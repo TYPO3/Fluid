@@ -52,11 +52,23 @@ class Test extends F3::Testing::BaseTestCase {
 
 		$source = '<html><head> <f3:blablubb> {testing}</f4:blz> </t3:hi:jo>';
 		$expected = array('<html><head> ', '<f3:blablubb>', ' {testing}</f4:blz> ', '</t3:hi:jo>');
-		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly.');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with simple tags.');
 
-		$source = 'hi<f3:testing attribute="Hallo{yep}" nested:attribute="jup" />ja';
-		$expected = array('hi', '<f3:testing attribute="Hallo{yep}" nested:attribute="jup" />', 'ja');
-		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly if complex tags are inside.');
+		$source = 'hi<f3:testing attribute="Hallo>{yep}" nested:attribute="jup" />ja';
+		$expected = array('hi', '<f3:testing attribute="Hallo>{yep}" nested:attribute="jup" />', 'ja');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with  > inside an attribute.');
+		
+		$source = 'hi<f3:testing attribute="Hallo\"{yep}" nested:attribute="jup" />ja';
+		$expected = array('hi', '<f3:testing attribute="Hallo\"{yep}" nested:attribute="jup" />', 'ja');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly if a " is inside a double-quoted string.');
+		
+		$source = 'hi<f3:testing attribute=\'Hallo>{yep}\' nested:attribute="jup" />ja';
+		$expected = array('hi', '<f3:testing attribute=\'Hallo>{yep}\' nested:attribute="jup" />', 'ja');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with single quotes as attribute delimiters.');
+		
+		$source = 'hi<f3:testing attribute=\'Hallo\\\'{yep}\' nested:attribute="jup" />ja';
+		$expected = array('hi', '<f3:testing attribute=\'Hallo\\\'{yep}\' nested:attribute="jup" />', 'ja');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly if \' is inside a single-quoted attribute.');
 	}
 	
 	/**
@@ -80,35 +92,35 @@ class Test extends F3::Testing::BaseTestCase {
 		preg_match($pattern, $source, $matches);
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly.');
 		
-		$source = '<f3:crop attribute="Hallo"/>';
+		$source = '<f3:crop attribute="Ha\"llo"/>';
 		$expected = array (
-			0 => '<f3:crop attribute="Hallo"/>',
+			0 => '<f3:crop attribute="Ha\"llo"/>',
 			'NamespaceIdentifier' => 'f3',
 			1 => 'f3',
 			'MethodIdentifier' => 'crop',
 			2 => 'crop',
-			'Attributes' => ' attribute="Hallo"',
-			3 => ' attribute="Hallo"',
+			'Attributes' => ' attribute="Ha\"llo"',
+			3 => ' attribute="Ha\"llo"',
 			'Selfclosing' => '/',
 			4 => '/'
 		);
 		preg_match($pattern, $source, $matches);
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with self-closing tags.');
 		
-		$source = '<f3:link:uriTo complex:attribute="Hallo"  />';
+		$source = '<f3:link:uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>';
 		$expected = array (
-			0 => '<f3:link:uriTo complex:attribute="Hallo"  />',
+			0 => '<f3:link:uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>',
 			'NamespaceIdentifier' => 'f3',
 			1 => 'f3',
 			'MethodIdentifier' => 'link:uriTo',
 			2 => 'link:uriTo',
-			'Attributes' => ' complex:attribute="Hallo"  ',
-			3 => ' complex:attribute="Hallo"  ',
+			'Attributes' => ' complex:attribute="Ha>llo" a="b" c=\'d\'',
+			3 => ' complex:attribute="Ha>llo" a="b" c=\'d\'',
 			'Selfclosing' => '/',
 			4 => '/'
 		);
 		preg_match($pattern, $source, $matches);
-		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with complex attributes.');
+		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with complex attributes and > inside the attributes.');
 	}
 	
 	/**
@@ -129,8 +141,9 @@ class Test extends F3::Testing::BaseTestCase {
 	public function testSPLIT_PATTERN_TAGARGUMENTS() {
 		$pattern = F3::Beer3::TemplateParser::SPLIT_PATTERN_TAGARGUMENTS;
 		$source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\'';
-		$this->assertEquals(preg_match($pattern, $source), 3, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
+		$this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 3, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
 	}
+	
 	/**
 	 * Helper method which replaces NAMESPACE in the regular expression with the real namespace used.
 	 * 

@@ -29,13 +29,13 @@ namespace F3::Beer3;
  */
 class TemplateParser {
 	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3::(?:\w+|::)+)\s*}/m';
-	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<[\/]?(?:(?:NAMESPACE):[a-zA-Z0-9:]+)[^>]*>)/';
-	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)(?P<Attributes>[^>]*?)(?P<Selfclosing>\/?)>$/';
+	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9:]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\/?>)/';
+	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)(?P<Selfclosing>\/?)>$/';
 	const SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)\s*>$/';
-	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?P<Value>(?:"[^"]*"|\'[^\']\'))\s*)*/';
+	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 	
 	/**
-	 * Namespace identifiers and their component name prefix
+	 * Namespace identifiers and their component name prefix (Associative array).
 	 * @var array
 	 */
 	protected $namespaces = array();
@@ -60,12 +60,12 @@ class TemplateParser {
 		$this->initialize();
 		
 		$this->extractNamespaceDefinitions($templateString);
-		$splittedTemplate = $this->splitDynamicTags();
-		$this->buildObjectTree($splittedTemplate);
+		$splittedTemplate = $this->splitTemplateAtDynamicTags();
+		$this->buildMainObjectTree($splittedTemplate);
 	}
 	
 	/**
-	 * Gets the namespaces
+	 * Gets the namespace definitions found.
 	 *
 	 * @return array Namespace identifiers and their component name prefix
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -75,7 +75,7 @@ class TemplateParser {
 	}
 	
 	/**
-	 * Resets the parser to its default values
+	 * Resets the parser to its default values.
 	 * 
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -105,13 +105,13 @@ class TemplateParser {
 	}
 	
 	/**
-	 * Splits the input string on all dynamic tags found.
+	 * Splits the template string on all dynamic tags found.
 	 * 
 	 * @param string $templateString Template string to split.
 	 * @return array Splitted template string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function splitDynamicTags($templateString) {
+	protected function splitTemplateAtDynamicTags($templateString) {
 		$regularExpression = $this->prepareTemplateRegularExpression(self::SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
 		return preg_split($regularExpression, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	}
@@ -120,9 +120,11 @@ class TemplateParser {
 	 * Build object tree from the splitted template
 	 *
 	 * @param array $splittedTemplate The splitted template, so that every tag with a namespace declaration is already a seperate array element.
+	 * @return TreeNode the main tree node.
+	 * @todo Handle return values?
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function buildObjectTree($splittedTemplate) {
+	protected function buildMainObjectTree($splittedTemplate) {
 		$regularExpression_dynamicTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_DYNAMICTAG);
 		$regularExpression_closingDynamicTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG);
 		
@@ -140,7 +142,7 @@ class TemplateParser {
 				
 				$this->handler_closingDynamicTag($namespaceIdentifier, $methodIdentifier);
 			} else {
-				$this->parseText($templateElement);
+				$this->handler_text($templateElement);
 			}
 		}
 	}
@@ -181,12 +183,29 @@ class TemplateParser {
 		}
 	}
 	/**
-	 * Parse arguments of tag.
+	 * Parse arguments of a given tag, and build up the Arguments Object Tree for each argument.
+	 * Returns an associative array, where the key is the name of the argument,
+	 * and the value is either an array of Argument Object Trees (for parameter-lists), or a single Argument Object Tree.
 	 *
-	 * @param unknown_type $argumentsString
+	 * @param string $argumentsString All arguments
+	 * @return array An associative array of objects, where the key is 
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseArguments($argumentsString) {
-		
+		if (preg_match_all(self::SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
+			foreach ($matches as $singleMatch) {
+				$argument = $singleMatch['Argument'];
+				$value = '';
+				if ($singleMatch['ValueSingleQuoted'] != '') {
+					$value = str_replace("\'", "'", $singleMatch['ValueSingleQuoted']);
+				} else {
+					$value = str_replace('\"', '"', $singleMatch['ValueDoubleQuoted']);
+				}
+				$value = str_replace('\\\\', '\\', $value);
+				// argument and value have to be handled
+			}
+		}
+		// return array of objects, and handle multiple dimensions in argument
 	}
 	
 	/**
@@ -203,7 +222,7 @@ class TemplateParser {
 	 * Enter description here...
 	 *
 	 */
-	protected function parseText() {
+	protected function handler_text() {
 		
 	}
 }
