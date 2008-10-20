@@ -184,13 +184,39 @@ class TemplateParser {
 			throw new F3::Beer3::Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
 		$argumentsObjectTree = $this->parseArguments($arguments);
-		$currentDynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $argumentsObjectTree);
+		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
+		$currentDynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
 		
 		$state->getNodeFromStack()->addSubNode($currentDynamicNode);
 		
 		if (!$selfclosing) {
 			$state->pushNodeToStack($currentDynamicNode);
 		}
+	}
+	
+	protected function resolveViewHelper($namespaceIdentifier, $methodIdentifier) {
+		$explodedViewHelperName = explode(':', $methodIdentifier);
+		$methodName = '';
+		$className = '';
+		if (count($explodedViewHelperName) > 1) {
+			$methodName = $explodedViewHelperName[1];
+			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
+		} else {
+			$methodName = $methodIdentifier;
+			$className = 'Default';
+		}
+		$className .= 'ViewHelper';
+		$methodName .= 'Method';
+		$name = $this->namespaces[$namespaceIdentifier] . '::' . $className;
+		try {
+			$object = $this->componentFactory->getComponent($name);
+		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
+			throw new F3::Beer3::Exception('View helper '.$name.' does not exist.', 1224532429);
+		}
+		if (!method_exists($object, $methodName)) {
+			throw new F3::Beer3::Exception('Method '.$methodName.' in view helper '.$name.' does not exist.', 1224532421);
+		}
+		return array($object, $methodName);
 	}
 	
 	/**

@@ -49,16 +49,27 @@ class DynamicNode extends F3::Beer3::AbstractNode {
 	protected $arguments = array();
 	
 	/**
+	 * @var F3::Beer3::DynamicNodeHelper
+	 */
+	protected $dynamicNodeHelper;
+	
+	/**
+	 * @var F3::FLOW3::Component::FactoryInterface
+	 */
+	protected $componentFactory;
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperNamespace, $viewHelperName, $arguments) {
+	public function __construct($viewHelperNamespace, $viewHelperName, $objectToCall, $arguments) {
 		$this->viewHelperNamespace = $viewHelperNamespace;
 		$this->viewHelperName = $viewHelperName;
 		$this->arguments = $arguments;
+		$this->objectToCall = $objectToCall;
 	}
-	
+
 	/**
 	 * Get the namespace name of the view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -76,7 +87,7 @@ class DynamicNode extends F3::Beer3::AbstractNode {
 	}
 	
 	public function render(F3::Beer3::Context $context) {
-		
+
 	}
 }
 
