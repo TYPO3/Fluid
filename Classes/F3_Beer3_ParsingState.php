@@ -50,7 +50,7 @@ class ParsingState {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setRootNode($rootNode) {
+	public function setRootNode(F3::Beer3::RootNode $rootNode) {
 		if (!($rootNode instanceof F3::Beer3::RootNode)) throw new F3::Beer3::Exception('Root node must be of type RootNode.', 1224495647);
 		$this->rootNode = $rootNode;
 	}
@@ -72,7 +72,7 @@ class ParsingState {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function pushNodeToStack($node) {
+	public function pushNodeToStack(F3::Beer3::AbstractNode $node) {
 		array_push($this->nodeStack, $node);
 	}
 	
