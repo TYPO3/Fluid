@@ -29,10 +29,13 @@ namespace F3::Beer3;
  */
 class TemplateParser {
 	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3::(?:\w+|::)+)\s*}/m';
-	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9:]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\/?>)/';
-	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)(?P<Selfclosing>\/?)>$/';
+	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9:]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\s*\/?>)/';
+	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
 	const SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
+	
+	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/(\\\\?{[^}]+})/';
+	const SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/(?:^|[^\\\\]+){(?P<Object>[a-zA-Z0-9\-_.]+)}/';
 	
 	/**
 	 * Namespace identifiers and their component name prefix (Associative array).
@@ -41,10 +44,18 @@ class TemplateParser {
 	protected $namespaces = array();
 	
 	/**
-	 * Stack of currently open tags. Needed to check for valid nesting of our tags.
-	 * @var array
+	 * @var F3::FLOW3::Component::FactoryInterface
 	 */
-	protected $currentObjectStack = array();
+	protected $componentFactory;
+	
+	/**
+	 * Inject component factory
+	 *
+	 * @param F3::FLOW3::Component::FactoryInterface $componentFactory
+	 */
+	public function injectComponentFactory(F3::FLOW3::Component::FactoryInterface $componentFactory) {
+		$this->componentFactory = $componentFactory;
+	}
 	
 	/**
 	 * Parses a given template and returns an object tree, identified by a root node
@@ -59,9 +70,11 @@ class TemplateParser {
 		
 		$this->initialize();
 		
-		$this->extractNamespaceDefinitions($templateString);
-		$splittedTemplate = $this->splitTemplateAtDynamicTags();
-		$this->buildMainObjectTree($splittedTemplate);
+		$templateString = $this->extractNamespaceDefinitions($templateString);
+		$splittedTemplate = $this->splitTemplateAtDynamicTags($templateString);
+		$rootNode = $this->buildMainObjectTree($splittedTemplate);
+		
+		return $rootNode;
 	}
 	
 	/**
@@ -88,7 +101,7 @@ class TemplateParser {
 	 * Extracts given namespace definitions and sets $this->namespaces.
 	 *
 	 * @param string $templateString Template string to extract the namespaces from
-	 * @return void
+	 * @return string The updated template string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function extractNamespaceDefinitions($templateString) {
@@ -101,19 +114,22 @@ class TemplateParser {
 				}
 				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
 			}
+			
+			$templateString = preg_replace(self::SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
 		}
+		return $templateString;
 	}
 	
 	/**
 	 * Splits the template string on all dynamic tags found.
 	 * 
 	 * @param string $templateString Template string to split.
-	 * @return array Splitted template string
+	 * @return array Splitted template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function splitTemplateAtDynamicTags($templateString) {
 		$regularExpression = $this->prepareTemplateRegularExpression(self::SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
-		return preg_split($regularExpression, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		return preg_split($regularExpression, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	}
 	
 	/**
@@ -128,44 +144,52 @@ class TemplateParser {
 		$regularExpression_dynamicTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_DYNAMICTAG);
 		$regularExpression_closingDynamicTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG);
 		
+		$state = $this->componentFactory->getComponent('F3::Beer3::ParsingState');
+		$rootNode = $this->componentFactory->getComponent('F3::Beer3::RootNode');
+		$state->setRootNode($rootNode);
+		$state->pushNodeToStack($rootNode);
+		
 		foreach ($splittedTemplate as $templateElement) {
 			if (preg_match($regularExpression_dynamicTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
 				$selfclosing = $matchedVariables['Selfclosing'] === '' ? false : true;
-				$arguments = $matchedVariables['Arguments'];
-				
-				$this->handler_openingDynamicTag($namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
+				$arguments = $matchedVariables['Attributes'];
+
+				$this->handler_openingDynamicTag($state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
 			} elseif (preg_match($regularExpression_closingDynamicTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
 				
-				$this->handler_closingDynamicTag($namespaceIdentifier, $methodIdentifier);
-			} else {
-				$this->handler_text($templateElement);
+				$this->handler_closingDynamicTag($state, $namespaceIdentifier, $methodIdentifier);
+			}  else {
+				$this->handler_textAndShorthandSyntax($state, $templateElement);
 			}
 		}
+		return $state->getRootNode();
 	}
 	
 	/**
 	 * Handles an opening or self-closing dynamic tag.
 	 *
-	 * @param unknown_type $namespaceIdentifier
-	 * @param unknown_type $methodIdentifier
-	 * @param unknown_type $arguments
-	 * @param unknown_type $selfclosing
+	 * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
+	 * @param string $methodIdentifier Method identifier
+	 * @param string $arguments Arguments string, not yet parsed
+	 * @param boolean $selfclosing true, if the tag is a self-closing tag.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_openingDynamicTag($namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
-		if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			
-			$this->parseArguments($arguments);
-			// build up argument objects
-			// build up the actual DynamicTreeNode and push it to stack
-			if (!$selfclosing) {
-				array_push($this->currentObjectStack, $OBJECT);
-			}
-		} else {
+	protected function handler_openingDynamicTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
+		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new F3::Beer3::Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
+		}
+		$argumentsObjectTree = $this->parseArguments($arguments);
+		$currentDynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $argumentsObjectTree);
+		
+		$state->getNodeFromStack()->addSubNode($currentDynamicNode);
+		
+		if (!$selfclosing) {
+			$state->pushNodeToStack($currentDynamicNode);
 		}
 	}
 	
@@ -175,13 +199,29 @@ class TemplateParser {
 	 * @param unknown_type $namespaceIdentifier
 	 * @param unknown_type $methodIdentifier
 	 */
-	protected function handler_closingDynamicTag($namespaceIdentifier, $methodIdentifier) {
-		if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			// todo
-		} else {
+	protected function handler_closingDynamicTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
+		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new F3::Beer3::Exception('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
 		}
+		$lastStackElement = $state->popNodeFromStack();
+		if (!($lastStackElement instanceof F3::Beer3::DynamicNode)) {
+			throw new F3::Beer3::Exception('You closed a templating tag which you never opened!', 1224485838);
+		}
+		if ($lastStackElement->getViewHelperName() != $methodIdentifier || $lastStackElement->getViewHelperNamespace() != $this->namespaces[$namespaceIdentifier]) {
+			throw new F3::Beer3::Exception('Templating tags not properly nested.', 1224485398);
+		}
 	}
+	
+	/**
+	 * Handles the appearance of an object accessor. Creates a new instance of F3::Beer3::ObjectAccessorNode
+	 *
+	 * @param string $objectAccessorString
+	 */
+	protected function handler_objectAccessor(F3::Beer3::ParsingState $state, $objectAccessorString) {
+		$node = $this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', $objectAccessorString);
+		$state->getNodeFromStack()->addSubNode($node);
+	}
+	
 	/**
 	 * Parse arguments of a given tag, and build up the Arguments Object Tree for each argument.
 	 * Returns an associative array, where the key is the name of the argument,
@@ -192,20 +232,54 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseArguments($argumentsString) {
+		$argumentsObjectTree = array();
 		if (preg_match_all(self::SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
-				$value = '';
-				if ($singleMatch['ValueSingleQuoted'] != '') {
-					$value = str_replace("\'", "'", $singleMatch['ValueSingleQuoted']);
+				$value = $this->unquoteArgumentString($singleMatch['ValueSingleQuoted'], $singleMatch['ValueDoubleQuoted']);
+				$argumentArray = explode(':', $argument);
+				if (count($argumentArray) > 1) {
+					$argumentsObjectTree[$argumentArray[0]][$argumentArray[1]] = $this->buildArgumentObjectTree($value);
 				} else {
-					$value = str_replace('\"', '"', $singleMatch['ValueDoubleQuoted']);
+					$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
 				}
-				$value = str_replace('\\\\', '\\', $value);
-				// argument and value have to be handled
 			}
 		}
-		// return array of objects, and handle multiple dimensions in argument
+		return $argumentsObjectTree;
+	}
+	
+	/**
+	 * Build up an argument object tree for the string in $argumentsString
+	 *
+	 * @param string $argumentsString
+	 * @return ArgumentObject the corresponding argument object tree.
+	 * @todo Refine doc comment and write method
+	 */
+	protected function buildArgumentObjectTree($argumentsString) {
+		$splittedArguments = $this->splitTemplateAtDynamicTags($argumentsString);
+		$rootNode = $this->buildMainObjectTree($splittedArguments);
+		return $rootNode;
+	}
+	
+	/**
+	 * Removes escapings from a given argument string. Expects two string parameters, with one of them being empty.
+	 * The first parameter should be non-empty if the argument was quoted by single quotes, and the second parameter should be non-empty
+	 * if the argument was quoted by double quotes.
+	 * 
+	 * This method is meant as a helper for regular expression results.
+	 *
+	 * @param string $singleQuotedValue Value, if quoted by single quotes
+	 * @param string $doubleQuotedValue Value, if quoted by double quotes
+	 * @return string Unquoted value
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function unquoteArgumentString($singleQuotedValue, $doubleQuotedValue) {
+		if ($singleQuotedValue != '') {
+			$value = str_replace("\'", "'", $singleQuotedValue);
+		} else {
+			$value = str_replace('\"', '"', $doubleQuotedValue);
+		}
+		return str_replace('\\\\', '\\', $value);
 	}
 	
 	/**
@@ -222,8 +296,25 @@ class TemplateParser {
 	 * Enter description here...
 	 *
 	 */
-	protected function handler_text() {
-		
+	protected function handler_textAndShorthandSyntax(F3::Beer3::ParsingState $state, $text) {
+		$sections = preg_split(self::SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		foreach ($sections as $section) {
+			if (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
+				$this->handler_objectAccessor($state, $matchedVariables['Object']);
+			} else {
+				$this->handler_text($state, $section);
+			}
+		}		
+	}
+	
+	/**
+	 * Text node handler
+	 *
+	 * @param string $text
+	 */
+	protected function handler_text(F3::Beer3::ParsingState $state, $text) {
+		$node = $this->componentFactory->getComponent('F3::Beer3::TextNode', $text);
+		$state->getNodeFromStack()->addSubNode($node);	
 	}
 }
 

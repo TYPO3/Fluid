@@ -50,8 +50,8 @@ class Test extends F3::Testing::BaseTestCase {
 	public function testSPLIT_PATTERN_DYNAMICTAGS() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('f3', 't3'));
 
-		$source = '<html><head> <f3:blablubb> {testing}</f4:blz> </t3:hi:jo>';
-		$expected = array('<html><head> ', '<f3:blablubb>', ' {testing}</f4:blz> ', '</t3:hi:jo>');
+		$source = '<html><head> <f3:testing /> <f3:blablubb> {testing}</f4:blz> </t3:hi:jo>';
+		$expected = array('<html><head> ','<f3:testing />', ' ', '<f3:blablubb>', ' {testing}</f4:blz> ', '</t3:hi:jo>');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with simple tags.');
 
 		$source = 'hi<f3:testing attribute="Hallo>{yep}" nested:attribute="jup" />ja';
@@ -91,6 +91,21 @@ class Test extends F3::Testing::BaseTestCase {
 		);
 		preg_match($pattern, $source, $matches);
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly.');
+		
+		$source = '<f3:base />';
+		$expected = array (
+			0 => '<f3:base />',
+			'NamespaceIdentifier' => 'f3',
+			1 => 'f3',
+			'MethodIdentifier' => 'base',
+			2 => 'base',
+			'Attributes' => '',
+			3 => '',
+			'Selfclosing' => '/',
+			4 => '/'
+		);
+		preg_match($pattern, $source, $matches);
+		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly when there is a space before the self-closing tag.');
 		
 		$source = '<f3:crop attribute="Ha\"llo"/>';
 		$expected = array (
@@ -143,6 +158,40 @@ class Test extends F3::Testing::BaseTestCase {
 		$source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\'';
 		$this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 3, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
 	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo finish unit test; add complete shorthand syntax!!
+	 */
+	public function testSPLIT_PATTERN_SHORTHANDSYNTAX() {
+		$pattern = F3::Beer3::TemplateParser::SPLIT_PATTERN_SHORTHANDSYNTAX;
+		
+		$source = 'some string{Object.bla}here as well';
+		$expected = array('some string', '{Object.bla}','here as well');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a simple example.');
+		
+		$source = 'some {}string\{Object.bla}here as well';
+		$expected = array('some {}string', '\{Object.bla}','here as well');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.');
+		
+	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS() {
+		$pattern = F3::Beer3::TemplateParser::SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
+		$this->assertEquals(preg_match($pattern, '{object}'), 1, 'Object accessor not identified!');
+		$this->assertEquals(preg_match($pattern, '{oBject1}'), 1, 'Object accessor not identified if there is a number and capitals inside!');
+		$this->assertEquals(preg_match($pattern, '{object.recursive}'), 1, 'Object accessor not identified if there is a dot inside!');
+		$this->assertEquals(preg_match($pattern, '{object-with-dash.recursive_value}'), 1, 'Object accessor not identified if there is a _ or - inside!');
+		$this->assertEquals(preg_match($pattern, '\{object}'), 0, 'Object accessor identified, but it was escaped!');
+		$this->assertEquals(preg_match($pattern, '{}'), 0, 'Object accessor identified, but it was empty!');
+	}
+	
+	
 	
 	/**
 	 * Helper method which replaces NAMESPACE in the regular expression with the real namespace used.
