@@ -28,8 +28,18 @@ namespace F3::Beer3;
  * @scope prototype
  */
 class RootNode extends F3::Beer3::AbstractNode {
-	public function render(F3::Beer3::Context $context) {
-		
+	
+	/**
+	 * Evaluate the root node, by evaluating the subtree.
+	 * 
+	 * @param F3::Beer3::Context $context Context to be used
+	 * @return object Evaluated subtree
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function evaluate(F3::Beer3::Context $context) {
+		$this->context = $context;
+		$text = $this->evaluateSubtree();
+		return $text;
 	}
 }
 

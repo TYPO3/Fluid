@@ -54,7 +54,16 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::RuntimeException
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function contextTakesOnlyArraysInConstructor() {
+		new F3::Beer3::Context("string");
+	}
+	
+	/**
+	 * @test
+	 * @expectedException F3::Beer3::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
@@ -64,7 +73,7 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
@@ -73,7 +82,7 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
@@ -89,7 +98,7 @@ class ContextTest extends F3::Testing::BaseTestCase {
 		$this->context->remove('variable');
 		try {
 			$this->context->get('variable');
-		} catch (F3::Beer3::Exception $e) {}
+		} catch (F3::Beer3::RuntimeException $e) {}
 	}
 }
 

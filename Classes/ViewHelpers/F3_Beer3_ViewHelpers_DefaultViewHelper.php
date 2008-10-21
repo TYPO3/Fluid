@@ -16,21 +16,30 @@ namespace F3::Beer3::ViewHelpers;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  */
 /**
  * [Enter description here]
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class DefaultViewHelper {
 	public function baseMethod() {}
-	public function forMethod() {}
+	public function forMethod(F3::Beer3::NodeInterface $node, $arguments) {
+		//if (!array_key_exists('each', $arguments)) throw new F3::Beer3::Exception('Argument "each" not specified in loop.', 1224590686);
+		$out = '';
+		foreach ($arguments['each'] as $singleElement) {
+			$node->addToContext($arguments['as'], $singleElement);
+			$out .= $node->renderSubtree();
+			$node->removeFromContext($arguments['as']);
+		}
+		return $out;
+	}
 }
 
 

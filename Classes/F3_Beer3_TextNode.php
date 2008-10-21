@@ -39,7 +39,7 @@ class TextNode extends F3::Beer3::AbstractNode {
 		if (!is_string($text)) throw new F3::Beer3::Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		$this->text = $text;
 	}
-	public function render(F3::Beer3::Context $context) {
+	public function evaluate(F3::Beer3::Context $context) {
 		return $this->text;
 	}
 }

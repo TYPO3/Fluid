@@ -20,7 +20,7 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * Context
+ * Context which stores template variables.
  *
  * @package Beer3
  * @version $Id:$
@@ -35,6 +35,17 @@ class Context {
 	protected $objects = array();
 	
 	/**
+	 * Constructor. Can take an array, and initializes the objects with it.
+	 *
+	 * @param array $objectArray
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function __construct($objectArray = array()) {
+		if (!is_array($objectArray)) throw new F3::Beer3::RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
+		$this->objects = $objectArray;
+	}
+	
+	/**
 	 * Add an object to the context
 	 *
 	 * @param string $identifier
@@ -43,7 +54,7 @@ class Context {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function add($identifier, $object) {
-		if (array_key_exists($identifier, $this->objects)) throw new F3::Beer3::Exception('Duplicate variable declarations!', 1224479063);
+		if (array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Duplicate variable declarations!', 1224479063);
 		$this->objects[$identifier] = $object;
 	}
 	
@@ -55,7 +66,7 @@ class Context {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function get($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::Exception('Tried to get a variable which is not stored in the context!', 1224479370);
+		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to get a variable which is not stored in the context!', 1224479370);
 		return $this->objects[$identifier];
 	}
 	
@@ -67,8 +78,18 @@ class Context {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::Exception('Tried to remove a variable which is not stored in the context!', 1224479372);
+		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to remove a variable which is not stored in the context!', 1224479372);
 		unset($this->objects[$identifier]);
+	}
+	
+	/**
+	 * Returns an array of all identifiers available in the context.
+	 *
+	 * @return array Array of identifier strings
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getAllIdentifiers() {
+		return array_keys($this->objects);
 	}
 }
 

@@ -49,10 +49,11 @@ class DynamicNode extends F3::Beer3::AbstractNode {
 	protected $arguments = array();
 	
 	/**
-	 * @var F3::Beer3::DynamicNodeHelper
+	 * Context storing the currently available variables.
+	 * @var F3::Beer3::Context
 	 */
-	protected $dynamicNodeHelper;
-	
+	protected $context;
+		
 	/**
 	 * @var F3::FLOW3::Component::FactoryInterface
 	 */
@@ -86,8 +87,27 @@ class DynamicNode extends F3::Beer3::AbstractNode {
 		return $this->viewHelperName;
 	}
 	
-	public function render(F3::Beer3::Context $context) {
-
+	public function evaluate(F3::Beer3::Context $context) {
+		$this->context = $context;
+		$contextVariables = $this->context->getAllIdentifiers();
+		$evaluatedArguments = array();
+		foreach ($this->arguments as $argumentName => $argumentValue) {
+			if (is_array($argumentValue)) {
+				
+			} else {
+				$evaluatedArguments[$argumentName] = $argumentValue->evaluate($context);
+			}
+		}
+		$out = call_user_func_array($this->objectToCall, array($this, $evaluatedArguments));
+		
+		
+		if ($contextVariables != $this->context->getAllIdentifiers()) {
+			$endContextVariables = $this->context->getAllIdentifiers();
+			$diff = array_intersect($endContextVariables, $contextVariables);
+			
+			throw new F3::Beer3::RuntimeException('The following context variable has been changed after the view helper has been called: ' .implode(', ', $diff));
+		}
+		return $out;
 	}
 }
 

@@ -34,13 +34,7 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	 * @var array F3::Beer3::AbstractNode
 	 */
 	protected $subnodes = array();
-	
-	/**
-	 * Context storing the currently available variables.
-	 * @var F3::Beer3::Context
-	 */
-	protected $context;
-	
+		
 	/**
 	 * Render the whole subtree and return the rendered result string.
 	 *
@@ -59,8 +53,8 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	 */
 	public function evaluateSubtree() {
 		$output = NULL;
-		foreach ($subNodes as $subNode) {
-			if ($output == NULL) {
+		foreach ($this->subnodes as $subNode) {
+			if ($output === NULL) {
 				$output = $subNode->evaluate($this->context);
 			} else {
 				$output = (string)$output;
@@ -111,7 +105,17 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public abstract function render(F3::Beer3::Context $context);
+	public function render(F3::Beer3::Context $context) {
+		return (string)$this->evaluate($context);
+	}
+	
+	/**
+	 * Evaluates the node.
+	 * @param F3::Beer3::Context context to be used for the evaluation
+	 * @return object Evaluated node
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	abstract public function evaluate(F3::Beer3::Context $context);
 }
 
 

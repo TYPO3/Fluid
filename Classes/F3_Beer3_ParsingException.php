@@ -17,44 +17,20 @@ namespace F3::Beer3;
 
 /**
  * @package Beer3
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * A node which handles object access.
+ * A Parsing Exception
  *
- * @package
+ * @package 
  * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class ObjectAccessorNode extends F3::Beer3::AbstractNode {
-	
-	/**
-	 * Object path which will be called.
-	 * @var string
-	 */
-	protected $objectPath;
-	
-	/**
-	 * Constructor. Takes an object path as input.
-	 * 
-	 * The first part of the object path has to be a variable in the context.
-	 * For the further parts, it is checked if the object has a getObjectname method. If yes, this is called.
-	 * If no, it is checked if a property "objectname" exists.
-	 * If no, an error is thrown.
-	 * 
-	 * @param string $objectPath An Object Path, like object1.object2.object3
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function __construct($objectPath) {
-		$this->objectPath = $objectPath;
-	}
-	
-	public function evaluate(F3::Beer3::Context $context) {
-		return $context->get($this->objectPath);
-	}
+class ParsingException extends F3::Beer3::Exception {
 }
+ 
 
 
 ?>
