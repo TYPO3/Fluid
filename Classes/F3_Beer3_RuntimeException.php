@@ -28,7 +28,4 @@ namespace F3::Beer3;
  */
 class RuntimeException extends F3::Beer3::Exception {
 }
- 
-
-
 ?>

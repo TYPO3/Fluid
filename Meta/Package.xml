@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package xmlns="http://typo3.org/ns/2008/flow3/package">
+    <key>Beer3</key>
+    <title>Beer3 Templating Framework</title>
+    <description>Next-Generation Templating Framework for TYPO3 v5, to be backported to 5.x</description>
+    <version>0.0.1</version>
+    <state>Development</state>
+    <categories/>
+    <parties>
+        <person role="LeadDeveloper">
+            <name>Sebastian Kurfürst</name>
+            <email>sebastian@typo3.org</email>
+            <website></website>
+            <organisation></organisation>
+            <repositoryUserName>sebastian</repositoryUserName>
+        </person>
+        <person role="CoDeveloper">
+            <name>Bastian Weidelich</name>
+            <email>bastian@typo3.org</email>
+            <website></website>
+            <organisation></organisation>
+            <repositoryUserName></repositoryUserName>
+        </person>
+    </parties>
+    <constraints>
+        <depends/>
+        <conflicts/>
+        <suggests/>
+    </constraints>
+</package>

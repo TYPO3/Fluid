@@ -47,7 +47,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.or>
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::ParsingException
 	 */
 	public function parseThrowsExceptionWhenStringArgumentMissing() {
 		$this->templateParser->parse(123);
@@ -69,7 +69,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::ParsingException
 	 */
 	public function parseThrowsExceptionIfNamespaceIsRedeclared() {
 		$this->templateParser->parse("{namespace f3=F3::Beer3::Blablubb} {namespace f3=F3::Rocks}");
@@ -116,7 +116,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture03ThrowsExceptionBecauseWrongTagNesting() {
@@ -126,7 +126,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::Exception
+	 * @expectedException F3::Beer3::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture04ThrowsExceptionBecauseClosingATagWhichWasNeverOpened() {
@@ -167,7 +167,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		);
 		$arguments['each']->addSubNode($this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', 'posts'));
 		$arguments['as']->addSubNode($this->componentFactory->getComponent('F3::Beer3::TextNode', 'post'));
-		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'for', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'forMethod'), $arguments);
+		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'default:for', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'forMethod'), $arguments);
 		$rootNode->addSubNode($dynamicNode);
 		$dynamicNode->addSubNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "\n"));
 		$dynamicNode->addSubNode($this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', 'post'));

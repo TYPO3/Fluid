@@ -21,7 +21,7 @@ namespace F3::Beer3::ViewHelpers;
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * Default view helper
  *
  * @package Beer3
  * @subpackage ViewHelpers
@@ -31,7 +31,8 @@ namespace F3::Beer3::ViewHelpers;
 class DefaultViewHelper {
 	public function baseMethod() {}
 	public function forMethod(F3::Beer3::NodeInterface $node, $arguments) {
-		//if (!array_key_exists('each', $arguments)) throw new F3::Beer3::Exception('Argument "each" not specified in loop.', 1224590686);
+		if (!array_key_exists('as', $arguments)) throw new F3::Beer3::RuntimeException('Argument "as" not specified in "for"-Tag.', 1224590686);
+		
 		$out = '';
 		foreach ($arguments['each'] as $singleElement) {
 			$node->addToContext($arguments['as'], $singleElement);

@@ -30,7 +30,4 @@ namespace F3::Beer3;
  */
 class ParsingException extends F3::Beer3::Exception {
 }
- 
-
-
 ?>

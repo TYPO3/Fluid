@@ -51,8 +51,43 @@ class ObjectAccessorNode extends F3::Beer3::AbstractNode {
 		$this->objectPath = $objectPath;
 	}
 	
+	/**
+	 * Evaluate this node and return the correct object.
+	 * 
+	 * Handles each part (denoted by .) in $this->objectPath in the following order:
+	 * - call appropriate getter
+	 * - call public property, if exists
+	 * - fail
+	 * 
+	 * @return object The evaluated object, can be a string...
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function evaluate(F3::Beer3::Context $context) {
-		return $context->get($this->objectPath);
+		$objectPathParts = explode('.', $this->objectPath);
+		$contextVariableName = array_shift($objectPathParts);
+		$currentObject = $context->get($contextVariableName);
+		
+		if (count($objectPathParts) > 0) {
+			foreach ($objectPathParts as $currentObjectPath) {
+				$getterMethodName = 'get' . F3::PHP6::Functions::ucfirst($currentObjectPath);
+				if (method_exists($currentObject, $getterMethodName)) {
+					$currentObject = call_user_func(array($currentObject, $getterMethodName));
+					continue;
+				}
+				
+				try {
+					$reflectionProperty = new ReflectionProperty($currentObject, $currentObjectPath);
+				} catch(ReflectionException $e) {
+					throw new F3::Beer3::RuntimeException($e->getMessage(), 1224611407);
+				}
+				if ($reflectionProperty->isPublic()) {
+					$currentObject = $reflectionProperty->getValue($currentObject);
+				} else {
+					throw new F3::Beer3::RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
+				}
+			}
+		}
+		return $currentObject;
 	}
 }
 

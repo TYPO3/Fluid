@@ -20,10 +20,9 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * Template parser building up an object syntax tree
  *
- * @package
- * @subpackage
+ * @package Beer3
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
@@ -66,7 +65,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function parse($templateString) {
-		if (!is_string($templateString)) throw new F3::Beer3::Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
+		if (!is_string($templateString)) throw new F3::Beer3::ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
 		
 		$this->initialize();
 		
@@ -110,7 +109,7 @@ class TemplateParser {
 				$namespaceIdentifier = $matchedVariables[1][$index];
 				$fullyQualifiedNamespace = $matchedVariables[2][$index];
 				if (key_exists($namespaceIdentifier, $this->namespaces)) {
-					throw new F3::Beer3::Exception('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
+					throw new F3::Beer3::ParsingException('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
 				}
 				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
 			}
@@ -153,7 +152,7 @@ class TemplateParser {
 			if (preg_match($regularExpression_dynamicTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
-				$selfclosing = $matchedVariables['Selfclosing'] === '' ? false : true;
+				$selfclosing = $matchedVariables['Selfclosing'] === '' ? FALSE : TRUE;
 				$arguments = $matchedVariables['Attributes'];
 
 				$this->handler_openingDynamicTag($state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
@@ -162,7 +161,7 @@ class TemplateParser {
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
 				
 				$this->handler_closingDynamicTag($state, $namespaceIdentifier, $methodIdentifier);
-			}  else {
+			} else {
 				$this->handler_textAndShorthandSyntax($state, $templateElement);
 			}
 		}
@@ -181,7 +180,7 @@ class TemplateParser {
 	 */
 	protected function handler_openingDynamicTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new F3::Beer3::Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
+			throw new F3::Beer3::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
 		$argumentsObjectTree = $this->parseArguments($arguments);
 		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
@@ -211,10 +210,10 @@ class TemplateParser {
 		try {
 			$object = $this->componentFactory->getComponent($name);
 		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
-			throw new F3::Beer3::Exception('View helper '.$name.' does not exist.', 1224532429);
+			throw new F3::Beer3::ÜarsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
 		if (!method_exists($object, $methodName)) {
-			throw new F3::Beer3::Exception('Method '.$methodName.' in view helper '.$name.' does not exist.', 1224532421);
+			throw new F3::Beer3::ParsingException('Method ' . $methodName . ' in view helper ' . $name . ' does not exist.', 1224532421);
 		}
 		return array($object, $methodName);
 	}
@@ -227,14 +226,14 @@ class TemplateParser {
 	 */
 	protected function handler_closingDynamicTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new F3::Beer3::Exception('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
+			throw new F3::Beer3::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
 		}
 		$lastStackElement = $state->popNodeFromStack();
 		if (!($lastStackElement instanceof F3::Beer3::DynamicNode)) {
-			throw new F3::Beer3::Exception('You closed a templating tag which you never opened!', 1224485838);
+			throw new F3::Beer3::ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
 		if ($lastStackElement->getViewHelperName() != $methodIdentifier || $lastStackElement->getViewHelperNamespace() != $this->namespaces[$namespaceIdentifier]) {
-			throw new F3::Beer3::Exception('Templating tags not properly nested.', 1224485398);
+			throw new F3::Beer3::ParsingException('Templating tags not properly nested.', 1224485398);
 		}
 	}
 	

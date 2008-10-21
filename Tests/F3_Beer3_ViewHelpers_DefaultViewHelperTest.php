@@ -16,14 +16,14 @@ namespace F3::Beer3::ViewHelpers;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage Tests
  * @version $Id:$
  */
 /**
  * Testcase for DefaultViewHelper
  *
- * @package
+ * @package Beer3
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
@@ -32,13 +32,25 @@ class DefaultViewHelperTest extends F3::Testing::BaseTestCase {
 
 	public function setUp() {
 		$this->viewHelper = new F3::Beer3::ViewHelpers::DefaultViewHelper();
+		$this->nodeMock = $this->getMock('F3::Beer3::NodeInterface');
 	}
 	/**
 	 * @test
-	 * @author sebastian
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function forReturnsCorrectResults() {
-		//$this->viewHelper->for(, array('key' ));
+	public function forCallsRenderSubtreeCorrectly() {
+		$this->nodeMock->expects($this->exactly(7))
+		               ->method('renderSubtree');
+		$this->viewHelper->forMethod($this->nodeMock, array('each' => array(0,1,2,3,4,5,6), 'as' => 'a'));
+	}
+	
+	/**
+	 * @test
+	 * @expectedException F3::Beer3::Exception
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function forThrowsExceptionIfAsArgumentMissing() {
+		$this->viewHelper->forMethod($this->nodeMock, array('each' => array()));
 	}
 }
 

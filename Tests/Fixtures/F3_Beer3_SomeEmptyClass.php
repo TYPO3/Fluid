@@ -16,40 +16,31 @@ namespace F3::Beer3;
  *                                                                        */
 
 /**
- * @package Beer3 
- * @subpackage Tests 
+ * @package Beer3
+ * @subpackage Tests
  * @version $Id:$
  */
 /**
- * Testcase for TextNode
+ * Example class
  *
  * @package Beer3
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @author Sebastian Kurfürst <sebastian@typo3.org>
  */
-class TextNodeTest extends F3::Testing::BaseTestCase {
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function renderReturnsSameStringAsGivenInConstructor() {
-		$string = 'I can work quite effectively in a train!';
-		$node = new F3::Beer3::TextNode($string);
-		$this->assertEquals($node->render(new F3::Beer3::Context()), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+class SomeEmptyClass {
+	public $publicVariable = "Hallo";
+	protected $protectedVariable;
+	
+	public function __construct($protectedVariable) {
+		$this->protectedVariable = $protectedVariable;
 	}
 	
-	/**
-	 * @test
-	 * @expectedException F3::Beer3::ParsingException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function constructorThrowsExceptionIfNoStringGiven() {
-		new F3::Beer3::TextNode(123);
+	public function getSubproperty() {
+		return $this->protectedVariable;
 	}
 }
-
 
 
 ?>
