@@ -53,11 +53,6 @@ class DynamicNode extends F3::Beer3::AbstractNode {
 	 * @var F3::Beer3::Context
 	 */
 	protected $context;
-		
-	/**
-	 * @var F3::FLOW3::Component::FactoryInterface
-	 */
-	protected $componentFactory;
 	
 	/**
 	 * Constructor.

@@ -27,9 +27,20 @@ namespace F3::Beer3::ViewHelpers;
  * @subpackage ViewHelpers
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @viewhelper
  */
 class DefaultViewHelper {
 	public function baseMethod() {}
+	
+	/**
+	 * This is some test
+	 *
+	 * @argument as string Name of the object.
+	 * @argument each object Thing to iterate over
+	 * @param NodeInterface $node
+	 * @param unknown_type $arguments
+	 * @return unknown
+	 */
 	public function forMethod(F3::Beer3::NodeInterface $node, $arguments) {
 		if (!array_key_exists('as', $arguments)) throw new F3::Beer3::RuntimeException('Argument "as" not specified in "for"-Tag.', 1224590686);
 		

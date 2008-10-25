@@ -28,9 +28,9 @@ namespace F3::Beer3;
  */
 class TemplateParser {
 	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3::(?:\w+|::)+)\s*}/m';
-	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9:]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\s*\/?>)/';
-	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
-	const SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9:]+)\s*>$/';
+	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\s*\/?>)/';
+	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
+	const SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 	
 	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/(\\\\?{[^}]+})/';
@@ -194,7 +194,7 @@ class TemplateParser {
 	}
 	
 	protected function resolveViewHelper($namespaceIdentifier, $methodIdentifier) {
-		$explodedViewHelperName = explode(':', $methodIdentifier);
+		$explodedViewHelperName = explode('.', $methodIdentifier);
 		$methodName = '';
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {

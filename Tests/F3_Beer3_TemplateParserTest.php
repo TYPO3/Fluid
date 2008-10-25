@@ -160,19 +160,16 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture06.html', FILE_TEXT);
 		
 		$rootNode = $this->componentFactory->getComponent('F3::Beer3::RootNode');
-		$rootNode->addSubNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "\n"));
 		$arguments = array(
 			'each' => $this->componentFactory->getComponent('F3::Beer3::RootNode'),
 			'as' => $this->componentFactory->getComponent('F3::Beer3::RootNode')
 		);
 		$arguments['each']->addSubNode($this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', 'posts'));
 		$arguments['as']->addSubNode($this->componentFactory->getComponent('F3::Beer3::TextNode', 'post'));
-		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'default:for', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'forMethod'), $arguments);
+		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'default.for', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'forMethod'), $arguments);
 		$rootNode->addSubNode($dynamicNode);
-		$dynamicNode->addSubNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "\n"));
 		$dynamicNode->addSubNode($this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', 'post'));
-		$dynamicNode->addSubNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "\n"));
-
+		
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource);
 		$this->assertEquals($expected, $actual, 'Fixture 06 was not parsed correctly.');

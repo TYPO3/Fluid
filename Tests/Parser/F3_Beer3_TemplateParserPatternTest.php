@@ -50,8 +50,8 @@ class Test extends F3::Testing::BaseTestCase {
 	public function testSPLIT_PATTERN_DYNAMICTAGS() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('f3', 't3'));
 
-		$source = '<html><head> <f3:testing /> <f3:blablubb> {testing}</f4:blz> </t3:hi:jo>';
-		$expected = array('<html><head> ','<f3:testing />', ' ', '<f3:blablubb>', ' {testing}</f4:blz> ', '</t3:hi:jo>');
+		$source = '<html><head> <f3:a.testing /> <f3:blablubb> {testing}</f4:blz> </t3:hi.jo>';
+		$expected = array('<html><head> ','<f3:a.testing />', ' ', '<f3:blablubb>', ' {testing}</f4:blz> ', '</t3:hi.jo>');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with simple tags.');
 
 		$source = 'hi<f3:testing attribute="Hallo>{yep}" nested:attribute="jup" />ja';
@@ -122,13 +122,13 @@ class Test extends F3::Testing::BaseTestCase {
 		preg_match($pattern, $source, $matches);
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with self-closing tags.');
 		
-		$source = '<f3:link:uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>';
+		$source = '<f3:link.uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>';
 		$expected = array (
-			0 => '<f3:link:uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>',
+			0 => '<f3:link.uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>',
 			'NamespaceIdentifier' => 'f3',
 			1 => 'f3',
-			'MethodIdentifier' => 'link:uriTo',
-			2 => 'link:uriTo',
+			'MethodIdentifier' => 'link.uriTo',
+			2 => 'link.uriTo',
 			'Attributes' => ' complex:attribute="Ha>llo" a="b" c=\'d\'',
 			3 => ' complex:attribute="Ha>llo" a="b" c=\'d\'',
 			'Selfclosing' => '/',
@@ -145,7 +145,7 @@ class Test extends F3::Testing::BaseTestCase {
 	public function testSCAN_PATTERN_CLOSINGDYNAMICTAG() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG, array('f3'));
 		$this->assertEquals(preg_match($pattern, '</f3:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
-		$this->assertEquals(preg_match($pattern, '</f3:bla    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
+		$this->assertEquals(preg_match($pattern, '</f3:bla.a    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
 		$this->assertEquals(preg_match($pattern, '</t3:bla>'), 0, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does match match a tag it should not match.');
 	}
 	
