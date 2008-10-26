@@ -38,7 +38,7 @@ class RootNode extends F3::Beer3::AbstractNode {
 	 */
 	public function evaluate(F3::Beer3::Context $context) {
 		$this->context = $context;
-		$text = $this->evaluateSubtree();
+		$text = $this->evaluateChildNodes();
 		return $text;
 	}
 }

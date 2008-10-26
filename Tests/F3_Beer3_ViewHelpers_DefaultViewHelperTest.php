@@ -40,7 +40,7 @@ class DefaultViewHelperTest extends F3::Testing::BaseTestCase {
 	 */
 	public function forCallsRenderSubtreeCorrectly() {
 		$this->nodeMock->expects($this->exactly(7))
-		               ->method('renderSubtree');
+		               ->method('renderChildNodes');
 		$this->viewHelper->forMethod($this->nodeMock, array('each' => array(0,1,2,3,4,5,6), 'as' => 'a'));
 	}
 	

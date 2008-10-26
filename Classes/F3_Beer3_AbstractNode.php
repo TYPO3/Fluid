@@ -30,30 +30,30 @@ namespace F3::Beer3;
  */
 abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	/**
-	 * List of subnodes.
+	 * List of Child Nodes.
 	 * @var array F3::Beer3::AbstractNode
 	 */
-	protected $subnodes = array();
+	protected $childNodes = array();
 		
 	/**
-	 * Render the whole subtree and return the rendered result string.
+	 * Render all child nodes and return the rendered result string.
 	 *
 	 * @return string Rendered representation
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderSubtree() {
-		return (string)$this->evaluateSubtree();
+	public function renderChildNodes() {
+		return (string)$this->evaluateChildNodes();
 	}
 	
 	/**
-	 * Evaluate the whole subtree and return the evaluated results.
+	 * Evaluate all child nodes and return the evaluated results.
 	 * 
 	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluateSubtree() {
+	public function evaluateChildNodes() {
 		$output = NULL;
-		foreach ($this->subnodes as $subNode) {
+		foreach ($this->childNodes as $subNode) {
 			if ($output === NULL) {
 				$output = $subNode->evaluate($this->context);
 			} else {
@@ -94,8 +94,8 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function addSubNode(F3::Beer3::AbstractNode $subnode) {
-		$this->subnodes[] = $subnode;
+	public function addChildNode(F3::Beer3::AbstractNode $subnode) {
+		$this->childNodes[] = $subnode;
 	}
 	
 	/**

@@ -30,20 +30,20 @@ namespace F3::Beer3;
  */
 interface NodeInterface {
 	/**
-	 * Render the whole subtree and return the rendered result string.
+	 * Render all child nodes and return the rendered result string.
 	 *
 	 * @return string Rendered representation
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderSubtree();
+	public function renderChildNodes();
 	
 	/**
-	 * Evaluate the whole subtree and return the evaluated results.
+	 * Evaluate all child nodes and return the evaluated results.
 	 * 
 	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluateSubtree();
+	public function evaluateChildNodes();
 	
 	/**
 	 * Add an object identified by $key to context

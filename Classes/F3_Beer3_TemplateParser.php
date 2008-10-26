@@ -186,7 +186,7 @@ class TemplateParser {
 		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
 		$currentDynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
 		
-		$state->getNodeFromStack()->addSubNode($currentDynamicNode);
+		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
 		if (!$selfclosing) {
 			$state->pushNodeToStack($currentDynamicNode);
@@ -244,7 +244,7 @@ class TemplateParser {
 	 */
 	protected function handler_objectAccessor(F3::Beer3::ParsingState $state, $objectAccessorString) {
 		$node = $this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', $objectAccessorString);
-		$state->getNodeFromStack()->addSubNode($node);
+		$state->getNodeFromStack()->addChildNode($node);
 	}
 	
 	/**
@@ -339,7 +339,7 @@ class TemplateParser {
 	 */
 	protected function handler_text(F3::Beer3::ParsingState $state, $text) {
 		$node = $this->componentFactory->getComponent('F3::Beer3::TextNode', $text);
-		$state->getNodeFromStack()->addSubNode($node);	
+		$state->getNodeFromStack()->addChildNode($node);	
 	}
 }
 

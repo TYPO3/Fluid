@@ -47,7 +47,7 @@ class DefaultViewHelper {
 		$out = '';
 		foreach ($arguments['each'] as $singleElement) {
 			$node->addToContext($arguments['as'], $singleElement);
-			$out .= $node->renderSubtree();
+			$out .= $node->renderChildNodes();
 			$node->removeFromContext($arguments['as']);
 		}
 		return $out;
