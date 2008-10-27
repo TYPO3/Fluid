@@ -29,8 +29,8 @@ namespace F3::Beer3;
 class TemplateParser {
 	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3::(?:\w+|::)+)\s*}/m';
 	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\s*\/?>)/';
-	const SCAN_PATTERN_TEMPLATE_DYNAMICTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
-	const SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+	const SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
+	const SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 	
 	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/(\\\\?{[^}]+})/';
@@ -140,8 +140,8 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildMainObjectTree($splittedTemplate) {
-		$regularExpression_dynamicTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_DYNAMICTAG);
-		$regularExpression_closingDynamicTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG);
+		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
+		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 		
 		$state = $this->componentFactory->getComponent('F3::Beer3::ParsingState');
 		$rootNode = $this->componentFactory->getComponent('F3::Beer3::RootNode');
@@ -149,18 +149,18 @@ class TemplateParser {
 		$state->pushNodeToStack($rootNode);
 		
 		foreach ($splittedTemplate as $templateElement) {
-			if (preg_match($regularExpression_dynamicTag, $templateElement, $matchedVariables) > 0) {
+			if (preg_match($regularExpression_viewHelperTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
 				$selfclosing = $matchedVariables['Selfclosing'] === '' ? FALSE : TRUE;
 				$arguments = $matchedVariables['Attributes'];
 
-				$this->handler_openingDynamicTag($state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
-			} elseif (preg_match($regularExpression_closingDynamicTag, $templateElement, $matchedVariables) > 0) {
+				$this->handler_openingViewHelperTag($state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
+			} elseif (preg_match($regularExpression_closingViewHelperTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
 				
-				$this->handler_closingDynamicTag($state, $namespaceIdentifier, $methodIdentifier);
+				$this->handler_closingViewHelperTag($state, $namespaceIdentifier, $methodIdentifier);
 			} else {
 				$this->handler_textAndShorthandSyntax($state, $templateElement);
 			}
@@ -178,13 +178,14 @@ class TemplateParser {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_openingDynamicTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
+	protected function handler_openingViewHelperTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new F3::Beer3::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
+		
 		$argumentsObjectTree = $this->parseArguments($arguments);
 		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
-		$currentDynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
+		$currentDynamicNode = $this->componentFactory->getComponent('F3::Beer3::ViewHelperNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
 		
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
@@ -224,12 +225,12 @@ class TemplateParser {
 	 * @param unknown_type $namespaceIdentifier
 	 * @param unknown_type $methodIdentifier
 	 */
-	protected function handler_closingDynamicTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
+	protected function handler_closingViewHelperTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new F3::Beer3::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
 		}
 		$lastStackElement = $state->popNodeFromStack();
-		if (!($lastStackElement instanceof F3::Beer3::DynamicNode)) {
+		if (!($lastStackElement instanceof F3::Beer3::ViewHelperNode)) {
 			throw new F3::Beer3::ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
 		if ($lastStackElement->getViewHelperName() != $methodIdentifier || $lastStackElement->getViewHelperNamespace() != $this->namespaces[$namespaceIdentifier]) {

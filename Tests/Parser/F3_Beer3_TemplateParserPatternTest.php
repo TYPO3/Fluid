@@ -76,7 +76,7 @@ class Test extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_DYNAMICTAG() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SCAN_PATTERN_TEMPLATE_DYNAMICTAG, array('f3'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f3'));
 		$source = '<f3:crop attribute="Hallo">';
 		$expected = array (
 			0 => '<f3:crop attribute="Hallo">',
@@ -143,7 +143,7 @@ class Test extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_CLOSINGDYNAMICTAG() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SCAN_PATTERN_TEMPLATE_CLOSINGDYNAMICTAG, array('f3'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(F3::Beer3::TemplateParser::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f3'));
 		$this->assertEquals(preg_match($pattern, '</f3:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
 		$this->assertEquals(preg_match($pattern, '</f3:bla.a    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
 		$this->assertEquals(preg_match($pattern, '</t3:bla>'), 0, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does match match a tag it should not match.');

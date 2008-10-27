@@ -84,7 +84,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		
 		$rootNode = $this->componentFactory->getComponent('F3::Beer3::RootNode');
 		$rootNode->addChildNode($this->componentFactory->getComponent('F3::Beer3::TextNode',"\na"));
-		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'base', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'baseMethod'), array());
+		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::ViewHelperNode', 'F3::Beer3::ViewHelpers', 'base', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'baseMethod'), array());
 		$rootNode->addChildNode($dynamicNode);
 		$rootNode->addChildNode($this->componentFactory->getComponent('F3::Beer3::TextNode', 'b'));
 		
@@ -102,10 +102,10 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		
 		$rootNode = $this->componentFactory->getComponent('F3::Beer3::RootNode');
 		$rootNode->addChildNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "\n"));
-		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'base', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'baseMethod'), array());
+		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::ViewHelperNode', 'F3::Beer3::ViewHelpers', 'base', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'baseMethod'), array());
 		$dynamicNode->addChildNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "\nHallo\n"));
 		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'base', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'baseMethod'), array());
+		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::ViewHelperNode', 'F3::Beer3::ViewHelpers', 'base', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'baseMethod'), array());
 		$dynamicNode->addChildNode($this->componentFactory->getComponent('F3::Beer3::TextNode', "Second"));
 		$rootNode->addChildNode($dynamicNode);
 		
@@ -166,7 +166,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		);
 		$arguments['each']->addChildNode($this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', 'posts'));
 		$arguments['as']->addChildNode($this->componentFactory->getComponent('F3::Beer3::TextNode', 'post'));
-		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::DynamicNode', 'F3::Beer3::ViewHelpers', 'default.for', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'forMethod'), $arguments);
+		$dynamicNode = $this->componentFactory->getComponent('F3::Beer3::ViewHelperNode', 'F3::Beer3::ViewHelpers', 'default.for', array($this->componentFactory->getComponent('F3::Beer3::ViewHelpers::DefaultViewHelper'), 'forMethod'), $arguments);
 		$rootNode->addChildNode($dynamicNode);
 		$dynamicNode->addChildNode($this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', 'post'));
 		

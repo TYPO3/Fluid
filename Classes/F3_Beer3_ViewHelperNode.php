@@ -28,7 +28,7 @@ namespace F3::Beer3;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class DynamicNode extends F3::Beer3::AbstractNode {
+class ViewHelperNode extends F3::Beer3::AbstractNode {
 	
 	/**
 	 * Namespace of view helper
