@@ -188,9 +188,31 @@ class Test extends F3::Testing::BaseTestCase {
 		$this->assertEquals(preg_match($pattern, '{object.recursive}'), 1, 'Object accessor not identified if there is a dot inside!');
 		$this->assertEquals(preg_match($pattern, '{object-with-dash.recursive_value}'), 1, 'Object accessor not identified if there is a _ or - inside!');
 		$this->assertEquals(preg_match($pattern, '\{object}'), 0, 'Object accessor identified, but it was escaped!');
+		$this->assertEquals(preg_match($pattern, '{dash:value}'), 0, 'Object accessor identified, but was array!');
 		$this->assertEquals(preg_match($pattern, '{}'), 0, 'Object accessor identified, but it was empty!');
 	}
 	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
+		$pattern = F3::Beer3::TemplateParser::SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
+		$this->assertEquals(preg_match($pattern, '{a:b}'), 1, 'Array syntax not identified!');
+		$this->assertEquals(preg_match($pattern, '\{a:b}'), 0, 'Escaped Array syntax identified!');
+		$this->assertEquals(preg_match($pattern, '{a:b, c :   d}'), 1, 'Array syntax not identified in case there are multiple properties!');
+		$this->assertEquals(preg_match($pattern, '{a : 123}'), 1, 'Array syntax not identified when a number is passed as argument!');
+		$this->assertEquals(preg_match($pattern, '{a:"String"}'), 1, 'Array syntax not identified in case of a double quoted string!');
+		$this->assertEquals(preg_match($pattern, '{a:\'String\'}'), 1, 'Array syntax not identified in case of a single quoted string!');
+		
+		$exprected = '{a:{bla:{x:z}, b: a}}';
+		preg_match($pattern, $expected, $match);
+		$this->assertEquals($match[0], $expected, 'If nested arrays appear, the string is not parsed correctly.');
+		
+		$expected = '{a:"{bla{{}"}';
+		preg_match($pattern, $expected, $match);
+		$this->assertEquals($match[0], $expected, 'If nested strings with {} inside appear, the string is not parsed correctly.');
+	}
 	
 	
 	/**

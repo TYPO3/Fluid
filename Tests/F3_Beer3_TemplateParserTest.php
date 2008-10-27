@@ -200,7 +200,21 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$context = new F3::Beer3::Context(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
-		$this->assertEquals($expected, $result, 'Fixture 08 was not parsed correctly.');
+		$this->assertEquals($expected, $result, 'Fixture 08 was not rendered correctly.');
+	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture09ReturnsCorrectlyRenderedResult() {
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
+		
+		$templateTree = $this->templateParser->parse($templateSource);
+		$context = new F3::Beer3::Context(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$result = $templateTree->render($context);
+		$expected = '0 hallo test 3 4 ';
+		$this->assertEquals($expected, $result, 'Fixture 09 was not rendered correctly. This is most likely due to problems in the array parser.');
 	}
 }
 

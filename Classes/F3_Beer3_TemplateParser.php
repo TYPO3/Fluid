@@ -33,20 +33,90 @@ class TemplateParser {
 	const SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 	
-	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/(\\\\?{[^}]+})/';
+	/**
+	 * Pattern which splits the shorthand syntax into different tokens
+	 * 
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/
+		(\\\\?                               # Optional backslash in front
+			{                                # Start of shorthand syntax
+				(?:                          # Shorthand syntax is either composed of...
+					[a-zA-Z0-9\-_:,.]        # Various characters
+					|"(?:\\\"|[^"])*"        # Double-quoted strings
+					|\'(?:\\\\\'|[^\'])*\'   # Single-quoted strings
+					|(?R)                    # Other shorthand syntaxes inside, albeit not in a quoted string
+					|\s+                     # Spaces
+				)+
+			}                                # End of shorthand syntax
+		)/x';
+	
+	/**
+	 * Pattern which detects the object accessor syntax:
+	 * {object.some.value}
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	const SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/(?:^|[^\\\\]+){(?P<Object>[a-zA-Z0-9\-_.]+)}/';
+	
+	/**
+	 * Pattern which detects the array/object syntax like in JavaScript, so it detects strings like:
+	 * {object: value, object2: {nested: array}, object3: "Some string"}
+	 * 
+	 * If the string is escaped with an \ in front, it is not detected.
+	 * 
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	const SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/
+		(?:^|[^\\\\]+)                                  # In case the { is prefixed with backslash, we do not match
+		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
+			{                                           # Each array needs to start with {
+				(?P<Array>                              # Start submatch
+					(?:
+						\s*[a-zA-Z0-9\-_]+              # The keys of the array
+						\s*:\s*                         # Key|Value delimiter :
+						(?:                             # Possible value options:
+							"(?:\\\"|[^"])*"            # Double qouoted string
+							|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
+							|[a-zA-Z0-9\-_.]+           # variable identifiers
+							|(?P>Recursion)             # Another sub-array
+						)                               # END possible value options
+						\s*,?                           # There might be a , to seperate different parts of the array
+					)*                                  # The above cycle is repeated for all array elements
+				)                                       # End array submatch
+			}                                           # Each array ends with }
+		)/x';
+	
+	/**
+	 * This pattern splits an array into its parts. It is quite similar to the pattern above.
+	 * 
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	const SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
+		(?:(?P<ArrayPart>                                             # Start submatch
+			(?P<Key>\s*[a-zA-Z0-9\-_]+)                               # The keys of the array
+			\s*:\s*                                                   # Key|Value delimiter :
+			(?:                                                       # Possible value options:
+				"(?P<DoubleQuotedString>(?:\\\"|[^"])*)"              # Double qouoted string
+				|\'(?P<SingleQuotedString>(?:\\\\\'|[^\'])*)\'        # Single quoted string
+				|(?P<VariableIdentifier>[a-zA-Z].[a-zA-Z0-9\-_.]*)    # variable identifiers have to start with a letter
+				|(?P<Number>[0-9.]+)                                  # Number
+				|{\s*(?P<Subarray>(?P>ArrayPart))\s*}\s*              # Another sub-array
+			)                                                         # END possible value options
+		)\s*)                                                         # End array part submatch
+	/x';
 	
 	/**
 	 * Namespace identifiers and their component name prefix (Associative array).
 	 * @var array
 	 */
 	protected $namespaces = array();
-	
+
 	/**
 	 * @var F3::FLOW3::Component::FactoryInterface
 	 */
 	protected $componentFactory;
-	
+
 	/**
 	 * Inject component factory
 	 *
@@ -136,7 +206,6 @@ class TemplateParser {
 	 *
 	 * @param array $splittedTemplate The splitted template, so that every tag with a namespace declaration is already a seperate array element.
 	 * @return TreeNode the main tree node.
-	 * @todo Handle return values?
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildMainObjectTree($splittedTemplate) {
@@ -168,9 +237,11 @@ class TemplateParser {
 		return $state->getRootNode();
 	}
 	
+	
 	/**
-	 * Handles an opening or self-closing dynamic tag.
+	 * Handles an opening or self-closing view helper tag.
 	 *
+	 * @param F3::Beer3::ParsingState $state Current parsing state
 	 * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
 	 * @param string $methodIdentifier Method identifier
 	 * @param string $arguments Arguments string, not yet parsed
@@ -194,6 +265,14 @@ class TemplateParser {
 		}
 	}
 	
+	/**
+	 * Resolve a view helper.
+	 *
+	 * @param string $namespaceIdentifier Namespace identifier for the view helper.
+	 * @param string $methodIdentifier Method identifier, might be hierarchical like "link.url"
+	 * @return array An Array where the first argument is the object to call the method on, and the second argument is the method name
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	protected function resolveViewHelper($namespaceIdentifier, $methodIdentifier) {
 		$explodedViewHelperName = explode('.', $methodIdentifier);
 		$methodName = '';
@@ -207,23 +286,30 @@ class TemplateParser {
 		}
 		$className .= 'ViewHelper';
 		$methodName .= 'Method';
+		
 		$name = $this->namespaces[$namespaceIdentifier] . '::' . $className;
+		
 		try {
 			$object = $this->componentFactory->getComponent($name);
 		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
-			throw new F3::Beer3::ÜarsingException('View helper ' . $name . ' does not exist.', 1224532429);
+			throw new F3::Beer3::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
+		
 		if (!method_exists($object, $methodName)) {
 			throw new F3::Beer3::ParsingException('Method ' . $methodName . ' in view helper ' . $name . ' does not exist.', 1224532421);
 		}
+		
 		return array($object, $methodName);
 	}
 	
 	/**
-	 * Handles a closing dynamic tag.
+	 * Handles a closing view helper tag
 	 *
-	 * @param unknown_type $namespaceIdentifier
-	 * @param unknown_type $methodIdentifier
+	 * @param F3::Beer3::ParsingState $state The current parsing state
+	 * @param string $namespaceIdentifier Namespace identifier for the closing tag.
+	 * @param string $methodIdentifier Method identifier.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_closingViewHelperTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
@@ -239,9 +325,13 @@ class TemplateParser {
 	}
 	
 	/**
-	 * Handles the appearance of an object accessor. Creates a new instance of F3::Beer3::ObjectAccessorNode
+	 * Handles the appearance of an object accessor (like {posts.author.email}).
+	 * Creates a new instance of F3::Beer3::ObjectAccessorNode.
 	 *
-	 * @param string $objectAccessorString
+	 * @param F3::Beer3::ParsingState $state The current parsing state
+	 * @param string $objectAccessorString String which identifies which objects to fetch
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_objectAccessor(F3::Beer3::ParsingState $state, $objectAccessorString) {
 		$node = $this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', $objectAccessorString);
@@ -251,10 +341,10 @@ class TemplateParser {
 	/**
 	 * Parse arguments of a given tag, and build up the Arguments Object Tree for each argument.
 	 * Returns an associative array, where the key is the name of the argument,
-	 * and the value is either an array of Argument Object Trees (for parameter-lists), or a single Argument Object Tree.
+	 * and the value is a single Argument Object Tree.
 	 *
-	 * @param string $argumentsString All arguments
-	 * @return array An associative array of objects, where the key is 
+	 * @param string $argumentsString All arguments as string
+	 * @return array An associative array of objects, where the key is the argument name.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseArguments($argumentsString) {
@@ -263,34 +353,30 @@ class TemplateParser {
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
 				$value = $this->unquoteArgumentString($singleMatch['ValueSingleQuoted'], $singleMatch['ValueDoubleQuoted']);
-				$argumentArray = explode(':', $argument);
-				if (count($argumentArray) > 1) {
-					$argumentsObjectTree[$argumentArray[0]][$argumentArray[1]] = $this->buildArgumentObjectTree($value);
-				} else {
-					$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
-				}
+				$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
 			}
 		}
 		return $argumentsObjectTree;
 	}
 	
 	/**
-	 * Build up an argument object tree for the string in $argumentsString
+	 * Build up an argument object tree for the string in $argumentString.
+	 * This builds up the tree for a single argument value.
 	 *
 	 * @param string $argumentsString
 	 * @return ArgumentObject the corresponding argument object tree.
-	 * @todo Refine doc comment and write method
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function buildArgumentObjectTree($argumentsString) {
-		$splittedArguments = $this->splitTemplateAtDynamicTags($argumentsString);
-		$rootNode = $this->buildMainObjectTree($splittedArguments);
+	protected function buildArgumentObjectTree($argumentString) {
+		$splittedArgument = $this->splitTemplateAtDynamicTags($argumentString);
+		$rootNode = $this->buildMainObjectTree($splittedArgument);
 		return $rootNode;
 	}
 	
 	/**
 	 * Removes escapings from a given argument string. Expects two string parameters, with one of them being empty.
-	 * The first parameter should be non-empty if the argument was quoted by single quotes, and the second parameter should be non-empty
-	 * if the argument was quoted by double quotes.
+	 * The first parameter should be non-empty if the argument was quoted by single quotes,
+	 * and the second parameter should be non-empty if the argument was quoted by double quotes.
 	 * 
 	 * This method is meant as a helper for regular expression results.
 	 *
@@ -313,20 +399,29 @@ class TemplateParser {
 	 *
 	 * @param string $regularExpression Regular expression template
 	 * @return string Regular expression ready to be used
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function prepareTemplateRegularExpression($regularExpression) {
 		return str_replace('NAMESPACE', implode('|', array_keys($this->namespaces)), $regularExpression);
 	}
 	
 	/**
-	 * Enter description here...
-	 *
+	 * Handler for everything which is not a ViewHelperNode.
+	 * 
+	 * This includes Text, array syntax, and object accessor syntax.
+	 * 
+	 * @param F3::Beer3::ParsingState $state Current parsing state
+	 * @param string $text Text to process
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_textAndShorthandSyntax(F3::Beer3::ParsingState $state, $text) {
 		$sections = preg_split(self::SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
 			if (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 				$this->handler_objectAccessor($state, $matchedVariables['Object']);
+			} elseif (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
+				$this->handler_array($state, $matchedVariables['Array']);
 			} else {
 				$this->handler_text($state, $section);
 			}
@@ -334,9 +429,60 @@ class TemplateParser {
 	}
 	
 	/**
+	 * Handler for array syntax. This creates the array object recursively and adds it to the current node.
+	 * 
+	 * @param F3::Beer3::ParsingState $state The current parsing state
+	 * @param string $arrayText The array as string.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function handler_array(F3::Beer3::ParsingState $state, $arrayText) {
+		$node = $this->handler_array_recursively($arrayText);
+		$state->getNodeFromStack()->addChildNode($node);
+	}
+	
+	/**
+	 * Recursive function which takes the string representation of an array and builds an object tree from it.
+	 * 
+	 * Deals with the following value types:
+	 * - Numbers (Integers and Floats)
+	 * - Strings
+	 * - Variables
+	 * - sub-arrays
+	 * 
+	 * @param string $arrayText Array text
+	 * @return F3::Beer3::ArrayNode the array node built up
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function handler_array_recursively($arrayText) {
+		if (preg_match_all(self::SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER) > 0) {
+			$arrayToBuild = array();
+			foreach ($matches as $singleMatch) {
+				$arrayKey = $singleMatch['Key'];
+				if (!empty($singleMatch['VariableIdentifier'])) {
+					$arrayToBuild[$arrayKey] = $this->componentFactory->getComponent('F3::Beer3::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
+				} elseif (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0') {
+					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
+				} elseif (!empty($singleMatch['DoubleQuotedString']) || !empty($singleMatch['SingleQuotedString'])) {
+					$arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
+				} elseif (!empty($singleMatch['Subarray'])) {
+					$arrayToBuild[$arrayKey] = $this->handler_array_recursively($singleMatch['Subarray']);
+				} else {
+					throw new F3::Beer3::ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
+				}
+			}
+			return $this->componentFactory->getComponent('F3::Beer3::ArrayNode', $arrayToBuild);
+		} else {
+			throw new F3::Beer3::ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
+		}
+	}
+	
+	/**
 	 * Text node handler
 	 *
 	 * @param string $text
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_text(F3::Beer3::ParsingState $state, $text) {
 		$node = $this->componentFactory->getComponent('F3::Beer3::TextNode', $text);
