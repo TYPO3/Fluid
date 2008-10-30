@@ -41,6 +41,7 @@ class ArrayNode extends F3::Beer3::AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($internalArray) {
+		//var_dump("Internal array", $internalArray);
 		$this->internalArray = $internalArray;
 	}
 	

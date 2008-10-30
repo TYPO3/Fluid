@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>Introduction</title>
+
+  <para>Beer3 is a next-generation templating engine which was engineered with
+  several goals in mind: </para>
+
+  <section>
+    <title>What does it do?</title>
+
+    <para>Overview; What does it do? What problem is solved? Who is interested
+    in this? Brief technical insight. Basically everything people need to know
+    if they should go on with this package.</para>
+  </section>
+
+  <section>
+    <title>Screenshots</title>
+
+    <para>Screenshots are very much welcome for a visual impression.</para>
+  </section>
+</section>

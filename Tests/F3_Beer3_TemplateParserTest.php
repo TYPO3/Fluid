@@ -211,10 +211,38 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
-		$context = new F3::Beer3::Context(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$context = new F3::Beer3::Context(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
 		$result = $templateTree->render($context);
 		$expected = '0 hallo test 3 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 09 was not rendered correctly. This is most likely due to problems in the array parser.');
+	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture10ReturnsCorrectlyRenderedResult() {
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
+		
+		$templateTree = $this->templateParser->parse($templateSource);
+		$context = new F3::Beer3::Context(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$result = $templateTree->render($context);
+		$expected = '0 1 2 3 4 5 ';
+		$this->assertEquals($expected, $result, 'Fixture 10 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
+	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture11ReturnsCorrectlyRenderedResult() {
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
+		
+		$templateTree = $this->templateParser->parse($templateSource);
+		$context = new F3::Beer3::Context(array());
+		$result = $templateTree->render($context);
+		$expected = '0 2 4 ';
+		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
 	}
 }
 

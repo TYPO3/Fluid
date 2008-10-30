@@ -93,17 +93,17 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
-		(?:(?P<ArrayPart>                                             # Start submatch
-			(?P<Key>\s*[a-zA-Z0-9\-_]+)                               # The keys of the array
+		(?P<ArrayPart>                                             # Start submatch
+			(?P<Key>[a-zA-Z0-9\-_]+)                               # The keys of the array
 			\s*:\s*                                                   # Key|Value delimiter :
 			(?:                                                       # Possible value options:
 				"(?P<DoubleQuotedString>(?:\\\"|[^"])*)"              # Double qouoted string
 				|\'(?P<SingleQuotedString>(?:\\\\\'|[^\'])*)\'        # Single quoted string
-				|(?P<VariableIdentifier>[a-zA-Z].[a-zA-Z0-9\-_.]*)    # variable identifiers have to start with a letter
+				|(?P<VariableIdentifier>[a-zA-Z][a-zA-Z0-9\-_.]*)    # variable identifiers have to start with a letter
 				|(?P<Number>[0-9.]+)                                  # Number
-				|{\s*(?P<Subarray>(?P>ArrayPart))\s*}\s*              # Another sub-array
+				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*}              # Another sub-array
 			)                                                         # END possible value options
-		)\s*)                                                         # End array part submatch
+		)                                                          # End array part submatch
 	/x';
 	
 	/**

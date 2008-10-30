@@ -214,6 +214,50 @@ class Test extends F3::Testing::BaseTestCase {
 		$this->assertEquals($match[0], $expected, 'If nested strings with {} inside appear, the string is not parsed correctly.');
 	}
 	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS() {
+		$pattern = F3::Beer3::TemplateParser::SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
+		
+		$source = '{a: b, e: {c:d, e:f}}';
+		preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
+		
+		$expected = array(
+			0 => array(
+				0 => 'a: b',
+				'ArrayPart' => 'a: b',
+				1 => 'a: b',
+				'Key' => 'a',
+      			2 => 'a',
+      			'DoubleQuotedString' => '',
+      			3 => '',
+				'SingleQuotedString' => '',
+      			4 => '',
+      			'VariableIdentifier' => 'b',
+      			5 => 'b'
+			),
+			1 => array(
+				0 => 'e: {c:d, e:f}',
+				'ArrayPart' => 'e: {c:d, e:f}',
+				1 => 'e: {c:d, e:f}',
+				'Key' => 'e',
+      			2 => 'e',
+      			'DoubleQuotedString' => '',
+      			3 => '',
+				'SingleQuotedString' => '',
+      			4 => '',
+      			'VariableIdentifier' => '',
+      			5 => '',
+      			'Number' => '',
+      			6 => '',
+      			'Subarray' => 'c:d, e:f',
+      			7 => 'c:d, e:f'
+			)
+		);
+		$this->assertEquals($matches, $expected, 'The regular expression splitting the array apart does not work!');
+	}
 	
 	/**
 	 * Helper method which replaces NAMESPACE in the regular expression with the real namespace used.

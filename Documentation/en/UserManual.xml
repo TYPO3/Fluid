@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section version="5.0" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xhtml="http://www.w3.org/1999/xhtml"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:ns="http://docbook.org/ns/docbook"
+         xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+  <title>Lorem ipsum</title>
+  <para>
+  	<itemizedlist>
+      <listitem>
+        <para>Documentation of how to use the package, how it works, how to
+        apply it if it's a website plugin. A user manual.</para>
+      </listitem>
+      <listitem>
+        <para>Examples: For the "News" plugin this would be a manual showing
+        how to create the news-items, explaining the options etc.</para>
+      </listitem>
+      <listitem>
+        <para>Target group: Users, Administrators or Developers in that
+        priority. Depends on the package.</para>
+      </listitem>
+    </itemizedlist>
+  </para>
+</section>
