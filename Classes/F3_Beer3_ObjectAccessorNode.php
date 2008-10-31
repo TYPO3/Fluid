@@ -69,21 +69,30 @@ class ObjectAccessorNode extends F3::Beer3::AbstractNode {
 		
 		if (count($objectPathParts) > 0) {
 			foreach ($objectPathParts as $currentObjectPath) {
-				$getterMethodName = 'get' . F3::PHP6::Functions::ucfirst($currentObjectPath);
-				if (method_exists($currentObject, $getterMethodName)) {
-					$currentObject = call_user_func(array($currentObject, $getterMethodName));
-					continue;
-				}
-				
-				try {
-					$reflectionProperty = new ReflectionProperty($currentObject, $currentObjectPath);
-				} catch(ReflectionException $e) {
-					throw new F3::Beer3::RuntimeException($e->getMessage(), 1224611407);
-				}
-				if ($reflectionProperty->isPublic()) {
-					$currentObject = $reflectionProperty->getValue($currentObject);
-				} else {
-					throw new F3::Beer3::RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
+				if (is_object($currentObject)) {
+					$getterMethodName = 'get' . F3::PHP6::Functions::ucfirst($currentObjectPath);
+					if (method_exists($currentObject, $getterMethodName)) {
+						$currentObject = call_user_func(array($currentObject, $getterMethodName));
+						continue;
+					}
+					
+					try {
+						$reflectionProperty = new ReflectionProperty($currentObject, $currentObjectPath);
+					} catch(ReflectionException $e) {
+						throw new F3::Beer3::RuntimeException($e->getMessage(), 1224611407);
+					}
+					if ($reflectionProperty->isPublic()) {
+						$currentObject = $reflectionProperty->getValue($currentObject);
+						continue;
+					} else {
+						throw new F3::Beer3::RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
+					}
+				} elseif (is_array($currentObject)) {
+					if (key_exists($currentObjectPath, $currentObject)) {
+						$currentObject = $currentObject[$currentObjectPath];
+					} else {
+						throw new F3::Beer3::RuntimeException('Tried to read key "' . $currentObjectPath . '" from associative array, but did not find it.', 1225393852);
+					}
 				}
 			}
 		}

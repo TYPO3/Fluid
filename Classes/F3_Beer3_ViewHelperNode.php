@@ -82,19 +82,23 @@ class ViewHelperNode extends F3::Beer3::AbstractNode {
 		return $this->viewHelperName;
 	}
 	
+	/**
+	 * Call the actual view helper associated with this object.
+	 * 
+	 * Afterwards, checks that the view helper did not leave a variable lying around.
+	 * 
+	 * @param F3::Beer3::Context $context The context in which the variables are stored
+	 * @return object evaluated node after the view helper has been called.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function evaluate(F3::Beer3::Context $context) {
 		$this->context = $context;
 		$contextVariables = $this->context->getAllIdentifiers();
 		$evaluatedArguments = array();
 		foreach ($this->arguments as $argumentName => $argumentValue) {
-			if (is_array($argumentValue)) {
-				
-			} else {
-				$evaluatedArguments[$argumentName] = $argumentValue->evaluate($context);
-			}
+			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($context);
 		}
 		$out = call_user_func_array($this->objectToCall, array($this, $evaluatedArguments));
-		
 		
 		if ($contextVariables != $this->context->getAllIdentifiers()) {
 			$endContextVariables = $this->context->getAllIdentifiers();

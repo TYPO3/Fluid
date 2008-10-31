@@ -35,10 +35,24 @@ class TextNode extends F3::Beer3::AbstractNode {
 	 */
 	protected $text;
 	
+	/**
+	 * Constructor.
+	 * 
+	 * @param string $text text to store in this textNode
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function __construct($text) {
 		if (!is_string($text)) throw new F3::Beer3::ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		$this->text = $text;
 	}
+	
+	/**
+	 * Return the text
+	 * 
+	 * @param F3::Beer3::Context $context the context where all variables are stored in
+	 * @return string the text stored in this node.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function evaluate(F3::Beer3::Context $context) {
 		return $this->text;
 	}

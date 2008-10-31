@@ -30,6 +30,9 @@ namespace F3::Beer3::ViewHelpers;
  */
 class DefaultViewHelperTest extends F3::Testing::BaseTestCase {
 
+	/**
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function setUp() {
 		$this->viewHelper = new F3::Beer3::ViewHelpers::DefaultViewHelper();
 		$this->nodeMock = $this->getMock('F3::Beer3::NodeInterface');
