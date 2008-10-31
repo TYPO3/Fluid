@@ -62,7 +62,7 @@ class ObjectAccessorNode extends F3::Beer3::AbstractNode {
 	 * @return object The evaluated object, can be a string...
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Context $context) {
+	public function evaluate(F3::Beer3::VariableContainer $context) {
 		$objectPathParts = explode('.', $this->objectPath);
 		$contextVariableName = array_shift($objectPathParts);
 		$currentObject = $context->get($contextVariableName);

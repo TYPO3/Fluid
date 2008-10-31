@@ -101,21 +101,21 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	/**
 	 * Renders the node.
 	 * 
-	 * @param F3::Beer3::Context context to be used for the rendering
+	 * @param F3::Beer3::VariableContainer context to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render(F3::Beer3::Context $context) {
+	public function render(F3::Beer3::VariableContainer $context) {
 		return (string)$this->evaluate($context);
 	}
 	
 	/**
 	 * Evaluates the node.
-	 * @param F3::Beer3::Context context to be used for the evaluation
+	 * @param F3::Beer3::VariableContainer context to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	abstract public function evaluate(F3::Beer3::Context $context);
+	abstract public function evaluate(F3::Beer3::VariableContainer $context);
 }
 
 

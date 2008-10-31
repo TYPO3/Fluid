@@ -20,14 +20,14 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * Context which stores template variables.
+ * VariableContainer which stores template variables.
  *
  * @package Beer3
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class Context {
+class VariableContainer {
 	/**
 	 * Objects stored in context
 	 * @var array

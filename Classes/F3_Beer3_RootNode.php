@@ -32,11 +32,11 @@ class RootNode extends F3::Beer3::AbstractNode {
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 * 
-	 * @param F3::Beer3::Context $context Context to be used
+	 * @param F3::Beer3::VariableContainer $context Context to be used
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Context $context) {
+	public function evaluate(F3::Beer3::VariableContainer $context) {
 		$this->context = $context;
 		$text = $this->evaluateChildNodes();
 		return $text;

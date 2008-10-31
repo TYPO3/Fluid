@@ -50,7 +50,7 @@ class ViewHelperNode extends F3::Beer3::AbstractNode {
 	
 	/**
 	 * Context storing the currently available variables.
-	 * @var F3::Beer3::Context
+	 * @var F3::Beer3::VariableContainer
 	 */
 	protected $context;
 	
@@ -87,11 +87,11 @@ class ViewHelperNode extends F3::Beer3::AbstractNode {
 	 * 
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 * 
-	 * @param F3::Beer3::Context $context The context in which the variables are stored
+	 * @param F3::Beer3::VariableContainer $context The context in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Context $context) {
+	public function evaluate(F3::Beer3::VariableContainer $context) {
 		$this->context = $context;
 		$contextVariables = $this->context->getAllIdentifiers();
 		$evaluatedArguments = array();

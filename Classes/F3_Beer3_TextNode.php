@@ -49,11 +49,11 @@ class TextNode extends F3::Beer3::AbstractNode {
 	/**
 	 * Return the text
 	 * 
-	 * @param F3::Beer3::Context $context the context where all variables are stored in
+	 * @param F3::Beer3::VariableContainer $context the context where all variables are stored in
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Context $context) {
+	public function evaluate(F3::Beer3::VariableContainer $context) {
 		return $this->text;
 	}
 }
