@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,44 +15,39 @@ namespace F3::Beer3::ViewHelpers;
  * Public License for more details.                                       *
  *                                                                        */
 
+require_once(__DIR__ . '/Fixtures/F3_Beer3_TestViewHelper.php');
+
 /**
  * @package Beer3
- * @subpackage ViewHelpers
+ * @subpackage Tests
  * @version $Id:$
  */
 /**
- * Default view helper
+ * Testcase for AbstractViewHelper
  *
- * @package Beer3
- * @subpackage ViewHelpers
+ * @package
+ * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @viewhelper
  */
-class DefaultViewHelper {
-	public function baseMethod() {}
-	
+class AbstractViewHelperTest extends F3::Testing::BaseTestCase {
 	/**
-	 * This is some test
-	 *
-	 * @argument as string Name of the object.
-	 * @argument each object Thing to iterate over
-	 * @param NodeInterface $node
-	 * @param unknown_type $arguments
-	 * @return unknown
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function forMethod(F3::Beer3::NodeInterface $node, $arguments) {
-		if (!array_key_exists('as', $arguments)) throw new F3::Beer3::RuntimeException('Argument "as" not specified in "for"-Tag.', 1224590686);
+	public function registeredArgumentsAreReturnedCorrectly() {
+		$name = "This is a name";
+		$description = "Example desc";
+		$type = "string";
+		$isOptional = TRUE;
+		$expected = new F3::Beer3::ArgumentDefinition($name, $type, $description, $isOptional);
 		
-		$out = '';
-		foreach ($arguments['each'] as $singleElement) {
-			$node->addToContext($arguments['as'], $singleElement);
-			$out .= $node->renderChildNodes();
-			$node->removeFromContext($arguments['as']);
-		}
-		return $out;
+		$viewHelper = new F3::Beer3::TestViewHelper($name, $type, $description, $isOptional);
+		$viewHelper->initializeArguments();
+		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
 	}
 }
+
 
 
 ?>

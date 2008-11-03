@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,48 +21,25 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * Node interface - available to all ViewHelpers.
+ * [Enter description here]
  *
  * @package
  * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @scope prototype
  */
-interface NodeInterface {
-	/**
-	 * Render all child nodes and return the rendered result string.
-	 *
-	 * @return string Rendered representation
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function renderChildNodes();
-	
-	/**
-	 * Evaluate all child nodes and return the evaluated results.
-	 * 
-	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function evaluateChildNodes();
-	
-	/**
-	 * Add an object identified by $key to context
-	 *
-	 * @param string $key Object identifier
-	 * @param object $value Object itself
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function addToContext($key, $value);
-	
-	/**
-	 * Removes an object identified by $key from context
-	 *
-	 * @param string $key Object identifier to remove
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function removeFromContext($key);
+class LinkViewHelper extends F3::Beer3::AbstractViewHelper {
+	public function injectUriHelper(F3::FLOW3::MVC::View::Helper::URIHelper $uriHelper) {
+		$this->uriHelper = $uriHelper;
+	}
+
+	public function initializeArguments() {
+		
+	}
+	public function render() {
+		return $this->uriHelper->linkTo($this->renderChildren(), $this->arguments['action']);
+	}
 }
 
 

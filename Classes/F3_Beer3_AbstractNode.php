@@ -28,7 +28,7 @@ namespace F3::Beer3;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-abstract class AbstractNode implements F3::Beer3::NodeInterface {
+abstract class AbstractNode {
 	/**
 	 * List of Child Nodes.
 	 * @var array F3::Beer3::AbstractNode
@@ -65,37 +65,14 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	}
 	
 	/**
-	 * Add an object identified by $key to context
-	 *
-	 * @param string $key Object identifier
-	 * @param object $value Object itself
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function addToContext($key, $value) {
-		$this->context->add($key, $value);
-	}
-	
-	/**
-	 * Removes an object identified by $key from context
-	 *
-	 * @param string $key Object identifier to remove
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function removeFromContext($key) {
-		$this->context->remove($key);
-	}
-	
-	/**
 	 * Appends a subnode to this node.
 	 * 
 	 * @param F3::Beer3::AbstractNode $subnode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function addChildNode(F3::Beer3::AbstractNode $subnode) {
-		$this->childNodes[] = $subnode;
+	public function addChildNode(F3::Beer3::AbstractNode $subNode) {
+		$this->childNodes[] = $subNode;
 	}
 	
 	/**
@@ -105,8 +82,8 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render(F3::Beer3::VariableContainer $context) {
-		return (string)$this->evaluate($context);
+	public function render(F3::Beer3::VariableContainer $variableContainer) {
+		return (string)$this->evaluate($variableContainer);
 	}
 	
 	/**
@@ -115,7 +92,7 @@ abstract class AbstractNode implements F3::Beer3::NodeInterface {
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	abstract public function evaluate(F3::Beer3::VariableContainer $context);
+	abstract public function evaluate(F3::Beer3::VariableContainer $variableContainer);
 }
 
 

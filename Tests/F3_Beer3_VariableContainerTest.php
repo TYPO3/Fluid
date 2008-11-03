@@ -21,26 +21,26 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * Testcase for Context
+ * Testcase for VariableContainer
  *
  * @package Beer3
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ContextTest extends F3::Testing::BaseTestCase {
+class VariableContainerTest extends F3::Testing::BaseTestCase {
 
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->context = new F3::Beer3::Context();
+		$this->variableContainer = new F3::Beer3::VariableContainer();
 	}
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function tearDown() {
-		unset($this->context);
+		unset($this->variableContainer);
 	}
 	/**
 	 * @test
@@ -48,8 +48,8 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	 */
 	public function addedObjectsCanBeRetrievedAgain() {
 		$object = "StringObject";
-		$this->context->add("variable", $object);
-		$this->assertSame($this->context->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
+		$this->variableContainer->add("variable", $object);
+		$this->assertSame($this->variableContainer->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
 	}
 	
 	/**
@@ -58,7 +58,7 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function contextTakesOnlyArraysInConstructor() {
-		new F3::Beer3::Context("string");
+		new F3::Beer3::VariableContainer("string");
 	}
 	
 	/**
@@ -67,8 +67,8 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
-		$this->context->add('variable', 'string1');
-		$this->context->add('variable', 'string2');
+		$this->variableContainer->add('variable', 'string1');
+		$this->variableContainer->add('variable', 'string2');
 	}
 	
 	/**
@@ -77,7 +77,7 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
-		$this->context->get('nonexistent');
+		$this->variableContainer->get('nonexistent');
 	}
 	
 	/**
@@ -86,7 +86,7 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
-		$this->context->remove('nonexistent');
+		$this->variableContainer->remove('nonexistent');
 	}
 	
 	/**
@@ -94,10 +94,10 @@ class ContextTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deleteReallyDeletesObjects() {
-		$this->context->add('variable', 'string1');
-		$this->context->remove('variable');
+		$this->variableContainer->add('variable', 'string1');
+		$this->variableContainer->remove('variable');
 		try {
-			$this->context->get('variable');
+			$this->variableContainer->get('variable');
 		} catch (F3::Beer3::RuntimeException $e) {}
 	}
 }

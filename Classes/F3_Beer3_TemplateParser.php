@@ -278,15 +278,13 @@ class TemplateParser {
 		$methodName = '';
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
-			$methodName = $explodedViewHelperName[1];
-			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
+			// TODO $methodName = $explodedViewHelperName[0];
+			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[1]);
 		} else {
-			$methodName = $methodIdentifier;
-			$className = 'Default';
+			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
 		}
 		$className .= 'ViewHelper';
-		$methodName .= 'Method';
-		
+			
 		$name = $this->namespaces[$namespaceIdentifier] . '::' . $className;
 		
 		try {
@@ -295,11 +293,7 @@ class TemplateParser {
 			throw new F3::Beer3::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
 		
-		if (!method_exists($object, $methodName)) {
-			throw new F3::Beer3::ParsingException('Method ' . $methodName . ' in view helper ' . $name . ' does not exist.', 1224532421);
-		}
-		
-		return array($object, $methodName);
+		return $object;
 	}
 	
 	/**

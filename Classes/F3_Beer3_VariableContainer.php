@@ -66,7 +66,7 @@ class VariableContainer {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function get($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to get a variable which is not stored in the context!', 1224479370);
+		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		return $this->objects[$identifier];
 	}
 	
@@ -78,7 +78,7 @@ class VariableContainer {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to remove a variable which is not stored in the context!', 1224479372);
+		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
 		unset($this->objects[$identifier]);
 	}
 	

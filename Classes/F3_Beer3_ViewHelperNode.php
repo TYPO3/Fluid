@@ -55,15 +55,21 @@ class ViewHelperNode extends F3::Beer3::AbstractNode {
 	protected $context;
 	
 	/**
+	 * Associated view helper
+	 * @var F3::Beer3::AbstractViewHelper
+	 */
+	protected $viewHelper;
+	
+	/**
 	 * Constructor.
 	 * 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperNamespace, $viewHelperName, $objectToCall, $arguments) {
+	public function __construct($viewHelperNamespace, $viewHelperName, F3::Beer3::AbstractViewHelper $viewHelper, $arguments) {
 		$this->viewHelperNamespace = $viewHelperNamespace;
 		$this->viewHelperName = $viewHelperName;
 		$this->arguments = $arguments;
-		$this->objectToCall = $objectToCall;
+		$this->viewHelper = $viewHelper;
 	}
 
 	/**
@@ -93,15 +99,17 @@ class ViewHelperNode extends F3::Beer3::AbstractNode {
 	 */
 	public function evaluate(F3::Beer3::VariableContainer $context) {
 		$this->context = $context;
-		$contextVariables = $this->context->getAllIdentifiers();
+		$contextVariables = $context->getAllIdentifiers();
 		$evaluatedArguments = array();
 		foreach ($this->arguments as $argumentName => $argumentValue) {
 			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($context);
 		}
-		$out = call_user_func_array($this->objectToCall, array($this, $evaluatedArguments));
+		$this->viewHelper->prepareRendering(new F3::Beer3::Arguments($evaluatedArguments), $this, $context);
+		// TODO: Component manager!
+		$out = $this->viewHelper->render();
 		
-		if ($contextVariables != $this->context->getAllIdentifiers()) {
-			$endContextVariables = $this->context->getAllIdentifiers();
+		if ($contextVariables != $context->getAllIdentifiers()) {
+			$endContextVariables = $context->getAllIdentifiers();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 			
 			throw new F3::Beer3::RuntimeException('The following context variable has been changed after the view helper has been called: ' .implode(', ', $diff));
