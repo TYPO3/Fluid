@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,36 +15,38 @@ namespace F3::Beer3;
  * Public License for more details.                                       *
  *                                                                        */
 
-require_once(__DIR__ . '/Fixtures/F3_Beer3_TestViewHelper.php');
-
 /**
- * @package Beer3
- * @subpackage Tests
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Testcase for AbstractViewHelper
+ * Testcase for [insert classname here]
  *
  * @package
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class AbstractViewHelperTest extends F3::Testing::BaseTestCase {
+include_once(__DIR__ . '/../Fixtures/F3_Beer3_ChildNodeAccessFacetViewHelper.php');
+class ViewHelperNodeTest extends F3::Testing::BaseTestCase {
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function registeredArgumentsAreReturnedCorrectly() {
-		$name = "This is a name";
-		$description = "Example desc";
-		$type = "string";
-		$isOptional = TRUE;
-		$expected = new F3::Beer3::ArgumentDefinition($name, $type, $description, $isOptional);
+	public function childNodeAccessFacetWorksAsExpected() {
+		$childNode = new F3::Beer3::Core::SyntaxTree::TextNode("Hallo");
 		
-		$viewHelper = new F3::Beer3::TestViewHelper($name, $type, $description, $isOptional);
-		$viewHelper->initializeArguments();
-		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
+		$stubViewHelper = $this->getMock('F3::Beer3::ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render'));
+		$stubViewHelper->expects($this->once())
+		               ->method('setChildNodes')
+		               ->with($this->equalTo(array($childNode)));
+		               
+		$viewHelperNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode("f3", "test", $stubViewHelper, array());
+		$viewHelperNode->addChildNode($childNode);
+
+		$viewHelperNode->render(new F3::Beer3::Core::VariableContainer(array($childNode)));
 	}
 }
 

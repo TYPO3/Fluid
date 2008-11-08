@@ -27,7 +27,7 @@ namespace F3::Beer3;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class TestViewHelper extends F3::Beer3::AbstractViewHelper {
+class TestViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

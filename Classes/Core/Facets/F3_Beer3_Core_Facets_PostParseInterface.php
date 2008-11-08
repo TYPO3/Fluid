@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::Facets;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,39 +16,20 @@ namespace F3::Beer3;
  *                                                                        */
 
 /**
- * @package Beer3
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * An test view helper - needed to test "registerArgument".
+ * [Enter description here]
  *
- * @package Beer3
+ * @package
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class TestViewHelper extends F3::Beer3::AbstractViewHelper {
-	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function __construct($name, $type, $description, $isOptional) {
-		$this->name = $name;
-		$this->description = $description;
-		$this->type = $type;
-		$this->isOptional = $isOptional;
-	}
+interface PostParseInterface {
 	
-	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-		$this->registerArgument($this->name, $this->type, $this->description, $this->isOptional);
-	}
-	
-	public function render() {
-		
-	}
-
 }
 
 

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -20,18 +20,17 @@ namespace F3::Beer3::ViewHelpers;
  * @subpackage 
  * @version $Id:$
  */
+
 /**
- * Enter description here...
- * @scope prototype
+ * Test fixture for the child node access facet.
+ *
+ * @package
+ * @subpackage
+ * @version $Id:$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class BaseViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	
-	public function initializeArguments() {
-		
-	}
-	public function render() {
-		
-	}
+abstract class ChildNodeAccessFacetViewHelper extends F3::Beer3::Core::AbstractViewHelper implements F3::Beer3::Core::Facets::ChildNodeAccessInterface {
+
 }
 
 ?>

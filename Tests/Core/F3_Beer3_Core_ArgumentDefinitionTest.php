@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -17,40 +17,37 @@ namespace F3::Beer3::ViewHelpers;
 
 /**
  * @package Beer3
- * @subpackage ViewHelpers
+ * @subpackage Tests
  * @version $Id:$
  */
 /**
- * Default view helper
+ * Testcase for [insert classname here]
  *
- * @package Beer3
- * @subpackage ViewHelpers
+ * @package
+ * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class ForViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	public function initializeArguments() {
-		
-	}
+class ArgumentDefinitionTest extends F3::Testing::BaseTestCase {
+
 	/**
-	 * This is some test
-	 *
-	 * @argument as string Name of the object.
-	 * @argument each object Thing to iterate over
-	 * @param NodeInterface $node
-	 * @param unknown_type $arguments
-	 * @return unknown
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render() {
-		$out = '';
-		foreach ($this->arguments['each'] as $singleElement) {
-			$this->variableContainer->add($this->arguments['as'], $singleElement);
-			$out .= $this->renderChildren();
-			$this->variableContainer->remove($this->arguments['as']);
-		}
-		return $out;
+	public function objectStoresDataCorrectly() {
+		$name = "This is a name";
+		$description = "Example desc";
+		$type = "string";
+		$isOptional = TRUE;
+		$argumentDefinition = new F3::Beer3::Core::ArgumentDefinition($name, $type, $description, $isOptional);
+		
+		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
+		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
+		$this->assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
+		$this->assertEquals($argumentDefinition->isOptional(), $isOptional, 'Optional flag could not be retrieved correctly.');
 	}
 }
+
+
 
 ?>

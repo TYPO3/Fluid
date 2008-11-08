@@ -81,7 +81,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture01ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture01.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture01.html', FILE_TEXT);
 		
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\na"));
@@ -99,7 +99,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture02ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture02.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture02.html', FILE_TEXT);
 		
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\n"));
@@ -121,7 +121,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture03ThrowsExceptionBecauseWrongTagNesting() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture03.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture03.html', FILE_TEXT);
 		$this->templateParser->parse($templateSource);
 	}
 	
@@ -131,7 +131,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture04ThrowsExceptionBecauseClosingATagWhichWasNeverOpened() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture04.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture04.html', FILE_TEXT);
 		$this->templateParser->parse($templateSource);
 	}
 	
@@ -140,7 +140,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture05ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture05.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture05.html', FILE_TEXT);
 		
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\na"));
@@ -158,7 +158,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture06ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture06.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture06.html', FILE_TEXT);
 		
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$arguments = array(
@@ -181,7 +181,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture07ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::Core::VariableContainer(array('id' => 1));
@@ -195,7 +195,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture08ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
@@ -209,7 +209,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture09ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
@@ -223,7 +223,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture10ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
@@ -237,7 +237,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture11ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::Core::VariableContainer(array());

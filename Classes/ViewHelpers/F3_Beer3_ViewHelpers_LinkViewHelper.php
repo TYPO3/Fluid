@@ -29,7 +29,7 @@ namespace F3::Beer3::ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class LinkViewHelper extends F3::Beer3::AbstractViewHelper {
+class LinkViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	public function injectUriHelper(F3::FLOW3::MVC::View::Helper::URIHelper $uriHelper) {
 		$this->uriHelper = $uriHelper;
 	}

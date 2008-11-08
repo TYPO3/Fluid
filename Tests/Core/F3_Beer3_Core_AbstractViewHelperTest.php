@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,32 +15,39 @@ namespace F3::Beer3;
  * Public License for more details.                                       *
  *                                                                        */
 
+require_once(__DIR__ . '/Fixtures/F3_Beer3_TestViewHelper.php');
+
 /**
  * @package Beer3
  * @subpackage Tests
  * @version $Id:$
  */
 /**
- * Example class
+ * Testcase for AbstractViewHelper
  *
- * @package Beer3
+ * @package
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @author Sebastian Kurfürst <sebastian@typo3.org>
  */
-class SomeEmptyClass {
-	public $publicVariable = "Hallo";
-	protected $protectedVariable;
-	
-	public function __construct($protectedVariable) {
-		$this->protectedVariable = $protectedVariable;
-	}
-	
-	public function getSubproperty() {
-		return $this->protectedVariable;
+class AbstractViewHelperTest extends F3::Testing::BaseTestCase {
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function registeredArgumentsAreReturnedCorrectly() {
+		$name = "This is a name";
+		$description = "Example desc";
+		$type = "string";
+		$isOptional = TRUE;
+		$expected = new F3::Beer3::Core::ArgumentDefinition($name, $type, $description, $isOptional);
+		
+		$viewHelper = new F3::Beer3::TestViewHelper($name, $type, $description, $isOptional);
+		$viewHelper->initializeArguments();
+		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
 	}
 }
+
 
 
 ?>

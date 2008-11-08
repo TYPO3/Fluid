@@ -22,7 +22,7 @@ namespace F3::Beer3::View;
  */
 
 class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
-	protected $templatePath = '@packageResources/Template/@controller/@action.xhtml';
+	protected $templatePattern = '@packageResources/Template/@controller/@action.xhtml';
 	
 	/**
 	 * Template parser instance.
@@ -37,7 +37,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	}
 	
 	public function render() {
-		$templatePath = $this->templatePath;
+		$templatePath = $this->templatePattern;
 		$templatePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templatePath);
 		$templatePath = str_replace('@controller', $this->request->getControllerName(), $templatePath);
 		$templatePath = str_replace('@action', $this->request->getControllerActionName(), $templatePath);

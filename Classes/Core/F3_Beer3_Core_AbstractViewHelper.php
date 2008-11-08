@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -36,16 +36,16 @@ abstract class AbstractViewHelper {
 	private $argumentDefinitions = array();
 	
 	/**
+	 * Current view helper node
+	 * @var F3::Beer3::Core::SyntaxTree::ViewHelperNode
+	 */
+	private $viewHelperNode;
+	
+	/**
 	 * Arguments accessor
 	 * @var F3::Beer3::Arguments
 	 */
 	protected $arguments;
-	
-	/**
-	 * Current view helper node
-	 * @var F3::Beer3::ViewHelperNode
-	 */
-	protected $viewHelperNode;
 	
 	/**
 	 * Current variable container reference
@@ -53,6 +53,19 @@ abstract class AbstractViewHelper {
 	 */
 	protected $variableContainer;
 	
+	/**
+	 * Current component factory
+	 * @var F3::FLOW3::Component::FactoryInterface
+	 */
+	//protected $componentFactory;
+	
+	/**
+	 * Inject a component factory
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	/*public function injectComponentFactory(F3::FLOW3::Component::FactoryInterface $componentFactory) {
+		$this->componentFactory = $componentFactory;
+	}*/
 	/**
 	 * Register a new argument. Call this method from the implementing ViewHelper class inside the initializeArguments() method.
 	 *
@@ -65,7 +78,7 @@ abstract class AbstractViewHelper {
 	 */
 	protected function registerArgument($name, $type, $description, $isOptional = FALSE) {
 		// TODO -> use component manager here!!
-		$this->argumentDefinitions[] = new F3::Beer3::ArgumentDefinition($name, $type, $description, $isOptional);
+		$this->argumentDefinitions[] = new F3::Beer3::Core::ArgumentDefinition($name, $type, $description, $isOptional);
 		return $this;
 	}
 	
@@ -89,7 +102,7 @@ abstract class AbstractViewHelper {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function prepareRendering(F3::Beer3::Arguments $arguments, F3::Beer3::Core::SyntaxTree::ViewHelperNode $node, F3::Beer3::Core::VariableContainer $variableContainer) {
+	final public function prepareRendering(F3::Beer3::Core::ViewHelperArguments $arguments, F3::Beer3::Core::SyntaxTree::ViewHelperNode $node, F3::Beer3::Core::VariableContainer $variableContainer) {
 		$this->arguments = $arguments;
 		$this->viewHelperNode = $node;
 		$this->variableContainer = $variableContainer;

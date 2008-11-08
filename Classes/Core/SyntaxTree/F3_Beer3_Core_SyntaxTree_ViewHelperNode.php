@@ -65,7 +65,7 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperNamespace, $viewHelperName, F3::Beer3::AbstractViewHelper $viewHelper, $arguments) {
+	public function __construct($viewHelperNamespace, $viewHelperName, F3::Beer3::Core::AbstractViewHelper $viewHelper, $arguments) {
 		$this->viewHelperNamespace = $viewHelperNamespace;
 		$this->viewHelperName = $viewHelperName;
 		$this->arguments = $arguments;
@@ -91,6 +91,9 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
 	 * Call the actual view helper associated with this object.
 	 * 
+	 * If the view helper implements Facets::ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
+	 * on the view helper.
+	 * 
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 * 
 	 * @param F3::Beer3::VariableContainer $context The context in which the variables are stored
@@ -104,8 +107,13 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 		foreach ($this->arguments as $argumentName => $argumentValue) {
 			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($context);
 		}
-		$this->viewHelper->prepareRendering(new F3::Beer3::Arguments($evaluatedArguments), $this, $context);
+		$this->viewHelper->prepareRendering(new F3::Beer3::Core::ViewHelperArguments($evaluatedArguments), $this, $context);
 		// TODO: Component manager!
+		
+		if ($this->viewHelper instanceof F3::Beer3::Core::Facets::ChildNodeAccessInterface) {
+			$this->viewHelper->setChildNodes($this->childNodes);
+		}
+		
 		$out = $this->viewHelper->render();
 		
 		if ($contextVariables != $context->getAllIdentifiers()) {

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::Facets;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,38 +16,26 @@ namespace F3::Beer3;
  *                                                                        */
 
 /**
- * @package Beer3
- * @subpackage Tests
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Testcase for [insert classname here]
+ * [Enter description here]
  *
  * @package
- * @subpackage Tests
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ArgumentDefinitionTest extends F3::Testing::BaseTestCase {
-
+interface ChildNodeAccessInterface {
 	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * Enter description here...
+	 *
+	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode array $childNodes
 	 */
-	public function objectStoresDataCorrectly() {
-		$name = "This is a name";
-		$description = "Example desc";
-		$type = "string";
-		$isOptional = TRUE;
-		$argumentDefinition = new F3::Beer3::ArgumentDefinition($name, $type, $description, $isOptional);
-		
-		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
-		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
-		$this->assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
-		$this->assertEquals($argumentDefinition->isOptional(), $isOptional, 'Optional flag could not be retrieved correctly.');
-	}
+	public function setChildNodes($childNodes);
 }
-
 
 
 ?>
