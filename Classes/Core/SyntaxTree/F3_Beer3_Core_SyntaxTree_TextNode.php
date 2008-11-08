@@ -42,7 +42,7 @@ class TextNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($text) {
-		if (!is_string($text)) throw new F3::Beer3::ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+		if (!is_string($text)) throw new F3::Beer3::Core::ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		$this->text = $text;
 	}
 	
@@ -53,7 +53,7 @@ class TextNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::VariableContainer $context) {
+	public function evaluate(F3::Beer3::Core::VariableContainer $context) {
 		return $this->text;
 	}
 }

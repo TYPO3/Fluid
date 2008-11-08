@@ -37,12 +37,12 @@ class TextNodeTest extends F3::Testing::BaseTestCase {
 	public function renderReturnsSameStringAsGivenInConstructor() {
 		$string = 'I can work quite effectively in a train!';
 		$node = new F3::Beer3::Core::SyntaxTree::TextNode($string);
-		$this->assertEquals($node->render(new F3::Beer3::VariableContainer()), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+		$this->assertEquals($node->render(new F3::Beer3::Core::VariableContainer()), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
 	}
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::ParsingException
+	 * @expectedException F3::Beer3::Core::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function constructorThrowsExceptionIfNoStringGiven() {

@@ -32,7 +32,7 @@ class ParsingStateTest extends F3::Testing::BaseTestCase {
 
 	/**
 	 * Parsing state
-	 * @var F3::Beer3::ParsingState
+	 * @var F3::Beer3::Core::ParsingState
 	 */
 	protected $parsingState;
 	
@@ -55,7 +55,7 @@ class ParsingStateTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::ParsingException
+	 * @expectedException F3::Beer3::Core::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNodeOnlyAcceptsARootNode() {

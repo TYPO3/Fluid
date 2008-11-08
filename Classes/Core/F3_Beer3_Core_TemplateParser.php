@@ -135,7 +135,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function parse($templateString) {
-		if (!is_string($templateString)) throw new F3::Beer3::ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
+		if (!is_string($templateString)) throw new F3::Beer3::Core::ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
 		
 		$this->initialize();
 		
@@ -179,7 +179,7 @@ class TemplateParser {
 				$namespaceIdentifier = $matchedVariables[1][$index];
 				$fullyQualifiedNamespace = $matchedVariables[2][$index];
 				if (key_exists($namespaceIdentifier, $this->namespaces)) {
-					throw new F3::Beer3::ParsingException('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
+					throw new F3::Beer3::Core::ParsingException('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
 				}
 				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
 			}
@@ -241,7 +241,7 @@ class TemplateParser {
 	/**
 	 * Handles an opening or self-closing view helper tag.
 	 *
-	 * @param F3::Beer3::ParsingState $state Current parsing state
+	 * @param F3::Beer3::Core::ParsingState $state Current parsing state
 	 * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
 	 * @param string $methodIdentifier Method identifier
 	 * @param string $arguments Arguments string, not yet parsed
@@ -249,14 +249,14 @@ class TemplateParser {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_openingViewHelperTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
+	protected function handler_openingViewHelperTag(F3::Beer3::Core::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new F3::Beer3::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
+			throw new F3::Beer3::Core::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
 		
 		$argumentsObjectTree = $this->parseArguments($arguments);
 		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
-		$currentDynamicNode = $this->componentFactory->create('F3::Beer3::ViewHelperNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
+		$currentDynamicNode = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ViewHelperNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
 		
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
@@ -290,7 +290,7 @@ class TemplateParser {
 		try {
 			$object = $this->componentFactory->create($name);
 		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
-			throw new F3::Beer3::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
+			throw new F3::Beer3::Core::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
 		
 		return $object;
@@ -299,22 +299,22 @@ class TemplateParser {
 	/**
 	 * Handles a closing view helper tag
 	 *
-	 * @param F3::Beer3::ParsingState $state The current parsing state
+	 * @param F3::Beer3::Core::ParsingState $state The current parsing state
 	 * @param string $namespaceIdentifier Namespace identifier for the closing tag.
 	 * @param string $methodIdentifier Method identifier.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_closingViewHelperTag(F3::Beer3::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
+	protected function handler_closingViewHelperTag(F3::Beer3::Core::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new F3::Beer3::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
+			throw new F3::Beer3::Core::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
 		}
 		$lastStackElement = $state->popNodeFromStack();
-		if (!($lastStackElement instanceof F3::Beer3::ViewHelperNode)) {
-			throw new F3::Beer3::ParsingException('You closed a templating tag which you never opened!', 1224485838);
+		if (!($lastStackElement instanceof F3::Beer3::Core::SyntaxTree::ViewHelperNode)) {
+			throw new F3::Beer3::Core::ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
 		if ($lastStackElement->getViewHelperName() != $methodIdentifier || $lastStackElement->getViewHelperNamespace() != $this->namespaces[$namespaceIdentifier]) {
-			throw new F3::Beer3::ParsingException('Templating tags not properly nested.', 1224485398);
+			throw new F3::Beer3::Core::ParsingException('Templating tags not properly nested.', 1224485398);
 		}
 	}
 	
@@ -322,13 +322,13 @@ class TemplateParser {
 	 * Handles the appearance of an object accessor (like {posts.author.email}).
 	 * Creates a new instance of F3::Beer3::ObjectAccessorNode.
 	 *
-	 * @param F3::Beer3::ParsingState $state The current parsing state
+	 * @param F3::Beer3::Core::ParsingState $state The current parsing state
 	 * @param string $objectAccessorString String which identifies which objects to fetch
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_objectAccessor(F3::Beer3::ParsingState $state, $objectAccessorString) {
-		$node = $this->componentFactory->create('F3::Beer3::ObjectAccessorNode', $objectAccessorString);
+	protected function handler_objectAccessor(F3::Beer3::Core::ParsingState $state, $objectAccessorString) {
+		$node = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $objectAccessorString);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
 	
@@ -404,12 +404,12 @@ class TemplateParser {
 	 * 
 	 * This includes Text, array syntax, and object accessor syntax.
 	 * 
-	 * @param F3::Beer3::ParsingState $state Current parsing state
+	 * @param F3::Beer3::Core::ParsingState $state Current parsing state
 	 * @param string $text Text to process
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_textAndShorthandSyntax(F3::Beer3::ParsingState $state, $text) {
+	protected function handler_textAndShorthandSyntax(F3::Beer3::Core::ParsingState $state, $text) {
 		$sections = preg_split(self::SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
 			if (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
@@ -425,12 +425,12 @@ class TemplateParser {
 	/**
 	 * Handler for array syntax. This creates the array object recursively and adds it to the current node.
 	 * 
-	 * @param F3::Beer3::ParsingState $state The current parsing state
+	 * @param F3::Beer3::Core::ParsingState $state The current parsing state
 	 * @param string $arrayText The array as string.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_array(F3::Beer3::ParsingState $state, $arrayText) {
+	protected function handler_array(F3::Beer3::Core::ParsingState $state, $arrayText) {
 		$node = $this->handler_array_recursively($arrayText);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
@@ -454,7 +454,7 @@ class TemplateParser {
 			foreach ($matches as $singleMatch) {
 				$arrayKey = $singleMatch['Key'];
 				if (!empty($singleMatch['VariableIdentifier'])) {
-					$arrayToBuild[$arrayKey] = $this->componentFactory->create('F3::Beer3::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
+					$arrayToBuild[$arrayKey] = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
 				} elseif (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0') {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
 				} elseif (!empty($singleMatch['DoubleQuotedString']) || !empty($singleMatch['SingleQuotedString'])) {
@@ -462,12 +462,12 @@ class TemplateParser {
 				} elseif (!empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->handler_array_recursively($singleMatch['Subarray']);
 				} else {
-					throw new F3::Beer3::ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
+					throw new F3::Beer3::Core::ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 				}
 			}
-			return $this->componentFactory->create('F3::Beer3::ArrayNode', $arrayToBuild);
+			return $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ArrayNode', $arrayToBuild);
 		} else {
-			throw new F3::Beer3::ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
+			throw new F3::Beer3::Core::ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 		}
 	}
 	
@@ -478,8 +478,8 @@ class TemplateParser {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_text(F3::Beer3::ParsingState $state, $text) {
-		$node = $this->componentFactory->create('F3::Beer3::TextNode', $text);
+	protected function handler_text(F3::Beer3::Core::ParsingState $state, $text) {
+		$node = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::TextNode', $text);
 		$state->getNodeFromStack()->addChildNode($node);	
 	}
 }

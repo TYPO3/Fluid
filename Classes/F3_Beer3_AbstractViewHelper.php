@@ -89,7 +89,7 @@ abstract class AbstractViewHelper {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function prepareRendering(F3::Beer3::Arguments $arguments, F3::Beer3::ViewHelperNode $node, F3::Beer3::VariableContainer $variableContainer) {
+	public function prepareRendering(F3::Beer3::Arguments $arguments, F3::Beer3::Core::SyntaxTree::ViewHelperNode $node, F3::Beer3::Core::VariableContainer $variableContainer) {
 		$this->arguments = $arguments;
 		$this->viewHelperNode = $node;
 		$this->variableContainer = $variableContainer;

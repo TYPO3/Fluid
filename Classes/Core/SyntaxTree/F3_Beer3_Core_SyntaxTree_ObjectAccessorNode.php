@@ -62,7 +62,7 @@ class ObjectAccessorNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * @return object The evaluated object, can be a string...
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::VariableContainer $context) {
+	public function evaluate(F3::Beer3::Core::VariableContainer $context) {
 		$objectPathParts = explode('.', $this->objectPath);
 		$contextVariableName = array_shift($objectPathParts);
 		$currentObject = $context->get($contextVariableName);
@@ -79,19 +79,19 @@ class ObjectAccessorNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 					try {
 						$reflectionProperty = new ReflectionProperty($currentObject, $currentObjectPath);
 					} catch(ReflectionException $e) {
-						throw new F3::Beer3::RuntimeException($e->getMessage(), 1224611407);
+						throw new F3::Beer3::Core::RuntimeException($e->getMessage(), 1224611407);
 					}
 					if ($reflectionProperty->isPublic()) {
 						$currentObject = $reflectionProperty->getValue($currentObject);
 						continue;
 					} else {
-						throw new F3::Beer3::RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
+						throw new F3::Beer3::Core::RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
 					}
 				} elseif (is_array($currentObject)) {
 					if (key_exists($currentObjectPath, $currentObject)) {
 						$currentObject = $currentObject[$currentObjectPath];
 					} else {
-						throw new F3::Beer3::RuntimeException('Tried to read key "' . $currentObjectPath . '" from associative array, but did not find it.', 1225393852);
+						throw new F3::Beer3::Core::RuntimeException('Tried to read key "' . $currentObjectPath . '" from associative array, but did not find it.', 1225393852);
 					}
 				}
 			}

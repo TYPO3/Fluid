@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -20,15 +20,12 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * A "Beer3" Exception
+ * A Runtime Exception
  *
  * @package Beer3
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class Exception extends F3::FLOW3::Exception {
+class RuntimeException extends F3::Beer3::Core::Exception {
 }
- 
-
-
 ?>

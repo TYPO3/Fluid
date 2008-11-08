@@ -34,7 +34,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->variableContainer = new F3::Beer3::VariableContainer();
+		$this->variableContainer = new F3::Beer3::Core::VariableContainer();
 	}
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -54,16 +54,16 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::RuntimeException
+	 * @expectedException F3::Beer3::Core::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function contextTakesOnlyArraysInConstructor() {
-		new F3::Beer3::VariableContainer("string");
+		new F3::Beer3::Core::VariableContainer("string");
 	}
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::RuntimeException
+	 * @expectedException F3::Beer3::Core::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
@@ -73,7 +73,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::RuntimeException
+	 * @expectedException F3::Beer3::Core::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
@@ -82,7 +82,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::RuntimeException
+	 * @expectedException F3::Beer3::Core::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
@@ -98,7 +98,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 		$this->variableContainer->remove('variable');
 		try {
 			$this->variableContainer->get('variable');
-		} catch (F3::Beer3::RuntimeException $e) {}
+		} catch (F3::Beer3::Core::RuntimeException $e) {}
 	}
 }
 

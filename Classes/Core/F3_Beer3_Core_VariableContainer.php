@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -41,7 +41,7 @@ class VariableContainer {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($objectArray = array()) {
-		if (!is_array($objectArray)) throw new F3::Beer3::RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
+		if (!is_array($objectArray)) throw new F3::Beer3::Core::RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
 		$this->objects = $objectArray;
 	}
 	
@@ -54,7 +54,7 @@ class VariableContainer {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function add($identifier, $object) {
-		if (array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Duplicate variable declarations!', 1224479063);
+		if (array_key_exists($identifier, $this->objects)) throw new F3::Beer3::Core::RuntimeException('Duplicate variable declarations!', 1224479063);
 		$this->objects[$identifier] = $object;
 	}
 	
@@ -66,7 +66,7 @@ class VariableContainer {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function get($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
+		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::Core::RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		return $this->objects[$identifier];
 	}
 	
@@ -78,7 +78,7 @@ class VariableContainer {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+		if (!array_key_exists($identifier, $this->objects)) throw new F3::Beer3::Core::RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
 		unset($this->objects[$identifier]);
 	}
 	

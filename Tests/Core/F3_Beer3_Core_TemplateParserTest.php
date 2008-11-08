@@ -48,7 +48,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.or>
-	 * @expectedException F3::Beer3::ParsingException
+	 * @expectedException F3::Beer3::Core::ParsingException
 	 */
 	public function parseThrowsExceptionWhenStringArgumentMissing() {
 		$this->templateParser->parse(123);
@@ -70,7 +70,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException F3::Beer3::ParsingException
+	 * @expectedException F3::Beer3::Core::ParsingException
 	 */
 	public function parseThrowsExceptionIfNamespaceIsRedeclared() {
 		$this->templateParser->parse("{namespace f3=F3::Beer3::Blablubb} {namespace f3=F3::Rocks}");
@@ -117,7 +117,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::ParsingException
+	 * @expectedException F3::Beer3::Core::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture03ThrowsExceptionBecauseWrongTagNesting() {
@@ -127,7 +127,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::ParsingException
+	 * @expectedException F3::Beer3::Core::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture04ThrowsExceptionBecauseClosingATagWhichWasNeverOpened() {
@@ -184,7 +184,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
-		$context = new F3::Beer3::VariableContainer(array('id' => 1));
+		$context = new F3::Beer3::Core::VariableContainer(array('id' => 1));
 		$result = $templateTree->render($context);
 		$expected = '1';
 		$this->assertEquals($expected, $result, 'Fixture 07 was not parsed correctly.');
@@ -198,7 +198,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
-		$context = new F3::Beer3::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
 		$this->assertEquals($expected, $result, 'Fixture 08 was not rendered correctly.');
@@ -212,7 +212,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
-		$context = new F3::Beer3::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
+		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
 		$result = $templateTree->render($context);
 		$expected = '0 hallo test 3 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 09 was not rendered correctly. This is most likely due to problems in the array parser.');
@@ -226,7 +226,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
-		$context = new F3::Beer3::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
 		$this->assertEquals($expected, $result, 'Fixture 10 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
@@ -240,7 +240,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
-		$context = new F3::Beer3::VariableContainer(array());
+		$context = new F3::Beer3::Core::VariableContainer(array());
 		$result = $templateTree->render($context);
 		$expected = '0 2 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
