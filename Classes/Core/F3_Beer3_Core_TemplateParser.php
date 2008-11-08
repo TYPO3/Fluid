@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -212,8 +212,8 @@ class TemplateParser {
 		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
 		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 		
-		$state = $this->componentFactory->create('F3::Beer3::ParsingState');
-		$rootNode = $this->componentFactory->create('F3::Beer3::RootNode');
+		$state = $this->componentFactory->create('F3::Beer3::Core::ParsingState');
+		$rootNode = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::RootNode');
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
 		

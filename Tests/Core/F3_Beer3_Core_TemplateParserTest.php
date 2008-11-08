@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -41,7 +41,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->templateParser = new F3::Beer3::TemplateParser();
+		$this->templateParser = new F3::Beer3::Core::TemplateParser();
 		$this->templateParser->injectComponentFactory($this->componentFactory);
 	}
 	
@@ -81,13 +81,13 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture01ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture01.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture01.html', FILE_TEXT);
 		
-		$rootNode = new F3::Beer3::RootNode();
-		$rootNode->addChildNode(new F3::Beer3::TextNode("\na"));
-		$dynamicNode = new F3::Beer3::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper(), array());
+		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
+		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\na"));
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper(), array());
 		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new F3::Beer3::TextNode('b'));
+		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('b'));
 		
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource);
@@ -99,15 +99,15 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture02ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture02.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture02.html', FILE_TEXT);
 		
-		$rootNode = new F3::Beer3::RootNode();
-		$rootNode->addChildNode(new F3::Beer3::TextNode("\n"));
-		$dynamicNode = new F3::Beer3::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
-		$dynamicNode->addChildNode(new F3::Beer3::TextNode("\nHallo\n"));
+		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
+		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\n"));
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
+		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\nHallo\n"));
 		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode = new F3::Beer3::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
-		$dynamicNode->addChildNode(new F3::Beer3::TextNode("Second"));
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
+		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("Second"));
 		$rootNode->addChildNode($dynamicNode);
 		
 		$expected = $rootNode;
@@ -121,7 +121,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture03ThrowsExceptionBecauseWrongTagNesting() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture03.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture03.html', FILE_TEXT);
 		$this->templateParser->parse($templateSource);
 	}
 	
@@ -131,7 +131,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture04ThrowsExceptionBecauseClosingATagWhichWasNeverOpened() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture04.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture04.html', FILE_TEXT);
 		$this->templateParser->parse($templateSource);
 	}
 	
@@ -140,13 +140,13 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture05ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture05.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture05.html', FILE_TEXT);
 		
-		$rootNode = new F3::Beer3::RootNode();
-		$rootNode->addChildNode(new F3::Beer3::TextNode("\na"));
-		$dynamicNode = new F3::Beer3::ObjectAccessorNode('posts.bla.Testing3');
+		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
+		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\na"));
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('posts.bla.Testing3');
 		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new F3::Beer3::TextNode('b'));
+		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('b'));
 		
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource);
@@ -158,18 +158,18 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture06ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture06.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture06.html', FILE_TEXT);
 		
-		$rootNode = new F3::Beer3::RootNode();
+		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$arguments = array(
-			'each' => new F3::Beer3::RootNode(),
-			'as' => new F3::Beer3::RootNode()
+			'each' => new F3::Beer3::Core::SyntaxTree::RootNode(),
+			'as' => new F3::Beer3::Core::SyntaxTree::RootNode()
 		);
-		$arguments['each']->addChildNode(new F3::Beer3::ObjectAccessorNode('posts'));
-		$arguments['as']->addChildNode(new F3::Beer3::TextNode('post'));
-		$dynamicNode = new F3::Beer3::ViewHelperNode('F3::Beer3::ViewHelpers', 'default.for', new F3::Beer3::ViewHelpers::ForViewHelper(), $arguments);
+		$arguments['each']->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('posts'));
+		$arguments['as']->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('post'));
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'default.for', new F3::Beer3::ViewHelpers::ForViewHelper(), $arguments);
 		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode->addChildNode(new F3::Beer3::ObjectAccessorNode('post'));
+		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('post'));
 		
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource);
@@ -181,7 +181,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture07ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::VariableContainer(array('id' => 1));
@@ -195,7 +195,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture08ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
@@ -209,7 +209,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture09ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
@@ -223,7 +223,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture10ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
@@ -237,7 +237,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture11ReturnsCorrectlyRenderedResult() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
+		$templateSource = file_get_contents(__DIR__ . '/../Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource);
 		$context = new F3::Beer3::VariableContainer(array());

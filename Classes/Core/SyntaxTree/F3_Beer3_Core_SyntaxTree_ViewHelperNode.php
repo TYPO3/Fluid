@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3::Beer3;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ViewHelperNode extends F3::Beer3::AbstractNode {
+class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	
 	/**
 	 * Namespace of view helper

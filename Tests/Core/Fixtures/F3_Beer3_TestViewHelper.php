@@ -20,48 +20,35 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 /**
- * Array node
+ * An test view helper - needed to test "registerArgument".
  *
  * @package Beer3
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ArrayNode extends F3::Beer3::AbstractNode {
+class TestViewHelper extends F3::Beer3::AbstractViewHelper {
 	/**
-	 * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
-	 * @var array
-	 */
-	protected $internalArray = array();
-	
-	/**
-	 * Constructor.
-	 * 
-	 * @param array Array to store
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($internalArray) {
-		$this->internalArray = $internalArray;
+	public function __construct($name, $type, $description, $isOptional) {
+		$this->name = $name;
+		$this->description = $description;
+		$this->type = $type;
+		$this->isOptional = $isOptional;
 	}
 	
 	/**
-	 * Evaluate the array and return an evaluated array
-	 * 
-	 * @param F3::Beer3::VariableContainer $context The context where the bound variables are stored
-	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::VariableContainer $context) {
-		$arrayToBuild = array();
-		foreach ($this->internalArray as $key => $value) {
-			if ($value instanceof F3::Beer3::AbstractNode) {
-				$arrayToBuild[$key] = $value->evaluate($context);
-			} else {
-				$arrayToBuild[$key] = $value;
-			}
-		}
-		return $arrayToBuild;
+	public function initializeArguments() {
+		$this->registerArgument($this->name, $this->type, $this->description, $this->isOptional);
 	}
+	
+	public function render() {
+		
+	}
+
 }
 
 

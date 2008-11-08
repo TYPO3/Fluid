@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,7 +21,7 @@ namespace F3::Beer3;
  * @version $Id:$
  */
 
-require_once(__DIR__ . '/Fixtures/F3_Beer3_SomeEmptyClass.php');
+require_once(__DIR__ . '/../Fixtures/F3_Beer3_SomeEmptyClass.php');
 
 /**
  * Testcase for ObjectAccessor
@@ -40,7 +40,7 @@ class ObjectAccessorNodeTest extends F3::Testing::BaseTestCase {
 	public function objectAccessorWorksWithStrings() {
 		$expected = 'ExpectedString';
 		
-		$objectAccessorNode = new F3::Beer3::ObjectAccessorNode("exampleObject");
+		$objectAccessorNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode("exampleObject");
 		$context = new F3::Beer3::VariableContainer(array('exampleObject' => $expected));
 
 		$actual = $objectAccessorNode->evaluate($context);
@@ -54,7 +54,7 @@ class ObjectAccessorNodeTest extends F3::Testing::BaseTestCase {
 	public function objectAccessorWorksWithNestedObjects() {
 		$exampleObject = new F3::Beer3::SomeEmptyClass("Hallo");
 		
-		$objectAccessorNode = new F3::Beer3::ObjectAccessorNode("exampleObject.subproperty");
+		$objectAccessorNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode("exampleObject.subproperty");
 		$context = new F3::Beer3::VariableContainer(array('exampleObject' => $exampleObject));
 		
 		$actual = $objectAccessorNode->evaluate($context);
@@ -69,7 +69,7 @@ class ObjectAccessorNodeTest extends F3::Testing::BaseTestCase {
 		$expected = 'This is a test';
 		$exampleObject = new F3::Beer3::SomeEmptyClass("Hallo");
 		$exampleObject->publicVariable = $expected;
-		$objectAccessorNode = new F3::Beer3::ObjectAccessorNode("exampleObject.publicVariable");
+		$objectAccessorNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode("exampleObject.publicVariable");
 		$context = new F3::Beer3::VariableContainer(array('exampleObject' => $exampleObject));
 		
 		$actual = $objectAccessorNode->evaluate($context);
@@ -83,7 +83,7 @@ class ObjectAccessorNodeTest extends F3::Testing::BaseTestCase {
 	public function objectAccessorWorksOnAssociativeArrays() {
 		$expected = 'My value';
 		$exampleArray = array('key' => array('key2' => $expected));
-		$objectAccessorNode = new F3::Beer3::ObjectAccessorNode('variable.key.key2');
+		$objectAccessorNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('variable.key.key2');
 		$context = new F3::Beer3::VariableContainer(array('variable' => $exampleArray));
 		
 		$actual = $objectAccessorNode->evaluate($context);
@@ -98,7 +98,7 @@ class ObjectAccessorNodeTest extends F3::Testing::BaseTestCase {
 	public function objectAccessorThrowsExceptionIfKeyInAssociativeArrayDoesNotExist() {
 		$expected = 'My value';
 		$exampleArray = array('key' => array('key2' => $expected));
-		$objectAccessorNode = new F3::Beer3::ObjectAccessorNode('variable.key.key3');
+		$objectAccessorNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('variable.key.key3');
 		$context = new F3::Beer3::VariableContainer(array('variable' => $exampleArray));
 		
 		$actual = $objectAccessorNode->evaluate($context);
@@ -113,7 +113,7 @@ class ObjectAccessorNodeTest extends F3::Testing::BaseTestCase {
 		$expected = 'This is a test';
 		$exampleObject = new F3::Beer3::SomeEmptyClass("Hallo");
 		$exampleObject->publicVariable = $expected;
-		$objectAccessorNode = new F3::Beer3::ObjectAccessorNode("exampleObject.publicVariableNotExisting");
+		$objectAccessorNode = new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode("exampleObject.publicVariableNotExisting");
 		$context = new F3::Beer3::VariableContainer(array('exampleObject' => $exampleObject));
 		
 		$actual = $objectAccessorNode->evaluate($context);

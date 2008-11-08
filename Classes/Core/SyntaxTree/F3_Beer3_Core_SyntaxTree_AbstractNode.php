@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -31,7 +31,7 @@ namespace F3::Beer3;
 abstract class AbstractNode {
 	/**
 	 * List of Child Nodes.
-	 * @var array F3::Beer3::AbstractNode
+	 * @var array F3::Beer3::Core::SyntaxTree::AbstractNode
 	 */
 	protected $childNodes = array();
 		
@@ -67,18 +67,18 @@ abstract class AbstractNode {
 	/**
 	 * Appends a subnode to this node.
 	 * 
-	 * @param F3::Beer3::AbstractNode $subnode The subnode to add
+	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode $subnode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function addChildNode(F3::Beer3::AbstractNode $subNode) {
+	public function addChildNode(F3::Beer3::Core::SyntaxTree::AbstractNode $subNode) {
 		$this->childNodes[] = $subNode;
 	}
 	
 	/**
 	 * Renders the node.
 	 * 
-	 * @param F3::Beer3::VariableContainer context to be used for the rendering
+	 * @param F3::Beer3::Core::VariableContainer context to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -88,7 +88,7 @@ abstract class AbstractNode {
 	
 	/**
 	 * Evaluates the node.
-	 * @param F3::Beer3::VariableContainer context to be used for the evaluation
+	 * @param F3::Beer3::Core::VariableContainer context to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -33,7 +33,7 @@ class ParsingState {
 
 	/**
 	 * Root node reference
-	 * @var F3::Beer3::RootNode
+	 * @var F3::Beer3::Core::SyntaxTree::RootNode
 	 */
 	protected $rootNode;
 	
@@ -46,12 +46,12 @@ class ParsingState {
 	/**
 	 * Set root node of this parsing state
 	 *
-	 * @param F3::Beer3::RootNode $rootNode
+	 * @param F3::Beer3::Core::SyntaxTree::RootNode $rootNode
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNode($rootNode) {
-		if (!($rootNode instanceof F3::Beer3::RootNode)) throw new F3::Beer3::ParsingException('Root node must be of type RootNode.', 1224495647);
+		if (!($rootNode instanceof F3::Beer3::Core::SyntaxTree::RootNode)) throw new F3::Beer3::ParsingException('Root node must be of type RootNode.', 1224495647);
 		$this->rootNode = $rootNode;
 	}
 	
@@ -72,7 +72,7 @@ class ParsingState {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function pushNodeToStack(F3::Beer3::AbstractNode $node) {
+	public function pushNodeToStack(F3::Beer3::Core::SyntaxTree::AbstractNode $node) {
 		array_push($this->nodeStack, $node);
 	}
 	

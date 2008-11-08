@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -27,7 +27,7 @@ namespace F3::Beer3;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class TextNode extends F3::Beer3::AbstractNode {
+class TextNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	
 	/**
 	 * Contents of the text node

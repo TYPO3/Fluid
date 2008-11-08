@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3;
+namespace F3::Beer3::Core::SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,40 +16,53 @@ namespace F3::Beer3;
  *                                                                        */
 
 /**
- * @package Beer3 
- * @subpackage Tests 
+ * @package Beer3
  * @version $Id:$
  */
 /**
- * Testcase for TextNode
+ * Array node
  *
  * @package Beer3
- * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @scope prototype
  */
-class TextNodeTest extends F3::Testing::BaseTestCase {
-
+class ArrayNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
-	 * @test
+	 * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
+	 * @var array
+	 */
+	protected $internalArray = array();
+	
+	/**
+	 * Constructor.
+	 * 
+	 * @param array Array to store
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderReturnsSameStringAsGivenInConstructor() {
-		$string = 'I can work quite effectively in a train!';
-		$node = new F3::Beer3::TextNode($string);
-		$this->assertEquals($node->render(new F3::Beer3::VariableContainer()), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+	public function __construct($internalArray) {
+		$this->internalArray = $internalArray;
 	}
 	
 	/**
-	 * @test
-	 * @expectedException F3::Beer3::ParsingException
+	 * Evaluate the array and return an evaluated array
+	 * 
+	 * @param F3::Beer3::VariableContainer $context The context where the bound variables are stored
+	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function constructorThrowsExceptionIfNoStringGiven() {
-		new F3::Beer3::TextNode(123);
+	public function evaluate(F3::Beer3::VariableContainer $context) {
+		$arrayToBuild = array();
+		foreach ($this->internalArray as $key => $value) {
+			if ($value instanceof F3::Beer3::Core::SyntaxTree::AbstractNode) {
+				$arrayToBuild[$key] = $value->evaluate($context);
+			} else {
+				$arrayToBuild[$key] = $value;
+			}
+		}
+		return $arrayToBuild;
 	}
 }
-
 
 
 ?>
