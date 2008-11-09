@@ -16,39 +16,86 @@ namespace F3::Beer3::View;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage View
  * @version $Id:$
  */
-
+/**
+ * The main template view. Should be used as view if you want Beer3 Templating
+ * 
+ * @package Beer3
+ * @subpackage View
+ * @version $Id:$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ */
 class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
-	protected $templatePattern = '@packageResources/Template/@controller/@action.xhtml';
+	protected $templatePathPattern = '@packageResources/Template/@controller/@action.xhtml';
 	
 	/**
 	 * Template parser instance.
-	 * @var F3::Beer3::TemplateParser
+	 * @var F3::Beer3::Core::TemplateParser
 	 */
 	protected $templateParser;
 	
-	public function injectTemplateParser(F3::Beer3::TemplateParser $templateParser) {
+	/**
+	 * Context variables
+	 * @var array of context variables
+	 */
+	protected $contextVariables = array();
+	
+	/**
+	 * Inject the template parser
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function injectTemplateParser(F3::Beer3::Core::TemplateParser $templateParser) {
 		$this->templateParser = $templateParser;
 	}
+	
+	/**
+	 * Initialize view
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeView() {	
 	}
 	
+	/**
+	 * Find the XHTML template according to $this->templatePathPattern and render the template.
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
-		$templatePath = $this->templatePattern;
+		$templatePath = $this->templatePathPattern;
 		$templatePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templatePath);
 		$templatePath = str_replace('@controller', $this->request->getControllerName(), $templatePath);
 		$templatePath = str_replace('@action', $this->request->getControllerActionName(), $templatePath);
 
 		$templateSource = file_get_contents($templatePath, FILE_TEXT);
-		if (!$templateSource) throw new F3::Beer3::RuntimeException('The template file "' . $templatePath . '" was not found.', 1225709595);
+		if (!$templateSource) throw new F3::Beer3::Core::RuntimeException('The template file "' . $templatePath . '" was not found.', 1225709595);
 		$templateTree = $this->templateParser->parse($templateSource);
-		// TODO
-		$variableStore = $this->componentFactory->getComponent('F3::Beer3::VariableContainer');
+		
+		$this->contextVariables['view'] = $this;
+		
+		$variableStore = $this->componentFactory->create('F3::Beer3::Core::VariableContainer', $this->contextVariables);
 		$result = $templateTree->render($variableStore);
 		return $result;
+	}
+	
+	/**
+	 * Add a variable to the context.
+	 * Can be chained, so $template->addVariable(..., ...)->addVariable(..., ...); is possible,
+	 * 
+	 * @param string $key Key of variable
+	 * @param object $value Value of object
+	 * @return F3::Beer3::View::TemplateView an instance of $this, to enable chaining.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function addVariable($key, $value) {
+		$this->contextVariables[$key] = $value;
+		return $this;
 	}
 }
 

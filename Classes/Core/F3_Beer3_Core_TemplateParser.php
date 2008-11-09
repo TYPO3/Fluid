@@ -121,11 +121,12 @@ class TemplateParser {
 	 * Inject component factory
 	 *
 	 * @param F3::FLOW3::Component::FactoryInterface $componentFactory
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectComponentFactory(F3::FLOW3::Component::FactoryInterface $componentFactory) {
 		$this->componentFactory = $componentFactory;
 	}
-	
+
 	/**
 	 * Parses a given template and returns an object tree, identified by a root node
 	 *

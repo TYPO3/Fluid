@@ -31,7 +31,6 @@ namespace F3::Beer3::ViewHelpers;
  */
 class ForViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	public function initializeArguments() {
-		
 	}
 	/**
 	 * This is some test
