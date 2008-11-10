@@ -97,6 +97,16 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		$this->contextVariables[$key] = $value;
 		return $this;
 	}
+	
+	/**
+	 * Return the current request
+	 * 
+	 * @return F3::FLOW3::MVC::Web::Request the current request
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getRequest() {
+		return $this->request;
+	}
 }
 
 

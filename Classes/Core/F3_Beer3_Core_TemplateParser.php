@@ -279,8 +279,8 @@ class TemplateParser {
 		$methodName = '';
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
-			// TODO $methodName = $explodedViewHelperName[0];
-			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[1]);
+			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
+			$className .= '::' . F3::PHP6::Functions::ucfirst($explodedViewHelperName[1]);
 		} else {
 			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
 		}

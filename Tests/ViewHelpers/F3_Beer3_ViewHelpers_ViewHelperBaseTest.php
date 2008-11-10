@@ -20,19 +20,27 @@ namespace F3::Beer3::ViewHelpers;
  * @subpackage 
  * @version $Id:$
  */
-/**
- * Enter description here...
- * @scope prototype
- */
-class BaseViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	
-	public function initializeArguments() {
-		
-	}
-	public function render() {
-		$currentRequest = $this->variableContainer->get('view')->getRequest();
-		return '<base href="' . $currentRequest->getBaseURI() . '" />';
-	}
-}
 
+/**
+ * Testcase for [insert classname here]
+ *
+ * @package
+ * @subpackage Tests
+ * @version $Id:$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ */
+abstract class ViewHelperBaseTest extends F3::Testing::BaseTestCase {
+	public function setUp() {
+/*		$this->viewHelper = $this->componentFactory->create($this->getViewHelperNameToTest());
+		$this->nodeMock = $this->getMock('F3::Beer3::Core::SyntaxTree::AbstractNodeInterface');
+		$view = $this->componentManager()
+		$this->nodeMock->expects($this->any())
+		               ->method('get')
+		               ->with($this->equalTo('view'))
+		               ->will($this->returnValue($))
+		$this->arguments = new F3::Beer3::Core::ViewHelperArguments(array());
+		 
+	}
+	abstract protected function getViewHelperNameToTest()*/
+}
 ?>

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3::ViewHelpers::Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -24,15 +24,20 @@ namespace F3::Beer3::ViewHelpers;
  * Enter description here...
  * @scope prototype
  */
-class BaseViewHelper extends F3::Beer3::Core::AbstractViewHelper {
+class SubmitViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	
 	public function initializeArguments() {
-		
+		$this->registerArgument('value', 'string', 'Caption for the button', TRUE);
 	}
 	public function render() {
-		$currentRequest = $this->variableContainer->get('view')->getRequest();
-		return '<base href="' . $currentRequest->getBaseURI() . '" />';
+		$out = '<button type="submit">';
+		$out .= $this->renderChildren();
+		$out .= '</button>';
+		
+		return $out;
 	}
 }
+
+
 
 ?>
