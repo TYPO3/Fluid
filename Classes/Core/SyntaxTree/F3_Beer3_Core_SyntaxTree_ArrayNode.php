@@ -47,15 +47,15 @@ class ArrayNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
 	 * Evaluate the array and return an evaluated array
 	 * 
-	 * @param F3::Beer3::VariableContainer $context The context where the bound variables are stored
+	 * @param F3::Beer3::VariableContainer Variable Container for the scope variables
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Core::VariableContainer $context) {
+	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
 			if ($value instanceof F3::Beer3::Core::SyntaxTree::AbstractNode) {
-				$arrayToBuild[$key] = $value->evaluate($context);
+				$arrayToBuild[$key] = $value->evaluate($variableContainer);
 			} else {
 				$arrayToBuild[$key] = $value;
 			}

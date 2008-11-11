@@ -36,6 +36,12 @@ abstract class AbstractNode {
 	protected $childNodes = array();
 		
 	/**
+	 * The variable container
+	 * @var F3::Beer3::Core::VariableContainer
+	 */
+	protected $variableContainer;
+	
+	/**
 	 * Render all child nodes and return the rendered result string.
 	 *
 	 * @return string Rendered representation
@@ -55,10 +61,10 @@ abstract class AbstractNode {
 		$output = NULL;
 		foreach ($this->childNodes as $subNode) {
 			if ($output === NULL) {
-				$output = $subNode->evaluate($this->context);
+				$output = $subNode->evaluate($this->variableContainer);
 			} else {
 				$output = (string)$output;
-				$output .= $subNode->render($this->context);
+				$output .= $subNode->render($this->variableContainer);
 			}
 		}
 		return $output;
@@ -78,7 +84,7 @@ abstract class AbstractNode {
 	/**
 	 * Renders the node.
 	 * 
-	 * @param F3::Beer3::Core::VariableContainer context to be used for the rendering
+	 * @param F3::Beer3::Core::VariableContainer Variable Container to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -88,7 +94,7 @@ abstract class AbstractNode {
 	
 	/**
 	 * Evaluates the node.
-	 * @param F3::Beer3::Core::VariableContainer context to be used for the evaluation
+	 * @param F3::Beer3::Core::VariableContainer Variable Container to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

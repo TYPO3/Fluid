@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::Core::SyntaxTree;
+namespace F3::Beer3::View::Fixture;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,30 +16,23 @@ namespace F3::Beer3::Core::SyntaxTree;
  *                                                                        */
 
 /**
- * @package Beer3
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Root node
+ * [Enter description here]
  *
- * @package Beer3
+ * @package
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class RootNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
+class TransparentSyntaxTreeNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
+	public $variableContainer;
 	
-	/**
-	 * Evaluate the root node, by evaluating the subtree.
-	 * 
-	 * @param F3::Beer3::VariableContainer $variableContainer Variable Container to be used
-	 * @return object Evaluated subtree
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
 	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
-		$text = $this->evaluateChildNodes();
-		return $text;
 	}
 }
 

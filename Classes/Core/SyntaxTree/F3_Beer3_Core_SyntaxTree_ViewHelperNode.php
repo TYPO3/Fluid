@@ -49,10 +49,10 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	protected $arguments = array();
 	
 	/**
-	 * Context storing the currently available variables.
-	 * @var F3::Beer3::VariableContainer
+	 * VariableContainer storing the currently available variables.
+	 * @var F3::Beer3::Core::VariableContainer
 	 */
-	protected $context;
+	protected $variableContainer;
 	
 	/**
 	 * Associated view helper
@@ -96,18 +96,18 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * 
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 * 
-	 * @param F3::Beer3::VariableContainer $context The context in which the variables are stored
+	 * @param F3::Beer3::VariableContainer $variableContainer The Variable Container in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Core::VariableContainer $context) {
-		$this->context = $context;
-		$contextVariables = $context->getAllIdentifiers();
+	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
+		$this->variableContainer = $variableContainer;
+		$contextVariables =  $variableContainer->getAllIdentifiers();
 		$evaluatedArguments = array();
 		foreach ($this->arguments as $argumentName => $argumentValue) {
-			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($context);
+			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
 		}
-		$this->viewHelper->prepareRendering(new F3::Beer3::Core::ViewHelperArguments($evaluatedArguments), $this, $context);
+		$this->viewHelper->prepareRendering(new F3::Beer3::Core::ViewHelperArguments($evaluatedArguments), $this, $variableContainer);
 		// TODO: Component manager!
 		
 		if ($this->viewHelper instanceof F3::Beer3::Core::Facets::ChildNodeAccessInterface) {
@@ -116,8 +116,8 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 		
 		$out = $this->viewHelper->render();
 		
-		if ($contextVariables != $context->getAllIdentifiers()) {
-			$endContextVariables = $context->getAllIdentifiers();
+		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
+			$endContextVariables = $variableContainer->getAllIdentifiers();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 			
 			throw new F3::Beer3::RuntimeException('The following context variable has been changed after the view helper has been called: ' .implode(', ', $diff));

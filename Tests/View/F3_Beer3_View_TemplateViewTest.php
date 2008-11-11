@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3::View;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,52 +16,39 @@ namespace F3::Beer3::ViewHelpers;
  *                                                                        */
 
 /**
- * @package Beer3
- * @subpackage Tests
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Testcase for DefaultViewHelper
+ * Testcase for [insert classname here]
  *
- * @package Beer3
+ * @package
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ForViewHelperTest extends F3::Testing::BaseTestCase {
+
+include_once(__DIR__ . '/Fixtures/F3_Beer3_View_Fixture_TransparentSyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/F3_Beer3_View_Fixture_TemplateViewFixture.php');
+
+class TemplateViewTest extends F3::Testing::BaseTestCase {
 
 	/**
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setUp() {
-		$this->viewHelper = new F3::Beer3::ViewHelpers::ForViewHelper();
-		$this->nodeMock = $this->getMock('F3::Beer3::NodeInterface');
-	}
-	/**
-	 * @test
-	 */
-	public function testEmpty() {
+	public function viewIsPlacedInVariableContainer() {
+		$packageManager = $this->objectManager->getObject('F3::FLOW3::Package::ManagerInterface');
+		$resourceManager = $this->objectManager->getObject('F3::FLOW3::Resource::Manager');
+		$templateView = new F3::Beer3::View::Fixture::TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
+		$templateView->addVariable('name', 'value');
+		$templateView->render();
+		
+		$this->assertSame($templateView, $templateView->syntaxTree->variableContainer->get('view'), 'The view has not been placed in the variable container.');
+		$this->assertEquals('value', $templateView->syntaxTree->variableContainer->get('name'), 'Context variable has been set.');
 		
 	}
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-/*	public function forCallsRenderSubtreeCorrectly() {
-		$this->nodeMock->expects($this->exactly(7))
-		               ->method('renderChildNodes');
-		$this->viewHelper->forMethod($this->nodeMock, array('each' => array(0,1,2,3,4,5,6), 'as' => 'a'));
-	}
-*/	
-	/**
-	 * @test
-	 * @expectedException F3::Beer3::Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-/*	public function forThrowsExceptionIfAsArgumentMissing() {
-		$this->viewHelper->forMethod($this->nodeMock, array('each' => array()));
-	}
-*/
 }
 
 

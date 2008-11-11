@@ -39,7 +39,7 @@ class ObjectAccessorNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
 	 * Constructor. Takes an object path as input.
 	 * 
-	 * The first part of the object path has to be a variable in the context.
+	 * The first part of the object path has to be a variable in the VariableContainer.
 	 * For the further parts, it is checked if the object has a getObjectname method. If yes, this is called.
 	 * If no, it is checked if a property "objectname" exists.
 	 * If no, an error is thrown.
@@ -62,10 +62,10 @@ class ObjectAccessorNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * @return object The evaluated object, can be a string...
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Beer3::Core::VariableContainer $context) {
+	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
 		$objectPathParts = explode('.', $this->objectPath);
-		$contextVariableName = array_shift($objectPathParts);
-		$currentObject = $context->get($contextVariableName);
+		$variableName = array_shift($objectPathParts);
+		$currentObject = $variableContainer->get($variableName);
 		
 		if (count($objectPathParts) > 0) {
 			foreach ($objectPathParts as $currentObjectPath) {

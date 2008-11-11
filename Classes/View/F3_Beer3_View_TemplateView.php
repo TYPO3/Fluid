@@ -62,12 +62,14 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	}
 	
 	/**
-	 * Find the XHTML template according to $this->templatePathPattern and render the template.
+	 * Load the template file, expects it at the location specified at $this->templatePathPattern.
 	 * 
-	 * @return void
+	 * Override if you have some custom logic saying where the template is.
+	 * 
+	 * @return string the contents of the template file
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render() {
+	protected function loadTemplateFile() {
 		$templatePath = $this->templatePathPattern;
 		$templatePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templatePath);
 		$templatePath = str_replace('@controller', $this->request->getControllerName(), $templatePath);
@@ -75,13 +77,29 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 
 		$templateSource = file_get_contents($templatePath, FILE_TEXT);
 		if (!$templateSource) throw new F3::Beer3::Core::RuntimeException('The template file "' . $templatePath . '" was not found.', 1225709595);
-		$templateTree = $this->templateParser->parse($templateSource);
+		return $templateSource;
+	}
+	
+	/**
+	 * Find the XHTML template according to $this->templatePathPattern and render the template.
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function render() {
+		$templateTree = $this->parseTemplate();
 		
 		$this->contextVariables['view'] = $this;
 		
-		$variableStore = $this->componentFactory->create('F3::Beer3::Core::VariableContainer', $this->contextVariables);
+		$variableStore = $this->objectFactory->create('F3::Beer3::Core::VariableContainer', $this->contextVariables);
 		$result = $templateTree->render($variableStore);
 		return $result;
+	}
+	
+	protected function parseTemplate() {
+		$templateSource = $this->loadTemplateFile();
+		
+		return $this->templateParser->parse($templateSource);	
 	}
 	
 	/**
