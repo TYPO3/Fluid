@@ -113,18 +113,18 @@ class TemplateParser {
 	protected $namespaces = array();
 
 	/**
-	 * @var F3::FLOW3::Component::FactoryInterface
+	 * @var F3::FLOW3::Object::FactoryInterface
 	 */
-	protected $componentFactory;
+	protected $objectFactory;
 
 	/**
-	 * Inject component factory
+	 * Inject object factory
 	 *
-	 * @param F3::FLOW3::Component::FactoryInterface $componentFactory
+	 * @param F3::FLOW3::Object::FactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectComponentFactory(F3::FLOW3::Component::FactoryInterface $componentFactory) {
-		$this->componentFactory = $componentFactory;
+	public function injectObjectFactory(F3::FLOW3::Object::FactoryInterface $objectFactory) {
+		$this->objectFactory = $objectFactory;
 	}
 
 	/**
@@ -213,8 +213,8 @@ class TemplateParser {
 		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
 		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 		
-		$state = $this->componentFactory->create('F3::Beer3::Core::ParsingState');
-		$rootNode = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::RootNode');
+		$state = $this->objectFactory->create('F3::Beer3::Core::ParsingState');
+		$rootNode = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::RootNode');
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
 		
@@ -257,7 +257,7 @@ class TemplateParser {
 		
 		$argumentsObjectTree = $this->parseArguments($arguments);
 		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
-		$currentDynamicNode = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ViewHelperNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
+		$currentDynamicNode = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ViewHelperNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
 		
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
@@ -289,7 +289,7 @@ class TemplateParser {
 		$name = $this->namespaces[$namespaceIdentifier] . '::' . $className;
 		
 		try {
-			$object = $this->componentFactory->create($name);
+			$object = $this->objectFactory->create($name);
 		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
 			throw new F3::Beer3::Core::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
@@ -329,7 +329,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_objectAccessor(F3::Beer3::Core::ParsingState $state, $objectAccessorString) {
-		$node = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $objectAccessorString);
+		$node = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $objectAccessorString);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
 	
@@ -455,7 +455,7 @@ class TemplateParser {
 			foreach ($matches as $singleMatch) {
 				$arrayKey = $singleMatch['Key'];
 				if (!empty($singleMatch['VariableIdentifier'])) {
-					$arrayToBuild[$arrayKey] = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
+					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
 				} elseif (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0') {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
 				} elseif (!empty($singleMatch['DoubleQuotedString']) || !empty($singleMatch['SingleQuotedString'])) {
@@ -466,7 +466,7 @@ class TemplateParser {
 					throw new F3::Beer3::Core::ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 				}
 			}
-			return $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::ArrayNode', $arrayToBuild);
+			return $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ArrayNode', $arrayToBuild);
 		} else {
 			throw new F3::Beer3::Core::ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 		}
@@ -480,7 +480,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_text(F3::Beer3::Core::ParsingState $state, $text) {
-		$node = $this->componentFactory->create('F3::Beer3::Core::SyntaxTree::TextNode', $text);
+		$node = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::TextNode', $text);
 		$state->getNodeFromStack()->addChildNode($node);	
 	}
 }

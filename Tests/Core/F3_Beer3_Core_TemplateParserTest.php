@@ -42,7 +42,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	 */
 	public function setUp() {
 		$this->templateParser = new F3::Beer3::Core::TemplateParser();
-		$this->templateParser->injectComponentFactory($this->componentFactory);
+		$this->templateParser->injectObjectFactory($this->objectFactory);
 	}
 	
 	/**
@@ -167,7 +167,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		);
 		$arguments['each']->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('posts'));
 		$arguments['as']->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('post'));
-		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'default.for', new F3::Beer3::ViewHelpers::ForViewHelper(), $arguments);
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'for', new F3::Beer3::ViewHelpers::ForViewHelper(), $arguments);
 		$rootNode->addChildNode($dynamicNode);
 		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('post'));
 		

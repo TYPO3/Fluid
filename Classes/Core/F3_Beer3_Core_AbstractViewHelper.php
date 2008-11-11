@@ -53,19 +53,7 @@ abstract class AbstractViewHelper {
 	 */
 	protected $variableContainer;
 	
-	/**
-	 * Current component factory
-	 * @var F3::FLOW3::Component::FactoryInterface
-	 */
-	//protected $componentFactory;
 	
-	/**
-	 * Inject a component factory
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	/*public function injectComponentFactory(F3::FLOW3::Component::FactoryInterface $componentFactory) {
-		$this->componentFactory = $componentFactory;
-	}*/
 	/**
 	 * Register a new argument. Call this method from the implementing ViewHelper class inside the initializeArguments() method.
 	 *
