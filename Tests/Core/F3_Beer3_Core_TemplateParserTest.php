@@ -85,7 +85,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\na"));
-		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper(), array());
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers::BaseViewHelper', new F3::Beer3::ViewHelpers::BaseViewHelper(), array());
 		$rootNode->addChildNode($dynamicNode);
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('b'));
 		
@@ -103,10 +103,10 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\n"));
-		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers::BaseViewHelper', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
 		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("\nHallo\n"));
 		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'base', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers::BaseViewHelper', new F3::Beer3::ViewHelpers::BaseViewHelper, array());
 		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode("Second"));
 		$rootNode->addChildNode($dynamicNode);
 		
@@ -167,7 +167,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		);
 		$arguments['each']->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('posts'));
 		$arguments['as']->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('post'));
-		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers', 'for', new F3::Beer3::ViewHelpers::ForViewHelper(), $arguments);
+		$dynamicNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode('F3::Beer3::ViewHelpers::ForViewHelper', new F3::Beer3::ViewHelpers::ForViewHelper(), $arguments);
 		$rootNode->addChildNode($dynamicNode);
 		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('post'));
 		

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::Core::Facets;
+namespace F3::Beer3::ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,26 +16,34 @@ namespace F3::Beer3::Core::Facets;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * "THEN" -> only has an effect inside of "IF". See If for documentation.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @scope prototype
  */
-interface ChildNodeAccessInterface {
+class ElseViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	/**
-	 * Enter description here...
-	 *
-	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode array $childNodes
+	 * Initialize arguments. We require no arguments.
 	 */
-	public function setChildNodes(array $childNodes);
-}
+	public function initializeArguments() {}
 
+	/**
+	 * Just render everything.
+	 *
+	 * @return string the rendered string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function render() {
+		return $this->renderChildren();	
+	}
+}
 
 ?>

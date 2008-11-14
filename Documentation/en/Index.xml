@@ -39,7 +39,7 @@
   </chapter>
 
   <chapter>
-    <title>Administration</title>
+    <title>Software Design</title>
 
     <xi:include href="Administration.xml" />
   </chapter>

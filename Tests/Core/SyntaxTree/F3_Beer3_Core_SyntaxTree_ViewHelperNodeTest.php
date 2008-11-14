@@ -43,7 +43,7 @@ class ViewHelperNodeTest extends F3::Testing::BaseTestCase {
 		               ->method('setChildNodes')
 		               ->with($this->equalTo(array($childNode)));
 		               
-		$viewHelperNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode("f3", "test", $stubViewHelper, array());
+		$viewHelperNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode("F3::Beer3::ViewHelpers::TestViewHelper", $stubViewHelper, array());
 		$viewHelperNode->addChildNode($childNode);
 
 		$viewHelperNode->render(new F3::Beer3::Core::VariableContainer(array($childNode)));

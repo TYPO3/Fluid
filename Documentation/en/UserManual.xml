@@ -6,21 +6,121 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:ns="http://docbook.org/ns/docbook"
          xmlns:mathml="http://www.w3.org/1998/Math/MathML">
-  <title>Lorem ipsum</title>
-  <para>
-  	<itemizedlist>
+  <title>User Manual</title>
+
+  <para><itemizedlist>
       <listitem>
-        <para>Documentation of how to use the package, how it works, how to
+        <para>Documentation of how to use the package, show it works, how to
         apply it if it's a website plugin. A user manual.</para>
       </listitem>
+
       <listitem>
         <para>Examples: For the "News" plugin this would be a manual showing
         how to create the news-items, explaining the options etc.</para>
       </listitem>
+
       <listitem>
         <para>Target group: Users, Administrators or Developers in that
-        priority. Depends on the package.</para>
+        priority. Depends on the</para>
       </listitem>
-    </itemizedlist>
-  </para>
+    </itemizedlist></para>
+
+  <section>
+    <title>How to write a template</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>Passing data to templates</title>
+
+    <para></para>
+  </section>
+
+  <section>
+    <title>Writing your own view helper</title>
+
+    <para>View Helpers are standard PHP classes, each extending
+    <classname>F3::Beer3::Core::AbstractViewHelper</classname>. You need to
+    implement at least two methods to write a view helper:</para>
+
+    <para><itemizedlist>
+        <listitem>
+          <para><methodname>initializeArguments()</methodname>: Inside this
+          method, you need to register all the arguments you expect the view
+          helper to take.</para>
+        </listitem>
+
+        <listitem>
+          <para><methodname>render()</methodname>: Render the view helper and
+          return the result.</para>
+        </listitem>
+      </itemizedlist></para>
+
+    <section>
+      <title>Initializing arguments</title>
+
+      <para>As previously mentioned, initializing arguments takes place inside
+      the <methodname>initializeArguments()</methodname> method. Call
+      <code>$this-&gt;registerArgument(...)</code> as often as you need
+      it.</para>
+    </section>
+
+    <section>
+      <title>Render contents</title>
+
+      <para>You have the following possibilities when rendering
+      contents:</para>
+
+      <para><itemizedlist>
+          <listitem>
+            <para><code>$this-&gt;arguments</code> is a read-only associative
+            array where you will find the values for all arguments you
+            registered previously.</para>
+          </listitem>
+
+          <listitem>
+            <para><code>$this-&gt;renderChildren()</code> renders everything
+            between the opening and closing tag of the view helper and returns
+            the rendered result.</para>
+          </listitem>
+
+          <listitem>
+            <para><code>$this-&gt;variableContainer</code> is an instance of
+            <classname>F3::Beer3::Core::VariableContainer</classname>, so you
+            have access to all variables registered in the template at the
+            given point.</para>
+
+            <para>Additionally, you can add variables to the container with
+            <code>$this-&gt;variableContainer-&gt;add($identifier,
+            $value)</code>, but you have to make sure that you
+            <emphasis>remove every variable you added</emphasis> again! This
+            is a security measure against side-effects.</para>
+
+            <para>Additionally, it is not possible to add a variable to the
+            VariableContainer if a variable of the same name already exists -
+            again to prevent side effects and scope problems.</para>
+          </listitem>
+        </itemizedlist>An example of the <methodname>render()</methodname>
+      method for a loop:</para>
+
+      <para><programlisting>public function render() {
+  $out = '';
+  foreach ($this-&gt;arguments['each'] as $singleElement) {
+    $this-&gt;variableContainer-&gt;add($this-&gt;arguments['as'], $singleElement);
+    $out .= $this-&gt;renderChildren();
+    $this-&gt;variableContainer-&gt;remove($this-&gt;arguments['as']);
+  }
+  return $out;
+}</programlisting>The above example demonstrates how we add a variable, render
+      all children (everything between the opening and closing tag), and
+      remove the variable again to prevent side-effects.</para>
+    </section>
+
+    <section>
+      <title>Facets</title>
+
+      <para></para>
+    </section>
+  </section>
 </section>

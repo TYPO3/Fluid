@@ -64,7 +64,10 @@ class ViewHelperArguments implements ::ArrayAccess {
      * @return object associated value
      * @author Sebastian Kurfürst <sebastian@typo3.org>
      */
-    function offsetGet($key) { 
+    function offsetGet($key) {
+    	if (!array_key_exists($key, $this->arguments)) {
+    		return NULL;
+    	}
     	return $this->arguments[$key];
     } 
     

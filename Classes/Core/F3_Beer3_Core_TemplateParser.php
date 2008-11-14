@@ -256,8 +256,15 @@ class TemplateParser {
 		}
 		
 		$argumentsObjectTree = $this->parseArguments($arguments);
-		$objectToCall = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
-		$currentDynamicNode = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ViewHelperNode', $this->namespaces[$namespaceIdentifier], $methodIdentifier, $objectToCall, $argumentsObjectTree);
+		$viewHelperName = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
+		
+		try {
+			$objectToCall = $this->objectFactory->create($viewHelperName);
+		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
+			throw new F3::Beer3::Core::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
+		}
+		
+		$currentDynamicNode = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ViewHelperNode', $viewHelperName, $objectToCall, $argumentsObjectTree);
 		
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
@@ -288,13 +295,7 @@ class TemplateParser {
 			
 		$name = $this->namespaces[$namespaceIdentifier] . '::' . $className;
 		
-		try {
-			$object = $this->objectFactory->create($name);
-		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
-			throw new F3::Beer3::Core::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
-		}
-		
-		return $object;
+		return $name;
 	}
 	
 	/**
@@ -314,7 +315,7 @@ class TemplateParser {
 		if (!($lastStackElement instanceof F3::Beer3::Core::SyntaxTree::ViewHelperNode)) {
 			throw new F3::Beer3::Core::ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
-		if ($lastStackElement->getViewHelperName() != $methodIdentifier || $lastStackElement->getViewHelperNamespace() != $this->namespaces[$namespaceIdentifier]) {
+		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier)) {
 			throw new F3::Beer3::Core::ParsingException('Templating tags not properly nested.', 1224485398);
 		}
 	}

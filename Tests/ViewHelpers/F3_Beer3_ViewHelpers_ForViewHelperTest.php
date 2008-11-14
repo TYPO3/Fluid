@@ -37,6 +37,7 @@ class ForViewHelperTest extends F3::Testing::BaseTestCase {
 	 */
 	public function setUp() {
 	}
+	
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -48,7 +49,6 @@ class ForViewHelperTest extends F3::Testing::BaseTestCase {
 			'each' => array(0,1,2,3),
 			'as'   => 'innerVariable'
 		));
-
 		
 		$variableContainer = new F3::Beer3::Core::VariableContainer(array());
 		
@@ -63,28 +63,8 @@ class ForViewHelperTest extends F3::Testing::BaseTestCase {
 			array('innerVariable' => 2),
 			array('innerVariable' => 3)
 		);
-		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-		
+		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');	
 	}
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-/*	public function forCallsRenderSubtreeCorrectly() {
-		$this->nodeMock->expects($this->exactly(7))
-		               ->method('renderChildNodes');
-		$this->viewHelper->forMethod($this->nodeMock, array('each' => array(0,1,2,3,4,5,6), 'as' => 'a'));
-	}
-*/	
-	/**
-	 * @test
-	 * @expectedException F3::Beer3::Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-/*	public function forThrowsExceptionIfAsArgumentMissing() {
-		$this->viewHelper->forMethod($this->nodeMock, array('each' => array()));
-	}
-*/
 }
 
 

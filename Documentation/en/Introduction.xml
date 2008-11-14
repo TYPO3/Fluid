@@ -9,19 +9,47 @@
   <title>Introduction</title>
 
   <para>Beer3 is a next-generation templating engine which was engineered with
-  several goals in mind: </para>
+  several goals in mind:<itemizedlist>
+      <listitem>
+        <para>Simplicity</para>
+      </listitem>
+
+      <listitem>
+        <para>Flexibility</para>
+      </listitem>
+
+      <listitem>
+        <para>Extensibility</para>
+      </listitem>
+
+      <listitem>
+        <para>Ease of use</para>
+      </listitem>
+    </itemizedlist></para>
+
+  <para>This templating engine should not be bloated, instead, we try to do it
+  "The Zen Way" - you do not need to learn too many things, thus you can
+  concentrate getting your things done, while the template engine does the
+  rest.</para>
 
   <section>
     <title>What does it do?</title>
 
-    <para>Overview; What does it do? What problem is solved? Who is interested
-    in this? Brief technical insight. Basically everything people need to know
-    if they should go on with this package.</para>
+    <para>In the current MVC system of FLOW3, the View part is currently quite
+    low-level. That means, the standard view provides a
+    <methodname>render</methodname> method, and nothing more. That makes it
+    really difficult to write powerful views, as most designers will not write
+    PHP code.</para>
+
+    <para>That is where the Template Engine comes into play: It "lives" inside
+    the View, and is controlled by a special
+    <classname>TemplateView</classname> which instanciates the Template
+    Parser, resolves the template HTML file, etc.</para>
   </section>
 
   <section>
-    <title>Screenshots</title>
+    <title>Example Template</title>
 
-    <para>Screenshots are very much welcome for a visual impression.</para>
+    <para>Now follows an example template<programlisting>// TODO</programlisting></para>
   </section>
 </section>

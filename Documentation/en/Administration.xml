@@ -6,20 +6,88 @@
          xmlns:svg="http://www.w3.org/2000/svg"
          xmlns:ns="http://docbook.org/ns/docbook"
          xmlns:mathml="http://www.w3.org/1998/Math/MathML">
-  <title>Lorem ipsum</title>
-  <para>
-  	<itemizedlist>
+  <title>Software Design</title>
+
+  <para><itemizedlist>
       <listitem>
-        <para>Describes how to manage the package from an
-        administrator/superuser point of view.</para>
+        <para></para>
       </listitem>
-      <listitem>
-        <para>Language should be non/semi-technical, explaining, using small
-        examples.</para>
-      </listitem>
-      <listitem>
-        <para>Target group: Administrators</para>
-      </listitem>
-    </itemizedlist>
-  </para>
+    </itemizedlist></para>
+
+  <section>
+    <title>Design Decisions</title>
+
+    <para>BEER3 was born in the context of FLOW3, but from beginning on, we
+    saw the needs for such a templating system in other contexts - namely
+    TYPO3 v4, or stand-alone usage. That's why the core design of BEER3
+    reflects this thinking.</para>
+
+    <para>We are using a layered architecture for BEER3, shown below:</para>
+
+    <para><mediaobject>
+        <imageobject>
+          <imagedata fileref="layered-architecture.png"></imagedata>
+        </imageobject>
+      </mediaobject>BEER3 Core consists of the parts which do not change
+    depending on the environment, such as the template parser.</para>
+
+    <para>The upper layer, consisting of the Standard View Helpers and the
+    TemplateView, are currently FLOW3-specific, but there will be separate
+    layers for different contexts (like TYPO3 v4).</para>
+  </section>
+
+  <section>
+    <title>The Core</title>
+
+    <para>BEER3 Core consists of the following components:</para>
+
+    <para><itemizedlist>
+        <listitem>
+          <para>The Parser, which takes a template file and builds up a syntax
+          tree from it.</para>
+        </listitem>
+
+        <listitem>
+          <para>The Syntax Tree Elements (which have logic inside them as
+          well)</para>
+        </listitem>
+
+        <listitem>
+          <para>The AbstractViewHelper, being the base class for all view
+          helpers.</para>
+        </listitem>
+      </itemizedlist></para>
+
+    <para>Rendering a template always involves two steps:<itemizedlist>
+        <listitem>
+          <para>Call the <methodname>parse</methodname> method in the
+          <classname>TemplateParser</classname> class, which will return a
+          SyntaxTree. This Syntax Tree will be cached in the future.</para>
+        </listitem>
+
+        <listitem>
+          <para>The SyntaxTree is implemented using a
+          <emphasis>Composite</emphasis> design pattern, with all syntax tree
+          nodes extending
+          <classname>F3::Beer3::Core::SyntaxTree::AbstractNode</classname>.</para>
+        </listitem>
+
+        <listitem>
+          <para>Call the <methodname>render(F3::Beer3::Core::VariableContainer
+          $variableContainer)</methodname> method. This method needs a
+          <classname>VariableContainer</classname> as argument - this means
+          all bound variables which should be rendered.</para>
+        </listitem>
+
+        <listitem>
+          <para>The result of the render() method is the output string.</para>
+        </listitem>
+      </itemizedlist></para>
+  </section>
+
+  <section>
+    <title>The upper layers for FLOW3</title>
+
+    <para></para>
+  </section>
 </section>

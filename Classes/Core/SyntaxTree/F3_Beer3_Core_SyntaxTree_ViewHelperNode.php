@@ -34,14 +34,8 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * Namespace of view helper
 	 * @var string
 	 */
-	protected $viewHelperNamespace;
+	protected $viewHelperClassName;
 
-	/**
-	 * Name of view helper
-	 * @var string
-	 */
-	protected $viewHelperName;
-	
 	/**
 	 * Arguments of view helper - References to ArgumentRootNodes.
 	 * @var array
@@ -65,27 +59,18 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperNamespace, $viewHelperName, F3::Beer3::Core::AbstractViewHelper $viewHelper, $arguments) {
-		$this->viewHelperNamespace = $viewHelperNamespace;
-		$this->viewHelperName = $viewHelperName;
-		$this->arguments = $arguments;
+	public function __construct($viewHelperClassName, F3::Beer3::Core::AbstractViewHelper $viewHelper, $arguments) {
+		$this->viewHelperClassName = $viewHelperClassName;
 		$this->viewHelper = $viewHelper;
-	}
-
-	/**
-	 * Get the namespace name of the view helper
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function getViewHelperNamespace() {
-		return $this->viewHelperNamespace;
+		$this->arguments = $arguments;
 	}
 	
 	/**
-	 * Get name of view helper
+	 * Get class name of view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function getViewHelperName() {
-		return $this->viewHelperName;
+	public function getViewHelperClassName() {
+		return $this->viewHelperClassName;
 	}
 	
 	/**
