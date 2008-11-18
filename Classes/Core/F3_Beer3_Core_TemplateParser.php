@@ -268,6 +268,10 @@ class TemplateParser {
 		
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
+		if ($objectToCall instanceof F3::Beer3::Core::Facets::PostParseInterface) {
+			$objectToCall->postParseEvent($currentDynamicNode);
+		}
+		
 		if (!$selfclosing) {
 			$state->pushNodeToStack($currentDynamicNode);
 		}

@@ -28,7 +28,9 @@
   <section>
     <title>How to write a template</title>
 
-    <para></para>
+    <para>Namespace declaration</para>
+
+    <para>View helpers are namespaced</para>
   </section>
 
   <section>
@@ -48,7 +50,7 @@
         <listitem>
           <para><methodname>initializeArguments()</methodname>: Inside this
           method, you need to register all the arguments you expect the view
-          helper to take.</para>
+          helper to use.</para>
         </listitem>
 
         <listitem>
@@ -62,15 +64,23 @@
 
       <para>As previously mentioned, initializing arguments takes place inside
       the <methodname>initializeArguments()</methodname> method. Call
-      <code>$this-&gt;registerArgument(...)</code> as often as you need
-      it.</para>
+      <code>$this-&gt;registerArgument(...)</code> once for each
+      argument.</para>
+
+      <para>See the section about the
+      <classname>TagBasedViewHelper</classname> for some more
+      possibilities.</para>
     </section>
 
     <section>
-      <title>Render contents</title>
+      <title>Rendering the view helper</title>
 
-      <para>You have the following possibilities when rendering
-      contents:</para>
+      <para>The rendering of the view helper is being triggered by the
+      render() method of it. It is expected to return the rendered content as
+      a string.</para>
+
+      <para>You have the following possibilities to access the environment
+      when rendering your view helper:</para>
 
       <para><itemizedlist>
           <listitem>
@@ -97,7 +107,7 @@
             <emphasis>remove every variable you added</emphasis> again! This
             is a security measure against side-effects.</para>
 
-            <para>Additionally, it is not possible to add a variable to the
+            <para>It is as well not possible to add a variable to the
             VariableContainer if a variable of the same name already exists -
             again to prevent side effects and scope problems.</para>
           </listitem>
@@ -115,12 +125,70 @@
 }</programlisting>The above example demonstrates how we add a variable, render
       all children (everything between the opening and closing tag), and
       remove the variable again to prevent side-effects.</para>
+
+      <para>In some cases, however, the view helper needs to access more
+      properties of its environment, and that's where facets come into
+      play.</para>
     </section>
 
     <section>
       <title>Facets</title>
 
-      <para></para>
+      <para>The possibilities you get when you base your view helper on
+      <classname>AbstractViewHelper</classname> should be enough for most use
+      cases - however, there are some cases when the view helper needs to
+      interact in a special way with its surroundings - an example is the
+      "if/else" view helper group.</para>
+
+      <para>If a view helper chooses to implement a certain facet (this means
+      it must implement a certain Facet Interface), it gets special access to
+      its surroundings.</para>
+
+      <para>Sometimes, the view helper needs direct access to its child nodes
+      - as it does not want to render all of its children, but only a subset.
+      For this to work the
+      <interfacename>SubNodeAccessInterface</interfacename> has been
+      introduced.</para>
+
+      <section>
+        <title>SubNodeAccess Facet</title>
+
+        <para>Let's take if/then/else as an example and start with two
+        examples how this view helper is supposed to work:</para>
+
+        <para><programlisting>&lt;f3:if condition="..."&gt;
+   This text should only be rendered if the condition evaluates to TRUE.
+&lt;/f3:if&gt;</programlisting>This above case is the most simple case,
+        however, we want to support if/else as well:</para>
+
+        <para><programlisting>&lt;f3:if condition="..."&gt;
+   &lt;f3:then&gt;If condition evaluated to TRUE, this should be rendered&lt;/f3:then&gt;
+   &lt;f3:else&gt;condition was FALSE -&gt; we render the else part.&lt;/f3:else&gt;
+&lt;/f3:if&gt;</programlisting>To implement the functionality of the
+        <code>&lt;f3:if&gt;</code> view helper, a standard
+        <code>$this-&gt;renderChildren()</code> will not be sufficent, as the
+        <code>if</code>-Tag has no control whether the
+        <code>&lt;f3:then&gt;</code> or <code>&lt;f3:else&gt;</code> is
+        rendered. Thus, the <code>&lt;f3:if&gt;</code> tag needs more
+        information about its environment, namely it needs access to its
+        subnodes in the syntax tree.</para>
+
+        <para>To make this work, the <code>&lt;f3:if&gt;</code>-tag implements
+        the
+        <interfacename>F3::Beer3::Core::Facets::SubNodeAccessInterface</interfacename>,
+        which consists of a <methodname>setChildren(array
+        $childNodes)</methodname> method being called before the
+        <methodname>render()</methodname> method is triggered. Then, it can
+        evaluate the sub nodes inside the <methodname>render()</methodname>
+        method, and decide which part of the subnodes it will render based on
+        the condition.</para>
+      </section>
     </section>
+  </section>
+
+  <section>
+    <title>Standard View Helper Library</title>
+
+    <para></para>
   </section>
 </section>

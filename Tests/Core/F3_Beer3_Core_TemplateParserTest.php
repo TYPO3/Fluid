@@ -15,6 +15,7 @@ namespace F3::Beer3::Core;
  * Public License for more details.                                       *
  *                                                                        */
 
+include_once(__DIR__ . '/Fixtures/F3_Beer3_PostParseFacetViewHelper.php');
 /**
  * @package Beer3
  * @subpackage Tests
@@ -245,6 +246,34 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$expected = '0 2 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
 	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function postParseFacetIsCalledOnParse() {
+		$templateParser = new F3::Beer3::Core::TemplateParser();
+		
+		$postParseFacetViewHelper = 
+		$objectFactoryMock = $this->getMock('F3::FLOW3::Object::FactoryInterface');
+		$objectFactoryMock->expects($this->any())
+		                  ->method('create')->will($this->returnCallback(array($this, 'objectFactoryCallback')));
+		$templateParser->injectObjectFactory($objectFactoryMock);
+		
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
+		$templateTree = $templateParser->parse($templateSource);
+		$this->assertEquals(F3::Beer3::PostParseFacetViewHelper::$wasCalled, TRUE, 'PostParse was not called!');
+	}
+	
+	public function objectFactoryCallback() {
+		$arguments = func_get_args();
+		if ($arguments[0] == 'F3::Beer3::PostParseFacetViewHelper') {
+			return new F3::Beer3::PostParseFacetViewHelper();
+		} else {
+			return call_user_func_array(array($this->objectFactory, 'create'), $arguments);
+		}
+	}
+	
 }
 
 

@@ -66,10 +66,6 @@ class ForViewHelperTest extends F3::Testing::BaseTestCase {
 		);
 		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');	
 	}
-<<<<<<< .mine
-
-=======
->>>>>>> .r1518
 }
 
 

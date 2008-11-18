@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::Core::Facets;
+namespace F3::Beer3;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,15 +21,26 @@ namespace F3::Beer3::Core::Facets;
  * @version $Id:$
  */
 /**
- * [Enter description here]
- *
- * @package
- * @subpackage
- * @version $Id:$
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * Enter description here...
+ * @scope prototype
  */
-interface PostParseInterface {
-	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode);
+class PostParseFacetViewHelper extends F3::Beer3::Core::AbstractViewHelper implements F3::Beer3::Core::Facets::PostParseInterface {
+	public static $wasCalled = FALSE;
+	
+	public function __construct() {
+		
+	}
+	
+	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $viewHelperNode) {
+		self::$wasCalled = TRUE;
+	}
+	public function initializeArguments() {
+		
+	}
+	
+	public function render() {
+		
+	}
 }
 
 
