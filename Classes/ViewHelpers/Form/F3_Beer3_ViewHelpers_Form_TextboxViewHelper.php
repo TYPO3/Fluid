@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3::ViewHelpers::Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -20,25 +20,22 @@ namespace F3::Beer3::ViewHelpers;
  * @subpackage 
  * @version $Id:$
  */
+
 /**
- * [Enter description here]
+ * Enter description here...
  *
- * @package
- * @subpackage
- * @version $Id:$
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class LinkViewHelper extends F3::Beer3::Core::AbstractViewHelper {
+class TextboxViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
 	
 	public function initializeArguments() {
-		
+		$this->registerUniversalTagAttributes();
+		$this->registerTagAttribute('name', 'Name of input tag', TRUE);
+		$this->registerTagAttribute('value', 'Value of input tag', TRUE);
 	}
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
-		return $uriHelper->linkTo($this->renderChildren(), $this->arguments['action'], $this->arguments['arguments']);
+		return '<input type="text" ' . $this->renderTagAttributes() . ' />';
 	}
 }
-
 
 ?>

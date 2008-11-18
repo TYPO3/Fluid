@@ -205,7 +205,7 @@ class Test extends F3::Testing::BaseTestCase {
 		$this->assertEquals(preg_match($pattern, '{a:"String"}'), 1, 'Array syntax not identified in case of a double quoted string!');
 		$this->assertEquals(preg_match($pattern, '{a:\'String\'}'), 1, 'Array syntax not identified in case of a single quoted string!');
 		
-		$exprected = '{a:{bla:{x:z}, b: a}}';
+		$expected = '{a:{bla:{x:z}, b: a}}';
 		preg_match($pattern, $expected, $match);
 		$this->assertEquals($match[0], $expected, 'If nested arrays appear, the string is not parsed correctly.');
 		

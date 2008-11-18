@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -27,16 +27,23 @@ namespace F3::Beer3::ViewHelpers;
  * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class LinkViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	
+class TestTagBasedViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
+
+	/**
+	 * Check tag attribute registration
+	 */
+	public function registerTagAttribute($name, $description, $required) {
+		parent::registerTagAttribute($name, $description, $required);
+	}
 	public function initializeArguments() {
 		
 	}
+	/**
+	 * Render the tag attributes registered
+	 */
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
-		return $uriHelper->linkTo($this->renderChildren(), $this->arguments['action'], $this->arguments['arguments']);
+		return $this->renderTagAttributes();
 	}
 }
 

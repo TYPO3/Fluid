@@ -48,10 +48,10 @@ class ArgumentDefinition {
 	protected $description;
 	
 	/**
-	 * Is argument optional?
+	 * Is argument required?
 	 * @var boolean
 	 */
-	protected $isOptional = FALSE;
+	protected $required = FALSE;
 	
 	/**
 	 * Constructor for this argument definition.
@@ -62,11 +62,11 @@ class ArgumentDefinition {
 	 * @param boolean $isOptional Optionality setting. If not set, defaults to FALSE
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($name, $type, $description, $isOptional = FALSE) {
+	public function __construct($name, $type, $description, $required) {
 		$this->name = $name;
 		$this->type = $type;
 		$this->description = $description;
-		$this->isOptional = $isOptional;
+		$this->required = $required;
 	}
 	
 	/**
@@ -105,8 +105,8 @@ class ArgumentDefinition {
 	 * @return boolean TRUE if argument is optional
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function isOptional() {
-		return $this->isOptional;
+	public function isRequired() {
+		return $this->required;
 	}
 }
 

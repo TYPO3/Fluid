@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -20,25 +20,35 @@ namespace F3::Beer3::ViewHelpers;
  * @subpackage 
  * @version $Id:$
  */
+
+include_once(__DIR__ . '/Fixtures/F3_Beer3_TestTagBasedViewHelper.php');
 /**
- * [Enter description here]
+ * Testcase for [insert classname here]
  *
  * @package
- * @subpackage
+ * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class LinkViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	
-	public function initializeArguments() {
-		
+class TagBasedViewHelperTest extends F3::Testing::BaseTestCase {
+
+	public function setUp() {
+		$this->viewHelper = new F3::Beer3::TestTagBasedViewHelper();
 	}
-	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
-		return $uriHelper->linkTo($this->renderChildren(), $this->arguments['action'], $this->arguments['arguments']);
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function oneTagAttributeIsRenderedCorrectly() {
+		$this->viewHelper->registerTagAttribute('x', 'Description', FALSE);
+		$arguments = new F3::Beer3::Core::ViewHelperArguments(array('x' => 'Hallo'));
+		$expected = 'x="Hallo"';
+		
+		$this->viewHelper->arguments = $arguments;
+		$this->assertEquals($expected, $this->viewHelper->render(), 'A simple tag attribute was not rendered correctly.');
 	}
 }
+
 
 
 ?>

@@ -62,21 +62,35 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	}
 	
 	/**
-	 * Load the template file, expects it at the location specified at $this->templatePathPattern.
+	 * Resolve the template file path, based on $this->templatePathPattern
 	 * 
-	 * Override if you have some custom logic saying where the template is.
-	 * 
-	 * @return string the contents of the template file
+	 * @param string $action Name of action. Optional. Defaults to current action.
+	 * @return string File name of template file
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function loadTemplateFile() {
+	protected function resolveTemplateFile($action = NULL) {
+		$action = ($action ? $action : $this->request->getControllerActionName());
+		
 		$templatePath = $this->templatePathPattern;
 		$templatePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templatePath);
 		$templatePath = str_replace('@controller', $this->request->getControllerName(), $templatePath);
-		$templatePath = str_replace('@action', $this->request->getControllerActionName(), $templatePath);
+		$templatePath = str_replace('@action', $action, $templatePath);
 
-		$templateSource = file_get_contents($templatePath, FILE_TEXT);
-		if (!$templateSource) throw new F3::Beer3::Core::RuntimeException('The template file "' . $templatePath . '" was not found.', 1225709595);
+		return $templatePath;
+	}
+	
+	/**
+	 * Load the given template file.
+	 * 
+	 * Override if you have some custom logic saying where the template is.
+	 * 
+	 * @param string $templateFilePath Full path to template file to load
+	 * @return string the contents of the template file
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function loadTemplateFile($templateFilePath) {
+		$templateSource = file_get_contents($templateFilePath, FILE_TEXT);
+		if (!$templateSource) throw new F3::Beer3::Core::RuntimeException('The template file "' . $templateFilePath . '" was not found.', 1225709595);
 		return $templateSource;
 	}
 	
@@ -86,8 +100,10 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render() {
-		$templateTree = $this->parseTemplate();
+	public function render($action = NULL) {
+		$templateFileName = $this->resolveTemplateFile($action);
+		$templateSource = $this->loadTemplateFile($templateFileName);
+		$templateTree = $this->templateParser->parse($templateSource);
 		
 		$this->contextVariables['view'] = $this;
 		
@@ -95,13 +111,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		$result = $templateTree->render($variableStore);
 		return $result;
 	}
-	
-	protected function parseTemplate() {
-		$templateSource = $this->loadTemplateFile();
-		
-		return $this->templateParser->parse($templateSource);	
-	}
-	
+
 	/**
 	 * Add a variable to the context.
 	 * Can be chained, so $template->addVariable(..., ...)->addVariable(..., ...); is possible,

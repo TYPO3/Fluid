@@ -15,63 +15,52 @@ namespace F3::Beer3::ViewHelpers;
  * Public License for more details.                                       *
  *                                                                        */
 
+include_once(__DIR__ . '/Fixtures/F3_Beer3_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
 /**
- * @package Beer3
- * @subpackage Tests
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Testcase for DefaultViewHelper
+ * [Enter description here]
  *
- * @package Beer3
- * @subpackage Tests
+ * @package
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-
-include_once(__DIR__ . '/Fixtures/F3_Beer3_ViewHelpers_Fixtures_ConstraintSyntaxTreeNode.php');
-class ForViewHelperTest extends F3::Testing::BaseTestCase {
-
-	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setUp() {
-	}
-	
+class SelectViewHelperTest extends F3::Testing::BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function forExecutesTheLoopCorrectly() {
-		$this->viewHelper = new F3::Beer3::ViewHelpers::ForViewHelper();
+	public function selectReturnsExpectedXML() {
+		$this->viewHelper = new F3::Beer3::ViewHelpers::Form::SelectViewHelper();
+		$this->viewHelper->initializeArguments();
 		
 		$arguments = new F3::Beer3::Core::ViewHelperArguments(array(
-			'each' => array(0,1,2,3),
-			'as'   => 'innerVariable'
+			'options' => array(
+				'k1' => 'v1',
+				'k2' => 'v2'
+			),
+			'selectedValue' => 'k2',
+			'name' => 'myName'
 		));
-		
-		$variableContainer = new F3::Beer3::Core::VariableContainer(array());
-		
-		$viewHelperNode = new F3::Beer3::ViewHelpers::Fixtures::ConstraintSyntaxTreeNode($variableContainer);		
+
 		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->variableContainer = $variableContainer;
-		$this->viewHelper->setViewHelperNode($viewHelperNode);
-		$this->viewHelper->render();
+		$this->viewHelper->setViewHelperNode(new F3::Beer3::ViewHelpers::Fixtures::EmptySyntaxTreeNode());
+		$output = $this->viewHelper->render();
+		$element = new ::SimpleXMLElement($output);
 		
-		$expectedCallProtocol = array(
-			array('innerVariable' => 0),
-			array('innerVariable' => 1),
-			array('innerVariable' => 2),
-			array('innerVariable' => 3)
-		);
-		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');	
+		$this->assertEquals('myName', (string)$element['name'], 'Name was not correctly read out');
+		
+		$selectedNode = $element->xpath('/select/option[@value="k2"]');
+		$this->assertEquals('selected', (string)$selectedNode[0]['selected'], 'The selected value was not correct.');
+		
+		$this->assertEquals('v1', (string)$element->option[0], 'One option was not rendered, albeit it should (1).');
+		$this->assertEquals('v2', (string)$element->option[1], 'One option was not rendered, albeit it should (2).');
 	}
-<<<<<<< .mine
-
-=======
->>>>>>> .r1518
 }
-
 
 
 ?>

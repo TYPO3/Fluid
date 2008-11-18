@@ -48,6 +48,19 @@ class ViewHelperNodeTest extends F3::Testing::BaseTestCase {
 
 		$viewHelperNode->render(new F3::Beer3::Core::VariableContainer(array($childNode)));
 	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initializeArgumentsIsCalledByViewHelperNode() {
+		$stubViewHelper = $this->getMock('F3::Beer3::Core::AbstractViewHelper');
+		$stubViewHelper->expects($this->once())
+		               ->method('initializeArguments');
+		$viewHelperNode = new F3::Beer3::Core::SyntaxTree::ViewHelperNode("f3", "test", $stubViewHelper, array());
+		
+		$viewHelperNode->render(new F3::Beer3::Core::VariableContainer(array()));
+	}
 }
 
 

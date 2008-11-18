@@ -42,16 +42,16 @@ abstract class AbstractViewHelper {
 	private $viewHelperNode;
 	
 	/**
-	 * Arguments accessor
+	 * Arguments accessor. Must be public, because it is set from the outside.
 	 * @var F3::Beer3::Arguments
 	 */
-	protected $arguments;
+	public $arguments;
 	
 	/**
-	 * Current variable container reference
+	 * Current variable container reference. Must be public because it is set by the framework
 	 * @var F3::Beer3::VariableContainer
 	 */
-	protected $variableContainer;
+	public $variableContainer;
 	
 	
 	/**
@@ -60,13 +60,13 @@ abstract class AbstractViewHelper {
 	 * @param string $name Name of the argument
 	 * @param string $type Type of the argument
 	 * @param string $description Description of the argument
-	 * @param boolean $isOptional If TRUE, argument is optional. Defaults to FALSE.
+	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @return $this this object to allow chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function registerArgument($name, $type, $description, $isOptional = FALSE) {
+	protected function registerArgument($name, $type, $description, $required = FALSE) {
 		// TODO -> use component manager here!!
-		$this->argumentDefinitions[] = new F3::Beer3::Core::ArgumentDefinition($name, $type, $description, $isOptional);
+		$this->argumentDefinitions[] = new F3::Beer3::Core::ArgumentDefinition($name, $type, $description, $required);
 		return $this;
 	}
 	
@@ -82,18 +82,14 @@ abstract class AbstractViewHelper {
 	
 	/**
 	 * Sets all needed attributes needed for the rendering. Called by the framework.
-	 * Populates $this->arguments, $this->viewHelperNode, and $this->varibleContainer.
+	 * Populates $this->viewHelperNode
 	 *
-	 * @param Arguments $arguments
 	 * @param ViewHelperNode $node
-	 * @param VariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	final public function prepareRendering(F3::Beer3::Core::ViewHelperArguments $arguments, F3::Beer3::Core::SyntaxTree::ViewHelperNode $node, F3::Beer3::Core::VariableContainer $variableContainer) {
-		$this->arguments = $arguments;
+	final public function setViewHelperNode(F3::Beer3::Core::SyntaxTree::ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
-		$this->variableContainer = $variableContainer;
 	}
 
 	/**

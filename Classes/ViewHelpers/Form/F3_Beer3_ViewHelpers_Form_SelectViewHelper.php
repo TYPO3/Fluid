@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers;
+namespace F3::Beer3::ViewHelpers::Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,24 +21,37 @@ namespace F3::Beer3::ViewHelpers;
  * @version $Id:$
  */
 /**
- * [Enter description here]
- *
- * @package
- * @subpackage
- * @version $Id:$
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * Enter description here...
  * @scope prototype
  */
-class LinkViewHelper extends F3::Beer3::Core::AbstractViewHelper {
+class SelectViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
 	
 	public function initializeArguments() {
-		
+		$this->registerUniversalTagAttributes();
+		$this->registerArgument('options', 'array', 'Associative array with internal IDs as key, and the values are displayed in the select box', TRUE);
+		$this->registerArgument('selectedValue', 'string', 'Selected key', FALSE);
+		$this->registerTagAttribute('name', 'Name of select box', TRUE);
 	}
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
-		return $uriHelper->linkTo($this->renderChildren(), $this->arguments['action'], $this->arguments['arguments']);
+		$out = '<select ' . $this->renderTagAttributes() . '>';
+		
+		$selectedValue = NULL;
+		if ($this->arguments['selectedValue']) {
+			$selectedValue = $this->arguments['selectedValue'];
+		}
+		
+		foreach ($this->arguments['options'] as $key => $value) {
+			$selected = '';
+			if ($key == $selectedValue) {
+				$selected = 'selected="selected"';
+			}
+			$out .= '<option ' . $selected . ' value="' . $key . '">' . $value . '</option>';
+		}
+		
+		$out .= '</select>';
+		
+		return $out;
 	}
 }
-
 
 ?>

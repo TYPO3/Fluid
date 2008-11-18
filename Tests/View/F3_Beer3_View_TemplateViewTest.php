@@ -41,12 +41,21 @@ class TemplateViewTest extends F3::Testing::BaseTestCase {
 	public function viewIsPlacedInVariableContainer() {
 		$packageManager = $this->objectManager->getObject('F3::FLOW3::Package::ManagerInterface');
 		$resourceManager = $this->objectManager->getObject('F3::FLOW3::Resource::Manager');
+		
+		$syntaxTreeNode = new F3::Beer3::View::Fixture::TransparentSyntaxTreeNode();
+		
+		$templateParserMock = $this->getMock('F3::Beer3::Core::TemplateParser', array('parse'));
+		$templateParserMock->expects($this->any())
+		                   ->method('parse')
+		                   ->will($this->returnValue($syntaxTreeNode));
+		                   
 		$templateView = new F3::Beer3::View::Fixture::TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
+		$templateView->injectTemplateParser($templateParserMock);
 		$templateView->addVariable('name', 'value');
 		$templateView->render();
 		
-		$this->assertSame($templateView, $templateView->syntaxTree->variableContainer->get('view'), 'The view has not been placed in the variable container.');
-		$this->assertEquals('value', $templateView->syntaxTree->variableContainer->get('name'), 'Context variable has been set.');
+		$this->assertSame($templateView, $syntaxTreeNode->variableContainer->get('view'), 'The view has not been placed in the variable container.');
+		$this->assertEquals('value', $syntaxTreeNode->variableContainer->get('name'), 'Context variable has been set.');
 		
 	}
 }

@@ -47,13 +47,11 @@ class FormViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		$currentRequest = $this->variableContainer->get('view')->getRequest();
-		$this->uriHelper->setRequest($currentRequest);
+		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
 		
-		$action = ( $this->arguments['action'] ? $this->arguments['action'] : $currentRequest->getControllerActionName() );
 		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'GET' );
 		
-		$formActionUrl = $this->uriHelper->URIFor($action, array(), $this->arguments['controller'], $this->arguments['package']);
+		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], array(), $this->arguments['controller'], $this->arguments['package']);
 		
 		$out = '<form action="' . $formActionUrl . '" enctype="multipart/form-data" method="' . $method . '">';
 		$out .= $this->renderChildren();

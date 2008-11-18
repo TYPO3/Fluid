@@ -348,6 +348,9 @@ class TemplateParser {
 		if (preg_match_all(self::SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
+				if (!array_key_exists('ValueSingleQuoted', $singleMatch)) $singleMatch['ValueSingleQuoted'] = '';
+				if (!array_key_exists('ValueDoubleQuoted', $singleMatch)) $singleMatch['ValueDoubleQuoted'] = '';
+				
 				$value = $this->unquoteArgumentString($singleMatch['ValueSingleQuoted'], $singleMatch['ValueDoubleQuoted']);
 				$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
 			}
@@ -457,11 +460,15 @@ class TemplateParser {
 				$arrayKey = $singleMatch['Key'];
 				if (!empty($singleMatch['VariableIdentifier'])) {
 					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3::Beer3::Core::SyntaxTree::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
-				} elseif (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0') {
+				} elseif (array_key_exists('Number', $singleMatch) && ( !empty($singleMatch['Number']) || $singleMatch['Number'] === '0' ) ) {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
-				} elseif (!empty($singleMatch['DoubleQuotedString']) || !empty($singleMatch['SingleQuotedString'])) {
-					$arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
-				} elseif (!empty($singleMatch['Subarray'])) {
+				} elseif ( ( array_key_exists('DoubleQuotedString', $singleMatch) && !empty($singleMatch['DoubleQuotedString']) )
+				          || ( array_key_exists('SingleQuotedString', $singleMatch) && !empty($singleMatch['SingleQuotedString']) ) ) {
+				    if (!array_key_exists('SingleQuotedString', $singleMatch)) $singleMatch['SingleQuotedString'] = '';
+					if (!array_key_exists('DoubleQuotedString', $singleMatch)) $singleMatch['DoubleQuotedString'] = '';
+				    
+				    $arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
+				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->handler_array_recursively($singleMatch['Subarray']);
 				} else {
 					throw new F3::Beer3::Core::ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);

@@ -44,7 +44,7 @@ class ArgumentDefinitionTest extends F3::Testing::BaseTestCase {
 		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
-		$this->assertEquals($argumentDefinition->isOptional(), $isOptional, 'Optional flag could not be retrieved correctly.');
+		$this->assertEquals($argumentDefinition->isRequired(), $isOptional, 'Optional flag could not be retrieved correctly.');
 	}
 }
 

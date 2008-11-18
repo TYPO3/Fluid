@@ -32,9 +32,9 @@ class TemplateViewFixture extends F3::Beer3::View::TemplateView {
 
 	public $syntaxTree;
 	
-	protected function parseTemplate() {
-		$this->syntaxTree = new F3::Beer3::View::Fixture::TransparentSyntaxTreeNode();
-		return $this->syntaxTree;
+	protected function resolveTemplateFile() {
+	}
+	protected function loadTemplateFile() {
 	}
 }
 

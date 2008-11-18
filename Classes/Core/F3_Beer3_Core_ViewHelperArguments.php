@@ -68,6 +68,9 @@ class ViewHelperArguments implements ::ArrayAccess {
     	if (!array_key_exists($key, $this->arguments)) {
     		return NULL;
     	}
+    	if (!array_key_exists($key, $this->arguments))
+    		return NULL;
+    		// TODO CHANGE THIS
     	return $this->arguments[$key];
     } 
     

@@ -86,14 +86,19 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
+		$this->viewHelper->initializeArguments();
+		
 		$this->variableContainer = $variableContainer;
-		$contextVariables =  $variableContainer->getAllIdentifiers();
+		$contextVariables = $variableContainer->getAllIdentifiers();
 		$evaluatedArguments = array();
 		foreach ($this->arguments as $argumentName => $argumentValue) {
 			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
 		}
-		$this->viewHelper->prepareRendering(new F3::Beer3::Core::ViewHelperArguments($evaluatedArguments), $this, $variableContainer);
+		
 		// TODO: Component manager!
+		$this->viewHelper->arguments = new F3::Beer3::Core::ViewHelperArguments($evaluatedArguments);
+		$this->viewHelper->variableContainer = $variableContainer;
+		$this->viewHelper->setViewHelperNode($this);
 		
 		if ($this->viewHelper instanceof F3::Beer3::Core::Facets::ChildNodeAccessInterface) {
 			$this->viewHelper->setChildNodes($this->childNodes);
