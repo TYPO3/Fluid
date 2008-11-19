@@ -16,8 +16,8 @@ namespace F3::Beer3::Core;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
@@ -25,8 +25,8 @@ namespace F3::Beer3::Core;
  * Sould be used as the base class for all view helpers which output simple tags, as it provides some
  * convenience methods to register default attributes, ...
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
@@ -34,11 +34,12 @@ abstract class TagBasedViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	
 	/**
 	 * Names of all registered tag attributes
+	 * @var array
 	 */
 	protected $tagAttributes = array();
 	
 	/**
-	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag, like CSS classes, ...
+	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->renderTagAttributes()
 	 * 
 	 * The tag attributes registered here are rendered with the $this->renderTagAttributes() method.
 	 * 
@@ -51,7 +52,6 @@ abstract class TagBasedViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	protected function registerTagAttribute($name, $description, $required=FALSE) {
 		$this->registerArgument($name, 'string', $description, $required);
 		$this->tagAttributes[] = $name;
-		
 	}
 	
 	/**
@@ -80,10 +80,11 @@ abstract class TagBasedViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	
 	/**
 	 * Render all tag attributes which were registered in $this->tagAttributes.
-	 * You should call this method in your render() method.
+	 * You should call this method in your render() method if you output some tag.
 	 * 
 	 * @return string Concatenated list of attributes
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo HTMLSPECIALCHAR output
 	 */
 	protected function renderTagAttributes() {
 		$attributes = array();

@@ -16,21 +16,23 @@ namespace F3::Beer3::Core;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 
 /**
  * Arguments list. Wraps an array, but only allows read-only methods on it.
+ * Is available inside every view helper as $this->arguments - and you use it as if it was an array.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class ViewHelperArguments implements ::ArrayAccess {
+
 	/**
 	 * Array storing the arguments themselves
 	 */
@@ -60,7 +62,7 @@ class ViewHelperArguments implements ::ArrayAccess {
     /**
      * Returns the value to the given key.
      *
-     * @param  $key
+     * @param  $key Key to get.
      * @return object associated value
      * @author Sebastian Kurfürst <sebastian@typo3.org>
      */
@@ -68,9 +70,8 @@ class ViewHelperArguments implements ::ArrayAccess {
     	if (!array_key_exists($key, $this->arguments)) {
     		return NULL;
     	}
-    	if (!array_key_exists($key, $this->arguments))
-    		return NULL;
-    		// TODO CHANGE THIS
+    	// TODO CHANGE THIS
+    		
     	return $this->arguments[$key];
     } 
     
@@ -94,7 +95,5 @@ class ViewHelperArguments implements ::ArrayAccess {
     function offsetUnset($name) { 
         throw new F3::Beer3::RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.'); 
     } 
-	
 }
-
 ?>

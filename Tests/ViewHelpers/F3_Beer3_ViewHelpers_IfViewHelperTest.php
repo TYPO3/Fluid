@@ -53,7 +53,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 	public function ifReturnsCorrectResultIfConditionTrue() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('condition' => 'true'));
 		$result = $templateTree->render($context);
 		$expected = 'RenderSomething';
@@ -67,7 +67,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 	public function ifReturnsCorrectResultIfConditionFalse() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('condition' => FALSE));
 		$result = $templateTree->render($context);
 		$expected = '';
@@ -81,7 +81,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 	public function ifThenElseReturnsCorrectResultIfConditionTrue() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('condition' => 'true'));
 		$result = $templateTree->render($context);
 		$expected = 'YEP';
@@ -95,7 +95,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 	public function ifThenElseReturnsCorrectResultIfConditionFalse() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('condition' => FALSE));
 		$result = $templateTree->render($context);
 		$expected = 'NOPE';

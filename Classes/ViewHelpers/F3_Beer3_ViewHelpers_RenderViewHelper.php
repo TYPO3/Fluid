@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::Core::Facets;
+namespace F3::Beer3::ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,20 +16,27 @@ namespace F3::Beer3::Core::Facets;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  */
 /**
  * [Enter description here]
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @scope prototype
  */
-interface PostParseInterface {
-	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Beer3::Core::VariableContainer $variableContainer);
+class RenderViewHelper extends F3::Beer3::Core::AbstractViewHelper {
+	public function initializeArguments() {
+		$this->registerArgument('section', 'string', 'Name of section to render. If used in a layout, renders a section of the main content file. If used inside a standard template, renders a section of the same file.', TRUE);
+	}
+	
+	public function render() {
+		return $this->variableContainer->get('view')->renderSection($this->arguments['section']);
+	}
 }
 
 

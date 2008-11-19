@@ -44,10 +44,13 @@ class TemplateViewTest extends F3::Testing::BaseTestCase {
 		
 		$syntaxTreeNode = new F3::Beer3::View::Fixture::TransparentSyntaxTreeNode();
 		
+		$parsingState = new F3::Beer3::Core::ParsingState();
+		$parsingState->setRootNode($syntaxTreeNode);
+		
 		$templateParserMock = $this->getMock('F3::Beer3::Core::TemplateParser', array('parse'));
 		$templateParserMock->expects($this->any())
 		                   ->method('parse')
-		                   ->will($this->returnValue($syntaxTreeNode));
+		                   ->will($this->returnValue($parsingState));
 		                   
 		$templateView = new F3::Beer3::View::Fixture::TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
 		$templateView->injectTemplateParser($templateParserMock);
@@ -56,7 +59,26 @@ class TemplateViewTest extends F3::Testing::BaseTestCase {
 		
 		$this->assertSame($templateView, $syntaxTreeNode->variableContainer->get('view'), 'The view has not been placed in the variable container.');
 		$this->assertEquals('value', $syntaxTreeNode->variableContainer->get('name'), 'Context variable has been set.');
-		
+	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderSingleSectionWorks() {
+		$templateView = $this->objectManager->getObject('F3::Beer3::View::TemplateView');
+		$templateView->setTemplateFile(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
+		$this->assertEquals($templateView->renderSection('mySection'), 'Output', 'Specific section was not rendered correctly!');
+	}
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function layoutEngineMergesTemplateAndLayout() {
+		$templateView = $this->objectManager->getObject('F3::Beer3::View::TemplateView');
+		$templateView->setTemplateFile(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
+		$templateView->setLayoutFile(__DIR__ . '/Fixtures/LayoutFixture.html');
+		$this->assertEquals($templateView->renderWithLayout('LayoutFixture'), '<div>Output</div>', 'Specific section was not rendered correctly!');
 	}
 }
 

@@ -17,14 +17,14 @@ namespace F3::Beer3::Core;
 
 /**
  * @package Beer3
- * @subpackage 
+ * @subpackage Core
  * @version $Id:$
  */
 /**
  * A Parsing Exception
  *
- * @package 
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

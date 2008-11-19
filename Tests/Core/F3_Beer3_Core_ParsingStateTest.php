@@ -39,7 +39,7 @@ class ParsingStateTest extends F3::Testing::BaseTestCase {
 	public function setUp() {
 		$this->parsingState = new F3::Beer3::Core::ParsingState();
 	}
-	public function teadDown() {
+	public function tearDown() {
 		unset($this->parsingState);
 	}
 	
@@ -55,15 +55,7 @@ class ParsingStateTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Beer3::Core::ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setRootNodeOnlyAcceptsARootNode() {
-		$this->parsingState->setRootNode(new F3::Beer3::Core::SyntaxTree::TextNode(""));
-	}
-	
-	/**
-	 * @test
 	 */
 	public function pushAndGetFromStackWorks() {
 		$rootNode = new F3::Beer3::Core::SyntaxTree::RootNode();

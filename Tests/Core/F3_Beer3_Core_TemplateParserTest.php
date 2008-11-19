@@ -91,7 +91,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('b'));
 		
 		$expected = $rootNode;
-		$actual = $this->templateParser->parse($templateSource);
+		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 01 was not parsed correctly.');
 	}
 	
@@ -112,7 +112,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$rootNode->addChildNode($dynamicNode);
 		
 		$expected = $rootNode;
-		$actual = $this->templateParser->parse($templateSource);
+		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 02 was not parsed correctly.');
 	}
 	
@@ -150,7 +150,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$rootNode->addChildNode(new F3::Beer3::Core::SyntaxTree::TextNode('b'));
 		
 		$expected = $rootNode;
-		$actual = $this->templateParser->parse($templateSource);
+		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 05 was not parsed correctly.');
 	}
 	
@@ -173,7 +173,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$dynamicNode->addChildNode(new F3::Beer3::Core::SyntaxTree::ObjectAccessorNode('post'));
 		
 		$expected = $rootNode;
-		$actual = $this->templateParser->parse($templateSource);
+		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 06 was not parsed correctly.');
 	}
 	
@@ -184,7 +184,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	public function fixture07ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('id' => 1));
 		$result = $templateTree->render($context);
 		$expected = '1';
@@ -198,7 +198,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	public function fixture08ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
@@ -212,7 +212,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	public function fixture09ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
 		$result = $templateTree->render($context);
 		$expected = '0 hallo test 3 4 ';
@@ -226,7 +226,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	public function fixture10ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
@@ -240,7 +240,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 	public function fixture11ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
 		
-		$templateTree = $this->templateParser->parse($templateSource);
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new F3::Beer3::Core::VariableContainer(array());
 		$result = $templateTree->render($context);
 		$expected = '0 2 4 ';
@@ -261,7 +261,7 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$templateParser->injectObjectFactory($objectFactoryMock);
 		
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
-		$templateTree = $templateParser->parse($templateSource);
+		$templateTree = $templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals(F3::Beer3::PostParseFacetViewHelper::$wasCalled, TRUE, 'PostParse was not called!');
 	}
 	

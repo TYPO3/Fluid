@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::Core::Facets;
+namespace F3::Beer3::ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,16 +21,37 @@ namespace F3::Beer3::Core::Facets;
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * Testcase for [insert classname here]
  *
  * @package
- * @subpackage
+ * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-interface PostParseInterface {
-	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Beer3::Core::VariableContainer $variableContainer);
+class SectionViewHelperTest extends F3::Testing::BaseTestCase {
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function sectionIsAddedToParseVariableContainer() {
+		$section = new F3::Beer3::ViewHelpers::SectionViewHelper();
+		
+		$viewHelperNodeMock = $this->getMock('F3::Beer3::Core::SyntaxTree::ViewHelperNode', array(), array(), '', FALSE);
+		$viewHelperArguments = array(
+			'name' => new F3::Beer3::Core::SyntaxTree::TextNode('sectionName')
+		);
+		
+		$variableContainer = new F3::Beer3::Core::VariableContainer();
+		
+		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
+		
+		$this->assertTrue($variableContainer->exists('sections'), 'Sections array was not created, albeit it should.');
+		$sections = $variableContainer->get('sections');
+		$this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
+	}
 }
+
 
 
 ?>

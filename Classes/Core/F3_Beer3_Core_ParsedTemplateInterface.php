@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::Core::Facets;
+namespace F3::Beer3::Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,21 +16,26 @@ namespace F3::Beer3::Core::Facets;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
-/**
- * [Enter description here]
- *
- * @package
- * @subpackage
- * @version $Id:$
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- */
-interface PostParseInterface {
-	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Beer3::Core::VariableContainer $variableContainer);
+interface ParsedTemplateInterface {
+	/**
+	 * Get root node of this parsing state.
+	 *
+	 * @return F3::Beer3::RootNode The root node
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getRootNode();
+	
+	/**
+	 * Returns a variable container used in the PostParse Facet.
+	 *
+	 * @return F3::Beer3::Core::VariableContainer
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getVariableContainer();
 }
-
 
 ?>

@@ -31,7 +31,7 @@ class PostParseFacetViewHelper extends F3::Beer3::Core::AbstractViewHelper imple
 		
 	}
 	
-	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $viewHelperNode) {
+	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $viewHelperNode, $arguments, F3::Beer3::Core::VariableContainer $variableContainer) {
 		self::$wasCalled = TRUE;
 	}
 	public function initializeArguments() {

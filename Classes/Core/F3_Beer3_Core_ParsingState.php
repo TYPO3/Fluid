@@ -17,19 +17,20 @@ namespace F3::Beer3::Core;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
  * Stores all information relevant for one parsing pass - that is, the root node,
- * and the current stack of open nodes (nodeStack).
+ * and the current stack of open nodes (nodeStack) and a variable container used for PostParseFacets.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ParsingState {
+class ParsingState implements F3::Beer3::Core::ParsedTemplateInterface {
 
 	/**
 	 * Root node reference
@@ -44,21 +45,38 @@ class ParsingState {
 	protected $nodeStack = array();
 	
 	/**
-	 * Set root node of this parsing state
+	 * Variable container where ViewHelpers implementing the PostParseFacet can store things in.
+	 * @var F3::Beer3::Core::VariableContainer
+	 */
+	protected $variableContainer;
+	
+	/**
+	 * Injects a variable container. ViewHelpers implementing the PostParse Facet can store information inside this variableContainer.
 	 *
-	 * @param F3::Beer3::Core::SyntaxTree::RootNode $rootNode
+	 * @param F3::Beer3::Core::VariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setRootNode($rootNode) {
-		if (!($rootNode instanceof F3::Beer3::Core::SyntaxTree::RootNode)) throw new F3::Beer3::Core::ParsingException('Root node must be of type RootNode.', 1224495647);
+	public function injectVariableContainer(F3::Beer3::Core::VariableContainer $variableContainer) {
+		$this->variableContainer = $variableContainer;
+	}
+	
+	/**
+	 * Set root node of this parsing state
+	 *
+	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode $rootNode
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo RENAME THIS!!
+	 */
+	public function setRootNode(F3::Beer3::Core::SyntaxTree::AbstractNode $rootNode) {
 		$this->rootNode = $rootNode;
 	}
 	
 	/**
 	 * Get root node of this parsing state.
 	 *
-	 * @return F3::Beer3::RootNode The root node
+	 * @return F3::Beer3::Core::SyntaxTree::AbstractNode The root node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRootNode() {
@@ -66,9 +84,9 @@ class ParsingState {
 	}
 	
 	/**
-	 * Push a node to the node stack.
+	 * Push a node to the node stack. The node stack holds all currently open templating tags.
 	 *
-	 * @param F3::Beer3::AbstractNode $node Node to push to node stack
+	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode $node Node to push to node stack
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -79,7 +97,7 @@ class ParsingState {
 	/**
 	 * Get the top stack element, without removing it.
 	 * 
-	 * @return F3::Beer3::AbstractNode the top stack element.
+	 * @return F3::Beer3::Core::SyntaxTree::AbstractNode the top stack element.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getNodeFromStack() {
@@ -89,11 +107,21 @@ class ParsingState {
 	/**
 	 * Pop the top stack element (=remove it) and return it back.
 	 *
-	 * @return F3::Beer3::AbstractNode the top stack element, which was removed.
+	 * @return F3::Beer3::Core::SyntaxTree::AbstractNode the top stack element, which was removed.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function popNodeFromStack() {
 		return array_pop($this->nodeStack);
+	}
+	
+	/**
+	 * Returns a variable container which will be then passed to the postParseFacet.
+	 *
+	 * @return F3::Beer3::Core::VariableContainer
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getVariableContainer() {
+		return $this->variableContainer;
 	}
 }
 ?>

@@ -29,7 +29,9 @@ namespace F3::Beer3::View;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
-	protected $templatePathPattern = '@packageResources/Template/@controller/@action.xhtml';
+	protected $templateFilePattern = '@packageResources/Template/@controller/@action.xhtml';
+	
+	protected $layoutFilePattern = '@packageResources/Template/@tempate.xhtml';
 	
 	/**
 	 * Template parser instance.
@@ -42,6 +44,14 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * @var array of context variables
 	 */
 	protected $contextVariables = array();
+	
+	/**
+	 * Template file path. If set, resolveTemplateFile returns it.
+	 * @var string
+	 */
+	protected $templateFile = NULL;
+	
+	protected $layoutFile = NULL;
 	
 	/**
 	 * Inject the template parser
@@ -62,21 +72,53 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	}
 	
 	/**
-	 * Resolve the template file path, based on $this->templatePathPattern
+	 * Sets the template file. Effectively overrides the dynamic resolving of a template file.
+	 * 
+	 * @param string $templateFile Template file path
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function setTemplateFile($templateFile) {
+		$this->templateFile = $templateFile;
+	}
+	
+	public function setLayoutFile($layoutFile) {
+		$this->layoutFile = $layoutFile;
+	}
+	
+	/**
+	 * Resolve the template file path, based on $this->templateFilePath and $this->templatePathPattern.
+	 * In case a template has been set with $this->setTemplateFile, it just uses the given template file.
+	 * Otherwise, it resolves the $this->templatePathPattern
 	 * 
 	 * @param string $action Name of action. Optional. Defaults to current action.
 	 * @return string File name of template file
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function resolveTemplateFile($action = NULL) {
-		$action = ($action ? $action : $this->request->getControllerActionName());
-		
-		$templatePath = $this->templatePathPattern;
-		$templatePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templatePath);
-		$templatePath = str_replace('@controller', $this->request->getControllerName(), $templatePath);
-		$templatePath = str_replace('@action', $action, $templatePath);
+		if ($this->templateFile) {
+			return $this->templateFile;
+		} else {
+			$action = ($action ? $action : $this->request->getControllerActionName());
+			
+			$templateFile = $this->templatePathPattern;
+			$templateFile = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templateFile);
+			$templateFile = str_replace('@controller', $this->request->getControllerName(), $templateFile);
+			$templateFile = str_replace('@action', $action, $templateFile);
 
-		return $templatePath;
+			return $templateFile;
+		}
+	}
+	
+	protected function resolveLayoutFile($layoutName = 'default') {
+		if ($this->layoutFile) {
+			return $this->layoutFile;
+		} else {
+			$layoutFile = $this->layoutFilePattern;
+			$layoutFile = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $layoutFile);
+			$layoutFile = str_replace('@layout', $layoutName, $layoutFile);
+			return $layoutFile;
+		}		
 	}
 	
 	/**
@@ -97,13 +139,15 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	/**
 	 * Find the XHTML template according to $this->templatePathPattern and render the template.
 	 * 
-	 * @return void
+	 * @param string $action: If given, renders this action instead.
+	 * @return string Rendered Template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render($action = NULL) {
 		$templateFileName = $this->resolveTemplateFile($action);
 		$templateSource = $this->loadTemplateFile($templateFileName);
-		$templateTree = $this->templateParser->parse($templateSource);
+		$parsedTemplate = $this->templateParser->parse($templateSource);
+		$templateTree = $parsedTemplate->getRootNode();
 		
 		$this->contextVariables['view'] = $this;
 		
@@ -112,6 +156,52 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		return $result;
 	}
 
+	/**
+	 * Renders a given section.
+	 * 
+	 * @param string $sectionName Name of section to render 
+	 * @return rendered template for the section
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderSection($sectionName) {
+		$templateFileName = $this->resolveTemplateFile($action);
+		$templateSource = $this->loadTemplateFile($templateFileName);
+		$parsedTemplate = $this->templateParser->parse($templateSource);
+		$templateTree = $parsedTemplate->getRootNode();
+		
+		$sections = $parsedTemplate->getVariableContainer()->get('sections');
+		
+		if(!array_key_exists($sectionName, $sections)) {
+			throw new F3::Beer3::Core::RuntimeException('The given section does not exist!', 1227108982);
+		}
+		
+		$sectionToRender = $sections[$sectionName];
+		
+		$this->contextVariables['view'] = $this;
+		
+		$variableStore = $this->objectFactory->create('F3::Beer3::Core::VariableContainer', $this->contextVariables);
+		$result = $sectionToRender->render($variableStore);
+		return $result;
+	}
+	
+	/**
+	 * 
+	 */
+	public function renderWithLayout($layoutName) {
+		$layoutFileName = $this->resolveLayoutFile($layoutName);
+		$layoutSource = $this->loadTemplateFile($layoutFileName);
+		
+		$layout = $this->templateParser->parse($layoutSource);
+		$layoutTree = $layout->getRootNode();
+		
+		$this->contextVariables['view'] = $this;
+		
+		$variableStore = $this->objectFactory->create('F3::Beer3::Core::VariableContainer', $this->contextVariables);
+		$result = $layoutTree->render($variableStore);
+		
+		return $result;
+	}
+	
 	/**
 	 * Add a variable to the context.
 	 * Can be chained, so $template->addVariable(..., ...)->addVariable(..., ...); is possible,

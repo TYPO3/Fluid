@@ -54,6 +54,26 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function addedObjectsExistInArray() {
+		$object = "StringObject";
+		$this->variableContainer->add("variable", $object);
+		$this->assertSame($this->variableContainer->exists('variable'), TRUE, 'The object is reported to not be in the VariableContainer, but it is.');
+	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function addedObjectsExistInAllIdentifiers() {
+		$object = "StringObject";
+		$this->variableContainer->add("variable", $object);
+		$this->assertEquals($this->variableContainer->getAllIdentifiers(), array('variable'), 'Added key is not visible in getAllIdentifiers');
+	}
+	
+	/**
+	 * @test
 	 * @expectedException F3::Beer3::Core::RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

@@ -17,12 +17,14 @@ namespace F3::Beer3::Core;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
  * VariableContainer which stores template variables.
  *
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -90,6 +92,17 @@ class VariableContainer {
 	 */
 	public function getAllIdentifiers() {
 		return array_keys($this->objects);
+	}
+	
+	/**
+	 * Checks if this property exists in the VariableContainer.
+	 *
+	 * @param string $identifier
+	 * @return boolean TRUE if $identifier exists, FALSE otherwise
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function exists($identifier) {
+		return array_key_exists($identifier, $this->objects);
 	}
 }
 

@@ -17,12 +17,14 @@ namespace F3::Beer3::Core;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
  * Template parser building up an object syntax tree
  *
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
@@ -131,7 +133,7 @@ class TemplateParser {
 	 * Parses a given template and returns an object tree, identified by a root node
 	 *
 	 * @param string $templateString
-	 * @return TreeNode the root node
+	 * @return ParsingState the root node
 	 * @todo Refine doc comment
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -142,9 +144,9 @@ class TemplateParser {
 		
 		$templateString = $this->extractNamespaceDefinitions($templateString);
 		$splittedTemplate = $this->splitTemplateAtDynamicTags($templateString);
-		$rootNode = $this->buildMainObjectTree($splittedTemplate);
+		$parsingState = $this->buildMainObjectTree($splittedTemplate);
 		
-		return $rootNode;
+		return $parsingState;
 	}
 	
 	/**
@@ -206,7 +208,7 @@ class TemplateParser {
 	 * Build object tree from the splitted template
 	 *
 	 * @param array $splittedTemplate The splitted template, so that every tag with a namespace declaration is already a seperate array element.
-	 * @return TreeNode the main tree node.
+	 * @return ParsingState
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildMainObjectTree($splittedTemplate) {
@@ -235,7 +237,7 @@ class TemplateParser {
 				$this->handler_textAndShorthandSyntax($state, $templateElement);
 			}
 		}
-		return $state->getRootNode();
+		return $state;
 	}
 	
 	
@@ -269,7 +271,7 @@ class TemplateParser {
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
 		if ($objectToCall instanceof F3::Beer3::Core::Facets::PostParseInterface) {
-			$objectToCall->postParseEvent($currentDynamicNode);
+			$objectToCall->postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 		
 		if (!$selfclosing) {
@@ -372,7 +374,7 @@ class TemplateParser {
 	 */
 	protected function buildArgumentObjectTree($argumentString) {
 		$splittedArgument = $this->splitTemplateAtDynamicTags($argumentString);
-		$rootNode = $this->buildMainObjectTree($splittedArgument);
+		$rootNode = $this->buildMainObjectTree($splittedArgument)->getRootNode();
 		return $rootNode;
 	}
 	
