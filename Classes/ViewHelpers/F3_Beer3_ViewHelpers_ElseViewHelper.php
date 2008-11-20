@@ -21,7 +21,7 @@ namespace F3::Beer3::ViewHelpers;
  * @version $Id:$
  */
 /**
- * "THEN" -> only has an effect inside of "IF". See If for documentation.
+ * "else"-Tag. Only has an effect inside of "if". See "if" for documentation.
  *
  * @package Beer3
  * @subpackage ViewHelpers

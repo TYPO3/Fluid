@@ -17,12 +17,14 @@ namespace F3::Beer3::Core::SyntaxTree;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Root node
+ * Root node of every syntax tree.
  *
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -32,7 +34,7 @@ class RootNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 * 
-	 * @param F3::Beer3::VariableContainer $variableContainer Variable Container to be used
+	 * @param F3::Beer3::Core::VariableContainer $variableContainer Variable Container to be used
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

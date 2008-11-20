@@ -17,13 +17,14 @@ namespace F3::Beer3::Core::SyntaxTree;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Dynamic node
+ * Node which will call a ViewHelper associated with this node.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -37,7 +38,7 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	protected $viewHelperClassName;
 
 	/**
-	 * Arguments of view helper - References to ArgumentRootNodes.
+	 * Arguments of view helper - References to RootNodes.
 	 * @var array
 	 */
 	protected $arguments = array();
@@ -50,13 +51,16 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	
 	/**
 	 * Associated view helper
-	 * @var F3::Beer3::AbstractViewHelper
+	 * @var F3::Beer3::Core::AbstractViewHelper
 	 */
 	protected $viewHelper;
 	
 	/**
 	 * Constructor.
 	 * 
+	 * @param string $viewHelperClassName Fully qualified class name of the view helper
+	 * @param F3::Beer3::Core::AbstractViewHelper $viewHelper View helper reference
+	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($viewHelperClassName, F3::Beer3::Core::AbstractViewHelper $viewHelper, $arguments) {
@@ -67,6 +71,8 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	
 	/**
 	 * Get class name of view helper
+	 * 
+	 * @return string Class Name of associated view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperClassName() {
@@ -74,16 +80,20 @@ class ViewHelperNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	}
 	
 	/**
-	 * Call the actual view helper associated with this object.
+	 * Call the view helper associated with this object.
 	 * 
-	 * If the view helper implements Facets::ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
+	 * First, it evaluates the arguments of the view helper.
+	 * 
+	 * If the view helper implements F3::Beer3::Core::Facets::ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
 	 * on the view helper.
 	 * 
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 * 
-	 * @param F3::Beer3::VariableContainer $variableContainer The Variable Container in which the variables are stored
+	 * @param F3::Beer3::Core::VariableContainer $variableContainer The Variable Container in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo: Handle initializeArguments()
+	 * @todo: Component manager
 	 */
 	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
 		$this->viewHelper->initializeArguments();

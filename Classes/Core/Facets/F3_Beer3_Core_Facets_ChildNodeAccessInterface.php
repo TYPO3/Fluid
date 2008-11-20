@@ -16,23 +16,30 @@ namespace F3::Beer3::Core::Facets;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * Child Node Access Facet. View Helpers should implement this interface if they need access to the direct children in the Syntax Tree at rendering-time.
+ * This might happen if you only want to selectively render a part of the syntax tree depending on some conditions.
+ * 
+ * In most cases, you will not need this view helper.
+ * 
+ * See F3::Beer3::ViewHelpers::IfViewHelper for an example how it is used.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 interface ChildNodeAccessInterface {
 	/**
-	 * Enter description here...
+	 * Sets the direct child nodes of the current syntax tree node.
 	 *
-	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode array $childNodes
+	 * @param array F3::Beer3::Core::SyntaxTree::AbstractNode $childNodes
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodes(array $childNodes);
 }

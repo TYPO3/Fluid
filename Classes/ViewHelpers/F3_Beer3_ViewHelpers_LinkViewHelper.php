@@ -16,24 +16,40 @@ namespace F3::Beer3::ViewHelpers;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * Link-generation view helper
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class LinkViewHelper extends F3::Beer3::Core::AbstractViewHelper {
 	
+	/**
+	 * Initialize arguments
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo Implement support for controller and package arguments
+	 * @todo let it inherit from TagBasedViewHelper
+	 */
 	public function initializeArguments() {
-		
+		$this->registerArgument('action', 'string', 'Name of action where the link points to', TRUE);
+		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended.');
 	}
+	
+	/**
+	 * Render the link.
+	 * 
+	 * @return string The rendered link
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
 		return $uriHelper->linkTo($this->renderChildren(), $this->arguments['action'], $this->arguments['arguments']);

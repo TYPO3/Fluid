@@ -29,9 +29,18 @@ namespace F3::Beer3::View;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
+	
+	/**
+	 * File pattern for resolving the template file
+	 * @var string
+	 */
 	protected $templateFilePattern = '@packageResources/Template/@controller/@action.xhtml';
 	
-	protected $layoutFilePattern = '@packageResources/Template/@tempate.xhtml';
+	/**
+	 * File pattern for resolving the layout
+	 * @var string
+	 */
+	protected $layoutFilePattern = '@packageResources/Template/@layout.xhtml';
 	
 	/**
 	 * Template parser instance.
@@ -46,15 +55,21 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	protected $contextVariables = array();
 	
 	/**
-	 * Template file path. If set, resolveTemplateFile returns it.
+	 * Template file path. If set,  overrides the templateFilePattern
 	 * @var string
 	 */
 	protected $templateFile = NULL;
 	
+	/**
+	 * Layout file path. If set, overrides the layoutFilePattern
+	 * @var string
+	 */
 	protected $layoutFile = NULL;
 	
 	/**
 	 * Inject the template parser
+	 * 
+	 * @param F3::Beer3::Core::TemplateParser $templateParser The template parser
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -82,6 +97,13 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		$this->templateFile = $templateFile;
 	}
 	
+	/**
+	 * Sets the layout file. Overrides the dynamic resolving of the layout file.
+	 * 
+	 * @param string $layoutFile Path to the layout file
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function setLayoutFile($layoutFile) {
 		$this->layoutFile = $layoutFile;
 	}
@@ -110,6 +132,15 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		}
 	}
 	
+	/**
+	 * Resolve the layout file path, based on $this->layoutFilePath and $this->layoutPathPattern.
+	 * In case a layout has been set with $this->setLayoutFile, it just uses the given layout file.
+	 * Otherwise, it resolves the $this->layoutPathPattern
+	 * 
+	 * @param string $layoutName Name of the layout to use. If none used, use "default"
+	 * @return string File name of template file
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	protected function resolveLayoutFile($layoutName = 'default') {
 		if ($this->layoutFile) {
 			return $this->layoutFile;
@@ -123,8 +154,6 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	
 	/**
 	 * Load the given template file.
-	 * 
-	 * Override if you have some custom logic saying where the template is.
 	 * 
 	 * @param string $templateFilePath Full path to template file to load
 	 * @return string the contents of the template file
@@ -185,7 +214,11 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	}
 	
 	/**
+	 * Render a template with a given layout.
 	 * 
+	 * @param string $layoutName Name of layout
+	 * @return string rendered HTML
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderWithLayout($layoutName) {
 		$layoutFileName = $this->resolveLayoutFile($layoutName);

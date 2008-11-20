@@ -17,12 +17,14 @@ namespace F3::Beer3::Core::SyntaxTree;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Text node
+ * Text Syntax Tree Node - is a container for strings.
  *
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -47,9 +49,9 @@ class TextNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	}
 	
 	/**
-	 * Return the text
+	 * Return the text associated to the syntax tree.
 	 * 
-	 * @param F3::Beer3::VariableContainer $variableContainer Variable Container where all variables are stored in
+	 * @param F3::Beer3::Core::VariableContainer $variableContainer Variable Container where all variables are stored in
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

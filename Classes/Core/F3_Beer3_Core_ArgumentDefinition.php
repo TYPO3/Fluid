@@ -16,15 +16,15 @@ namespace F3::Beer3::Core;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Argument definition
+ * Argument definition - definition of each view helper
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

@@ -20,11 +20,17 @@ namespace F3::Beer3::Core;
  * @subpackage Core
  * @version $Id:$
  */
+/**
+ * This interface is returned by F3::Beer3::Core::TemplateParser->parse() method.
+ *
+ * @package Beer3
+ * @subpackage Core
+ */
 interface ParsedTemplateInterface {
 	/**
 	 * Get root node of this parsing state.
 	 *
-	 * @return F3::Beer3::RootNode The root node
+	 * @return F3::Beer3::Core::SyntaxTree::RootNode The root node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRootNode();

@@ -22,6 +22,10 @@ namespace F3::Beer3::Core;
  */
 /**
  * VariableContainer which stores template variables.
+ * Is used in two contexts:
+ * 
+ * 1) Holds the current variables in the template
+ * 2) Holds variables being set during Parsing (set in view helpers implementing the PostParse facet)
  *
  * @package Beer3
  * @subpackage Core

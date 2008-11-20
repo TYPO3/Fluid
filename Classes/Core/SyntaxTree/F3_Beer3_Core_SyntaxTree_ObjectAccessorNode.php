@@ -17,13 +17,14 @@ namespace F3::Beer3::Core::SyntaxTree;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * A node which handles object access.
+ * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -31,7 +32,7 @@ namespace F3::Beer3::Core::SyntaxTree;
 class ObjectAccessorNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	
 	/**
-	 * Object path which will be called.
+	 * Object path which will be called. Is a list like "post.name.email"
 	 * @var string
 	 */
 	protected $objectPath;
@@ -59,8 +60,10 @@ class ObjectAccessorNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * - call public property, if exists
 	 * - fail
 	 * 
-	 * @return object The evaluated object, can be a string...
+	 * @param F3::Beer3::Core::VariableContainer $variableContainer Variable Container which is used.
+	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo: Depending on the context, either fail or not!!!
 	 */
 	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
 		try {

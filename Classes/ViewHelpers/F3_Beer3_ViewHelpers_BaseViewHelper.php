@@ -16,19 +16,28 @@ namespace F3::Beer3::ViewHelpers;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  */
 /**
- * Enter description here...
+ * Vew helper which creates a <base href="..."/> tag.
+ * 
  * @scope prototype
  */
 class BaseViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	
+	/**
+	 * The Base view helper does not take any arguments.
+	 */
 	public function initializeArguments() {
-		
 	}
+	
+	/**
+	 * Render the "Base" tag by outputting $request->getBaseURI()
+	 * 
+	 * @return string "base"-Tag.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		$currentRequest = $this->variableContainer->get('view')->getRequest();
 		return '<base href="' . $currentRequest->getBaseURI() . '" />';

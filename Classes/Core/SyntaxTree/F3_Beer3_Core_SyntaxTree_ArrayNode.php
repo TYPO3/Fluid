@@ -17,12 +17,14 @@ namespace F3::Beer3::Core::SyntaxTree;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Array node
+ * Array Syntax Tree Node. Handles JSON-like arrays.
  *
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -37,7 +39,7 @@ class ArrayNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
 	 * Constructor.
 	 * 
-	 * @param array Array to store
+	 * @param array $internalArray Array to store
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($internalArray) {
@@ -47,7 +49,7 @@ class ArrayNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	/**
 	 * Evaluate the array and return an evaluated array
 	 * 
-	 * @param F3::Beer3::VariableContainer Variable Container for the scope variables
+	 * @param F3::Beer3::VariableContainer $variableContainer Variable Container for the scope variables
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

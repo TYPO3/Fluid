@@ -17,13 +17,14 @@ namespace F3::Beer3::Core::SyntaxTree;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Abstract node.
+ * Abstract node in the syntax tree which has been built.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -42,9 +43,9 @@ abstract class AbstractNode {
 	protected $variableContainer;
 	
 	/**
-	 * Render all child nodes and return the rendered result string.
+	 * Render all child nodes and return the rendered result string. Call inside your own view helpers.
 	 *
-	 * @return string Rendered representation
+	 * @return string Rendered representation of all child nodes.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderChildNodes() {
@@ -71,7 +72,7 @@ abstract class AbstractNode {
 	}
 	
 	/**
-	 * Appends a subnode to this node.
+	 * Appends a subnode to this node. Is used inside the parser to append children
 	 * 
 	 * @param F3::Beer3::Core::SyntaxTree::AbstractNode $subnode The subnode to add
 	 * @return void
@@ -84,7 +85,7 @@ abstract class AbstractNode {
 	/**
 	 * Renders the node.
 	 * 
-	 * @param F3::Beer3::Core::VariableContainer Variable Container to be used for the rendering
+	 * @param F3::Beer3::Core::VariableContainer $variableContainer Variable Container to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -93,7 +94,8 @@ abstract class AbstractNode {
 	}
 	
 	/**
-	 * Evaluates the node.
+	 * Evaluates the node - can return not only strings, but arbitary objects.
+	 * 
 	 * @param F3::Beer3::Core::VariableContainer Variable Container to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

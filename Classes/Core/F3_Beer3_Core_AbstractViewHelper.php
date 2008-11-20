@@ -17,12 +17,14 @@ namespace F3::Beer3::Core;
 
 /**
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * The abstract base class for all view helpers
+ * The abstract base class for all view helpers.
  *
  * @package Beer3
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
@@ -30,7 +32,7 @@ namespace F3::Beer3::Core;
 abstract class AbstractViewHelper {
 	
 	/**
-	 * Stores all F3::Beer3::ArgumentDefinition
+	 * Stores all F3::Beer3::ArgumentDefinition instances
 	 * @var array
 	 */
 	private $argumentDefinitions = array();
@@ -42,30 +44,30 @@ abstract class AbstractViewHelper {
 	private $viewHelperNode;
 	
 	/**
-	 * Arguments accessor. Must be public, because it is set from the outside.
-	 * @var F3::Beer3::Arguments
+	 * Arguments accessor. Must be public, because it is set from the framework.
+	 * @var F3::Beer3::Core::ViewHelperArguments
 	 */
 	public $arguments;
 	
 	/**
 	 * Current variable container reference. Must be public because it is set by the framework
-	 * @var F3::Beer3::VariableContainer
+	 * @var F3::Beer3::Core::VariableContainer
 	 */
 	public $variableContainer;
 	
 	
 	/**
-	 * Register a new argument. Call this method from the implementing ViewHelper class inside the initializeArguments() method.
+	 * Register a new argument. Call this method from your ViewHelper subclass inside the initializeArguments() method.
 	 *
 	 * @param string $name Name of the argument
 	 * @param string $type Type of the argument
 	 * @param string $description Description of the argument
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
-	 * @return $this this object to allow chaining.
+	 * @return $this $this, to allow chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo Component manager usage!
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE) {
-		// TODO -> use component manager here!!
 		$this->argumentDefinitions[] = new F3::Beer3::Core::ArgumentDefinition($name, $type, $description, $required);
 		return $this;
 	}
@@ -73,7 +75,7 @@ abstract class AbstractViewHelper {
 	/**
 	 * Get all argument definitions. Used by the framework to get a list of all arguments registered
 	 *
-	 * @return array An Array of F3::Beer3::ArgumentDefinition objects
+	 * @return array An Array of F3::Beer3::Core::ArgumentDefinition objects
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getArgumentDefinitions() {
@@ -84,7 +86,7 @@ abstract class AbstractViewHelper {
 	 * Sets all needed attributes needed for the rendering. Called by the framework.
 	 * Populates $this->viewHelperNode
 	 *
-	 * @param ViewHelperNode $node
+	 * @param F3::Beer3::Core::SyntaxTree::ViewHelperNode $node View Helper node to be set.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -104,7 +106,7 @@ abstract class AbstractViewHelper {
 	
 	/**
 	 * Initialize all arguments. You need to override this method and call
-	 * $this->registerArgument() inside this method, to register all your arguments.
+	 * $this->registerArgument(...) inside this method, to register all your arguments.
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -115,6 +117,8 @@ abstract class AbstractViewHelper {
 	 * Render method you need to implement for your custom view helper.
 	 * Available objects at this point are $this->arguments, and $this->variableContainer.
 	 *
+	 * Besides, you often need $this->renderChildren().
+	 * 
 	 * @return string rendered string, view helper specific
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

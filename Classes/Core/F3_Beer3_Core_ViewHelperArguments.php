@@ -24,6 +24,7 @@ namespace F3::Beer3::Core;
 /**
  * Arguments list. Wraps an array, but only allows read-only methods on it.
  * Is available inside every view helper as $this->arguments - and you use it as if it was an array.
+ * However, you can only read, and not write to it.
  *
  * @package Beer3
  * @subpackage Core

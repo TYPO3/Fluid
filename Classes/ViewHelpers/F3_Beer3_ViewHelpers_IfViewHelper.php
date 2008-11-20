@@ -45,21 +45,33 @@ class IfViewHelper extends F3::Beer3::Core::AbstractViewHelper implements F3::Be
 	 */
 	protected $childNodes;
 	
+	/**
+	 * Setter for ChildNodes - as defined in ChildNodeAccessInterface
+	 * 
+	 * @param array $childNodes Child nodes of this syntax tree node
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function setChildNodes(array $childNodes) {
 		$this->childNodes = $childNodes;
 	}
 
 	/**
 	 * Initialize arguments. We require only the argument "condition"
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
 		$this->registerArgument('condition', 'string', 'View helper condition', TRUE);
 	}
+	
 	/**
 	 * Render the if.
 	 *
 	 * @return string the rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo More sophisticated condition evaluation
 	 */
 	public function render() {
 		$out = '';

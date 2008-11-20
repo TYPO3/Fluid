@@ -133,7 +133,7 @@ class TemplateParser {
 	 * Parses a given template and returns an object tree, identified by a root node
 	 *
 	 * @param string $templateString
-	 * @return ParsingState the root node
+	 * @return F3::Beer3::Core::ParsedTemplateInterface Parsed template.
 	 * @todo Refine doc comment
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -170,10 +170,10 @@ class TemplateParser {
 	}
 	
 	/**
-	 * Extracts given namespace definitions and sets $this->namespaces.
+	 * Extracts namespace definitions out of the given template string and sets $this->namespaces.
 	 *
 	 * @param string $templateString Template string to extract the namespaces from
-	 * @return string The updated template string
+	 * @return string The updated template string without namespace declarations inside
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function extractNamespaceDefinitions($templateString) {
@@ -208,7 +208,7 @@ class TemplateParser {
 	 * Build object tree from the splitted template
 	 *
 	 * @param array $splittedTemplate The splitted template, so that every tag with a namespace declaration is already a seperate array element.
-	 * @return ParsingState
+	 * @return F3::Beer3::Core::ParsingState
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildMainObjectTree($splittedTemplate) {

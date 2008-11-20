@@ -21,7 +21,7 @@ namespace F3::Beer3::ViewHelpers;
  * @version $Id:$
  */
 /**
- * Default view helper
+ * Loop view helper
  *
  * @package Beer3
  * @subpackage ViewHelpers
@@ -30,16 +30,24 @@ namespace F3::Beer3::ViewHelpers;
  * @scope prototype
  */
 class ForViewHelper extends F3::Beer3::Core::AbstractViewHelper {
-	public function initializeArguments() {
-	}
+	
 	/**
-	 * This is some test
+	 * Arguments initialization
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initializeArguments() {
+		$this->registerArgument('each', 'array', 'The array which is iterated over.', TRUE);
+		$this->registerArgument('as', 'string', 'Name of the variable where each array element is bound to.', TRUE);
+		
+	}
+	
+	/**
+	 * Render.
 	 *
-	 * @argument as string Name of the object.
-	 * @argument each object Thing to iterate over
-	 * @param NodeInterface $node
-	 * @param unknown_type $arguments
-	 * @return unknown
+	 * @return string Rendered string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
 		$out = '';
