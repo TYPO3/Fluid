@@ -40,12 +40,14 @@ class SelectViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
 			$selectedValue = $this->arguments['selectedValue'];
 		}
 		
-		foreach ($this->arguments['options'] as $key => $value) {
-			$selected = '';
-			if ($key == $selectedValue) {
-				$selected = 'selected="selected"';
+		if ($this->arguments['options']) {
+			foreach ($this->arguments['options'] as $key => $value) {
+				$selected = '';
+				if ($key == $selectedValue) {
+					$selected = 'selected="selected"';
+				}
+				$out .= '<option ' . $selected . ' value="' . $key . '">' . $value . '</option>';
 			}
-			$out .= '<option ' . $selected . ' value="' . $key . '">' . $value . '</option>';
 		}
 		
 		$out .= '</select>';

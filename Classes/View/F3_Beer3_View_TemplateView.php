@@ -40,7 +40,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * File pattern for resolving the layout
 	 * @var string
 	 */
-	protected $layoutFilePattern = '@packageResources/Template/@layout.xhtml';
+	protected $layoutFilePattern = '@packageResources/Template/layout/@layout.xhtml';
 	
 	/**
 	 * Template parser instance.
@@ -65,6 +65,12 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * @var string
 	 */
 	protected $layoutFile = NULL;
+	
+	/**
+	 * Name of current action to render
+	 * @var string
+	 */
+	protected $actionName;
 	
 	/**
 	 * Inject the template parser
@@ -117,13 +123,13 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * @return string File name of template file
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolveTemplateFile($action = NULL) {
+	protected function resolveTemplateFile() {
 		if ($this->templateFile) {
 			return $this->templateFile;
 		} else {
-			$action = ($action ? $action : $this->request->getControllerActionName());
+			$action = ($this->actionName ? $this->actionName : $this->request->getControllerActionName());
 			
-			$templateFile = $this->templatePathPattern;
+			$templateFile = $this->templateFilePattern;
 			$templateFile = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templateFile);
 			$templateFile = str_replace('@controller', $this->request->getControllerName(), $templateFile);
 			$templateFile = str_replace('@action', $action, $templateFile);
@@ -168,14 +174,22 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	/**
 	 * Find the XHTML template according to $this->templatePathPattern and render the template.
 	 * 
+	 * If "layoutName" is set in a PostParseFacet callback, will render the file with the given layout.
+	 * 
 	 * @param string $action: If given, renders this action instead.
 	 * @return string Rendered Template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render($action = NULL) {
-		$templateFileName = $this->resolveTemplateFile($action);
+		$this->actionName = $action;
+		$templateFileName = $this->resolveTemplateFile();
 		$templateSource = $this->loadTemplateFile($templateFileName);
 		$parsedTemplate = $this->templateParser->parse($templateSource);
+		
+		if ($parsedTemplate->getVariableContainer()->exists('layoutName')) {
+			return $this->renderWithLayout($parsedTemplate->getVariableContainer()->get('layoutName'));
+		}
+		
 		$templateTree = $parsedTemplate->getRootNode();
 		
 		$this->contextVariables['view'] = $this;
@@ -193,7 +207,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderSection($sectionName) {
-		$templateFileName = $this->resolveTemplateFile($action);
+		$templateFileName = $this->resolveTemplateFile();
 		$templateSource = $this->loadTemplateFile($templateFileName);
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$templateTree = $parsedTemplate->getRootNode();

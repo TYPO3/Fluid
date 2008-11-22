@@ -21,44 +21,23 @@ namespace F3::Beer3::ViewHelpers;
  * @version $Id:$
  */
 /**
- * Link-generation view helper
+ * [Enter description here]
  *
- * @package Beer3
- * @subpackage ViewHelpers
+ * @package
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class LinkViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
-	
-	/**
-	 * Initialize arguments
-	 * 
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo Implement support for controller and package arguments
-	 * @todo let it inherit from TagBasedViewHelper
-	 */
+class LayoutViewHelper extends F3::Beer3::Core::AbstractViewHelper implements F3::Beer3::Core::Facets::PostParseInterface {
 	public function initializeArguments() {
-		$this->registerArgument('action', 'string', 'Name of action where the link points to', TRUE);
-		$this->registerArgument('controller', 'string', 'Name of controller where the link points to');
-		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended.');
-		
-		$this->registerUniversalTagAttributes();
+		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "default" is used.', TRUE);
 	}
-	
-	/**
-	 * Render the link.
-	 * 
-	 * @return string The rendered link
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
+	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Beer3::Core::VariableContainer $variableContainer) {
+		$layoutName = $viewHelperArguments['name']->evaluate(new F3::Beer3::Core::VariableContainer());
+		$variableContainer->add('layoutName', $layoutName);
+	}
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
-		$out = '<a href="' . $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller']) . '" ' . $this->renderTagAttributes() . '>';
-		$out .= $this->renderChildren();
-		$out .= '</a>';
-		return $out;
 	}
 }
 
