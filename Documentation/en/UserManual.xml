@@ -40,6 +40,62 @@
   </section>
 
   <section>
+    <title>Layouts</title>
+
+    <para>In almost all web applications, there are many similarities between
+    each page. Usually, there are common templates, menu structures,
+    ...</para>
+
+    <para>To make this possible in BEER3, we created a layout system, which we
+    will introduce in this chapter.</para>
+
+    <section>
+      <title>Writing a layout</title>
+
+      <para>Every layout is placed in the
+      <filename>Resources/Template/layout</filename> directory, and has the
+      file ending <filename>.xhtml</filename>. A layout is a normal BEER3
+      template file, except there are some parts where the actual content of
+      the target page should be inserted.</para>
+
+      <para>Below is an example layout:</para>
+
+      <para><programlisting>{namespace F3=F3::Beer3::ViewHelpers}
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;My fancy web application&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;div id="menu"&gt;... menu goes here ...&lt;/div&gt;
+&lt;div id="content"&gt;<emphasis>&lt;f3:render section="content" /&gt;</emphasis>&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</programlisting>The only speciality of this layout is the
+      <code>&lt;f3:render section="..."&gt;</code>-tag. With this tag, a
+      special section is rendered. However, as we are in a layout currently,
+      the section from the target template is rendered, and not the section
+      from the layout file.</para>
+    </section>
+
+    <section>
+      <title>Using a layout</title>
+
+      <para>Using a layout involves two steps:</para>
+
+      <para><itemizedlist>
+          <listitem>
+            <para>Declare which layout to use: <code>&lt;f3:layout name="..."
+            /&gt;</code> can be written anywhere on the page - the given name
+            references the layout.</para>
+          </listitem>
+
+          <listitem>
+            <para>Define the sections as used by the layout:
+            <code>&lt;f3:section
+            name="content"&gt;...&lt;/f3:section&gt;</code></para>
+          </listitem>
+        </itemizedlist></para>
+    </section>
+  </section>
+
+  <section>
     <title>Writing your own view helper</title>
 
     <para>View Helpers are standard PHP classes, each extending
