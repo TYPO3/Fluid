@@ -22,6 +22,18 @@ namespace F3::Beer3::ViewHelpers;
  */
 /**
  * Form view helper. Generates a <form> Tag.
+ * 
+ * Example
+ * 
+ * (1) Basic usage
+ * 
+ * <f3:form action="...">...</f3:form>
+ * Outputs an HTML <form> tag which is targeted at the specified action, in the current controller and package.
+ * It will submit the form data via a GET request. If you want to change this, use method="post" as an argument.
+ * 
+ * (2) A complex form with a specified encoding type (needed for file uploads)
+ * 
+ * <f3:form action=".." controller="..." package="..." method="post" enctype="multipart/form-data">...</f3:form>
  *
  * @package Beer3
  * @subpackage ViewHelpers
@@ -38,8 +50,8 @@ class FormViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
+		$this->registerArgument('action', 'string', 'name of action to call', TRUE);
 		$this->registerArgument('controller', 'string', 'name of controller to call the current action on');
-		$this->registerArgument('action', 'string', 'name of action to call');
 		$this->registerArgument('package', 'string', 'name of package to call');
 		
 		$this->registerTagAttribute('enctype', 'string', 'MIME type with which the form is submitted');

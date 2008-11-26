@@ -36,7 +36,7 @@ namespace F3::Beer3::ViewHelpers::Form;
  * Generates a dropdown box like above, except that "VISA Card" is selected.
  * 
  * 
- * (3) Usaage on domain objects
+ * (3) Usage on domain objects
  * 
  * <f3:form.select name="users" options="{userArray}" optionKey="id" optionValue="firstName" />
  * In the above example, the userArray is an array of "User" domain objects, with no array key specified.

@@ -7,14 +7,14 @@
       xmlns:ns="http://docbook.org/ns/docbook"
       xmlns:mathml="http://www.w3.org/1998/Math/MathML">
   <info>
-    <title>Math</title>
+    <title>Beer3 Templating System</title>
 
     <abstract>
-      <para>Beer3</para>
+      <para>Beer3 Templating System</para>
     </abstract>
 
     <author>
-      <personname>Sebastian Kurfuerst</personname>
+      <personname>Sebastian Kurfürst</personname>
 
       <email>sebastian@typo3.org</email>
     </author>
@@ -22,37 +22,17 @@
     <copyright>
       <year>2008</year>
 
-      <holder>Sebastian Kurfuerst</holder>
+      <holder>Sebastian Kurfürst</holder>
     </copyright>
   </info>
 
-  <chapter>
-    <title>Introduction</title>
+  <xi:include href="Introduction.xml" />
 
-    <xi:include href="Introduction.xml" />
-  </chapter>
+  <xi:include href="UserManual.xml" />
 
-  <chapter>
-    <title>User Manual</title>
+  <xi:include href="Administration.xml" />
 
-    <xi:include href="UserManual.xml" />
-  </chapter>
+  <xi:include href="Configuration.xml" />
 
-  <chapter>
-    <title>Software Design</title>
-
-    <xi:include href="Administration.xml" />
-  </chapter>
-
-  <chapter>
-    <title>Configuration</title>
-
-    <xi:include href="Configuration.xml" />
-  </chapter>
-
-  <chapter>
-    <title>Tutorial</title>
-
-    <xi:include href="Tutorial.xml" />
-  </chapter>
+  <xi:include href="Tutorial.xml" />
 </book>

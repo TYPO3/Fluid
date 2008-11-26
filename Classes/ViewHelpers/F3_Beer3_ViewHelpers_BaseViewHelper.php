@@ -23,6 +23,10 @@ namespace F3::Beer3::ViewHelpers;
 /**
  * Vew helper which creates a <base href="..."/> tag.
  * 
+ * Example:
+ * <f3:base />
+ * Generates a <base href="..." /> tag.
+ * 
  * @scope prototype
  */
 class BaseViewHelper extends F3::Beer3::Core::AbstractViewHelper {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section version="5.0" xmlns="http://docbook.org/ns/docbook"
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns:xhtml="http://www.w3.org/1999/xhtml"
@@ -8,27 +8,14 @@
          xmlns:mathml="http://www.w3.org/1998/Math/MathML">
   <title>User Manual</title>
 
-  <para><itemizedlist>
-      <listitem>
-        <para>Documentation of how to use the package, show it works, how to
-        apply it if it's a website plugin. A user manual.</para>
-      </listitem>
-
-      <listitem>
-        <para>Examples: For the "News" plugin this would be a manual showing
-        how to create the news-items, explaining the options etc.</para>
-      </listitem>
-
-      <listitem>
-        <para>Target group: Users, Administrators or Developers in that
-        priority. Depends on the</para>
-      </listitem>
-    </itemizedlist></para>
+  <para>This chapter describes all things the users need to know about the
+  templating system. This starts with a little tutorial how to write a
+  template, using layouts, and in the end write your own view helpers.</para>
 
   <section>
     <title>How to write a template</title>
 
-    <para>Namespace declaration</para>
+    <para>Namespace declare</para>
 
     <para>View helpers are namespaced</para>
   </section>
@@ -247,4 +234,4 @@
 
     <para></para>
   </section>
-</section>
+</chapter>

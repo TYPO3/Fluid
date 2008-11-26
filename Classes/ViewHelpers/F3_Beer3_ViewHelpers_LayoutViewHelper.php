@@ -21,22 +21,48 @@ namespace F3::Beer3::ViewHelpers;
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * With this tag, you can select a layout to be used.
  *
- * @package
- * @subpackage
+ * @package Beer3
+ * @subpackage ViewHelpers
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
+ * @todo refine documentation
  */
 class LayoutViewHelper extends F3::Beer3::Core::AbstractViewHelper implements F3::Beer3::Core::Facets::PostParseInterface {
+	/**
+	 * Initialize arguments
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "default" is used.', TRUE);
 	}
+	
+	/**
+	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function postParseEvent(F3::Beer3::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Beer3::Core::VariableContainer $variableContainer) {
-		$layoutName = $viewHelperArguments['name']->evaluate(new F3::Beer3::Core::VariableContainer());
+		if ($viewHelperArguments['name']) {
+			$layoutName = $viewHelperArguments['name']->evaluate(new F3::Beer3::Core::VariableContainer());
+		} else {
+			$layoutName = 'default';
+		}
+
 		$variableContainer->add('layoutName', $layoutName);
 	}
+	
+	/**
+	 * This tag will not be rendered at all.
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 	}
 }
