@@ -16,6 +16,7 @@ namespace F3::Beer3::ViewHelpers;
  *                                                                        */
 
 include_once(__DIR__ . '/Fixtures/F3_Beer3_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
  * @package 
  * @subpackage 
@@ -60,7 +61,40 @@ class SelectViewHelperTest extends F3::Testing::BaseTestCase {
 		$this->assertEquals('v1', (string)$element->option[0], 'One option was not rendered, albeit it should (1).');
 		$this->assertEquals('v2', (string)$element->option[1], 'One option was not rendered, albeit it should (2).');
 	}
-}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function selectOnDomainObjectsReturnsExpectedXML() {
+		$this->viewHelper = new F3::Beer3::ViewHelpers::Form::SelectViewHelper();
+		$this->viewHelper->initializeArguments();
+		
+		$user_sk = new F3::Beer3::ViewHelpers::Fixtures::UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		
+		$arguments = new F3::Beer3::Core::ViewHelperArguments(array(
+			'options' => array(
+				new F3::Beer3::ViewHelpers::Fixtures::UserDomainClass(1, 'Ingmar', 'Schlecht'),
+				$user_sk,
+				new F3::Beer3::ViewHelpers::Fixtures::UserDomainClass(3, 'Robert', 'Lemke')
+			),
+			'selectedValue' => $user_sk,
+			'optionKey' => 'id',
+			'optionValue' => 'firstName',
+			'name' => 'myName'
+		));
 
+		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->setViewHelperNode(new F3::Beer3::ViewHelpers::Fixtures::EmptySyntaxTreeNode());
+		$output = $this->viewHelper->render();
+		$element = new ::SimpleXMLElement($output);
+		
+		$selectedNode = $element->xpath('/select/option[@value="2"]');
+		$this->assertEquals('selected', (string)$selectedNode[0]['selected'], 'The selected value was not correct.');
+		
+		$this->assertEquals('Ingmar', (string)$element->option[0], 'One option was not rendered, albeit it should (1).');
+		$this->assertEquals('Sebastian', (string)$element->option[1], 'One option was not rendered, albeit it should (2).');
+	}
+}
 
 ?>

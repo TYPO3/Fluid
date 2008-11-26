@@ -186,7 +186,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		$templateSource = $this->loadTemplateFile($templateFileName);
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		
-		if ($parsedTemplate->getVariableContainer()->exists('layoutName')) {
+		if ($parsedTemplate->getVariableContainer() && $parsedTemplate->getVariableContainer()->exists('layoutName')) {
 			return $this->renderWithLayout($parsedTemplate->getVariableContainer()->get('layoutName'));
 		}
 		
