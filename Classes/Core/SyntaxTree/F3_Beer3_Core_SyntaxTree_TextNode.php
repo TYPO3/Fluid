@@ -56,7 +56,8 @@ class TextNode extends F3::Beer3::Core::SyntaxTree::AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluate(F3::Beer3::Core::VariableContainer $variableContainer) {
-		return $this->text;
+		return str_replace('\{', '{', $this->text);
+		// TODO: THIS IS A QUICK AND REALLY DIRTY FIX!!!!!!!
 	}
 }
 
