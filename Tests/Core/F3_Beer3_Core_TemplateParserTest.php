@@ -244,7 +244,23 @@ class TemplateParserTest extends F3::Testing::BaseTestCase {
 		$context = new F3::Beer3::Core::VariableContainer(array());
 		$result = $templateTree->render($context);
 		$expected = '0 2 4 ';
-		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
+		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly.');
+	}
+	
+	/**
+	 * Test for CDATA support
+	 * 
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture12ReturnsCorrectlyRenderedResult() {
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture12_cdata.html', FILE_TEXT);
+		
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
+		$context = new F3::Beer3::Core::VariableContainer(array());
+		$result = $templateTree->render($context);
+		$expected = '<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f3:for each="{array}" as="value">{value} </f3:for>';
+		$this->assertEquals($expected, $result, 'Fixture 12 was not rendered correctly. This hints at some problem with CDATA handling.');
 	}
 	
 	/**

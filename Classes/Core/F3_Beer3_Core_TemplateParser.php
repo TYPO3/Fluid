@@ -30,13 +30,44 @@ namespace F3::Beer3::Core;
  */
 class TemplateParser {
 	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3::(?:\w+|::)+)\s*}/m';
-	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/(<\/?(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*\s*\/?>)/';
+	
+	/**
+	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
+		(
+			(?: <\/?                                      # Start dynamic tags
+					(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)     # A tag consists of the namespace prefix and word characters
+					(?:                                   # Begin tag arguments
+						\s*[a-zA-Z0-9:]+                  # Argument Keys
+						=                                 # =
+						(?:                               # either...
+							"(?:\\\"|[^"])*"              # a double-quoted string
+							|\'(?:\\\\\'|[^\'])*\'        # or a single quoted string
+						)\s*                              #
+					)*                                    # Tag arguments can be replaced many times.
+				\s*
+				\/?>                                      # Closing tag
+			)
+			|(?:                                          # Start match CDATA section
+				<!\[CDATA\[.*?\]\]>
+			)
+		)/x';
 	const SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
 	const SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 	
 	/**
-	 * Pattern which splits the shorthand syntax into different tokens
+	 * This pattern detects CDATA sections and outputs the text between opening and closing CDATA.
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	const SCAN_PATTERN_CDATA = '<!\[CDATA\[(.*?)\]\]>';
+	
+	/**
+	 * Pattern which splits the shorthand syntax into different tokens. The "shorthand syntax" is everything like {...}
 	 * 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -221,7 +252,9 @@ class TemplateParser {
 		$state->pushNodeToStack($rootNode);
 		
 		foreach ($splittedTemplate as $templateElement) {
-			if (preg_match($regularExpression_viewHelperTag, $templateElement, $matchedVariables) > 0) {
+			if (preg_match(self::SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
+				$this->handler_text($state, $matchedVariables[1]);
+			} elseif (preg_match($regularExpression_viewHelperTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
 				$selfclosing = $matchedVariables['Selfclosing'] === '' ? FALSE : TRUE;
