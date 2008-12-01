@@ -54,7 +54,7 @@ class TemplateParser {
 			|(?:                                          # Start match CDATA section
 				<!\[CDATA\[.*?\]\]>
 			)
-		)/x';
+		)/xs';
 	const SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
 	const SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
@@ -64,7 +64,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SCAN_PATTERN_CDATA = '<!\[CDATA\[(.*?)\]\]>';
+	const SCAN_PATTERN_CDATA = '/<!\[CDATA\[(.*?)\]\]>/s';
 	
 	/**
 	 * Pattern which splits the shorthand syntax into different tokens. The "shorthand syntax" is everything like {...}
