@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Beer3::ViewHelpers::Fixtures;
+namespace F3::Fluid::ViewHelpers::Fixtures;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -16,14 +16,14 @@ namespace F3::Beer3::ViewHelpers::Fixtures;
  *                                                                        */
 
 /**
- * @package Beer3
+ * @package Fluid
  * @subpackage Tests
  * @version $Id:$
  */
 /**
  * Example domain class which can be used to test different view helpers, e.g. the "select" view helper.
  *
- * @package Beer3
+ * @package Fluid
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2

@@ -8,7 +8,7 @@
          xmlns:mathml="http://www.w3.org/1998/Math/MathML">
   <title>Introduction</title>
 
-  <para>Beer3 is a next-generation templating engine which was engineered with
+  <para>Fluid is a next-generation templating engine which was engineered with
   several goals in mind:<itemizedlist>
       <listitem>
         <para>Simplicity</para>

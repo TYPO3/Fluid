@@ -47,7 +47,7 @@
 
       <para>Below is an example layout:</para>
 
-      <para><programlisting>{namespace F3=F3::Beer3::ViewHelpers}
+      <para><programlisting>{namespace F3=F3::Fluid::ViewHelpers}
 &lt;html&gt;
 &lt;head&gt;&lt;title&gt;My fancy web application&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;
@@ -86,7 +86,7 @@
     <title>Writing your own view helper</title>
 
     <para>View Helpers are standard PHP classes, each extending
-    <classname>F3::Beer3::Core::AbstractViewHelper</classname>. You need to
+    <classname>F3::Fluid::Core::AbstractViewHelper</classname>. You need to
     implement at least two methods to write a view helper:</para>
 
     <para><itemizedlist>
@@ -140,7 +140,7 @@
 
           <listitem>
             <para><code>$this-&gt;variableContainer</code> is an instance of
-            <classname>F3::Beer3::Core::VariableContainer</classname>, so you
+            <classname>F3::Fluid::Core::VariableContainer</classname>, so you
             have access to all variables registered in the template at the
             given point.</para>
 
@@ -218,7 +218,7 @@
 
         <para>To make this work, the <code>&lt;f3:if&gt;</code>-tag implements
         the
-        <interfacename>F3::Beer3::Core::Facets::SubNodeAccessInterface</interfacename>,
+        <interfacename>F3::Fluid::Core::Facets::SubNodeAccessInterface</interfacename>,
         which consists of a <methodname>setChildren(array
         $childNodes)</methodname> method being called before the
         <methodname>render()</methodname> method is triggered. Then, it can

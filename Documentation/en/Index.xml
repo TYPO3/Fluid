@@ -7,10 +7,10 @@
       xmlns:ns="http://docbook.org/ns/docbook"
       xmlns:mathml="http://www.w3.org/1998/Math/MathML">
   <info>
-    <title>Beer3 Templating System</title>
+    <title>Fluid Templating System</title>
 
     <abstract>
-      <para>Beer3 Templating System</para>
+      <para>Fluid Templating System</para>
     </abstract>
 
     <author>
