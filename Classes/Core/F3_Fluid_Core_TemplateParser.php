@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,8 +29,7 @@ namespace F3::Fluid::Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TemplateParser {
-	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3::(?:\w+|::)+)\s*}/m';
-	
+	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
 	 *
@@ -146,17 +145,17 @@ class TemplateParser {
 	protected $namespaces = array();
 
 	/**
-	 * @var F3::FLOW3::Object::FactoryInterface
+	 * @var \F3\FLOW3\Object\FactoryInterface
 	 */
 	protected $objectFactory;
 
 	/**
 	 * Inject object factory
 	 *
-	 * @param F3::FLOW3::Object::FactoryInterface $objectFactory
+	 * @param \F3\FLOW3\Object\FactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectObjectFactory(F3::FLOW3::Object::FactoryInterface $objectFactory) {
+	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
 		$this->objectFactory = $objectFactory;
 	}
 
@@ -164,12 +163,12 @@ class TemplateParser {
 	 * Parses a given template and returns an object tree, identified by a root node
 	 *
 	 * @param string $templateString
-	 * @return F3::Fluid::Core::ParsedTemplateInterface Parsed template.
+	 * @return \F3\Fluid\Core\ParsedTemplateInterface Parsed template.
 	 * @todo Refine doc comment
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function parse($templateString) {
-		if (!is_string($templateString)) throw new F3::Fluid::Core::ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
+		if (!is_string($templateString)) throw new \F3\Fluid\Core\ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
 		
 		$this->initialize();
 		
@@ -213,7 +212,7 @@ class TemplateParser {
 				$namespaceIdentifier = $matchedVariables[1][$index];
 				$fullyQualifiedNamespace = $matchedVariables[2][$index];
 				if (key_exists($namespaceIdentifier, $this->namespaces)) {
-					throw new F3::Fluid::Core::ParsingException('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
+					throw new \F3\Fluid\Core\ParsingException('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
 				}
 				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
 			}
@@ -239,15 +238,15 @@ class TemplateParser {
 	 * Build object tree from the splitted template
 	 *
 	 * @param array $splittedTemplate The splitted template, so that every tag with a namespace declaration is already a seperate array element.
-	 * @return F3::Fluid::Core::ParsingState
+	 * @return \F3\Fluid\Core\ParsingState
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildMainObjectTree($splittedTemplate) {
 		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
 		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 		
-		$state = $this->objectFactory->create('F3::Fluid::Core::ParsingState');
-		$rootNode = $this->objectFactory->create('F3::Fluid::Core::SyntaxTree::RootNode');
+		$state = $this->objectFactory->create('F3\Fluid\Core\ParsingState');
+		$rootNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\RootNode');
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
 		
@@ -277,7 +276,7 @@ class TemplateParser {
 	/**
 	 * Handles an opening or self-closing view helper tag.
 	 *
-	 * @param F3::Fluid::Core::ParsingState $state Current parsing state
+	 * @param \F3\Fluid\Core\ParsingState $state Current parsing state
 	 * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
 	 * @param string $methodIdentifier Method identifier
 	 * @param string $arguments Arguments string, not yet parsed
@@ -285,9 +284,9 @@ class TemplateParser {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_openingViewHelperTag(F3::Fluid::Core::ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
+	protected function handler_openingViewHelperTag(\F3\Fluid\Core\ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new F3::Fluid::Core::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
+			throw new \F3\Fluid\Core\ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
 		
 		$argumentsObjectTree = $this->parseArguments($arguments);
@@ -295,15 +294,15 @@ class TemplateParser {
 		
 		try {
 			$objectToCall = $this->objectFactory->create($viewHelperName);
-		} catch(F3::FLOW3::Component::Exception::UnknownComponent $e) {
-			throw new F3::Fluid::Core::ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
+		} catch(\F3\FLOW3\Component\Exception\UnknownComponent $e) {
+			throw new \F3\Fluid\Core\ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
 		
-		$currentDynamicNode = $this->objectFactory->create('F3::Fluid::Core::SyntaxTree::ViewHelperNode', $viewHelperName, $objectToCall, $argumentsObjectTree);
+		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ViewHelperNode', $viewHelperName, $objectToCall, $argumentsObjectTree);
 		
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 		
-		if ($objectToCall instanceof F3::Fluid::Core::Facets::PostParseInterface) {
+		if ($objectToCall instanceof \F3\Fluid\Core\Facets\PostParseInterface) {
 			$objectToCall->postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 		
@@ -325,14 +324,15 @@ class TemplateParser {
 		$methodName = '';
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
-			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
-			$className .= '::' . F3::PHP6::Functions::ucfirst($explodedViewHelperName[1]);
+			$className = \F3\PHP6\Functions::ucfirst($explodedViewHelperName[0]);
+			$className .= '\\';
+			$className .= \F3\PHP6\Functions::ucfirst($explodedViewHelperName[1]);
 		} else {
-			$className = F3::PHP6::Functions::ucfirst($explodedViewHelperName[0]);
+			$className = \F3\PHP6\Functions::ucfirst($explodedViewHelperName[0]);
 		}
 		$className .= 'ViewHelper';
 			
-		$name = $this->namespaces[$namespaceIdentifier] . '::' . $className;
+		$name = $this->namespaces[$namespaceIdentifier] . '\\' . $className;
 		
 		return $name;
 	}
@@ -340,36 +340,36 @@ class TemplateParser {
 	/**
 	 * Handles a closing view helper tag
 	 *
-	 * @param F3::Fluid::Core::ParsingState $state The current parsing state
+	 * @param \F3\Fluid\Core\ParsingState $state The current parsing state
 	 * @param string $namespaceIdentifier Namespace identifier for the closing tag.
 	 * @param string $methodIdentifier Method identifier.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_closingViewHelperTag(F3::Fluid::Core::ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
+	protected function handler_closingViewHelperTag(\F3\Fluid\Core\ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new F3::Fluid::Core::ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
+			throw new \F3\Fluid\Core\ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
 		}
 		$lastStackElement = $state->popNodeFromStack();
-		if (!($lastStackElement instanceof F3::Fluid::Core::SyntaxTree::ViewHelperNode)) {
-			throw new F3::Fluid::Core::ParsingException('You closed a templating tag which you never opened!', 1224485838);
+		if (!($lastStackElement instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode)) {
+			throw new \F3\Fluid\Core\ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
 		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier)) {
-			throw new F3::Fluid::Core::ParsingException('Templating tags not properly nested.', 1224485398);
+			throw new \F3\Fluid\Core\ParsingException('Templating tags not properly nested.', 1224485398);
 		}
 	}
 	
 	/**
 	 * Handles the appearance of an object accessor (like {posts.author.email}).
-	 * Creates a new instance of F3::Fluid::ObjectAccessorNode.
+	 * Creates a new instance of \F3\Fluid\ObjectAccessorNode.
 	 *
-	 * @param F3::Fluid::Core::ParsingState $state The current parsing state
+	 * @param \F3\Fluid\Core\ParsingState $state The current parsing state
 	 * @param string $objectAccessorString String which identifies which objects to fetch
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_objectAccessor(F3::Fluid::Core::ParsingState $state, $objectAccessorString) {
-		$node = $this->objectFactory->create('F3::Fluid::Core::SyntaxTree::ObjectAccessorNode', $objectAccessorString);
+	protected function handler_objectAccessor(\F3\Fluid\Core\ParsingState $state, $objectAccessorString) {
+		$node = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
 	
@@ -448,12 +448,12 @@ class TemplateParser {
 	 * 
 	 * This includes Text, array syntax, and object accessor syntax.
 	 * 
-	 * @param F3::Fluid::Core::ParsingState $state Current parsing state
+	 * @param \F3\Fluid\Core\ParsingState $state Current parsing state
 	 * @param string $text Text to process
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_textAndShorthandSyntax(F3::Fluid::Core::ParsingState $state, $text) {
+	protected function handler_textAndShorthandSyntax(\F3\Fluid\Core\ParsingState $state, $text) {
 		$sections = preg_split(self::SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
 			if (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
@@ -469,12 +469,12 @@ class TemplateParser {
 	/**
 	 * Handler for array syntax. This creates the array object recursively and adds it to the current node.
 	 * 
-	 * @param F3::Fluid::Core::ParsingState $state The current parsing state
+	 * @param \F3\Fluid\Core\ParsingState $state The current parsing state
 	 * @param string $arrayText The array as string.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_array(F3::Fluid::Core::ParsingState $state, $arrayText) {
+	protected function handler_array(\F3\Fluid\Core\ParsingState $state, $arrayText) {
 		$node = $this->handler_array_recursively($arrayText);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
@@ -489,7 +489,7 @@ class TemplateParser {
 	 * - sub-arrays
 	 * 
 	 * @param string $arrayText Array text
-	 * @return F3::Fluid::ArrayNode the array node built up
+	 * @return \F3\Fluid\ArrayNode the array node built up
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_array_recursively($arrayText) {
@@ -498,7 +498,7 @@ class TemplateParser {
 			foreach ($matches as $singleMatch) {
 				$arrayKey = $singleMatch['Key'];
 				if (!empty($singleMatch['VariableIdentifier'])) {
-					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3::Fluid::Core::SyntaxTree::ObjectAccessorNode', $singleMatch['VariableIdentifier']);
+					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ObjectAccessorNode', $singleMatch['VariableIdentifier']);
 				} elseif (array_key_exists('Number', $singleMatch) && ( !empty($singleMatch['Number']) || $singleMatch['Number'] === '0' ) ) {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
 				} elseif ( ( array_key_exists('DoubleQuotedString', $singleMatch) && !empty($singleMatch['DoubleQuotedString']) )
@@ -510,12 +510,12 @@ class TemplateParser {
 				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->handler_array_recursively($singleMatch['Subarray']);
 				} else {
-					throw new F3::Fluid::Core::ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
+					throw new \F3\Fluid\Core\ParsingException('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 				}
 			}
-			return $this->objectFactory->create('F3::Fluid::Core::SyntaxTree::ArrayNode', $arrayToBuild);
+			return $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ArrayNode', $arrayToBuild);
 		} else {
-			throw new F3::Fluid::Core::ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
+			throw new \F3\Fluid\Core\ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 		}
 	}
 	
@@ -526,8 +526,8 @@ class TemplateParser {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function handler_text(F3::Fluid::Core::ParsingState $state, $text) {
-		$node = $this->objectFactory->create('F3::Fluid::Core::SyntaxTree::TextNode', $text);
+	protected function handler_text(\F3\Fluid\Core\ParsingState $state, $text) {
+		$node = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\TextNode', $text);
 		$state->getNodeFromStack()->addChildNode($node);	
 	}
 }

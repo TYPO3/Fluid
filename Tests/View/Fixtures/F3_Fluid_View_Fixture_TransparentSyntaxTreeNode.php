@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::View::Fixture;
+namespace F3\Fluid\View\Fixture;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,10 +28,10 @@ namespace F3::Fluid::View::Fixture;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TransparentSyntaxTreeNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
+class TransparentSyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	public $variableContainer;
 	
-	public function evaluate(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,7 +30,7 @@ namespace F3::Fluid::ViewHelpers;
  * @scope prototype
  * @todo refine documentation
  */
-class LayoutViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3::Fluid::Core::Facets::PostParseInterface {
+class LayoutViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
 	/**
 	 * Initialize arguments
 	 * 
@@ -47,9 +47,9 @@ class LayoutViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function postParseEvent(F3::Fluid::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
 		if ($viewHelperArguments['name']) {
-			$layoutName = $viewHelperArguments['name']->evaluate(new F3::Fluid::Core::VariableContainer());
+			$layoutName = $viewHelperArguments['name']->evaluate(new \F3\Fluid\Core\VariableContainer());
 		} else {
 			$layoutName = 'default';
 		}

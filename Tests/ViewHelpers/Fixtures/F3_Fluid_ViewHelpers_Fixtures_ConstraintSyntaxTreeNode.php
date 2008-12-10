@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers::Fixtures;
+namespace F3\Fluid\ViewHelpers\Fixtures;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,10 +28,10 @@ namespace F3::Fluid::ViewHelpers::Fixtures;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ConstraintSyntaxTreeNode extends F3::Fluid::Core::SyntaxTree::ViewHelperNode {
+class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\ViewHelperNode {
 	public $callProtocol = array();
 	
-	public function __construct(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function __construct(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 	
@@ -44,7 +44,7 @@ class ConstraintSyntaxTreeNode extends F3::Fluid::Core::SyntaxTree::ViewHelperNo
 		$this->callProtocol[] = $callElement;
 	}
 	
-	public function evaluate(F3::Fluid::Core::VariableContainer $container) {}
+	public function evaluate(\F3\Fluid\Core\VariableContainer $container) {}
 }
 
 

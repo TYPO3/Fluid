@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,7 +30,7 @@ namespace F3::Fluid::ViewHelpers;
  */
 
 include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_ConstraintSyntaxTreeNode.php');
-class ForViewHelperTest extends F3::Testing::BaseTestCase {
+class ForViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -43,16 +43,16 @@ class ForViewHelperTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function forExecutesTheLoopCorrectly() {
-		$this->viewHelper = new F3::Fluid::ViewHelpers::ForViewHelper();
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
 		
-		$arguments = new F3::Fluid::Core::ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
 			'each' => array(0,1,2,3),
 			'as'   => 'innerVariable'
 		));
 		
-		$variableContainer = new F3::Fluid::Core::VariableContainer(array());
+		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
 		
-		$viewHelperNode = new F3::Fluid::ViewHelpers::Fixtures::ConstraintSyntaxTreeNode($variableContainer);		
+		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);		
 		$this->viewHelper->arguments = $arguments;
 		$this->viewHelper->variableContainer = $variableContainer;
 		$this->viewHelper->setViewHelperNode($viewHelperNode);

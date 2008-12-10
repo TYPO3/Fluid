@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,11 +30,11 @@ namespace F3::Fluid::Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ParsingState implements F3::Fluid::Core::ParsedTemplateInterface {
+class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 
 	/**
 	 * Root node reference
-	 * @var F3::Fluid::Core::SyntaxTree::RootNode
+	 * @var \F3\Fluid\Core\SyntaxTree\RootNode
 	 */
 	protected $rootNode;
 	
@@ -46,37 +46,37 @@ class ParsingState implements F3::Fluid::Core::ParsedTemplateInterface {
 	
 	/**
 	 * Variable container where ViewHelpers implementing the PostParseFacet can store things in.
-	 * @var F3::Fluid::Core::VariableContainer
+	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	protected $variableContainer;
 	
 	/**
 	 * Injects a variable container. ViewHelpers implementing the PostParse Facet can store information inside this variableContainer.
 	 *
-	 * @param F3::Fluid::Core::VariableContainer $variableContainer
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectVariableContainer(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function injectVariableContainer(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 	
 	/**
 	 * Set root node of this parsing state
 	 *
-	 * @param F3::Fluid::Core::SyntaxTree::AbstractNode $rootNode
+	 * @param \F3\Fluid\Core\SyntaxTree\AbstractNode $rootNode
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo RENAME THIS!!
 	 */
-	public function setRootNode(F3::Fluid::Core::SyntaxTree::AbstractNode $rootNode) {
+	public function setRootNode(\F3\Fluid\Core\SyntaxTree\AbstractNode $rootNode) {
 		$this->rootNode = $rootNode;
 	}
 	
 	/**
 	 * Get root node of this parsing state.
 	 *
-	 * @return F3::Fluid::Core::SyntaxTree::AbstractNode The root node
+	 * @return \F3\Fluid\Core\SyntaxTree\AbstractNode The root node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRootNode() {
@@ -86,18 +86,18 @@ class ParsingState implements F3::Fluid::Core::ParsedTemplateInterface {
 	/**
 	 * Push a node to the node stack. The node stack holds all currently open templating tags.
 	 *
-	 * @param F3::Fluid::Core::SyntaxTree::AbstractNode $node Node to push to node stack
+	 * @param \F3\Fluid\Core\SyntaxTree\AbstractNode $node Node to push to node stack
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function pushNodeToStack(F3::Fluid::Core::SyntaxTree::AbstractNode $node) {
+	public function pushNodeToStack(\F3\Fluid\Core\SyntaxTree\AbstractNode $node) {
 		array_push($this->nodeStack, $node);
 	}
 	
 	/**
 	 * Get the top stack element, without removing it.
 	 * 
-	 * @return F3::Fluid::Core::SyntaxTree::AbstractNode the top stack element.
+	 * @return \F3\Fluid\Core\SyntaxTree\AbstractNode the top stack element.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getNodeFromStack() {
@@ -107,7 +107,7 @@ class ParsingState implements F3::Fluid::Core::ParsedTemplateInterface {
 	/**
 	 * Pop the top stack element (=remove it) and return it back.
 	 *
-	 * @return F3::Fluid::Core::SyntaxTree::AbstractNode the top stack element, which was removed.
+	 * @return \F3\Fluid\Core\SyntaxTree\AbstractNode the top stack element, which was removed.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function popNodeFromStack() {
@@ -117,7 +117,7 @@ class ParsingState implements F3::Fluid::Core::ParsedTemplateInterface {
 	/**
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *
-	 * @return F3::Fluid::Core::VariableContainer
+	 * @return \F3\Fluid\Core\VariableContainer
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getVariableContainer() {

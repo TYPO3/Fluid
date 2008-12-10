@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,10 +30,10 @@ include_once(__DIR__ . '/Fixtures/F3_Fluid_TestTagBasedViewHelper.php');
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TagBasedViewHelperTest extends F3::Testing::BaseTestCase {
+class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	public function setUp() {
-		$this->viewHelper = new F3::Fluid::TestTagBasedViewHelper();
+		$this->viewHelper = new \F3\Fluid\TestTagBasedViewHelper();
 	}
 	/**
 	 * @test
@@ -41,7 +41,7 @@ class TagBasedViewHelperTest extends F3::Testing::BaseTestCase {
 	 */
 	public function oneTagAttributeIsRenderedCorrectly() {
 		$this->viewHelper->registerTagAttribute('x', 'Description', FALSE);
-		$arguments = new F3::Fluid::Core::ViewHelperArguments(array('x' => 'Hallo'));
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('x' => 'Hallo'));
 		$expected = 'x="Hallo"';
 		
 		$this->viewHelper->arguments = $arguments;

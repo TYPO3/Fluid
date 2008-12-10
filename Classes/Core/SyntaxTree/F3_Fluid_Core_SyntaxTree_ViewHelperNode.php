@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::SyntaxTree;
+namespace F3\Fluid\Core\SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,7 +29,7 @@ namespace F3::Fluid::Core::SyntaxTree;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ViewHelperNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
+class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	
 	/**
 	 * Namespace of view helper
@@ -45,13 +45,13 @@ class ViewHelperNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 	
 	/**
 	 * VariableContainer storing the currently available variables.
-	 * @var F3::Fluid::Core::VariableContainer
+	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	protected $variableContainer;
 	
 	/**
 	 * Associated view helper
-	 * @var F3::Fluid::Core::AbstractViewHelper
+	 * @var \F3\Fluid\Core\AbstractViewHelper
 	 */
 	protected $viewHelper;
 	
@@ -59,11 +59,11 @@ class ViewHelperNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 	 * Constructor.
 	 * 
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
-	 * @param F3::Fluid::Core::AbstractViewHelper $viewHelper View helper reference
+	 * @param \F3\Fluid\Core\AbstractViewHelper $viewHelper View helper reference
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperClassName, F3::Fluid::Core::AbstractViewHelper $viewHelper, $arguments) {
+	public function __construct($viewHelperClassName, \F3\Fluid\Core\AbstractViewHelper $viewHelper, $arguments) {
 		$this->viewHelperClassName = $viewHelperClassName;
 		$this->viewHelper = $viewHelper;
 		$this->arguments = $arguments;
@@ -84,18 +84,18 @@ class ViewHelperNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 	 * 
 	 * First, it evaluates the arguments of the view helper.
 	 * 
-	 * If the view helper implements F3::Fluid::Core::Facets::ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
+	 * If the view helper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
 	 * on the view helper.
 	 * 
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 * 
-	 * @param F3::Fluid::Core::VariableContainer $variableContainer The Variable Container in which the variables are stored
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer The Variable Container in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo: Handle initializeArguments()
 	 * @todo: Component manager
 	 */
-	public function evaluate(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->viewHelper->initializeArguments();
 		
 		$this->variableContainer = $variableContainer;
@@ -106,11 +106,11 @@ class ViewHelperNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 		}
 		
 		// TODO: Component manager!
-		$this->viewHelper->arguments = new F3::Fluid::Core::ViewHelperArguments($evaluatedArguments);
+		$this->viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments($evaluatedArguments);
 		$this->viewHelper->variableContainer = $variableContainer;
 		$this->viewHelper->setViewHelperNode($this);
 		
-		if ($this->viewHelper instanceof F3::Fluid::Core::Facets::ChildNodeAccessInterface) {
+		if ($this->viewHelper instanceof \F3\Fluid\Core\Facets\ChildNodeAccessInterface) {
 			$this->viewHelper->setChildNodes($this->childNodes);
 		}
 		
@@ -120,7 +120,7 @@ class ViewHelperNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 			$endContextVariables = $variableContainer->getAllIdentifiers();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 			
-			throw new F3::Fluid::RuntimeException('The following context variable has been changed after the view helper has been called: ' .implode(', ', $diff));
+			throw new \F3\Fluid\RuntimeException('The following context variable has been changed after the view helper has been called: ' .implode(', ', $diff));
 		}
 		return $out;
 	}

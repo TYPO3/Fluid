@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,13 +28,13 @@ namespace F3::Fluid::Core;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class VariableContainerTest extends F3::Testing::BaseTestCase {
+class VariableContainerTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->variableContainer = new F3::Fluid::Core::VariableContainer();
+		$this->variableContainer = new \F3\Fluid\Core\VariableContainer();
 	}
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -74,16 +74,16 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Fluid::Core::RuntimeException
+	 * @expectedException \F3\Fluid\Core\RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function contextTakesOnlyArraysInConstructor() {
-		new F3::Fluid::Core::VariableContainer("string");
+		new \F3\Fluid\Core\VariableContainer("string");
 	}
 	
 	/**
 	 * @test
-	 * @expectedException F3::Fluid::Core::RuntimeException
+	 * @expectedException \F3\Fluid\Core\RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
@@ -93,7 +93,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Fluid::Core::RuntimeException
+	 * @expectedException \F3\Fluid\Core\RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
@@ -102,7 +102,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException F3::Fluid::Core::RuntimeException
+	 * @expectedException \F3\Fluid\Core\RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
@@ -118,7 +118,7 @@ class VariableContainerTest extends F3::Testing::BaseTestCase {
 		$this->variableContainer->remove('variable');
 		try {
 			$this->variableContainer->get('variable');
-		} catch (F3::Fluid::Core::RuntimeException $e) {}
+		} catch (\F3\Fluid\Core\RuntimeException $e) {}
 	}
 }
 

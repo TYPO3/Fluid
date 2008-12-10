@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::Facets;
+namespace F3\Fluid\Core\Facets;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -25,7 +25,7 @@ namespace F3::Fluid::Core::Facets;
  * to be called directly after the syntax tree node corresponding to this view helper has been built.
  * 
  * In the callback, it is possible to store some variables inside the parseVariableContainer (which is different from the runtime variable container!).
- * This implicates that you usually have to adjust the F3::Fluid::View::TemplateView in case you implement this facet.
+ * This implicates that you usually have to adjust the \F3\Fluid\View\TemplateView in case you implement this facet.
  * 
  * Normally, this facet is not needed, except in really really rare cases.
  *
@@ -41,13 +41,13 @@ interface PostParseInterface {
 	 * 
 	 * You can store some data inside the variableContainer given here, which can be used f.e. inside the TemplateView.
 	 *
-	 * @param F3::Fluid::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
+	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
 	 * @param array $viewHelperArguments View helper arguments as an array of SyntaxTrees. If you really need an argument, make sure to call $viewHelperArguments[$argName]->render(...)!
 	 * @param VariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function postParseEvent(F3::Fluid::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Fluid::Core::VariableContainer $variableContainer);
+	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);
 }
 
 

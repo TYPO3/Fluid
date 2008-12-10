@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers::Form;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -24,7 +24,7 @@ namespace F3::Fluid::ViewHelpers::Form;
  * Enter description here...
  * @scope prototype
  */
-class SubmitViewHelper extends F3::Fluid::Core::AbstractViewHelper {
+class SubmitViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	
 	public function initializeArguments() {
 		$this->registerArgument('value', 'string', 'Caption for the button', TRUE);

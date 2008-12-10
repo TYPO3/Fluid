@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,16 +28,16 @@ namespace F3::Fluid::Core;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ParsingStateTest extends F3::Testing::BaseTestCase {
+class ParsingStateTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Parsing state
-	 * @var F3::Fluid::Core::ParsingState
+	 * @var \F3\Fluid\Core\ParsingState
 	 */
 	protected $parsingState;
 	
 	public function setUp() {
-		$this->parsingState = new F3::Fluid::Core::ParsingState();
+		$this->parsingState = new \F3\Fluid\Core\ParsingState();
 	}
 	public function tearDown() {
 		unset($this->parsingState);
@@ -48,7 +48,7 @@ class ParsingStateTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNodeCanBeReadOutAgain() {
-		$rootNode = new F3::Fluid::Core::SyntaxTree::RootNode();
+		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$this->parsingState->setRootNode($rootNode);
 		$this->assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
 	}
@@ -58,7 +58,7 @@ class ParsingStateTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pushAndGetFromStackWorks() {
-		$rootNode = new F3::Fluid::Core::SyntaxTree::RootNode();
+		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$this->parsingState->pushNodeToStack($rootNode);
 		$this->assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
 		$this->assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');

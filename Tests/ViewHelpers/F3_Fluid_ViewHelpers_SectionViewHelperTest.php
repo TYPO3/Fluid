@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,21 +28,21 @@ namespace F3::Fluid::ViewHelpers;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class SectionViewHelperTest extends F3::Testing::BaseTestCase {
+class SectionViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function sectionIsAddedToParseVariableContainer() {
-		$section = new F3::Fluid::ViewHelpers::SectionViewHelper();
+		$section = new \F3\Fluid\ViewHelpers\SectionViewHelper();
 		
-		$viewHelperNodeMock = $this->getMock('F3::Fluid::Core::SyntaxTree::ViewHelperNode', array(), array(), '', FALSE);
+		$viewHelperNodeMock = $this->getMock('F3\Fluid\Core\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
 		$viewHelperArguments = array(
-			'name' => new F3::Fluid::Core::SyntaxTree::TextNode('sectionName')
+			'name' => new \F3\Fluid\Core\SyntaxTree\TextNode('sectionName')
 		);
 		
-		$variableContainer = new F3::Fluid::Core::VariableContainer();
+		$variableContainer = new \F3\Fluid\Core\VariableContainer();
 		
 		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 		

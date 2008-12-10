@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::SyntaxTree;
+namespace F3\Fluid\Core\SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,7 +29,7 @@ namespace F3::Fluid::Core::SyntaxTree;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ObjectAccessorNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
+class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	
 	/**
 	 * Object path which will be called. Is a list like "post.name.email"
@@ -60,12 +60,12 @@ class ObjectAccessorNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 	 * - call public property, if exists
 	 * - fail
 	 * 
-	 * @param F3::Fluid::Core::VariableContainer $variableContainer Variable Container which is used.
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container which is used.
 	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo: Depending on the context, either fail or not!!!
 	 */
-	public function evaluate(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		try {
 			$objectPathParts = explode('.', $this->objectPath);
 			$variableName = array_shift($objectPathParts);
@@ -74,34 +74,34 @@ class ObjectAccessorNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 			if (count($objectPathParts) > 0) {
 				foreach ($objectPathParts as $currentObjectPath) {
 					if (is_object($currentObject)) {
-						$getterMethodName = 'get' . F3::PHP6::Functions::ucfirst($currentObjectPath);
+						$getterMethodName = 'get' . \F3\PHP6\Functions::ucfirst($currentObjectPath);
 						if (method_exists($currentObject, $getterMethodName)) {
 							$currentObject = call_user_func(array($currentObject, $getterMethodName));
 							continue;
 						}
 						
 						try {
-							$reflectionProperty = new ReflectionProperty($currentObject, $currentObjectPath);
+							$reflectionProperty = new \ReflectionProperty($currentObject, $currentObjectPath);
 						} catch(ReflectionException $e) {
-							throw new F3::Fluid::Core::RuntimeException($e->getMessage(), 1224611407);
+							throw new \F3\Fluid\Core\RuntimeException($e->getMessage(), 1224611407);
 						}
 						if ($reflectionProperty->isPublic()) {
 							$currentObject = $reflectionProperty->getValue($currentObject);
 							continue;
 						} else {
-							throw new F3::Fluid::Core::RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
+							throw new \F3\Fluid\Core\RuntimeException('Trying to resolve ' . $this->objectPath . ', but did not find public getters or variables.', 1224609559);
 						}
 					} elseif (is_array($currentObject)) {
 						if (key_exists($currentObjectPath, $currentObject)) {
 							$currentObject = $currentObject[$currentObjectPath];
 						} else {
-							throw new F3::Fluid::Core::RuntimeException('Tried to read key "' . $currentObjectPath . '" from associative array, but did not find it.', 1225393852);
+							throw new \F3\Fluid\Core\RuntimeException('Tried to read key "' . $currentObjectPath . '" from associative array, but did not find it.', 1225393852);
 						}
 					}
 				}
 			}
 			return $currentObject;
-		} catch(F3::Fluid::Core::RuntimeException $e) {
+		} catch(\F3\Fluid\Core\RuntimeException $e) {
 			// DEPENDING ON THE CONTEXT / CONFIG, either fail silently or not. Currently we always fail silently.
 			return '';
 			// throw $e;

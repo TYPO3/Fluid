@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::View;
+namespace F3\Fluid\View;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3::Fluid::View;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
+class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	
 	/**
 	 * File pattern for resolving the template file
@@ -44,7 +44,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	
 	/**
 	 * Template parser instance.
-	 * @var F3::Fluid::Core::TemplateParser
+	 * @var \F3\Fluid\Core\TemplateParser
 	 */
 	protected $templateParser;
 	
@@ -75,11 +75,11 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	/**
 	 * Inject the template parser
 	 * 
-	 * @param F3::Fluid::Core::TemplateParser $templateParser The template parser
+	 * @param \F3\Fluid\Core\TemplateParser $templateParser The template parser
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectTemplateParser(F3::Fluid::Core::TemplateParser $templateParser) {
+	public function injectTemplateParser(\F3\Fluid\Core\TemplateParser $templateParser) {
 		$this->templateParser = $templateParser;
 	}
 	
@@ -167,7 +167,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 */
 	protected function loadTemplateFile($templateFilePath) {
 		$templateSource = file_get_contents($templateFilePath, FILE_TEXT);
-		if (!$templateSource) throw new F3::Fluid::Core::RuntimeException('The template file "' . $templateFilePath . '" was not found.', 1225709595);
+		if (!$templateSource) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templateFilePath . '" was not found.', 1225709595);
 		return $templateSource;
 	}
 	
@@ -194,7 +194,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		
 		$this->contextVariables['view'] = $this;
 		
-		$variableStore = $this->objectFactory->create('F3::Fluid::Core::VariableContainer', $this->contextVariables);
+		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
 		$result = $templateTree->render($variableStore);
 		return $result;
 	}
@@ -215,14 +215,14 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		
 		if(!array_key_exists($sectionName, $sections)) {
-			throw new F3::Fluid::Core::RuntimeException('The given section does not exist!', 1227108982);
+			throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108982);
 		}
 		
 		$sectionToRender = $sections[$sectionName];
 		
 		$this->contextVariables['view'] = $this;
 		
-		$variableStore = $this->objectFactory->create('F3::Fluid::Core::VariableContainer', $this->contextVariables);
+		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
 		$result = $sectionToRender->render($variableStore);
 		return $result;
 	}
@@ -243,7 +243,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 		
 		$this->contextVariables['view'] = $this;
 		
-		$variableStore = $this->objectFactory->create('F3::Fluid::Core::VariableContainer', $this->contextVariables);
+		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
 		$result = $layoutTree->render($variableStore);
 		
 		return $result;
@@ -255,7 +255,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	 * 
 	 * @param string $key Key of variable
 	 * @param object $value Value of object
-	 * @return F3::Fluid::View::TemplateView an instance of $this, to enable chaining.
+	 * @return \F3\Fluid\View\TemplateView an instance of $this, to enable chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addVariable($key, $value) {
@@ -266,7 +266,7 @@ class TemplateView extends F3::FLOW3::MVC::View::AbstractView {
 	/**
 	 * Return the current request
 	 * 
-	 * @return F3::FLOW3::MVC::Web::Request the current request
+	 * @return \F3\FLOW3\MVC\Web\Request the current request
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRequest() {

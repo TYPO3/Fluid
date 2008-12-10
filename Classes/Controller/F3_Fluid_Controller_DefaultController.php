@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Controller;
+namespace F3\Fluid\Controller;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,11 +28,11 @@ namespace F3::Fluid::Controller;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class DefaultController extends F3::FLOW3::MVC::Controller::ActionController {
+class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	
 	/**
-	 * @var F3::FLOW3::Reflection::Service
+	 * @var \F3\FLOW3\Reflection\Service
 	 */
 	protected $reflectionService;
 	
@@ -41,7 +41,7 @@ class DefaultController extends F3::FLOW3::MVC::Controller::ActionController {
 	 * 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectReflectionService(F3::FLOW3::Reflection::Service $reflectionService) {
+	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
 		$this->reflectionService = $reflectionService;
 	}
 	
@@ -70,7 +70,7 @@ class DefaultController extends F3::FLOW3::MVC::Controller::ActionController {
 						
 						$tagName = $lastTagPart;
 						if ($viewHelperSubNamespace != 'Default') {
-							$tagName = F3::PHP6::Functions::strtolower($viewHelperSubNamespace) . '.' . $tagName;
+							$tagName = \F3\PHP6\Functions\strtolower($viewHelperSubNamespace) . '.' . $tagName;
 						}
 						
 						$this->outputElement($tagName, $className, $methodName);
@@ -93,8 +93,8 @@ class DefaultController extends F3::FLOW3::MVC::Controller::ActionController {
 	protected function outputElement($tagName, $className, $methodName) {
 		$this->out .= '<xsd:element name="'.$tagName.'">';
 		
-		$reflectionMethod = new ::ReflectionMethod($className, $methodName);
-		$docCommentParser = new F3::FLOW3::Reflection::DocCommentParser();
+		$reflectionMethod = new \ReflectionMethod($className, $methodName);
+		$docCommentParser = new \F3\FLOW3\Reflection\DocCommentParser();
 		$docCommentParser->parseDocComment($reflectionMethod->getDocComment());
 		
 		$description = $docCommentParser->getDescription();

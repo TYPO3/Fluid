@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -32,26 +32,26 @@ namespace F3::Fluid::Core;
 abstract class AbstractViewHelper {
 	
 	/**
-	 * Stores all F3::Fluid::ArgumentDefinition instances
+	 * Stores all \F3\Fluid\ArgumentDefinition instances
 	 * @var array
 	 */
 	private $argumentDefinitions = array();
 	
 	/**
 	 * Current view helper node
-	 * @var F3::Fluid::Core::SyntaxTree::ViewHelperNode
+	 * @var \F3\Fluid\Core\SyntaxTree\ViewHelperNode
 	 */
 	private $viewHelperNode;
 	
 	/**
 	 * Arguments accessor. Must be public, because it is set from the framework.
-	 * @var F3::Fluid::Core::ViewHelperArguments
+	 * @var \F3\Fluid\Core\ViewHelperArguments
 	 */
 	public $arguments;
 	
 	/**
 	 * Current variable container reference. Must be public because it is set by the framework
-	 * @var F3::Fluid::Core::VariableContainer
+	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	public $variableContainer;
 	
@@ -68,14 +68,14 @@ abstract class AbstractViewHelper {
 	 * @todo Component manager usage!
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE) {
-		$this->argumentDefinitions[] = new F3::Fluid::Core::ArgumentDefinition($name, $type, $description, $required);
+		$this->argumentDefinitions[] = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $required);
 		return $this;
 	}
 	
 	/**
 	 * Get all argument definitions. Used by the framework to get a list of all arguments registered
 	 *
-	 * @return array An Array of F3::Fluid::Core::ArgumentDefinition objects
+	 * @return array An Array of \F3\Fluid\Core\ArgumentDefinition objects
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getArgumentDefinitions() {
@@ -86,11 +86,11 @@ abstract class AbstractViewHelper {
 	 * Sets all needed attributes needed for the rendering. Called by the framework.
 	 * Populates $this->viewHelperNode
 	 *
-	 * @param F3::Fluid::Core::SyntaxTree::ViewHelperNode $node View Helper node to be set.
+	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $node View Helper node to be set.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	final public function setViewHelperNode(F3::Fluid::Core::SyntaxTree::ViewHelperNode $node) {
+	final public function setViewHelperNode(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
 	}
 

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,16 +30,16 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class SelectViewHelperTest extends F3::Testing::BaseTestCase {
+class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function selectReturnsExpectedXML() {
-		$this->viewHelper = new F3::Fluid::ViewHelpers::Form::SelectViewHelper();
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\SelectViewHelper();
 		$this->viewHelper->initializeArguments();
 		
-		$arguments = new F3::Fluid::Core::ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
 			'options' => array(
 				'k1' => 'v1',
 				'k2' => 'v2'
@@ -49,9 +49,9 @@ class SelectViewHelperTest extends F3::Testing::BaseTestCase {
 		));
 
 		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->setViewHelperNode(new F3::Fluid::ViewHelpers::Fixtures::EmptySyntaxTreeNode());
+		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$output = $this->viewHelper->render();
-		$element = new ::SimpleXMLElement($output);
+		$element = new \SimpleXMLElement($output);
 		
 		$this->assertEquals('myName', (string)$element['name'], 'Name was not correctly read out');
 		
@@ -67,16 +67,16 @@ class SelectViewHelperTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function selectOnDomainObjectsReturnsExpectedXML() {
-		$this->viewHelper = new F3::Fluid::ViewHelpers::Form::SelectViewHelper();
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\SelectViewHelper();
 		$this->viewHelper->initializeArguments();
 		
-		$user_sk = new F3::Fluid::ViewHelpers::Fixtures::UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
 		
-		$arguments = new F3::Fluid::Core::ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
 			'options' => array(
-				new F3::Fluid::ViewHelpers::Fixtures::UserDomainClass(1, 'Ingmar', 'Schlecht'),
+				new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht'),
 				$user_sk,
-				new F3::Fluid::ViewHelpers::Fixtures::UserDomainClass(3, 'Robert', 'Lemke')
+				new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke')
 			),
 			'selectedValue' => $user_sk,
 			'optionKey' => 'id',
@@ -85,9 +85,9 @@ class SelectViewHelperTest extends F3::Testing::BaseTestCase {
 		));
 
 		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->setViewHelperNode(new F3::Fluid::ViewHelpers::Fixtures::EmptySyntaxTreeNode());
+		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$output = $this->viewHelper->render();
-		$element = new ::SimpleXMLElement($output);
+		$element = new \SimpleXMLElement($output);
 		
 		$selectedNode = $element->xpath('/select/option[@value="2"]');
 		$this->assertEquals('selected', (string)$selectedNode[0]['selected'], 'The selected value was not correct.');

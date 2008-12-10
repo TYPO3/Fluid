@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,11 +28,11 @@ namespace F3::Fluid::ViewHelpers;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class IfViewHelperTest extends F3::Testing::BaseTestCase {
+class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	
 	/**
-	 * @var F3::Fluid::TemplateParser
+	 * @var \F3\Fluid\TemplateParser
 	 */
 	protected $templateParser;
 
@@ -42,7 +42,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->templateParser = new F3::Fluid::Core::TemplateParser();
+		$this->templateParser = new \F3\Fluid\Core\TemplateParser();
 		$this->templateParser->injectObjectFactory($this->objectFactory);
 	}
 	
@@ -54,7 +54,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new F3::Fluid::Core::VariableContainer(array('condition' => 'true'));
+		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => 'true'));
 		$result = $templateTree->render($context);
 		$expected = 'RenderSomething';
 		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was true');	
@@ -68,7 +68,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new F3::Fluid::Core::VariableContainer(array('condition' => FALSE));
+		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => FALSE));
 		$result = $templateTree->render($context);
 		$expected = '';
 		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was false');	
@@ -82,7 +82,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new F3::Fluid::Core::VariableContainer(array('condition' => 'true'));
+		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => 'true'));
 		$result = $templateTree->render($context);
 		$expected = 'YEP';
 		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was true');	
@@ -96,7 +96,7 @@ class IfViewHelperTest extends F3::Testing::BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
 		
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new F3::Fluid::Core::VariableContainer(array('condition' => FALSE));
+		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => FALSE));
 		$result = $templateTree->render($context);
 		$expected = 'NOPE';
 		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was false');	

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::SyntaxTree;
+namespace F3\Fluid\Core\SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,7 +29,7 @@ namespace F3::Fluid::Core::SyntaxTree;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class TextNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
+class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	
 	/**
 	 * Contents of the text node
@@ -44,18 +44,18 @@ class TextNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($text) {
-		if (!is_string($text)) throw new F3::Fluid::Core::ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+		if (!is_string($text)) throw new \F3\Fluid\Core\ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		$this->text = $text;
 	}
 	
 	/**
 	 * Return the text associated to the syntax tree.
 	 * 
-	 * @param F3::Fluid::Core::VariableContainer $variableContainer Variable Container where all variables are stored in
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container where all variables are stored in
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		return $this->text;
 	}
 }

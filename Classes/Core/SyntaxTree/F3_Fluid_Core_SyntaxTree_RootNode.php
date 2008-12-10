@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::SyntaxTree;
+namespace F3\Fluid\Core\SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,16 +29,16 @@ namespace F3::Fluid::Core::SyntaxTree;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class RootNode extends F3::Fluid::Core::SyntaxTree::AbstractNode {
+class RootNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 * 
-	 * @param F3::Fluid::Core::VariableContainer $variableContainer Variable Container to be used
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container to be used
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 		$text = $this->evaluateChildNodes();
 		return $text;

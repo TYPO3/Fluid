@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,7 +29,7 @@ namespace F3::Fluid::ViewHelpers;
  * 
  * @scope prototype
  */
-class BaseViewHelper extends F3::Fluid::Core::AbstractViewHelper {
+class BaseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	/**
 	 * The Base view helper does not take any arguments.
 	 */

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3::Fluid::Core;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ArgumentDefinitionTest extends F3::Testing::BaseTestCase {
+class ArgumentDefinitionTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
@@ -39,7 +39,7 @@ class ArgumentDefinitionTest extends F3::Testing::BaseTestCase {
 		$description = "Example desc";
 		$type = "string";
 		$isOptional = TRUE;
-		$argumentDefinition = new F3::Fluid::Core::ArgumentDefinition($name, $type, $description, $isOptional);
+		$argumentDefinition = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isOptional);
 		
 		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');

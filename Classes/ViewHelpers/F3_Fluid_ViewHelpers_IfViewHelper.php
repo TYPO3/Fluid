@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -55,11 +55,11 @@ namespace F3::Fluid::ViewHelpers;
  * @scope prototype
  * @todo implement useful conditions
  */
-class IfViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3::Fluid::Core::Facets::ChildNodeAccessInterface {
+class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface {
 	
 	/**
 	 * An array of
-	 * @var F3::Fluid::Core::SyntaxTree::AbstractNode
+	 * @var \F3\Fluid\Core\SyntaxTree\AbstractNode
 	 */
 	protected $childNodes;
 	
@@ -96,8 +96,8 @@ class IfViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3::Fl
 		
 		if ($this->arguments['condition']) {
 			foreach ($this->childNodes as $childNode) {
-				if ($childNode instanceof F3::Fluid::Core::SyntaxTree::ViewHelperNode
-				    && $childNode->getViewHelperClassName() == 'F3::Fluid::ViewHelpers::ThenViewHelper' ) {
+				if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
+				    && $childNode->getViewHelperClassName() == 'F3\Fluid\ViewHelpers\ThenViewHelper' ) {
 					return $childNode->render($this->variableContainer);	
 				} else { 
 					$out .= $childNode->render($this->variableContainer);
@@ -105,8 +105,8 @@ class IfViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3::Fl
 			}
 		} else {
 			foreach ($this->childNodes as $childNode) {
-				if ($childNode instanceof F3::Fluid::Core::SyntaxTree::ViewHelperNode
-				    && $childNode->getViewHelperClassName() == 'F3::Fluid::ViewHelpers::ElseViewHelper' ) {
+				if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
+				    && $childNode->getViewHelperClassName() == 'F3\Fluid\ViewHelpers\ElseViewHelper' ) {
 					return $childNode->render($this->variableContainer);	
 				}
 			}

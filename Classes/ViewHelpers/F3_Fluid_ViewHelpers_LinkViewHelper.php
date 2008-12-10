@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,7 +29,7 @@ namespace F3::Fluid::ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class LinkViewHelper extends F3::Fluid::Core::TagBasedViewHelper {
+class LinkViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	/**
 	 * Initialize arguments
@@ -54,7 +54,7 @@ class LinkViewHelper extends F3::Fluid::Core::TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3::FLOW3::MVC::View::Helper::URIHelper');
+		$uriHelper = $this->variableContainer->get('view')->getViewHelper('\F3\FLOW3\MVC\View\Helper\URIHelper');
 		$out = '<a href="' . $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller']) . '" ' . $this->renderTagAttributes() . '>';
 		$out .= $this->renderChildren();
 		$out .= '</a>';

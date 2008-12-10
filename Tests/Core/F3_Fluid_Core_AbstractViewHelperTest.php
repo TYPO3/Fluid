@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,7 +30,7 @@ require_once(__DIR__ . '/Fixtures/F3_Fluid_TestViewHelper.php');
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class AbstractViewHelperTest extends F3::Testing::BaseTestCase {
+class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -40,9 +40,9 @@ class AbstractViewHelperTest extends F3::Testing::BaseTestCase {
 		$description = "Example desc";
 		$type = "string";
 		$isOptional = TRUE;
-		$expected = new F3::Fluid::Core::ArgumentDefinition($name, $type, $description, $isOptional);
+		$expected = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isOptional);
 		
-		$viewHelper = new F3::Fluid::TestViewHelper($name, $type, $description, $isOptional);
+		$viewHelper = new \F3\Fluid\TestViewHelper($name, $type, $description, $isOptional);
 		$viewHelper->initializeArguments();
 		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
 	}

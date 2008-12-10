@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -32,7 +32,7 @@ namespace F3::Fluid::Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ViewHelperArguments implements ::ArrayAccess {
+class ViewHelperArguments implements \ArrayAccess {
 
 	/**
 	 * Array storing the arguments themselves
@@ -84,7 +84,7 @@ class ViewHelperArguments implements ::ArrayAccess {
      * @author Sebastian Kurfürst <sebastian@typo3.org>
      */
     function offsetSet($name, $value) { 
-    	throw new F3::Fluid::RuntimeException('Tried to set argument "' . $name . '", but setting arguments is forbidden.');
+    	throw new \F3\Fluid\RuntimeException('Tried to set argument "' . $name . '", but setting arguments is forbidden.');
     } 
     
     /**
@@ -94,7 +94,7 @@ class ViewHelperArguments implements ::ArrayAccess {
      * @author Sebastian Kurfürst <sebastian@typo3.org>
      */
     function offsetUnset($name) { 
-        throw new F3::Fluid::RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.'); 
+        throw new \F3\Fluid\RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.'); 
     } 
 }
 ?>

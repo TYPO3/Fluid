@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::Facets;
+namespace F3\Fluid\Core\Facets;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -26,7 +26,7 @@ namespace F3::Fluid::Core::Facets;
  * 
  * In most cases, you will not need this view helper.
  * 
- * See F3::Fluid::ViewHelpers::IfViewHelper for an example how it is used.
+ * See \F3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
  *
  * @package Fluid
  * @subpackage Core
@@ -37,7 +37,7 @@ interface ChildNodeAccessInterface {
 	/**
 	 * Sets the direct child nodes of the current syntax tree node.
 	 *
-	 * @param array F3::Fluid::Core::SyntaxTree::AbstractNode $childNodes
+	 * @param array \F3\Fluid\Core\SyntaxTree\AbstractNode $childNodes
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

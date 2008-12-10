@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,7 +21,7 @@ namespace F3::Fluid::Core;
  * @version $Id:$
  */
 /**
- * This interface is returned by F3::Fluid::Core::TemplateParser->parse() method.
+ * This interface is returned by \F3\Fluid\Core\TemplateParser->parse() method.
  *
  * @package Fluid
  * @subpackage Core
@@ -30,7 +30,7 @@ interface ParsedTemplateInterface {
 	/**
 	 * Get root node of this parsing state.
 	 *
-	 * @return F3::Fluid::Core::SyntaxTree::RootNode The root node
+	 * @return \F3\Fluid\Core\SyntaxTree\RootNode The root node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRootNode();
@@ -38,7 +38,7 @@ interface ParsedTemplateInterface {
 	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
-	 * @return F3::Fluid::Core::VariableContainer
+	 * @return \F3\Fluid\Core\VariableContainer
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getVariableContainer();

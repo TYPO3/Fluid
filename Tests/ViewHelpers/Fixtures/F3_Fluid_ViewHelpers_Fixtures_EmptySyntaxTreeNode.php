@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers::Fixtures;
+namespace F3\Fluid\ViewHelpers\Fixtures;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3::Fluid::ViewHelpers::Fixtures;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class EmptySyntaxTreeNode extends F3::Fluid::Core::SyntaxTree::ViewHelperNode {
+class EmptySyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\ViewHelperNode {
 	
 	public function __construct() {
 		

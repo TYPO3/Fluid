@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::SyntaxTree;
+namespace F3\Fluid\Core\SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -32,13 +32,13 @@ namespace F3::Fluid::Core::SyntaxTree;
 abstract class AbstractNode {
 	/**
 	 * List of Child Nodes.
-	 * @var array F3::Fluid::Core::SyntaxTree::AbstractNode
+	 * @var array \F3\Fluid\Core\SyntaxTree\AbstractNode
 	 */
 	protected $childNodes = array();
 		
 	/**
 	 * The variable container
-	 * @var F3::Fluid::Core::VariableContainer
+	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	protected $variableContainer;
 	
@@ -74,33 +74,33 @@ abstract class AbstractNode {
 	/**
 	 * Appends a subnode to this node. Is used inside the parser to append children
 	 * 
-	 * @param F3::Fluid::Core::SyntaxTree::AbstractNode $subnode The subnode to add
+	 * @param \F3\Fluid\Core\SyntaxTree\AbstractNode $subnode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function addChildNode(F3::Fluid::Core::SyntaxTree::AbstractNode $subNode) {
+	public function addChildNode(\F3\Fluid\Core\SyntaxTree\AbstractNode $subNode) {
 		$this->childNodes[] = $subNode;
 	}
 	
 	/**
 	 * Renders the node.
 	 * 
-	 * @param F3::Fluid::Core::VariableContainer $variableContainer Variable Container to be used for the rendering
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render(F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function render(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		return (string)$this->evaluate($variableContainer);
 	}
 	
 	/**
 	 * Evaluates the node - can return not only strings, but arbitary objects.
 	 * 
-	 * @param F3::Fluid::Core::VariableContainer Variable Container to be used for the evaluation
+	 * @param \F3\Fluid\Core\VariableContainer Variable Container to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	abstract public function evaluate(F3::Fluid::Core::VariableContainer $variableContainer);
+	abstract public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer);
 }
 
 

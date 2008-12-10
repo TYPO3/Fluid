@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid;
+namespace F3\Fluid;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -24,14 +24,14 @@ namespace F3::Fluid;
  * Enter description here...
  * @scope prototype
  */
-class PostParseFacetViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3::Fluid::Core::Facets::PostParseInterface {
+class PostParseFacetViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
 	public static $wasCalled = FALSE;
 	
 	public function __construct() {
 		
 	}
 	
-	public function postParseEvent(F3::Fluid::Core::SyntaxTree::ViewHelperNode $viewHelperNode, $arguments, F3::Fluid::Core::VariableContainer $variableContainer) {
+	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $viewHelperNode, $arguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
 		self::$wasCalled = TRUE;
 	}
 	public function initializeArguments() {

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers::Form;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -26,7 +26,7 @@ namespace F3::Fluid::ViewHelpers::Form;
  *
  * @scope prototype
  */
-class TextboxViewHelper extends F3::Fluid::Core::TagBasedViewHelper {
+class TextboxViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();

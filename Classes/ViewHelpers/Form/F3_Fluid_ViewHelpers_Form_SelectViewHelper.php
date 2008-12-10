@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers::Form;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -50,7 +50,7 @@ namespace F3::Fluid::ViewHelpers::Form;
  * 
  * @scope prototype
  */
-class SelectViewHelper extends F3::Fluid::Core::TagBasedViewHelper {
+class SelectViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	/**
 	 * Initialize arguments.
@@ -122,13 +122,13 @@ class SelectViewHelper extends F3::Fluid::Core::TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function callSpecifiedProperty($object, $name) {
-		if (!is_object($object)) throw new F3::Fluid::RuntimeException('SelectViewHelper expects a list of objects if you specify the "optionKey" argument.', 1227711174);
+		if (!is_object($object)) throw new \F3\Fluid\RuntimeException('SelectViewHelper expects a list of objects if you specify the "optionKey" argument.', 1227711174);
 		
-		$getterMethodName = 'get' . F3::PHP6::Functions::ucfirst($name);
+		$getterMethodName = 'get' . \F3\PHP6\Functions::ucfirst($name);
 		if (method_exists($object, $getterMethodName)) {
 			return call_user_func(array($object, $getterMethodName));
 		} else {
-			throw new F3::Fluid::RuntimeException('Tried to call "' . $getterMethodName . '" on an object in the select view helper but method does not exist.', 1227711306);
+			throw new \F3\Fluid\RuntimeException('Tried to call "' . $getterMethodName . '" on an object in the select view helper but method does not exist.', 1227711306);
 		}
 	}
 }

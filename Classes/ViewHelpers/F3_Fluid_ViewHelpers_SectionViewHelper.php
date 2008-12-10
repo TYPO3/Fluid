@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::ViewHelpers;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -29,7 +29,7 @@ namespace F3::Fluid::ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class SectionViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F3::Fluid::Core::Facets::PostParseInterface {
+class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
 
 	/**
 	 * Initialize the arguments.
@@ -44,8 +44,8 @@ class SectionViewHelper extends F3::Fluid::Core::AbstractViewHelper implements F
 	 * Save the associated view helper node in a static public class variable.
 	 * called directly after the view helper was built.
 	 */
-	public function postParseEvent(F3::Fluid::Core::SyntaxTree::ViewHelperNode $syntaxTreeNode, $viewHelperArguments, F3::Fluid::Core::VariableContainer $variableContainer) {
-		$sectionName = $viewHelperArguments['name']->render(new F3::Fluid::Core::VariableContainer());
+	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
+		$sectionName = $viewHelperArguments['name']->render(new \F3\Fluid\Core\VariableContainer());
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
 		}

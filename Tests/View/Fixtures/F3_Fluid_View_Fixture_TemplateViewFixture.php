@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::View::Fixture;
+namespace F3\Fluid\View\Fixture;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3::Fluid::View::Fixture;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TemplateViewFixture extends F3::Fluid::View::TemplateView {
+class TemplateViewFixture extends \F3\Fluid\View\TemplateView {
 
 	public $syntaxTree;
 	

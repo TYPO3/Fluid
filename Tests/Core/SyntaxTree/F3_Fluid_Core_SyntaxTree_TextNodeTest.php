@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core::SyntaxTree;
+namespace F3\Fluid\Core\SyntaxTree;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3::Fluid::Core::SyntaxTree;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TextNodeTest extends F3::Testing::BaseTestCase {
+class TextNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
@@ -36,17 +36,17 @@ class TextNodeTest extends F3::Testing::BaseTestCase {
 	 */
 	public function renderReturnsSameStringAsGivenInConstructor() {
 		$string = 'I can work quite effectively in a train!';
-		$node = new F3::Fluid::Core::SyntaxTree::TextNode($string);
-		$this->assertEquals($node->render(new F3::Fluid::Core::VariableContainer()), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+		$node = new \F3\Fluid\Core\SyntaxTree\TextNode($string);
+		$this->assertEquals($node->render(new \F3\Fluid\Core\VariableContainer()), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
 	}
 	
 	/**
 	 * @test
-	 * @expectedException F3::Fluid::Core::ParsingException
+	 * @expectedException \F3\Fluid\Core\ParsingException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function constructorThrowsExceptionIfNoStringGiven() {
-		new F3::Fluid::Core::SyntaxTree::TextNode(123);
+		new \F3\Fluid\Core\SyntaxTree\TextNode(123);
 	}
 }
 

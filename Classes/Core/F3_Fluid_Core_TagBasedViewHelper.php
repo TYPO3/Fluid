@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3::Fluid::Core;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -30,7 +30,7 @@ namespace F3::Fluid::Core;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-abstract class TagBasedViewHelper extends F3::Fluid::Core::AbstractViewHelper {
+abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	
 	/**
 	 * Names of all registered tag attributes
