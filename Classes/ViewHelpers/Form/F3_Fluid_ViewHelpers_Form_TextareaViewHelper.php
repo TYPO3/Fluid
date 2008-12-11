@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Form;
+namespace F3\Beer3\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -22,19 +22,22 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * View Helper which creates a Text Box.
+ * Textarea View Helper.
  *
  * @scope prototype
  */
-class TextboxViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+class TextAreaViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
 	
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
 		$this->registerTagAttribute('name', 'Name of input tag', TRUE);
-		$this->registerTagAttribute('value', 'Value of input tag', TRUE);
+		$this->registerArgument('value', 'string', 'Value of input tag', TRUE);
 	}
 	public function render() {
-		return '<input type="text" ' . $this->renderTagAttributes() . ' />';
+		$out = '<textarea ' . $this->renderTagAttributes() . '>';
+		$out .= $this->arguments['value'];
+		$out .= '</textarea>';
+		return $out;
 	}
 }
 
