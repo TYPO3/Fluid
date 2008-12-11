@@ -70,7 +70,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('\F3\FLOW3\MVC\View\Helper\URIHelper');
+		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
 		
 		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'GET' );
 		
