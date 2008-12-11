@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Beer3\ViewHelpers\Form;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -26,7 +26,7 @@ namespace F3\Beer3\ViewHelpers\Form;
  *
  * @scope prototype
  */
-class TextAreaViewHelper extends F3::Beer3::Core::TagBasedViewHelper {
+class TextAreaViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
