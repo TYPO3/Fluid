@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Controller;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,60 +15,43 @@ namespace F3\Fluid\Controller;
  * Public License for more details.                                       *
  *                                                                        */
 
+include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
- * @package Fluid
- * @subpackage Controller
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Controller which provides a web UI for generating ViewHelper XSD Definitons
+ * Test for the "Textarea" Form view helper
  *
  * @package
  * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
-	
+class TextareaViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
-	 * XSD Generator
-	 * @var F3\Fluid\Service\XSDGenerator
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected $xsdGenerator;
+	public function textBoxReturnsExpectedXML() {
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextareaViewHelper();
+		$this->viewHelper->initializeArguments();
+		
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+			'name' => 'NameOfTextbox',
+			'value' => 'Current value'
+		));
 
-	/**
-	 * Inject XSD Generator
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectXSDGenerator(\F3\Fluid\Service\XSDGenerator $xsdGenerator) {
-		$this->xsdGenerator = $xsdGenerator;
-	}
-	/**
-	 * Inject a TemplateView
-	 * 
-	 * @param \F3\Fluid\View\TemplateView $view The Beer3 View  Instance
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectView(\F3\Fluid\View\TemplateView $view) {
-		$this->view = $view;
-	}
-	
-	/**
-	 * Initialize the view correctly.
-	 * 
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeView() {
-		$this->view->setRequest($this->request);
-	}
-	
-	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function indexAction() {
-		return $this->xsdGenerator->generateXSD('Fluid');
+		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
+		$output = $this->viewHelper->render();
+		$element = new \SimpleXMLElement($output);
+		
+		$this->assertEquals('NameOfTextbox', (string)$element['name'], 'Name was not correctly read out');
+		$this->assertEquals('Current value', (string)$element, 'Value was not correctly read out');
 	}
 }
+
 ?>

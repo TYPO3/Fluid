@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -23,7 +23,7 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * Test for the "Select" Form view helper
  *
  * @package
  * @subpackage

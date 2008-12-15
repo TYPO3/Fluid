@@ -24,13 +24,14 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Enter description here...
  * @scope prototype
  */
-class SubmitViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class SubmitViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	public function initializeArguments() {
-		$this->registerArgument('value', 'string', 'Caption for the button', TRUE);
+		$this->registerUniversalTagAttributes();
 	}
+
 	public function render() {
-		$out = '<button type="submit">';
+		$out = '<button type="submit"' . $this->renderTagAttributes() . '>';
 		$out .= $this->renderChildren();
 		$out .= '</button>';
 		
