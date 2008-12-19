@@ -1,7 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
 namespace F3\Fluid\Service;
-
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
  *                                                                        *
@@ -21,7 +20,8 @@ namespace F3\Fluid\Service;
  * @version $Id:$
  */
 /**
- * [Enter description here]
+ * XML Schema (XSD) Generator. Will generate an XML schema which can be used for autocompletion
+ * in schema-aware editors like Eclipse XML editor.
  *
  * @package Fluid
  * @subpackage Service
@@ -29,106 +29,216 @@ namespace F3\Fluid\Service;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class XSDGenerator {
-/**
-	 * @var \F3\FLOW3\Reflection\Service
-	 */
-	protected $reflectionService;
 
 	/**
-	 * Inject a reflection service.
+	 * Object manager.
+	 *
+	 * @var \F3\FLOW3\Object\Manager
+	 */
+	protected $objectManager;
+	
+	/**
+	 * The reflection class for AbstractViewHelper. Is needed quite often, that's why we use a pre-initialized one.
 	 * 
+	 * @var \F3\FLOW3\Reflection\ClassReflection
+	 */
+	protected $abstractViewHelperReflectionClass;
+	
+	/**
+	 * The doc comment parser.
+	 *  
+	 * @var \F3\FLOW3\Reflection\DocCommentParser
+	 */
+	protected $docCommentParser;
+	
+	
+	/**
+	 * Constructor. Sets $this->abstractViewHelperReflectionClass
+	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
-		$this->reflectionService = $reflectionService;
+	public function __construct() {
+		$this->abstractViewHelperReflectionClass = new \F3\FLOW3\Reflection\ClassReflection('F3\Fluid\Core\AbstractViewHelper');
+		$this->docCommentParser = new \F3\FLOW3\Reflection\DocCommentParser();
 	}
-
-	public function generateXSD($packageName) {
-		
-	}
-	
-	/* TODO */
 	
 	/**
-	 * Default action for this controller
+	 * Inject the object manager.
 	 *
-	 * @return string The rendered view
-	 * @author sebastian
+	 * @param \F3\FLOW3\Object\Manager $objectManager the object manager to inject
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function indexAction() {
-		// TODO INPUT PARAMETERS _ LIMIT TO CERTAIN PACKAGE!
+	public function injectObjectManager(\F3\FLOW3\Object\ManagerInterface $objectManager) {
+		$this->objectManager = $objectManager;
+	}
+	
+	/**
+	 * Generate the XML Schema definition for a given namespace.
+	 * It will generate an XSD file for all view helpers in this namespace.
+	 *
+	 * @param string $namespace Namespace identifier to generate the XSD for, without leading Backslash.
+	 * @return string XML Schema definition
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function generateXSD($namespace) {
+		if (substr($namespace, -1) !== '\\') {
+			$namespace .= '\\';
+		}
 		
-		$this->xmlHeader();
+		$classNames = $this->getClassNamesInNamespace($namespace);
 		
-		$classNames = $this->reflectionService->getClassNamesByTag('viewhelper');
+		$xmlRootNode = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+			<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/f3"></xsd:schema>');
+		//<?
 		foreach ($classNames as $className) {
-			if (preg_match('/([^:]*)ViewHelper$/', $className, $match) > 0) {
-				$viewHelperSubNamespace = $match[1];
-				
-				$methodNames = $this->reflectionService->getClassMethodNames($className);
-				foreach ($methodNames as $methodName) {
-					if (preg_match('/^(.*)Method$/', $methodName, $match) > 0) {
-						$lastTagPart = $match[1];
-						
-						$tagName = $lastTagPart;
-						if ($viewHelperSubNamespace != 'Default') {
-							$tagName = \F3\PHP6\Functions\strtolower($viewHelperSubNamespace) . '.' . $tagName;
-						}
-						
-						$this->outputElement($tagName, $className, $methodName);
-					}
-				}
-			}
-		}
-		$this->out .= '</xsd:schema>';
-		
-		return $this->out;
-		return $this->view->render();
-	}
-	
-	protected function xmlHeader() {
-		$this->out = '<?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	targetNamespace="http://typo3.org/ns/f3">';
-	}
-	
-	protected function outputElement($tagName, $className, $methodName) {
-		$this->out .= '<xsd:element name="'.$tagName.'">';
-		
-		$reflectionMethod = new \ReflectionMethod($className, $methodName);
-		$docCommentParser = new \F3\FLOW3\Reflection\DocCommentParser();
-		$docCommentParser->parseDocComment($reflectionMethod->getDocComment());
-		
-		$description = $docCommentParser->getDescription();
-		$this->out .= '<xsd:annotation><xsd:documentation>'.htmlentities($description).'</xsd:documentation></xsd:annotation>';
-		
-		$this->out .= '<xsd:complexType mixed="true">
-			<xsd:sequence>
-				<xsd:any minOccurs="0" maxOccurs="unbounded" />
-			</xsd:sequence>';
-		
-		$tags = $this->reflectionService->getMethodTagsValues($className, $methodName);
-		if ($tags['argument']) {
-			foreach ($tags['argument'] as $argument) {
-				preg_match('/(?<Name>[a-zA-Z0-9]*)\s+(?<Type>[a-zA-Z0-9]*)\s+(?<Description>.*)$/', $argument, $matches);
-				
-				// todo use="required"
-				$this->out .= '<xsd:attribute name="'.$matches['Name'].'" type="xsd:string">';
-				
-				$this->out .= '<xsd:annotation><xsd:documentation>';
-				$this->out .= htmlentities($matches['Description']);
-				$this->out .= '</xsd:documentation></xsd:annotation>';
-				
-				$this->out .= '</xsd:attribute>';
-			}
-			
+			$this->generateXMLForClassName($className, $namespace, $xmlRootNode);
 		}
 		
-		$this->out .= '</xsd:complexType>';
-		
-		$this->out .= '</xsd:element>';
-		
+		return $xmlRootNode->asXML();
 	}
 	
+	/**
+	 * Get all class names inside this namespace and return them as array.
+	 *
+	 * @param string $namespace
+	 * @return array Array of all class names inside a given namespace.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getClassNamesInNamespace($namespace) {
+		$viewHelperClassNames = array();
+		
+		$registeredObjectNames = array_keys($this->objectManager->getRegisteredObjects());
+		foreach ($registeredObjectNames as $registeredObjectName) {
+			if (strncmp($namespace, $registeredObjectName, strlen($namespace)) === 0) {
+				$viewHelperClassNames[] = $registeredObjectName;
+			}
+		}
+		
+		return $registeredObjectNames;
+	}
+
+	/**
+	 * Generate the XML Schema for a given class name.
+	 *
+	 * @param string $className Class name to generate the schema for.
+	 * @param string $namespace Namespace prefix. Used to split off the first parts of the class name.
+	 * @param \SimpleXMLElement $xmlRootNode XML root node where the xsd:element is appended.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function generateXMLForClassName($className, $namespace, \SimpleXMLElement $xmlRootNode) {
+		$reflectionClass = new \F3\FLOW3\Reflection\ClassReflection($className);
+		if (!$reflectionClass->isSubclassOf($this->abstractViewHelperReflectionClass)) {
+			return;
+		}
+		
+		$tagName = $this->getTagNameForClass($className, $namespace);
+		
+		$xsdElement = $xmlRootNode->addChild('xsd:element');
+		$xsdElement['name'] = $tagName;
+		$this->docCommentParser->parseDocComment($reflectionClass->getDocComment());
+		$this->addDocumentation($this->docCommentParser->getDescription(), $xsdElement);
+		
+		$xsdComplexType = $xsdElement->addChild('xsd:complexType');
+		$xsdComplexType['mixed'] = 'true';
+		$xsdSequence = $xsdComplexType->addChild('xsd:sequence');
+		$xsdAny = $xsdSequence->addChild('xsd:any');
+		$xsdAny['minOccurs'] = '0';
+		$xsdAny['maxOccurs'] = 'unbounded';
+
+		$this->addAttributes($className, $xsdComplexType);
+	}
+	
+	/**
+	 * Get a tag name for a given ViewHelper class.
+	 * Example: For the View Helper F3\Fluid\ViewHelpers\Form\SelectViewHelper, and the
+	 * namespace prefix F3\Fluid\ViewHelpers\, this method returns "form.select".
+	 *
+	 * @param string $className Class name
+	 * @param string $namespace Base namespace to use
+	 * @return string Tag name
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getTagNameForClass($className, $namespace) {
+		$strippedClassName = substr($className, strlen($namespace));
+		$classNameParts = explode('\\', $strippedClassName);
+	
+		if (count($classNameParts) == 1) {
+			$tagName = lcfirst(substr($classNameParts[0], 0, -10)); // strip the "ViewHelper" ending
+		} else {
+			$tagName = lcfirst($classNameParts[0]) . '.' . lcfirst(substr($classNameParts[1], 0, -10));
+		}
+		return $tagName;
+	}
+
+	/**
+	 * Add attribute descriptions to a given tag.
+	 * Initializes the view helper and its arguments, and then reads out the list of arguments.
+	 *
+	 * @param string $className Class name where to add the attribute descriptions
+	 * @param \SimpleXMLElement $xsdElement XML element to add the attributes to.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function addAttributes($className, \SimpleXMLElement $xsdElement) {
+		$viewHelper = $this->objectManager->getObject($className);
+		$viewHelper->initializeArguments();
+		$argumentDefinitions = $viewHelper->getArgumentDefinitions();
+		
+		foreach ($argumentDefinitions as $argumentDefinition) {
+			$xsdAttribute = $xsdElement->addChild('xsd:attribute');
+			$xsdAttribute['type'] = 'xsd:string';
+			$xsdAttribute['name'] = $argumentDefinition->getName();
+			$this->addDocumentation($argumentDefinition->getDescription(), $xsdAttribute);
+			if ($argumentDefinition->isRequired()) {
+				$xsdAttribute['use'] = 'required';
+			}
+		}
+	}
+	
+	/**
+	 * Add documentation XSD to a given XML node
+	 *
+	 * As Eclipse renders newlines only on new <xsd:documentation> tags, we wrap every line in a new
+	 * <xsd:documentation> tag.
+	 * Furthermore, eclipse strips out tags - the only way to prevent this is to have every line wrapped in a
+	 * CDATA block AND to replace the < and > with their XML entities. (This is IMHO not XML conformant).
+	 * 
+	 * @param string $documentation Documentation string to add.
+	 * @param \SimpleXMLElement $xsdParentNode Node to add the documentation to
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function addDocumentation($documentation, \SimpleXMLElement $xsdParentNode) {
+		$xsdAnnotation = $xsdParentNode->addChild('xsd:annotation');
+		$documentationLines = explode("\n", $documentation);
+		
+		foreach ($documentationLines as $documentationLine) {
+			$documentationLine = str_replace('<', '&lt;', $documentationLine);
+			$documentationLine = str_replace('>', '&gt;', $documentationLine);
+			$this->addChildWithCData($xsdAnnotation, 'xsd:documentation', $documentationLine);
+		}
+	}
+	
+	/**
+	 * Add a child node to $parentXMLNode, and wrap the contents inside a CDATA section.
+	 *
+	 * @param \SimpleXMLElement $parentXMLNode Parent XML Node to add the child to
+	 * @param string $childNodeName Name of the child node
+	 * @param string $nodeValue Value of the child node. Will be placed inside CDATA.
+	 * @return \SimpleXMLElement the new element
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function addChildWithCData(\SimpleXMLElement $parentXMLNode, $childNodeName, $childNodeValue) {
+		$parentDomNode = dom_import_simplexml($parentXMLNode);
+		$domDocument = new \DOMDocument();
+		
+		$childNode = $domDocument->appendChild($domDocument->createElement($childNodeName));
+		$childNode->appendChild($domDocument->createCDATASection($childNodeValue));
+		$childNodeTarget = $parentDomNode->ownerDocument->importNode($childNode, true);
+		$parentDomNode->appendChild($childNodeTarget);
+		return simplexml_import_dom($childNodeTarget);
+	}
 }
 ?>

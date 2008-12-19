@@ -40,7 +40,6 @@ class ForViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	public function initializeArguments() {
 		$this->registerArgument('each', 'array', 'The array which is iterated over.', TRUE);
 		$this->registerArgument('as', 'string', 'Name of the variable where each array element is bound to.', TRUE);
-		
 	}
 	
 	/**

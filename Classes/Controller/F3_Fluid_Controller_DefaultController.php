@@ -38,11 +38,14 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * Inject XSD Generator
+	 * 
+	 * @param \F3\Fluid\Service\XSDGenerator $xsdGenerator XSD Generator
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectXSDGenerator(\F3\Fluid\Service\XSDGenerator $xsdGenerator) {
 		$this->xsdGenerator = $xsdGenerator;
 	}
+	
 	/**
 	 * Inject a TemplateView
 	 * 
@@ -68,7 +71,7 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function indexAction() {
-		return $this->xsdGenerator->generateXSD('Fluid');
+		return $this->xsdGenerator->generateXSD('F3\Fluid\ViewHelpers');
 	}
 }
 ?>
