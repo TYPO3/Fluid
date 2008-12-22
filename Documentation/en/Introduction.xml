@@ -8,8 +8,8 @@
          xmlns:mathml="http://www.w3.org/1998/Math/MathML">
   <title>Introduction</title>
 
-  <para>Fluid is a next-generation templating engine which was engineered with
-  several goals in mind:<itemizedlist>
+  <para>Fluid is the next-generation templating engine which was engineered
+  with several goals in mind:<itemizedlist>
       <listitem>
         <para>Simplicity</para>
       </listitem>
@@ -30,7 +30,9 @@
   <para>This templating engine should not be bloated, instead, we try to do it
   "The Zen Way" - you do not need to learn too many things, thus you can
   concentrate on getting your things done, while the template engine handles
-  everything you do not want to care about.</para>
+  everything you do not want to care about. In XML Schema aware editors (like
+  Eclipse), you even get autocompletion and inline help support while writing
+  your template.</para>
 
   <section>
     <title>What does it do?</title>
@@ -38,8 +40,8 @@
     <para>In the current MVC system of FLOW3, the View currently does not have
     a lot of functionality. The standard view provides a
     <methodname>render</methodname> method, and nothing more. That makes it
-    really difficult to write powerful views, as most designers will not write
-    PHP code.</para>
+    cumbersome to write powerful views, as most designers will not write PHP
+    code.</para>
 
     <para>That is where the Template Engine comes into play: It "lives" inside
     the View, and is controlled by a special

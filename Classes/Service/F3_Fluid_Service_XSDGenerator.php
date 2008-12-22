@@ -82,6 +82,8 @@ class XSDGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function generateXSD($namespace) {
+		$tmp = str_replace('\\', '/', $namespace);
+		
 		if (substr($namespace, -1) !== '\\') {
 			$namespace .= '\\';
 		}
@@ -89,7 +91,7 @@ class XSDGenerator {
 		$classNames = $this->getClassNamesInNamespace($namespace);
 		
 		$xmlRootNode = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-			<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/f3"></xsd:schema>');
+			<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/fluid/' . $tmp . '"></xsd:schema>');
 		//<?
 		foreach ($classNames as $className) {
 			$this->generateXMLForClassName($className, $namespace, $xmlRootNode);

@@ -66,12 +66,54 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	public function initializeView() {
 		$this->view->setRequest($this->request);
 	}
+	/**
+	 * Initialize arguments.
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initializeController() {
+		$this->arguments->addNewArgument('baseNamespace', 'Text');
+		$this->arguments->addNewArgument('namespacePrefix', 'Text');
+	}
 	
 	/**
+	 * Index action
+	 * 
+	 * @return string HTML string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function indexAction() {
-		return $this->xsdGenerator->generateXSD('F3\Fluid\ViewHelpers');
+		return $this->view->render();
+	}
+	
+	/**
+	 * Generate the XSD file.
+	 * 
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo Still has to be finished
+	 */
+	public function generateXSDAction() {
+		$baseNamespace = (string)$this->arguments['baseNamespace'];
+		$namespacePrefix = (string)$this->arguments['namespacePrefix'];
+		
+		$xsdFileContents = $this->xsdGenerator->generateXSD($baseNamespace);
+		
+		$path = 'Resources/Fluid/XSD/';
+		if (!is_dir(FLOW3_PATH_PUBLIC . $path)) {
+			\F3\FLOW3\Utility\Files::createDirectoryRecursively(FLOW3_PATH_PUBLIC . $path);
+		}
+		
+		$filename = $path . str_replace('\\', '_', $baseNamespace) . '.xsd';
+		
+		$fp = fopen(FLOW3_PATH_PUBLIC . $filename, 'w');
+		fputs($fp, $xsdFileContents);
+		fclose($fp);
+		
+		return $this->view->addVariable('xsdPath', $filename)
+		                  ->addVariable('namespaceURI', 'http://typo3.org/ns/fluid/' . str_replace('\\', '/', $baseNamespace))
+		                  ->addVariable('namespacePrefix', $namespacePrefix)
+		                  ->render();
 	}
 }
 ?>

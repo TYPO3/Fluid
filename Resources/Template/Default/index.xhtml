@@ -1,0 +1,51 @@
+{namespace f3=F3\Fluid\ViewHelpers}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+body {
+	font-family:Arial, Helvetica, sans-serif;
+	background-color:#F1F1F1;
+	
+}
+h2 {
+	text-align:center;
+	color:white;
+	font-weight:normal;
+	padding-top:15px;
+}
+.box {
+	background-color:#414141;
+	width:800px;
+	margin:auto;
+}
+.content {
+	background-color:#B9B9B9;
+	padding-left:10px;
+	padding-right:10px;
+}
+</style>
+<f3:base />
+</head>
+<body>
+<div class="box">
+	<h2>Fluid Autocompletion Generation Wizard</h2>
+	<p class="content">
+		After you have written your view helpers, you can generate an XML Schema file
+		which you can load into your favourite IDE (i.e. Eclipse) - providing syntax highlighting,
+		inline help and autocompletion.<br />
+		This wizard will guide you through the steps needed.
+	</p>
+	<h2>Step 1<span style="color:#919191">/2</span></h2>
+	<f3:form class="content" action="generateXSD">
+		<label for="baseNamespace">Base namespace of view helpers</label>
+		<f3:form.textbox name="baseNamespace" /> <br />
+		<label for="namespacePrefix">Namespace prefix</label>
+		<f3:form.textbox name="namespacePrefix" /> <br />
+		<f3:form.submit>Proceed with step 2</f3:form.submit>
+	</f3:form>
+</div>
+</body>
+</html>

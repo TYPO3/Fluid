@@ -17,31 +17,31 @@
   <section>
     <title>Design Decisions</title>
 
-    <para>BEER3 was born in the context of FLOW3, but from the beginning, we
+    <para>Fluid was born in the context of FLOW3, but from the beginning, we
     saw the needs for such a templating system in other contexts - namely
-    TYPO3 v4, or stand-alone usage. That's why the core design of BEER3
+    TYPO3 v4, or stand-alone usage. That's why the core design of Fluid
     reflects this thinking.</para>
 
-    <para>We are using a layered architecture for BEER3, shown below:</para>
+    <para>We are using a layered architecture for Fluid, shown below:</para>
 
     <para><mediaobject>
         <imageobject>
           <imagedata fileref="layered-architecture.png"></imagedata>
         </imageobject>
-      </mediaobject>BEER3 Core consists of the parts which do not change
+      </mediaobject>Fluid Core consists of the parts which do not change
     depending on the environment, such as the template parser.</para>
 
     <para>The upper layer, consisting of the Standard View Helpers and the
     TemplateView, are currently FLOW3-specific, but there will be separate
     layers for different contexts (like TYPO3 v4) which provide standard view
-    helpers adjusted to the different platforms, different BEER3
+    helpers adjusted to the different platforms, different Fluid
     initialization code, etc.</para>
   </section>
 
   <section>
     <title>The Core</title>
 
-    <para>BEER3 Core consists of the following components:</para>
+    <para>Fluid Core consists of the following components:</para>
 
     <para><itemizedlist>
         <listitem>

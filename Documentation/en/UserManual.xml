@@ -10,14 +10,142 @@
 
   <para>This chapter describes all things the users need to know about the
   templating system. This starts with a little tutorial how to write a
-  template, using layouts, and in the end write your own view helpers.</para>
+  template, using layouts, and finishes with writing your own view
+  helpers.</para>
 
   <section>
     <title>How to write a template</title>
 
-    <para>Namespace declare</para>
+    <para>Let's look at a small example - outputting a list of all Blog
+    postings:</para>
+
+    <para><programlisting>&lt;html&gt;
+&lt;head&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h2&gt;Blog Posts&lt;/h2&gt;
+&lt;/body&gt;</programlisting></para>
 
     <para>View helpers are namespaced</para>
+  </section>
+
+  <section>
+    <title>Syntax Elements</title>
+
+    <para>⁄</para>
+
+    <section>
+      <title>ViewHelpers / Namespace declaration</title>
+
+      <para>Most custom output logic is placed in so-called
+      <emphasis>ViewHelpers</emphasis>, which can be called from inside a
+      template as special tags:</para>
+
+      <para><programlisting>{namespace f3=F3\Fluid\ViewHelpers}
+&lt;f3:link action="someAction"&gt;Administration interface&lt;/f3:link&gt;</programlisting>The
+      first line in the above example is the so-called <emphasis>namespace
+      declaration</emphasis>, which imports a certain ViewHelper package into
+      the template. Thus, <code>f3</code> is a shorthand for
+      <code>F3\Fluid\ViewHelpers</code>. In the second line, we call a View
+      Helper called <code>LinkViewHelper</code>, which takes the
+      <code>action</code> argument, and renders a HTML link from it.</para>
+    </section>
+
+    <section>
+      <title>Variables and Object Accessors</title>
+
+      <para>A templating system would be quite pointless if it was not
+      possible to display some external data in the templates. That's what
+      variables are for:</para>
+
+      <para>Suppose you want to output the title of your blog, you could write
+      the following snippet into your controller:</para>
+
+      <para><programlisting>$this-&gt;view-&gt;addVariable('blogTitle', $blog-&gt;getTitle());</programlisting>Then,
+      you could output the blog title in your template with the following
+      snippet:</para>
+
+      <para><programlisting>&lt;h1&gt;This blog is called {blogTitle}&lt;/h1&gt;</programlisting>Now,
+      you might want to extend the output by the blog author as well. To do
+      this, you could repeat the above steps, but that would be quite
+      inconvenient and hard to read.</para>
+
+      <para>That's why the template language has a special syntax for object
+      access, demonstrated below. A nicer way of expressing the above is the
+      following:</para>
+
+      <para><programlisting><lineannotation>This should go into the controller:
+</lineannotation>$this-&gt;view-&gt;addVariable('blog', $blog);
+<lineannotation>This should go into the template:</lineannotation>
+&lt;h1&gt;This blog is called <emphasis>{blog.title}</emphasis>, written by <emphasis>{blog.author}</emphasis>&lt;/h1&gt;</programlisting>Instead
+      of passing strings to the template, we are passing whole objects around
+      now. To access certain properties of these objects, you can use the
+      <emphasis>Object Accessors</emphasis>. By writing
+      <code>{blog.title}</code>, the template engine will call a
+      <code>getTitle()</code> method on the <code>blog</code> object, if it
+      exists. Besides, you can use that syntax to traverse associative arrays
+      and public properties.</para>
+
+      <para><tip>
+          <para>Deep nesting is supported: If you want to output the email
+          address of the blog author, then you can use
+          <code>{blog.author.email}</code>, which internally calls
+          <code>$blog-&gt;getAuthor()-&gt;getEmail()</code>.</para>
+        </tip></para>
+    </section>
+
+    <section>
+      <title>Arrays</title>
+
+      <para>Some view helpers, like the <code>SelectViewHelper</code> (which
+      renders an HTML select dropdown box), need to get associative arrays as
+      arguments (mapping from internal to displayed name). See the following
+      example how this works:</para>
+
+      <para><programlisting>&lt;f3:form.select options="{edit: 'Edit item', delete: 'Delete item'}" /&gt;</programlisting>The
+      array syntax used here is very similar (if not equal) to the JSON object
+      syntax. Thus, the left side of the associative array is used as key
+      without any parsing, and the right side can be either:</para>
+
+      <para><itemizedlist>
+          <listitem>
+            <para>a number</para>
+
+            <para><programlisting>{a : 1,
+ b : 2
+}</programlisting></para>
+          </listitem>
+
+          <listitem>
+            <para>a string; Needs to be in either single- or double quotes. In
+            a double-quoted string, you need to escape the " with a \ in front
+            (and vice versa for single quoted strings).</para>
+
+            <para><programlisting>{a : 'Hallo',
+ b : "Second string"
+}</programlisting></para>
+          </listitem>
+
+          <listitem>
+            <para>a nested array</para>
+
+            <para><programlisting>{a : {
+    a1 : "bla1",
+    a2 : "bla2"
+  },
+ b : "hallo"
+}</programlisting></para>
+          </listitem>
+
+          <listitem>
+            <para>a variable reference</para>
+
+            <para><programlisting>{blogTitle : blog.title,
+ blogObject: blog
+}</programlisting>Here, you have all the possibilities the object accessors
+            have.</para>
+          </listitem>
+        </itemizedlist></para>
+    </section>
   </section>
 
   <section>
@@ -33,7 +161,7 @@
     each page. Usually, there are common templates, menu structures,
     ...</para>
 
-    <para>To make this possible in BEER3, we created a layout system, which we
+    <para>To make this possible in Fluid, we created a layout system, which we
     will introduce in this chapter.</para>
 
     <section>
@@ -41,7 +169,7 @@
 
       <para>Every layout is placed in the
       <filename>Resources/Template/layout</filename> directory, and has the
-      file ending <filename>.xhtml</filename>. A layout is a normal BEER3
+      file ending <filename>.xhtml</filename>. A layout is a normal Fluid
       template file, except there are some parts where the actual content of
       the target page should be inserted.</para>
 
@@ -225,6 +353,12 @@
         evaluate the sub nodes inside the <methodname>render()</methodname>
         method, and decide which part of the subnodes it will render based on
         the condition.</para>
+      </section>
+
+      <section>
+        <title>PostParse Facet</title>
+
+        <para></para>
       </section>
     </section>
   </section>
