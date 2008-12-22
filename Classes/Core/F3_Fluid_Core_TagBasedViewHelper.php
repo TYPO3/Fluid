@@ -37,7 +37,9 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @var array
 	 */
 	protected $tagAttributes = array();
-	
+	public function __construct() {
+		$this->registerArgument('additionalArguments', 'array', 'Additional arguments', FALSE);
+	}
 	/**
 	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->renderTagAttributes()
 	 * 
@@ -88,6 +90,9 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 */
 	protected function renderTagAttributes() {
 		$attributes = array();
+		foreach ($this->arguments['additionalArguments'] as $key => $value) {
+			$this->tagAttributes[$key] = $value;
+		}
 		foreach ($this->tagAttributes as $attributeName) {
 			if ($this->arguments[$attributeName]) {
 				$attributes[] = $attributeName . '="' . $this->arguments[$attributeName] . '"';
