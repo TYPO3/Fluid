@@ -91,7 +91,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	protected function renderTagAttributes() {
 		$attributes = array();
 		foreach ($this->arguments['additionalArguments'] as $key => $value) {
-			$this->tagAttributes[$key] = $value;
+			$attributes[] = $key . '="' . $value . '"';
 		}
 		foreach ($this->tagAttributes as $attributeName) {
 			if ($this->arguments[$attributeName]) {
