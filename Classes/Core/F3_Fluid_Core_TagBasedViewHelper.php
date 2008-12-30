@@ -29,22 +29,30 @@ namespace F3\Fluid\Core;
  * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @scope prototype
  */
 abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
-	
+
 	/**
 	 * Names of all registered tag attributes
 	 * @var array
 	 */
 	protected $tagAttributes = array();
+
+	/**
+	 * Constructor
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function __construct() {
 		$this->registerArgument('additionalArguments', 'array', 'Additional arguments', FALSE);
 	}
+
 	/**
 	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->renderTagAttributes()
-	 * 
+	 *
 	 * The tag attributes registered here are rendered with the $this->renderTagAttributes() method.
-	 * 
+	 *
 	 * @param string $name Name of tag attribute
 	 * @param string $description Description of tag attribute
 	 * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
@@ -55,11 +63,11 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 		$this->registerArgument($name, 'string', $description, $required);
 		$this->tagAttributes[] = $name;
 	}
-	
+
 	/**
 	 * Registers all standard HTML universal attributes.
 	 * Should be used inside registerArguments();
-	 * 
+	 *
 	 * The following attributes are registered:
 	 * - class (CSS Class)
 	 * - dir (Text direction)
@@ -79,19 +87,21 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 		$this->registerTagAttribute('style', 'Individual CSS styles for this element');
 		$this->registerTagAttribute('title', 'Tooltip text of element');
 	}
-	
+
 	/**
 	 * Render all tag attributes which were registered in $this->tagAttributes.
 	 * You should call this method in your render() method if you output some tag.
-	 * 
+	 *
 	 * @return string Concatenated list of attributes
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo HTMLSPECIALCHAR output
 	 */
 	protected function renderTagAttributes() {
 		$attributes = array();
-		foreach ($this->arguments['additionalArguments'] as $key => $value) {
-			$attributes[] = $key . '="' . $value . '"';
+		if (isset($this->arguments['additionalArguments']) && is_array($this->arguments['additionalArguments'])) {
+			foreach ($this->arguments['additionalArguments'] as $key => $value) {
+				$attributes[] = $key . '="' . $value . '"';
+			}
 		}
 		foreach ($this->tagAttributes as $attributeName) {
 			if ($this->arguments[$attributeName]) {
@@ -101,6 +111,4 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 		return implode(' ', $attributes);
 	}
 }
-
-
 ?>

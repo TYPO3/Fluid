@@ -1,95 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
-         xmlns:xl="http://www.w3.org/1999/xlink"
-         xmlns:xi="http://www.w3.org/2001/XInclude"
-         xmlns:xhtml="http://www.w3.org/1999/xhtml"
-         xmlns:svg="http://www.w3.org/2000/svg"
-         xmlns:ns="http://docbook.org/ns/docbook"
-         xmlns:mathml="http://www.w3.org/1998/Math/MathML">
-  <title>Software Design</title>
+			xmlns:xl="http://www.w3.org/1999/xlink"
+			xmlns:xi="http://www.w3.org/2001/XInclude"
+			xmlns:xhtml="http://www.w3.org/1999/xhtml"
+			xmlns:svg="http://www.w3.org/2000/svg"
+			xmlns:ns="http://docbook.org/ns/docbook"
+			xmlns:mathml="http://www.w3.org/1998/Math/MathML">
+<title>Software Design</title>
 
-  <para><itemizedlist>
-      <listitem>
-        <para></para>
-      </listitem>
-    </itemizedlist></para>
+<para><itemizedlist>
+		<listitem>
+		  <para></para>
+		</listitem>
+	 </itemizedlist></para>
 
-  <section>
-    <title>Design Decisions</title>
+<section>
+	 <title>Design Decisions</title>
 
-    <para>Fluid was born in the context of FLOW3, but from the beginning, we
-    saw the needs for such a templating system in other contexts - namely
-    TYPO3 v4, or stand-alone usage. That's why the core design of Fluid
-    reflects this thinking.</para>
+	 <para>Fluid was born in the context of FLOW3, but from the beginning, we
+	 saw the needs for such a templating system in other contexts - namely
+	 TYPO3 v4, or stand-alone usage. That's why the core design of Fluid
+	 reflects this thinking.</para>
 
-    <para>We are using a layered architecture for Fluid, shown below:</para>
+	 <para>We are using a layered architecture for Fluid, shown below:</para>
 
-    <para><mediaobject>
-        <imageobject>
-          <imagedata fileref="layered-architecture.png"></imagedata>
-        </imageobject>
-      </mediaobject>Fluid Core consists of the parts which do not change
-    depending on the environment, such as the template parser.</para>
+	 <para><mediaobject>
+		  <imageobject>
+			 <imagedata fileref="layered-architecture.png"></imagedata>
+		  </imageobject>
+		</mediaobject>Fluid Core consists of the parts which do not change
+	 depending on the environment, such as the template parser.</para>
 
-    <para>The upper layer, consisting of the Standard View Helpers and the
-    TemplateView, are currently FLOW3-specific, but there will be separate
-    layers for different contexts (like TYPO3 v4) which provide standard view
-    helpers adjusted to the different platforms, different Fluid
-    initialization code, etc.</para>
-  </section>
+	 <para>The upper layer, consisting of the Standard View Helpers and the
+	 TemplateView, are currently FLOW3-specific, but there will be separate
+	 layers for different contexts (like TYPO3 v4) which provide standard view
+	 helpers adjusted to the different platforms, different Fluid
+	 initialization code, etc.</para>
+</section>
 
-  <section>
-    <title>The Core</title>
+<section>
+	 <title>The Core</title>
 
-    <para>Fluid Core consists of the following components:</para>
+	 <para>Fluid Core consists of the following components:</para>
 
-    <para><itemizedlist>
-        <listitem>
-          <para>The TemplateParser, which takes a template file and builds up
-          a syntax tree from it.</para>
-        </listitem>
+	 <para><itemizedlist>
+		  <listitem>
+			 <para>The TemplateParser, which takes a template file and builds up
+			 a syntax tree from it.</para>
+		  </listitem>
 
-        <listitem>
-          <para>The Syntax Tree Elements (which have logic inside them as
-          well)</para>
-        </listitem>
+		  <listitem>
+			 <para>The Syntax Tree Elements (which have logic inside them as
+			 well)</para>
+		  </listitem>
 
-        <listitem>
-          <para>The AbstractViewHelper, being the base class for all view
-          helpers.</para>
-        </listitem>
-      </itemizedlist></para>
+		  <listitem>
+			 <para>The AbstractViewHelper, being the base class for all view
+			 helpers.</para>
+		  </listitem>
+		</itemizedlist></para>
 
-    <para>Rendering a template always involves two steps:<itemizedlist>
-        <listitem>
-          <para>Call the <methodname>parse</methodname> method in the
-          <classname>TemplateParser</classname> class, which will return a
-          SyntaxTree. This Syntax Tree will be cached in the future.</para>
-        </listitem>
+	 <para>Rendering a template always involves two steps:<itemizedlist>
+		  <listitem>
+			 <para>Call the <methodname>parse</methodname> method in the
+			 <classname>TemplateParser</classname> class, which will return a
+			 SyntaxTree. This Syntax Tree will be cached in the future.</para>
+		  </listitem>
 
-        <listitem>
-          <para>The SyntaxTree is implemented using a
-          <emphasis>Composite</emphasis> design pattern, with all syntax tree
-          nodes extending
-          <classname>F3::Fluid::Core::SyntaxTree::AbstractNode</classname>.</para>
-        </listitem>
+		  <listitem>
+			 <para>The SyntaxTree is implemented using a
+			 <emphasis>Composite</emphasis> design pattern, with all syntax tree
+			 nodes extending
+			 <classname>\F3\Fluid\Core\SyntaxTree\AbstractNode</classname>.</para>
+		  </listitem>
 
-        <listitem>
-          <para>Call the <methodname>render(F3::Fluid::Core::VariableContainer
-          $variableContainer)</methodname> method. This method needs a
-          <classname>VariableContainer</classname> as argument - this means
-          all bound variables which should be rendered.</para>
-        </listitem>
+		  <listitem>
+			 <para>Call the <methodname>render(\F3\Fluid\Core\VariableContainer
+			 $variableContainer)</methodname> method. This method needs a
+			 <classname>VariableContainer</classname> as argument - this means
+			 all bound variables which should be rendered.</para>
+		  </listitem>
 
-        <listitem>
-          <para>The result of the render() method is the output string.</para>
-        </listitem>
-      </itemizedlist></para>
-  </section>
+		  <listitem>
+			 <para>The result of the render() method is the output string.</para>
+		  </listitem>
+		</itemizedlist></para>
+</section>
 
-  <section>
-    <title>The upper layers for FLOW3</title>
+<section>
+	 <title>The upper layers for FLOW3</title>
 
-    <para></para>
-  </section>
+	 <para></para>
+</section>
 </chapter>
