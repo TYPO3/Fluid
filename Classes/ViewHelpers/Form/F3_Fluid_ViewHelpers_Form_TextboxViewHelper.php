@@ -33,8 +33,7 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$this->registerUniversalTagAttributes();
 	}
 	public function render() {
-		$this->evaluateProperty();
-		return '<input type="text" ' . $this->renderTagAttributes() . ' />';
+		return '<input type="text" name="' . $this->getName() . '" value="' . $this->getValue() . '" ' . $this->renderTagAttributes() . ' />';
 	}
 }
 

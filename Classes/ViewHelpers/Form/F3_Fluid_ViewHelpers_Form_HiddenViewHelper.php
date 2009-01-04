@@ -30,8 +30,7 @@ class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 		parent::initializeArguments();
 	}
 	public function render() {
-		$this->evaluateProperty();
-		$out = '<input type="hidden" name="' . $this->arguments['name'] . '" value="' . $this->arguments['value'] . '" />';
+		$out = '<input type="hidden" name="' . $this->getName() . '" value="' . $this->getValue() . '" />';
 		return $out;
 	}
 }

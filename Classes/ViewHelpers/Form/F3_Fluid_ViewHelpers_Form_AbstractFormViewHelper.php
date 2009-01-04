@@ -28,21 +28,35 @@ namespace F3\Fluid\ViewHelpers\Form;
 abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	public function initializeArguments() {
-		$this->registerTagAttribute('name', 'Name of input tag');
-		$this->registerTagAttribute('value', 'string', 'Value of input tag');
+		$this->registerArgument('name', 'Name of input tag');
+		$this->registerArgument('value', 'string', 'Value of input tag');
 		$this->registerArgument('property', 'string', 'Name of Object Property. Use in conjunction with <f3:form object="...">');
 	}
 	
-	protected function evaluateProperty() {
-		if ($this->arguments['property'] && $this->arguments['__formObject'] && $this->arguments['__formName']) {
-			$this->arguments['name'] = $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']';
-			$this->arguments['value'] = $this->getValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
-		}
+	private function getObjectValue($object, $propertyName) {
+		$methodName = 'get' . ucfirst($propertyName);
+		return $object->$methodName();
 	}
 	
-	private function getValue($object, $propertyName) {
-		$methodName = 'get' . ucfirst($propertyName);
-		return $object->$methodName;
+	protected function getName() {
+	    if ($this->isObjectAccessorMode()) {
+		return $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']';
+	    } else {
+		return $this->arguments['name'];
+	    }
+	    return $this->name;
+	}
+	
+	protected function getValue() {
+	    if ($this->isObjectAccessorMode()) {
+		return $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
+	    } else {
+		return $this->arguments['value'];
+	    }
+	}
+	
+	private function isObjectAccessorMode() {
+	    return ($this->arguments['property'] && $this->variableContainer->exists('__formObject') && $this->variableContainer->exists('__formName'))?TRUE:FALSE; 
 	}
 }
 
