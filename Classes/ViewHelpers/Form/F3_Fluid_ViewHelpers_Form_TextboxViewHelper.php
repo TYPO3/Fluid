@@ -26,14 +26,14 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * @scope prototype
  */
-class TextboxViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	
 	public function initializeArguments() {
+		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
-		$this->registerTagAttribute('name', 'Name of input tag', TRUE);
-		$this->registerTagAttribute('value', 'Value of input tag', TRUE);
 	}
 	public function render() {
+		$this->evaluateProperty();
 		return '<input type="text" ' . $this->renderTagAttributes() . ' />';
 	}
 }

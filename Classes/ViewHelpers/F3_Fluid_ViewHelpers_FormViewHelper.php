@@ -31,10 +31,19 @@ namespace F3\Fluid\ViewHelpers;
  * Outputs an HTML <form> tag which is targeted at the specified action, in the current controller and package.
  * It will submit the form data via a GET request. If you want to change this, use method="post" as an argument.
  * 
+ * 
  * (2) A complex form with a specified encoding type (needed for file uploads)
  * 
  * <f3:form action=".." controller="..." package="..." method="post" enctype="multipart/form-data">...</f3:form>
  *
+ * 
+ * (3) A complex form which should render a domain object.
+ * 
+ * <f3:form action="..." name="customer" object="{customer}">
+ *   <f3:form.textbox property="name" />
+ * </f3:form>
+ * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name accordingly.
+ * 
  * @package Fluid
  * @subpackage ViewHelpers
  * @version $Id:$
@@ -53,6 +62,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$this->registerArgument('action', 'string', 'name of action to call', TRUE);
 		$this->registerArgument('controller', 'string', 'name of controller to call the current action on');
 		$this->registerArgument('package', 'string', 'name of package to call');
+		$this->registerArgument('object', 'object', 'Object to use for the form. Use in conjunction with the "property" attribute on the sub tags.');
 		
 		$this->registerTagAttribute('enctype', 'string', 'MIME type with which the form is submitted');
 		$this->registerTagAttribute('method', 'string', 'Transfer type (GET or POST)');
@@ -76,9 +86,21 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		
 		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], array(), $this->arguments['controller'], $this->arguments['package']);
 		
+		$object = NULL;
+		if ($this->arguments['object'] && $this->arguments['name']) {
+			$object = $this->arguments['object'];
+			$this->variableContainer->add('__formObject', $object);
+			$this->variableContainer->add('__formName', $this->arguments['name']);
+		}
+		
 		$out = '<form action="' . $formActionUrl . '" ' . $this->renderTagAttributes() . '>';
 		$out .= $this->renderChildren();
 		$out .= '</form>';
+		
+		if ($object) {
+			$this->variableContainer->remove('__formObject');
+			$this->variableContainer->remove('__formName');
+		}
 		
 		return $out;
 	}

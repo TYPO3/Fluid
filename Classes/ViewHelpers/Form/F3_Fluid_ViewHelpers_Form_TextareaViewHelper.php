@@ -26,14 +26,16 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * @scope prototype
  */
-class TextAreaViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+class TextAreaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	
 	public function initializeArguments() {
+		$this->registerTagAttribute('name', 'Name of input tag');
+		$this->registerArgument('value', 'string', 'Value of input tag');
+		$this->registerArgument('property', 'string', 'Name of Object Property. Use in conjunction with <f3:form object="...">');
 		$this->registerUniversalTagAttributes();
-		$this->registerTagAttribute('name', 'Name of input tag', TRUE);
-		$this->registerArgument('value', 'string', 'Value of input tag', TRUE);
 	}
 	public function render() {
+		$this->evaluateProperty();
 		$out = '<textarea ' . $this->renderTagAttributes() . '>';
 		$out .= $this->arguments['value'];
 		$out .= '</textarea>';

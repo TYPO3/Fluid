@@ -16,25 +16,34 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Fluid
+ * @subpackage ViewHelpers
  * @version $Id:$
  */
+
 /**
- * Enter description here...
+ * 
  * @scope prototype
  */
-class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
 	public function initializeArguments() {
-		parent::initializeArguments();
+		$this->registerTagAttribute('name', 'Name of input tag');
+		$this->registerTagAttribute('value', 'string', 'Value of input tag');
+		$this->registerArgument('property', 'string', 'Name of Object Property. Use in conjunction with <f3:form object="...">');
 	}
-	public function render() {
-		$this->evaluateProperty();
-		$out = '<input type="hidden" name="' . $this->arguments['name'] . '" value="' . $this->arguments['value'] . '" />';
-		return $out;
+	
+	protected function evaluateProperty() {
+		if ($this->arguments['property'] && $this->arguments['__formObject'] && $this->arguments['__formName']) {
+			$this->arguments['name'] = $this->arguments['__formName'] . '[' . $this->arguments['property'] . ']';
+			$this->arguments['value'] = $this->getValue($this->arguments['__formObject'], $this->arguments['property']);
+		}
+	}
+	
+	private function getValue($object, $propertyName) {
+		$methodName = 'get' . ucfirst($propertyName);
+		return $object->$methodName;
 	}
 }
-
 
 ?>
