@@ -35,8 +35,8 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper 
 	
 	protected function evaluateProperty() {
 		if ($this->arguments['property'] && $this->arguments['__formObject'] && $this->arguments['__formName']) {
-			$this->arguments['name'] = $this->arguments['__formName'] . '[' . $this->arguments['property'] . ']';
-			$this->arguments['value'] = $this->getValue($this->arguments['__formObject'], $this->arguments['property']);
+			$this->arguments['name'] = $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']';
+			$this->arguments['value'] = $this->getValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
 		}
 	}
 	
