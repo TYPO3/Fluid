@@ -22,41 +22,81 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
+ * Abstract Form View Helper. Bundles functionality related to direct property access of objects in other Form ViewHelpers.
+ * 
+ * If you set the "property" attribute to the name of the property to resolve from the object, this class will
+ * automatically set the name and value of a form element.
  * 
  * @scope prototype
  */
 abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	
+	/**
+	 * Initialize arguments. Registers:
+	 * - name
+	 * - value
+	 * - property
+	 * 
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
-		$this->registerArgument('name', 'Name of input tag');
+		$this->registerArgument('name', 'string', 'Name of input tag');
 		$this->registerArgument('value', 'string', 'Value of input tag');
-		$this->registerArgument('property', 'string', 'Name of Object Property. Use in conjunction with <f3:form object="...">');
+		$this->registerArgument('property', 'string', 'Name of Object Property. If used in conjunction with <f3:form object="...">, "name" and "value" properties will be ignored.');
 	}
 	
+	/**
+	 * Get the name of this form element.
+	 * Either returns arguments['name'], or the correct name for Object Access.
+	 * 
+	 * @return string Name
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getName() {
+		if ($this->isObjectAccessorMode()) {
+			return $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']';
+		} else {
+			return $this->arguments['name'];
+		}
+	}
+
+	/**
+	 * Get the value of this form element.
+	 * Either returns arguments['value'], or the correct value for Object Access.
+	 * 
+	 * @return string Value
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getValue() {
+		if ($this->isObjectAccessorMode()) {
+			return $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
+		} else {
+			return $this->arguments['value'];
+		}
+	}
+	
+	/**
+	 * Internal method which checks if we should evaluate a domain object or just output arguments['name'] and arguments['value']
+	 * 
+	 * @return boolean TRUE if we should evaluate the domain object, FALSE otherwise.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	private function isObjectAccessorMode() {
+	    return ($this->arguments['property'] && $this->variableContainer->exists('__formObject') && $this->variableContainer->exists('__formName'))?TRUE:FALSE; 
+	}
+	
+	/**
+	 * Get object value. Calls the appropriate getter.
+	 * 
+	 * @param object $object Object to get the value from
+	 * @param string $propertyName Name of property to get.
+	 * @todo replace with something generic.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	private function getObjectValue($object, $propertyName) {
 		$methodName = 'get' . ucfirst($propertyName);
 		return $object->$methodName();
-	}
-	
-	protected function getName() {
-	    if ($this->isObjectAccessorMode()) {
-		return $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']';
-	    } else {
-		return $this->arguments['name'];
-	    }
-	    return $this->name;
-	}
-	
-	protected function getValue() {
-	    if ($this->isObjectAccessorMode()) {
-		return $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
-	    } else {
-		return $this->arguments['value'];
-	    }
-	}
-	
-	private function isObjectAccessorMode() {
-	    return ($this->arguments['property'] && $this->variableContainer->exists('__formObject') && $this->variableContainer->exists('__formName'))?TRUE:FALSE; 
 	}
 }
 

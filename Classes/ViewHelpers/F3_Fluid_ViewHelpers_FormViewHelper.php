@@ -40,9 +40,10 @@ namespace F3\Fluid\ViewHelpers;
  * (3) A complex form which should render a domain object.
  * 
  * <f3:form action="..." name="customer" object="{customer}">
+ *   <f3:form.hidden property="id" />
  *   <f3:form.textbox property="name" />
  * </f3:form>
- * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name accordingly.
+ * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name of the textbox accordingly.
  * 
  * @package Fluid
  * @subpackage ViewHelpers

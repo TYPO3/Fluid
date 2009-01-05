@@ -29,15 +29,12 @@ namespace F3\Fluid\ViewHelpers\Form;
 class TextAreaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	
 	public function initializeArguments() {
-		$this->registerTagAttribute('name', 'Name of input tag');
-		$this->registerArgument('value', 'string', 'Value of input tag');
-		$this->registerArgument('property', 'string', 'Name of Object Property. Use in conjunction with <f3:form object="...">');
+		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
 	}
 	public function render() {
-		$this->evaluateProperty();
-		$out = '<textarea ' . $this->renderTagAttributes() . '>';
-		$out .= $this->arguments['value'];
+		$out = '<textarea name="' . $this->getName() . '"' . $this->renderTagAttributes() . '>';
+		$out .= $this->getValue();
 		$out .= '</textarea>';
 		return $out;
 	}
