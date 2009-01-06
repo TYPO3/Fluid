@@ -16,8 +16,8 @@ namespace F3\Fluid\View\Fixture;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
@@ -31,11 +31,13 @@ namespace F3\Fluid\View\Fixture;
 class TemplateViewFixture extends \F3\Fluid\View\TemplateView {
 
 	public $syntaxTree;
-	
+
 	protected function resolveTemplateFile() {
 	}
-	protected function loadTemplateFile() {
+
+	protected function loadTemplateFile($templateFilePath) {
 	}
+
 }
 
 

@@ -16,8 +16,8 @@ namespace F3\Fluid;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
@@ -33,12 +33,13 @@ class TestTagBasedViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	/**
 	 * Check tag attribute registration
 	 */
-	public function registerTagAttribute($name, $description, $required) {
+	public function registerTagAttribute($name, $description, $required = FALSE) {
 		parent::registerTagAttribute($name, $description, $required);
 	}
+
 	public function initializeArguments() {
-		
 	}
+
 	/**
 	 * Render the tag attributes registered
 	 */
