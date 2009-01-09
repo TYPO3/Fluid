@@ -80,14 +80,14 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 		if ($this->arguments['options']) {
 			if ($this->arguments['optionKey']) {
 				foreach ($this->arguments['options'] as $domainObject) {
-					$key = $this->callSpecifiedProperty($domainObject, $this->arguments['optionKey']);
+					$key = \F3\FLOW3\Reflection\ObjectAccess::getProperty($domainObject, $this->arguments['optionKey']);
 
 					$selected = '';
 					if ($domainObject == $selectedValue) {
 						$selected = 'selected="selected"';
 					}
 
-					$value = \F3\FLOW3\Property\ObjectAccess::getProperty($domainObject, $this->arguments['optionValue']);
+					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($domainObject, $this->arguments['optionValue']);
 
 					$out .= '<option ' . $selected . ' value="' . $key . '">' . $value . '</option>';
 				}
