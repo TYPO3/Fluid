@@ -15,13 +15,15 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Public License for more details.                                       *
  *                                                                        */
 
-include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
-include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
  * @package
  * @subpackage
  * @version $Id:$
  */
+
+include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
+
 /**
  * Test for the "Select" Form view helper
  *
