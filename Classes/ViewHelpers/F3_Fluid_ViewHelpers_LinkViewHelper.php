@@ -30,10 +30,10 @@ namespace F3\Fluid\ViewHelpers;
  * @scope prototype
  */
 class LinkViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
-	
+
 	/**
 	 * Initialize arguments
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Implement support for controller and package arguments
@@ -42,20 +42,22 @@ class LinkViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	public function initializeArguments() {
 		$this->registerArgument('action', 'string', 'Name of action where the link points to', TRUE);
 		$this->registerArgument('controller', 'string', 'Name of controller where the link points to');
+		$this->registerArgument('package', 'string', 'Name of package where the link points to');
+		$this->registerArgument('subpackage', 'string', 'Name of subpackage where the link points to');
 		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended.');
-		
+
 		$this->registerUniversalTagAttributes();
 	}
-	
+
 	/**
 	 * Render the link.
-	 * 
+	 *
 	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$out = '<a href="' . $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller']) . '" ' . $this->renderTagAttributes() . '>';
+		$out = '<a href="' . $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], array(), $this->arguments['subpackage']) . '" ' . $this->renderTagAttributes() . '>';
 		$out .= $this->renderChildren();
 		$out .= '</a>';
 		return $out;
