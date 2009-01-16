@@ -69,7 +69,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getValue() {
-		if ($this->isObjectAccessorMode()) {
+		if ($this->isObjectAccessorMode() && $this->variableContainer->exists('__formObject')) {
 			return $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
 		} else {
 			return $this->arguments['value'];
@@ -83,7 +83,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	private function isObjectAccessorMode() {
-		return ($this->arguments['property'] && $this->variableContainer->exists('__formObject') && $this->variableContainer->exists('__formName')) ? TRUE : FALSE;
+		return ($this->arguments['property'] && $this->variableContainer->exists('__formName')) ? TRUE : FALSE;
 	}
 
 	/**

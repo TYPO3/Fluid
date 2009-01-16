@@ -30,7 +30,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @scope prototype
  */
 class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
-	
+
 	/**
 	 * Namespace of view helper
 	 * @var string
@@ -42,22 +42,22 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @var array
 	 */
 	protected $arguments = array();
-	
+
 	/**
 	 * VariableContainer storing the currently available variables.
 	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	protected $variableContainer;
-	
+
 	/**
 	 * Associated view helper
 	 * @var \F3\Fluid\Core\AbstractViewHelper
 	 */
 	protected $viewHelper;
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
 	 * @param \F3\Fluid\Core\AbstractViewHelper $viewHelper View helper reference
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
@@ -68,27 +68,27 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		$this->viewHelper = $viewHelper;
 		$this->arguments = $arguments;
 	}
-	
+
 	/**
 	 * Get class name of view helper
-	 * 
+	 *
 	 * @return string Class Name of associated view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperClassName() {
 		return $this->viewHelperClassName;
 	}
-	
+
 	/**
 	 * Call the view helper associated with this object.
-	 * 
+	 *
 	 * First, it evaluates the arguments of the view helper.
-	 * 
+	 *
 	 * If the view helper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
 	 * on the view helper.
-	 * 
+	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\VariableContainer $variableContainer The Variable Container in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -97,30 +97,30 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 */
 	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->viewHelper->initializeArguments();
-		
+
 		$this->variableContainer = $variableContainer;
 		$contextVariables = $variableContainer->getAllIdentifiers();
 		$evaluatedArguments = array();
 		foreach ($this->arguments as $argumentName => $argumentValue) {
 			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
 		}
-		
+
 		// TODO: Component manager!
 		$this->viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments($evaluatedArguments);
 		$this->viewHelper->variableContainer = $variableContainer;
 		$this->viewHelper->setViewHelperNode($this);
-		
+
 		if ($this->viewHelper instanceof \F3\Fluid\Core\Facets\ChildNodeAccessInterface) {
 			$this->viewHelper->setChildNodes($this->childNodes);
 		}
-		
+
 		$out = $this->viewHelper->render();
-		
+
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
 			$endContextVariables = $variableContainer->getAllIdentifiers();
 			$diff = array_intersect($endContextVariables, $contextVariables);
-			
-			throw new \F3\Fluid\RuntimeException('The following context variable has been changed after the view helper has been called: ' .implode(', ', $diff));
+
+			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff));
 		}
 		return $out;
 	}

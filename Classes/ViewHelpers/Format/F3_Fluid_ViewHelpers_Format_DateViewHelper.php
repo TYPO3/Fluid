@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers;
+namespace F3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,7 +21,11 @@ namespace F3\Fluid\ViewHelpers;
  * @version $Id:$
  */
 /**
- * Link-generation view helper
+ * Formats a \DateTime object.
+ *
+ * Example:
+ *
+ * <f3:format.date target="{myDateTimeObject}" format="d m y" />
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -29,38 +33,30 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class LinkViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
-
+class DateViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	/**
-	 * Initialize arguments
+	 * Registers two arguments: "target" and "format". Both are mandatory.
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('action', 'string', 'Name of action where the link points to', TRUE);
-		$this->registerArgument('controller', 'string', 'Name of controller where the link points to');
-		$this->registerArgument('package', 'string', 'Name of package where the link points to');
-		$this->registerArgument('subpackage', 'string', 'Name of subpackage where the link points to');
-		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended.');
-
-		$this->registerUniversalTagAttributes();
+		$this->registerArgument('target', 'DateTime', 'Date / Time object to format', TRUE);
+		$this->registerArgument('format', 'string', 'Format String which is taken to format the Date/Time', TRUE);
 	}
 
 	/**
-	 * Render the link.
+	 * Renders a formatted date.
 	 *
-	 * @return string The rendered link
+	 * @return string the formatted date string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$out = '<a href="' . $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], array(), $this->arguments['subpackage']) . '" ' . $this->renderTagAttributes() . '>';
-		$out .= $this->renderChildren();
-		$out .= '</a>';
-		return $out;
+		$dateObject = $this->arguments['target'];
+		if ($dateObject instanceof \DateTime) {
+			return $dateObject->format($this->arguments['format']);
+		}
+		return '';
 	}
 }
-
-
 ?>

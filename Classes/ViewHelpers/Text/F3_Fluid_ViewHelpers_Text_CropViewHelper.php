@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers;
+namespace F3\Fluid\ViewHelpers\Text;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -21,7 +21,12 @@ namespace F3\Fluid\ViewHelpers;
  * @version $Id:$
  */
 /**
- * Link-generation view helper
+ * Use this view helper to crop the text between its opening and closing tags.
+ *
+ * Example:
+ * <f3:text.crop >Some very long text</f3:text.crop>
+ *
+ * WARNING: This tag does NOT handle tags currently.
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -29,36 +34,34 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class LinkViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
-
+class CropViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	/**
-	 * Initialize arguments
+	 * Initialize arguments for this view helper
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('action', 'string', 'Name of action where the link points to', TRUE);
-		$this->registerArgument('controller', 'string', 'Name of controller where the link points to');
-		$this->registerArgument('package', 'string', 'Name of package where the link points to');
-		$this->registerArgument('subpackage', 'string', 'Name of subpackage where the link points to');
-		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended.');
-
-		$this->registerUniversalTagAttributes();
+		$this->registerArgument('maxCharacters', 'integer', 'Place where to truncate the string', TRUE);
+		$this->registerArgument('append', 'string', 'What to append, if truncation happened. By Default, "..."', FALSE);
 	}
 
 	/**
-	 * Render the link.
+	 * Render the cropped text
 	 *
-	 * @return string The rendered link
+	 * @return string cropped text
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$out = '<a href="' . $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], array(), $this->arguments['subpackage']) . '" ' . $this->renderTagAttributes() . '>';
-		$out .= $this->renderChildren();
-		$out .= '</a>';
-		return $out;
+		$numberOfCharacters = (int)$this->arguments['maxCharacters'];
+		$stringToTruncate = $this->renderChildren();
+		$whatToAppend = ($this->arguments['append']?$this->arguments['append']:'...');
+
+		if (strlen($stringToTruncate) > $numberOfCharacters) {
+			return substr($stringToTruncate, 0, $numberOfCharacters) . $whatToAppend;
+		} else {
+			return $stringToTruncate;
+		}
 	}
 }
 

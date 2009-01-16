@@ -57,17 +57,17 @@ class TemplateParser {
 	const SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
 	const SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
-	
+
 	/**
 	 * This pattern detects CDATA sections and outputs the text between opening and closing CDATA.
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SCAN_PATTERN_CDATA = '/<!\[CDATA\[(.*?)\]\]>/s';
-	
+
 	/**
 	 * Pattern which splits the shorthand syntax into different tokens. The "shorthand syntax" is everything like {...}
-	 * 
+	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/
@@ -82,7 +82,7 @@ class TemplateParser {
 				)+
 			}                                # End of shorthand syntax
 		)/x';
-	
+
 	/**
 	 * Pattern which detects the object accessor syntax:
 	 * {object.some.value}
@@ -90,13 +90,13 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/(?:^|[^\\\\]+){(?P<Object>[a-zA-Z0-9\-_.]+)}/';
-	
+
 	/**
 	 * Pattern which detects the array/object syntax like in JavaScript, so it detects strings like:
 	 * {object: value, object2: {nested: array}, object3: "Some string"}
-	 * 
+	 *
 	 * If the string is escaped with an \ in front, it is not detected.
-	 * 
+	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/
@@ -118,10 +118,10 @@ class TemplateParser {
 				)                                       # End array submatch
 			}                                           # Each array ends with }
 		)/x';
-	
+
 	/**
 	 * This pattern splits an array into its parts. It is quite similar to the pattern above.
-	 * 
+	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
@@ -137,7 +137,7 @@ class TemplateParser {
 			)                                                         # END possible value options
 		)                                                          # End array part submatch
 	/x';
-	
+
 	/**
 	 * Namespace identifiers and their component name prefix (Associative array).
 	 * @var array
@@ -169,16 +169,16 @@ class TemplateParser {
 	 */
 	public function parse($templateString) {
 		if (!is_string($templateString)) throw new \F3\Fluid\Core\ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
-		
+
 		$this->initialize();
-		
+
 		$templateString = $this->extractNamespaceDefinitions($templateString);
 		$splittedTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildMainObjectTree($splittedTemplate);
-		
+
 		return $parsingState;
 	}
-	
+
 	/**
 	 * Gets the namespace definitions found.
 	 *
@@ -188,17 +188,17 @@ class TemplateParser {
 	public function getNamespaces() {
 		return $this->namespaces;
 	}
-	
+
 	/**
 	 * Resets the parser to its default values.
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function initialize() {
 		$this->namespaces = array();
 	}
-	
+
 	/**
 	 * Extracts namespace definitions out of the given template string and sets $this->namespaces.
 	 *
@@ -216,15 +216,15 @@ class TemplateParser {
 				}
 				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
 			}
-			
+
 			$templateString = preg_replace(self::SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
 		}
 		return $templateString;
 	}
-	
+
 	/**
 	 * Splits the template string on all dynamic tags found.
-	 * 
+	 *
 	 * @param string $templateString Template string to split.
 	 * @return array Splitted template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -233,7 +233,7 @@ class TemplateParser {
 		$regularExpression = $this->prepareTemplateRegularExpression(self::SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
 		return preg_split($regularExpression, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	}
-	
+
 	/**
 	 * Build object tree from the splitted template
 	 *
@@ -244,12 +244,12 @@ class TemplateParser {
 	protected function buildMainObjectTree($splittedTemplate) {
 		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
 		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
-		
+
 		$state = $this->objectFactory->create('F3\Fluid\Core\ParsingState');
 		$rootNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\RootNode');
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
-		
+
 		foreach ($splittedTemplate as $templateElement) {
 			if (preg_match(self::SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->handler_text($state, $matchedVariables[1]);
@@ -263,7 +263,7 @@ class TemplateParser {
 			} elseif (preg_match($regularExpression_closingViewHelperTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
 				$methodIdentifier = $matchedVariables['MethodIdentifier'];
-				
+
 				$this->handler_closingViewHelperTag($state, $namespaceIdentifier, $methodIdentifier);
 			} else {
 				$this->handler_textAndShorthandSyntax($state, $templateElement);
@@ -271,8 +271,8 @@ class TemplateParser {
 		}
 		return $state;
 	}
-	
-	
+
+
 	/**
 	 * Handles an opening or self-closing view helper tag.
 	 *
@@ -288,29 +288,29 @@ class TemplateParser {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new \F3\Fluid\Core\ParsingException('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
-		
+
 		$argumentsObjectTree = $this->parseArguments($arguments);
 		$viewHelperName = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
-		
+
 		try {
 			$objectToCall = $this->objectFactory->create($viewHelperName);
 		} catch(\F3\FLOW3\Component\Exception\UnknownComponent $e) {
 			throw new \F3\Fluid\Core\ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
 		}
-		
+
 		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ViewHelperNode', $viewHelperName, $objectToCall, $argumentsObjectTree);
-		
+
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
-		
+
 		if ($objectToCall instanceof \F3\Fluid\Core\Facets\PostParseInterface) {
 			$objectToCall->postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
-		
+
 		if (!$selfclosing) {
 			$state->pushNodeToStack($currentDynamicNode);
 		}
 	}
-	
+
 	/**
 	 * Resolve a view helper.
 	 *
@@ -331,12 +331,12 @@ class TemplateParser {
 			$className = \F3\PHP6\Functions::ucfirst($explodedViewHelperName[0]);
 		}
 		$className .= 'ViewHelper';
-			
+
 		$name = $this->namespaces[$namespaceIdentifier] . '\\' . $className;
-		
+
 		return $name;
 	}
-	
+
 	/**
 	 * Handles a closing view helper tag
 	 *
@@ -355,10 +355,10 @@ class TemplateParser {
 			throw new \F3\Fluid\Core\ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
 		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier)) {
-			throw new \F3\Fluid\Core\ParsingException('Templating tags not properly nested.', 1224485398);
+			throw new \F3\Fluid\Core\ParsingException('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier), 1224485398);
 		}
 	}
-	
+
 	/**
 	 * Handles the appearance of an object accessor (like {posts.author.email}).
 	 * Creates a new instance of \F3\Fluid\ObjectAccessorNode.
@@ -372,7 +372,7 @@ class TemplateParser {
 		$node = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
-	
+
 	/**
 	 * Parse arguments of a given tag, and build up the Arguments Object Tree for each argument.
 	 * Returns an associative array, where the key is the name of the argument,
@@ -389,14 +389,14 @@ class TemplateParser {
 				$argument = $singleMatch['Argument'];
 				if (!array_key_exists('ValueSingleQuoted', $singleMatch)) $singleMatch['ValueSingleQuoted'] = '';
 				if (!array_key_exists('ValueDoubleQuoted', $singleMatch)) $singleMatch['ValueDoubleQuoted'] = '';
-				
+
 				$value = $this->unquoteArgumentString($singleMatch['ValueSingleQuoted'], $singleMatch['ValueDoubleQuoted']);
 				$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
 			}
 		}
 		return $argumentsObjectTree;
 	}
-	
+
 	/**
 	 * Build up an argument object tree for the string in $argumentString.
 	 * This builds up the tree for a single argument value.
@@ -410,12 +410,12 @@ class TemplateParser {
 		$rootNode = $this->buildMainObjectTree($splittedArgument)->getRootNode();
 		return $rootNode;
 	}
-	
+
 	/**
 	 * Removes escapings from a given argument string. Expects two string parameters, with one of them being empty.
 	 * The first parameter should be non-empty if the argument was quoted by single quotes,
 	 * and the second parameter should be non-empty if the argument was quoted by double quotes.
-	 * 
+	 *
 	 * This method is meant as a helper for regular expression results.
 	 *
 	 * @param string $singleQuotedValue Value, if quoted by single quotes
@@ -431,7 +431,7 @@ class TemplateParser {
 		}
 		return str_replace('\\\\', '\\', $value);
 	}
-	
+
 	/**
 	 * Takes a regular expression template and replaces "NAMESPACE" with the currently registered namespace identifiers. Returns a regular expression which is ready to use.
 	 *
@@ -442,12 +442,12 @@ class TemplateParser {
 	protected function prepareTemplateRegularExpression($regularExpression) {
 		return str_replace('NAMESPACE', implode('|', array_keys($this->namespaces)), $regularExpression);
 	}
-	
+
 	/**
 	 * Handler for everything which is not a ViewHelperNode.
-	 * 
+	 *
 	 * This includes Text, array syntax, and object accessor syntax.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\ParsingState $state Current parsing state
 	 * @param string $text Text to process
 	 * @return void
@@ -463,12 +463,12 @@ class TemplateParser {
 			} else {
 				$this->handler_text($state, $section);
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * Handler for array syntax. This creates the array object recursively and adds it to the current node.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\ParsingState $state The current parsing state
 	 * @param string $arrayText The array as string.
 	 * @return void
@@ -478,16 +478,16 @@ class TemplateParser {
 		$node = $this->handler_array_recursively($arrayText);
 		$state->getNodeFromStack()->addChildNode($node);
 	}
-	
+
 	/**
 	 * Recursive function which takes the string representation of an array and builds an object tree from it.
-	 * 
+	 *
 	 * Deals with the following value types:
 	 * - Numbers (Integers and Floats)
 	 * - Strings
 	 * - Variables
 	 * - sub-arrays
-	 * 
+	 *
 	 * @param string $arrayText Array text
 	 * @return \F3\Fluid\ArrayNode the array node built up
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -505,7 +505,7 @@ class TemplateParser {
 				          || ( array_key_exists('SingleQuotedString', $singleMatch) && !empty($singleMatch['SingleQuotedString']) ) ) {
 				    if (!array_key_exists('SingleQuotedString', $singleMatch)) $singleMatch['SingleQuotedString'] = '';
 					if (!array_key_exists('DoubleQuotedString', $singleMatch)) $singleMatch['DoubleQuotedString'] = '';
-				    
+
 				    $arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
 				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->handler_array_recursively($singleMatch['Subarray']);
@@ -518,7 +518,7 @@ class TemplateParser {
 			throw new \F3\Fluid\Core\ParsingException('This exception should never be thrown, there is most likely some error in the regular expressions. Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 		}
 	}
-	
+
 	/**
 	 * Text node handler
 	 *
@@ -528,7 +528,7 @@ class TemplateParser {
 	 */
 	protected function handler_text(\F3\Fluid\Core\ParsingState $state, $text) {
 		$node = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\TextNode', $text);
-		$state->getNodeFromStack()->addChildNode($node);	
+		$state->getNodeFromStack()->addChildNode($node);
 	}
 }
 

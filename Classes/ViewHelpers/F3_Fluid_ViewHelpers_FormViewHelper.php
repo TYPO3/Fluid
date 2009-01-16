@@ -88,10 +88,10 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], array(), $this->arguments['controller'], $this->arguments['package'], array(), $this->arguments['subpackage']);
 
-		$object = NULL;
-		if ($this->arguments['object'] && $this->arguments['name']) {
-			$object = $this->arguments['object'];
-			$this->variableContainer->add('__formObject', $object);
+		if ($this->arguments['object']) {
+			$this->variableContainer->add('__formObject', $this->arguments['object']);
+		}
+		if ($this->arguments['name']) {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
 		}
 
@@ -99,8 +99,10 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$out .= $this->renderChildren();
 		$out .= '</form>';
 
-		if ($object) {
+		if ($this->arguments['object']) {
 			$this->variableContainer->remove('__formObject');
+		}
+		if ($this->arguments['name']) {
 			$this->variableContainer->remove('__formName');
 		}
 
