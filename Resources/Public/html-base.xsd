@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+    targetNamespace="http://typo3.org/ns/html-base">
+  <xsd:element name="html" type="xsd:anyType">
+  	<xsd:annotation>
+  		<xsd:documentation>HTML Master Element</xsd:documentation>
+  	</xsd:annotation></xsd:element>
+  
+  <xsd:element name="head" type="xsd:anyType">
+  	<xsd:annotation>
+  		<xsd:documentation>Head HTML element</xsd:documentation>
+  	</xsd:annotation></xsd:element>
+  
+  <xsd:element name="body" type="xsd:anyType">
+  	<xsd:annotation>
+  		<xsd:documentation>Body HTML element</xsd:documentation>
+  	</xsd:annotation></xsd:element>
+  	
+  	<xsd:element name="ul" type="xsd:anyType">
+  	<xsd:annotation>
+  		<xsd:documentation>UL HTML element</xsd:documentation>
+  	</xsd:annotation></xsd:element>
+  	
+  	<xsd:element name="li" type="xsd:anyType">
+  	<xsd:annotation>
+  		<xsd:documentation>LI HTML element</xsd:documentation>
+  	</xsd:annotation></xsd:element>
+</xsd:schema>

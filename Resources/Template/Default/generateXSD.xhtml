@@ -39,10 +39,10 @@ h2 {
 	<pre>
 &lt;?xml version="1.0"?&gt;
 &lt;html xmlns="http://typo3.org/ns/html-base"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:xsi="http://typo3.org/ns/html-base"
       xmlns:{namespacePrefix}="{namespaceURI}"
       xsi:schemaLocation="http://typo3.org/ns/html-base
-         http://localhost/NamespaceTest/html-base.xsd
+         {view.request.baseURI}Resources/Web/Fluid/Public/html-base.xsd
          {namespaceURI}
          {view.request.baseURI}{xsdPath}"&gt;
     &lt;!-- Your content goes here --&gt;
