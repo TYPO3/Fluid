@@ -27,6 +27,7 @@ namespace F3\Fluid\ViewHelpers\Text;
  * <f3:text.crop >Some very long text</f3:text.crop>
  *
  * WARNING: This tag does NOT handle tags currently.
+ * WARNING: This tag doesn't care about multibyte charsets currently.
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -35,6 +36,7 @@ namespace F3\Fluid\ViewHelpers\Text;
  * @scope prototype
  */
 class CropViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+
 	/**
 	 * Initialize arguments for this view helper
 	 *
@@ -55,7 +57,7 @@ class CropViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	public function render() {
 		$numberOfCharacters = (int)$this->arguments['maxCharacters'];
 		$stringToTruncate = $this->renderChildren();
-		$whatToAppend = ($this->arguments['append']?$this->arguments['append']:'...');
+		$whatToAppend = ($this->arguments['append'] ? $this->arguments['append'] : '...');
 
 		if (strlen($stringToTruncate) > $numberOfCharacters) {
 			return substr($stringToTruncate, 0, $numberOfCharacters) . $whatToAppend;

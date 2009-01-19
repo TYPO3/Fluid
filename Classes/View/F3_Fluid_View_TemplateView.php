@@ -269,8 +269,10 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * This is an alias to the "assign" method.
 	 * @todo remove this alias after changing all production code
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @deprecated
 	 */
 	public function addVariable($key, $value) {
+		trigger_error('Call to deprecated method addVariable() in Fluid\View\TemplateView', E_USER_DEPRECATED);
 		return $this->assign($key, $value);
 	}
 
