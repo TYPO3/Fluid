@@ -49,7 +49,7 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Inject a TemplateView
 	 * 
-	 * @param \F3\Fluid\View\TemplateView $view The Beer3 View  Instance
+	 * @param \F3\Fluid\View\TemplateView $view The Fluid View Instance
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
