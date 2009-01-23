@@ -34,7 +34,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * File pattern for resolving the template file
 	 * @var string
 	 */
-	protected $templateFilePattern = '@packageResources/Template/@controller/@action.xhtml';
+	protected $templateFilePattern = '@packageResources/Template/@subpackage@controller/@action.xhtml';
 
 	/**
 	 * File pattern for resolving the layout
@@ -129,10 +129,20 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 		} else {
 			$action = ($this->actionName ? $this->actionName : $this->request->getControllerActionName());
 
+			preg_match('/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/', $this->request->getControllerObjectName(), $matches);
+
+			$subpackageName = '';
+			if ($matches['SubpackageName']) {
+				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
+				$subpackageName .= '/';
+			}
+
+			$controllerName = $matches['ControllerName'];
 			$templateFile = $this->templateFilePattern;
 			$templateFile = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templateFile);
-			$templateFile = str_replace('@controller', $this->request->getControllerName(), $templateFile);
-			$templateFile = str_replace('@action', $action, $templateFile);
+			$templateFile = str_replace('@subpackage', $subpackageName, $templateFile);
+			$templateFile = str_replace('@controller', $controllerName, $templateFile);
+			$templateFile = str_replace('@action', strtolower($action), $templateFile);
 
 			return $templateFile;
 		}

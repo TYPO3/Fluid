@@ -86,7 +86,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'GET' );
 
-		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], array(), $this->arguments['controller'], $this->arguments['package'], array(), $this->arguments['subpackage']);
+		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], array(), $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
 		if ($this->arguments['object']) {
 			$this->variableContainer->add('__formObject', $this->arguments['object']);
