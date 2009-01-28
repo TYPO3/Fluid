@@ -21,7 +21,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @version $Id:$
  */
 
-include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 
 /**

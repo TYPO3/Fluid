@@ -29,8 +29,8 @@ namespace F3\Fluid\View;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 
-include_once(__DIR__ . '/Fixtures/F3_Fluid_View_Fixture_TransparentSyntaxTreeNode.php');
-include_once(__DIR__ . '/Fixtures/F3_Fluid_View_Fixture_TemplateViewFixture.php');
+include_once(__DIR__ . '/Fixtures/TransparentSyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/TemplateViewFixture.php');
 
 class TemplateViewTest extends \F3\Testing\BaseTestCase {
 

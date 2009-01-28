@@ -15,7 +15,7 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
-include_once(__DIR__ . '/Fixtures/F3_Fluid_PostParseFacetViewHelper.php');
+include_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
 /**
  * @package Fluid
  * @subpackage Tests

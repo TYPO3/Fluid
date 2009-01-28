@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,40 +15,43 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
+include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
  * @package 
  * @subpackage 
  * @version $Id:$
  */
-
-include_once(__DIR__ . '/Fixtures/F3_Fluid_TestTagBasedViewHelper.php');
 /**
- * Testcase for [insert classname here]
+ * Test for the "Textarea" Form view helper
  *
  * @package
- * @subpackage Tests
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
-
-	public function setUp() {
-		$this->viewHelper = new \F3\Fluid\TestTagBasedViewHelper();
-	}
+class TextareaViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function oneTagAttributeIsRenderedCorrectly() {
-		$this->viewHelper->registerTagAttribute('x', 'Description', FALSE);
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('x' => 'Hallo'));
-		$expected = 'x="Hallo"';
+	public function textBoxReturnsExpectedXML() {
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextareaViewHelper();
+		$this->viewHelper->initializeArguments();
 		
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+			'name' => 'NameOfTextbox',
+			'value' => 'Current value'
+		));
+
 		$this->viewHelper->arguments = $arguments;
-		$this->assertEquals($expected, $this->viewHelper->render(), 'A simple tag attribute was not rendered correctly.');
+		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
+		$output = $this->viewHelper->render();
+		$element = new \SimpleXMLElement($output);
+		
+		$this->assertEquals('NameOfTextbox', (string)$element['name'], 'Name was not correctly read out');
+		$this->assertEquals('Current value', (string)$element, 'Value was not correctly read out');
 	}
 }
-
-
 
 ?>

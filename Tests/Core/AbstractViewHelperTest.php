@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Form;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,43 +15,39 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Public License for more details.                                       *
  *                                                                        */
 
-include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_EmptySyntaxTreeNode.php');
-include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
+require_once(__DIR__ . '/Fixtures/TestViewHelper.php');
+
 /**
- * @package 
- * @subpackage 
+ * @package Fluid
+ * @subpackage Tests
  * @version $Id:$
  */
 /**
- * Test for the "Textbox" Form view helper
+ * Testcase for AbstractViewHelper
  *
  * @package
- * @subpackage
+ * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
+class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function textBoxReturnsExpectedXML() {
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextboxViewHelper();
-		$this->viewHelper->initializeArguments();
+	public function registeredArgumentsAreReturnedCorrectly() {
+		$name = "This is a name";
+		$description = "Example desc";
+		$type = "string";
+		$isOptional = TRUE;
+		$expected = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isOptional);
 		
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
-			'name' => 'NameOfTextbox',
-			'value' => 'Current value'
-		));
-
-		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
-		$output = $this->viewHelper->render();
-		$element = new \SimpleXMLElement($output);
-		
-		$this->assertEquals('NameOfTextbox', (string)$element['name'], 'Name was not correctly read out');
-		$this->assertEquals('Current value', (string)$element['value'], 'Value was not correctly read out');
+		$viewHelper = new \F3\Fluid\TestViewHelper($name, $type, $description, $isOptional);
+		$viewHelper->initializeArguments();
+		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
 	}
 }
+
+
 
 ?>

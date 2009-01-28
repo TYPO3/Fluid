@@ -15,36 +15,37 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
-require_once(__DIR__ . '/Fixtures/F3_Fluid_TestViewHelper.php');
-
 /**
- * @package Fluid
- * @subpackage Tests
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
+
+include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
 /**
- * Testcase for AbstractViewHelper
+ * Testcase for [insert classname here]
  *
  * @package
  * @subpackage Tests
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
+class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
+
+	public function setUp() {
+		$this->viewHelper = new \F3\Fluid\TestTagBasedViewHelper();
+	}
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function registeredArgumentsAreReturnedCorrectly() {
-		$name = "This is a name";
-		$description = "Example desc";
-		$type = "string";
-		$isOptional = TRUE;
-		$expected = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isOptional);
+	public function oneTagAttributeIsRenderedCorrectly() {
+		$this->viewHelper->registerTagAttribute('x', 'Description', FALSE);
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('x' => 'Hallo'));
+		$expected = 'x="Hallo"';
 		
-		$viewHelper = new \F3\Fluid\TestViewHelper($name, $type, $description, $isOptional);
-		$viewHelper->initializeArguments();
-		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
+		$this->viewHelper->arguments = $arguments;
+		$this->assertEquals($expected, $this->viewHelper->render(), 'A simple tag attribute was not rendered correctly.');
 	}
 }
 

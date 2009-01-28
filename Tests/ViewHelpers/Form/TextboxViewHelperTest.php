@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers;
+namespace F3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,59 +15,43 @@ namespace F3\Fluid\ViewHelpers;
  * Public License for more details.                                       *
  *                                                                        */
 
+include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
+include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
- * @package Fluid
- * @subpackage Tests
+ * @package 
+ * @subpackage 
  * @version $Id:$
  */
 /**
- * Testcase for DefaultViewHelper
+ * Test for the "Textbox" Form view helper
  *
- * @package Fluid
- * @subpackage Tests
+ * @package
+ * @subpackage
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-
-include_once(__DIR__ . '/Fixtures/F3_Fluid_ViewHelpers_Fixtures_ConstraintSyntaxTreeNode.php');
-class ForViewHelperTest extends \F3\Testing\BaseTestCase {
-
-	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setUp() {
-	}
-	
+class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function forExecutesTheLoopCorrectly() {
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+	public function textBoxReturnsExpectedXML() {
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextboxViewHelper();
+		$this->viewHelper->initializeArguments();
 		
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
-			'each' => array(0,1,2,3),
-			'as'   => 'innerVariable'
+			'name' => 'NameOfTextbox',
+			'value' => 'Current value'
 		));
-		
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
-		
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);		
+
 		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->variableContainer = $variableContainer;
-		$this->viewHelper->setViewHelperNode($viewHelperNode);
-		$this->viewHelper->render();
+		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
+		$output = $this->viewHelper->render();
+		$element = new \SimpleXMLElement($output);
 		
-		$expectedCallProtocol = array(
-			array('innerVariable' => 0),
-			array('innerVariable' => 1),
-			array('innerVariable' => 2),
-			array('innerVariable' => 3)
-		);
-		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');	
+		$this->assertEquals('NameOfTextbox', (string)$element['name'], 'Name was not correctly read out');
+		$this->assertEquals('Current value', (string)$element['value'], 'Value was not correctly read out');
 	}
 }
-
-
 
 ?>

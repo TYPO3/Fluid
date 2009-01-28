@@ -28,7 +28,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-include_once(__DIR__ . '/../Fixtures/F3_Fluid_ChildNodeAccessFacetViewHelper.php');
+include_once(__DIR__ . '/../Fixtures/ChildNodeAccessFacetViewHelper.php');
 class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
