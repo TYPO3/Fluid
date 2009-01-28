@@ -16,8 +16,8 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
@@ -25,13 +25,13 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @scope prototype
  */
 class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
-	
+
 	public function initializeArguments() {
 		parent::initializeArguments();
+		$this->registerUniversalTagAttributes();
 	}
 	public function render() {
-		$out = '<input type="hidden" name="' . $this->getName() . '" value="' . $this->getValue() . '" />';
-		return $out;
+		return '<input type="hidden" name="' . $this->getName() . '" value="' . $this->getValue() . '" ' . $this->renderTagAttributes() . ' />';
 	}
 }
 
