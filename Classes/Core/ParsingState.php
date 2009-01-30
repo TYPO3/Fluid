@@ -37,19 +37,19 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 	 * @var \F3\Fluid\Core\SyntaxTree\RootNode
 	 */
 	protected $rootNode;
-	
+
 	/**
 	 * Array of node references currently open.
 	 * @var array
 	 */
 	protected $nodeStack = array();
-	
+
 	/**
 	 * Variable container where ViewHelpers implementing the PostParseFacet can store things in.
 	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	protected $variableContainer;
-	
+
 	/**
 	 * Injects a variable container. ViewHelpers implementing the PostParse Facet can store information inside this variableContainer.
 	 *
@@ -60,7 +60,7 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 	public function injectVariableContainer(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
-	
+
 	/**
 	 * Set root node of this parsing state
 	 *
@@ -72,7 +72,7 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 	public function setRootNode(\F3\Fluid\Core\SyntaxTree\AbstractNode $rootNode) {
 		$this->rootNode = $rootNode;
 	}
-	
+
 	/**
 	 * Get root node of this parsing state.
 	 *
@@ -82,7 +82,7 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 	public function getRootNode() {
 		return $this->rootNode;
 	}
-	
+
 	/**
 	 * Push a node to the node stack. The node stack holds all currently open templating tags.
 	 *
@@ -93,17 +93,17 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 	public function pushNodeToStack(\F3\Fluid\Core\SyntaxTree\AbstractNode $node) {
 		array_push($this->nodeStack, $node);
 	}
-	
+
 	/**
 	 * Get the top stack element, without removing it.
-	 * 
+	 *
 	 * @return \F3\Fluid\Core\SyntaxTree\AbstractNode the top stack element.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getNodeFromStack() {
 		return $this->nodeStack[count($this->nodeStack)-1];
 	}
-	
+
 	/**
 	 * Pop the top stack element (=remove it) and return it back.
 	 *
@@ -113,11 +113,11 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 	public function popNodeFromStack() {
 		return array_pop($this->nodeStack);
 	}
-	
+
 	/**
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *
-	 * @return \F3\Fluid\Core\VariableContainer
+	 * @return \F3\Fluid\Core\VariableContainer The variable container or NULL if none has been set yet
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getVariableContainer() {

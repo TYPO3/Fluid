@@ -29,7 +29,9 @@ namespace F3\Fluid\Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TemplateParser {
+
 	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
+
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
 	 *
@@ -153,6 +155,7 @@ class TemplateParser {
 	 * Inject object factory
 	 *
 	 * @param \F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
@@ -162,8 +165,8 @@ class TemplateParser {
 	/**
 	 * Parses a given template and returns an object tree, identified by a root node
 	 *
-	 * @param string $templateString
-	 * @return \F3\Fluid\Core\ParsedTemplateInterface Parsed template.
+	 * @param string $templateString The template to parse as a string
+	 * @return \F3\Fluid\Core\ParsedTemplateInterface Parsed template
 	 * @todo Refine doc comment
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -324,11 +327,11 @@ class TemplateParser {
 		$methodName = '';
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
-			$className = \F3\PHP6\Functions::ucfirst($explodedViewHelperName[0]);
+			$className = ucfirst($explodedViewHelperName[0]);
 			$className .= '\\';
-			$className .= \F3\PHP6\Functions::ucfirst($explodedViewHelperName[1]);
+			$className .= ucfirst($explodedViewHelperName[1]);
 		} else {
-			$className = \F3\PHP6\Functions::ucfirst($explodedViewHelperName[0]);
+			$className = ucfirst($explodedViewHelperName[0]);
 		}
 		$className .= 'ViewHelper';
 
@@ -502,11 +505,11 @@ class TemplateParser {
 				} elseif (array_key_exists('Number', $singleMatch) && ( !empty($singleMatch['Number']) || $singleMatch['Number'] === '0' ) ) {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
 				} elseif ( ( array_key_exists('DoubleQuotedString', $singleMatch) && !empty($singleMatch['DoubleQuotedString']) )
-				          || ( array_key_exists('SingleQuotedString', $singleMatch) && !empty($singleMatch['SingleQuotedString']) ) ) {
-				    if (!array_key_exists('SingleQuotedString', $singleMatch)) $singleMatch['SingleQuotedString'] = '';
+							|| ( array_key_exists('SingleQuotedString', $singleMatch) && !empty($singleMatch['SingleQuotedString']) ) ) {
+					if (!array_key_exists('SingleQuotedString', $singleMatch)) $singleMatch['SingleQuotedString'] = '';
 					if (!array_key_exists('DoubleQuotedString', $singleMatch)) $singleMatch['DoubleQuotedString'] = '';
 
-				    $arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
+					$arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
 				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->handler_array_recursively($singleMatch['Subarray']);
 				} else {

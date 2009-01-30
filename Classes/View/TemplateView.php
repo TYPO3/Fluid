@@ -31,40 +31,38 @@ namespace F3\Fluid\View;
 class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 
 	/**
-	 * File pattern for resolving the template file
-	 * @var string
-	 */
-	protected $templateFilePattern = '@packageResources/Template/@subpackage@controller/@action.xhtml';
-
-	/**
-	 * File pattern for resolving the layout
-	 * @var string
-	 */
-	protected $layoutFilePattern = '@packageResources/Template/layout/@layout.xhtml';
-
-	/**
-	 * Template parser instance.
 	 * @var \F3\Fluid\Core\TemplateParser
 	 */
 	protected $templateParser;
 
 	/**
-	 * Context variables
-	 * @var array of context variables
+	 * File pattern for resolving the template file
+	 * @var string
+	 */
+	protected $templatePathAndFilenamePattern = '@packageResources/Template/@subpackage@controller/@action.xhtml';
+
+	/**
+	 * File pattern for resolving the layout
+	 * @var string
+	 */
+	protected $layoutPathAndFilenamePattern = '@packageResources/Template/layout/@layout.xhtml';
+
+	/**
+	 * @var array
 	 */
 	protected $contextVariables = array();
 
 	/**
-	 * Template file path. If set,  overrides the templateFilePattern
+	 * Path and filename of the template file. If set,  overrides the templatePathAndFilenamePattern
 	 * @var string
 	 */
-	protected $templateFile = NULL;
+	protected $templatePathAndFilename = NULL;
 
 	/**
-	 * Layout file path. If set, overrides the layoutFilePattern
+	 * Path and filename of the layout file. If set, overrides the layoutPathAndFilenamePattern
 	 * @var string
 	 */
-	protected $layoutFile = NULL;
+	protected $layoutPathAndFilename = NULL;
 
 	/**
 	 * Name of current action to render
@@ -90,123 +88,54 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeView() {
+		$this->contextVariables['view'] = $this;
 	}
 
 	/**
-	 * Sets the template file. Effectively overrides the dynamic resolving of a template file.
+	 * Sets the path and name of of the template file. Effectively overrides the
+	 * dynamic resolving of a template file.
 	 *
-	 * @param string $templateFile Template file path
+	 * @param string $templatePathAndFilename Template file path
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setTemplateFile($templateFile) {
-		$this->templateFile = $templateFile;
+	public function setTemplatePathAndFilename($templatePathAndFilename) {
+		$this->templatePathAndFilename = $templatePathAndFilename;
 	}
 
 	/**
-	 * Sets the layout file. Overrides the dynamic resolving of the layout file.
+	 * Sets the path and name of the layout file. Overrides the dynamic resolving of the layout file.
 	 *
-	 * @param string $layoutFile Path to the layout file
+	 * @param string $layoutPathAndFilename Path and filename of the layout file
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setLayoutFile($layoutFile) {
-		$this->layoutFile = $layoutFile;
+	public function setLayoutPathAndFilename($layoutPathAndFilename) {
+		$this->layoutPathAndFilename = $layoutPathAndFilename;
 	}
 
 	/**
-	 * Resolve the template file path, based on $this->templateFilePath and $this->templatePathPattern.
-	 * In case a template has been set with $this->setTemplateFile, it just uses the given template file.
-	 * Otherwise, it resolves the $this->templatePathPattern
+	 * Find the XHTML template according to $this->templatePathAndFilenamePattern and render the template.
+	 * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
 	 *
-	 * @param string $action Name of action. Optional. Defaults to current action.
-	 * @return string File name of template file
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function resolveTemplateFile() {
-		if ($this->templateFile) {
-			return $this->templateFile;
-		} else {
-			$action = ($this->actionName ? $this->actionName : $this->request->getControllerActionName());
-
-			preg_match('/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/', $this->request->getControllerObjectName(), $matches);
-
-			$subpackageName = '';
-			if ($matches['SubpackageName']) {
-				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
-				$subpackageName .= '/';
-			}
-
-			$controllerName = $matches['ControllerName'];
-			$templateFile = $this->templateFilePattern;
-			$templateFile = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $templateFile);
-			$templateFile = str_replace('@subpackage', $subpackageName, $templateFile);
-			$templateFile = str_replace('@controller', $controllerName, $templateFile);
-			$templateFile = str_replace('@action', strtolower($action), $templateFile);
-
-			return $templateFile;
-		}
-	}
-
-	/**
-	 * Resolve the layout file path, based on $this->layoutFilePath and $this->layoutPathPattern.
-	 * In case a layout has been set with $this->setLayoutFile, it just uses the given layout file.
-	 * Otherwise, it resolves the $this->layoutPathPattern
-	 *
-	 * @param string $layoutName Name of the layout to use. If none used, use "default"
-	 * @return string File name of template file
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function resolveLayoutFile($layoutName = 'default') {
-		if ($this->layoutFile) {
-			return $this->layoutFile;
-		} else {
-			$layoutFile = $this->layoutFilePattern;
-			$layoutFile = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $layoutFile);
-			$layoutFile = str_replace('@layout', $layoutName, $layoutFile);
-			return $layoutFile;
-		}
-	}
-
-	/**
-	 * Load the given template file.
-	 *
-	 * @param string $templateFilePath Full path to template file to load
-	 * @return string the contents of the template file
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function loadTemplateFile($templateFilePath) {
-		$templateSource = file_get_contents($templateFilePath, FILE_TEXT);
-		if (!$templateSource) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templateFilePath . '" was not found.', 1225709595);
-		return $templateSource;
-	}
-
-	/**
-	 * Find the XHTML template according to $this->templatePathPattern and render the template.
-	 *
-	 * If "layoutName" is set in a PostParseFacet callback, will render the file with the given layout.
-	 *
-	 * @param string $action: If given, renders this action instead.
+	 * @param string $actionName If set, the view of the specified action will be rendered instead. Default is the action specified in the Request object
 	 * @return string Rendered Template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render($action = NULL) {
-		$this->actionName = $action;
-		$templateFileName = $this->resolveTemplateFile();
-		$templateSource = $this->loadTemplateFile($templateFileName);
+	public function render($actionName = NULL) {
+		$this->actionName = $actionName;
+		$templatePathAndFilename = $this->resolveTemplatePathAndFilename();
+		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+		if ($templateSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709595);
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 
-		if ($parsedTemplate->getVariableContainer() && $parsedTemplate->getVariableContainer()->exists('layoutName')) {
-			return $this->renderWithLayout($parsedTemplate->getVariableContainer()->get('layoutName'));
+		$variableContainer = $parsedTemplate->getVariableContainer();
+		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
+			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
-
 		$templateTree = $parsedTemplate->getRootNode();
-
-		$this->contextVariables['view'] = $this;
-
-		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$result = $templateTree->render($variableStore);
-		return $result;
+		return $templateTree->render($this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables));
 	}
 
 	/**
@@ -217,24 +146,17 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderSection($sectionName) {
-		$templateFileName = $this->resolveTemplateFile();
-		$templateSource = $this->loadTemplateFile($templateFileName);
+		$templatePathAndFilename = $this->resolveTemplatePathAndFileName();
+		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+		if ($templateSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709525);
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$templateTree = $parsedTemplate->getRootNode();
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
+		if(!array_key_exists($sectionName, $sections)) throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108982);
 
-		if(!array_key_exists($sectionName, $sections)) {
-			throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108982);
-		}
-
-		$sectionToRender = $sections[$sectionName];
-
-		$this->contextVariables['view'] = $this;
-
-		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$result = $sectionToRender->render($variableStore);
-		return $result;
+		return $sections[$sectionName]->render($this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables));
 	}
 
 	/**
@@ -245,13 +167,12 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderWithLayout($layoutName) {
-		$layoutFileName = $this->resolveLayoutFile($layoutName);
-		$layoutSource = $this->loadTemplateFile($layoutFileName);
+		$layoutPathAndFilenameName = $this->resolveLayoutPathAndFilename($layoutName);
+		$layoutSource = \F3\FLOW3\Utility\Files::getFileContents($layoutPathAndFilenameName, FILE_TEXT);
+		if ($layoutSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The layout file "' . $layoutPathAndFilename . '" could not be loaded.', 1233316394);
 
 		$layout = $this->templateParser->parse($layoutSource);
 		$layoutTree = $layout->getRootNode();
-
-		$this->contextVariables['view'] = $this;
 
 		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
 		$result = $layoutTree->render($variableStore);
@@ -269,6 +190,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function assign($key, $value) {
+		if ($key === 'view') throw new \F3\Fluid\Core\RuntimeException('The variable "view" cannot be set using assign().', 1233317880);
 		$this->contextVariables[$key] = $value;
 		return $this;
 	}
@@ -295,7 +217,55 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	public function getRequest() {
 		return $this->request;
 	}
+
+	/**
+	 * Resolve the path and name of the template, based on $this->templatePathAndFilename and $this->templatePathAndFilenamePattern.
+	 * In case a template has been set with $this->setTemplatePathAndFilename, it just uses the given template file.
+	 * Otherwise, it resolves the $this->templatePathAndFilenamePattern
+	 *
+	 * @return string Path and filename of template file
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function resolveTemplatePathAndFilename() {
+		if ($this->templatePathAndFilename !== NULL) {
+			return $this->templatePathAndFilename;
+		} else {
+			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->request->getControllerActionName());
+			preg_match('/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/', $this->request->getControllerObjectName(), $matches);
+			$subpackageName = '';
+			if (isset($matches['SubpackageName'])) {
+				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
+				$subpackageName .= '/';
+			}
+			$controllerName = $matches['ControllerName'];
+			$templatePathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->templatePathAndFilenamePattern);
+			$templatePathAndFilename = str_replace('@subpackage', $subpackageName, $templatePathAndFilename);
+			$templatePathAndFilename = str_replace('@controller', $controllerName, $templatePathAndFilename);
+			$templatePathAndFilename = str_replace('@action', strtolower($actionName), $templatePathAndFilename);
+
+			return $templatePathAndFilename;
+		}
+	}
+
+	/**
+	 * Resolve the path and file name of the layout fil, based on $this->layoutPathAndFilename and
+	 * $this->layoutPathAndFilenamePattern.
+	 *
+	 * In case a layout has already been set with setLayoutPathAndFilename(), this method returns that
+	 * path, otherwise a path and filename will be resolved using the layoutPathAndFilenamePattern.
+	 *
+	 * @param string $layoutName Name of the layout to use. If none used, use "default"
+	 * @return string Path and filename of layout file
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function resolveLayoutPathAndFilename($layoutName = 'default') {
+		if ($this->layoutPathAndFilename) {
+			return $this->layoutPathAndFilename;
+		} else {
+			$layoutPathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->layoutPathAndFilenamePattern);
+			$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
+			return $layoutPathAndFilename;
+		}
+	}
 }
-
-
 ?>

@@ -16,15 +16,15 @@ namespace F3\Fluid\View;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package Fluid
+ * @subpackage Core
  * @version $Id:$
  */
 /**
- * Testcase for [insert classname here]
+ * Testcase for the TemplateView
  *
- * @package
- * @subpackage Tests
+ * @package Fluid
+ * @subpackage Core
  * @version $Id:$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
@@ -41,33 +41,40 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	public function viewIsPlacedInVariableContainer() {
 		$packageManager = $this->objectManager->getObject('F3\FLOW3\Package\ManagerInterface');
 		$resourceManager = $this->objectManager->getObject('F3\FLOW3\Resource\Manager');
-		
+
 		$syntaxTreeNode = new \F3\Fluid\View\Fixture\TransparentSyntaxTreeNode();
-		
+
 		$parsingState = new \F3\Fluid\Core\ParsingState();
 		$parsingState->setRootNode($syntaxTreeNode);
-		
+
 		$templateParserMock = $this->getMock('F3\Fluid\Core\TemplateParser', array('parse'));
-		$templateParserMock->expects($this->any())
-		                   ->method('parse')
-		                   ->will($this->returnValue($parsingState));
-		                   
+		$templateParserMock->expects($this->any())->method('parse')->will($this->returnValue($parsingState));
+
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request');
+		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
+		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
+		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('Fluid'));
+
 		$templateView = new \F3\Fluid\View\Fixture\TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
 		$templateView->injectTemplateParser($templateParserMock);
+		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
+		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
+		$templateView->setRequest($mockRequest);
 		$templateView->addVariable('name', 'value');
+		$templateView->initializeView();
 		$templateView->render();
-		
+
 		$this->assertSame($templateView, $syntaxTreeNode->variableContainer->get('view'), 'The view has not been placed in the variable container.');
 		$this->assertEquals('value', $syntaxTreeNode->variableContainer->get('name'), 'Context variable has been set.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderSingleSectionWorks() {
 		$templateView = $this->objectManager->getObject('F3\Fluid\View\TemplateView');
-		$templateView->setTemplateFile(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
+		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
 		$this->assertEquals($templateView->renderSection('mySection'), 'Output', 'Specific section was not rendered correctly!');
 	}
 	/**
@@ -76,8 +83,8 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function layoutEngineMergesTemplateAndLayout() {
 		$templateView = $this->objectManager->getObject('F3\Fluid\View\TemplateView');
-		$templateView->setTemplateFile(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
-		$templateView->setLayoutFile(__DIR__ . '/Fixtures/LayoutFixture.html');
+		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
+		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
 		$this->assertEquals($templateView->renderWithLayout('LayoutFixture'), '<div>Output</div>', 'Specific section was not rendered correctly!');
 	}
 }
