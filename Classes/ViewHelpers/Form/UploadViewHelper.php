@@ -16,21 +16,22 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
  * Enter description here...
  * @scope prototype
  */
-class UploadViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
-	
+class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+
 	public function initializeArguments() {
-		$this->registerArgument('name', 'string', 'Name of the upload form', TRUE);
+		parent::initializeArguments();
+		$this->registerUniversalTagAttributes();
 	}
 	public function render() {
-		return '<input type="file" name="' . $this->arguments['name'] . '" />';
+		return '<input type="file" name="' . $this->getName() . '" ' . $this->renderTagAttributes() . ' />';
 	}
 }
 
