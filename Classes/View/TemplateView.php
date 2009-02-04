@@ -233,7 +233,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->request->getControllerActionName());
 			preg_match('/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/', $this->request->getControllerObjectName(), $matches);
 			$subpackageName = '';
-			if (isset($matches['SubpackageName'])) {
+			if ($matches['SubpackageName'] !== '') {
 				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
 				$subpackageName .= '/';
 			}
