@@ -39,13 +39,13 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * File pattern for resolving the template file
 	 * @var string
 	 */
-	protected $templatePathAndFilenamePattern = '@packageResources/Template/@subpackage@controller/@action.xhtml';
+	protected $templatePathAndFilenamePattern = '@packageResources/Private/Templates/@subpackage@controller/@action.html';
 
 	/**
 	 * File pattern for resolving the layout
 	 * @var string
 	 */
-	protected $layoutPathAndFilenamePattern = '@packageResources/Template/layout/@layout.xhtml';
+	protected $layoutPathAndFilenamePattern = '@packageResources/Private/Layouts/@layout.html';
 
 	/**
 	 * @var array
