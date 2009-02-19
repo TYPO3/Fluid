@@ -10,7 +10,8 @@
     <title>Fluid Templating System</title>
 
     <abstract>
-      <para>Fluid Templating System</para>
+      <para>Fluid is a Templating System which is used by default for
+      FLOW3-based applications.</para>
     </abstract>
 
     <author>
@@ -20,7 +21,7 @@
     </author>
 
     <copyright>
-      <year>2008</year>
+      <year>2008, 2009</year>
 
       <holder>Sebastian Kurfürst</holder>
     </copyright>

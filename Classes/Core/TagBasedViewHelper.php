@@ -90,6 +90,8 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
 	 * Render all tag attributes which were registered in $this->tagAttributes.
+	 * Additionally, renders all attributes specified in additionalArguments.
+	 *
 	 * You should call this method in your render() method if you output some tag.
 	 *
 	 * @return string Concatenated list of attributes

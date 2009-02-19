@@ -8,8 +8,8 @@
          xmlns:mathml="http://www.w3.org/1998/Math/MathML">
   <title>Introduction</title>
 
-  <para>Fluid is the next-generation templating engine which was engineered
-  with several goals in mind:<itemizedlist>
+  <para>Fluid is a next-generation templating engine which was engineered with
+  several goals in mind:<itemizedlist>
       <listitem>
         <para>Simplicity</para>
       </listitem>
@@ -51,8 +51,75 @@
   </section>
 
   <section>
-    <title>Example Template</title>
+    <title>Example</title>
 
-    <para>Now follows an example template<programlisting>// TODO</programlisting></para>
+    <para>Below, you'll find a snippet of a real-world template displaying a
+    list of blog postings. Use it to check whether you find the template
+    language intuitive (we hope you will ;-) )</para>
+
+    <example>
+      <title>Basic Fluid Example</title>
+
+      <programlisting>{namespace f3=F3\Fluid\ViewHelpers}<co
+          xml:id="intro.example.0" />
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Blog&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Blog Postings&lt;/h1&gt;
+&lt;f3:for each="{postings}" as="posting"&gt;<co xml:id="intro.example.1" />
+  &lt;h2&gt;{posting.title}&lt;/h2&gt;
+  &lt;div class="author"&gt;{posting.author.name} {posting.author.email}&lt;/div&gt;<co
+          xml:id="intro.example.2" />
+  &lt;p&gt;&lt;f3:link action="details" arguments="{id : posting.id}"&gt;{posting.teaser}&lt;/f3:link&gt;&lt;/p&gt;<co
+          xml:id="intro.example.3" />
+&lt;/f3:for&gt;
+&lt;/body&gt;
+&lt;/html&gt;</programlisting>
+
+      <calloutlist>
+        <callout arearefs="intro.example.0">
+          <para>The <emphasis>Namespace Import</emphasis> makes the
+          <classname>F3\Fluid\ViewHelper</classname> namespace available under
+          the shorthand <code>f3</code>. This is important for View Helpers,
+          like the <code>&lt;f3:link /&gt;</code> tag.</para>
+        </callout>
+
+        <callout arearefs="intro.example.1">
+          <para>This essentially corresponds to <code>foreach($postings as
+          $posting)</code> in PHP.</para>
+        </callout>
+
+        <callout arearefs="intro.example.2">
+          <para>With the dot-notation (<code>{posting.title}</code>, or
+          <code>{posting.author.name}</code>), you can traverse objects. In
+          the latter example, the system calls
+          <code>$posting-&gt;getAuthor()-&gt;getName()</code>.</para>
+        </callout>
+
+        <callout arearefs="intro.example.3">
+          <para>The <code>&lt;f3:link&gt;...&lt;/f3:link&gt;</code> tag is a
+          so-called <emphasis>ViewHelper</emphasis>. It calls arbitary PHP
+          code, and in this case renders a link to the
+          "details"-Action.</para>
+        </callout>
+      </calloutlist>
+    </example>
+
+    <para>There is a lot more to show, including:<itemizedlist>
+        <listitem>
+          <para>Layouts</para>
+        </listitem>
+
+        <listitem>
+          <para>Autocompletion in Eclipse</para>
+        </listitem>
+
+        <listitem>
+          <para>Custom View Helpers</para>
+        </listitem>
+      </itemizedlist></para>
+
+    <para>We invite you to explore Fluid some more, and please do not hesitate
+    to give feedback!</para>
   </section>
 </chapter>
