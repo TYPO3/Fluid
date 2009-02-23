@@ -24,7 +24,7 @@
 
     <para><mediaobject>
         <imageobject>
-          <imagedata fileref="layered-architecture.png"></imagedata>
+          <imagedata fileref="layered-architecture.png" scalefit="1" width="100%" contentdepth="100%"/>
         </imageobject>
       </mediaobject>Fluid Core consists of the parts which do not change
     depending on the environment, such as the template parser.</para>

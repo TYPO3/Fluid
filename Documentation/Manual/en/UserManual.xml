@@ -101,9 +101,9 @@
           <title>Tags and Namespace declarations</title>
 
           <programlisting>{namespace f3=F3\Fluid\ViewHelpers}⁄<co
-              xml:id="co.tags-example.1" />
+              xml:id="co.tags-example.1"/>
 &lt;f3:link controller="Administration"&gt;Administration&lt;/f3:link&gt;<co
-              xml:id="co.tags-example.2" /></programlisting>
+              xml:id="co.tags-example.2"/></programlisting>
 
           <calloutlist>
             <callout arearefs="co.tags-example.1">
@@ -186,29 +186,29 @@
         <title>Creating a link with arguments</title>
 
         <programlisting>&lt;f3:link controller="Blog" action="show" arguments="{id : blogPost.id}"&gt;... read more&lt;/f3:link&gt;</programlisting>
-
-        <para>Here, the view helper will get a parameter called
-        <code>arguments</code> which is of type array.</para>
-
-        <warning>
-          <para>Make sure you <emphasis>do not put a space</emphasis> before
-          or after the opening or closing brackets of an array. If you type
-          <code>arguments=" {id : blogPost.id}"</code> (notice the space
-          before the opening curly bracket), the array is automatically casted
-          to a string (as a string concatenation takes place).</para>
-
-          <para>This also applies when using object accessors:
-          <code>&lt;f3:do.something with="{object}" /&gt;</code> and
-          <code>&lt;f3:do.something with=" {object}" /&gt;</code> are
-          substantially different: In the first case, the view helper will
-          receive an <emphasis>object</emphasis> as argument, while in the
-          second case, it will receive a <emphasis>string</emphasis> as
-          argument.</para>
-
-          <para>This might first seem like a bug, but actually it is just
-          consistent that it works that way.</para>
-        </warning>
       </example>
+
+      <para>Here, the view helper will get a parameter called
+      <code>arguments</code> which is of type array.</para>
+
+      <warning>
+        <para>Make sure you <emphasis>do not put a space</emphasis> before or
+        after the opening or closing brackets of an array. If you type
+        <code>arguments=" {id : blogPost.id}"</code> (notice the space before
+        the opening curly bracket), the array is automatically casted to a
+        string (as a string concatenation takes place).</para>
+
+        <para>This also applies when using object accessors:
+        <code>&lt;f3:do.something with="{object}" /&gt;</code> and
+        <code>&lt;f3:do.something with=" {object}" /&gt;</code> are
+        substantially different: In the first case, the view helper will
+        receive an <emphasis>object</emphasis> as argument, while in the
+        second case, it will receive a <emphasis>string</emphasis> as
+        argument.</para>
+
+        <para>This might first seem like a bug, but actually it is just
+        consistent that it works that way.</para>
+      </warning>
     </section>
 
     <section>
@@ -307,7 +307,7 @@
 &lt;div id="menu"&gt;... menu goes here ...&lt;/div&gt;
 &lt;div id="content"&gt;
   <emphasis>&lt;f3:render section="content" /&gt;</emphasis><co
-            xml:id="co.layout-example.1" />
+            xml:id="co.layout-example.1"/>
 &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</programlisting>
@@ -673,7 +673,7 @@
       <section>
         <title>PostParse Facet</title>
 
-        <para></para>
+        <para/>
       </section>
     </section>
   </section>
