@@ -53,7 +53,6 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * Constructor.
 	 *
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
-	 * @param \F3\Fluid\Core\AbstractViewHelper $viewHelper View helper reference
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -77,8 +76,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * First, it evaluates the arguments of the view helper.
 	 *
-	 * If the view helper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface, it calls setChildNodes(array childNodes)
-	 * on the view helper.
+	 * If the view helper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface,
+	 * it calls setChildNodes(array childNodes) on the view helper.
 	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 *

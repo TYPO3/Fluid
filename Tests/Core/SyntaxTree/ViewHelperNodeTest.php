@@ -16,8 +16,8 @@ namespace F3\Fluid\Core\SyntaxTree;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
@@ -37,18 +37,23 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function childNodeAccessFacetWorksAsExpected() {
 		$childNode = new \F3\Fluid\Core\SyntaxTree\TextNode("Hallo");
-		
+
 		$stubViewHelper = $this->getMock('F3\Fluid\ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render'));
 		$stubViewHelper->expects($this->once())
 		               ->method('setChildNodes')
 		               ->with($this->equalTo(array($childNode)));
-		               
-		$viewHelperNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode("\F3\Fluid\ViewHelpers\TestViewHelper", $stubViewHelper, array());
+		$mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
+		$mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\ViewHelpers\TestViewHelper')->will($this->returnValue($stubViewHelper));
+
+		$variableContainer = new \F3\Fluid\Core\VariableContainer(array($childNode));
+		$variableContainer->injectObjectFactory($mockObjectFactory);
+
+		$viewHelperNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\TestViewHelper', array());
 		$viewHelperNode->addChildNode($childNode);
 
-		$viewHelperNode->render(new \F3\Fluid\Core\VariableContainer(array($childNode)));
+		$viewHelperNode->render($variableContainer);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -57,9 +62,16 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$stubViewHelper = $this->getMock('F3\Fluid\Core\AbstractViewHelper');
 		$stubViewHelper->expects($this->once())
 		               ->method('initializeArguments');
-		$viewHelperNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode("\F3\Fluid\Core\AbstractViewHelper", $stubViewHelper, array());
-		
-		$viewHelperNode->render(new \F3\Fluid\Core\VariableContainer(array()));
+
+		$mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
+		$mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\Core\AbstractViewHelper')->will($this->returnValue($stubViewHelper));
+
+		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
+		$variableContainer->injectObjectFactory($mockObjectFactory);
+
+		$viewHelperNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\Core\AbstractViewHelper', array());
+
+		$viewHelperNode->render($variableContainer);
 	}
 }
 

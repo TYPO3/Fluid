@@ -80,7 +80,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * Syntax tree cache (persistent)
 	 * @var \F3\FLOW3\Cache\Frontend\VariableFrontend
 	 */
-	protected $syntaxTreeCache = array();
+	protected $syntaxTreeCache;
 
 	/**
 	 * Sets the cache

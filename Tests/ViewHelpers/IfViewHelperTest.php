@@ -16,8 +16,8 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
@@ -30,7 +30,6 @@ namespace F3\Fluid\ViewHelpers;
  */
 class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 
-	
 	/**
 	 * @var \F3\Fluid\TemplateParser
 	 */
@@ -45,61 +44,65 @@ class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->templateParser = new \F3\Fluid\Core\TemplateParser();
 		$this->templateParser->injectObjectFactory($this->objectFactory);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function ifReturnsCorrectResultIfConditionTrue() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
-		
+
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => 'true'));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = 'RenderSomething';
-		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was true');	
+		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was true');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function ifReturnsCorrectResultIfConditionFalse() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
-		
+
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => FALSE));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '';
-		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was false');	
+		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was false');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function ifThenElseReturnsCorrectResultIfConditionTrue() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
-		
+
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => 'true'));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = 'YEP';
-		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was true');	
+		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was true');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function ifThenElseReturnsCorrectResultIfConditionFalse() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
-		
+
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => FALSE));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = 'NOPE';
-		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was false');	
+		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was false');
 	}
 }
 

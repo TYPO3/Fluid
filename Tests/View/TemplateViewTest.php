@@ -50,6 +50,8 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$templateParserMock = $this->getMock('F3\Fluid\Core\TemplateParser', array('parse'));
 		$templateParserMock->expects($this->any())->method('parse')->will($this->returnValue($parsingState));
 
+		$mockSyntaxTreeCache = $this->getMock('F3\FLOW3\Cache\Frontend\variableFrontend', array(), array(), '', FALSE);
+
 		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request');
 		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
@@ -57,6 +59,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		$templateView = new \F3\Fluid\View\Fixture\TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
 		$templateView->injectTemplateParser($templateParserMock);
+		$templateView->injectSyntaxTreeCache($mockSyntaxTreeCache);
 		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
 		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
 		$templateView->setRequest($mockRequest);
