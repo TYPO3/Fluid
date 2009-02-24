@@ -1,0 +1,5 @@
+Fluid_SyntaxTreeCache:
+  frontend: F3\FLOW3\Cache\Frontend\VariableFrontend
+  backend: F3\FLOW3\Cache\Backend\FileBackend
+  backendOptions:
+    defaultLifetime: 0

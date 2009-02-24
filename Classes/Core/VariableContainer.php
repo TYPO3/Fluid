@@ -23,7 +23,7 @@ namespace F3\Fluid\Core;
 /**
  * VariableContainer which stores template variables.
  * Is used in two contexts:
- * 
+ *
  * 1) Holds the current variables in the template
  * 2) Holds variables being set during Parsing (set in view helpers implementing the PostParse facet)
  *
@@ -39,7 +39,13 @@ class VariableContainer {
 	 * @var array
 	 */
 	protected $objects = array();
-	
+
+	/**
+	 * Object factory
+	 * @var F3\FLOW3\Object\FactoryInterface
+	 */
+	protected $objectFactory;
+
 	/**
 	 * Constructor. Can take an array, and initializes the objects with it.
 	 *
@@ -50,7 +56,29 @@ class VariableContainer {
 		if (!is_array($objectArray)) throw new \F3\Fluid\Core\RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
 		$this->objects = $objectArray;
 	}
-	
+
+	/**
+	 * Inject object factory. Needed to instanciate view helpers in the syntax tree.
+	 *
+	 * @param \F3\FLOW3\Object\FactoryInterface Object Factory
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
+		$this->objectFactory = $objectFactory;
+	}
+
+	/**
+	 * Get object factory. Needed to instanciate view helpers in the syntax tree. For internal use only!
+	 *
+	 * @return \F3\FLOW3\Object\FactoryInterface Object Factory
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function getObjectFactory() {
+		return $this->objectFactory;
+	}
+
+
 	/**
 	 * Add an object to the context
 	 *
@@ -63,7 +91,7 @@ class VariableContainer {
 		if (array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Duplicate variable declarations!', 1224479063);
 		$this->objects[$identifier] = $object;
 	}
-	
+
 	/**
 	 * Get an object from the context. Throws exception if object is not found in context.
 	 *
@@ -75,7 +103,7 @@ class VariableContainer {
 		if (!array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		return $this->objects[$identifier];
 	}
-	
+
 	/**
 	 * Remove an object from context. Throws exception if object is not found in context.
 	 *
@@ -87,7 +115,7 @@ class VariableContainer {
 		if (!array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
 		unset($this->objects[$identifier]);
 	}
-	
+
 	/**
 	 * Returns an array of all identifiers available in the context.
 	 *
@@ -97,7 +125,7 @@ class VariableContainer {
 	public function getAllIdentifiers() {
 		return array_keys($this->objects);
 	}
-	
+
 	/**
 	 * Checks if this property exists in the VariableContainer.
 	 *
@@ -107,6 +135,10 @@ class VariableContainer {
 	 */
 	public function exists($identifier) {
 		return array_key_exists($identifier, $this->objects);
+	}
+
+	public function __sleep() {
+		return array('objects');
 	}
 }
 

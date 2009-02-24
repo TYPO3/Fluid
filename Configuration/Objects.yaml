@@ -1,0 +1,8 @@
+F3\Fluid\View\TemplateView:
+  properties:
+    syntaxTreeCache:
+      object:
+        factoryClassName: F3\FLOW3\Cache\Manager
+        factoryMethodName: getCache
+        arguments:
+          1: value: Fluid_SyntaxTreeCache

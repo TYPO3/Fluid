@@ -50,12 +50,6 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	protected $variableContainer;
 
 	/**
-	 * Associated view helper
-	 * @var \F3\Fluid\Core\AbstractViewHelper
-	 */
-	protected $viewHelper;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
@@ -63,9 +57,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperClassName, \F3\Fluid\Core\AbstractViewHelper $viewHelper, $arguments) {
+	public function __construct($viewHelperClassName, $arguments) {
 		$this->viewHelperClassName = $viewHelperClassName;
-		$this->viewHelper = $viewHelper;
 		$this->arguments = $arguments;
 	}
 
@@ -96,7 +89,10 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @todo: Component manager
 	 */
 	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
-		$this->viewHelper->initializeArguments();
+		$objectFactory = $variableContainer->getObjectFactory();
+		$viewHelper = $objectFactory->create($this->viewHelperClassName);
+
+		$viewHelper->initializeArguments();
 
 		$this->variableContainer = $variableContainer;
 		$contextVariables = $variableContainer->getAllIdentifiers();
@@ -105,16 +101,15 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
 		}
 
-		// TODO: Component manager!
-		$this->viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments($evaluatedArguments);
-		$this->viewHelper->variableContainer = $variableContainer;
-		$this->viewHelper->setViewHelperNode($this);
+		$viewHelper->arguments = $objectFactory->create('F3\Fluid\Core\ViewHelperArguments', $evaluatedArguments);
+		$viewHelper->variableContainer = $variableContainer;
+		$viewHelper->setViewHelperNode($this);
 
-		if ($this->viewHelper instanceof \F3\Fluid\Core\Facets\ChildNodeAccessInterface) {
-			$this->viewHelper->setChildNodes($this->childNodes);
+		if ($viewHelper instanceof \F3\Fluid\Core\Facets\ChildNodeAccessInterface) {
+			$viewHelper->setChildNodes($this->childNodes);
 		}
 
-		$out = $this->viewHelper->render();
+		$out = $viewHelper->render();
 
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
 			$endContextVariables = $variableContainer->getAllIdentifiers();

@@ -71,6 +71,30 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	protected $actionName;
 
 	/**
+	 * Syntax tree cache. The key will be the file name (including path), the value the generated syntax tree.
+	 * @var array
+	 */
+	protected $localSyntaxTreeCache = array();
+
+	/**
+	 * Syntax tree cache (persistent)
+	 * @var \F3\FLOW3\Cache\Frontend\VariableFrontend
+	 */
+	protected $syntaxTreeCache = array();
+
+	/**
+	 * Sets the cache
+	 *
+	 *
+	 * @param \F3\FLOW3\Cache\Frontend\VariableFrontend $cache Cache for the reflection service
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function injectSyntaxTreeCache(\F3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache) {
+		$this->syntaxTreeCache = $syntaxTreeCache;
+	}
+
+	/**
 	 * Inject the template parser
 	 *
 	 * @param \F3\Fluid\Core\TemplateParser $templateParser The template parser
@@ -124,11 +148,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 */
 	public function render($actionName = NULL) {
 		$this->actionName = $actionName;
-		$templatePathAndFilename = $this->resolveTemplatePathAndFilename();
-		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
-		if ($templateSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709595);
 
-		$parsedTemplate = $this->templateParser->parse($templateSource);
+		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
 
 		$variableContainer = $parsedTemplate->getVariableContainer();
 		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
@@ -146,11 +167,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderSection($sectionName) {
-		$templatePathAndFilename = $this->resolveTemplatePathAndFileName();
-		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
-		if ($templateSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709525);
+		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
 
-		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$templateTree = $parsedTemplate->getRootNode();
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
@@ -167,11 +185,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderWithLayout($layoutName) {
-		$layoutPathAndFilenameName = $this->resolveLayoutPathAndFilename($layoutName);
-		$layoutSource = \F3\FLOW3\Utility\Files::getFileContents($layoutPathAndFilenameName, FILE_TEXT);
-		if ($layoutSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The layout file "' . $layoutPathAndFilename . '" could not be loaded.', 1233316394);
-
-		$layout = $this->templateParser->parse($layoutSource);
+		$layout = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
 		$layoutTree = $layout->getRootNode();
 
 		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
@@ -216,6 +230,30 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 */
 	public function getRequest() {
 		return $this->request;
+	}
+
+	/**
+	 * Parse the given template and return it.
+	 *
+	 * Will cache the results for one call.
+	 * @return \F3\Fluid\Core\ParsedTemplateInterface
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function parseTemplate($templatePathAndFilename) {
+		if (array_key_exists($templatePathAndFilename, $this->localSyntaxTreeCache)) {
+			return $this->localSyntaxTreeCache[$templatePathAndFilename];
+		}
+		
+		$parsedTemplate = $this->syntaxTreeCache->get(md5($templatePathAndFilename));
+		if (!$parsedTemplate) {
+			$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+			if ($templateSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709595);
+			$parsedTemplate = $this->templateParser->parse($templateSource);
+
+			$this->syntaxTreeCache->set(md5($templatePathAndFilename), $parsedTemplate);
+		}
+		$this->localSyntaxTreeCache[$templatePathAndFilename] = $parsedTemplate;
+		return $parsedTemplate;
 	}
 
 	/**

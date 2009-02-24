@@ -295,16 +295,12 @@ class TemplateParser {
 		$argumentsObjectTree = $this->parseArguments($arguments);
 		$viewHelperName = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
 
-		try {
-			$objectToCall = $this->objectFactory->create($viewHelperName);
-		} catch(\F3\FLOW3\Component\Exception\UnknownComponent $e) {
-			throw new \F3\Fluid\Core\ParsingException('View helper ' . $name . ' does not exist.', 1224532429);
-		}
-
-		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ViewHelperNode', $viewHelperName, $objectToCall, $argumentsObjectTree);
+		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ViewHelperNode', $viewHelperName, $argumentsObjectTree);
 
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 
+		// TODO!! POSTPARSE - EVTL STATIC??
+		$objectToCall = $this->objectFactory->create($viewHelperName);
 		if ($objectToCall instanceof \F3\Fluid\Core\Facets\PostParseInterface) {
 			$objectToCall->postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
