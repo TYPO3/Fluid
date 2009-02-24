@@ -40,7 +40,7 @@
 
   <xi:include href="UserManual.xml" />
 
-  <xi:include href="Administration.xml" />
+  <xi:include href="SoftwareDesign.xml" />
 
   <xi:include href="Configuration.xml" />
 
