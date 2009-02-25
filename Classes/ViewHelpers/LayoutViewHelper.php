@@ -33,21 +33,21 @@ namespace F3\Fluid\ViewHelpers;
 class LayoutViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
 	/**
 	 * Initialize arguments
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
 		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "default" is used.', TRUE);
 	}
-	
+
 	/**
 	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
+	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
 		if ($viewHelperArguments['name']) {
 			$layoutName = $viewHelperArguments['name']->evaluate(new \F3\Fluid\Core\VariableContainer());
 		} else {
@@ -56,10 +56,10 @@ class LayoutViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\
 
 		$variableContainer->add('layoutName', $layoutName);
 	}
-	
+
 	/**
 	 * This tag will not be rendered at all.
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

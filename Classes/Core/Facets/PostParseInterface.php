@@ -23,10 +23,10 @@ namespace F3\Fluid\Core\Facets;
 /**
  * Post Parse Facet. Your view helper should implement this if you want a callback
  * to be called directly after the syntax tree node corresponding to this view helper has been built.
- * 
+ *
  * In the callback, it is possible to store some variables inside the parseVariableContainer (which is different from the runtime variable container!).
  * This implicates that you usually have to adjust the \F3\Fluid\View\TemplateView in case you implement this facet.
- * 
+ *
  * Normally, this facet is not needed, except in really really rare cases.
  *
  * @package Fluid
@@ -38,7 +38,7 @@ interface PostParseInterface {
 	/**
 	 * Callback which is called directly after the corresponding syntax tree node to this view helper has been built.
 	 * This is a parse-time callback, which does not change the rendering of a view helper.
-	 * 
+	 *
 	 * You can store some data inside the variableContainer given here, which can be used f.e. inside the TemplateView.
 	 *
 	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
@@ -47,7 +47,7 @@ interface PostParseInterface {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);
+	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);
 }
 
 

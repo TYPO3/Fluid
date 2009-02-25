@@ -275,26 +275,12 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function postParseFacetIsCalledOnParse() {
 		$templateParser = new \F3\Fluid\Core\TemplateParser();
-
-		$objectFactoryMock = $this->getMock('F3\FLOW3\Object\FactoryInterface');
-		$objectFactoryMock->expects($this->any())
-		                  ->method('create')->will($this->returnCallback(array($this, 'objectFactoryCallback')));
-		$templateParser->injectObjectFactory($objectFactoryMock);
+		$templateParser->injectObjectFactory($this->objectFactory);
 
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
 		$templateTree = $templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals(\F3\Fluid\PostParseFacetViewHelper::$wasCalled, TRUE, 'PostParse was not called!');
 	}
-
-	public function objectFactoryCallback() {
-		$arguments = func_get_args();
-		if ($arguments[0] == 'F3\Fluid\PostParseFacetViewHelper') {
-			return new \F3\Fluid\PostParseFacetViewHelper();
-		} else {
-			return call_user_func_array(array($this->objectFactory, 'create'), $arguments);
-		}
-	}
-
 }
 
 

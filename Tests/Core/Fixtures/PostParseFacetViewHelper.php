@@ -16,8 +16,8 @@ namespace F3\Fluid;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 /**
@@ -26,20 +26,20 @@ namespace F3\Fluid;
  */
 class PostParseFacetViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
 	public static $wasCalled = FALSE;
-	
+
 	public function __construct() {
-		
+
 	}
-	
-	public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $viewHelperNode, $arguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
+
+	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $viewHelperNode, $arguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
 		self::$wasCalled = TRUE;
 	}
 	public function initializeArguments() {
-		
+
 	}
-	
+
 	public function render() {
-		
+
 	}
 }
 

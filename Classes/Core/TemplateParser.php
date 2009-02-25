@@ -299,10 +299,9 @@ class TemplateParser {
 
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 
-		// TODO!! POSTPARSE - EVTL STATIC??
-		$objectToCall = $this->objectFactory->create($viewHelperName);
-		if ($objectToCall instanceof \F3\Fluid\Core\Facets\PostParseInterface) {
-			$objectToCall->postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
+		// PostParse Facet
+		if (in_array('F3\Fluid\Core\Facets\PostParseInterface',class_implements($viewHelperName))) {
+			call_user_func(array($viewHelperName, 'postParseEvent'), $currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 
 		if (!$selfclosing) {
