@@ -45,7 +45,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
-		$this->registerArgument('additionalArguments', 'array', 'Additional arguments', FALSE);
+		$this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes', FALSE);
 	}
 
 	/**
@@ -100,8 +100,8 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 */
 	protected function renderTagAttributes() {
 		$attributes = array();
-		if (isset($this->arguments['additionalArguments']) && is_array($this->arguments['additionalArguments'])) {
-			foreach ($this->arguments['additionalArguments'] as $key => $value) {
+		if (isset($this->arguments['additionalAttributes']) && is_array($this->arguments['additionalAttributes'])) {
+			foreach ($this->arguments['additionalAttributes'] as $key => $value) {
 				$attributes[] = $key . '="' . $value . '"';
 			}
 		}

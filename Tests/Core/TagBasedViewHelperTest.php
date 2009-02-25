@@ -16,8 +16,8 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
+ * @package
+ * @subpackage
  * @version $Id:$
  */
 
@@ -43,9 +43,21 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelper->registerTagAttribute('x', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('x' => 'Hallo'));
 		$expected = 'x="Hallo"';
-		
+
 		$this->viewHelper->arguments = $arguments;
 		$this->assertEquals($expected, $this->viewHelper->render(), 'A simple tag attribute was not rendered correctly.');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function additionalTagAttributesAreRenderedCorrectly() {
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('additionalAttributes' => array('x' => 'Hallo')));
+		$expected = 'x="Hallo"';
+
+		$this->viewHelper->arguments = $arguments;
+		$this->assertEquals($expected, $this->viewHelper->render(), 'An additional tag attribute was not rendered correctly.');
 	}
 }
 
