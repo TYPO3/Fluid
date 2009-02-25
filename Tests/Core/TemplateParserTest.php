@@ -86,7 +86,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\na"));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', new \F3\Fluid\ViewHelpers\BaseViewHelper(), array());
+		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
 		$rootNode->addChildNode($dynamicNode);
 		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode('b'));
 
@@ -104,10 +104,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\n"));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', new \F3\Fluid\ViewHelpers\BaseViewHelper, array());
+		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
 		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\nHallo\n"));
 		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', new \F3\Fluid\ViewHelpers\BaseViewHelper, array());
+		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
 		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("Second"));
 		$rootNode->addChildNode($dynamicNode);
 
@@ -168,7 +168,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		);
 		$arguments['each']->addChildNode(new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('posts'));
 		$arguments['as']->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode('post'));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\ForViewHelper', new \F3\Fluid\ViewHelpers\ForViewHelper(), $arguments);
+		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\ForViewHelper', $arguments);
 		$rootNode->addChildNode($dynamicNode);
 		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('post'));
 
@@ -186,6 +186,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('id' => 1));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '1';
 		$this->assertEquals($expected, $result, 'Fixture 07 was not parsed correctly.');
@@ -200,6 +201,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
 		$this->assertEquals($expected, $result, 'Fixture 08 was not rendered correctly.');
@@ -214,6 +216,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '0 hallo test 3 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 09 was not rendered correctly. This is most likely due to problems in the array parser.');
@@ -228,6 +231,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '0 1 2 3 4 5 ';
 		$this->assertEquals($expected, $result, 'Fixture 10 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
@@ -242,6 +246,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array());
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '0 2 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly.');
@@ -258,6 +263,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 		$context = new \F3\Fluid\Core\VariableContainer(array());
+		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
 		$expected = '<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array">'.chr(10).'<f3:for each="{array}" as="value">{value} </f3:for>';
 		$this->assertEquals($expected, $result, 'Fixture 12 was not rendered correctly. This hints at some problem with CDATA handling.');
@@ -270,7 +276,6 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function postParseFacetIsCalledOnParse() {
 		$templateParser = new \F3\Fluid\Core\TemplateParser();
 
-		$postParseFacetViewHelper =
 		$objectFactoryMock = $this->getMock('F3\FLOW3\Object\FactoryInterface');
 		$objectFactoryMock->expects($this->any())
 		                  ->method('create')->will($this->returnCallback(array($this, 'objectFactoryCallback')));
