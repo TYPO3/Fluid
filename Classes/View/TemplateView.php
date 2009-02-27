@@ -42,6 +42,13 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	protected $templatePathAndFilenamePattern = '@packageResources/Private/Templates/@subpackage@controller/@action.html';
 
 	/**
+	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
+	 * @var string
+	 * @internal
+	 */
+	private $globalPartialBasePath = '@packageResources/Private/Templates';
+
+	/**
 	 * File pattern for resolving the layout
 	 * @var string
 	 */
@@ -195,6 +202,34 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	}
 
 	/**
+	 * Renders a partial. If $partialName starts with /, the partial is resolved globally. Else, locally.
+	 * SHOULD NOT BE USED BY USERS!
+	 * @internal
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderPartial($partialName, array $variables) {
+		if ($partialName{0} === '/') {
+			$partialBasePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->globalPartialBasePath);
+			$partialName = substr($partialName, 1);
+		} else {
+			$partialBasePath = dirname($this->resolveTemplatePathAndFilename());
+		}
+		$partialNameSplitted = explode('/', $partialName);
+		$partialFileName = '_' . array_pop($partialNameSplitted) . '.html';
+		$partialDirectoryName = $partialBasePath . '/' . implode('/', $partialNameSplitted);
+
+		$partialPathAndFileName = $partialDirectoryName . '/' . $partialFileName;
+
+		$partial = $this->parseTemplate($partialPathAndFileName);
+		$syntaxTree = $partial->getRootNode();
+
+		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
+		$result = $syntaxTree->render($variableStore);
+
+		return $result;
+	}
+
+	/**
 	 * Add a variable to the context.
 	 * Can be chained, so $template->addVariable(..., ...)->addVariable(..., ...); is possible,
 	 *
@@ -243,7 +278,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 		if (array_key_exists($templatePathAndFilename, $this->localSyntaxTreeCache)) {
 			return $this->localSyntaxTreeCache[$templatePathAndFilename];
 		}
-		
+
 		$parsedTemplate = $this->syntaxTreeCache->get(md5($templatePathAndFilename));
 		if (!$parsedTemplate) {
 			$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);

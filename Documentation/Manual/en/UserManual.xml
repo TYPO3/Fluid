@@ -101,9 +101,9 @@
           <title>Tags and Namespace declarations</title>
 
           <programlisting>{namespace f3=F3\Fluid\ViewHelpers}⁄<co
-              xml:id="co.tags-example.1"/>
+              xml:id="co.tags-example.1" />
 &lt;f3:link controller="Administration"&gt;Administration&lt;/f3:link&gt;<co
-              xml:id="co.tags-example.2"/></programlisting>
+              xml:id="co.tags-example.2" /></programlisting>
 
           <calloutlist>
             <callout arearefs="co.tags-example.1">
@@ -307,7 +307,7 @@
 &lt;div id="menu"&gt;... menu goes here ...&lt;/div&gt;
 &lt;div id="content"&gt;
   <emphasis>&lt;f3:render section="content" /&gt;</emphasis><co
-            xml:id="co.layout-example.1"/>
+            xml:id="co.layout-example.1" />
 &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</programlisting>
@@ -576,7 +576,7 @@
       about it in the next section.</para>
 
       <section>
-        <title>additionalArguments</title>
+        <title>additionalAttributes</title>
 
         <para>Sometimes, you need some HTML attributes which are not part of
         the standard. As an example: if you use the Dojo JavaScript framework,
@@ -597,24 +597,22 @@
         constrain the user in his possibilities - thus, it should be possible
         to add custom HTML attributes as well, if they are needed (People who
         have already worked with JSP know that it can be difficult to archive
-        this). Our solution looks as follows:</para>
+        this. Our solution looks as follows:</para>
 
         <para><emphasis>Every view helper which inherits from
         <code>TagBasedViewHelper</code> has a special property called
-        <code>additionalArguments</code> which allows you to add arbitary HTML
-        attributes to the tag.</emphasis></para>
+        <code>additionalAttributes</code> which allows you to add arbitary
+        HTML attributes to the tag.</emphasis></para>
 
-        <para><code>additionalArguments</code> should be an associative array,
-        where the key is the name of the HTML attribute.</para>
+        <para><code>additionalAttributes</code> should be an associative
+        array, where the key is the name of the HTML attribute.</para>
 
         <para>If the link tag from above needed a new attribute called
         <code>fadeDuration</code>, which is not part of HTML, you could do
-        that as follows:<programlisting>&lt;f3:link ... additionalArguments="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f3:link&gt;</programlisting></para>
+        that as follows:<programlisting>&lt;f3:link ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f3:link&gt;</programlisting></para>
 
         <para>This attribute is available in all tags that inherit from
         <classname>F3\Fluid\Core\TagBasedViewHelper</classname>.</para>
-
-        <para>TODO: Rename to additionalAttributes??</para>
       </section>
     </section>
 
@@ -673,7 +671,64 @@
       <section>
         <title>PostParse Facet</title>
 
-        <para/>
+        <note>
+          <para>This facet will be only needed in exceptional cases, so before
+          you use it, try to think of a different way to do it. Using this
+          facet can easily break template parsing if you do not know what you
+          are doing.</para>
+        </note>
+
+        <para>Sometimes, the presence of a tag affects global rendering
+        behavior - as seen in the template/layout subsystem: With the tag
+        <code>&lt;f3:layout name="..." /&gt;</code> the user can specify a
+        layout name for the current template. Somehow, the parser needs to
+        know if a layout was selected directly after parsing the template -
+        before any data has been passed to it.</para>
+
+        <para>Thus, if a view helper implements the
+        <interfacename>F3\Fluid\Core\Facets\PostParseInterface</interfacename>,
+        it can specify a callback which is called <emphasis>directly after the
+        tag has been parsed in the template</emphasis>. The method signature
+        looks as follows:</para>
+
+        <programlisting>static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);</programlisting>
+
+        <para>Note this method is <emphasis>static</emphasis><footnote>
+            <para>It is static because the ViewHelper has not been
+            instanciated at that point in time, thus it is forbidden to set
+            any instance variables.</para>
+          </footnote>. The arguments the method receives are as
+        follows:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>A reference to the current syntax tree node (which is always
+            a <classname>ViewHelperNode</classname>). This is particularly
+            useful if a ViewHelper wants to store a reference to its node in
+            the variableContainer.</para>
+          </listitem>
+
+          <listitem>
+            <para>The view helper arguments. This is an associative array,
+            with the argument name as key, and the associated syntax tree (an
+            instance of
+            <classname>F3\Fluid\Core\SyntaxTree\RootNode</classname>) as
+            value. Because variables are not bound at this point, you always
+            need to call <code>evaluate(...)</code> on the arguments you want
+            to receive. Look into the <code>LayoutViewHelper</code> for an
+            example.</para>
+          </listitem>
+
+          <listitem>
+            <para>A <emphasis>parsing</emphasis> variable container.
+            <emphasis>This is not the VariableContainer used for
+            rendering!</emphasis> The supplied VariableContainer is initially
+            empty, and is used to pass data from <code>ViewHelper</code>s to
+            the <code>View</code>. It is used mainly in the
+            <code>LayoutViewHelper</code> and
+            <code>SectionViewHelper</code>.</para>
+          </listitem>
+        </itemizedlist>
       </section>
     </section>
   </section>
