@@ -223,6 +223,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 		$partial = $this->parseTemplate($partialPathAndFileName);
 		$syntaxTree = $partial->getRootNode();
 
+		$variables['view'] = $this;
 		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
 		$result = $syntaxTree->render($variableStore);
 
