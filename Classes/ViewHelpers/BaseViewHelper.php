@@ -43,8 +43,9 @@ class BaseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
+		// RENDERS IT AS <base></base>, because IE6 will else refuse to display the page. :-(
 		$currentRequest = $this->variableContainer->get('view')->getRequest();
-		return '<base href="' . $currentRequest->getBaseURI() . '" />';
+		return '<base href="' . $currentRequest->getBaseURI() . '"></base>';
 	}
 }
 
