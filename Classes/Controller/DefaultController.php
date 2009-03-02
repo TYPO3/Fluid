@@ -66,16 +66,6 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	public function initializeView() {
 		$this->view->setRequest($this->request);
 	}
-	/**
-	 * Initialize arguments.
-	 * 
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeController() {
-		$this->arguments->addNewArgument('baseNamespace', 'Text');
-		$this->arguments->addNewArgument('namespacePrefix', 'Text');
-	}
 	
 	/**
 	 * Index action
@@ -90,13 +80,13 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Generate the XSD file.
 	 * 
+	 * @param $baseNamespace string
+	 * @param $namespacePrefix string
+	 * @return string HTML string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Still has to be finished
 	 */
-	public function generateXSDAction() {
-		$baseNamespace = (string)$this->arguments['baseNamespace'];
-		$namespacePrefix = (string)$this->arguments['namespacePrefix'];
-		
+	public function generateXSDAction($baseNamespace, $namespacePrefix) {
 		$xsdFileContents = $this->xsdGenerator->generateXSD($baseNamespace);
 		
 		$path = 'Resources/Fluid/XSD/';
