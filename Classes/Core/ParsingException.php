@@ -18,16 +18,18 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * A Parsing Exception
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class ParsingException extends \F3\Fluid\Core\Exception {
 }
+
 ?>

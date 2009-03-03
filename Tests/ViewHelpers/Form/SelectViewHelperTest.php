@@ -18,7 +18,7 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  */
 
 include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
@@ -29,7 +29,7 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  *
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class SelectViewHelperTest extends \F3\Testing\BaseTestCase {

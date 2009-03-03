@@ -18,7 +18,7 @@ namespace F3\Fluid;
 /**
  * @package 
  * @subpackage 
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -26,7 +26,7 @@ namespace F3\Fluid;
  *
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 abstract class ChildNodeAccessFacetViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface {

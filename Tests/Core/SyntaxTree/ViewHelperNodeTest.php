@@ -18,14 +18,14 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * Testcase for [insert classname here]
  *
  * @package
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 include_once(__DIR__ . '/../Fixtures/ChildNodeAccessFacetViewHelper.php');

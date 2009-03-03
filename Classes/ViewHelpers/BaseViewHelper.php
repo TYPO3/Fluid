@@ -18,32 +18,42 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Vew helper which creates a <base href="..."/> tag.
- * 
+ *
  * Example:
  * <f3:base />
  * Generates a <base href="..." /> tag.
- * 
+ *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class BaseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+
 	/**
 	 * The Base view helper does not take any arguments.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
 	}
-	
+
 	/**
 	 * Render the "Base" tag by outputting $request->getBaseURI()
-	 * 
+	 *
+	 * Note: renders as <base></base>, because IE6 will else refuse to display
+	 * the page...
+	 *
 	 * @return string "base"-Tag.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		// RENDERS IT AS <base></base>, because IE6 will else refuse to display the page. :-(
 		$currentRequest = $this->variableContainer->get('view')->getRequest();
 		return '<base href="' . $currentRequest->getBaseURI() . '"></base>';
 	}

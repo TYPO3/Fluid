@@ -18,7 +18,7 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -27,6 +27,10 @@ namespace F3\Fluid\ViewHelpers\Form;
  * If you set the "property" attribute to the name of the property to resolve from the object, this class will
  * automatically set the name and value of a form element.
  *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {

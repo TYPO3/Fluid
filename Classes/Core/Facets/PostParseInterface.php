@@ -18,8 +18,9 @@ namespace F3\Fluid\Core\Facets;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Post Parse Facet. Your view helper should implement this if you want a callback
  * to be called directly after the syntax tree node corresponding to this view helper has been built.
@@ -31,10 +32,11 @@ namespace F3\Fluid\Core\Facets;
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 interface PostParseInterface {
+
 	/**
 	 * Callback which is called directly after the corresponding syntax tree node to this view helper has been built.
 	 * This is a parse-time callback, which does not change the rendering of a view helper.
@@ -45,10 +47,9 @@ interface PostParseInterface {
 	 * @param array $viewHelperArguments View helper arguments as an array of SyntaxTrees. If you really need an argument, make sure to call $viewHelperArguments[$argName]->render(...)!
 	 * @param VariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);
-}
+	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);
 
+}
 
 ?>

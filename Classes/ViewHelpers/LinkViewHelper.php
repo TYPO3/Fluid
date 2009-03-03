@@ -18,14 +18,15 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Link-generation view helper
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */

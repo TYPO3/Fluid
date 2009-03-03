@@ -20,14 +20,14 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
  * @package 
  * @subpackage 
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * Test for the "Textbox" Form view helper
  *
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {

@@ -18,14 +18,14 @@ namespace F3\Fluid;
 /**
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * [Enter description here]
  *
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TestTagBasedViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {

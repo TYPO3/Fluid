@@ -18,20 +18,37 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
  * View Helper which creates a Text Box.
  *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
-	
+
+	/**
+	 * Initialize the arguments.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
 	}
+
+	/**
+	 * Renders the textbox.
+	 *
+	 * @return string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		return '<input type="text" name="' . $this->getName() . '" value="' . $this->getValue() . '" ' . $this->renderTagAttributes() . ' />';
 	}

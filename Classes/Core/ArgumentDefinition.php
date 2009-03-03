@@ -18,17 +18,19 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Argument definition - definition of each view helper
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class ArgumentDefinition {
+
 	/**
 	 * Name of argument
 	 * @var string
@@ -40,19 +42,19 @@ class ArgumentDefinition {
 	 * @var string
 	 */
 	protected $type;
-	
+
 	/**
 	 * Description of argument
 	 * @var string
 	 */
 	protected $description;
-	
+
 	/**
 	 * Is argument required?
 	 * @var boolean
 	 */
 	protected $required = FALSE;
-	
+
 	/**
 	 * Constructor for this argument definition.
 	 *
@@ -68,40 +70,40 @@ class ArgumentDefinition {
 		$this->description = $description;
 		$this->required = $required;
 	}
-	
+
 	/**
 	 * Get the name of the argument
-	 * 
+	 *
 	 * @return string Name of argument
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getName() {
 		return $this->name;
 	}
-	
+
 	/**
 	 * Get the type of the argument
-	 * 
+	 *
 	 * @return string Type of argument
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getType() {
 		return $this->type;
 	}
-	
+
 	/**
 	 * Get the description of the argument
-	 * 
+	 *
 	 * @return string Description of argument
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getDescription() {
 		return $this->description;
 	}
-	
+
 	/**
 	 * Get the optionality of the argument
-	 * 
+	 *
 	 * @return boolean TRUE if argument is optional
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -109,6 +111,5 @@ class ArgumentDefinition {
 		return $this->required;
 	}
 }
-
 
 ?>

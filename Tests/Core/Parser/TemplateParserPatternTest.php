@@ -18,14 +18,14 @@ namespace F3\Fluid;
 /**
  * @package Fluid
  * @subpackage Test
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * Testcase for Regular expressions in parser
  *
  * @package
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class Test extends \F3\Testing\BaseTestCase {

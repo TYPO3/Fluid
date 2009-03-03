@@ -18,22 +18,23 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Loop view helper
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class ForViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
-	
+
 	/**
 	 * Arguments initialization
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -41,7 +42,7 @@ class ForViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 		$this->registerArgument('each', 'array', 'The array which is iterated over.', TRUE);
 		$this->registerArgument('as', 'string', 'Name of the variable where each array element is bound to.', TRUE);
 	}
-	
+
 	/**
 	 * Render.
 	 *

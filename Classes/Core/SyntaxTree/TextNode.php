@@ -18,28 +18,29 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Text Syntax Tree Node - is a container for strings.
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
-	
+
 	/**
 	 * Contents of the text node
 	 * @var string
 	 */
 	protected $text;
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param string $text text to store in this textNode
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -47,10 +48,10 @@ class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		if (!is_string($text)) throw new \F3\Fluid\Core\ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		$this->text = $text;
 	}
-	
+
 	/**
 	 * Return the text associated to the syntax tree.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container where all variables are stored in
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

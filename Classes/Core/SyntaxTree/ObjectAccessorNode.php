@@ -18,59 +18,60 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
-	
+
 	/**
 	 * Object path which will be called. Is a list like "post.name.email"
 	 * @var string
 	 */
 	protected $objectPath;
-	
+
 	/**
 	 * Constructor. Takes an object path as input.
-	 * 
+	 *
 	 * The first part of the object path has to be a variable in the VariableContainer.
 	 * For the further parts, it is checked if the object has a getObjectname method. If yes, this is called.
 	 * If no, it is checked if a property "objectname" exists.
 	 * If no, an error is thrown.
-	 * 
+	 *
 	 * @param string $objectPath An Object Path, like object1.object2.object3
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($objectPath) {
 		$this->objectPath = $objectPath;
 	}
-	
+
 	/**
 	 * Evaluate this node and return the correct object.
-	 * 
+	 *
 	 * Handles each part (denoted by .) in $this->objectPath in the following order:
 	 * - call appropriate getter
 	 * - call public property, if exists
 	 * - fail
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container which is used.
 	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo: Depending on the context, either fail or not!!!
+	 * @todo Depending on the context, either fail or not!!!
 	 */
 	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		try {
 			$objectPathParts = explode('.', $this->objectPath);
 			$variableName = array_shift($objectPathParts);
 			$currentObject = $variableContainer->get($variableName);
-			
+
 			if (count($objectPathParts) > 0) {
 				foreach ($objectPathParts as $currentObjectPath) {
 					if (is_object($currentObject)) {
@@ -79,7 +80,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 							$currentObject = call_user_func(array($currentObject, $getterMethodName));
 							continue;
 						}
-						
+
 						try {
 							$reflectionProperty = new \ReflectionProperty($currentObject, $currentObjectPath);
 						} catch(ReflectionException $e) {
@@ -102,9 +103,8 @@ class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			}
 			return $currentObject;
 		} catch(\F3\Fluid\Core\RuntimeException $e) {
-			// DEPENDING ON THE CONTEXT / CONFIG, either fail silently or not. Currently we always fail silently.
+				// DEPENDING ON THE CONTEXT / CONFIG, either fail silently or not. Currently we always fail silently.
 			return '';
-			// throw $e;
 		}
 	}
 }

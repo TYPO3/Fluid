@@ -18,7 +18,7 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
@@ -49,6 +49,10 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * The "selectedValue" property now expects a domain object, and tests for object equivalence.
  *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
@@ -71,7 +75,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 *
 	 * @return string rendered tag.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo HTMLspecialchar output
+	 * @todo htmlspecialchar() output
 	 */
 	public function render() {
 		$out = '<select name="' . $this->getName() . '" ' . $this->renderTagAttributes() . '>';

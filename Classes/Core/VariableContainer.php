@@ -18,8 +18,9 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * VariableContainer which stores template variables.
  * Is used in two contexts:
@@ -29,11 +30,12 @@ namespace F3\Fluid\Core;
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class VariableContainer {
+
 	/**
 	 * Objects stored in context
 	 * @var array
@@ -77,7 +79,6 @@ class VariableContainer {
 	public function getObjectFactory() {
 		return $this->objectFactory;
 	}
-
 
 	/**
 	 * Add an object to the context
@@ -137,6 +138,12 @@ class VariableContainer {
 		return array_key_exists($identifier, $this->objects);
 	}
 
+	/**
+	 * Clean up for serializing.
+	 *
+	 * @return array
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function __sleep() {
 		return array('objects');
 	}

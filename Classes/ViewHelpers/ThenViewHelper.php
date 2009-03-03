@@ -18,18 +18,20 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * "THEN" -> only has an effect inside of "IF". See If for documentation.
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class ThenViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+
 	/**
 	 * Initialize arguments. We require no arguments.
 	 */
@@ -42,7 +44,7 @@ class ThenViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		return $this->renderChildren();	
+		return $this->renderChildren();
 	}
 }
 

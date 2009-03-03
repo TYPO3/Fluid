@@ -16,16 +16,17 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
- * @version $Id:$
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
  */
+
 /**
- * [Enter description here]
+ * A Section view helper
  *
- * @package
- * @subpackage
- * @version $Id:$
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
@@ -33,6 +34,7 @@ class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3
 
 	/**
 	 * Initialize the arguments.
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -43,8 +45,14 @@ class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3
 	/**
 	 * Save the associated view helper node in a static public class variable.
 	 * called directly after the view helper was built.
+	 *
+	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode
+	 * @param array $viewHelperArguments
+	 * @param \F3\Fluid\Core\VariableContainer $variableContainer
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
+	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
 		$sectionName = $viewHelperArguments['name']->render(new \F3\Fluid\Core\VariableContainer());
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
@@ -65,6 +73,5 @@ class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3
 		return $this->renderChildren();
 	}
 }
-
 
 ?>

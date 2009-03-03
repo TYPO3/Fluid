@@ -18,7 +18,7 @@ namespace F3\Fluid\Core;
 /**
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  */
 
 include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
@@ -27,7 +27,7 @@ include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
  *
  * @package
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {

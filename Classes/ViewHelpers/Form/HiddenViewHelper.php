@@ -18,18 +18,37 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
- * Enter description here...
+ * [Enter description here...]
+ *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
+	/**
+	 * Initialize the arguments.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
 	}
+
+	/**
+	 * Renders the hidden field.
+	 *
+	 * @return string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		return '<input type="hidden" name="' . $this->getName() . '" value="' . $this->getValue() . '" ' . $this->renderTagAttributes() . ' />';
 	}

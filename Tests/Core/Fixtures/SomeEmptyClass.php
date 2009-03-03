@@ -18,14 +18,14 @@ namespace F3\Fluid;
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * Example class
  *
  * @package Fluid
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @author Sebastian Kurfürst <sebastian@typo3.org>
  */

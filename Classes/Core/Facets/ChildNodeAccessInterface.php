@@ -18,22 +18,24 @@ namespace F3\Fluid\Core\Facets;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Child Node Access Facet. View Helpers should implement this interface if they need access to the direct children in the Syntax Tree at rendering-time.
  * This might happen if you only want to selectively render a part of the syntax tree depending on some conditions.
- * 
+ *
  * In most cases, you will not need this view helper.
- * 
+ *
  * See \F3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 interface ChildNodeAccessInterface {
+
 	/**
 	 * Sets the direct child nodes of the current syntax tree node.
 	 *
@@ -42,7 +44,7 @@ interface ChildNodeAccessInterface {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodes(array $childNodes);
-}
 
+}
 
 ?>

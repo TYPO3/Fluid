@@ -17,13 +17,13 @@ namespace F3\Fluid;
 
 /**
  * @package Fluid
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * An test view helper - needed to test "registerArgument".
  *
  * @package Fluid
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */

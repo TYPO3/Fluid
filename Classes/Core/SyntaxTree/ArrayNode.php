@@ -18,37 +18,39 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class ArrayNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
+
 	/**
 	 * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
 	 * @var array
 	 */
 	protected $internalArray = array();
-	
+
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param array $internalArray Array to store
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($internalArray) {
 		$this->internalArray = $internalArray;
 	}
-	
+
 	/**
 	 * Evaluate the array and return an evaluated array
-	 * 
+	 *
 	 * @param \F3\Fluid\VariableContainer $variableContainer Variable Container for the scope variables
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -65,6 +67,5 @@ class ArrayNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		return $arrayToBuild;
 	}
 }
-
 
 ?>

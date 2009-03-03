@@ -18,14 +18,15 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Template parser building up an object syntax tree
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TemplateParser {
@@ -167,8 +168,8 @@ class TemplateParser {
 	 *
 	 * @param string $templateString The template to parse as a string
 	 * @return \F3\Fluid\Core\ParsedTemplateInterface Parsed template
-	 * @todo Refine doc comment
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo Refine doc comment
 	 */
 	public function parse($templateString) {
 		if (!is_string($templateString)) throw new \F3\Fluid\Core\ParsingException('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
@@ -299,7 +300,7 @@ class TemplateParser {
 
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 
-		// PostParse Facet
+			// PostParse Facet
 		if (in_array('F3\Fluid\Core\Facets\PostParseInterface',class_implements($viewHelperName))) {
 			call_user_func(array($viewHelperName, 'postParseEvent'), $currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}

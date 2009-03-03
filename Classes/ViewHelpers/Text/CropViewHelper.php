@@ -18,8 +18,9 @@ namespace F3\Fluid\ViewHelpers\Text;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Use this view helper to crop the text between its opening and closing tags.
  *
@@ -31,7 +32,7 @@ namespace F3\Fluid\ViewHelpers\Text;
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */

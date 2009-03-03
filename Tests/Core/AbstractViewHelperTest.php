@@ -20,14 +20,14 @@ require_once(__DIR__ . '/Fixtures/TestViewHelper.php');
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * Testcase for AbstractViewHelper
  *
  * @package
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {

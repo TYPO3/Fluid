@@ -18,7 +18,7 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  */
 
 require_once(__DIR__ . '/../Fixtures/SomeEmptyClass.php');
@@ -28,7 +28,7 @@ require_once(__DIR__ . '/../Fixtures/SomeEmptyClass.php');
  *
  * @package
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {

@@ -18,20 +18,24 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * "else"-Tag. Only has an effect inside of "if". See "if" for documentation.
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class ElseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+
 	/**
 	 * Initialize arguments. We require no arguments.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {}
 
@@ -42,7 +46,7 @@ class ElseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		return $this->renderChildren();	
+		return $this->renderChildren();
 	}
 }
 

@@ -18,14 +18,15 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Node which will call a ViewHelper associated with this node.
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
@@ -56,7 +57,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($viewHelperClassName, $arguments) {
+	public function __construct($viewHelperClassName, array $arguments) {
 		$this->viewHelperClassName = $viewHelperClassName;
 		$this->arguments = $arguments;
 	}
@@ -84,8 +85,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @param \F3\Fluid\Core\VariableContainer $variableContainer The Variable Container in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo: Handle initializeArguments()
-	 * @todo: Component manager
+	 * @todo Handle initializeArguments()
+	 * @todo Component manager
 	 */
 	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$objectFactory = $variableContainer->getObjectFactory();
@@ -114,7 +115,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			$endContextVariables = $variableContainer->getAllIdentifiers();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 
-			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff));
+			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);
 		}
 		return $out;
 	}

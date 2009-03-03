@@ -18,18 +18,19 @@ namespace F3\Fluid\Controller;
 /**
  * @package Fluid
  * @subpackage Controller
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Controller which provides a web UI for generating ViewHelper XSD Definitons
  *
- * @package
- * @subpackage
- * @version $Id:$
+ * @package Fluid
+ * @subpackage Controller
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
-	
+
 	/**
 	 * XSD Generator
 	 * @var F3\Fluid\Service\XSDGenerator
@@ -38,17 +39,18 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * Inject XSD Generator
-	 * 
+	 *
 	 * @param \F3\Fluid\Service\XSDGenerator $xsdGenerator XSD Generator
+	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectXSDGenerator(\F3\Fluid\Service\XSDGenerator $xsdGenerator) {
 		$this->xsdGenerator = $xsdGenerator;
 	}
-	
+
 	/**
 	 * Inject a TemplateView
-	 * 
+	 *
 	 * @param \F3\Fluid\View\TemplateView $view The Fluid View Instance
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -56,30 +58,30 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	public function injectView(\F3\Fluid\View\TemplateView $view) {
 		$this->view = $view;
 	}
-	
+
 	/**
 	 * Initialize the view correctly.
-	 * 
+	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeView() {
 		$this->view->setRequest($this->request);
 	}
-	
+
 	/**
 	 * Index action
-	 * 
+	 *
 	 * @return string HTML string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function indexAction() {
 		return $this->view->render();
 	}
-	
+
 	/**
 	 * Generate the XSD file.
-	 * 
+	 *
 	 * @param $baseNamespace string
 	 * @param $namespacePrefix string
 	 * @return string HTML string
@@ -88,18 +90,18 @@ class DefaultController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	public function generateXSDAction($baseNamespace, $namespacePrefix) {
 		$xsdFileContents = $this->xsdGenerator->generateXSD($baseNamespace);
-		
+
 		$path = 'Resources/Fluid/XSD/';
 		if (!is_dir(FLOW3_PATH_PUBLIC . $path)) {
 			\F3\FLOW3\Utility\Files::createDirectoryRecursively(FLOW3_PATH_PUBLIC . $path);
 		}
-		
+
 		$filename = $path . str_replace('\\', '_', $baseNamespace) . '.xsd';
-		
+
 		$fp = fopen(FLOW3_PATH_PUBLIC . $filename, 'w');
 		fputs($fp, $xsdFileContents);
 		fclose($fp);
-		
+
 		return $this->view->addVariable('xsdPath', $filename)
 		                  ->addVariable('namespaceURI', 'http://typo3.org/ns/fluid/' . str_replace('\\', '/', $baseNamespace))
 		                  ->addVariable('namespacePrefix', $namespacePrefix)

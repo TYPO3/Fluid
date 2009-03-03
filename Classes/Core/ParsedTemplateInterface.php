@@ -18,28 +18,30 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * This interface is returned by \F3\Fluid\Core\TemplateParser->parse() method.
  *
  * @package Fluid
  * @subpackage Core
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 interface ParsedTemplateInterface {
+
 	/**
 	 * Get root node of this parsing state.
 	 *
 	 * @return \F3\Fluid\Core\SyntaxTree\RootNode The root node
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRootNode();
-	
+
 	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
 	 * @return \F3\Fluid\Core\VariableContainer
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getVariableContainer();
 }

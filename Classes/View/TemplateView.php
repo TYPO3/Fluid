@@ -18,17 +18,24 @@ namespace F3\Fluid\View;
 /**
  * @package Fluid
  * @subpackage View
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * The main template view. Should be used as view if you want Fluid Templating
  *
  * @package Fluid
  * @subpackage View
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
+
+	/**
+	 * Pattern for fetching information from controller object name
+	 * @var string
+	 */
+	const PATTERN_CONTROLLER = '/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/';
 
 	/**
 	 * @var \F3\Fluid\Core\TemplateParser
@@ -208,7 +215,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderPartial($partialName, array $variables) {
-		if ($partialName{0} === '/') {
+		if ($partialName[0] === '/') {
 			$partialBasePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->globalPartialBasePath);
 			$partialName = substr($partialName, 1);
 		} else {
@@ -272,6 +279,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * Parse the given template and return it.
 	 *
 	 * Will cache the results for one call.
+	 *
 	 * @return \F3\Fluid\Core\ParsedTemplateInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -305,7 +313,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 			return $this->templatePathAndFilename;
 		} else {
 			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->request->getControllerActionName());
-			preg_match('/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/', $this->request->getControllerObjectName(), $matches);
+			preg_match(self::PATTERN_CONTROLLER, $this->request->getControllerObjectName(), $matches);
 			$subpackageName = '';
 			if ($matches['SubpackageName'] !== '') {
 				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);

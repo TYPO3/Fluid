@@ -16,20 +16,39 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
- * @version $Id:$
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
  */
+
 /**
- * Enter description here...
+ * [Enter description here...]
+ *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
+	/**
+	 * Initialize the arguments.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
 	}
+
+	/**
+	 * Renders the upload field.
+	 *
+	 * @return string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		return '<input type="file" name="' . $this->getName() . '" ' . $this->renderTagAttributes() . ' />';
 	}

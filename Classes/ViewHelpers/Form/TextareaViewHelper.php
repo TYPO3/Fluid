@@ -18,20 +18,37 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
 
 /**
  * Textarea View Helper.
  *
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class TextAreaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
-	
+
+	/**
+	 * Initialize the arguments.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
 	}
+
+	/**
+	 * Renders the textarea.
+	 *
+	 * @return string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		$out = '<textarea name="' . $this->getName() . '"' . $this->renderTagAttributes() . '>';
 		$out .= $this->getValue();

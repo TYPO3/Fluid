@@ -18,30 +18,32 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Abstract node in the syntax tree which has been built.
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 abstract class AbstractNode {
+
 	/**
 	 * List of Child Nodes.
 	 * @var array \F3\Fluid\Core\SyntaxTree\AbstractNode
 	 */
 	protected $childNodes = array();
-		
+
 	/**
 	 * The variable container
 	 * @var \F3\Fluid\Core\VariableContainer
 	 */
 	protected $variableContainer;
-	
+
 	/**
 	 * Render all child nodes and return the rendered result string. Call inside your own view helpers.
 	 *
@@ -51,10 +53,10 @@ abstract class AbstractNode {
 	public function renderChildNodes() {
 		return (string)$this->evaluateChildNodes();
 	}
-	
+
 	/**
 	 * Evaluate all child nodes and return the evaluated results.
-	 * 
+	 *
 	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -70,10 +72,10 @@ abstract class AbstractNode {
 		}
 		return $output;
 	}
-	
+
 	/**
 	 * Appends a subnode to this node. Is used inside the parser to append children
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\SyntaxTree\AbstractNode $subnode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -81,10 +83,10 @@ abstract class AbstractNode {
 	public function addChildNode(\F3\Fluid\Core\SyntaxTree\AbstractNode $subNode) {
 		$this->childNodes[] = $subNode;
 	}
-	
+
 	/**
 	 * Renders the node.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -92,16 +94,15 @@ abstract class AbstractNode {
 	public function render(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		return (string)$this->evaluate($variableContainer);
 	}
-	
+
 	/**
 	 * Evaluates the node - can return not only strings, but arbitary objects.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\VariableContainer Variable Container to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	abstract public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer);
 }
-
 
 ?>

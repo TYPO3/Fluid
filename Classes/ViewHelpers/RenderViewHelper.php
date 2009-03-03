@@ -18,24 +18,38 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * [Enter description here]
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class RenderViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+
+	/**
+	 * Initializes the arguments.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		$this->registerArgument('section', 'string', 'Name of section to render. If used in a layout, renders a section of the main content file. If used inside a standard template, renders a section of the same file.', FALSE);
 		$this->registerArgument('partial', 'string', 'Reference to a partial.', FALSE);
 		$this->registerArgument('arguments', 'array', 'Arguments to pass to the partial', FALSE);
 	}
 
+	/**
+	 * Renders the content.
+	 *
+	 * @return string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		if ($this->arguments['section']) {
 			return $this->variableContainer->get('view')->renderSection($this->arguments['section']);

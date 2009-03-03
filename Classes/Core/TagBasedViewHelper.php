@@ -18,8 +18,9 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Tag based view helper.
  * Sould be used as the base class for all view helpers which output simple tags, as it provides some
@@ -27,7 +28,7 @@ namespace F3\Fluid\Core;
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
@@ -96,7 +97,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 *
 	 * @return string Concatenated list of attributes
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo HTMLSPECIALCHAR output
+	 * @todo htmlspecialchar() output
 	 */
 	protected function renderTagAttributes() {
 		$attributes = array();

@@ -18,8 +18,9 @@ namespace F3\Fluid\ViewHelpers\Format;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Formats a \DateTime object.
  *
@@ -29,11 +30,12 @@ namespace F3\Fluid\ViewHelpers\Format;
  *
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class DateViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+
 	/**
 	 * Registers two arguments: "target" and "format". Both are mandatory.
 	 *

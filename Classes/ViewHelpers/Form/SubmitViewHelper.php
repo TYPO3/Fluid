@@ -16,25 +16,41 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
- * @version $Id:$
+ * @package
+ * @subpackage
+ * @version $Id$
  */
 /**
- * Enter description here...
+ * [Enter description here...]
+ * @package Fluid
+ * @subpackage ViewHelpers
+ * @version $Id$
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class SubmitViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
-	
+
+	/**
+	 * Initialize the arguments.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
 	}
 
+	/**
+	 * Renders the submit button.
+	 *
+	 * @return string
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function render() {
 		$out = '<button type="submit"' . $this->renderTagAttributes() . '>';
 		$out .= $this->renderChildren();
 		$out .= '</button>';
-		
+
 		return $out;
 	}
 }

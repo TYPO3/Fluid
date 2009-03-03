@@ -18,22 +18,23 @@ namespace F3\Fluid\Core\SyntaxTree;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  */
+
 /**
  * Root node of every syntax tree.
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
 class RootNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
-	
+
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container to be used
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -44,6 +45,5 @@ class RootNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		return $text;
 	}
 }
-
 
 ?>

@@ -18,14 +18,14 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package 
  * @subpackage 
- * @version $Id:$
+ * @version $Id$
  */
 /**
  * Testcase for [insert classname here]
  *
  * @package
  * @subpackage Tests
- * @version $Id:$
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class SectionViewHelperTest extends \F3\Testing\BaseTestCase {
