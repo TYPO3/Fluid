@@ -214,7 +214,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @internal
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderPartial($partialName, array $variables) {
+	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		if ($partialName[0] === '/') {
 			$partialBasePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->globalPartialBasePath);
 			$partialName = substr($partialName, 1);
@@ -232,8 +232,14 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 
 		$variables['view'] = $this;
 		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
-		$result = $syntaxTree->render($variableStore);
 
+		if ($sectionToRender != NULL) {
+			$sections = $partial->getVariableContainer()->get('sections');
+			if(!array_key_exists($sectionToRender, $sections)) throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108983);
+			$result = $sections[$sectionToRender]->render($variableStore);
+		} else {
+			$result = $syntaxTree->render($variableStore);
+		}
 		return $result;
 	}
 

@@ -51,16 +51,16 @@ class RenderViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		if ($this->arguments['section']) {
-			return $this->variableContainer->get('view')->renderSection($this->arguments['section']);
-		} else {
+		if ($this->arguments['partial']) {
 			$arguments = $this->arguments['arguments'];
 			if (!is_array($arguments)) {
 				$arguments = array();
 			}
-
-			return $this->variableContainer->get('view')->renderPartial($this->arguments['partial'], $arguments);
+			return $this->variableContainer->get('view')->renderPartial($this->arguments['partial'], $this->arguments['section'], $arguments);
+		} elseif ($this->arguments['section']) {
+			return $this->variableContainer->get('view')->renderSection($this->arguments['section']);
 		}
+		return '';
 	}
 
 
