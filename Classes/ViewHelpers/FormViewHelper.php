@@ -66,6 +66,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$this->registerArgument('package', 'string', 'name of package to call');
 		$this->registerArgument('subpackage', 'string', 'name of subpackage to call');
 		$this->registerArgument('object', 'object', 'Object to use for the form. Use in conjunction with the "property" attribute on the sub tags.');
+		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended to the action URI.');
 
 		$this->registerTagAttribute('enctype', 'string', 'MIME type with which the form is submitted');
 		$this->registerTagAttribute('method', 'string', 'Transfer type (GET or POST)');
@@ -87,7 +88,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'GET' );
 
-		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], array(), $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
+		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
 		if ($this->arguments['object']) {
 			$this->variableContainer->add('__formObject', $this->arguments['object']);
