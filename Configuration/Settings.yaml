@@ -1,0 +1,9 @@
+#                                                                        #
+# Settings Configuration for the Fluid Package                           #
+#                                                                        #
+
+# $Id:$
+
+Fluid:
+  syntaxTreeCache:
+    enable: y

@@ -1,4 +1,4 @@
-F3\Fluid\View\TemplateView:
+F3\Fluid\View\Aspect\TemplateViewCachingAspect:
   properties:
     syntaxTreeCache:
       object:

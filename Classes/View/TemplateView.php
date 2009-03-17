@@ -29,7 +29,7 @@ namespace F3\Fluid\View;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
+class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\View\TemplateViewInterface {
 
 	/**
 	 * Pattern for fetching information from controller object name
@@ -85,30 +85,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	protected $actionName;
 
 	/**
-	 * Syntax tree cache. The key will be the file name (including path), the value the generated syntax tree.
-	 * @var array
-	 */
-	protected $localSyntaxTreeCache = array();
-
-	/**
-	 * Syntax tree cache (persistent)
-	 * @var \F3\FLOW3\Cache\Frontend\VariableFrontend
-	 */
-	protected $syntaxTreeCache;
-
-	/**
-	 * Sets the cache
-	 *
-	 *
-	 * @param \F3\FLOW3\Cache\Frontend\VariableFrontend $cache Cache for the reflection service
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectSyntaxTreeCache(\F3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache) {
-		$this->syntaxTreeCache = $syntaxTreeCache;
-	}
-
-	/**
 	 * Inject the template parser
 	 *
 	 * @param \F3\Fluid\Core\TemplateParser $templateParser The template parser
@@ -125,7 +101,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function initializeView() {
+	protected function initializeView() {
 		$this->contextVariables['view'] = $this;
 	}
 
@@ -286,24 +262,16 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView {
 	 *
 	 * Will cache the results for one call.
 	 *
-	 * @return \F3\Fluid\Core\ParsedTemplateInterface
+	 * @param $templatePathAndFilename absolute filename of the template to be parsed
+	 * @return \F3\Fluid\Core\ParsedTemplateInterface the parsed template tree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseTemplate($templatePathAndFilename) {
-		if (array_key_exists($templatePathAndFilename, $this->localSyntaxTreeCache)) {
-			return $this->localSyntaxTreeCache[$templatePathAndFilename];
+		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+		if ($templateSource === FALSE) {
+			throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709595);
 		}
-
-		$parsedTemplate = $this->syntaxTreeCache->get(md5($templatePathAndFilename));
-		if (!$parsedTemplate) {
-			$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
-			if ($templateSource === FALSE) throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709595);
-			$parsedTemplate = $this->templateParser->parse($templateSource);
-
-			$this->syntaxTreeCache->set(md5($templatePathAndFilename), $parsedTemplate);
-		}
-		$this->localSyntaxTreeCache[$templatePathAndFilename] = $parsedTemplate;
-		return $parsedTemplate;
+		return $this->templateParser->parse($templateSource);
 	}
 
 	/**
