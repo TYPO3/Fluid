@@ -31,7 +31,7 @@ namespace F3\Fluid\Core;
  */
 class TemplateParser {
 
-	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]+){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
+	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
 
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
@@ -74,7 +74,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/
-		(\\\\?                               # Optional backslash in front
+		(
 			{                                # Start of shorthand syntax
 				(?:                          # Shorthand syntax is either composed of...
 					[a-zA-Z0-9\-_:,.]        # Various characters
@@ -92,7 +92,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/(?:^|[^\\\\]+){(?P<Object>[a-zA-Z0-9\-_.]+)}/';
+	const SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/{(?P<Object>[a-zA-Z0-9\-_.]+)}/';
 
 	/**
 	 * Pattern which detects the array/object syntax like in JavaScript, so it detects strings like:
@@ -103,7 +103,6 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	const SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/
-		(?:^|[^\\\\]+)                                  # In case the { is prefixed with backslash, we do not match
 		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
 			{                                           # Each array needs to start with {
 				(?P<Array>                              # Start submatch
