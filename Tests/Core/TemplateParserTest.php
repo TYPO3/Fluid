@@ -265,7 +265,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$context = new \F3\Fluid\Core\VariableContainer(array());
 		$context->injectObjectFactory($this->objectFactory);
 		$result = $templateTree->render($context);
-		$expected = '<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array">'.PHP_EOL.'<f3:for each="{array}" as="value">{value} </f3:for>';
+		$expected = '<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array">' . chr(10) . '<f3:for each="{array}" as="value">{value} </f3:for>';
 		$this->assertEquals($expected, $result, 'Fixture 12 was not rendered correctly. This hints at some problem with CDATA handling.');
 	}
 

@@ -73,16 +73,6 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	public function renderWithLayout($layoutName);
 
 	/**
-	 * Add a variable to the context.
-	 * Can be chained, so $template->addVariable(..., ...)->addVariable(..., ...); is possible,
-	 *
-	 * @param string $key Key of variable
-	 * @param object $value Value of object
-	 * @return \F3\Fluid\View\TemplateViewInterface an instance of $this, to enable chaining.
-	 */
-	public function assign($key, $value);
-
-	/**
 	 * Return the current request
 	 *
 	 * @return \F3\FLOW3\MVC\Web\Request the current request

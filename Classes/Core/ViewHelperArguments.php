@@ -56,7 +56,7 @@ class ViewHelperArguments implements \ArrayAccess {
 	 * @return boolean true if exists
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	function offsetExists($key) {
+	public function offsetExists($key) {
 		return array_key_exists($key, $this->arguments);
 	}
 
@@ -68,7 +68,7 @@ class ViewHelperArguments implements \ArrayAccess {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo change this (what?)
 	 */
-	function offsetGet($key) {
+	public function offsetGet($key) {
 		if (!array_key_exists($key, $this->arguments)) {
 			return NULL;
 		}
@@ -83,8 +83,8 @@ class ViewHelperArguments implements \ArrayAccess {
 	 * @param object $value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	function offsetSet($name, $value) {
-		throw new \F3\Fluid\RuntimeException('Tried to set argument "' . $name . '", but setting arguments is forbidden.', 1236080693);
+	public function offsetSet($name, $value) {
+		throw new \F3\Fluid\Core\RuntimeException('Tried to set argument "' . $name . '", but setting arguments is forbidden.', 1236080693);
 	}
 
 	/**
@@ -93,8 +93,8 @@ class ViewHelperArguments implements \ArrayAccess {
 	 * @param string $name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	function offsetUnset($name) {
-		throw new \F3\Fluid\RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.', 1236080702);
+	public function offsetUnset($name) {
+		throw new \F3\Fluid\Core\RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.', 1236080702);
 	}
 }
 ?>
