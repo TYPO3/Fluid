@@ -15,8 +15,6 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
-require_once(__DIR__ . '/Fixtures/TestViewHelper.php');
-
 /**
  * @package Fluid
  * @subpackage Tests
@@ -35,19 +33,62 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function registeredArgumentsAreReturnedCorrectly() {
+	public function argumentsCanBeRegistered() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render'), array(), '', FALSE);
+
 		$name = "This is a name";
 		$description = "Example desc";
 		$type = "string";
-		$isOptional = TRUE;
-		$expected = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isOptional);
-		
-		$viewHelper = new \F3\Fluid\TestViewHelper($name, $type, $description, $isOptional);
-		$viewHelper->initializeArguments();
-		$this->assertEquals($viewHelper->getArgumentDefinitions(), array($expected), 'Argument definitions not returned correctly.');
+		$isRequired = TRUE;
+		$expected = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isRequired);
+
+		$viewHelper->_call('registerArgument', $name, $type, $isRequired, $description);
+		$this->assertEquals($viewHelper->prepareArguments(), array($name => $expected), 'Argument definitions not returned correctly.');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function prepareArgumentsCallsInitializeArguments() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'initializeArguments'), array(), '', FALSE);
+
+		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
+		$viewHelper->expects($this->once())->method('initializeArguments');
+
+		$viewHelper->prepareArguments();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function validateArgumentsCallsPrepareArguments() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
+		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array()));
+
+		$viewHelper->validateArguments();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function validateArgumentsCallsTheRightValidators() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array('test' => 'Value of argument'));
+
+		$validatorResolver = $this->getMock('F3\FLOW3\Validation\ValidatorResolver', array('getValidator'), array(), '', FALSE);
+		$validatorResolver->expects($this->once())->method('getValidator')->with('string')->will($this->returnValue(new \F3\FLOW3\Validation\Validator\TextValidator()));
+
+		$viewHelper->injectValidatorResolver($validatorResolver);
+
+		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array(
+			'test' => new \F3\Fluid\Core\ArgumentDefinition("test", "string", FALSE, "documentation")
+		)));
+
+		$viewHelper->validateArguments();
 	}
 }
-
-
-
 ?>

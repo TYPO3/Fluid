@@ -57,6 +57,22 @@ abstract class AbstractViewHelper {
 	public $variableContainer;
 
 	/**
+	 * Validator resolver
+	 * @var \F3\FLOW3\Validation\ValidatorResolver
+	 */
+	protected $validatorResolver;
+
+	/**
+	 * Inject a validator resolver
+	 * @param \F3\FLOW3\Validation\ValidatorResolver $validatorResolver Validator Resolver
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function injectValidatorResolver(\F3\FLOW3\Validation\ValidatorResolver $validatorResolver) {
+		$this->validatorResolver = $validatorResolver;
+	}
+
+	/**
 	 * Register a new argument. Call this method from your ViewHelper subclass
 	 * inside the initializeArguments() method.
 	 *
@@ -69,19 +85,8 @@ abstract class AbstractViewHelper {
 	 * @todo Component manager usage!
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE) {
-		$this->argumentDefinitions[] = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $required);
+		$this->argumentDefinitions[$name] = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $required);
 		return $this;
-	}
-
-	/**
-	 * Get all argument definitions. Used by the framework to get a list of all
-	 * arguments registered
-	 *
-	 * @return array An Array of \F3\Fluid\Core\ArgumentDefinition objects
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function getArgumentDefinitions() {
-		return $this->argumentDefinitions;
 	}
 
 	/**
@@ -91,6 +96,7 @@ abstract class AbstractViewHelper {
 	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $node View Helper node to be set.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	final public function setViewHelperNode(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
@@ -108,13 +114,56 @@ abstract class AbstractViewHelper {
 	}
 
 	/**
+	 * Initialize all arguments and return them
+	 *
+	 * @return array Array of F3\Fluid\Core\ArgumentDefinition instances.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function prepareArguments() {
+		$this->initializeArguments();
+		return $this->argumentDefinitions;
+	}
+
+	/**
+	 * Validate arguments, and throw exception if arguments do not validate.
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function validateArguments() {
+		$argumentDefinitions = $this->prepareArguments();
+		foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
+			if ($this->arguments->offsetExists($argumentName)) {
+				$type = $registeredArgument->getType();
+				if ($type === 'array') {
+					if (!is_array($this->arguments[$argumentName])) {
+						throw new \F3\Fluid\Core\RuntimeException('An argument "' . $argumentName . '" was registered with type array, but it is no array.', 1237900529);
+					}
+				} else {
+					$validator = $this->validatorResolver->getValidator($type);
+					if (is_null($validator)) {
+						throw new \F3\Fluid\Core\RuntimeException('No validator found for argument name "' . $argumentName . '" with type "' . $type . '".', 1237900534);
+					}
+					$errors = new \F3\FLOW3\Validation\Errors();
+
+					if (!$validator->isValid($this->arguments[$argumentName], $errors)) {
+						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" FAILED.', 1237900686);
+					}
+				}
+			}
+		}
+	}
+
+	/**
 	 * Initialize all arguments. You need to override this method and call
 	 * $this->registerArgument(...) inside this method, to register all your arguments.
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	abstract public function initializeArguments();
+	public function initializeArguments() {
+	}
 
 	/**
 	 * Render method you need to implement for your custom view helper.

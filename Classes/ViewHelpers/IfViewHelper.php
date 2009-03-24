@@ -82,7 +82,7 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('condition', 'string', 'View helper condition', TRUE);
+		$this->registerArgument('condition', 'Raw', 'View helper condition', TRUE);
 	}
 
 	/**

@@ -89,13 +89,13 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @todo Component manager
 	 */
 	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
+		$this->variableContainer = $variableContainer;
+
 		$objectFactory = $variableContainer->getObjectFactory();
 		$viewHelper = $objectFactory->create($this->viewHelperClassName);
 
-		$viewHelper->initializeArguments();
-
-		$this->variableContainer = $variableContainer;
 		$contextVariables = $variableContainer->getAllIdentifiers();
+
 		$evaluatedArguments = array();
 		foreach ($this->arguments as $argumentName => $argumentValue) {
 			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
@@ -109,6 +109,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			$viewHelper->setChildNodes($this->childNodes);
 		}
 
+		$viewHelper->validateArguments();
 		$out = $viewHelper->render();
 
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {

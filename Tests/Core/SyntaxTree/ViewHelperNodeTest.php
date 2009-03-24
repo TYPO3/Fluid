@@ -58,10 +58,10 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function initializeArgumentsIsCalledByViewHelperNode() {
+	public function validateArgumentsIsCalledByViewHelperNode() {
 		$stubViewHelper = $this->getMock('F3\Fluid\Core\AbstractViewHelper');
 		$stubViewHelper->expects($this->once())
-		               ->method('initializeArguments');
+		               ->method('validateArguments');
 
 		$mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
 		$mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\Core\AbstractViewHelper')->will($this->returnValue($stubViewHelper));

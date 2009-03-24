@@ -293,7 +293,12 @@ class TemplateParser {
 		}
 
 		$argumentsObjectTree = $this->parseArguments($arguments);
-		$viewHelperName = $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier);
+		$viewHelperName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
+
+		$viewHelper = $this->objectFactory->create($viewHelperName);
+		$expectedViewHelperArguments = $viewHelper->prepareArguments();
+		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $argumentsObjectTree);
+		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $argumentsObjectTree);
 
 		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\ViewHelperNode', $viewHelperName, $argumentsObjectTree);
 
@@ -310,6 +315,42 @@ class TemplateParser {
 	}
 
 	/**
+	 * Throw a ParsingException if there are arguments which were not registered before.
+	 *
+	 * @param array $expectedArguments Array of F3\Fluid\Core\ArgumentDefinition of all expected arguments
+	 * @param array $actualArguments Actual arguments
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function abortIfUnregisteredArgumentsExist($expectedArguments, $actualArguments) {
+		$expectedArgumentNames = array();
+		foreach ($expectedArguments as $expectedArgument) {
+			$expectedArgumentNames[] = $expectedArgument->getName();
+		}
+
+		foreach ($actualArguments as $argumentName => $v) {
+			if (!in_array($argumentName, $expectedArgumentNames)) {
+				throw new \F3\Fluid\Core\ParsingException('Argument "' . $argumentName . '" was not registered.', 1237823695);
+			}
+		}
+	}
+
+	/**
+	 * Throw a ParsingException if required arguments are missing
+	 *
+	 * @param array $expectedArguments Array of F3\Fluid\Core\ArgumentDefinition of all expected arguments
+	 * @param array $actualArguments Actual arguments
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments) {
+		$actualArgumentNames = array_keys($actualArguments);
+		foreach ($expectedArguments as $expectedArgument) {
+			if ($expectedArgument->isRequired() && !in_array($expectedArgument->getName(), $actualArgumentNames)) {
+				throw new \F3\Fluid\Core\ParsingException('Required argument "' . $expectedArgument->getName() . '" was not supplied.', 1237823699);
+			}
+		}
+	}
+
+	/**
 	 * Resolve a view helper.
 	 *
 	 * @param string $namespaceIdentifier Namespace identifier for the view helper.
@@ -317,7 +358,7 @@ class TemplateParser {
 	 * @return array An Array where the first argument is the object to call the method on, and the second argument is the method name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolveViewHelper($namespaceIdentifier, $methodIdentifier) {
+	protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier) {
 		$explodedViewHelperName = explode('.', $methodIdentifier);
 		$methodName = '';
 		$className = '';
@@ -352,8 +393,8 @@ class TemplateParser {
 		if (!($lastStackElement instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode)) {
 			throw new \F3\Fluid\Core\ParsingException('You closed a templating tag which you never opened!', 1224485838);
 		}
-		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier)) {
-			throw new \F3\Fluid\Core\ParsingException('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelper($namespaceIdentifier, $methodIdentifier), 1224485398);
+		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier)) {
+			throw new \F3\Fluid\Core\ParsingException('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier), 1224485398);
 		}
 	}
 

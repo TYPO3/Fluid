@@ -270,7 +270,20 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
+	 * Test for CDATA support
+	 *
 	 * @test
+	 * @expectedException F3\Fluid\Core\ParsingException
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture13ReturnsCorrectlyRenderedResult() {
+		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture13_mandatoryInformation.html', FILE_TEXT);
+
+		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
+	}
+
+	/**
+	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function postParseFacetIsCalledOnParse() {
@@ -280,6 +293,73 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
 		$templateTree = $templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals(\F3\Fluid\PostParseFacetViewHelper::$wasCalled, TRUE, 'PostParse was not called!');
+	}
+
+	/**
+	 * @test
+	 * @expectedException F3\Fluid\Core\ParsingException
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function abortIfUnregisteredArgumentsExist() {
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$expectedArguments = array(
+			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', TRUE),
+			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', TRUE)
+		);
+		$actualArguments = array(
+			'name1' => 'bla',
+			'name4' => 'bla'
+		);
+		$mockTemplateParser->_call('abortIfUnregisteredArgumentsExist', $expectedArguments, $actualArguments);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function makeSureThatAbortIfUnregisteredArgumentsExistDoesNotThrowExceptionIfEverythingIsOk() {
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$expectedArguments = array(
+			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', TRUE),
+			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', TRUE)
+		);
+		$actualArguments = array(
+			'name1' => 'bla'
+		);
+		$mockTemplateParser->_call('abortIfUnregisteredArgumentsExist', $expectedArguments, $actualArguments);
+	}
+
+	/**
+	 * @test
+	 * @expectedException F3\Fluid\Core\ParsingException
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function abortIfRequiredArgumentsAreMissingShouldThrowExceptionIfRequiredArgumentIsMissing() {
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$expectedArguments = array(
+			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', TRUE),
+			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', FALSE)
+		);
+		$actualArguments = array(
+			'name2' => 'bla'
+		);
+		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function abortIfRequiredArgumentsAreMissingShouldNotThrowExceptionIfRequiredArgumentIsNotMissing() {
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$expectedArguments = array(
+			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', FALSE),
+			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', FALSE)
+		);
+		$actualArguments = array(
+			'name2' => 'bla'
+		);
+		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
 	}
 }
 
