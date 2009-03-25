@@ -539,7 +539,7 @@
       <para>Now, the TagBasedViewHelper introduces two more methods you can
       use inside <code>initializeArguments()</code>:<itemizedlist>
           <listitem>
-            <para><code>registerTagAttribute($name, $description,
+            <para><code>registerTagAttribute($name, $type, $description,
             $required)</code>: Use this method to register an attribute which
             should be directly added to the tag</para>
           </listitem>

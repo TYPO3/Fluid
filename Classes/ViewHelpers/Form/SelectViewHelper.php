@@ -65,8 +65,8 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 */
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
-		$this->registerTagAttribute('multiple', 'if TRUE, multiple select field');
-		$this->registerTagAttribute('size', 'Size of input field');
+		$this->registerTagAttribute('multiple', 'string', 'if TRUE, multiple select field');
+		$this->registerTagAttribute('size', 'string', 'Size of input field');
 		$this->registerArgument('options', 'array', 'Associative array with internal IDs as key, and the values are displayed in the select box', FALSE);
 		$this->registerArgument('optionKey', 'string', 'If specified, will call the appropriate getter on each object to determine the key.', FALSE);
 		$this->registerArgument('optionValue', 'string', 'If specified, will call the appropriate getter on each object to determine the value.', FALSE);

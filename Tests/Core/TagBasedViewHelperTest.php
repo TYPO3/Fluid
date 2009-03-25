@@ -40,7 +40,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function oneTagAttributeIsRenderedCorrectly() {
-		$this->viewHelper->registerTagAttribute('x', 'Description', FALSE);
+		$this->viewHelper->registerTagAttribute('x', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('x' => 'Hallo'));
 		$expected = 'x="Hallo"';
 

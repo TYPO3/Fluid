@@ -33,8 +33,8 @@ class TestTagBasedViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	/**
 	 * Check tag attribute registration
 	 */
-	public function registerTagAttribute($name, $description, $required = FALSE) {
-		parent::registerTagAttribute($name, $description, $required);
+	public function registerTagAttribute($name, $type, $description, $required = FALSE) {
+		parent::registerTagAttribute($name, $type, $description, $required);
 	}
 
 	public function initializeArguments() {
