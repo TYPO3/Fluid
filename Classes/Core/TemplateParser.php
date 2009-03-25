@@ -31,14 +31,14 @@ namespace F3\Fluid\Core;
  */
 class TemplateParser {
 
-	const SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
+	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
 
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
+	public static $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
 		(
 			(?: <\/?                                      # Start dynamic tags
 					(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)     # A tag consists of the namespace prefix and word characters
@@ -57,23 +57,23 @@ class TemplateParser {
 				<!\[CDATA\[.*?\]\]>
 			)
 		)/xs';
-	const SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
-	const SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
-	const SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
+	public static $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
+	public static $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+	public static $SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 
 	/**
 	 * This pattern detects CDATA sections and outputs the text between opening and closing CDATA.
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SCAN_PATTERN_CDATA = '/<!\[CDATA\[(.*?)\]\]>/s';
+	public static $SCAN_PATTERN_CDATA = '/<!\[CDATA\[(.*?)\]\]>/s';
 
 	/**
 	 * Pattern which splits the shorthand syntax into different tokens. The "shorthand syntax" is everything like {...}
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SPLIT_PATTERN_SHORTHANDSYNTAX = '/
+	public static $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
 		(
 			{                                # Start of shorthand syntax
 				(?:                          # Shorthand syntax is either composed of...
@@ -92,7 +92,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/{(?P<Object>[a-zA-Z0-9\-_.]+)}/';
+	public static $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/{(?P<Object>[a-zA-Z0-9\-_.]+)}/';
 
 	/**
 	 * Pattern which detects the array/object syntax like in JavaScript, so it detects strings like:
@@ -102,7 +102,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/
+	public static $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/
 		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
 			{                                           # Each array needs to start with {
 				(?P<Array>                              # Start submatch
@@ -126,7 +126,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	const SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
+	public static $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
 		(?P<ArrayPart>                                             # Start submatch
 			(?P<Key>[a-zA-Z0-9\-_]+)                               # The keys of the array
 			\s*:\s*                                                   # Key|Value delimiter :
@@ -210,7 +210,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function extractNamespaceDefinitions($templateString) {
-		if (preg_match_all(self::SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matchedVariables) > 0) {
+		if (preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matchedVariables) > 0) {
 			foreach ($matchedVariables[0] as $index => $tmp) {
 				$namespaceIdentifier = $matchedVariables[1][$index];
 				$fullyQualifiedNamespace = $matchedVariables[2][$index];
@@ -220,7 +220,7 @@ class TemplateParser {
 				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
 			}
 
-			$templateString = preg_replace(self::SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
+			$templateString = preg_replace(self::$SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
 		}
 		return $templateString;
 	}
@@ -233,7 +233,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function splitTemplateAtDynamicTags($templateString) {
-		$regularExpression = $this->prepareTemplateRegularExpression(self::SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
+		$regularExpression = $this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
 		return preg_split($regularExpression, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	}
 
@@ -245,8 +245,8 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildMainObjectTree($splittedTemplate) {
-		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
-		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
+		$regularExpression_viewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
+		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 
 		$state = $this->objectFactory->create('F3\Fluid\Core\ParsingState');
 		$rootNode = $this->objectFactory->create('F3\Fluid\Core\SyntaxTree\RootNode');
@@ -254,7 +254,7 @@ class TemplateParser {
 		$state->pushNodeToStack($rootNode);
 
 		foreach ($splittedTemplate as $templateElement) {
-			if (preg_match(self::SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
+			if (preg_match(self::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->handler_text($state, $matchedVariables[1]);
 			} elseif (preg_match($regularExpression_viewHelperTag, $templateElement, $matchedVariables) > 0) {
 				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
@@ -423,7 +423,7 @@ class TemplateParser {
 	 */
 	protected function parseArguments($argumentsString) {
 		$argumentsObjectTree = array();
-		if (preg_match_all(self::SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
+		if (preg_match_all(self::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
 				if (!array_key_exists('ValueSingleQuoted', $singleMatch)) $singleMatch['ValueSingleQuoted'] = '';
@@ -493,11 +493,11 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_textAndShorthandSyntax(\F3\Fluid\Core\ParsingState $state, $text) {
-		$sections = preg_split(self::SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		$sections = preg_split(self::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
-			if (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
+			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 				$this->handler_objectAccessor($state, $matchedVariables['Object']);
-			} elseif (preg_match(self::SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
+			} elseif (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
 				$this->handler_array($state, $matchedVariables['Array']);
 			} else {
 				$this->handler_text($state, $section);
@@ -532,7 +532,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_array_recursively($arrayText) {
-		if (preg_match_all(self::SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER) > 0) {
+		if (preg_match_all(self::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER) > 0) {
 			$arrayToBuild = array();
 			foreach ($matches as $singleMatch) {
 				$arrayKey = $singleMatch['Key'];
