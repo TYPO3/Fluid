@@ -82,6 +82,13 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$stubViewHelper = $this->getMock('F3\Fluid\Core\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments'));
 
 		$stubViewHelper->expects($this->once())
+		               ->method('prepareArguments')->will($this->returnValue(
+		               	array(
+		               		'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'string', 'Hallo', TRUE),
+		               		'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'string', 'Hallo', TRUE)
+		               	)
+		               ));
+		$stubViewHelper->expects($this->once())
 		               ->method('render')->with('a', 'b');
 
 		$mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
@@ -91,8 +98,8 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$variableContainer->injectObjectFactory($mockObjectFactory);
 
 		$viewHelperNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\Core\AbstractViewHelper', array(
-			'param1' => new \F3\Fluid\Core\SyntaxTree\TextNode('a'),
 			'param2' => new \F3\Fluid\Core\SyntaxTree\TextNode('b'),
+			'param1' => new \F3\Fluid\Core\SyntaxTree\TextNode('a'),
 		));
 
 		$viewHelperNode->render($variableContainer);

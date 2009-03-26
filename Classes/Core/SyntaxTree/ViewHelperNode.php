@@ -93,12 +93,18 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
 		$objectFactory = $variableContainer->getObjectFactory();
 		$viewHelper = $objectFactory->create($this->viewHelperClassName);
+		$argumentDefinitions = $viewHelper->prepareArguments();
 
 		$contextVariables = $variableContainer->getAllIdentifiers();
 
 		$evaluatedArguments = array();
-		foreach ($this->arguments as $argumentName => $argumentValue) {
-			$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
+		if (count($argumentDefinitions)) {
+			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+				if (isset($this->arguments[$argumentName])) {
+					$argumentValue = $this->arguments[$argumentName];
+					$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
+				}
+			}
 		}
 
 		$viewHelper->arguments = $objectFactory->create('F3\Fluid\Core\ViewHelperArguments', $evaluatedArguments);
