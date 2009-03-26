@@ -64,9 +64,9 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 
 	/**
 	 * Reflection service
-	 * @var \F3\FLOW3\Reflection\Service
+	 * @var \F3\Fluid\Service\ParameterReflectionService
 	 */
-	protected $reflectionService;
+	protected $parameterReflectionService;
 
 	/**
 	 * Inject a validator resolver
@@ -80,12 +80,12 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 
 	/**
 	 * Inject a Reflection service
-	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
+	 * @param \F3\Fluid\Service\ParameterReflectionService $parameterReflectionService Reflection service
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
-	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
-		$this->reflectionService = $reflectionService;
+	public function injectParameterReflectionService(\F3\Fluid\Service\ParameterReflectionService $parameterReflectionService) {
+		$this->parameterReflectionService = $parameterReflectionService;
 	}
 
 	/**
@@ -149,34 +149,10 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	private function registerRenderMethodArguments() {
-		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
 
-		$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
-
-		$paramAnnotations = array();
-		if (isset($methodTags['param'])) {
-			$paramAnnotations = $methodTags['param'];
-		}
-
-		$i = 0;
-		foreach ($methodParameters as $parameterName => $parameterInfo) {
-			$dataType = 'Text';
-
-			if (isset($parameterInfo['type'])) {
-				$dataType = $parameterInfo['type'];
-			} elseif ($parameterInfo['array']) {
-				$dataType = 'array';
-			}
-
-			$description = '';
-			if (isset($paramAnnotations[$i])) {
-				$explodedAnnotation = explode(' ', $paramAnnotations[$i]);
-				array_shift($explodedAnnotation);
-				array_shift($explodedAnnotation);
-				$description = implode(' ', $explodedAnnotation);
-			}
-			$this->registerArgument($parameterName, $dataType, $description, ($parameterInfo['optional'] === FALSE));
-			$i++;
+		$parameters = $this->parameterReflectionService->getMethodParameters(get_class($this), 'render');
+		foreach ($parameters as $parameter) {
+			$this->registerArgument($parameter['name'], $parameter['dataType'], $parameter['description'], $parameter['required']);
 		}
 	}
 

@@ -110,7 +110,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		}
 
 		$viewHelper->validateArguments();
-		$out = $viewHelper->render();
+		$out = call_user_func_array(array($viewHelper, 'render'), $evaluatedArguments);
 
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
 			$endContextVariables = $variableContainer->getAllIdentifiers();

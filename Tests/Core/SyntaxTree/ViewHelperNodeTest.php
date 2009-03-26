@@ -73,6 +73,30 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 		$viewHelperNode->render($variableContainer);
 	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderMethodIsCalledWithCorrectArguments() {
+		$stubViewHelper = $this->getMock('F3\Fluid\Core\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments'));
+
+		$stubViewHelper->expects($this->once())
+		               ->method('render')->with('a', 'b');
+
+		$mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
+		$mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\Core\AbstractViewHelper')->will($this->returnValue($stubViewHelper));
+
+		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
+		$variableContainer->injectObjectFactory($mockObjectFactory);
+
+		$viewHelperNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\Core\AbstractViewHelper', array(
+			'param1' => new \F3\Fluid\Core\SyntaxTree\TextNode('a'),
+			'param2' => new \F3\Fluid\Core\SyntaxTree\TextNode('b'),
+		));
+
+		$viewHelperNode->render($variableContainer);
+	}
 }
 
 
