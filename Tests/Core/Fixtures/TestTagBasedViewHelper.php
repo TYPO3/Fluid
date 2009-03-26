@@ -38,6 +38,7 @@ class TestTagBasedViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	}
 
 	public function initializeArguments() {
+		$this->registerUniversalTagAttributes();
 	}
 
 	/**

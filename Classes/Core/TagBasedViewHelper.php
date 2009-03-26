@@ -88,6 +88,8 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 		$this->registerTagAttribute('lang', 'string', 'Language for this element. Use short names specified in RFC 1766');
 		$this->registerTagAttribute('style', 'string', 'Individual CSS styles for this element');
 		$this->registerTagAttribute('title', 'string', 'Tooltip text of element');
+		$this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
+		$this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
 	}
 
 	/**

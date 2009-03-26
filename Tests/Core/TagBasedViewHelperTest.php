@@ -59,6 +59,19 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelper->arguments = $arguments;
 		$this->assertEquals($expected, $this->viewHelper->render(), 'An additional tag attribute was not rendered correctly.');
 	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function standardTagAttributesAreRegistered() {
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('class' => 'classAttribute', 'dir' => 'dirAttribute', 'id' => 'idAttribute', 'lang' => 'langAttribute', 'style' => 'styleAttribute', 'title' => 'titleAttribute', 'accesskey' => 'accesskeyAttribute', 'tabindex' => 'tabindexAttribute'));
+		$expected = 'class="classAttribute" dir="dirAttribute" id="idAttribute" lang="langAttribute" style="styleAttribute" title="titleAttribute" accesskey="accesskeyAttribute" tabindex="tabindexAttribute"';
+
+		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->initializeArguments();
+		$this->assertEquals($expected, $this->viewHelper->render());
+	}
 }
 
 
