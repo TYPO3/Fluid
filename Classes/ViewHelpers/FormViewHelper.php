@@ -65,7 +65,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$this->registerArgument('controller', 'string', 'name of controller to call the current action on');
 		$this->registerArgument('package', 'string', 'name of package to call');
 		$this->registerArgument('subpackage', 'string', 'name of subpackage to call');
-		$this->registerArgument('object', 'object', 'Object to use for the form. Use in conjunction with the "property" attribute on the sub tags.');
+		$this->registerArgument('object', 'Raw', 'Object to use for the form. Use in conjunction with the "property" attribute on the sub tags.');
 		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended to the action URI.');
 
 		$this->registerTagAttribute('enctype', 'string', 'MIME type with which the form is submitted');
@@ -90,14 +90,17 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
+		$hiddenIdentityFields = '';
 		if ($this->arguments['object']) {
 			$this->variableContainer->add('__formObject', $this->arguments['object']);
+			$hiddenIdentityFields = $this->generateHiddenIdentityFields($this->arguments['object']);
 		}
 		if ($this->arguments['name']) {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
 		}
 
 		$out = '<form action="' . $formActionUrl . '" ' . $this->renderTagAttributes() . '>';
+		$out .= $hiddenIdentityFields;
 		$out .= $this->renderChildren();
 		$out .= '</form>';
 
@@ -109,6 +112,20 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		}
 
 		return $out;
+	}
+
+	/**
+	 *			// <![CDATA[<f:form.hidden name="updatedBlog[__identity][name]" value="{blog.name}" />]]>
+	 *
+	 */
+	protected function generateHiddenIdentityFields($object) {
+		if ($this->persistenceManager->getBackend()->isNewObject($object)) return '';
+/*
+		$classSchema = $this->persistenceManager->getClassSchema($object);
+		foreach (array_keys($classSchema->getIdentityProperties()) as $propertyName) {
+			$propertyValue = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
+		}
+*/
 	}
 }
 

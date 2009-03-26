@@ -32,35 +32,35 @@ require_once(__DIR__ . '/../Fixtures/SomeEmptyClass.php');
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectAccessorWorksWithStrings() {
 		$expected = 'ExpectedString';
-		
+
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode("exampleObject");
 		$context = new \F3\Fluid\Core\VariableContainer(array('exampleObject' => $expected));
 
 		$actual = $objectAccessorNode->evaluate($context);
 		$this->assertEquals($expected, $actual, 'ObjectAccessorNode did not work for string input.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectAccessorWorksWithNestedObjects() {
 		$exampleObject = new \F3\Fluid\SomeEmptyClass("Hallo");
-		
+
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode("exampleObject.subproperty");
 		$context = new \F3\Fluid\Core\VariableContainer(array('exampleObject' => $exampleObject));
-		
+
 		$actual = $objectAccessorNode->evaluate($context);
 		$this->assertEquals("Hallo", $actual, 'ObjectAccessorNode did not work for calling getters.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -71,11 +71,11 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$exampleObject->publicVariable = $expected;
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode("exampleObject.publicVariable");
 		$context = new \F3\Fluid\Core\VariableContainer(array('exampleObject' => $exampleObject));
-		
+
 		$actual = $objectAccessorNode->evaluate($context);
 		$this->assertEquals($expected, $actual, 'ObjectAccessorNode did not work for direct properties.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -85,13 +85,13 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$exampleArray = array('key' => array('key2' => $expected));
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('variable.key.key2');
 		$context = new \F3\Fluid\Core\VariableContainer(array('variable' => $exampleArray));
-		
+
 		$actual = $objectAccessorNode->evaluate($context);
 		$this->assertEquals($expected, $actual, 'ObjectAccessorNode did not traverse associative arrays.');
 	}
-	
+
 	/**
-	 * @test
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @expectedException \F3\Fluid\Core\RuntimeException
 	 */
@@ -101,28 +101,28 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$exampleArray = array('key' => array('key2' => $expected));
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('variable.key.key3');
 		$context = new \F3\Fluid\Core\VariableContainer(array('variable' => $exampleArray));
-		
+
 		$actual = $objectAccessorNode->evaluate($context);
 	}
-	
+
 	/**
-	 * @test
+	 * test
 	 * @expectedException \F3\Fluid\Core\RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectAccessorThrowsErrorIfPropertyDoesNotExist() {
 		$this->markTestIncomplete('Objects accessors fail silently so far. We need some context dependencies here.');
-		
+
 		$expected = 'This is a test';
 		$exampleObject = new \F3\Fluid\SomeEmptyClass("Hallo");
 		$exampleObject->publicVariable = $expected;
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode("exampleObject.publicVariableNotExisting");
 		$context = new \F3\Fluid\Core\VariableContainer(array('exampleObject' => $exampleObject));
-		
+
 		$actual = $objectAccessorNode->evaluate($context);
 	}
-	
-	
+
+
 }
 
 
