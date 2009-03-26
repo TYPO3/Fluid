@@ -30,7 +30,7 @@ namespace F3\Fluid\Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-abstract class AbstractViewHelper {
+abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface {
 
 	/**
 	 * Stores all \F3\Fluid\ArgumentDefinition instances

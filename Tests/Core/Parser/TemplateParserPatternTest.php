@@ -35,7 +35,7 @@ class Test extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_NAMESPACEDECLARATION() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION;
+		$pattern = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), \F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION);
 		$this->assertEquals(preg_match($pattern, '{namespace f3=F3\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
 		$this->assertEquals(preg_match($pattern, '{namespace f3=F3\Bla\Blubb }'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (2).');
 		$this->assertEquals(preg_match($pattern, '    {namespace f3 = F3\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (3).');

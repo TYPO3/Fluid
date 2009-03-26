@@ -31,7 +31,7 @@ namespace F3\Fluid\Core;
  */
 class TemplateParser {
 
-	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(F3(?:\\\\\w+)+)\s*}/m';
+	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*((?:F3|Tx)(?:FLUID_NAMESPACE_SEPARATOR\w+)+)\s*}/m';
 
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
@@ -150,6 +150,15 @@ class TemplateParser {
 	 * @var \F3\FLOW3\Object\FactoryInterface
 	 */
 	protected $objectFactory;
+
+	/**
+	 * Constructor. Preprocesses the $SCAN_PATTERN_NAMESPACEDECLARATION by inserting the correct namespace separator.
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function __construct() {
+		self::$SCAN_PATTERN_NAMESPACEDECLARATION = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), self::$SCAN_PATTERN_NAMESPACEDECLARATION);
+	}
 
 	/**
 	 * Inject object factory
@@ -364,14 +373,14 @@ class TemplateParser {
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
 			$className = ucfirst($explodedViewHelperName[0]);
-			$className .= '\\';
+			$className .= \F3\Fluid\Fluid::NAMESPACE_SEPARATOR;
 			$className .= ucfirst($explodedViewHelperName[1]);
 		} else {
 			$className = ucfirst($explodedViewHelperName[0]);
 		}
 		$className .= 'ViewHelper';
 
-		$name = $this->namespaces[$namespaceIdentifier] . '\\' . $className;
+		$name = $this->namespaces[$namespaceIdentifier] . \F3\Fluid\Fluid::NAMESPACE_SEPARATOR . $className;
 
 		return $name;
 	}
