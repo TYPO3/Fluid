@@ -63,6 +63,12 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	protected $validatorResolver;
 
 	/**
+	 * Reflection service
+	 * @var \F3\FLOW3\Reflection\Service
+	 */
+	protected $reflectionService;
+
+	/**
 	 * Inject a validator resolver
 	 * @param \F3\FLOW3\Validation\ValidatorResolver $validatorResolver Validator Resolver
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -70,6 +76,16 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 */
 	public function injectValidatorResolver(\F3\FLOW3\Validation\ValidatorResolver $validatorResolver) {
 		$this->validatorResolver = $validatorResolver;
+	}
+
+	/**
+	 * Inject a Reflection service
+	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
+		$this->reflectionService = $reflectionService;
 	}
 
 	/**
@@ -121,8 +137,47 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @internal
 	 */
 	public function prepareArguments() {
+		$this->registerRenderMethodArguments();
 		$this->initializeArguments();
 		return $this->argumentDefinitions;
+	}
+
+	/**
+	 * Register method arguments for "render" by analysing the doc comment above.
+	 *
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	private function registerRenderMethodArguments() {
+		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
+
+		$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
+
+		$paramAnnotations = array();
+		if (isset($methodTags['param'])) {
+			$paramAnnotations = $methodTags['param'];
+		}
+
+		$i = 0;
+		foreach ($methodParameters as $parameterName => $parameterInfo) {
+			$dataType = 'Text';
+
+			if (isset($parameterInfo['type'])) {
+				$dataType = $parameterInfo['type'];
+			} elseif ($parameterInfo['array']) {
+				$dataType = 'array';
+			}
+
+			$description = '';
+			if (isset($paramAnnotations[$i])) {
+				$explodedAnnotation = explode(' ', $paramAnnotations[$i]);
+				array_shift($explodedAnnotation);
+				array_shift($explodedAnnotation);
+				$description = implode(' ', $explodedAnnotation);
+			}
+			$this->registerArgument($parameterName, $dataType, $description, ($parameterInfo['optional'] === FALSE));
+			$i++;
+		}
 	}
 
 	/**
@@ -133,6 +188,8 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 */
 	public function validateArguments() {
 		$argumentDefinitions = $this->prepareArguments();
+		if (!count($argumentDefinitions)) return;
+
 		foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
 			if ($this->arguments->offsetExists($argumentName)) {
 				$type = $registeredArgument->getType();
@@ -174,7 +231,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @return string rendered string, view helper specific
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	abstract public function render();
+	//abstract public function render();
 
 }
 

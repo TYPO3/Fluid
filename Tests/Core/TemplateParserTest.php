@@ -60,9 +60,9 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function parseExtractsNamespacesCorrectly() {
-		$this->templateParser->parse("{namespace f3=F3\Fluid\Blablubb} \{namespace f4=F7\Rocks} {namespace f4=F3\Rocks}");
+		$this->templateParser->parse(" \{namespace f4=F7\Rocks} {namespace f4=F3\Rocks}");
 		$expected = array(
-			'f3' => 'F3\Fluid\Blablubb',
+			'f' => 'F3\Fluid\ViewHelpers',
 			'f4' => 'F3\Rocks'
 		);
 		$this->assertEquals($this->templateParser->getNamespaces(), $expected, 'Namespaces do not match.');

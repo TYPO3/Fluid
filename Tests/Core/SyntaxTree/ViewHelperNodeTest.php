@@ -38,7 +38,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	public function childNodeAccessFacetWorksAsExpected() {
 		$childNode = new \F3\Fluid\Core\SyntaxTree\TextNode("Hallo");
 
-		$stubViewHelper = $this->getMock('F3\Fluid\ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render'));
+		$stubViewHelper = $this->getMock('F3\Fluid\ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render', 'prepareArguments'));
 		$stubViewHelper->expects($this->once())
 		               ->method('setChildNodes')
 		               ->with($this->equalTo(array($childNode)));
@@ -59,7 +59,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function validateArgumentsIsCalledByViewHelperNode() {
-		$stubViewHelper = $this->getMock('F3\Fluid\Core\AbstractViewHelper');
+		$stubViewHelper = $this->getMock('F3\Fluid\Core\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments'));
 		$stubViewHelper->expects($this->once())
 		               ->method('validateArguments');
 

@@ -20,6 +20,9 @@ namespace F3\Fluid\Core;
  * @subpackage Tests
  * @version $Id$
  */
+
+include_once(__DIR__ . '/Fixtures/TestViewHelper.php');
+
 /**
  * Testcase for AbstractViewHelper
  *
@@ -35,6 +38,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function argumentsCanBeRegistered() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
 
 		$name = "This is a name";
 		$description = "Example desc";
@@ -52,6 +56,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function prepareArgumentsCallsInitializeArguments() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'initializeArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
 
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
 		$viewHelper->expects($this->once())->method('initializeArguments');
@@ -63,8 +68,35 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
+	public function prepareArgumentsRegistersAnnotationBasedArguments() {
+
+		$availableClassNames = array(
+			'F3\Fluid\Core\Fixtures\TestViewHelper',
+		);
+		$reflectionService = new \F3\FLOW3\Reflection\Service();
+		$reflectionService->setCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
+		$reflectionService->initialize($availableClassNames);
+
+		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
+		$viewHelper->injectReflectionService($reflectionService);
+
+		$expected = array(
+			'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'integer', 'P1 Stuff', TRUE),
+			'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'array', 'P2 Stuff', TRUE),
+			'param3' => new \F3\Fluid\Core\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE),
+		);
+
+		$this->assertEquals($expected, $viewHelper->prepareArguments(), 'Annotation based arguments were not registered.');
+
+	}
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function validateArgumentsCallsPrepareArguments() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
+
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
 		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array()));
 
@@ -77,6 +109,8 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function validateArgumentsCallsTheRightValidators() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
+
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array('test' => 'Value of argument'));
 
 		$validatorResolver = $this->getMock('F3\FLOW3\Validation\ValidatorResolver', array('getValidator'), array(), '', FALSE);

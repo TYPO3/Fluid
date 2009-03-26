@@ -144,7 +144,9 @@ class TemplateParser {
 	 * Namespace identifiers and their component name prefix (Associative array).
 	 * @var array
 	 */
-	protected $namespaces = array();
+	protected $namespaces = array(
+		'f' => 'F3\Fluid\ViewHelpers'
+	);
 
 	/**
 	 * @var \F3\FLOW3\Object\FactoryInterface
@@ -208,7 +210,9 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function initialize() {
-		$this->namespaces = array();
+		$this->namespaces = array(
+			'f' => 'F3\Fluid\ViewHelpers'
+		);
 	}
 
 	/**
