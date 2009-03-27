@@ -102,7 +102,9 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
-					$evaluatedArguments[$argumentName] = $argumentValue->evaluate($variableContainer);
+					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue->evaluate($variableContainer), $argumentDefinition->getType());
+				} else {
+					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 				}
 			}
 		}
@@ -125,6 +127,21 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);
 		}
 		return $out;
+	}
+
+	/**
+	 * Convert argument strings to their equivalents. Needed to handle strings with a boolean meaning.
+	 *
+	 * @param mixed $value Value to be converted
+	 * @param string $type Target type
+	 * @return mixed New value
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function convertArgumentValue($value, $type) {
+		if ($type == 'boolean' && is_string($value)) {
+			$value = (strtolower($value) === 'true' || $value === '1');
+		}
+		return $value;
 	}
 }
 

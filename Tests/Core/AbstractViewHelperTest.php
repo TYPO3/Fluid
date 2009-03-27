@@ -38,7 +38,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function argumentsCanBeRegistered() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render'), array(), '', FALSE);
-		$viewHelper->injectParameterReflectionService($this->objectManager->getObject('F3\Fluid\Service\ParameterReflectionService'));
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
 
 		$name = "This is a name";
 		$description = "Example desc";
@@ -56,7 +56,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function prepareArgumentsCallsInitializeArguments() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'initializeArguments'), array(), '', FALSE);
-		$viewHelper->injectParameterReflectionService($this->objectManager->getObject('F3\Fluid\Service\ParameterReflectionService'));
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
 
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
 		$viewHelper->expects($this->once())->method('initializeArguments');
@@ -77,16 +77,13 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 		$reflectionService->setCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
 		$reflectionService->initialize($availableClassNames);
 
-		$parameterReflectionService = new \F3\Fluid\Service\ParameterReflectionService();
-		$parameterReflectionService->injectReflectionService($reflectionService);
-
 		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
-		$viewHelper->injectParameterReflectionService($parameterReflectionService);
+		$viewHelper->injectReflectionService($reflectionService);
 
 		$expected = array(
 			'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'integer', 'P1 Stuff', TRUE),
 			'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'array', 'P2 Stuff', TRUE),
-			'param3' => new \F3\Fluid\Core\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE),
+			'param3' => new \F3\Fluid\Core\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE, 'default'),
 		);
 
 		$this->assertEquals($expected, $viewHelper->prepareArguments(), 'Annotation based arguments were not registered.');
@@ -98,7 +95,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function validateArgumentsCallsPrepareArguments() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-		$viewHelper->injectParameterReflectionService($this->objectManager->getObject('F3\Fluid\Service\ParameterReflectionService'));
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
 
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
 		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array()));
@@ -112,7 +109,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function validateArgumentsCallsTheRightValidators() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-		$viewHelper->injectParameterReflectionService($this->objectManager->getObject('F3\Fluid\Service\ParameterReflectionService'));
+		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\Service'));
 
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array('test' => 'Value of argument'));
 

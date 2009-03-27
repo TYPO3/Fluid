@@ -33,32 +33,19 @@ namespace F3\Fluid\ViewHelpers;
 class RenderViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * Initializes the arguments.
-	 *
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('section', 'string', 'Name of section to render. If used in a layout, renders a section of the main content file. If used inside a standard template, renders a section of the same file.', FALSE);
-		$this->registerArgument('partial', 'string', 'Reference to a partial.', FALSE);
-		$this->registerArgument('arguments', 'array', 'Arguments to pass to the partial', FALSE);
-	}
-
-	/**
 	 * Renders the content.
 	 *
+	 * @param string $section Name of section to render. If used in a layout, renders a section of the main content file. If used inside a standard template, renders a section of the same file.
+	 * @param string $partial Reference to a partial.
+	 * @param array $arguments Arguments to pass to the partial.
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function render() {
-		if ($this->arguments['partial']) {
-			$arguments = $this->arguments['arguments'];
-			if (!is_array($arguments)) {
-				$arguments = array();
-			}
-			return $this->variableContainer->get('view')->renderPartial($this->arguments['partial'], $this->arguments['section'], $arguments);
-		} elseif ($this->arguments['section']) {
-			return $this->variableContainer->get('view')->renderSection($this->arguments['section']);
+	public function render($section = '', $partial = '', $arguments = array()) {
+		if ($partial !== '') {
+			return $this->variableContainer->get('view')->renderPartial($partial, $section, $arguments);
+		} elseif ($section !== '') {
+			return $this->variableContainer->get('view')->renderSection($section);
 		}
 		return '';
 	}

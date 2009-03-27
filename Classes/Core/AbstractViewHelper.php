@@ -33,6 +33,12 @@ namespace F3\Fluid\Core;
 abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface {
 
 	/**
+	 * TRUE if arguments have already been initialized
+	 * @var boolean
+	 */
+	private $argumentsInitialized = FALSE;
+
+	/**
 	 * Stores all \F3\Fluid\ArgumentDefinition instances
 	 * @var array
 	 */
@@ -64,9 +70,9 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 
 	/**
 	 * Reflection service
-	 * @var \F3\Fluid\Service\ParameterReflectionService
+	 * @var \F3\FLOW3\Reflection\Service
 	 */
-	protected $parameterReflectionService;
+	protected $reflectionService;
 
 	/**
 	 * Inject a validator resolver
@@ -80,12 +86,12 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 
 	/**
 	 * Inject a Reflection service
-	 * @param \F3\Fluid\Service\ParameterReflectionService $parameterReflectionService Reflection service
+	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
-	public function injectParameterReflectionService(\F3\Fluid\Service\ParameterReflectionService $parameterReflectionService) {
-		$this->parameterReflectionService = $parameterReflectionService;
+	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
+		$this->reflectionService = $reflectionService;
 	}
 
 	/**
@@ -96,12 +102,13 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @param string $type Type of the argument
 	 * @param string $description Description of the argument
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
+	 * @param mixed $defaultValue Default value of argument
 	 * @return \F3\Fluid\Core\AbstractViewHelper $this, to allow chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Component manager usage!
 	 */
-	protected function registerArgument($name, $type, $description, $required = FALSE) {
-		$this->argumentDefinitions[$name] = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $required);
+	protected function registerArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
+		$this->argumentDefinitions[$name] = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $required, $defaultValue);
 		return $this;
 	}
 
@@ -137,8 +144,11 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @internal
 	 */
 	public function prepareArguments() {
-		$this->registerRenderMethodArguments();
-		$this->initializeArguments();
+		if (!$this->argumentsInitialized) {
+			$this->registerRenderMethodArguments();
+			$this->initializeArguments();
+			$this->argumentsInitialized = TRUE;
+		}
 		return $this->argumentDefinitions;
 	}
 
@@ -150,9 +160,40 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 */
 	private function registerRenderMethodArguments() {
 
-		$parameters = $this->parameterReflectionService->getMethodParameters(get_class($this), 'render');
-		foreach ($parameters as $parameter) {
-			$this->registerArgument($parameter['name'], $parameter['dataType'], $parameter['description'], $parameter['required']);
+		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
+
+		$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
+
+		$paramAnnotations = array();
+		if (isset($methodTags['param'])) {
+			$paramAnnotations = $methodTags['param'];
+		}
+
+		$i = 0;
+		if (!count($methodParameters)) return array();
+
+		$output = array();
+		foreach ($methodParameters as $parameterName => $parameterInfo) {
+			$dataType = 'Text';
+			if (isset($parameterInfo['type'])) {
+				$dataType = $parameterInfo['type'];
+			} elseif ($parameterInfo['array']) {
+				$dataType = 'array';
+			}
+
+			$description = '';
+			if (isset($paramAnnotations[$i])) {
+				$explodedAnnotation = explode(' ', $paramAnnotations[$i]);
+				array_shift($explodedAnnotation);
+				array_shift($explodedAnnotation);
+				$description = implode(' ', $explodedAnnotation);
+			}
+			$defaultValue = NULL;
+			if (isset($parameterInfo['defaultValue'])) {
+				$defaultValue = $parameterInfo['defaultValue'];
+			}
+			$this->registerArgument($parameterName, $dataType, $description, ($parameterInfo['optional'] === FALSE), $defaultValue);
+			$i++;
 		}
 	}
 
@@ -181,7 +222,8 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 					$errors = new \F3\FLOW3\Validation\Errors();
 
 					if (!$validator->isValid($this->arguments[$argumentName], $errors)) {
-						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED.', 1237900686);
+						var_dump($errors);
+						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED. Expected type: "' . $type . '"; Given: ' . gettype($this->arguments[$argumentName]), 1237900686);
 					}
 				}
 			}
