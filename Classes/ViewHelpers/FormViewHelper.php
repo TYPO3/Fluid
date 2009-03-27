@@ -55,6 +55,22 @@ namespace F3\Fluid\ViewHelpers;
 class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 	/**
+	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 */
+	protected $persistenceManager;
+
+	/**
+	 * Injects the Persistence Manager
+	 *
+	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
+	 * @return void
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
+		$this->persistenceManager = $persistenceManager;
+	}
+
+	/**
 	 * Initialize arguments.
 	 *
 	 * @return void
