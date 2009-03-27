@@ -210,6 +210,8 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 		foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
 			if ($this->arguments->offsetExists($argumentName)) {
 				$type = $registeredArgument->getType();
+				if ($this->arguments[$argumentName] === $registeredArgument->getDefaultValue()) continue;
+
 				if ($type === 'array') {
 					if (!is_array($this->arguments[$argumentName])) {
 						throw new \F3\Fluid\Core\RuntimeException('An argument "' . $argumentName . '" was registered with type array, but it is no array.', 1237900529);
@@ -222,7 +224,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 					$errors = new \F3\FLOW3\Validation\Errors();
 
 					if (!$validator->isValid($this->arguments[$argumentName], $errors)) {
-						var_dump($errors);
 						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED. Expected type: "' . $type . '"; Given: ' . gettype($this->arguments[$argumentName]), 1237900686);
 					}
 				}

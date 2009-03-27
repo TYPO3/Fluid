@@ -115,6 +115,10 @@ class ParsingState implements \F3\Fluid\Core\ParsedTemplateInterface {
 		return array_pop($this->nodeStack);
 	}
 
+	public function countNodeStack() {
+		return count($this->nodeStack);
+	}
+
 	/**
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *

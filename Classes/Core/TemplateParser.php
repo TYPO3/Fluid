@@ -285,6 +285,10 @@ class TemplateParser {
 				$this->handler_textAndShorthandSyntax($state, $templateElement);
 			}
 		}
+
+		if ($state->countNodeStack() !== 1) {
+			throw new \F3\Fluid\Core\ParsingException('Not all tags were closed!', 1238169398);
+		}
 		return $state;
 	}
 
