@@ -213,8 +213,8 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 				if ($this->arguments[$argumentName] === $registeredArgument->getDefaultValue()) continue;
 
 				if ($type === 'array') {
-					if (!is_array($this->arguments[$argumentName])) {
-						throw new \F3\Fluid\Core\RuntimeException('An argument "' . $argumentName . '" was registered with type array, but it is no array.', 1237900529);
+					if (!is_array($this->arguments[$argumentName]) && !$this->arguments[$argumentName] instanceof \ArrayAccess) {
+						throw new \F3\Fluid\Core\RuntimeException('The argument "' . $argumentName . '" was registered with type array, but is of type ' . gettype($this->arguments[$argumentName]), 1237900529);
 					}
 				} else {
 					$validator = $this->validatorResolver->getValidator($type);

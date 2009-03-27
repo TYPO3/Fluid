@@ -95,7 +95,12 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	public function render() {
 		$out = '';
 
-		if ($this->arguments['condition']) {
+		$conditionResult = ($this->arguments['condition'] == TRUE);
+		if (is_object($this->arguments['condition']) && $this->arguments['condition'] instanceof \Countable) {
+			$conditionResult = count($this->arguments['condition']) > 0;
+		}
+
+		if ($conditionResult === TRUE) {
 			foreach ($this->childNodes as $childNode) {
 				if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
 				    && $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper' ) {

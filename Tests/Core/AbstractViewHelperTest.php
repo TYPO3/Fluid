@@ -105,6 +105,18 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function validateArgumentsAcceptsAllObjectsImplemtingArrayAccessAsAnArray() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+
+		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array('test' => new \ArrayObject));
+		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array('test' => new \F3\Fluid\Core\ArgumentDefinition('test', 'array', FALSE, 'documentation'))));
+		$viewHelper->validateArguments();
+	}
+
+	/**
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function validateArgumentsCallsTheRightValidators() {
