@@ -3,16 +3,23 @@ declare(ENCODING = 'utf-8');
 namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script is part of the TYPO3 project - inspiring people to share!  *
+ * This script belongs to the FLOW3 package "Fluid".                      *
  *                                                                        *
- * TYPO3 is free software; you can redistribute it and/or modify it under *
- * the terms of the GNU General Public License version 2 as published by  *
- * the Free Software Foundation.                                          *
+ * It is free software; you can redistribute it and/or modify it under    *
+ * the terms of the GNU General Public License as published by the Free   *
+ * Software Foundation, either version 3 of the License, or (at your      *
+ * option) any later version.                                             *
  *                                                                        *
  * This script is distributed in the hope that it will be useful, but     *
  * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHAN-    *
  * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
  * Public License for more details.                                       *
+ *                                                                        *
+ * You should have received a copy of the GNU General Public License      *
+ * along with the script.                                                 *
+ * If not, see http://www.gnu.org/licenses/gpl.html                       *
+ *                                                                        *
+ * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
 /**
@@ -101,18 +108,16 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 */
 	public function render() {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-
 		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'GET' );
-
 		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
 		$hiddenIdentityFields = '';
-		if ($this->arguments['object']) {
-			$this->variableContainer->add('__formObject', $this->arguments['object']);
-			$hiddenIdentityFields = $this->generateHiddenIdentityFields($this->arguments['object']);
-		}
 		if ($this->arguments['name']) {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
+		}
+		if ($this->arguments['object']) {
+			$this->variableContainer->add('__formObject', $this->arguments['object']);
+			$hiddenIdentityFields = $this->renderHiddenIdentityField($this->arguments['object']);
 		}
 
 		$out = '<form action="' . $formActionUrl . '" ' . $this->renderTagAttributes() . '>';
@@ -131,17 +136,16 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	}
 
 	/**
-	 *			// <![CDATA[<f:form.hidden name="updatedBlog[__identity][name]" value="{blog.name}" />]]>
+	 * Renders a hidden form field containing the technical identity of the given object.
 	 *
+	 * @param object $object The object to create an identity field for
+	 * @return string A hidden field containing the UUID of the given object or NULL if the object is unknown to the persistence framework
+	 * @author Robert Lemke <robert@typo3.org>
+	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
-	protected function generateHiddenIdentityFields($object) {
-		if ($this->persistenceManager->getBackend()->isNewObject($object)) return '';
-/*
-		$classSchema = $this->persistenceManager->getClassSchema($object);
-		foreach (array_keys($classSchema->getIdentityProperties()) as $propertyName) {
-			$propertyValue = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
-		}
-*/
+	protected function renderHiddenIdentityField($object) {
+		$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($object);
+		return ($uuid === NULL) ? '' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $uuid .'" />';
 	}
 }
 
