@@ -27,22 +27,22 @@ namespace F3\Fluid\ViewHelpers;
  * Example:
  * (1) Basic usage
  *
- * <f3:if condition="somecondition">
+ * <code><f3:if condition="somecondition">
  *   This is being shown in case the condition matches
- * </f3:if>
+ * </f3:if></code>
  * Everything inside the <f3:if> tag is being displayed if the condition evaluates to TRUE.
  *
  *
  * (2) If / Then / Else
  *
- * <f3:if condition="somecondition">
+ * <code><f3:if condition="somecondition">
  *   <f3:then>
  *     This is being shown in case the condition matches.
  *   </f3:then>
  *   <f3:else>
  *     This is being displayed in case the condition evaluates to FALSE.
  *   </f3:else>
- * </f3:if>
+ * </f3:if></code>
  * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
  * Otherwise, everything inside the "else"-tag is displayed.
  *

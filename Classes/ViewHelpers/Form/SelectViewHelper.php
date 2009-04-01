@@ -27,19 +27,19 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Example:
  * (1) Basic usage
  *
- * <f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" />
+ * <code><f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" /></code>
  * Generates a dropdown with two options. The array key is used as key, and the value is used as human-readable name.
  *
  *
  * (2) Pre-select a value
  *
- * <f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" />
+ * <code><f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" /></code>
  * Generates a dropdown box like above, except that "VISA Card" is selected.
  *
  *
  * (3) Usage on domain objects
  *
- * <f3:form.select name="users" options="{userArray}" optionKey="id" optionValue="firstName" />
+ * <code><f3:form.select name="users" options="{userArray}" optionKey="id" optionValue="firstName" /></code>
  * In the above example, the userArray is an array of "User" domain objects, with no array key specified.
  * If the optionKey variable is set, the getter named after that value is used to retrieve the option key.
  * If the optionValue variable is set, the getter named after that value is used to retrieve the option key.
@@ -48,6 +48,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * the displayed value of each entry.
  *
  * The "selectedValue" property now expects a domain object, and tests for object equivalence.
+ *
  *
  * @package Fluid
  * @subpackage ViewHelpers
