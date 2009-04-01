@@ -367,34 +367,10 @@
     <para>If you want to create a view helper which you can call from your
     template (as a tag), you just write a plain PHP class which needs to
     inherit from <classname>F3\Fluid\Core\AbstractViewHelper</classname> (or
-    its subclasses). You need to implement at least two methods to write a
-    view helper:</para>
+    its subclasses). You need to implement only one method to write a view
+    helper:</para>
 
-    <para><itemizedlist>
-        <listitem>
-          <para><methodname>initializeArguments()</methodname>: Inside this
-          method, you need to register all the arguments you expect the view
-          helper to use.</para>
-        </listitem>
-
-        <listitem>
-          <para><methodname>render()</methodname>: Render the view helper and
-          return the result (usually as string).</para>
-        </listitem>
-      </itemizedlist></para>
-
-    <section>
-      <title>Initializing arguments</title>
-
-      <para>As previously mentioned, initializing arguments takes place inside
-      the <methodname>initializeArguments()</methodname> method. Call
-      <code>$this-&gt;registerArgument(...)</code> once for each
-      argument.</para>
-
-      <para>See the section about the
-      <classname>TagBasedViewHelper</classname> for some more
-      possibilities.</para>
-    </section>
+    <para><methodname>public function render()</methodname></para>
 
     <section>
       <title>Rendering the View Helper</title>
@@ -445,7 +421,7 @@
       <para>Now, we will look at an example: How to write a view helper giving
       us the <code>foreach</code> functionality of PHP.<footnote>
           <para>This view helper is already available in the standard library
-          as <code>&lt;f3:for&gt;..&lt;/f3:for&gt;</code>. We still use it as
+          as <code>&lt;f:for&gt;..&lt;/f:for&gt;</code>. We still use it as
           example here, as it is quite simple and shows many
           possibilities.</para>
         </footnote></para>
@@ -456,9 +432,9 @@
         <para>A loop could be called within the template in the following
         way:</para>
 
-        <programlisting>&lt;f3:for each="{blogPosts}" as="blogPost"&gt;
+        <programlisting>&lt;f:for each="{blogPosts}" as="blogPost"&gt;
   &lt;h2&gt;{blogPost.title}&lt;/h2&gt;
-&lt;/f3:for&gt;</programlisting>
+&lt;/f:for&gt;</programlisting>
 
         <para>So, in words, what should the loop do?</para>
 
@@ -485,23 +461,67 @@
         <para>Implementing this is fairly straightforward, as you will see
         right now:</para>
 
-        <programlisting>public function render() {
-  $out = '';
-  foreach ($this-&gt;arguments['each'] as $singleElement) {
-    $this-&gt;variableContainer-&gt;add($this-&gt;arguments['as'], $singleElement);
-    $out .= $this-&gt;renderChildren();
-    $this-&gt;variableContainer-&gt;remove($this-&gt;arguments['as']);
+        <programlisting>class ForViewHelper {
+  /**
+   * Renders a loop
+   *
+   * @param array $each Array to iterate over<co xml:id="co.forViewHelper.1" />
+   * @param string $as Iteration variable
+   */
+  public function render(array $each, $as) {<co xml:id="co.forViewHelper.2" />
+    $out = '';
+    foreach ($each as $singleElement) {
+      $this-&gt;variableContainer-&gt;add($as, $singleElement);
+      $out .= $this-&gt;renderChildren();<co xml:id="co.forViewHelper.3" />
+      $this-&gt;variableContainer-&gt;remove($as);
+    }
+    return $out;
   }
-  return $out;
 }</programlisting>
+
+        <calloutlist>
+          <callout arearefs="co.forViewHelper.1">
+            <para>The PHPDoc <emphasis>is part of the code</emphasis>! Fluid
+            extracts the argument datatypes from the PHPDoc.</para>
+          </callout>
+
+          <callout arearefs="co.forViewHelper.2">
+            <para>You can simply register arguments to the view helper by
+            adding them as method arguments of the
+            <methodname>render()</methodname> method.</para>
+          </callout>
+
+          <callout arearefs="co.forViewHelper.3">
+            <para>Here, everything between the opening and closing tag of the
+            view helper is rendered and returned as string.</para>
+          </callout>
+        </calloutlist>
 
         <para>The above example demonstrates how we add a variable, render all
         children (everything between the opening and closing tag), and remove
         the variable again to prevent side-effects.</para>
       </example>
+    </section>
 
-      <para>Sometimes, the above possibilities to interact with the
-      environment are not enough - that is where facets come into play.</para>
+    <section>
+      <title>Declaring arguments</title>
+
+      <para>We have now seen that we can add arguments just by adding them as
+      method arguments to the <methodname>render()</methodname> method. There
+      is, however, a second method to register arguments:</para>
+
+      <para>You can also register arguments inside a method called
+      <methodname>initializeArguments()</methodname>. Call
+      <code>$this-&gt;registerArgument(<replaceable>$name</replaceable>,
+      <replaceable>$dataType</replaceable>,
+      <replaceable>$description</replaceable>,
+      <replaceable>$isRequired</replaceable>,
+      <replaceable>$defaultValue</replaceable>=NULL) inside.</code></para>
+
+      <para><code>It depends how many arguments a view helper has. Sometimes,
+      registering them as render() arguments is more beneficial, and sometimes
+      it makes more sense to register them in
+      <methodname>initializeArguments()</methodname>.</code></para>
     </section>
 
     <section>

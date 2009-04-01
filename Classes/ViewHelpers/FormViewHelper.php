@@ -108,7 +108,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 */
 	public function render() {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'GET' );
+		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'POST' );
 		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
 		$hiddenIdentityFields = '';
