@@ -31,7 +31,7 @@ namespace F3\Fluid\Core;
  */
 class TemplateParser {
 
-	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?:^|[^\\\\]){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*((?:F3|Tx)(?:FLUID_NAMESPACE_SEPARATOR\w+)+)\s*}/m';
+	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*((?:F3|Tx)(?:FLUID_NAMESPACE_SEPARATOR\w+)+)\s*}/m';
 
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND on all <![CDATA[...]]> sections.
@@ -66,7 +66,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public static $SCAN_PATTERN_CDATA = '/<!\[CDATA\[(.*?)\]\]>/s';
+	public static $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>/s';
 
 	/**
 	 * Pattern which splits the shorthand syntax into different tokens. The "shorthand syntax" is everything like {...}
