@@ -24,8 +24,9 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * Vew helper which creates a <base href="..."/> tag.
  *
- * Example:
+ * <code title="Example">
  * <f3:base />
+ * </code>
  * Generates a <base href="..." /> tag.
  *
  * @package Fluid

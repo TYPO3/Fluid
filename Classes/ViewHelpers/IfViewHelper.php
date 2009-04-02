@@ -25,15 +25,16 @@ namespace F3\Fluid\ViewHelpers;
  * This view helper implements an if/else condition.
  *
  * Example:
- * (1) Basic usage
  *
- * <code><f3:if condition="somecondition">
+ * = Basic usage =
+ *
+ * <code><f:if condition="somecondition">
  *   This is being shown in case the condition matches
- * </f3:if></code>
+ * </f:if></code>
  * Everything inside the <f3:if> tag is being displayed if the condition evaluates to TRUE.
  *
  *
- * (2) If / Then / Else
+ * = If / then / else =
  *
  * <code><f3:if condition="somecondition">
  *   <f3:then>
@@ -45,6 +46,7 @@ namespace F3\Fluid\ViewHelpers;
  * </f3:if></code>
  * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
  * Otherwise, everything inside the "else"-tag is displayed.
+ *
  *
  * TODO:
  * Currently, condition handling is not really implemented.

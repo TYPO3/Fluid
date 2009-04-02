@@ -31,26 +31,28 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * Form view helper. Generates a <form> Tag.
  *
- * Example
+ * = Basic usage =
  *
- * (1) Basic usage
+ * Use <f:form> to output an HTML <form> tag which is targeted at the specified action, in the current controller and package.
+ * It will submit the form data via a POST request. If you want to change this, use method="get" as an argument.
+ * <code title="Example">
+ * <f:form action="...">...</f:form>
+ * </code>
  *
- * <f3:form action="...">...</f3:form>
- * Outputs an HTML <form> tag which is targeted at the specified action, in the current controller and package.
- * It will submit the form data via a GET request. If you want to change this, use method="post" as an argument.
+ * = A complex form with a specified encoding type =
  *
+ * <code title="Form with enctype set">
+ * <f:form action=".." controller="..." package="..." enctype="multipart/form-data">...</f:form>
+ * </code>
  *
- * (2) A complex form with a specified encoding type (needed for file uploads)
+ * = A Form which should render a domain object =
  *
- * <f3:form action=".." controller="..." package="..." method="post" enctype="multipart/form-data">...</f3:form>
- *
- *
- * (3) A complex form which should render a domain object.
- *
- * <f3:form action="..." name="customer" object="{customer}">
- *   <f3:form.hidden property="id" />
- *   <f3:form.textbox property="name" />
- * </f3:form>
+ * <code title="Binding a domain object to a form">
+ * <f:form action="..." name="customer" object="{customer}">
+ *   <f:form.hidden property="id" />
+ *   <f:form.textbox property="name" />
+ * </f:form>
+ * </code>
  * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name of the textbox accordingly.
  *
  * @package Fluid

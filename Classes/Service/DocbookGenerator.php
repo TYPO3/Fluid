@@ -152,7 +152,9 @@ class DocbookGenerator {
 		$this->docCommentParser->parseDocComment($reflectionClass->getDocComment());
 		$this->addDocumentation($this->docCommentParser->getDescription(), $docbookSection);
 
-		$this->addArguments($className, $docbookSection);
+		$argumentsSection = $docbookSection->addChild('section');
+		$argumentsSection->addChild('title', 'Arguments');
+		$this->addArguments($className, $argumentsSection);
 
 		return $docbookSection;
 	}
@@ -192,6 +194,10 @@ class DocbookGenerator {
 		$viewHelper = $this->objectManager->getObject($className);
 		$argumentDefinitions = $viewHelper->prepareArguments();
 
+		if (count($argumentDefinitions) === 0) {
+			$docbookSection->addChild('para', 'No arguments defined.');
+			return;
+		}
 		$argumentsTable = $docbookSection->addChild('table');
 		$argumentsTable->addChild('title', 'Arguments');
 		$tgroup = $argumentsTable->addChild('tgroup');
@@ -199,6 +205,7 @@ class DocbookGenerator {
 		$this->addArgumentTableRow($tgroup->addChild('thead'), 'Name', 'Type', 'Required', 'Description', 'Default');
 
 		$tbody = $tgroup->addChild('tbody');
+
 		foreach ($argumentDefinitions as $argumentDefinition) {
 			$this->addArgumentTableRow($tbody, $argumentDefinition->getName(), $argumentDefinition->getType(), $argumentDefinition->isRequired(), $argumentDefinition->getDescription(), $argumentDefinition->getDefaultValue());
 		}
@@ -227,59 +234,51 @@ class DocbookGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addDocumentation($documentation, \SimpleXMLElement $docbookSection) {
+		$splitRegex = '/^\s*(=[^=]+=)$/m';
+		$regex = '/^\s*(=([^=]+)=)$/m';
 
-		$regex = '/^(.*?)Examples?:?(.*)$/ms';
+		$matches = preg_split($splitRegex, $documentation, -1,  PREG_SPLIT_NO_EMPTY  |  PREG_SPLIT_DELIM_CAPTURE );
 
-		$exampleRegex = '/
-			\s*
-			\([0-9]+\)
-			\s+
-			(?P<ExampleTitle>[^\\n]*?)
-			\s*
-			<code>
-				(?P<ExampleCode>.*?)
-			<\\/code>
-			\s*
-			(?P<ExampleExplanation>.*?)
-			(?:
-				\n\s*\n\s*\n
-				|@[a-z]+
-			)
-			\s*/sx';
-		if (preg_match($regex, $documentation, $matches)) {
-			$docbookSection->addChild('para', trim($matches[1]));
-
-			if (preg_match_all($exampleRegex, $matches[2], $matches,  PREG_SET_ORDER  )) {
-				foreach ($matches as $singleMatch) {
-					$example = $docbookSection->addChild('example');
-					$example->addChild('title', $singleMatch['ExampleTitle']);
-					$example->addChild('programlisting', $singleMatch['ExampleCode']);
-					$example->addChild('para', $singleMatch['ExampleExplanation']);
-				}
+		$currentSection = $docbookSection;
+		foreach ($matches as $singleMatch) {
+			if (preg_match($regex, $singleMatch, $tmp)) {
+				$currentSection = $docbookSection->addChild('section');
+				$currentSection->addChild('title', trim($tmp[2]));
+			} else {
+				$this->addText(trim($singleMatch), $currentSection);
 			}
- 		} else {
- 			$docbookSection->addChild('para', trim($documentation));
- 		}
+		}
 	}
 
-	/**
-	 * Add a child node to $parentXMLNode, and wrap the contents inside a CDATA section.
-	 *
-	 * @param \SimpleXMLElement $parentXMLNode Parent XML Node to add the child to
-	 * @param string $childNodeName Name of the child node
-	 * @param string $nodeValue Value of the child node. Will be placed inside CDATA.
-	 * @return \SimpleXMLElement the new element
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-/*	protected function addChildWithCData(\SimpleXMLElement $parentXMLNode, $childNodeName, $childNodeValue) {
-		$parentDomNode = dom_import_simplexml($parentXMLNode);
-		$domDocument = new \DOMDocument();
+	protected function addText($text, \SimpleXMLElement $parentElement) {
+		$splitRegex = '/
+		(<code(?:.*?)>
+			(?:.*?)
+		<\/code>)/xs';
 
-		$childNode = $domDocument->appendChild($domDocument->createElement($childNodeName));
-		$childNode->appendChild($domDocument->createCDATASection($childNodeValue));
-		$childNodeTarget = $parentDomNode->ownerDocument->importNode($childNode, true);
-		$parentDomNode->appendChild($childNodeTarget);
-		return simplexml_import_dom($childNodeTarget);
-	}*/
+		$regex = '/
+		<code(.*?)>
+			(.*?)
+		<\/code>/xs';
+		$matches = preg_split($splitRegex, $text, -1,  PREG_SPLIT_NO_EMPTY  |  PREG_SPLIT_DELIM_CAPTURE );
+		foreach ($matches as $singleMatch) {
+
+			if (preg_match($regex, $singleMatch, $tmp)) {
+				preg_match('/title="([^"]+)"/', $tmp[1], $titleMatch);
+
+				$example = $parentElement->addChild('example');
+				$example->addChild('title', trim($titleMatch[1]));
+				$example->addChild('programlisting', trim($tmp[2]));
+			} else {
+				$textParts = explode("\n", $singleMatch);
+				foreach ($textParts as $text) {
+					if (trim($text) === '') continue;
+					$parentElement->addChild('para', trim($text));
+				}
+			}
+		}
+
+	}
+
 }
 ?>

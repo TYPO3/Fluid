@@ -22,7 +22,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * View Helper which creates a Text Box.
+ * View Helper which creates a simple Text Box (<input type="text">).
  *
  * @package Fluid
  * @subpackage ViewHelpers

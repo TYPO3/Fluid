@@ -21,7 +21,9 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @version $Id$
  */
 /**
- * [Enter description here...]
+ * Creates a submit button.
+ * <code title="Example"><f:submit>Send Mail</f:submit></code>
+ *
  * @package Fluid
  * @subpackage ViewHelpers
  * @version $Id$

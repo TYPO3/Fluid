@@ -22,7 +22,8 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * [Enter description here...]
+ * A view helper which generates an <input type="file"> HTML element.
+ * Make sure to set enctype="multipart/form-data" on the form!
  *
  * @package Fluid
  * @subpackage ViewHelpers

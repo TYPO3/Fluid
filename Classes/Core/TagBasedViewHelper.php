@@ -46,7 +46,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
-		$this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes', FALSE);
+		$this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', FALSE);
 	}
 
 	/**
@@ -62,7 +62,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function registerTagAttribute($name, $type, $description, $required = FALSE) {
-		$this->registerArgument($name, $type, $description, $required);
+		$this->registerArgument($name, $type, $description, $required, '');
 		$this->tagAttributes[] = $name;
 	}
 

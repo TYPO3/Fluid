@@ -24,31 +24,37 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * This view helper generates a <select> dropdown list for the use with a form.
  *
- * Example:
- * (1) Basic usage
+ * = Basic usage =
  *
- * <code><f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" /></code>
- * Generates a dropdown with two options. The array key is used as key, and the value is used as human-readable name.
+ * The most straightforward way is to supply an associative array as the "options" parameter.
+ * The array key is used as option key, and the value is used as human-readable name.
  *
+ * <code title="Basic usage">
+ * 	<f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" />
+ * </code>
  *
- * (2) Pre-select a value
+ * = Pre-select a value =
  *
- * <code><f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" /></code>
+ * To pre-select a value, set "selectedValue" to the option key which should be selected.
+ * <code title="Default value"><f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" /></code>
  * Generates a dropdown box like above, except that "VISA Card" is selected.
  *
+ * If the select box is a multi-select box (multiple="true"), then "selectedValue" can be an array as well.
  *
- * (3) Usage on domain objects
+ * = Usage on domain objects =
  *
- * <code><f3:form.select name="users" options="{userArray}" optionKey="id" optionValue="firstName" /></code>
- * In the above example, the userArray is an array of "User" domain objects, with no array key specified.
+ * If you want to output domain objects, you can just pass them as array into the "options" parameter.
+ * To define what domain object value should be used as option key, use the "optionKey" variable. Same goes for optionValue.
+ *
  * If the optionKey variable is set, the getter named after that value is used to retrieve the option key.
- * If the optionValue variable is set, the getter named after that value is used to retrieve the option key.
+ * If the optionValue variable is set, the getter named after that value is used to retrieve the option value.
  *
- * So, in the above example, the method $user->getId() is called to retrieve the key, and $user->getFirstName() to retrieve
- * the displayed value of each entry.
+ * <code title="Domain objects"><f3:form.select name="users" options="{userArray}" optionKey="id" optionValue="firstName" /></code>
+ * In the above example, the userArray is an array of "User" domain objects, with no array key specified.
+ *
+ * So, in the above example, the method $user->getId() is called to retrieve the key, and $user->getFirstName() to retrieve the displayed value of each entry.
  *
  * The "selectedValue" property now expects a domain object, and tests for object equivalence.
- *
  *
  * @package Fluid
  * @subpackage ViewHelpers

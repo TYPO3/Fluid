@@ -22,7 +22,7 @@ namespace F3\Fluid\ViewHelpers;
  */
 
 /**
- * "else"-Tag. Only has an effect inside of "if". See "if" for documentation.
+ * <f:else>-Tag. Only has an effect inside of <f:if>. See <f:if> for documentation.
  *
  * @package Fluid
  * @subpackage ViewHelpers

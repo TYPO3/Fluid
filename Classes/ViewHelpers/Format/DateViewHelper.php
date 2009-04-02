@@ -24,9 +24,9 @@ namespace F3\Fluid\ViewHelpers\Format;
 /**
  * Formats a \DateTime object.
  *
- * Example:
- *
- * <f3:format.date target="{myDateTimeObject}" format="d m y" />
+ * <code title="Example">
+ * <f:format.date target="{myDateTimeObject}" format="d m y" />
+ * </code>
  *
  * @package Fluid
  * @subpackage ViewHelpers

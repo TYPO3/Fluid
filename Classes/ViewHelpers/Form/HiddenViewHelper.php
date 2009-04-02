@@ -22,7 +22,13 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * [Enter description here...]
+ * Render an <input type="hidden" ...> tag.
+ *
+ * <code title="Example">
+ * <f:hidden name="myHiddenValue" value="42" />
+ * </code>
+ * You can also use the "property" attribute if you have bound an object to the form.
+ * See <f:form> for more documentation.
  *
  * @package Fluid
  * @subpackage ViewHelpers

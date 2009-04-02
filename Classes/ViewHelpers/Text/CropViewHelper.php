@@ -24,8 +24,9 @@ namespace F3\Fluid\ViewHelpers\Text;
 /**
  * Use this view helper to crop the text between its opening and closing tags.
  *
- * Example:
- * <f3:text.crop >Some very long text</f3:text.crop>
+ * <code title="Example">
+ * <f:text.crop>Some very long text</f3:text.crop>
+ * </code>
  *
  * WARNING: This tag does NOT handle tags currently.
  * WARNING: This tag doesn't care about multibyte charsets currently.

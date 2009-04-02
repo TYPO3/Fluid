@@ -22,7 +22,13 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * Textarea View Helper.
+ * Textarea view helper.
+ *
+ * The value of the text area needs to be set via the "value" attribute, as with all other form ViewHelpers.
+ *
+ * <code title="Example">
+ * <f:textarea name="myTextArea" value="This is shown inside the textarea" />
+ * </code>
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -30,7 +36,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class TextAreaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class TextareaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
 	/**
 	 * Initialize the arguments.
