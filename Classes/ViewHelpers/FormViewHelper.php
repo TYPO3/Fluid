@@ -147,7 +147,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 */
 	protected function renderHiddenIdentityField($object) {
 		$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($object);
-		return ($uuid === NULL) ? '' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $uuid .'" />';
+		return ($uuid === NULL) ? '<!-- Object of type ' . get_class($object) . ' is without identity -->' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $uuid .'" />';
 	}
 }
 

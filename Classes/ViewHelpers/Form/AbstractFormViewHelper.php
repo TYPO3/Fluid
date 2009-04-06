@@ -73,7 +73,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getValue() {
-		if ($this->isObjectAccessorMode() && $this->variableContainer->exists('__formObject') && !isset($this->arguments['value'])) {
+		if ($this->isObjectAccessorMode() && $this->variableContainer->exists('__formObject') && ($this->arguments['value'] === NULL)) {
 			return $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
 		} else {
 			return $this->arguments['value'];
