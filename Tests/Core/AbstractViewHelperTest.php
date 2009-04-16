@@ -125,8 +125,8 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array('test' => 'Value of argument'));
 
-		$validatorResolver = $this->getMock('F3\FLOW3\Validation\ValidatorResolver', array('getValidator'), array(), '', FALSE);
-		$validatorResolver->expects($this->once())->method('getValidator')->with('string')->will($this->returnValue(new \F3\FLOW3\Validation\Validator\TextValidator()));
+		$validatorResolver = $this->getMock('F3\FLOW3\Validation\ValidatorResolver', array('createValidator'), array(), '', FALSE);
+		$validatorResolver->expects($this->once())->method('createValidator')->with('string')->will($this->returnValue(new \F3\FLOW3\Validation\Validator\TextValidator()));
 
 		$viewHelper->injectValidatorResolver($validatorResolver);
 
