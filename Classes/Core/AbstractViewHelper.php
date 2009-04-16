@@ -200,6 +200,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	/**
 	 * Validate arguments, and throw exception if arguments do not validate.
 	 *
+	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
@@ -217,7 +218,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 						throw new \F3\Fluid\Core\RuntimeException('The argument "' . $argumentName . '" was registered with type array, but is of type ' . gettype($this->arguments[$argumentName]), 1237900529);
 					}
 				} else {
-					$validator = $this->validatorResolver->getValidator($type);
+					$validator = $this->validatorResolver->createValidator($type);
 					if (is_null($validator)) {
 						throw new \F3\Fluid\Core\RuntimeException('No validator found for argument name "' . $argumentName . '" with type "' . $type . '" in view helper "' . get_class($this) . '".', 1237900534);
 					}
