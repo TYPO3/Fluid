@@ -81,9 +81,9 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 		$viewHelper->injectReflectionService($reflectionService);
 
 		$expected = array(
-			'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'integer', 'P1 Stuff', TRUE),
-			'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'array', 'P2 Stuff', TRUE),
-			'param3' => new \F3\Fluid\Core\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE, 'default'),
+			'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'integer', 'P1 Stuff', TRUE, null, TRUE),
+			'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'array', 'P2 Stuff', TRUE, null, TRUE),
+			'param3' => new \F3\Fluid\Core\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE, 'default', TRUE),
 		);
 
 		$this->assertEquals($expected, $viewHelper->prepareArguments(), 'Annotation based arguments were not registered.');

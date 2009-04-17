@@ -84,8 +84,9 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$stubViewHelper->expects($this->once())
 		               ->method('prepareArguments')->will($this->returnValue(
 		               	array(
-		               		'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'string', 'Hallo', TRUE),
-		               		'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'string', 'Hallo', TRUE)
+		               		'param0' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, null, FALSE),
+		               		'param1' => new \F3\Fluid\Core\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, null, TRUE),
+		               		'param2' => new \F3\Fluid\Core\ArgumentDefinition('param2', 'string', 'Hallo', TRUE, null, TRUE)
 		               	)
 		               ));
 		$stubViewHelper->expects($this->once())

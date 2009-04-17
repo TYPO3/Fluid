@@ -98,6 +98,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		$contextVariables = $variableContainer->getAllIdentifiers();
 
 		$evaluatedArguments = array();
+		$evaluatedArgumentsWhichAreMethodParameters = array();
 		if (count($argumentDefinitions)) {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
@@ -105,6 +106,9 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue->evaluate($variableContainer), $argumentDefinition->getType());
 				} else {
 					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
+				}
+				if ($argumentDefinition->isMethodParameter()) {
+					$evaluatedArgumentsWhichAreMethodParameters[$argumentName] = $evaluatedArguments[$argumentName];
 				}
 			}
 		}
@@ -118,7 +122,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		}
 
 		$viewHelper->validateArguments();
-		$out = call_user_func_array(array($viewHelper, 'render'), $evaluatedArguments);
+
+		$out = call_user_func_array(array($viewHelper, 'render'), $evaluatedArgumentsWhichAreMethodParameters);
 
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
 			$endContextVariables = $variableContainer->getAllIdentifiers();

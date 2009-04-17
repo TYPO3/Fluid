@@ -39,12 +39,14 @@ class ArgumentDefinitionTest extends \F3\Testing\BaseTestCase {
 		$description = "Example desc";
 		$type = "string";
 		$isRequired = TRUE;
-		$argumentDefinition = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isRequired);
+		$isMethodParameter = TRUE;
+		$argumentDefinition = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $isRequired, null, $isMethodParameter);
 
 		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
-		$this->assertEquals($argumentDefinition->isRequired(), $isRequired, 'Optional flag could not be retrieved correctly.');
+		$this->assertEquals($argumentDefinition->isRequired(), $isRequired, 'Required flag could not be retrieved correctly.');
+		$this->assertEquals($argumentDefinition->isMethodParameter(), $isMethodParameter, 'isMethodParameter flag could not be retrieved correctly.');
 	}
 }
 

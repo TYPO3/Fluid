@@ -192,7 +192,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 			if (isset($parameterInfo['defaultValue'])) {
 				$defaultValue = $parameterInfo['defaultValue'];
 			}
-			$this->registerArgument($parameterName, $dataType, $description, ($parameterInfo['optional'] === FALSE), $defaultValue);
+			$this->argumentDefinitions[$parameterName] = new \F3\Fluid\Core\ArgumentDefinition($parameterName, $dataType, $description, ($parameterInfo['optional'] === FALSE), $defaultValue, TRUE);
 			$i++;
 		}
 	}
