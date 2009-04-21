@@ -41,22 +41,17 @@ class ForViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function forExecutesTheLoopCorrectly() {
 		$this->viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
 		
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
-			'each' => array(0,1,2,3),
-			'as'   => 'innerVariable'
-		));
-		
 		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
 		
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);		
-		$this->viewHelper->arguments = $arguments;
 		$this->viewHelper->variableContainer = $variableContainer;
 		$this->viewHelper->setViewHelperNode($viewHelperNode);
-		$this->viewHelper->render();
+		$this->viewHelper->render(array(0,1,2,3), 'innerVariable');
 		
 		$expectedCallProtocol = array(
 			array('innerVariable' => 0),

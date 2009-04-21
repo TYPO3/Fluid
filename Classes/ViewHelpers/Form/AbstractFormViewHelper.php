@@ -36,17 +36,15 @@ namespace F3\Fluid\ViewHelpers\Form;
 abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 	/**
-	 * Initialize arguments. Registers:
-	 * - name
-	 * - value
-	 * - property
+	 * Initialize arguments.
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
+		parent::initializeArguments();
 		$this->registerArgument('name', 'string', 'Name of input tag');
-		$this->registerArgument('value', 'string', 'Value of input tag');
+		$this->registerArgument('value', 'mixed', 'Value of input tag');
 		$this->registerArgument('property', 'string', 'Name of Object Property. If used in conjunction with <f3:form object="...">, "name" and "value" properties will be ignored.');
 	}
 
@@ -99,8 +97,8 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	private function getObjectValue($object, $propertyName) {
-		$methodName = 'get' . ucfirst($propertyName);
-		return $object->$methodName();
+		$getterMethodName = 'get' . ucfirst($propertyName);
+		return $object->$getterMethodName();
 	}
 }
 

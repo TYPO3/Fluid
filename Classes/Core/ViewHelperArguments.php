@@ -96,5 +96,17 @@ class ViewHelperArguments implements \ArrayAccess {
 	public function offsetUnset($name) {
 		throw new \F3\Fluid\Core\RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.', 1236080702);
 	}
+
+	/**
+	 * Checks if an argument with the specified name exists
+	 *
+	 * @param string $argumentName Name of the argument to check for
+	 * @return boolean TRUE if such an argument exists, otherwise FALSE
+	 * @see offsetExists()
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function hasArgument($argumentName) {
+		return $this->offsetExists($argumentName) && $this->arguments[$argumentName] !== NULL;
+	}
 }
 ?>

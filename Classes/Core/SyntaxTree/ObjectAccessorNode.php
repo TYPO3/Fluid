@@ -103,9 +103,9 @@ class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			}
 			return $currentObject;
 		} catch(\F3\Fluid\Core\RuntimeException $e) {
-				// DEPENDING ON THE CONTEXT / CONFIG, either fail silently or not. Currently we always fail silently.
-			return '';
+			// DEPENDING ON THE CONTEXT / CONFIG, either fail silently or not. Currently we always fail silently.
 		}
+		return '';
 	}
 }
 

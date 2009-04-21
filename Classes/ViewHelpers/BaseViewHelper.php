@@ -22,12 +22,17 @@ namespace F3\Fluid\ViewHelpers;
  */
 
 /**
- * Vew helper which creates a <base href="..."/> tag.
+ * View helper which creates a <base href="..."></base> tag.
+ *
+ * = Examples =
  *
  * <code title="Example">
- * <f3:base />
+ * <f:base />
  * </code>
- * Generates a <base href="..." /> tag.
+ * 
+ * Output:
+ * <base href="http://yourdomain.tld/"></base>
+ * (depending on your domain)
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -36,14 +41,6 @@ namespace F3\Fluid\ViewHelpers;
  * @scope prototype
  */
 class BaseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
-
-	/**
-	 * The Base view helper does not take any arguments.
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-	}
 
 	/**
 	 * Render the "Base" tag by outputting $request->getBaseURI()

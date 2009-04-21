@@ -32,6 +32,7 @@ namespace F3\Fluid\Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
+
 abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
@@ -39,6 +40,31 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * @var array
 	 */
 	protected $tagAttributes = array();
+
+	/**
+	 * Tag builder instance
+	 *
+	 * @var \F3\Fluid\Core\TagBuilder
+	 */
+	protected $tag = NULL;
+
+	/**
+	 * name of the tag to be created by this view helper
+	 *
+	 * @var string
+	 */
+	protected $tagName = 'div';
+
+	/**
+	 * Inject a TagBuilder
+	 * 
+	 * @param \F3\Fluid\Core\TagBuilder $tagBuilder Tag builder
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function injectTagBuilder(\F3\Fluid\Core\TagBuilder $tagBuilder) {
+		$this->tag = $tagBuilder;
+	}
 
 	/**
 	 * Constructor
@@ -50,9 +76,30 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	}
 
 	/**
-	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->renderTagAttributes()
+	 * Sets the tag name to $this->tagName.
+	 * Additionally, sets all tag attributes which were registered in
+	 * $this->tagAttributes and additionalArguments.
 	 *
-	 * The tag attributes registered here are rendered with the $this->renderTagAttributes() method.
+	 * Will be invoked just before the render method
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function initialize() {
+		parent::initialize();
+		$this->tag->setTagName($this->tagName);
+		if (is_array($this->arguments['additionalAttributes'])) {
+			$this->tag->addAttributes($this->arguments['additionalAttributes']);
+		}
+		foreach ($this->tagAttributes as $attributeName) {
+			if ($this->arguments->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
+				$this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
+			}
+		}
+	}
+
+	/**
+	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->initializeTag()
 	 *
 	 * @param string $name Name of tag attribute
 	 * @param strgin $type Type of the tag attribute
@@ -70,14 +117,6 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * Registers all standard HTML universal attributes.
 	 * Should be used inside registerArguments();
 	 *
-	 * The following attributes are registered:
-	 * - class (CSS Class)
-	 * - dir (Text direction)
-	 * - id (Universal identifier)
-	 * - lang (Language)
-	 * - style (per-element style)
-	 * - title (tooltip text)
-	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -90,31 +129,6 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 		$this->registerTagAttribute('title', 'string', 'Tooltip text of element');
 		$this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
 		$this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
-	}
-
-	/**
-	 * Render all tag attributes which were registered in $this->tagAttributes.
-	 * Additionally, renders all attributes specified in additionalArguments.
-	 *
-	 * You should call this method in your render() method if you output some tag.
-	 *
-	 * @return string Concatenated list of attributes
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo htmlspecialchar() output
-	 */
-	protected function renderTagAttributes() {
-		$attributes = array();
-		if (isset($this->arguments['additionalAttributes']) && is_array($this->arguments['additionalAttributes'])) {
-			foreach ($this->arguments['additionalAttributes'] as $key => $value) {
-				$attributes[] = $key . '="' . $value . '"';
-			}
-		}
-		foreach ($this->tagAttributes as $attributeName) {
-			if ($this->arguments[$attributeName]) {
-				$attributes[] = $attributeName . '="' . $this->arguments[$attributeName] . '"';
-			}
-		}
-		return implode(' ', $attributes);
 	}
 }
 ?>

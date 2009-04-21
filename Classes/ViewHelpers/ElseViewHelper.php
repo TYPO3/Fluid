@@ -22,7 +22,8 @@ namespace F3\Fluid\ViewHelpers;
  */
 
 /**
- * <f:else>-Tag. Only has an effect inside of <f:if>. See <f:if> for documentation.
+ * "ELSE" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
+ * @see F3\Fluid\ViewHelpers\IfViewHelper
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -33,15 +34,6 @@ namespace F3\Fluid\ViewHelpers;
 class ElseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * Initialize arguments. We require no arguments.
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {}
-
-	/**
-	 * Just render everything.
-	 *
 	 * @return string the rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

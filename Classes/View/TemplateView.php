@@ -287,6 +287,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			return $this->templatePathAndFilename;
 		} else {
 			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->request->getControllerActionName());
+			$matches = array();
 			preg_match(self::PATTERN_CONTROLLER, $this->request->getControllerObjectName(), $matches);
 			$subpackageName = '';
 			if ($matches['SubpackageName'] !== '') {

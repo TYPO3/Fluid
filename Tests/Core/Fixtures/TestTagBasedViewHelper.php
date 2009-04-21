@@ -45,7 +45,6 @@ class TestTagBasedViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 * Render the tag attributes registered
 	 */
 	public function render() {
-		return $this->renderTagAttributes();
 	}
 }
 

@@ -223,8 +223,9 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function extractNamespaceDefinitions($templateString) {
+		$matchedVariables = array();
 		if (preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matchedVariables) > 0) {
-			foreach ($matchedVariables[0] as $index => $tmp) {
+			foreach (array_keys($matchedVariables[0]) as $index) {
 				$namespaceIdentifier = $matchedVariables[1][$index];
 				$fullyQualifiedNamespace = $matchedVariables[2][$index];
 				if (key_exists($namespaceIdentifier, $this->namespaces)) {
@@ -267,6 +268,7 @@ class TemplateParser {
 		$state->pushNodeToStack($rootNode);
 
 		foreach ($splittedTemplate as $templateElement) {
+			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->handler_text($state, $matchedVariables[1]);
 			} elseif (preg_match($regularExpression_viewHelperTag, $templateElement, $matchedVariables) > 0) {
@@ -344,7 +346,7 @@ class TemplateParser {
 			$expectedArgumentNames[] = $expectedArgument->getName();
 		}
 
-		foreach ($actualArguments as $argumentName => $v) {
+		foreach (array_keys($actualArguments) as $argumentName) {
 			if (!in_array($argumentName, $expectedArgumentNames)) {
 				throw new \F3\Fluid\Core\ParsingException('Argument "' . $argumentName . '" was not registered.', 1237823695);
 			}
@@ -377,7 +379,6 @@ class TemplateParser {
 	 */
 	protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier) {
 		$explodedViewHelperName = explode('.', $methodIdentifier);
-		$methodName = '';
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
 			$className = ucfirst($explodedViewHelperName[0]);
@@ -440,6 +441,7 @@ class TemplateParser {
 	 */
 	protected function parseArguments($argumentsString) {
 		$argumentsObjectTree = array();
+		$matches = array();
 		if (preg_match_all(self::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
@@ -481,7 +483,7 @@ class TemplateParser {
 	 */
 	protected function unquoteArgumentString($singleQuotedValue, $doubleQuotedValue) {
 		if ($singleQuotedValue != '') {
-			$value = str_replace("\'", "'", $singleQuotedValue);
+			$value = str_replace("\\'", "'", $singleQuotedValue);
 		} else {
 			$value = str_replace('\"', '"', $doubleQuotedValue);
 		}
@@ -512,6 +514,7 @@ class TemplateParser {
 	protected function handler_textAndShorthandSyntax(\F3\Fluid\Core\ParsingState $state, $text) {
 		$sections = preg_split(self::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
+			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 				$this->handler_objectAccessor($state, $matchedVariables['Object']);
 			} elseif (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
@@ -549,6 +552,7 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_array_recursively($arrayText) {
+		$matches = array();
 		if (preg_match_all(self::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER) > 0) {
 			$arrayToBuild = array();
 			foreach ($matches as $singleMatch) {

@@ -64,6 +64,11 @@ namespace F3\Fluid\ViewHelpers;
 class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 	/**
+	 * @var string
+	 */
+	protected $tagName = 'form';
+
+	/**
 	 * @var \F3\FLOW3\Persistence\ManagerInterface
 	 */
 	protected $persistenceManager;
@@ -86,13 +91,6 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('action', 'string', 'name of action to call', TRUE);
-		$this->registerArgument('controller', 'string', 'name of controller to call the current action on');
-		$this->registerArgument('package', 'string', 'name of package to call');
-		$this->registerArgument('subpackage', 'string', 'name of subpackage to call');
-		$this->registerArgument('object', 'Raw', 'Object to use for the form. Use in conjunction with the "property" attribute on the sub tags.');
-		$this->registerArgument('arguments', 'array', 'Associative array of all URL arguments which should be appended to the action URI.');
-
 		$this->registerTagAttribute('enctype', 'string', 'MIME type with which the form is submitted');
 		$this->registerTagAttribute('method', 'string', 'Transfer type (GET or POST)');
 		$this->registerTagAttribute('name', 'string', 'Name of form');
@@ -105,27 +103,34 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	/**
 	 * Render the form.
 	 *
-	 * @return string FORM-Tag.
+	 * @param string $action name of action to call
+	 * @param string $controller name of controller to call the current action on
+	 * @param string $package name target package
+	 * @param string $subpackage target subpackage
+	 * @param array $arguments name of action to call Associative array of all URL arguments which should be appended to the action URI.
+	 * @param mixed $object Object to use for the form. Use in conjunction with the "property" attribute on the sub tags
+	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render() {
+	public function render($action = '', $controller = '', $package = '', $subpackage = '', array $arguments = array(), $object = NULL) {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$method = ( $this->arguments['method'] ? $this->arguments['method'] : 'POST' );
+		$method = $this->arguments['method'] ? $this->arguments['method'] : 'POST';
 		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
-		$hiddenIdentityFields = '';
 		if ($this->arguments['name']) {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
 		}
+		$hiddenIdentityFields = '';
 		if ($this->arguments['object']) {
 			$this->variableContainer->add('__formObject', $this->arguments['object']);
 			$hiddenIdentityFields = $this->renderHiddenIdentityField($this->arguments['object']);
 		}
 
-		$out = '<form action="' . $formActionUrl . '" ' . $this->renderTagAttributes() . '>';
-		$out .= $hiddenIdentityFields;
-		$out .= $this->renderChildren();
-		$out .= '</form>';
+		$this->tag->addAttribute('action', $formActionUrl);
+		$content = $hiddenIdentityFields;
+		$content .= $this->renderChildren();
+		$this->tag->setContent($content, FALSE);
 
 		if ($this->arguments['object']) {
 			$this->variableContainer->remove('__formObject');
@@ -134,7 +139,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 			$this->variableContainer->remove('__formName');
 		}
 
-		return $out;
+		return $this->tag->render();
 	}
 
 	/**

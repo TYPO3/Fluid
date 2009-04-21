@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Form;
+namespace F3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -22,58 +22,35 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * Renders an <input type="hidden" ...> tag.
+ * Wrapper for PHPs nl2br function.
+ * @see http://www.php.net/manual/en/function.nl2br.php
  * 
  * = Examples =
  *
  * <code title="Example">
- * <f:hidden name="myHiddenValue" value="42" />
+ * <f:format.nl2br>{text_with_linebreaks}</f:format.nl2br>
  * </code>
- * 
+ *
  * Output:
- * <input type="hidden" name="myHiddenValue" value="42" />
- * 
- * You can also use the "property" attribute if you have bound an object to the form.
- * See <f:form> for more documentation.
+ * text with line breaks replaced by <br />
  *
  * @package Fluid
  * @subpackage ViewHelpers
  * @version $Id$
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class Nl2brViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * @var string
-	 */
-	protected $tagName = 'input';
-
-	/**
-	 * Initialize the arguments.
+	 * Replaces newline characters by HTML line breaks.
 	 *
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-		parent::initializeArguments();
-		$this->registerUniversalTagAttributes();
-	}
-
-	/**
-	 * Renders the hidden field.
-	 *
-	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @return string the altered string. 
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function render() {
-		$this->tag->addAttribute('type', 'hidden');
-		$this->tag->addAttribute('name', $this->getName());
-		$this->tag->addAttribute('value', $this->getValue());
-		
-		return $this->tag->render();
+		$content = $this->renderChildren();
+		return nl2br($content);
 	}
 }
-
-
 ?>

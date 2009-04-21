@@ -22,25 +22,24 @@ namespace F3\Fluid\ViewHelpers\Format;
  */
 
 /**
- * Formats a \DateTime object.
+ * Formats a number with custom precision, decimal point and grouped thousands.
+ * @see http://www.php.net/manual/en/function.number-format.php
  *
  * = Examples =
  *
  * <code title="Defaults">
- * <f:format.date date="{dateObject}" />
+ * <f:format.number value="423423.234" />
  * </code>
- * 
+ *
  * Output:
- * 1980-12-13
- * (depending on the current date)
- * 
- * <code title="Custom date format">
- * <f:format.date date="{dateObject}" format="H:i" />
+ * 423,423.20
+ *
+ * <code title="With all parameters">
+ * <f:format.number value="423423.234" decimals="1" decimalSeparator="," thousandsSeparator="." />
  * </code>
- * 
+ *
  * Output:
- * 01:23
- * (depending on the current time)
+ * 423.423,2
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -48,22 +47,22 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class DateViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class NumberViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * Render the supplied DateTime object as a formatted date.
+	 * Format the numeric value as a number with grouped thousands, decimal point and
+	 * precision.
 	 *
-	 * @param \DateTime $date The DateTime object to format
-	 * @param string $format Format String which is taken to format the Date/Time
-	 * @return string Formatted date
+	 * @param float $value The value to format
+	 * @param int $decimals The number of digits after the decimal point
+	 * @param string $decimalSeparator The decimal point character
+	 * @param string $thousandsSeparator The character for grouping the thousand digits
+	 * @return string The formatted number
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($date, $format = 'Y-m-d') {
-		if ($date === NULL || !($date instanceof \DateTime)) {
-			return '';
-		}
-		return $date->format($format);
+	public function render($value, $decimals = 2, $decimalSeparator = '.', $thousandsSeparator = ',') {
+		return number_format($value, $decimals, $decimalSeparator, $thousandsSeparator);
 	}
 }
 ?>

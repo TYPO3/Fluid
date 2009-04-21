@@ -22,6 +22,7 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @subpackage 
  * @version $Id$
  */
+
 /**
  * Test for the "Textarea" Form view helper
  *
@@ -31,26 +32,51 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class TextareaViewHelperTest extends \F3\Testing\BaseTestCase {
+
+	/**
+	 * var \F3\Fluid\ViewHelpers\Form\TextareaViewHelper
+	 */
+	protected $viewHelper;
+
+	public function setUp() {
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextareaViewHelper();
+		$this->viewHelper->initializeArguments();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function textareaCorrectlySetsTagName() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('setTagName')->with('textarea');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$this->viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function textBoxReturnsExpectedXML() {
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextareaViewHelper();
-		$this->viewHelper->initializeArguments();
-		
+	public function textareaCorrectlySetsNameAttributeAndContent() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'NameOfTextarea');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('Current value');
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
-			'name' => 'NameOfTextbox',
+			'name' => 'NameOfTextarea',
 			'value' => 'Current value'
 		));
 
 		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
-		$output = $this->viewHelper->render();
-		$element = new \SimpleXMLElement($output);
-		
-		$this->assertEquals('NameOfTextbox', (string)$element['name'], 'Name was not correctly read out');
-		$this->assertEquals('Current value', (string)$element, 'Value was not correctly read out');
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
 	}
 }
 

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Text;
+namespace F3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -24,9 +24,21 @@ namespace F3\Fluid\ViewHelpers\Text;
 /**
  * Use this view helper to crop the text between its opening and closing tags.
  *
- * <code title="Example">
- * <f:text.crop>Some very long text</f3:text.crop>
+ * = Examples =
+ * 
+ * <code title="Defaults">
+ * <f:format.crop maxCharacters="10">This is some very long text</f:format.crop>
  * </code>
+ *
+ * Output:
+ * This is so...
+ * 
+ * <code title="Custom suffix">
+ * <f:format.crop maxCharacters="17" append=" [more]">This is some very long text</f:format.crop>
+ * </code>
+ * 
+ * Output:
+ * This is some very [more]
  *
  * WARNING: This tag does NOT handle tags currently.
  * WARNING: This tag doesn't care about multibyte charsets currently.
@@ -40,29 +52,19 @@ namespace F3\Fluid\ViewHelpers\Text;
 class CropViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * Initialize arguments for this view helper
-	 *
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('maxCharacters', 'integer', 'Place where to truncate the string', TRUE);
-		$this->registerArgument('append', 'string', 'What to append, if truncation happened. By Default, "..."', FALSE);
-	}
-
-	/**
 	 * Render the cropped text
 	 *
+	 * @param integer $maxCharacters Place where to truncate the string
+	 * @param string $append What to append, if truncation happened
 	 * @return string cropped text
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render() {
-		$numberOfCharacters = (int)$this->arguments['maxCharacters'];
+	public function render($maxCharacters, $append = '...') {
 		$stringToTruncate = $this->renderChildren();
-		$whatToAppend = ($this->arguments['append'] ? $this->arguments['append'] : '...');
 
-		if (strlen($stringToTruncate) > $numberOfCharacters) {
-			return substr($stringToTruncate, 0, $numberOfCharacters) . $whatToAppend;
+		if (strlen($stringToTruncate) > $maxCharacters) {
+			return substr($stringToTruncate, 0, $maxCharacters) . $append;
 		} else {
 			return $stringToTruncate;
 		}

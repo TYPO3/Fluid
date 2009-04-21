@@ -22,7 +22,6 @@ namespace F3\Fluid\ViewHelpers;
  */
 
 /**
- * [Enter description here]
  *
  * @package Fluid
  * @subpackage ViewHelpers

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Form;
+namespace F3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -22,58 +22,35 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * Renders an <input type="hidden" ...> tag.
- * 
+ * A view helper for escaping HTML. Any HTML character in the body of this tag will
+ * be escaped to an HTML entity.
+ *
  * = Examples =
  *
  * <code title="Example">
- * <f:hidden name="myHiddenValue" value="42" />
+ * <f:format.htmlEscape><p>This will be <em>escaped</em></p></f:format.htmlEscape>
  * </code>
- * 
+ *
  * Output:
- * <input type="hidden" name="myHiddenValue" value="42" />
- * 
- * You can also use the "property" attribute if you have bound an object to the form.
- * See <f:form> for more documentation.
+ * &lt;p&gt;This will be &lt;em&gt;escaped&lt;/em&gt;&lt;/p&gt;
  *
  * @package Fluid
  * @subpackage ViewHelpers
  * @version $Id$
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class HtmlEscapeViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * @var string
-	 */
-	protected $tagName = 'input';
-
-	/**
-	 * Initialize the arguments.
+	 * HTML escape the content of this tag.
 	 *
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-		parent::initializeArguments();
-		$this->registerUniversalTagAttributes();
-	}
-
-	/**
-	 * Renders the hidden field.
-	 *
-	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @return string The HTML escaped body.
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function render() {
-		$this->tag->addAttribute('type', 'hidden');
-		$this->tag->addAttribute('name', $this->getName());
-		$this->tag->addAttribute('value', $this->getValue());
-		
-		return $this->tag->render();
+		return htmlspecialchars($this->renderChildren());
 	}
 }
-
-
 ?>

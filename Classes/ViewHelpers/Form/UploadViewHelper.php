@@ -24,6 +24,15 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * A view helper which generates an <input type="file"> HTML element.
  * Make sure to set enctype="multipart/form-data" on the form!
+ * 
+ * = Examples =
+ * 
+ * <code title="Example">
+ * <f:upload name="file" />
+ * </code>
+ * 
+ * Output:
+ * <input type="file" name="file" />
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -32,6 +41,11 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @scope prototype
  */
 class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+
+	/**
+	 * @var string
+	 */
+	protected $tagName = 'input';
 
 	/**
 	 * Initialize the arguments.
@@ -51,7 +65,10 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		return '<input type="file" name="' . $this->getName() . '" ' . $this->renderTagAttributes() . ' />';
+		$this->tag->addAttribute('type', 'file');
+		$this->tag->addAttribute('name', $this->getName());
+
+		return $this->tag->render();
 	}
 }
 

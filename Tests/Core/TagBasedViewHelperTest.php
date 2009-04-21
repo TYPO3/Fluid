@@ -22,8 +22,9 @@ namespace F3\Fluid\Core;
  */
 
 include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
+
 /**
- * Testcase for [insert classname here]
+ * Testcase for TagBasedViewHelper
  *
  * @package
  * @subpackage Tests
@@ -38,26 +39,33 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function oneTagAttributeIsRenderedCorrectly() {
-		$this->viewHelper->registerTagAttribute('x', 'string', 'Description', FALSE);
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('x' => 'Hallo'));
-		$expected = 'x="Hallo"';
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('foo', 'bar');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
+		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('foo' => 'bar'));
 		$this->viewHelper->arguments = $arguments;
-		$this->assertEquals($expected, $this->viewHelper->render(), 'A simple tag attribute was not rendered correctly.');
+		$this->viewHelper->initialize();
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function additionalTagAttributesAreRenderedCorrectly() {
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('additionalAttributes' => array('x' => 'Hallo')));
-		$expected = 'x="Hallo"';
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('foo', 'bar');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
+		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('additionalAttributes' => array('foo' => 'bar')));
 		$this->viewHelper->arguments = $arguments;
-		$this->assertEquals($expected, $this->viewHelper->render(), 'An additional tag attribute was not rendered correctly.');
+		$this->viewHelper->initialize();
 	}
 
 	/**
@@ -65,12 +73,32 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function standardTagAttributesAreRegistered() {
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('class' => 'classAttribute', 'dir' => 'dirAttribute', 'id' => 'idAttribute', 'lang' => 'langAttribute', 'style' => 'styleAttribute', 'title' => 'titleAttribute', 'accesskey' => 'accesskeyAttribute', 'tabindex' => 'tabindexAttribute'));
-		$expected = 'class="classAttribute" dir="dirAttribute" id="idAttribute" lang="langAttribute" style="styleAttribute" title="titleAttribute" accesskey="accesskeyAttribute" tabindex="tabindexAttribute"';
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');
+		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('dir', 'dirAttribute');
+		$tagBuilderMock->expects($this->at(2))->method('addAttribute')->with('id', 'idAttribute');
+		$tagBuilderMock->expects($this->at(3))->method('addAttribute')->with('lang', 'langAttribute');
+		$tagBuilderMock->expects($this->at(4))->method('addAttribute')->with('style', 'styleAttribute');
+		$tagBuilderMock->expects($this->at(5))->method('addAttribute')->with('title', 'titleAttribute');
+		$tagBuilderMock->expects($this->at(6))->method('addAttribute')->with('accesskey', 'accesskeyAttribute');
+		$tagBuilderMock->expects($this->at(7))->method('addAttribute')->with('tabindex', 'tabindexAttribute');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(
+			array(
+				'class' => 'classAttribute',
+				'dir' => 'dirAttribute',
+				'id' => 'idAttribute',
+				'lang' => 'langAttribute',
+				'style' => 'styleAttribute',
+				'title' => 'titleAttribute',
+				'accesskey' => 'accesskeyAttribute',
+				'tabindex' => 'tabindexAttribute'
+			)
+		);
 		$this->viewHelper->arguments = $arguments;
 		$this->viewHelper->initializeArguments();
-		$this->assertEquals($expected, $this->viewHelper->render());
+		$this->viewHelper->initialize();
 	}
 }
 

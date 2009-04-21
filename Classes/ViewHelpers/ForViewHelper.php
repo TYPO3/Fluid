@@ -23,7 +23,32 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  * Loop view helper
+ * 
+ * = Examples =
  *
+ * <code title="Simple">
+ * <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">{foo}</f:for>
+ * </code>
+ * 
+ * Output:
+ * 1234
+ * 
+ * <code title="Output array key">
+ * <ul>
+ *   <f:for each="{fruit1: 'apple', fruit2: 'pear', fruit3: 'banana', fruit4: 'cherry'}" as="fruit" key="label">
+ *     <li>{label}: {fruit}</li>
+ *   </f:for>
+ * </ul>
+ * </code>
+ * 
+ * Output:
+ * <ul>
+ *   <li>fruit1: apple</li>
+ *   <li>fruit2: pear</li>
+ *   <li>fruit3: banana</li>
+ *   <li>fruit4: cherry</li>
+ * </ul>
+ * 
  * @package Fluid
  * @subpackage ViewHelpers
  * @version $Id$
@@ -33,30 +58,32 @@ namespace F3\Fluid\ViewHelpers;
 class ForViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * Arguments initialization
+	 * Iterates through elements of $each and renders child nodes 
 	 *
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('each', 'array', 'The array which is iterated over.', TRUE);
-		$this->registerArgument('as', 'string', 'Name of the variable where each array element is bound to.', TRUE);
-	}
-
-	/**
-	 * Render.
-	 *
+	 * @param array $each The array to be iterated over
+	 * @param string $as The name of the iteration variable
+	 * @param string $key The name of the variable to store the current array key
 	 * @return string Rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render() {
-		$out = '';
-		foreach ($this->arguments['each'] as $singleElement) {
-			$this->variableContainer->add($this->arguments['as'], $singleElement);
-			$out .= $this->renderChildren();
-			$this->variableContainer->remove($this->arguments['as']);
+	public function render(array $each, $as, $key = '') {
+		if (empty($each)) {
+			return '';
 		}
-		return $out;
+		$output = '';
+		foreach ($each as $keyValue => $singleElement) {
+			$this->variableContainer->add($as, $singleElement);
+			if ($key !== '') {
+				$this->variableContainer->add($key, $keyValue);
+			}
+			$output .= $this->renderChildren();
+			$this->variableContainer->remove($as);
+			if ($key !== '') {
+				$this->variableContainer->remove($key);
+			}
+		}
+		return $output;
 	}
 }
 

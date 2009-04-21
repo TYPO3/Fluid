@@ -33,69 +33,148 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
+
 	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * var \F3\Fluid\ViewHelpers\Form\SelectViewHelper
 	 */
-	public function selectReturnsExpectedXML() {
+	protected $viewHelper;
+
+	public function setUp() {
 		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\SelectViewHelper();
 		$this->viewHelper->initializeArguments();
+	}
 
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
-			'options' => array(
-				'k1' => 'v1',
-				'k2' => 'v2'
-			),
-			'value' => 'k2',
-			'name' => 'myName'
-		));
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function selectCorrectlySetsTagName() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('setTagName')->with('select');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$this->viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array('options' => array()));
 
-		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
-		$output = $this->viewHelper->render();
-		$element = new \SimpleXMLElement($output);
-
-		$this->assertEquals('myName', (string)$element['name'], 'Name was not correctly read out');
-
-		$selectedNode = $element->xpath('/select/option[@value="k2"]');
-		$this->assertEquals('selected', (string)$selectedNode[0]['selected'], 'The selected value was not correct.');
-
-		$this->assertEquals('v1', (string)$element->option[0], 'One option was not rendered, albeit it should (1).');
-		$this->assertEquals('v2', (string)$element->option[1], 'One option was not rendered, albeit it should (2).');
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function selectOnDomainObjectsReturnsExpectedXML() {
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\SelectViewHelper();
-		$this->viewHelper->initializeArguments();
-
-		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+	public function selectCreatesExpectedOptions() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
 			'options' => array(
-				new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht'),
-				$user_sk,
-				new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke')
+				'value1' => 'label1',
+				'value2' => 'label2'
 			),
-			'value' => $user_sk,
-			'optionKey' => 'id',
-			'optionValue' => 'firstName',
+			'value' => 'value2',
 			'name' => 'myName'
 		));
 
 		$this->viewHelper->arguments = $arguments;
-		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
-		$output = $this->viewHelper->render();
-		$element = new \SimpleXMLElement($output);
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
 
-		$selectedNode = $element->xpath('/select/option[@value="2"]');
-		$this->assertEquals('selected', (string)$selectedNode[0]['selected'], 'The selected value was not correct.');
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function multipleSelectCreatesExpectedOptions() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
+		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
-		$this->assertEquals('Ingmar', (string)$element->option[0], 'One option was not rendered, albeit it should (1).');
-		$this->assertEquals('Sebastian', (string)$element->option[1], 'One option was not rendered, albeit it should (2).');
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+			'options' => array(
+				'value1' => 'label1',
+				'value2' => 'label2',
+				'value3' => 'label3'
+			),
+			'value' => array('value3', 'value1'),
+			'name' => 'myName',
+			'multiple' => 'multiple',
+		));
+
+		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function selectOnDomainObjectsCreatesExpectedOptions() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1">Ingmar</option>' . chr(10) . '<option value="2" selected="selected">Sebastian</option>' . chr(10) . '<option value="3">Robert</option>' . chr(10));
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+
+		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+			'options' => array(
+				$user_is,
+				$user_sk,
+				$user_rl
+			),
+			'value' => $user_sk,
+			'optionValueField' => 'id',
+			'optionLabelField' => 'firstName',
+			'name' => 'myName'
+		));
+
+		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function multipleSelectOnDomainObjectsCreatesExpectedOptions() {
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
+		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1" selected="selected">Schlecht</option>' . chr(10) . '<option value="2">Kurfuerst</option>' . chr(10) . '<option value="3" selected="selected">Lemke</option>' . chr(10));
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+
+		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+			'options' => array(
+				$user_is,
+				$user_sk,
+				$user_rl
+			),
+			'value' => array($user_rl, $user_is),
+			'optionValueField' => 'id',
+			'optionLabelField' => 'lastName',
+			'name' => 'myName',
+			'multiple' => 'multiple'
+		));
+
+		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
 	}
 }
 

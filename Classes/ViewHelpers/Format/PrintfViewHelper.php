@@ -22,25 +22,32 @@ namespace F3\Fluid\ViewHelpers\Format;
  */
 
 /**
- * Formats a \DateTime object.
+ * A view helper for formatting values with printf. Either supply an array for
+ * the arguments or a single value.
+ * See http://www.php.net/manual/en/function.sprintf.php
  *
  * = Examples =
+ * 
+ * <code title="Scientific notation">
+ * <f:format.printf format="%.3e" arguments="{number : 362525200}" />
+ * </code>
  *
- * <code title="Defaults">
- * <f:format.date date="{dateObject}" />
+ * Output:
+ * 3.625e+8
+ * 
+ * <code title="Argument swapping">
+ * <f:format.printf format="%2$s is great, TYPO%1$d too. Yes, TYPO%1$d is great and so is %2$s!" arguments="{0: 3,1: 'Kasper'}" />
  * </code>
  * 
  * Output:
- * 1980-12-13
- * (depending on the current date)
- * 
- * <code title="Custom date format">
- * <f:format.date date="{dateObject}" format="H:i" />
+ * Kasper is great, TYPO3 too. Yes, TYPO3 is great and so is Kasper!
+ *
+ * <code title="Single argument">
+ * <f:format.printf format="We love %s" arguments="{1:'TYPO3'}" />
  * </code>
  * 
  * Output:
- * 01:23
- * (depending on the current time)
+ * We love TYPO3
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -48,22 +55,18 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class DateViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class PrintfViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
-	 * Render the supplied DateTime object as a formatted date.
+	 * Format the arguments with the given printf format string.
 	 *
-	 * @param \DateTime $date The DateTime object to format
-	 * @param string $format Format String which is taken to format the Date/Time
-	 * @return string Formatted date
+	 * @param string $format The printf format string
+	 * @param array $arguments The arguments for vsprintf
+	 * @return string The formatted value
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($date, $format = 'Y-m-d') {
-		if ($date === NULL || !($date instanceof \DateTime)) {
-			return '';
-		}
-		return $date->format($format);
+	public function render($format, array $arguments) {
+		return vsprintf($format, $arguments);
 	}
 }
 ?>

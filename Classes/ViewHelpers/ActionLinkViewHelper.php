@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Form;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -22,23 +22,25 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 /**
- * Creates a submit button.
+ * Link-generation view helper.
  * 
  * = Examples =
- * 
+ *
  * <code title="Defaults">
- * <f:submit value="Send Mail" />
+ * <f:actionLink>some link</f:actionLink>
  * </code>
  * 
  * Output:
- * <input type="submit" />
+ * <a href="currentpackage/currentcontroller">some link</a>
+ * (depending on routing setup and current package/controller/action)
  *
- * <code title="Dummy content for template preview">
- * <f:submit name="mySubmit" value="Send Mail"><button>dummy button</button></f:submit>
+ * <code title="Additional arguments">
+ * <f:actionLink action="myAction" controller="MyController" package="MyPackage" subpackage="MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:actionLink>
  * </code>
  * 
-  * Output:
- * <input type="submit" name="mySubmit" value="Send Mail" />
+ * Output:
+ * <a href="mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2">some link</a>
+ * (depending on routing setup)
  *
  * @package Fluid
  * @subpackage ViewHelpers
@@ -46,46 +48,44 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class SubmitViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+class ActionLinkViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 	/**
 	 * @var string
 	 */
-	protected $tagName = 'input';
+	protected $tagName = 'a';
 
 	/**
-	 * Initialize the arguments.
+	 * Initialize arguments
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
-		parent::initializeArguments();
 		$this->registerUniversalTagAttributes();
 	}
 
 	/**
-	 * Renders the submit button.
+	 * Render the link.
 	 *
-	 * @param string name Name of submit tag
-	 * @param string value Value of submit tag
-	 * @return string
+	 * @param string $action Name of target action.
+	 * @param string $controller Name of target controller. Defaults to current controller.
+	 * @param string $package Name of target package
+	 * @param string $subpackage Name of target subpackage
+	 * @param array $arguments Associative array of all URL arguments which should be appended
+	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($name = '', $value = '') {
-		$this->tag->addAttribute('type', 'submit');
-		if ($name !== '') {
-			$this->tag->addAttribute('name', $name);
-		}
-		if ($value !== '') {
-			$this->tag->addAttribute('value', $value);
-		}
+	public function render($action = NULL, $controller = NULL, $package = NULL, $subpackage = NULL, array $arguments = array()) {
+		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
+		$uri = $uriHelper->URIFor($action, $arguments, $controller, $package, $subpackage);
+		$this->tag->addAttribute('href', $uri);
+		$this->tag->setContent($this->renderChildren());
 
 		return $this->tag->render();
 	}
 }
-
 
 
 ?>

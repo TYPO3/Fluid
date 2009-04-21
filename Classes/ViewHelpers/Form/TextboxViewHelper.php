@@ -24,6 +24,15 @@ namespace F3\Fluid\ViewHelpers\Form;
 /**
  * View Helper which creates a simple Text Box (<input type="text">).
  *
+  * = Examples =
+ * 
+ * <code title="Example">
+ * <f:textbox name="myTextBox" value="default value" />
+ * </code>
+ * 
+ * Output:
+ * <input type="text" name="myTextBox" value="default value" />
+ * 
  * @package Fluid
  * @subpackage ViewHelpers
  * @version $Id$
@@ -31,6 +40,11 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @scope prototype
  */
 class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+
+	/**
+	 * @var string
+	 */
+	protected $tagName = 'input';
 
 	/**
 	 * Initialize the arguments.
@@ -50,7 +64,11 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		return '<input type="text" name="' . $this->getName() . '" value="' . $this->getValue() . '" ' . $this->renderTagAttributes() . ' />';
+		$this->tag->addAttribute('type', 'text');
+		$this->tag->addAttribute('name', $this->getName());
+		$this->tag->addAttribute('value', $this->getValue());
+		
+		return $this->tag->render();
 	}
 }
 

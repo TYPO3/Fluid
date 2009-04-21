@@ -22,7 +22,8 @@ namespace F3\Fluid\ViewHelpers;
  */
 
 /**
- * "THEN" -> only has an effect inside of "IF". See If for documentation.
+ * "THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
+ * @see F3\Fluid\ViewHelpers\IfViewHelper
  *
  * @package Fluid
  * @subpackage ViewHelpers

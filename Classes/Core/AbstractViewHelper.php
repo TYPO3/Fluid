@@ -126,6 +126,17 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	}
 
 	/**
+	 * Initializes the view helper before invoking the render method.
+	 *
+	 * Override this method to solve tasks before the view helper content is rendered.
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function initialize() {
+	}
+
+	/**
 	 * Helper method which triggers the rendering of everything between the
 	 * opening and the closing tag.
 	 *
@@ -157,11 +168,13 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	private function registerRenderMethodArguments() {
-
 		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
-
+		if (count($methodParameters) === 0) {
+			return;
+		}
 		$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
 
 		$paramAnnotations = array();
@@ -170,9 +183,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 		}
 
 		$i = 0;
-		if (!count($methodParameters)) return array();
-
-		$output = array();
 		foreach ($methodParameters as $parameterName => $parameterInfo) {
 			$dataType = 'Text';
 			if (isset($parameterInfo['type'])) {
@@ -202,6 +212,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @internal
 	 */
 	public function validateArguments() {
@@ -215,7 +226,11 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 
 				if ($type === 'array') {
 					if (!is_array($this->arguments[$argumentName]) && !$this->arguments[$argumentName] instanceof \ArrayAccess && !$this->arguments[$argumentName] instanceof \Traversable) {
-						throw new \F3\Fluid\Core\RuntimeException('The argument "' . $argumentName . '" was registered with type array, but is of type ' . gettype($this->arguments[$argumentName]), 1237900529);
+						throw new \F3\Fluid\Core\RuntimeException('The argument "' . $argumentName . '" was registered with type "array", but is of type "' . gettype($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1237900529);
+					}
+				} elseif ($type === 'boolean') {
+					if (!is_bool($this->arguments[$argumentName])) {
+						throw new \F3\Fluid\Core\RuntimeException('The argument "' . $argumentName . '" was registered with type "boolean", but is of type "' . gettype($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1240227732);
 					}
 				} else {
 					$validator = $this->validatorResolver->createValidator($type);
@@ -223,9 +238,8 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 						throw new \F3\Fluid\Core\RuntimeException('No validator found for argument name "' . $argumentName . '" with type "' . $type . '" in view helper "' . get_class($this) . '".', 1237900534);
 					}
 					$errors = new \F3\FLOW3\Validation\Errors();
-
 					if (!$validator->isValid($this->arguments[$argumentName], $errors)) {
-						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED. Expected type: "' . $type . '"; Given: ' . gettype($this->arguments[$argumentName]), 1237900686);
+						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED. Expected type: "' . $type . '"; Given: "' . gettype($this->arguments[$argumentName]) . '".', 1237900686);
 					}
 				}
 			}
@@ -252,7 +266,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	//abstract public function render();
-
 }
 
 ?>

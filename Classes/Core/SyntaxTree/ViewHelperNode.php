@@ -98,7 +98,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		$contextVariables = $variableContainer->getAllIdentifiers();
 
 		$evaluatedArguments = array();
-		$evaluatedArgumentsWhichAreMethodParameters = array();
+		$renderMethodParameters = array();
 		if (count($argumentDefinitions)) {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
@@ -108,7 +108,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 				}
 				if ($argumentDefinition->isMethodParameter()) {
-					$evaluatedArgumentsWhichAreMethodParameters[$argumentName] = $evaluatedArguments[$argumentName];
+					$renderMethodParameters[$argumentName] = $evaluatedArguments[$argumentName];
 				}
 			}
 		}
@@ -122,8 +122,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		}
 
 		$viewHelper->validateArguments();
-
-		$out = call_user_func_array(array($viewHelper, 'render'), $evaluatedArgumentsWhichAreMethodParameters);
+		$viewHelper->initialize();
+		$output = call_user_func_array(array($viewHelper, 'render'), $renderMethodParameters);
 
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
 			$endContextVariables = $variableContainer->getAllIdentifiers();
@@ -131,7 +131,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
 			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);
 		}
-		return $out;
+		return $output;
 	}
 
 	/**
@@ -141,10 +141,21 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @param string $type Target type
 	 * @return mixed New value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @todo re-check boolean conditions
 	 */
 	protected function convertArgumentValue($value, $type) {
-		if ($type == 'boolean' && is_string($value)) {
-			$value = (strtolower($value) === 'true' || $value === '1');
+		if ($type === 'boolean') {
+			if (is_string($value)) {
+				return (strtolower($value) !== 'false' && !empty($value));
+			}
+			if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
+				return count($value) > 0;
+			}
+			if (is_object($value)) {
+				return TRUE;
+			}
+			return FALSE;
 		}
 		return $value;
 	}
