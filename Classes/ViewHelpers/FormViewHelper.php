@@ -113,10 +113,12 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($action = '', $controller = '', $package = '', $subpackage = '', array $arguments = array(), $object = NULL) {
+	public function render($action = '', $controller = NULL, $package = NULL, $subpackage = NULL, array $arguments = array(), $object = NULL) {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
+		$formActionUrl = $uriHelper->URIFor($action, $arguments, $controller, $package, $subpackage, array());
+		$this->tag->addAttribute('action', $formActionUrl);
+		
 		$method = $this->arguments['method'] ? $this->arguments['method'] : 'POST';
-		$formActionUrl = $uriHelper->URIFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage'], array());
 
 		if ($this->arguments['name']) {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
@@ -127,7 +129,6 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 			$hiddenIdentityFields = $this->renderHiddenIdentityField($this->arguments['object']);
 		}
 
-		$this->tag->addAttribute('action', $formActionUrl);
 		$content = $hiddenIdentityFields;
 		$content .= $this->renderChildren();
 		$this->tag->setContent($content, FALSE);
