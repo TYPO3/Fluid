@@ -237,8 +237,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 					if (is_null($validator)) {
 						throw new \F3\Fluid\Core\RuntimeException('No validator found for argument name "' . $argumentName . '" with type "' . $type . '" in view helper "' . get_class($this) . '".', 1237900534);
 					}
-					$errors = new \F3\FLOW3\Validation\Errors();
-					if (!$validator->isValid($this->arguments[$argumentName], $errors)) {
+					if (!$validator->isValid($this->arguments[$argumentName])) {
 						throw new \F3\Fluid\Core\RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED. Expected type: "' . $type . '"; Given: "' . gettype($this->arguments[$argumentName]) . '".', 1237900686);
 					}
 				}
