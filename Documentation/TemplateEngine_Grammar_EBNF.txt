@@ -67,7 +67,7 @@ idList = array(1,2,3,4,5,6);
 
 
 {f3:for "hallo" each="bla" as="a"}
-{f3:link action="bla"}
-{f3:link(action="bla")}
+{f3:actionLink action="bla"}
+{f3:actionLink(action="bla")}
 
 

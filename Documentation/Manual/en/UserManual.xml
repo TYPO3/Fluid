@@ -102,7 +102,7 @@
 
           <programlisting>{namespace f3=F3\Fluid\ViewHelpers}⁄<co
               xml:id="co.tags-example.1" />
-&lt;f3:link controller="Administration"&gt;Administration&lt;/f3:link&gt;<co
+&lt;f3:actionLink controller="Administration"&gt;Administration&lt;/f3:actionLink&gt;<co
               xml:id="co.tags-example.2" /></programlisting>
 
           <calloutlist>
@@ -116,7 +116,7 @@
 
             <callout arearefs="co.tags-example.2">
               <para>Calling the <emphasis>View Helper:</emphasis> The
-              <code>&lt;f3:link...&gt; ... &lt;/f3:link&gt;</code> tag renders
+              <code>&lt;f3:actionLink...&gt; ... &lt;/f3:actionLink&gt;</code> tag renders
               a link.</para>
             </callout>
           </calloutlist>
@@ -126,7 +126,7 @@
           view helper, there exists a corresponding PHP class.</emphasis>
           Let's see how this works for the example above:</para>
 
-          <para>The <code>&lt;f3:link /&gt;</code> tag is implemented in the
+          <para>The <code>&lt;f3:actionLink /&gt;</code> tag is implemented in the
           class
           <classname>\F3\Fluid\ViewHelpers\LinkViewHelper</classname>.</para>
         </example></para>
@@ -174,8 +174,8 @@
         </itemizedlist></para>
 
       <para>Most view helpers have some parameters. These can be plain
-      strings, just like in <code>&lt;f3:link
-      controller="Administration"&gt;...&lt;/f3:link&gt;</code>, but as well
+      strings, just like in <code>&lt;f3:actionLink
+      controller="Administration"&gt;...&lt;/f3:actionLink&gt;</code>, but as well
       arbitary objects. Parameters of view helpers will just be parsed with
       the same rules as the rest of the template, thus you can pass arrays or
       objects as parameters.</para>
@@ -185,7 +185,7 @@
       <example>
         <title>Creating a link with arguments</title>
 
-        <programlisting>&lt;f3:link controller="Blog" action="show" arguments="{id : blogPost.id}"&gt;... read more&lt;/f3:link&gt;</programlisting>
+        <programlisting>&lt;f3:actionLink controller="Blog" action="show" arguments="{id : blogPost.id}"&gt;... read more&lt;/f3:actionLink&gt;</programlisting>
       </example>
 
       <para>Here, the view helper will get a parameter called
@@ -528,7 +528,7 @@
       <title>TagBasedViewHelper</title>
 
       <para>Many view helpers output an HTML tag - for example
-      <code>&lt;f3:link ...&gt; outputs </code>a <code>&lt;a
+      <code>&lt;f3:actionLink ...&gt; outputs </code>a <code>&lt;a
       href="..."&gt;</code> tag. There are many view helpers which work that
       way.</para>
 
@@ -629,7 +629,7 @@
 
         <para>If the link tag from above needed a new attribute called
         <code>fadeDuration</code>, which is not part of HTML, you could do
-        that as follows:<programlisting>&lt;f3:link ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f3:link&gt;</programlisting></para>
+        that as follows:<programlisting>&lt;f3:actionLink ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f3:actionLink&gt;</programlisting></para>
 
         <para>This attribute is available in all tags that inherit from
         <classname>F3\Fluid\Core\TagBasedViewHelper</classname>.</para>

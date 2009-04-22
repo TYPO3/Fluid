@@ -70,7 +70,7 @@
   &lt;h2&gt;{posting.title}&lt;/h2&gt;
   &lt;div class="author"&gt;{posting.author.name} {posting.author.email}&lt;/div&gt;<co
           xml:id="intro.example.2" />
-  &lt;p&gt;&lt;f3:link action="details" arguments="{id : posting.id}"&gt;{posting.teaser}&lt;/f3:link&gt;&lt;/p&gt;<co
+  &lt;p&gt;&lt;f3:actionLink action="details" arguments="{id : posting.id}"&gt;{posting.teaser}&lt;/f3:actionLink&gt;&lt;/p&gt;<co
           xml:id="intro.example.3" />
 &lt;/f3:for&gt;
 &lt;/body&gt;
@@ -81,7 +81,7 @@
           <para>The <emphasis>Namespace Import</emphasis> makes the
           <classname>F3\Fluid\ViewHelper</classname> namespace available under
           the shorthand <code>f3</code>. This is important for View Helpers,
-          like the <code>&lt;f3:link /&gt;</code> tag.</para>
+          like the <code>&lt;f3:actionLink /&gt;</code> tag.</para>
         </callout>
 
         <callout arearefs="intro.example.1">
@@ -97,7 +97,7 @@
         </callout>
 
         <callout arearefs="intro.example.3">
-          <para>The <code>&lt;f3:link&gt;...&lt;/f3:link&gt;</code> tag is a
+          <para>The <code>&lt;f3:actionLink&gt;...&lt;/f3:actionLink&gt;</code> tag is a
           so-called <emphasis>ViewHelper</emphasis>. It calls arbitary PHP
           code, and in this case renders a link to the
           "details"-Action.</para>
