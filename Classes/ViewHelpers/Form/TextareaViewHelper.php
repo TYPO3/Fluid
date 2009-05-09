@@ -55,8 +55,8 @@ class TextareaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelp
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
-		$this->registerTagAttribute('rows', 'int', 'The number of rows of a text area');
-		$this->registerTagAttribute('cols', 'int', 'The number of columns of a text area');
+		$this->registerTagAttribute('rows', 'int', 'The number of rows of a text area', TRUE);
+		$this->registerTagAttribute('cols', 'int', 'The number of columns of a text area', TRUE);
 		$this->registerUniversalTagAttributes();
 	}
 

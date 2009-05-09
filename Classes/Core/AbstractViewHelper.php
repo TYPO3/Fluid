@@ -140,11 +140,12 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * Helper method which triggers the rendering of everything between the
 	 * opening and the closing tag.
 	 *
-	 * @return string The finally rendered string.
+	 * @return mixed The finally rendered child nodes.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function renderChildren() {
-		return $this->viewHelperNode->renderChildNodes();
+		return $this->viewHelperNode->evaluateChildNodes();
 	}
 
 	/**

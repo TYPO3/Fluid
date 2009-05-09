@@ -85,8 +85,6 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function render($condition) {
-		$output = '';
-
 		if ($condition) {
 			return $this->renderThenChild();
 		} else {

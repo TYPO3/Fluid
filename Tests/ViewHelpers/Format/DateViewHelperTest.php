@@ -34,9 +34,20 @@ class DateViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperFormatsDateCorrectly() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
-		$date = new \DateTime('1980-12-13');
-		$actualResult = $viewHelper->render($date);
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(new \DateTime('1980-12-13')));
+		$actualResult = $viewHelper->render();
+		$this->assertEquals('1980-12-13', $actualResult);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function viewHelperFormatsDateStringCorrectly() {
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('1980-12-13'));
+		$actualResult = $viewHelper->render();
 		$this->assertEquals('1980-12-13', $actualResult);
 	}
 
@@ -45,9 +56,9 @@ class DateViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsCustomFormat() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
-		$date = new \DateTime('1980-02-01');
-		$actualResult = $viewHelper->render($date, 'd.m.Y');
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(new \DateTime('1980-02-01')));
+		$actualResult = $viewHelper->render('d.m.Y');
 		$this->assertEquals('01.02.1980', $actualResult);
 	}
 
@@ -56,8 +67,9 @@ class DateViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperReturnsEmptyStringIfNULLIsGiven() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
-		$actualResult = $viewHelper->render(NULL);
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(NULL));
+		$actualResult = $viewHelper->render();
 		$this->assertEquals('', $actualResult);
 	}
 
@@ -65,10 +77,14 @@ class DateViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function viewHelperReturnsEmptyStringIfNoDateTimeObjectIsGiven() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
-		$actualResult = $viewHelper->render('foo');
-		$this->assertEquals('', $actualResult);
+	public function viewHelperThrowsExceptionIfDateStringCantBeParsed() {
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+		try {
+			$viewHelper->render();
+			$this->fail('render() did not throw an exception although the specified date could not be parsed.');
+		} catch (\F3\Fluid\Core\ViewHelperException $exception) {
+		}
 	}
 }
 ?>

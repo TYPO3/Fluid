@@ -34,8 +34,9 @@ class PrintfViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function viewHelperCanUseArrayAsArgument() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\PrintfViewHelper();
-		$actualResult = $viewHelper->render('%04d-%02d-%02d', array('year' => 2009, 'month' => 4, 'day' => 5));
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\PrintfViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%04d-%02d-%02d'));
+		$actualResult = $viewHelper->render(array('year' => 2009, 'month' => 4, 'day' => 5));
 		$this->assertEquals('2009-04-05', $actualResult);
 	}
 
@@ -44,8 +45,9 @@ class PrintfViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperCanSwapMultipleArguments() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\PrintfViewHelper();
-		$actualResult = $viewHelper->render('%2$s %1$d %3$s %2$s', array(123, 'foo', 'bar'));
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\PrintfViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%2$s %1$d %3$s %2$s'));
+		$actualResult = $viewHelper->render(array(123, 'foo', 'bar'));
 		$this->assertEquals('foo 123 bar foo', $actualResult);
 	}	
 }

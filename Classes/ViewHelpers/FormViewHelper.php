@@ -42,13 +42,13 @@ namespace F3\Fluid\ViewHelpers;
  * = A complex form with a specified encoding type =
  *
  * <code title="Form with enctype set">
- * <f:form action=".." controller="..." package="..." enctype="multipart/form-data">...</f:form>
+ * <f:form actionName=".." controllerName="..." packageName="..." enctype="multipart/form-data">...</f:form>
  * </code>
  *
  * = A Form which should render a domain object =
  *
  * <code title="Binding a domain object to a form">
- * <f:form action="..." name="customer" object="{customer}">
+ * <f:form actionName="..." name="customer" object="{customer}">
  *   <f:form.hidden property="id" />
  *   <f:form.textbox property="name" />
  * </f:form>
@@ -103,28 +103,32 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	/**
 	 * Render the form.
 	 *
-	 * @param string $action name of action to call
-	 * @param string $controller name of controller to call the current action on
-	 * @param string $package name target package
-	 * @param string $subpackage target subpackage
-	 * @param array $arguments name of action to call Associative array of all URL arguments which should be appended to the action URI.
-	 * @param mixed $object Object to use for the form. Use in conjunction with the "property" attribute on the sub tags
+	 * @param string $actionName target action
+	 * @param array $arguments additional arguments
+	 * @param string $controllerName target controller
+	 * @param string $packageName target package
+	 * @param string $subpackageName target subpackage
+	 * @param mixed $object object to use for the form. Use in conjunction with the "property" attribute on the sub tags
 	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($action = '', $controller = NULL, $package = NULL, $subpackage = NULL, array $arguments = array(), $object = NULL) {
+	public function render($actionName = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL) {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$formActionUrl = $uriHelper->URIFor($action, $arguments, $controller, $package, $subpackage, array());
+		$formActionUrl = $uriHelper->URIFor($actionName, $arguments, $controllerName, $packageName, $subpackageName);
 		$this->tag->addAttribute('action', $formActionUrl);
 		
-		$method = $this->arguments['method'] ? $this->arguments['method'] : 'POST';
+		if (strtolower($this->arguments['method']) === 'get') {
+			$this->tag->addAttribute('method', 'get');
+		} else {
+			$this->tag->addAttribute('method', 'post');
+		}
 
 		if ($this->arguments['name']) {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
 		}
 		$hiddenIdentityFields = '';
-		if ($this->arguments['object']) {
+		if ($object !== NULL) {
 			$this->variableContainer->add('__formObject', $this->arguments['object']);
 			$hiddenIdentityFields = $this->renderHiddenIdentityField($this->arguments['object']);
 		}
@@ -133,7 +137,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$content .= $this->renderChildren();
 		$this->tag->setContent($content, FALSE);
 
-		if ($this->arguments['object']) {
+		if ($object !== NULL) {
 			$this->variableContainer->remove('__formObject');
 		}
 		if ($this->arguments['name']) {

@@ -123,7 +123,12 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
 		$viewHelper->validateArguments();
 		$viewHelper->initialize();
-		$output = call_user_func_array(array($viewHelper, 'render'), $renderMethodParameters);
+		try {
+			$output = call_user_func_array(array($viewHelper, 'render'), $renderMethodParameters);
+		} catch (\F3\Fluid\Core\ViewHelperException $exception) {
+			// @todo [BW] rethrow exception, log, ignore.. depending on the current context
+			$output = $exception->getMessage();
+		}
 
 		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
 			$endContextVariables = $variableContainer->getAllIdentifiers();

@@ -34,8 +34,9 @@ class NumberViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function formatNumberDefaultsToEnglishNotationWithTwoDecimals() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\NumberViewHelper();
-		$actualResult = $viewHelper->render(10000.0 / 3.0);
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(10000.0 / 3.0));
+		$actualResult = $viewHelper->render();
 		$this->assertEquals('3,333.33', $actualResult);
 	}
 
@@ -44,8 +45,9 @@ class NumberViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function formatNumberWithDecimalsDecimalPointAndSeparator() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\NumberViewHelper();
-		$actualResult = $viewHelper->render(10000.0 / 3.0, 3, ',', '.');
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(10000.0 / 3.0));
+		$actualResult = $viewHelper->render(3, ',', '.');
 		$this->assertEquals('3.333,333', $actualResult);
 	}
 }

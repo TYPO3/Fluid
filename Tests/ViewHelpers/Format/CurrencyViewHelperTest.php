@@ -34,8 +34,9 @@ class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRoundsFloatCorrectly() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\CurrencyViewHelper();
-		$actualResult = $viewHelper->render(123.456);
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123.456));
+		$actualResult = $viewHelper->render();
 		$this->assertEquals('123,46', $actualResult);
 	}
 
@@ -44,8 +45,9 @@ class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersCurrencySign() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\CurrencyViewHelper();
-		$actualResult = $viewHelper->render(123, 'foo');
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123));
+		$actualResult = $viewHelper->render('foo');
 		$this->assertEquals('123,00 foo', $actualResult);
 	}
 
@@ -54,8 +56,9 @@ class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsDecimalSeparator() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\CurrencyViewHelper();
-		$actualResult = $viewHelper->render(12345, '', '|');
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(12345));
+		$actualResult = $viewHelper->render('', '|');
 		$this->assertEquals('12.345|00', $actualResult);
 	}
 
@@ -64,8 +67,9 @@ class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsThousandsSeparator() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\CurrencyViewHelper();
-		$actualResult = $viewHelper->render(12345, '', ',', '|');
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(12345));
+		$actualResult = $viewHelper->render('', ',', '|');
 		$this->assertEquals('12|345,00', $actualResult);
 	}
 
@@ -74,8 +78,9 @@ class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersNullValues() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\CurrencyViewHelper();
-		$actualResult = $viewHelper->render(NULL);
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(NULL));
+		$actualResult = $viewHelper->render();
 		$this->assertEquals('0,00', $actualResult);
 	}
 
@@ -84,8 +89,9 @@ class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersNegativeAmounts() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\CurrencyViewHelper();
-		$actualResult = $viewHelper->render(-123.456);
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(-123.456));
+		$actualResult = $viewHelper->render();
 		$this->assertEquals('-123,46', $actualResult);
 	}
 }
