@@ -57,13 +57,15 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('Fluid'));
-
+		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
+		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
+		
 		$templateView = new \F3\Fluid\View\Fixture\TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
 		$templateView->injectTemplateParser($templateParserMock);
 		//$templateView->injectSyntaxTreeCache($mockSyntaxTreeCache);
 		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
 		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
-		$templateView->setRequest($mockRequest);
+		$templateView->setControllerContext($mockControllerContext);
 		$templateView->initializeObject();
 		$templateView->addVariable('name', 'value');
 		$templateView->render();
