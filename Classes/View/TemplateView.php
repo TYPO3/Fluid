@@ -191,7 +191,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
 		$layoutTree->setVariableContainer($variableContainer);
-		
+
 		return $layoutTree->render();
 	}
 
@@ -204,7 +204,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		if ($partialName[0] === '/') {
-			$partialBasePath = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->globalPartialBasePath);
+			$partialBasePath = str_replace('@package', $this->packageManager->getPackagePath($this->controllerContext->getRequest()->getControllerPackageKey()), $this->globalPartialBasePath);
 			$partialName = substr($partialName, 1);
 		} else {
 			$partialBasePath = dirname($this->resolveTemplatePathAndFilename());
@@ -256,7 +256,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRequest() {
-		return $this->request;
+		return $this->controllerContext->getRequest();
 	}
 
 	/**
@@ -288,16 +288,16 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->templatePathAndFilename !== NULL) {
 			return $this->templatePathAndFilename;
 		} else {
-			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->request->getControllerActionName());
+			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->controllerContext->getRequest()->getControllerActionName());
 			$matches = array();
-			preg_match(self::PATTERN_CONTROLLER, $this->request->getControllerObjectName(), $matches);
+			preg_match(self::PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
 			$subpackageName = '';
 			if ($matches['SubpackageName'] !== '') {
 				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
 				$subpackageName .= '/';
 			}
 			$controllerName = $matches['ControllerName'];
-			$templatePathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->templatePathAndFilenamePattern);
+			$templatePathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->controllerContext->getRequest()->getControllerPackageKey()), $this->templatePathAndFilenamePattern);
 			$templatePathAndFilename = str_replace('@subpackage', $subpackageName, $templatePathAndFilename);
 			$templatePathAndFilename = str_replace('@controller', $controllerName, $templatePathAndFilename);
 			$templatePathAndFilename = str_replace('@action', strtolower($actionName), $templatePathAndFilename);
@@ -321,7 +321,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->layoutPathAndFilename) {
 			return $this->layoutPathAndFilename;
 		} else {
-			$layoutPathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->request->getControllerPackageKey()), $this->layoutPathAndFilenamePattern);
+			$layoutPathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->controllerContext->getRequest()->getControllerPackageKey()), $this->layoutPathAndFilenamePattern);
 			$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
 			return $layoutPathAndFilename;
 		}
