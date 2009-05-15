@@ -53,7 +53,8 @@ class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
-		$sectionName = $viewHelperArguments['name']->render(new \F3\Fluid\Core\VariableContainer());
+		$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\VariableContainer());
+		$sectionName = $viewHelperArguments['name']->render();
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
 		}

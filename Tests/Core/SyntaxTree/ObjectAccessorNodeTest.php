@@ -118,7 +118,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$objectAccessorNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('variable.key.key3');
 		$context = new \F3\Fluid\Core\VariableContainer(array('variable' => $exampleArray));
 
-		$actual = $objectAccessorNode->evaluate($context);
+		$actual = $objectAccessorNode->evaluate();
 	}
 
 	/**
