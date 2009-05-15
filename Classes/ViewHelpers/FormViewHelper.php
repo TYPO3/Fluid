@@ -128,7 +128,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 			$this->variableContainer->add('__formName', $this->arguments['name']);
 		}
 		$hiddenIdentityFields = '';
-		if ($object !== NULL) {
+		if (!empty($object)) {
 			$this->variableContainer->add('__formObject', $this->arguments['object']);
 			$hiddenIdentityFields = $this->renderHiddenIdentityField($this->arguments['object']);
 		}
@@ -137,7 +137,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$content .= $this->renderChildren();
 		$this->tag->setContent($content, FALSE);
 
-		if ($object !== NULL) {
+		if (!empty($object)) {
 			$this->variableContainer->remove('__formObject');
 		}
 		if ($this->arguments['name']) {
@@ -156,6 +156,9 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object) {
+		if (!is_object($object)) {
+			return '';
+		}
 		$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($object);
 		return ($uuid === NULL) ? '<!-- Object of type ' . get_class($object) . ' is without identity -->' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $uuid .'" />';
 	}
