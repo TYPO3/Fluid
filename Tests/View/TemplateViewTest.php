@@ -53,7 +53,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		//$mockSyntaxTreeCache = $this->getMock('F3\FLOW3\Cache\Frontend\variableFrontend', array(), array(), '', FALSE);
 
-		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request');
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
 		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('Fluid'));
