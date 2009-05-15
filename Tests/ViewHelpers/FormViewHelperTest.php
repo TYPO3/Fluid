@@ -45,7 +45,7 @@ class FormViewHelperTest extends \F3\Testing\BaseTestCase {
 		$expectedResult = '<input type="hidden" name="theName[__identity]" value="123" />';
 
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('dummy'), array(), '', FALSE);
-		$viewHelper->arguments['name'] = 'theName';
+		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelperArguments(array('name' => 'theName')));
 		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
 
 		$actualResult = $viewHelper->_call('renderHiddenIdentityField', $object);

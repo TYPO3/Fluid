@@ -31,8 +31,7 @@ namespace F3\Fluid\View\Fixture;
 class TransparentSyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	public $variableContainer;
 	
-	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
-		$this->variableContainer = $variableContainer;
+	public function evaluate() {
 	}
 }
 

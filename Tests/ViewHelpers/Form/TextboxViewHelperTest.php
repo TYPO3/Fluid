@@ -51,7 +51,7 @@ class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
 		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('setTagName'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('setTagName')->with('input');
 		$this->viewHelper->injectTagBuilder($tagBuilderMock);
-		$this->viewHelper->arguments = new \F3\Fluid\Core\ViewHelperArguments(array());
+		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelperArguments(array()));
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -75,7 +75,7 @@ class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
 			'value' => 'Current value'
 		));
 
-		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();

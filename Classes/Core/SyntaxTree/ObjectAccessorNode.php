@@ -61,16 +61,17 @@ class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * - call public property, if exists
 	 * - fail
 	 *
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container which is used.
 	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @todo Depending on the context, either fail or not!!!
+	 * @todo make use of FLOW3 reflection
 	 */
-	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
+	public function evaluate() {
 		try {
 			$objectPathParts = explode('.', $this->objectPath);
 			$variableName = array_shift($objectPathParts);
-			$currentObject = $variableContainer->get($variableName);
+			$currentObject = $this->variableContainer->get($variableName);
 
 			if (count($objectPathParts) > 0) {
 				foreach ($objectPathParts as $currentObjectPath) {
@@ -83,7 +84,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
 						try {
 							$reflectionProperty = new \ReflectionProperty($currentObject, $currentObjectPath);
-						} catch(ReflectionException $e) {
+						} catch(\ReflectionException $e) {
 							throw new \F3\Fluid\Core\RuntimeException($e->getMessage(), 1224611407);
 						}
 						if ($reflectionProperty->isPublic()) {

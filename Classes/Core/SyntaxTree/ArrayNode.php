@@ -51,15 +51,16 @@ class ArrayNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the array and return an evaluated array
 	 *
-	 * @param \F3\Fluid\VariableContainer $variableContainer Variable Container for the scope variables
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
+	public function evaluate() {
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
 			if ($value instanceof \F3\Fluid\Core\SyntaxTree\AbstractNode) {
-				$arrayToBuild[$key] = $value->evaluate($variableContainer);
+				$value->setVariableContainer($this->variableContainer);
+				$arrayToBuild[$key] = $value->evaluate();
 			} else {
 				$arrayToBuild[$key] = $value;
 			}

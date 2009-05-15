@@ -63,7 +63,7 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	 * An array of \F3\Fluid\Core\SyntaxTree\AbstractNode
 	 * @var array
 	 */
-	protected $childNodes;
+	protected $childNodes = array();
 
 	/**
 	 * Setter for ChildNodes - as defined in ChildNodeAccessInterface
@@ -103,8 +103,9 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	protected function renderThenChild() {
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper' ) {
-				return $childNode->render($this->variableContainer);
+				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
+				$childNode->setVariableContainer($this->variableContainer);
+				return $childNode->render();
 			}
 		}
 		return $this->renderChildren();
@@ -120,8 +121,9 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	protected function renderElseChild() {
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper' ) {
-				return $childNode->render($this->variableContainer);
+				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
+				$childNode->setVariableContainer($this->variableContainer);
+				return $childNode->render();
 			}
 		}
 		return '';

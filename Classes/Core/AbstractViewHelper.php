@@ -51,16 +51,16 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	private $viewHelperNode;
 
 	/**
-	 * Arguments accessor. Must be public, because it is set from the framework.
+	 * Arguments accessor.
 	 * @var \F3\Fluid\Core\ViewHelperArguments
 	 */
-	public $arguments;
+	protected $arguments;
 
 	/**
-	 * Current variable container reference. Must be public because it is set by the framework
+	 * Current variable container reference.
 	 * @var \F3\Fluid\Core\VariableContainer
 	 */
-	public $variableContainer;
+	protected $variableContainer;
 
 	/**
 	 * Validator resolver
@@ -73,6 +73,26 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @var \F3\FLOW3\Reflection\Service
 	 */
 	protected $reflectionService;
+
+	/**
+	 * @param \F3\Fluid\Core\ViewHelperArguments
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
+	 */
+	public function setArguments(\F3\Fluid\Core\ViewHelperArguments $arguments) {
+		$this->arguments = $arguments;
+	}
+
+	/**
+	 * @param \F3\Fluid\Core\VariableContainer Variable Container to be used for rendering
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
+	 */
+	public function setVariableContainer(\F3\Fluid\Core\VariableContainer $variableContainer) {
+		$this->variableContainer = $variableContainer;
+	}
 
 	/**
 	 * Inject a validator resolver
@@ -185,11 +205,14 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 
 		$i = 0;
 		foreach ($methodParameters as $parameterName => $parameterInfo) {
-			$dataType = 'Text';
+			$dataType = NULL;
 			if (isset($parameterInfo['type'])) {
 				$dataType = $parameterInfo['type'];
 			} elseif ($parameterInfo['array']) {
 				$dataType = 'array';
+			}
+			if ($dataType === NULL) {
+				throw new \F3\Fluid\Core\ParsingException('could not determine type of argument "' . $parameterName .'" of the render-method in ViewHelper "' . get_class($this) . '". Either the methods docComment is invalid or some PHP optimizer strips off comments.', 1242292003);
 			}
 
 			$description = '';

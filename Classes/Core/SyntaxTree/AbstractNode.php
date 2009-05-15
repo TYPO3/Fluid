@@ -45,19 +45,31 @@ abstract class AbstractNode {
 	protected $variableContainer;
 
 	/**
+	 * @param \F3\Fluid\Core\VariableContainer Variable Container to be used for the evaluation
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
+	 */
+	public function setVariableContainer(\F3\Fluid\Core\VariableContainer $variableContainer) {
+		$this->variableContainer = $variableContainer;
+	}
+
+	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
 	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluateChildNodes() {
 		$output = NULL;
 		foreach ($this->childNodes as $subNode) {
+			$subNode->setVariableContainer($this->variableContainer);
 			if ($output === NULL) {
-				$output = $subNode->evaluate($this->variableContainer);
+				$output = $subNode->evaluate();
 			} else {
 				$output = (string)$output;
-				$output .= $subNode->render($this->variableContainer);
+				$output .= $subNode->render();
 			}
 		}
 		return $output;
@@ -77,22 +89,22 @@ abstract class AbstractNode {
 	/**
 	 * Renders the node.
 	 *
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container to be used for the rendering
 	 * @return string Rendered node as string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render(\F3\Fluid\Core\VariableContainer $variableContainer) {
-		return (string)$this->evaluate($variableContainer);
+	public function render() {
+		return (string)$this->evaluate();
 	}
 
 	/**
 	 * Evaluates the node - can return not only strings, but arbitary objects.
 	 *
-	 * @param \F3\Fluid\Core\VariableContainer Variable Container to be used for the evaluation
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	abstract public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer);
+	abstract public function evaluate();
 }
 
 ?>

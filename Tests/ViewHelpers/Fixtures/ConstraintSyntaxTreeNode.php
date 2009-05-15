@@ -44,7 +44,7 @@ class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\ViewHelperNode 
 		$this->callProtocol[] = $callElement;
 	}
 	
-	public function evaluate(\F3\Fluid\Core\VariableContainer $container) {}
+	public function evaluate() {}
 }
 
 

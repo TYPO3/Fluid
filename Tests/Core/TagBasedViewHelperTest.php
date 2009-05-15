@@ -48,7 +48,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('foo' => 'bar'));
-		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initialize();
 	}
 
@@ -64,7 +64,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array('additionalAttributes' => array('foo' => 'bar')));
-		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initialize();
 	}
 
@@ -96,7 +96,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 				'tabindex' => 'tabindexAttribute'
 			)
 		);
-		$this->viewHelper->arguments = $arguments;
+		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initializeArguments();
 		$this->viewHelper->initialize();
 	}

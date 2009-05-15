@@ -45,12 +45,6 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	protected $arguments = array();
 
 	/**
-	 * VariableContainer storing the currently available variables.
-	 * @var \F3\Fluid\Core\VariableContainer
-	 */
-	protected $variableContainer;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
@@ -82,20 +76,17 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 *
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer The Variable Container in which the variables are stored
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Handle initializeArguments()
 	 * @todo Component manager
 	 */
-	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
-		$this->variableContainer = $variableContainer;
-
-		$objectFactory = $variableContainer->getObjectFactory();
+	public function evaluate() {
+		$objectFactory = $this->variableContainer->getObjectFactory();
 		$viewHelper = $objectFactory->create($this->viewHelperClassName);
 		$argumentDefinitions = $viewHelper->prepareArguments();
 
-		$contextVariables = $variableContainer->getAllIdentifiers();
+		$contextVariables = $this->variableContainer->getAllIdentifiers();
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
@@ -103,7 +94,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
-					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue->evaluate($variableContainer), $argumentDefinition->getType());
+					$argumentValue->setVariableContainer($this->variableContainer);
+					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue->evaluate(), $argumentDefinition->getType());
 				} else {
 					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 				}
@@ -113,8 +105,9 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			}
 		}
 
-		$viewHelper->arguments = $objectFactory->create('F3\Fluid\Core\ViewHelperArguments', $evaluatedArguments);
-		$viewHelper->variableContainer = $variableContainer;
+		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelperArguments', $evaluatedArguments);
+		$viewHelper->setArguments($viewHelperArguments);
+		$viewHelper->setVariableContainer($this->variableContainer);
 		$viewHelper->setViewHelperNode($this);
 
 		if ($viewHelper instanceof \F3\Fluid\Core\Facets\ChildNodeAccessInterface) {
@@ -130,8 +123,8 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 			$output = $exception->getMessage();
 		}
 
-		if ($contextVariables != $variableContainer->getAllIdentifiers()) {
-			$endContextVariables = $variableContainer->getAllIdentifiers();
+		if ($contextVariables != $this->variableContainer->getAllIdentifiers()) {
+			$endContextVariables = $this->variableContainer->getAllIdentifiers();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 
 			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);

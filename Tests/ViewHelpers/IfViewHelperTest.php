@@ -31,78 +31,66 @@ namespace F3\Fluid\ViewHelpers;
 class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	/**
-	 * @var \F3\Fluid\TemplateParser
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	protected $templateParser;
+	public function viewHelperRendersChildrenIfConditionIsTrueAndNoThenViewHelperChildExists() {
+		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\IfViewHelper', array('renderChildren'));
+		$mockViewHelper->expects($this->at(0))->method('renderChildren')->will($this->returnValue('foo'));
 
-	/**
-	 * Sets up this test case
-	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setUp() {
-		$this->templateParser = new \F3\Fluid\Core\TemplateParser();
-		$this->templateParser->injectObjectFactory($this->objectFactory);
+		$actualResult = $mockViewHelper->render(TRUE);
+		$this->assertEquals('foo', $actualResult);
 	}
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function ifReturnsCorrectResultIfConditionTrue() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
+	public function viewHelperRendersThenViewHelperChildIfConditionIsTrueAndThenViewHelperChildExists() {
+		$mockVariableContainer = $this->getMock('F3\Fluid\Core\VariableContainer');
 
-		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => 'true'));
-		$context->injectObjectFactory($this->objectFactory);
-		$result = $templateTree->render($context);
-		$expected = 'RenderSomething';
-		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was true');
+		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setVariableContainer', 'render'), array(), '', FALSE);
+		$mockThenViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ThenViewHelper'));
+		$mockThenViewHelperNode->expects($this->at(1))->method('setVariableContainer')->with($mockVariableContainer);
+		$mockThenViewHelperNode->expects($this->at(2))->method('render')->will($this->returnValue('ThenViewHelperResults'));
+
+		$viewHelper = new \F3\Fluid\ViewHelpers\IfViewHelper();
+		$viewHelper->setVariableContainer($mockVariableContainer);
+		$viewHelper->setChildNodes(array($mockThenViewHelperNode));
+
+		$actualResult = $viewHelper->render(TRUE);
+		$this->assertEquals('ThenViewHelperResults', $actualResult);
 	}
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function ifReturnsCorrectResultIfConditionFalse() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfFixture.html', FILE_TEXT);
+	public function renderReturnsEmptyStringIfConditionIsFalseAndNoThenViewHelperChildExists() {
+		$viewHelper = new \F3\Fluid\ViewHelpers\IfViewHelper();
 
-		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => FALSE));
-		$context->injectObjectFactory($this->objectFactory);
-		$result = $templateTree->render($context);
-		$expected = '';
-		$this->assertEquals($expected, $result, 'IF did not return expected result if condition was false');
+		$actualResult = $viewHelper->render(FALSE);
+		$this->assertEquals('', $actualResult);
 	}
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function ifThenElseReturnsCorrectResultIfConditionTrue() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
+	public function viewHelperRendersElseViewHelperChildIfConditionIsFalseAndNoThenViewHelperChildExists() {
+		$mockVariableContainer = $this->getMock('F3\Fluid\Core\VariableContainer');
 
-		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => 'true'));
-		$context->injectObjectFactory($this->objectFactory);
-		$result = $templateTree->render($context);
-		$expected = 'YEP';
-		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was true');
-	}
+		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setVariableContainer', 'render'), array(), '', FALSE);
+		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ElseViewHelper'));
+		$mockElseViewHelperNode->expects($this->at(1))->method('setVariableContainer')->with($mockVariableContainer);
+		$mockElseViewHelperNode->expects($this->at(2))->method('render')->will($this->returnValue('ElseViewHelperResults'));
 
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function ifThenElseReturnsCorrectResultIfConditionFalse() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/IfThenElseFixture.html', FILE_TEXT);
+		$viewHelper = new \F3\Fluid\ViewHelpers\IfViewHelper();
+		$viewHelper->setVariableContainer($mockVariableContainer);
+		$viewHelper->setChildNodes(array($mockElseViewHelperNode));
 
-		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
-		$context = new \F3\Fluid\Core\VariableContainer(array('condition' => FALSE));
-		$context->injectObjectFactory($this->objectFactory);
-		$result = $templateTree->render($context);
-		$expected = 'NOPE';
-		$this->assertEquals($expected, $result, 'IF-Then-Else did not return expected result if condition was false');
+		$actualResult = $viewHelper->render(FALSE);
+		$this->assertEquals('ElseViewHelperResults', $actualResult);
 	}
 }
 

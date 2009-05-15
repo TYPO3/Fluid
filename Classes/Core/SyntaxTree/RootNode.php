@@ -35,12 +35,10 @@ class RootNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 *
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container to be used
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
-		$this->variableContainer = $variableContainer;
+	public function evaluate() {
 		$text = $this->evaluateChildNodes();
 		return $text;
 	}

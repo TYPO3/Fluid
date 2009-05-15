@@ -146,7 +146,10 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
 		$templateTree = $parsedTemplate->getRootNode();
-		return $templateTree->render($this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables));
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
+		$templateTree->setVariableContainer($variableContainer);
+
+		return $templateTree->render();
 	}
 
 	/**
@@ -155,6 +158,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param string $sectionName Name of section to render
 	 * @return rendered template for the section
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderSection($sectionName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
@@ -162,9 +166,15 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$templateTree = $parsedTemplate->getRootNode();
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
-		if(!array_key_exists($sectionName, $sections)) throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108982);
+		if(!array_key_exists($sectionName, $sections)) {
+			throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108982);
+		}
+		$section = $sections[$sectionName];
 
-		return $sections[$sectionName]->render($this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables));
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
+		$section->setVariableContainer($variableContainer);
+
+		return $section->render();
 	}
 
 	/**
@@ -173,15 +183,16 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param string $layoutName Name of layout
 	 * @return string rendered HTML
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderWithLayout($layoutName) {
 		$layout = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
 		$layoutTree = $layout->getRootNode();
 
-		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$result = $layoutTree->render($variableStore);
-
-		return $result;
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
+		$layoutTree->setVariableContainer($variableContainer);
+		
+		return $layoutTree->render();
 	}
 
 	/**
@@ -189,6 +200,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * SHOULD NOT BE USED BY USERS!
 	 * @internal
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		if ($partialName[0] === '/') {
@@ -204,19 +216,20 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$partialPathAndFileName = $partialDirectoryName . '/' . $partialFileName;
 
 		$partial = $this->parseTemplate($partialPathAndFileName);
-		$syntaxTree = $partial->getRootNode();
-
 		$variables['view'] = $this;
-		$variableStore = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
 
-		if ($sectionToRender != NULL) {
+		if ($sectionToRender !== NULL) {
 			$sections = $partial->getVariableContainer()->get('sections');
-			if(!array_key_exists($sectionToRender, $sections)) throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108983);
-			$result = $sections[$sectionToRender]->render($variableStore);
+			if(!array_key_exists($sectionToRender, $sections)) {
+				throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108983);
+			}
+			$syntaxTree = $sections[$sectionToRender];
 		} else {
-			$result = $syntaxTree->render($variableStore);
+			$syntaxTree = $partial->getRootNode();
 		}
-		return $result;
+		$syntaxTree->setVariableContainer($variableContainer);
+		return $node->render();
 	}
 
 	/**
@@ -229,22 +242,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function assign($key, $value) {
-		if ($key === 'view') throw new \F3\Fluid\Core\RuntimeException('The variable "view" cannot be set using assign().', 1233317880);
+		if ($key === 'view') {
+			throw new \F3\Fluid\Core\RuntimeException('The variable "view" cannot be set using assign().', 1233317880);
+		}
 		$this->contextVariables[$key] = $value;
 		return $this;
-	}
-
-	/**
-	 * Add a variable to the context. DEPRECATED; use "assign" instead.
-	 *
-	 * This is an alias to the "assign" method.
-	 * @todo remove this alias after changing all production code
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @deprecated
-	 */
-	public function addVariable($key, $value) {
-		trigger_error('Call to deprecated method addVariable() in Fluid\View\TemplateView', E_USER_DEPRECATED);
-		return $this->assign($key, $value);
 	}
 
 	/**

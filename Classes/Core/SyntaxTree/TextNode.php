@@ -45,18 +45,19 @@ class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($text) {
-		if (!is_string($text)) throw new \F3\Fluid\Core\ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+		if (!is_string($text)) {
+			throw new \F3\Fluid\Core\ParsingException('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+		}
 		$this->text = $text;
 	}
 
 	/**
 	 * Return the text associated to the syntax tree.
 	 *
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer Variable Container where all variables are stored in
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\VariableContainer $variableContainer) {
+	public function evaluate() {
 		return $this->text;
 	}
 }

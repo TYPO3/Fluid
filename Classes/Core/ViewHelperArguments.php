@@ -45,7 +45,7 @@ class ViewHelperArguments implements \ArrayAccess {
 	 * @param array $arguments Array of arguments
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function __construct($arguments) {
+	public function __construct(array $arguments) {
 		$this->arguments = $arguments;
 	}
 
