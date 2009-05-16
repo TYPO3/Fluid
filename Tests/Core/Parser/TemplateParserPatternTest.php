@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid;
+namespace F3\Fluid\Core\Parser;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,7 +28,7 @@ namespace F3\Fluid;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class Test extends \F3\Testing\BaseTestCase {
+class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
@@ -167,10 +167,9 @@ class Test extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo finish unit test; add complete shorthand syntax!!
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX;
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f3'));
 
 		$source = 'some string{Object.bla}here as well';
 		$expected = array('some string', '{Object.bla}','here as well');
@@ -178,7 +177,45 @@ class Test extends \F3\Testing\BaseTestCase {
 
 		$source = 'some {}string\{Object.bla}here as well';
 		$expected = array('some {}string\\', '{Object.bla}','here as well');
-		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example. (1)');
+
+		$source = 'some {f3:viewHelper()} as well';
+		$expected = array('some ', '{f3:viewHelper()}',' as well');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example. (2)');
+
+		$source = '{f3:for("{post}")}';
+		$expected = array('{f3:for("{post}")}');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(3)');
+
+		$source = '{f3:for("{post}" )}';
+		$expected = array('{f3:for("{post}" )}');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(4)');
+
+
+		$source = '{f3:for(bla="post{{")}';
+		$expected = array('{f3:for(bla="post{{")}');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(5)');
+
+		$source = '{f3:for("{post}" each="{posts}" as="post")}';
+		$expected = array('{f3:for("{post}" each="{posts}" as="post")}');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(6)');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function testSCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER() {
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, array('f'));
+
+		$this->assertEquals(preg_match($pattern, '{flow3}'), 0, 'Shorthand ViewHelper was identified, but should not.');
+		$this->assertEquals(preg_match($pattern, '{f:flow3}'), 0, 'Shorthand ViewHelper was identified, but should not.');
+		$this->assertEquals(preg_match($pattern, '{f:flow3()}'), 1, 'Shorthand ViewHelper was not identified (1).');
+		$this->assertEquals(preg_match($pattern, '{f:flow3(  )}'), 1, 'Shorthand ViewHelper was not identified (2).');
+		$this->assertEquals(preg_match($pattern, '{f:flow3( "argument" )}'), 1, 'Shorthand ViewHelper was not identified (3).');
+		$this->assertEquals(preg_match($pattern, '{f:flow3( \'argument\' )}'), 1, 'Shorthand ViewHelper was not identified (4).');
+		$this->assertEquals(preg_match($pattern, '{f:flow3( myArgument1 ="Hallo" )}'), 1, 'Shorthand ViewHelper was not identified (5).');
+		$this->assertEquals(preg_match($pattern, '{f:for("{post}" each="{posts}" as="post")}'), 1, 'Shorthand ViewHelper was not identified (6).');
 
 	}
 

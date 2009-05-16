@@ -81,8 +81,8 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function fixture01ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture01.html', FILE_TEXT);
+	public function fixture01ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture01.html') {
+		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
 		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\na"));
@@ -99,14 +99,23 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function fixture02ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture02.html', FILE_TEXT);
+	public function fixture01ShorthandSyntaxReturnsCorrectObjectTree() {
+		$this->fixture01ReturnsCorrectObjectTree('/Fixtures/TemplateParserTestFixture01-shorthand.html');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture02ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture02.html') {
+		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
 		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\n"));
 		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\nHallo\n"));
+		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("Hallo"));
 		$rootNode->addChildNode($dynamicNode);
+		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\n"));
 		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
 		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("Second"));
 		$rootNode->addChildNode($dynamicNode);
@@ -114,6 +123,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 02 was not parsed correctly.');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture02ShorthandSyntaxReturnsCorrectObjectTree() {
+		$this->fixture02ReturnsCorrectObjectTree('/Fixtures/TemplateParserTestFixture02-shorthand.html');
 	}
 
 	/**
@@ -158,8 +175,8 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function fixture06ReturnsCorrectObjectTree() {
-		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture06.html', FILE_TEXT);
+	public function fixture06ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture06.html') {
+		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
 		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
 		$arguments = array(
@@ -175,6 +192,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 06 was not parsed correctly.');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture06ShorthandSyntaxReturnsCorrectObjectTree() {
+		$this->fixture06ReturnsCorrectObjectTree('/Fixtures/TemplateParserTestFixture06-shorthand.html');
 	}
 
 	/**

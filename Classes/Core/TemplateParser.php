@@ -57,8 +57,26 @@ class TemplateParser {
 				<!\[CDATA\[.*?\]\]>
 			)
 		)/xs';
+
+	/**
+	 * This regular expression scans if the input string is a ViewHelper tag
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public static $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/^<(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)(?P<Attributes>(?:\s*[a-zA-Z0-9:]+=(?:"(?:\\\"|[^"])*"|\'(?:\\\\\'|[^\'])*\')\s*)*)\s*(?P<Selfclosing>\/?)>$/';
+
+	/**
+	 * This regular expression scans if the input string is a closing ViewHelper tag
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public static $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+
+	/**
+	 * This regular expression splits the tag arguments into its parts
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public static $SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
 
 	/**
@@ -66,7 +84,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public static $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>/s';
+	public static $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
 
 	/**
 	 * Pattern which splits the shorthand syntax into different tokens. The "shorthand syntax" is everything like {...}
@@ -75,15 +93,33 @@ class TemplateParser {
 	 */
 	public static $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
 		(
-			{                                # Start of shorthand syntax
-				(?:                          # Shorthand syntax is either composed of...
-					[a-zA-Z0-9\-_:,.]        # Various characters
-					|"(?:\\\"|[^"])*"        # Double-quoted strings
-					|\'(?:\\\\\'|[^\'])*\'   # Single-quoted strings
-					|(?R)                    # Other shorthand syntaxes inside, albeit not in a quoted string
-					|\s+                     # Spaces
-				)+
-			}                                # End of shorthand syntax
+			{                                                   # Start of shorthand syntax
+				(?:                                             # Shorthand syntax is either composed of...
+					[a-zA-Z0-9_.]+                              # Object accessors
+					|(?P<Array>                                 # Array
+						[a-zA-Z0-9_.]+                          # Array Key
+						\s*:\s*
+						(:                                      # Array Value
+							"(?:\\\"|[^"])*"                    # Double-quoted strings
+							|\'(?:\\\\\'|[^\'])*\'              # Single-quoted strings
+							|-?[0-9]+(?:\\.[0-9])?              # Numbers (negative as well, with floating point)
+							|{[a-zA-Z0-9_.]+}                   # Object Access
+							|(?P>Array)                         # recursive arrays
+						)                                       # End Array Value
+					)                                           # End Array
+					|(?:                                        # Inline ViewHelpers
+						(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)       # Have a namespace and an identifier
+						\\(                                     # After the ViewHelper name, (
+							(?:                                 # Start submatch: arguments for ViewHelpers
+								"(?:\\\"|[^"])*"                # Double-quoted strings
+								|\'(?:\\\\\'|[^\'])*\'          # Single-quoted strings
+								|[a-zA-Z0-9]+=                  # Variable name
+								|\s*                            # Spaces
+							)*                                  # End argument submatch
+						\\)                                     # closing argument bracket )
+					)                                           # End Inline ViewHelpers
+				)                                               # End Submatch: Shorthand syntax
+			}                                                   # End of shorthand syntax
 		)/x';
 
 	/**
@@ -92,17 +128,16 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public static $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/{(?P<Object>[a-zA-Z0-9\-_.]+)}/';
+	public static $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/^{(?P<Object>[a-zA-Z0-9\-_.]+)}$/';
 
 	/**
 	 * Pattern which detects the array/object syntax like in JavaScript, so it detects strings like:
 	 * {object: value, object2: {nested: array}, object3: "Some string"}
 	 *
-	 * If the string is escaped with an \ in front, it is not detected.
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public static $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/
+	public static $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
 		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
 			{                                           # Each array needs to start with {
 				(?P<Array>                              # Start submatch
@@ -119,7 +154,36 @@ class TemplateParser {
 					)*                                  # The above cycle is repeated for all array elements
 				)                                       # End array submatch
 			}                                           # Each array ends with }
-		)/x';
+		)$/x';
+
+	/**
+	 * If the string is a viewHelper in shorthand syntax, then this pattern matches.
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public static $SCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
+		^{                                                             # Each Inline ViewHelper should start with {
+			(?P<NamespaceIdentifier>NAMESPACE)                         # The namespace
+			:                                                          # :
+			(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)                      # ViewHelper Identifier
+			\\(                                                        # Opening bracket for arguments
+				\s*(?P<UnnamedArgument>                                # Possible options for Unnamed Argument:
+					"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"            # Double qouoted string
+					|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\'      # Single quoted string
+				)?                                                     # The unnamed argument is optional
+				\s*(?P<Attributes>                                        # Named attributes
+					(?:\s*                                             # Start cycle for single argument
+						[a-zA-Z0-9:]+                                  # Identifier for argument
+						\s*=\s*                                        # Equals
+						(?:                                            # Correctly escaped argument
+							"(?:\\\"|[^"])*"                           # Either double quoted
+							|\'(?:\\\\\'|[^\'])*\'                     # or single quoted
+						)\s*                                           # End sub match of argument
+					)*                                                 # End cycle for single argument and repeat
+				)                                                      # End named attributes
+			\\)                                                        # Closing bracket for arguments
+		}$                                                             # Each VH ShorthandSyntax should end with }
+	/x';
 
 	/**
 	 * This pattern splits an array into its parts. It is quite similar to the pattern above.
@@ -293,7 +357,6 @@ class TemplateParser {
 		}
 		return $state;
 	}
-
 
 	/**
 	 * Handles an opening or self-closing view helper tag.
@@ -512,13 +575,24 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function handler_textAndShorthandSyntax(\F3\Fluid\Core\ParsingState $state, $text) {
-		$sections = preg_split(self::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		$sections = preg_split($this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_SHORTHANDSYNTAX), $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
 			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 				$this->handler_objectAccessor($state, $matchedVariables['Object']);
 			} elseif (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
 				$this->handler_array($state, $matchedVariables['Array']);
+			} elseif (preg_match($this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER), $section, $matchedVariables) > 0) {
+				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
+				$methodIdentifier = $matchedVariables['MethodIdentifier'];
+				$selfclosing = ($matchedVariables['UnnamedArgument'] === '');
+				$arguments = $matchedVariables['Attributes'];
+
+				$this->handler_openingViewHelperTag($state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
+				if (!$selfclosing) {
+					$this->handler_textAndShorthandSyntax($state, $this->unquoteArgumentString($matchedVariables['ValueSingleQuoted'], $matchedVariables['ValueDoubleQuoted']));
+					$this->handler_closingViewHelperTag($state, $namespaceIdentifier, $methodIdentifier);
+				}
 			} else {
 				$this->handler_text($state, $section);
 			}
@@ -591,6 +665,4 @@ class TemplateParser {
 		$state->getNodeFromStack()->addChildNode($node);
 	}
 }
-
-
 ?>
