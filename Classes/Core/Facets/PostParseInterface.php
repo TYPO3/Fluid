@@ -34,6 +34,7 @@ namespace F3\Fluid\Core\Facets;
  * @subpackage Core
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @internal
  */
 interface PostParseInterface {
 
@@ -47,6 +48,7 @@ interface PostParseInterface {
 	 * @param array $viewHelperArguments View helper arguments as an array of SyntaxTrees. If you really need an argument, make sure to call $viewHelperArguments[$argName]->render(...)!
 	 * @param VariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
 	 * @return void
+	 * @internal
 	 */
 	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);
 

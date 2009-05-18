@@ -28,6 +28,8 @@ namespace F3\Fluid\Core;
  * @subpackage Core
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @internal
+ * @todo Refactor and move it to own subdirectory
  */
 class ParsingException extends \F3\Fluid\Core\Exception {
 }

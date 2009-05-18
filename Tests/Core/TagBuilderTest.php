@@ -44,26 +44,16 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function constructorSetsAndEscapesTagContent() {
+	public function constructorSetsTagContent() {
 		$tagBuilder = new \F3\Fluid\Core\TagBuilder('', '<some text>');
-		$this->assertEquals('&lt;some text&gt;', $tagBuilder->getContent());
+		$this->assertEquals('<some text>', $tagBuilder->getContent());
 	}
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function setContentEscapesValueByDefault() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder();
-		$tagBuilder->setContent('<to be escaped>');
-		$this->assertEquals('&lt;to be escaped&gt;', $tagBuilder->getContent());
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function setContentDoesNotEscapeValueIfDisabled() {
+	public function setContentDoesNotEscapeValue() {
 		$tagBuilder = new \F3\Fluid\Core\TagBuilder();
 		$tagBuilder->setContent('<to be escaped>', FALSE);
 		$this->assertEquals('<to be escaped>', $tagBuilder->getContent());

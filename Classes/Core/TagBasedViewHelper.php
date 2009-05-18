@@ -32,7 +32,6 @@ namespace F3\Fluid\Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-
 abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
@@ -57,10 +56,11 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 
 	/**
 	 * Inject a TagBuilder
-	 * 
+	 *
 	 * @param \F3\Fluid\Core\TagBuilder $tagBuilder Tag builder
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	public function injectTagBuilder(\F3\Fluid\Core\TagBuilder $tagBuilder) {
 		$this->tag = $tagBuilder;
@@ -80,7 +80,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 	 * Additionally, sets all tag attributes which were registered in
 	 * $this->tagAttributes and additionalArguments.
 	 *
-	 * Will be invoked just before the render method
+	 * Will be invoked just before the render method.
 	 *
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>

@@ -63,16 +63,21 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	protected $variableContainer;
 
 	/**
+	 * @var \F3\Fluid\Core\ViewHelperContext $viewHelperContext
+	 */
+	protected $viewHelperContext;
+
+	/**
 	 * Validator resolver
 	 * @var \F3\FLOW3\Validation\ValidatorResolver
 	 */
-	protected $validatorResolver;
+	private $validatorResolver;
 
 	/**
 	 * Reflection service
 	 * @var \F3\FLOW3\Reflection\Service
 	 */
-	protected $reflectionService;
+	private $reflectionService;
 
 	/**
 	 * @param \F3\Fluid\Core\ViewHelperArguments
@@ -92,6 +97,16 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 */
 	public function setVariableContainer(\F3\Fluid\Core\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
+	}
+
+	/**
+	 * @param \F3\Fluid\Core\ViewHelperContext $viewHelperContext
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
+	 */
+	public function setViewHelperContext($viewHelperContext) {
+		return $this->viewHelperContext = $viewHelperContext;
 	}
 
 	/**
@@ -125,7 +140,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelperInterface 
 	 * @param mixed $defaultValue Default value of argument
 	 * @return \F3\Fluid\Core\AbstractViewHelper $this, to allow chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo Component manager usage!
+	 * @todo Object Factory usage!
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
 		$this->argumentDefinitions[$name] = new \F3\Fluid\Core\ArgumentDefinition($name, $type, $description, $required, $defaultValue);

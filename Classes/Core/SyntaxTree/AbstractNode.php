@@ -29,6 +29,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
+ * @internal
  */
 abstract class AbstractNode {
 
@@ -45,6 +46,12 @@ abstract class AbstractNode {
 	protected $variableContainer;
 
 	/**
+	 * The View Helper Context
+	 * @var F3\Fluid\Core\ViewHelperContext
+	 */
+	protected $viewHelperContext;
+
+	/**
 	 * @param \F3\Fluid\Core\VariableContainer Variable Container to be used for the evaluation
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
@@ -55,21 +62,34 @@ abstract class AbstractNode {
 	}
 
 	/**
+	 * @param F3\Fluid\Core\ViewHelperContext View Helper Context
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setViewHelperContext(\F3\Fluid\Core\ViewHelperContext $viewHelperContext) {
+		$this->viewHelperContext = $viewHelperContext;
+	}
+
+	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
 	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	public function evaluateChildNodes() {
 		$output = NULL;
 		foreach ($this->childNodes as $subNode) {
 			$subNode->setVariableContainer($this->variableContainer);
+			$subNode->setViewHelperContext($this->viewHelperContext);
+
 			if ($output === NULL) {
 				$output = $subNode->evaluate();
 			} else {
 				$output = (string)$output;
-				$output .= $subNode->render();
+				$output .= (string)$subNode->evaluate();
 			}
 		}
 		return $output;
@@ -81,20 +101,10 @@ abstract class AbstractNode {
 	 * @param \F3\Fluid\Core\SyntaxTree\AbstractNode $subnode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function addChildNode(\F3\Fluid\Core\SyntaxTree\AbstractNode $subNode) {
 		$this->childNodes[] = $subNode;
-	}
-
-	/**
-	 * Renders the node.
-	 *
-	 * @return string Rendered node as string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function render() {
-		return (string)$this->evaluate();
 	}
 
 	/**
@@ -103,6 +113,7 @@ abstract class AbstractNode {
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	abstract public function evaluate();
 }

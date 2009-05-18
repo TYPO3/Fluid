@@ -106,10 +106,10 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 		if ($this->arguments->hasArgument('multiple')) {
 			$name .= '[]';
 		}
-		
+
 		$this->tag->addAttribute('name', $name);
-		$this->tag->setContent($this->renderOptionTags(), FALSE);
-		
+		$this->tag->setContent($this->renderOptionTags());
+
 		return $this->tag->render();
 	}
 
@@ -151,7 +151,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	/**
 	 * Render the option tags.
 	 *
-	 * @return boolean true if the 
+	 * @return boolean true if the
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function isSelected($value) {

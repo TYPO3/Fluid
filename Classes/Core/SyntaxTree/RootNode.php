@@ -29,6 +29,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
+ * @internal
  */
 class RootNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
@@ -37,8 +38,12 @@ class RootNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function evaluate() {
+		if ($this->viewHelperContext === NULL) {
+			throw new \F3\Fluid\Core\RuntimeException('ViewHelper context is null in RootNode, but necessary. If this error appears, please report a bug!', 1242669004);
+		}
 		$text = $this->evaluateChildNodes();
 		return $text;
 	}

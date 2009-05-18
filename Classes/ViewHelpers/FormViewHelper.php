@@ -117,7 +117,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
 		$formActionUrl = $uriHelper->URIFor($actionName, $arguments, $controllerName, $packageName, $subpackageName);
 		$this->tag->addAttribute('action', $formActionUrl);
-		
+
 		if (strtolower($this->arguments['method']) === 'get') {
 			$this->tag->addAttribute('method', 'get');
 		} else {
@@ -135,7 +135,7 @@ class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 
 		$content = $hiddenIdentityFields;
 		$content .= $this->renderChildren();
-		$this->tag->setContent($content, FALSE);
+		$this->tag->setContent($content);
 
 		if (!empty($object)) {
 			$this->variableContainer->remove('__formObject');

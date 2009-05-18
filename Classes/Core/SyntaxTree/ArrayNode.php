@@ -29,6 +29,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
+ * @internal
  */
 class ArrayNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
@@ -43,6 +44,7 @@ class ArrayNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * @param array $internalArray Array to store
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function __construct($internalArray) {
 		$this->internalArray = $internalArray;
@@ -54,14 +56,20 @@ class ArrayNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	public function evaluate() {
+		if ($this->viewHelperContext === NULL) {
+			throw new \F3\Fluid\Core\RuntimeException('ViewHelper context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
+		}
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
 			if ($value instanceof \F3\Fluid\Core\SyntaxTree\AbstractNode) {
 				$value->setVariableContainer($this->variableContainer);
+				$value->setViewHelperContext($this->viewHelperContext);
 				$arrayToBuild[$key] = $value->evaluate();
 			} else {
+				// TODO - this case should not happen!
 				$arrayToBuild[$key] = $value;
 			}
 		}

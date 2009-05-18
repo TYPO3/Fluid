@@ -29,6 +29,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
+ * @internal
  */
 class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
@@ -43,6 +44,7 @@ class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * @param string $text text to store in this textNode
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function __construct($text) {
 		if (!is_string($text)) {
@@ -56,11 +58,11 @@ class TextNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * @return string the text stored in this node.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function evaluate() {
 		return $this->text;
 	}
 }
-
 
 ?>

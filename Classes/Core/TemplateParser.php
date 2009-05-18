@@ -238,7 +238,7 @@ class TemplateParser {
 	}
 
 	/**
-	 * Parses a given template and returns an object tree, identified by a root node
+	 * Parses a given template and returns a parsed template object.
 	 *
 	 * @param string $templateString The template to parse as a string
 	 * @return \F3\Fluid\Core\ParsedTemplateInterface Parsed template
@@ -262,6 +262,7 @@ class TemplateParser {
 	 *
 	 * @return array Namespace identifiers and their component name prefix
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getNamespaces() {
 		return $this->namespaces;

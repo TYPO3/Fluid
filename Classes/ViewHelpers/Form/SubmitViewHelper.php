@@ -23,20 +23,20 @@ namespace F3\Fluid\ViewHelpers\Form;
 
 /**
  * Creates a submit button.
- * 
+ *
  * = Examples =
- * 
+ *
  * <code title="Defaults">
  * <f:submit value="Send Mail" />
  * </code>
- * 
+ *
  * Output:
  * <input type="submit" />
  *
  * <code title="Dummy content for template preview">
  * <f:submit name="mySubmit" value="Send Mail"><button>dummy button</button></f:submit>
  * </code>
- * 
+ *
   * Output:
  * <input type="submit" name="mySubmit" value="Send Mail" />
  *
@@ -85,7 +85,5 @@ class SubmitViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
 		return $this->tag->render();
 	}
 }
-
-
 
 ?>

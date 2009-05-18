@@ -54,7 +54,8 @@ class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3
 	 */
 	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
 		$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\VariableContainer());
-		$sectionName = $viewHelperArguments['name']->render();
+		$viewHelperArguments['name']->setViewHelperContext(new \F3\Fluid\Core\ViewHelperContext());
+		$sectionName = $viewHelperArguments['name']->evaluate();
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
 		}

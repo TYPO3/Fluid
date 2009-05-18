@@ -35,14 +35,14 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 	 * @var \F3\Fluid\Core\ParsingState
 	 */
 	protected $parsingState;
-	
+
 	public function setUp() {
 		$this->parsingState = new \F3\Fluid\Core\ParsingState();
 	}
 	public function tearDown() {
 		unset($this->parsingState);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -52,7 +52,7 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 		$this->parsingState->setRootNode($rootNode);
 		$this->assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -63,8 +63,24 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 		$this->assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
 		$this->assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
 	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderCallsTheRightMethodsOnTheRootNode() {
+		$variableContainer = $this->getMock('F3\Fluid\Core\VariableContainer');
+		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelperContext', array(), array(), '', FALSE);
+
+		$rootNode = $this->getMock('F3\Fluid\Core\SyntaxTree\RootNode');
+		$rootNode->expects($this->once())->method('setVariableContainer')->with($variableContainer);
+		$rootNode->expects($this->once())->method('setViewHelperContext')->with($viewHelperContext);
+		$rootNode->expects($this->once())->method('evaluate')->will($this->returnValue('T3DD09 Rock!'));
+		$this->parsingState->setRootNode($rootNode);
+		$renderedValue = $this->parsingState->render($variableContainer, $viewHelperContext);
+		$this->assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
+	}
+
 }
-
-
 
 ?>

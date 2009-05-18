@@ -28,6 +28,7 @@ namespace F3\Fluid\Core;
  * @subpackage Core
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @internal
  */
 class RuntimeException extends \F3\Fluid\Core\Exception {
 }

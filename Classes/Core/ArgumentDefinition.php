@@ -22,7 +22,7 @@ namespace F3\Fluid\Core;
  */
 
 /**
- * Argument definition - definition of each view helper
+ * Argument definition of each view helper argument
  *
  * @package Fluid
  * @subpackage Core

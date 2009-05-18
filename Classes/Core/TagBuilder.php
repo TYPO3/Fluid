@@ -22,9 +22,7 @@ namespace F3\Fluid\Core;
  */
 
 /**
- * Tag based view helper.
- * Sould be used as the base class for all view helpers which output simple tags, as it provides some
- * convenience methods to register default attributes, ...
+ * Tag builder. Can be easily accessed in TagBasedViewHelper
  *
  * @package Fluid
  * @subpackage Core
@@ -32,9 +30,8 @@ namespace F3\Fluid\Core;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-
 class TagBuilder {
-	
+
 	/**
 	 * Name of the Tag to be rendered
 	 *
@@ -103,11 +100,9 @@ class TagBuilder {
 	 * @param string $tagContent content of the tag to be rendered
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @todo remove $escapeSpecialCharacters
 	 */
-	public function setContent($tagContent, $escapeSpecialCharacters = TRUE) {
-		if ($escapeSpecialCharacters) {
-			$tagContent = htmlspecialchars($tagContent);
-		}
+	public function setContent($tagContent) {
 		$this->content = $tagContent;
 	}
 
@@ -128,6 +123,9 @@ class TagBuilder {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContent() {
+		if ($this->content === NULL) {
+			return FALSE;
+		}
 		return $this->content !== '';
 	}
 

@@ -145,11 +145,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
 			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
-		$templateTree = $parsedTemplate->getRootNode();
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$templateTree->setVariableContainer($variableContainer);
 
-		return $templateTree->render();
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
+
+		return $parsedTemplate->render($variableContainer, $viewHelperContext);
 	}
 
 	/**
@@ -159,6 +159,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @return rendered template for the section
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	public function renderSection($sectionName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
@@ -172,9 +173,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$section = $sections[$sectionName];
 
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$section->setVariableContainer($variableContainer);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
 
-		return $section->render();
+		$section->setVariableContainer($variableContainer);
+		$section->setViewHelperContext($viewHelperContext);
+		return $section->evaluate();
 	}
 
 	/**
@@ -184,23 +187,24 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @return string rendered HTML
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	public function renderWithLayout($layoutName) {
-		$layout = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
-		$layoutTree = $layout->getRootNode();
+		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
 
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$layoutTree->setVariableContainer($variableContainer);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
 
-		return $layoutTree->render();
+		return $parsedTemplate->render($variableContainer, $viewHelperContext);
 	}
 
 	/**
 	 * Renders a partial. If $partialName starts with /, the partial is resolved globally. Else, locally.
 	 * SHOULD NOT BE USED BY USERS!
-	 * @internal
+	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @internal
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		if ($partialName[0] === '/') {
@@ -218,6 +222,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$partial = $this->parseTemplate($partialPathAndFileName);
 		$variables['view'] = $this;
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
 
 		if ($sectionToRender !== NULL) {
 			$sections = $partial->getVariableContainer()->get('sections');
@@ -229,7 +234,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			$syntaxTree = $partial->getRootNode();
 		}
 		$syntaxTree->setVariableContainer($variableContainer);
-		return $node->render();
+		$syntaxTree->setViewHelperContext($viewHelperContext);
+		return $syntaxTree->evaluate();
 	}
 
 	/**
@@ -254,6 +260,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @return \F3\FLOW3\MVC\Web\Request the current request
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getRequest() {
 		return $this->controllerContext->getRequest();

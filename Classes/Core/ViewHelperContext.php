@@ -22,34 +22,55 @@ namespace F3\Fluid\Core;
  */
 
 /**
- * This interface is returned by \F3\Fluid\Core\TemplateParser->parse() method and is a parsed template
+ * ViewHelperContext
  *
  * @package Fluid
  * @subpackage Core
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @internal
+ * @scope prototype
  */
-interface ParsedTemplateInterface {
+class ViewHelperContext extends \F3\Fluid\Core\VariableContainer {
 
 	/**
-	 * Renders the parsed template with a variable container and a ViewHelper context
-	 *
-	 * @param F3\Fluid\Core\VariableContainer $variableContainer The variable container having the containing the variables which can be used in the template
-	 * @param F3\Fluid\Core\ViewHelperContext $viewHelperContext The ViewHelperContext which carries important configuration for the ViewHelper
-	 * @return Rendered string
-	 * @internal
+	 * @var \F3\FLOW3\MVC\View\ViewInterface
 	 */
-	public function render(\F3\Fluid\Core\VariableContainer $variableContainer, \F3\Fluid\Core\ViewHelperContext $viewHelperContext);
+	protected $view;
 
 	/**
-	 * Returns a variable container used in the PostParse Facet.
-	 *
-	 * @return \F3\Fluid\Core\VariableContainer
-	 * @internal
+	 * @var array
 	 */
-	// TODO
-	public function getVariableContainer(); // rename to getPostParseVariableContainer -- @internal definitely
+	protected $viewHelperDefaults = array();
+
+	/**
+	 * @param \F3\FLOW3\MVC\View\ViewInterface $view
+	 * @param array $viewHelperDefaults
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function __construct(\F3\FLOW3\MVC\View\ViewInterface $view = NULL, array $viewHelperDefaults = array()) {
+		$this->view = $view;
+		$this->viewHelperDefaults = $viewHelperDefaults;
+	}
+
+	/**
+	 * @return \F3\FLOW3\MVC\View\ViewInterface
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function getView() {
+		return $this->view;
+	}
+
+	/**
+	 * @param string $viewHelperClassName full class name of the view helper to fetch defaults for
+	 * @return array
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function getViewHelperDefaults($viewHelperClassName) {
+		if (isset($this->viewHelperDefaults[$viewHelperClassName]) && is_array($this->viewHelperDefaults[$viewHelperClassName])) {
+			return $this->viewHelperDefaults[$viewHelperClassName];
+		}
+		return array();
+	}
 }
 
 ?>

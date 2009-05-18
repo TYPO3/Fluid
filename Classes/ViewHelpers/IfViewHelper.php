@@ -32,7 +32,7 @@ namespace F3\Fluid\ViewHelpers;
  *   This is being shown in case the condition matches
  * </f:if>
  * </code>
- * 
+ *
  * Everything inside the <f3:if> tag is being displayed if the condition evaluates to TRUE.
  *
  * <code title="If / then / else">
@@ -45,10 +45,10 @@ namespace F3\Fluid\ViewHelpers;
  *   </f3:else>
  * </f3:if>
  * </code>
- * 
+ *
  * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
  * Otherwise, everything inside the "else"-tag is displayed.
- * 
+ *
  *
  *
  * @package Fluid
@@ -105,7 +105,8 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 			if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
 				$childNode->setVariableContainer($this->variableContainer);
-				return $childNode->render();
+				$childNode->setViewHelperContext($this->viewHelperContext);
+				return $childNode->evaluate();
 			}
 		}
 		return $this->renderChildren();
@@ -123,7 +124,8 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 			if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
 				$childNode->setVariableContainer($this->variableContainer);
-				return $childNode->render();
+				$childNode->setViewHelperContext($this->viewHelperContext);
+				return $childNode->evaluate();
 			}
 		}
 		return '';

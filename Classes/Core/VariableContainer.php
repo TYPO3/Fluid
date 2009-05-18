@@ -143,6 +143,7 @@ class VariableContainer {
 	 *
 	 * @return array
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function __sleep() {
 		return array('objects');

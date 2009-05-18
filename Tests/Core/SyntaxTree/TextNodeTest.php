@@ -16,8 +16,8 @@ namespace F3\Fluid\Core\SyntaxTree;
  *                                                                        */
 
 /**
- * @package Fluid 
- * @subpackage Tests 
+ * @package Fluid
+ * @subpackage Tests
  * @version $Id$
  */
 /**
@@ -37,9 +37,9 @@ class TextNodeTest extends \F3\Testing\BaseTestCase {
 	public function renderReturnsSameStringAsGivenInConstructor() {
 		$string = 'I can work quite effectively in a train!';
 		$node = new \F3\Fluid\Core\SyntaxTree\TextNode($string);
-		$this->assertEquals($node->render(), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+		$this->assertEquals($node->evaluate(), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
 	}
-	
+
 	/**
 	 * @test
 	 * @expectedException \F3\Fluid\Core\ParsingException

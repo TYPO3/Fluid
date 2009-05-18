@@ -33,6 +33,7 @@ namespace F3\Fluid\Core\Facets;
  * @subpackage Core
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @internal
  */
 interface ChildNodeAccessInterface {
 
@@ -42,6 +43,7 @@ interface ChildNodeAccessInterface {
 	 * @param array \F3\Fluid\Core\SyntaxTree\AbstractNode $childNodes
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function setChildNodes(array $childNodes);
 

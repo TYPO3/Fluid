@@ -29,6 +29,7 @@ namespace F3\Fluid\Core\SyntaxTree;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
+ * @intenral
  */
 class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 
@@ -50,6 +51,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function __construct($viewHelperClassName, array $arguments) {
 		$this->viewHelperClassName = $viewHelperClassName;
@@ -61,6 +63,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * @return string Class Name of associated view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getViewHelperClassName() {
 		return $this->viewHelperClassName;
@@ -78,10 +81,13 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 	 *
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo Handle initializeArguments()
-	 * @todo Component manager
+	 * @internal
 	 */
 	public function evaluate() {
+		if ($this->viewHelperContext === NULL) {
+			throw new \F3\Fluid\Core\RuntimeException('ViewHelper context is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
+		}
+
 		$objectFactory = $this->variableContainer->getObjectFactory();
 		$viewHelper = $objectFactory->create($this->viewHelperClassName);
 		$argumentDefinitions = $viewHelper->prepareArguments();
@@ -95,6 +101,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
 					$argumentValue->setVariableContainer($this->variableContainer);
+					$argumentValue->setViewHelperContext($this->viewHelperContext);
 					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue->evaluate(), $argumentDefinition->getType());
 				} else {
 					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
@@ -108,6 +115,7 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelperArguments', $evaluatedArguments);
 		$viewHelper->setArguments($viewHelperArguments);
 		$viewHelper->setVariableContainer($this->variableContainer);
+		$viewHelper->setViewHelperContext($this->viewHelperContext);
 		$viewHelper->setViewHelperNode($this);
 
 		if ($viewHelper instanceof \F3\Fluid\Core\Facets\ChildNodeAccessInterface) {
@@ -158,6 +166,5 @@ class ViewHelperNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
 		return $value;
 	}
 }
-
 
 ?>
