@@ -49,10 +49,10 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCorrectlySetsTagName() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('setTagName')->with('select');
 		$this->viewHelper->injectTagBuilder($tagBuilderMock);
-		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelperArguments(array('options' => array())));
+		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('options' => array())));
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -64,13 +64,13 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
 		$tagBuilderMock->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value1' => 'label1',
 				'value2' => 'label2'
@@ -89,14 +89,14 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
 		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
 		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
 		$tagBuilderMock->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value1' => 'label1',
 				'value2' => 'label2',
@@ -118,7 +118,7 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectOnDomainObjectsCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1">Ingmar</option>' . chr(10) . '<option value="2" selected="selected">Sebastian</option>' . chr(10) . '<option value="3">Robert</option>' . chr(10));
 		$tagBuilderMock->expects($this->once())->method('render');
@@ -127,7 +127,7 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
 		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
 		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user_is,
 				$user_sk,
@@ -149,7 +149,7 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectOnDomainObjectsCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
 		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
 		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1" selected="selected">Schlecht</option>' . chr(10) . '<option value="2">Kurfuerst</option>' . chr(10) . '<option value="3" selected="selected">Lemke</option>' . chr(10));
@@ -159,7 +159,7 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
 		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
 		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user_is,
 				$user_sk,

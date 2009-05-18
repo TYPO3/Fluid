@@ -40,7 +40,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class Nl2brViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class Nl2brViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Replaces newline characters by HTML line breaks.

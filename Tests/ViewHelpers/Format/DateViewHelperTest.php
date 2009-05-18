@@ -83,7 +83,7 @@ class DateViewHelperTest extends \F3\Testing\BaseTestCase {
 		try {
 			$viewHelper->render();
 			$this->fail('render() did not throw an exception although the specified date could not be parsed.');
-		} catch (\F3\Fluid\Core\ViewHelperException $exception) {
+		} catch (\F3\Fluid\Core\ViewHelper\Exception $exception) {
 		}
 	}
 }

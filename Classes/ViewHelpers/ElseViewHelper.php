@@ -31,7 +31,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ElseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class ElseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @return string the rendered string

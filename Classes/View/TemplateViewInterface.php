@@ -34,10 +34,10 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	/**
 	 * Inject the template parser
 	 *
-	 * @param \F3\Fluid\Core\TemplateParser $templateParser The template parser
+	 * @param \F3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
 	 * @return void
 	 */
-	public function injectTemplateParser(\F3\Fluid\Core\TemplateParser $templateParser);
+	public function injectTemplateParser(\F3\Fluid\Core\Parser\TemplateParser $templateParser);
 
 	/**
 	 * Sets the path and name of of the template file. Effectively overrides the

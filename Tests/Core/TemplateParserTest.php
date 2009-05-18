@@ -42,14 +42,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->templateParser = new \F3\Fluid\Core\TemplateParser();
+		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
 		$this->templateParser->injectObjectFactory($this->objectFactory);
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.or>
-	 * @expectedException \F3\Fluid\Core\ParsingException
+	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 */
 	public function parseThrowsExceptionWhenStringArgumentMissing() {
 		$this->templateParser->parse(123);
@@ -71,7 +71,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \F3\Fluid\Core\ParsingException
+	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 */
 	public function parseThrowsExceptionIfNamespaceIsRedeclared() {
 		$this->templateParser->parse("{namespace f3=F3\Fluid\Blablubb} {namespace f3= F3\Rocks}");
@@ -84,11 +84,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture01ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture01.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\na"));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
 		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode('b'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('b'));
 
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
@@ -110,14 +110,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture02ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture02.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\n"));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("Hallo"));
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
+		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("Hallo"));
 		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\n"));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("Second"));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
+		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("Second"));
 		$rootNode->addChildNode($dynamicNode);
 
 		$expected = $rootNode;
@@ -135,7 +135,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ParsingException
+	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture03ThrowsExceptionBecauseWrongTagNesting() {
@@ -145,7 +145,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ParsingException
+	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture04ThrowsExceptionBecauseClosingATagWhichWasNeverOpened() {
@@ -160,11 +160,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture05ReturnsCorrectObjectTree() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture05.html', FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode("\na"));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('posts.bla.Testing3');
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('posts.bla.Testing3');
 		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode('b'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('b'));
 
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
@@ -178,16 +178,16 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture06ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture06.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$arguments = array(
-			'each' => new \F3\Fluid\Core\SyntaxTree\RootNode(),
-			'as' => new \F3\Fluid\Core\SyntaxTree\RootNode()
+			'each' => new \F3\Fluid\Core\Parser\SyntaxTree\RootNode(),
+			'as' => new \F3\Fluid\Core\Parser\SyntaxTree\RootNode()
 		);
-		$arguments['each']->addChildNode(new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('posts'));
-		$arguments['as']->addChildNode(new \F3\Fluid\Core\SyntaxTree\TextNode('post'));
-		$dynamicNode = new \F3\Fluid\Core\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\ForViewHelper', $arguments);
+		$arguments['each']->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('posts'));
+		$arguments['as']->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('post'));
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\ForViewHelper', $arguments);
 		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\SyntaxTree\ObjectAccessorNode('post'));
+		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('post'));
 
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
@@ -209,10 +209,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture07ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array('id' => 1));
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('id' => 1));
 		$variableContainer->injectObjectFactory($this->objectFactory);
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext();
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
@@ -227,10 +227,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture08ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$variableContainer->injectObjectFactory($this->objectFactory);
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext();
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
@@ -246,10 +246,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture09ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
 		$variableContainer->injectObjectFactory($this->objectFactory);
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext();
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
@@ -265,10 +265,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture10ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$variableContainer->injectObjectFactory($this->objectFactory);
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext();
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
@@ -284,10 +284,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture11ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array());
 		$variableContainer->injectObjectFactory($this->objectFactory);
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext();
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
@@ -305,10 +305,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture12ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture12_cdata.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\VariableContainer(array());
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array());
 		$variableContainer->injectObjectFactory($this->objectFactory);
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext();
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
@@ -321,7 +321,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * Test for CDATA support
 	 *
 	 * @test
-	 * @expectedException F3\Fluid\Core\ParsingException
+	 * @expectedException F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture13ReturnsCorrectlyRenderedResult() {
@@ -335,7 +335,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function postParseFacetIsCalledOnParse() {
-		$templateParser = new \F3\Fluid\Core\TemplateParser();
+		$templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
 		$templateParser->injectObjectFactory($this->objectFactory);
 
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
@@ -345,14 +345,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\ParsingException
+	 * @expectedException F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfUnregisteredArgumentsExist() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
-			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', TRUE),
-			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', TRUE)
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', TRUE),
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', TRUE)
 		);
 		$actualArguments = array(
 			'name1' => 'bla',
@@ -366,10 +366,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function makeSureThatAbortIfUnregisteredArgumentsExistDoesNotThrowExceptionIfEverythingIsOk() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
-			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', TRUE),
-			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', TRUE)
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', TRUE),
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', TRUE)
 		);
 		$actualArguments = array(
 			'name1' => 'bla'
@@ -379,14 +379,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\ParsingException
+	 * @expectedException F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfRequiredArgumentsAreMissingShouldThrowExceptionIfRequiredArgumentIsMissing() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
-			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', TRUE),
-			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', FALSE)
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', TRUE),
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', FALSE)
 		);
 		$actualArguments = array(
 			'name2' => 'bla'
@@ -399,10 +399,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfRequiredArgumentsAreMissingShouldNotThrowExceptionIfRequiredArgumentIsNotMissing() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
-			new \F3\Fluid\Core\ArgumentDefinition('name1', 'string', 'desc', FALSE),
-			new \F3\Fluid\Core\ArgumentDefinition('name2', 'string', 'desc', FALSE)
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', FALSE),
+			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', FALSE)
 		);
 		$actualArguments = array(
 			'name2' => 'bla'

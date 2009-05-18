@@ -33,7 +33,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-abstract class AbstractFormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 
 	/**
 	 * Initialize arguments.

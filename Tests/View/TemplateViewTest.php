@@ -40,11 +40,11 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function renderCallsRenderOnParsedTemplateInterface() {
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('parseTemplate', 'resolveTemplatePathAndFilename'), array(), '', FALSE);
-		$parsedTemplate = $this->getMock('F3\Fluid\Core\ParsedTemplateInterface');
+		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
 		$objectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
 
-		$variableContainer = $this->getMock('F3\Fluid\Core\VariableContainer');
-		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelperContext', array(), array(), '', FALSE);
+		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
+		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperContext', array(), array(), '', FALSE);
 
 		$objectFactory->expects($this->exactly(2))->method('create')->will($this->onConsecutiveCalls($variableContainer, $viewHelperContext));
 
@@ -70,10 +70,10 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		$syntaxTreeNode = new \F3\Fluid\View\Fixture\TransparentSyntaxTreeNode();
 
-		$parsingState = new \F3\Fluid\Core\ParsingState();
+		$parsingState = new \F3\Fluid\Core\Parser\ParsingState();
 		$parsingState->setRootNode($syntaxTreeNode);
 
-		$templateParserMock = $this->getMock('F3\Fluid\Core\TemplateParser', array('parse'));
+		$templateParserMock = $this->getMock('F3\Fluid\Core\Parser\TemplateParser', array('parse'));
 		$templateParserMock->expects($this->any())->method('parse')->will($this->returnValue($parsingState));
 
 		//$mockSyntaxTreeCache = $this->getMock('F3\FLOW3\Cache\Frontend\variableFrontend', array(), array(), '', FALSE);

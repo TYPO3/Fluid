@@ -55,7 +55,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ForViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Iterates through elements of $each and renders child nodes 

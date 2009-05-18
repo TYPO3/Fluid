@@ -61,7 +61,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class FormViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 
 	/**
 	 * @var string

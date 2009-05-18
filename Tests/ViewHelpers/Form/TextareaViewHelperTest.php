@@ -48,10 +48,10 @@ class TextareaViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function textareaCorrectlySetsTagName() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('setTagName')->with('textarea');
 		$this->viewHelper->injectTagBuilder($tagBuilderMock);
-		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelperArguments(array()));
+		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array()));
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -63,13 +63,13 @@ class TextareaViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function textareaCorrectlySetsNameAttributeAndContent() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'NameOfTextarea');
 		$tagBuilderMock->expects($this->once())->method('setContent')->with('Current value');
 		$tagBuilderMock->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($tagBuilderMock);
 
-		$arguments = new \F3\Fluid\Core\ViewHelperArguments(array(
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'name' => 'NameOfTextarea',
 			'value' => 'Current value'
 		));

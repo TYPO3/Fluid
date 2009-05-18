@@ -24,14 +24,14 @@ namespace F3\Fluid;
  * Enter description here...
  * @scope prototype
  */
-class PostParseFacetViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
+class PostParseFacetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
 	public static $wasCalled = FALSE;
 
 	public function __construct() {
 	}
 
-	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $viewHelperNode, array $arguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
+	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $viewHelperNode, array $arguments, \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
 		self::$wasCalled = TRUE;
 	}
 

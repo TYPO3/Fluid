@@ -35,7 +35,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_NAMESPACEDECLARATION() {
-		$pattern = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), \F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION);
+		$pattern = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), \F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION);
 		$this->assertEquals(preg_match($pattern, '{namespace f3=F3\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
 		$this->assertEquals(preg_match($pattern, '{namespace f3=F3\Bla\Blubb }'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (2).');
 		$this->assertEquals(preg_match($pattern, '    {namespace f3 = F3\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (3).');
@@ -48,7 +48,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_DYNAMICTAGS() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('f3', 't3'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('f3', 't3'));
 
 		$source = '<html><head> <f3:a.testing /> <f3:blablubb> {testing}</f4:blz> </t3:hi.jo>';
 		$expected = array('<html><head> ','<f3:a.testing />', ' ', '<f3:blablubb>', ' {testing}</f4:blz> ', '</t3:hi.jo>');
@@ -81,7 +81,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_DYNAMICTAG() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f3'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f3'));
 		$source = '<f3:crop attribute="Hallo">';
 		$expected = array (
 			0 => '<f3:crop attribute="Hallo">',
@@ -148,7 +148,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_CLOSINGDYNAMICTAG() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f3'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f3'));
 		$this->assertEquals(preg_match($pattern, '</f3:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
 		$this->assertEquals(preg_match($pattern, '</f3:bla.a    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
 		$this->assertEquals(preg_match($pattern, '</t3:bla>'), 0, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does match match a tag it should not match.');
@@ -159,7 +159,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_TAGARGUMENTS() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SPLIT_PATTERN_TAGARGUMENTS;
+		$pattern = \F3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_TAGARGUMENTS;
 		$source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\'';
 		$this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 3, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
 	}
@@ -169,7 +169,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f3'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f3'));
 
 		$source = 'some string{Object.bla}here as well';
 		$expected = array('some string', '{Object.bla}','here as well');
@@ -206,7 +206,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, array('f'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(\F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, array('f'));
 
 		$this->assertEquals(preg_match($pattern, '{flow3}'), 0, 'Shorthand ViewHelper was identified, but should not.');
 		$this->assertEquals(preg_match($pattern, '{f:flow3}'), 0, 'Shorthand ViewHelper was identified, but should not.');
@@ -224,7 +224,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
+		$pattern = \F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
 		$this->assertEquals(preg_match($pattern, '{object}'), 1, 'Object accessor not identified!');
 		$this->assertEquals(preg_match($pattern, '{oBject1}'), 1, 'Object accessor not identified if there is a number and capitals inside!');
 		$this->assertEquals(preg_match($pattern, '{object.recursive}'), 1, 'Object accessor not identified if there is a dot inside!');
@@ -238,7 +238,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
+		$pattern = \F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
 		$this->assertEquals(preg_match($pattern, '{a:b}'), 1, 'Array syntax not identified!');
 		$this->assertEquals(preg_match($pattern, '{a:b, c :   d}'), 1, 'Array syntax not identified in case there are multiple properties!');
 		$this->assertEquals(preg_match($pattern, '{a : 123}'), 1, 'Array syntax not identified when a number is passed as argument!');
@@ -259,7 +259,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
+		$pattern = \F3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
 
 		$source = '{a: b, e: {c:d, e:f}}';
 		preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
@@ -306,7 +306,7 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_CDATA() {
-		$pattern = \F3\Fluid\Core\TemplateParser::$SCAN_PATTERN_CDATA;
+		$pattern = \F3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_CDATA;
 		$this->assertEquals(preg_match($pattern, '<!-- Test -->'), 0, 'The SCAN_PATTERN_CDATA matches a comment, but it should not.');
 		$this->assertEquals(preg_match($pattern, '<![CDATA[This is some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a simple CDATA string.');
 		$this->assertEquals(preg_match($pattern, '<![CDATA[This is<bla:test> some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a CDATA string with tags inside..');

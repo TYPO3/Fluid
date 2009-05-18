@@ -47,7 +47,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class NumberViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class NumberViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Format the numeric value as a number with grouped thousands, decimal point and

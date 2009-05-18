@@ -79,7 +79,7 @@ class TemplateViewCachingAspect {
 	 *
 	 * @around within(F3\Fluid\View\TemplateViewInterface) && method(.*->parseTemplate()) && setting(Fluid.syntaxTreeCache.enable)
 	 * @param F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
-	 * @return \F3\Fluid\Core\ParsedTemplateInterface template tree
+	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface template tree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */

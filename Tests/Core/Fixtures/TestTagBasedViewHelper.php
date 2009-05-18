@@ -28,7 +28,7 @@ namespace F3\Fluid;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TestTagBasedViewHelper extends \F3\Fluid\Core\TagBasedViewHelper {
+class TestTagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 
 	/**
 	 * Check tag attribute registration

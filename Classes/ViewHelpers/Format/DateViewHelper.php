@@ -56,7 +56,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class DateViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class DateViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Render the supplied DateTime object as a formatted date.
@@ -77,7 +77,7 @@ class DateViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
 			try {
 				$date = new \DateTime($stringToFormat);
 			} catch (\Exception $exception) {
-				throw new \F3\Fluid\Core\ViewHelperException('"' . $stringToFormat . '" could not be parsed by \DateTime constructor.', 1241722579);
+				throw new \F3\Fluid\Core\ViewHelper\Exception('"' . $stringToFormat . '" could not be parsed by \DateTime constructor.', 1241722579);
 			}
 		}
 		return $date->format($format);

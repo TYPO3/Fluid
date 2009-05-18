@@ -29,7 +29,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class RenderViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Renders the content.

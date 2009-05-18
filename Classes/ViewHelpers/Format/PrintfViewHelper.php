@@ -55,7 +55,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class PrintfViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class PrintfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Format the arguments with the given printf format string.

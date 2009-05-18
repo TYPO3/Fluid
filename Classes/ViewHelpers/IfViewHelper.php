@@ -23,7 +23,7 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  * This view helper implements an if/else condition.
- * @see F3\Fluid\Core\SyntaxTree\convertArgumentValue() to find see how boolean arguments are evaluated
+ * @see F3\Fluid\Core\Parser\SyntaxTree\convertArgumentValue() to find see how boolean arguments are evaluated
  *
  * = Examples =
  *
@@ -57,10 +57,10 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\ChildNodeAccessInterface {
+class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
-	 * An array of \F3\Fluid\Core\SyntaxTree\AbstractNode
+	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 * @var array
 	 */
 	protected $childNodes = array();
@@ -102,11 +102,12 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	 */
 	protected function renderThenChild() {
 		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
+			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
 				$childNode->setVariableContainer($this->variableContainer);
 				$childNode->setViewHelperContext($this->viewHelperContext);
-				return $childNode->evaluate();
+				$data = $childNode->evaluate();
+				return $data;
 			}
 		}
 		return $this->renderChildren();
@@ -121,7 +122,7 @@ class IfViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Flui
 	 */
 	protected function renderElseChild() {
 		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\SyntaxTree\ViewHelperNode
+			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
 				$childNode->setVariableContainer($this->variableContainer);
 				$childNode->setViewHelperContext($this->viewHelperContext);

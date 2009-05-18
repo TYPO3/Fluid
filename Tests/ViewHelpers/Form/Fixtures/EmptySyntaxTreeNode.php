@@ -28,7 +28,7 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class EmptySyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\ViewHelperNode {
+class EmptySyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	
 	public function __construct() {
 		

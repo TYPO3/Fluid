@@ -40,7 +40,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class BaseViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Render the "Base" tag by outputting $request->getBaseURI()

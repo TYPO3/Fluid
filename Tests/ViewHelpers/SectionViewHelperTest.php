@@ -37,12 +37,12 @@ class SectionViewHelperTest extends \F3\Testing\BaseTestCase {
 	public function sectionIsAddedToParseVariableContainer() {
 		$section = new \F3\Fluid\ViewHelpers\SectionViewHelper();
 		
-		$viewHelperNodeMock = $this->getMock('F3\Fluid\Core\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
+		$viewHelperNodeMock = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
 		$viewHelperArguments = array(
-			'name' => new \F3\Fluid\Core\SyntaxTree\TextNode('sectionName')
+			'name' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('sectionName')
 		);
 		
-		$variableContainer = new \F3\Fluid\Core\VariableContainer();
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer();
 		
 		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 		

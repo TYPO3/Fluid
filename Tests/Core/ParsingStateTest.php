@@ -32,12 +32,12 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Parsing state
-	 * @var \F3\Fluid\Core\ParsingState
+	 * @var \F3\Fluid\Core\Parser\ParsingState
 	 */
 	protected $parsingState;
 
 	public function setUp() {
-		$this->parsingState = new \F3\Fluid\Core\ParsingState();
+		$this->parsingState = new \F3\Fluid\Core\Parser\ParsingState();
 	}
 	public function tearDown() {
 		unset($this->parsingState);
@@ -48,7 +48,7 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNodeCanBeReadOutAgain() {
-		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$this->parsingState->setRootNode($rootNode);
 		$this->assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
 	}
@@ -58,7 +58,7 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pushAndGetFromStackWorks() {
-		$rootNode = new \F3\Fluid\Core\SyntaxTree\RootNode();
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$this->parsingState->pushNodeToStack($rootNode);
 		$this->assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
 		$this->assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
@@ -69,10 +69,10 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
-		$variableContainer = $this->getMock('F3\Fluid\Core\VariableContainer');
-		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelperContext', array(), array(), '', FALSE);
+		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
+		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperContext', array(), array(), '', FALSE);
 
-		$rootNode = $this->getMock('F3\Fluid\Core\SyntaxTree\RootNode');
+		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('setVariableContainer')->with($variableContainer);
 		$rootNode->expects($this->once())->method('setViewHelperContext')->with($viewHelperContext);
 		$rootNode->expects($this->once())->method('evaluate')->will($this->returnValue('T3DD09 Rock!'));

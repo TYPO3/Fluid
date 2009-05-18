@@ -28,7 +28,7 @@ namespace F3\Fluid\View\Fixture;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TransparentSyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\AbstractNode {
+class TransparentSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	public $variableContainer;
 	
 	public function evaluate() {

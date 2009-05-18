@@ -36,7 +36,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function constructorSetsTagName() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('someTagName');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('someTagName');
 		$this->assertEquals('someTagName', $tagBuilder->getTagName());
 	}
 
@@ -45,7 +45,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function constructorSetsTagContent() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('', '<some text>');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('', '<some text>');
 		$this->assertEquals('<some text>', $tagBuilder->getContent());
 	}
 
@@ -54,7 +54,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setContentDoesNotEscapeValue() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder();
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder();
 		$tagBuilder->setContent('<to be escaped>', FALSE);
 		$this->assertEquals('<to be escaped>', $tagBuilder->getContent());
 	}
@@ -64,7 +64,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContentReturnsTrueIfTagContainsText() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('', 'foo');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('', 'foo');
 		$this->assertTrue($tagBuilder->hasContent());
 	}
 
@@ -73,7 +73,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContentReturnsFalseIfContentIsNull() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder();
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder();
 		$tagBuilder->setContent(NULL);
 		$this->assertFalse($tagBuilder->hasContent());
 	}
@@ -83,7 +83,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContentReturnsFalseIfContentIsAnEmptyString() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder();
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder();
 		$tagBuilder->setContent('');
 		$this->assertFalse($tagBuilder->hasContent());
 	}
@@ -93,7 +93,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringByDefault() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder();
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder();
 		$this->assertEquals('', $tagBuilder->render());
 	}
 
@@ -102,7 +102,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsSelfClosingTagIfNoContentIsSpecified() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('tag');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$this->assertEquals('<tag />', $tagBuilder->render());
 	}
 
@@ -111,7 +111,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsOpeningAndClosingTagIfNoContentIsSpecifiedButForceClosingTagIsTrue() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('tag');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$tagBuilder->forceClosingTag(TRUE);
 		$this->assertEquals('<tag></tag>', $tagBuilder->render());
 	}
@@ -121,7 +121,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributesAreProperlyRendered() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('tag');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$tagBuilder->addAttribute('attribute1', 'attribute1value');
 		$tagBuilder->addAttribute('attribute2', 'attribute2value');
 		$tagBuilder->addAttribute('attribute3', 'attribute3value');
@@ -133,7 +133,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributeValuesAreEscapedByDefault() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('tag');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$tagBuilder->addAttribute('foo', '<to be escaped>');
 		$this->assertEquals('<tag foo="&lt;to be escaped&gt;" />', $tagBuilder->render());
 	}
@@ -143,7 +143,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributeValuesAreNotEscapedIfDisabled() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('tag');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$tagBuilder->addAttribute('foo', '<not to be escaped>', FALSE);
 		$this->assertEquals('<tag foo="<not to be escaped>" />', $tagBuilder->render());
 	}
@@ -153,7 +153,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributesCanBeRemoved() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('tag');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$tagBuilder->addAttribute('attribute1', 'attribute1value');
 		$tagBuilder->addAttribute('attribute2', 'attribute2value');
 		$tagBuilder->addAttribute('attribute3', 'attribute3value');
@@ -166,7 +166,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function tagNameCanBeOverridden() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('foo');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('foo');
 		$tagBuilder->setTagName('bar');
 		$this->assertEquals('<bar />', $tagBuilder->render());
 	}
@@ -176,7 +176,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function tagContentCanBeOverridden() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('foo', 'some content');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('foo', 'some content');
 		$tagBuilder->setContent('');
 		$this->assertEquals('<foo />', $tagBuilder->render());
 	}
@@ -186,7 +186,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function tagIsNotRenderedIfTagNameIsEmpty() {
-		$tagBuilder = new \F3\Fluid\Core\TagBuilder('foo');
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('foo');
 		$tagBuilder->setTagName('');
 		$this->assertEquals('', $tagBuilder->render());
 	}

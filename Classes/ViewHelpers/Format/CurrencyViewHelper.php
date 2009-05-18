@@ -46,7 +46,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class CurrencyViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class CurrencyViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @param string $currencySign (optional) The currency sign, eg $ or €.

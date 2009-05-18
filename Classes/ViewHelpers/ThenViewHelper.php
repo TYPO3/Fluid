@@ -31,7 +31,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class ThenViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class ThenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Initialize arguments. We require no arguments.

@@ -28,10 +28,10 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\SyntaxTree\ViewHelperNode {
+class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	public $callProtocol = array();
 	
-	public function __construct(\F3\Fluid\Core\VariableContainer $variableContainer) {
+	public function __construct(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 	

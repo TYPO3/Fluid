@@ -34,7 +34,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->variableContainer = new \F3\Fluid\Core\VariableContainer();
+		$this->variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer();
 	}
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -78,7 +78,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function contextTakesOnlyArraysInConstructor() {
-		new \F3\Fluid\Core\VariableContainer("string");
+		new \F3\Fluid\Core\ViewHelper\VariableContainer("string");
 	}
 	
 	/**

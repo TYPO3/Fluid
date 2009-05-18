@@ -2,7 +2,7 @@
 declare(ENCODING = 'utf-8');
 namespace F3\Fluid\Core\Fixtures;
 
-class TestViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+class TestViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * My comments. Bla blubb.

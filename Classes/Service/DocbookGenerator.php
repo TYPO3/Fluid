@@ -58,7 +58,7 @@ class DocbookGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
-		$this->abstractViewHelperReflectionClass = new \F3\FLOW3\Reflection\ClassReflection('F3\Fluid\Core\AbstractViewHelper');
+		$this->abstractViewHelperReflectionClass = new \F3\FLOW3\Reflection\ClassReflection('F3\Fluid\Core\ViewHelper\AbstractViewHelper');
 		$this->docCommentParser = new \F3\FLOW3\Reflection\DocCommentParser();
 	}
 

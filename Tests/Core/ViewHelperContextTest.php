@@ -36,8 +36,8 @@ class ViewHelperContextTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function viewHelperContextIsOfScopePrototype() {
 		$mockView = $this->getMock('F3\FLOW3\MVC\View\ViewInterface');
-		$instance1 = $this->objectManager->getObject('F3\Fluid\Core\ViewHelperContext', $mockView);
-		$instance2 = $this->objectManager->getObject('F3\Fluid\Core\ViewHelperContext', $mockView);
+		$instance1 = $this->objectManager->getObject('F3\Fluid\Core\ViewHelper\ViewHelperContext', $mockView);
+		$instance2 = $this->objectManager->getObject('F3\Fluid\Core\ViewHelper\ViewHelperContext', $mockView);
 		$this->assertNotSame($instance1, $instance2, 'The ViewHelperContext is not a prototype.');
 	}
 
@@ -47,7 +47,7 @@ class ViewHelperContextTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function viewIsSetInConstructor() {
 		$mockView = $this->getMock('F3\FLOW3\MVC\View\ViewInterface');
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext($mockView);
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext($mockView);
 		$this->assertSame($mockView, $viewHelperContext->getView());
 	}
 
@@ -70,7 +70,7 @@ class ViewHelperContextTest extends \F3\Testing\BaseTestCase {
 			'someParameter' => 'someDefaultValue',
 			'someOtherParameter' => 'someOtherDefaultValue',
 		);
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext($mockView, $viewHelperDefaults);
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext($mockView, $viewHelperDefaults);
 		$this->assertEquals($expectedResult, $viewHelperContext->getViewHelperDefaults('\F3\Fluid\ViewHelpers\FooViewHelper'));
 	}
 
@@ -89,7 +89,7 @@ class ViewHelperContextTest extends \F3\Testing\BaseTestCase {
 				'thirdParameter' => 'thirdDefaultValue',
 			),
 		);
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext($mockView, $viewHelperDefaults);
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext($mockView, $viewHelperDefaults);
 		$this->assertEquals(array(), $viewHelperContext->getViewHelperDefaults('\F3\Fluid\ViewHelpers\BazViewHelper'));
 	}
 
@@ -99,7 +99,7 @@ class ViewHelperContextTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function requestCanBeRetrieved() {
 		$mockView = $this->getMock('F3\FLOW3\MVC\View\ViewInterface');
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelperContext($mockView);
+		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext($mockView);
 		$this->assertEquals($viewHelperDefaults, $viewHelperContext->getViewHelperDefaults());
 	}
 }

@@ -38,7 +38,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	const PATTERN_CONTROLLER = '/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/';
 
 	/**
-	 * @var \F3\Fluid\Core\TemplateParser
+	 * @var \F3\Fluid\Core\Parser\TemplateParser
 	 */
 	protected $templateParser;
 
@@ -87,11 +87,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	/**
 	 * Inject the template parser
 	 *
-	 * @param \F3\Fluid\Core\TemplateParser $templateParser The template parser
+	 * @param \F3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectTemplateParser(\F3\Fluid\Core\TemplateParser $templateParser) {
+	public function injectTemplateParser(\F3\Fluid\Core\Parser\TemplateParser $templateParser) {
 		$this->templateParser = $templateParser;
 	}
 
@@ -146,8 +146,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $this->contextVariables);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
 
 		return $parsedTemplate->render($variableContainer, $viewHelperContext);
 	}
@@ -172,8 +172,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 		$section = $sections[$sectionName];
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $this->contextVariables);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
 
 		$section->setVariableContainer($variableContainer);
 		$section->setViewHelperContext($viewHelperContext);
@@ -192,8 +192,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	public function renderWithLayout($layoutName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $this->contextVariables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $this->contextVariables);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
 
 		return $parsedTemplate->render($variableContainer, $viewHelperContext);
 	}
@@ -221,8 +221,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$partial = $this->parseTemplate($partialPathAndFileName);
 		$variables['view'] = $this;
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\VariableContainer', $variables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $variables);
+		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
 
 		if ($sectionToRender !== NULL) {
 			$sections = $partial->getVariableContainer()->get('sections');
@@ -272,7 +272,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Will cache the results for one call.
 	 *
 	 * @param $templatePathAndFilename absolute filename of the template to be parsed
-	 * @return \F3\Fluid\Core\ParsedTemplateInterface the parsed template tree
+	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface the parsed template tree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseTemplate($templatePathAndFilename) {

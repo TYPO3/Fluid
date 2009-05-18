@@ -31,7 +31,7 @@ namespace F3\Fluid\ViewHelpers;
  * @scope prototype
  * @todo refine documentation
  */
-class LayoutViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
+class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
 	/**
 	 * Initialize arguments
@@ -46,16 +46,16 @@ class LayoutViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\
 	/**
 	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
 	 *
-	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer
+	 * @param \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
+	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
 		if ($viewHelperArguments['name']) {
-			$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\VariableContainer());
-			$viewHelperArguments['name']->setViewHelperContext(new \F3\Fluid\Core\ViewHelperContext());
+			$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\ViewHelper\VariableContainer());
+			$viewHelperArguments['name']->setViewHelperContext(new \F3\Fluid\Core\ViewHelper\ViewHelperContext());
 			$layoutName = $viewHelperArguments['name']->evaluate();
 		} else {
 			$layoutName = 'default';

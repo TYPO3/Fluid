@@ -30,7 +30,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3\Fluid\Core\Facets\PostParseInterface {
+class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
 	/**
 	 * Initialize the arguments.
@@ -46,15 +46,15 @@ class SectionViewHelper extends \F3\Fluid\Core\AbstractViewHelper implements \F3
 	 * Save the associated view helper node in a static public class variable.
 	 * called directly after the view helper was built.
 	 *
-	 * @param \F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments
-	 * @param \F3\Fluid\Core\VariableContainer $variableContainer
+	 * @param \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer) {
-		$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\VariableContainer());
-		$viewHelperArguments['name']->setViewHelperContext(new \F3\Fluid\Core\ViewHelperContext());
+	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
+		$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\ViewHelper\VariableContainer());
+		$viewHelperArguments['name']->setViewHelperContext(new \F3\Fluid\Core\ViewHelper\ViewHelperContext());
 		$sectionName = $viewHelperArguments['name']->evaluate();
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
