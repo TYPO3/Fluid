@@ -267,6 +267,16 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
+	 * Checks whether a template can be resolved for the current request context.
+	 *
+	 * @return boolean
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function hasTemplate() {
+		return file_exists($this->resolveTemplatePathAndFilename());
+	}
+
+	/**
 	 * Parse the given template and return it.
 	 *
 	 * Will cache the results for one call.

@@ -78,5 +78,13 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 * @return \F3\FLOW3\MVC\Web\Request the current request
 	 */
 	public function getRequest();
+
+	/**
+	 * Checks whether a template can be resolved for the current request context.
+	 *
+	 * @return boolean
+	 */
+	public function hasTemplate();
+
 }
 ?>
