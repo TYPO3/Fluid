@@ -3,7 +3,7 @@ declare(ENCODING = 'utf-8');
 namespace F3\Fluid\View\Aspect;
 
 /*                                                                        *
- * This script belongs to the FLOW3 framework.                            *
+ * This script belongs to the FLOW3 package "Fluid".                      *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
