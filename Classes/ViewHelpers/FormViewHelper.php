@@ -42,13 +42,13 @@ namespace F3\Fluid\ViewHelpers;
  * = A complex form with a specified encoding type =
  *
  * <code title="Form with enctype set">
- * <f:form actionName=".." controllerName="..." packageName="..." enctype="multipart/form-data">...</f:form>
+ * <f:form action=".." controllerName="..." packageName="..." enctype="multipart/form-data">...</f:form>
  * </code>
  *
  * = A Form which should render a domain object =
  *
  * <code title="Binding a domain object to a form">
- * <f:form actionName="..." name="customer" object="{customer}">
+ * <f:form action="..." name="customer" object="{customer}">
  *   <f:form.hidden property="id" />
  *   <f:form.textbox property="name" />
  * </f:form>
@@ -103,7 +103,7 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	/**
 	 * Render the form.
 	 *
-	 * @param string $actionName target action
+	 * @param string $action target action
 	 * @param array $arguments additional arguments
 	 * @param string $controllerName target controller
 	 * @param string $packageName target package
@@ -113,9 +113,9 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($actionName = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL) {
+	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL) {
 		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$formActionUrl = $uriHelper->URIFor($actionName, $arguments, $controllerName, $packageName, $subpackageName);
+		$formActionUrl = $uriHelper->URIFor($action, $arguments, $controllerName, $packageName, $subpackageName);
 		$this->tag->addAttribute('action', $formActionUrl);
 
 		if (strtolower($this->arguments['method']) === 'get') {
