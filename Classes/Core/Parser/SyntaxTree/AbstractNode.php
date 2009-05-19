@@ -40,35 +40,19 @@ abstract class AbstractNode {
 	protected $childNodes = array();
 
 	/**
-	 * The variable container
-	 * @var \F3\Fluid\Core\ViewHelper\VariableContainer
+	 * The rendering context containing everything to correctly render the subtree
+	 * @var \F3\Fluid\Core\RenderingContext
 	 */
-	protected $variableContainer;
+	protected $renderingContext;
 
 	/**
-	 * The View Helper Context
-	 * @var F3\Fluid\Core\ViewHelper\ViewHelperContext
-	 */
-	protected $viewHelperContext;
-
-	/**
-	 * @param \F3\Fluid\Core\ViewHelper\VariableContainer Variable Container to be used for the evaluation
-	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
-	 */
-	public function setVariableContainer(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
-		$this->variableContainer = $variableContainer;
-	}
-
-	/**
-	 * @param F3\Fluid\Core\ViewHelper\ViewHelperContext View Helper Context
+	 * @param \F3\Fluid\Core\RenderingContext Rendering Context to be used for this evaluation
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
-	public function setViewHelperContext(\F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext) {
-		$this->viewHelperContext = $viewHelperContext;
+	public function setRenderingContext(\F3\Fluid\Core\RenderingContext $renderingContext) {
+		$this->renderingContext = $renderingContext;
 	}
 
 	/**
@@ -82,8 +66,7 @@ abstract class AbstractNode {
 	public function evaluateChildNodes() {
 		$output = NULL;
 		foreach ($this->childNodes as $subNode) {
-			$subNode->setVariableContainer($this->variableContainer);
-			$subNode->setViewHelperContext($this->viewHelperContext);
+			$subNode->setRenderingContext($this->renderingContext);
 
 			if ($output === NULL) {
 				$output = $subNode->evaluate();

@@ -33,17 +33,25 @@ require_once(__DIR__ . '/../Fixtures/SomeEmptyClass.php');
  */
 class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 
+	protected $mockTemplateVariableContainer;
+	
+	protected $renderingContext;
+	
+	public function setUp() {
+		$this->mockTemplateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
+		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingContext->setTemplateVariableContainer($this->mockTemplateVariableContainer);
+	}
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function objectAccessorWorksWithStrings() {
-		$mockVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
-		$mockVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue('ExpectedString'));
-
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('exampleObject');
-		$objectAccessorNode->setVariableContainer($mockVariableContainer);
+		$objectAccessorNode->setRenderingContext($this->renderingContext);
+		
+		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue('ExpectedString'));
 
 		$actualResult = $objectAccessorNode->evaluate();
 		$this->assertEquals('ExpectedString', $actualResult, 'ObjectAccessorNode did not work for string input.');
@@ -55,14 +63,13 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function objectAccessorWorksWithNestedObjects() {
-		$exampleObject = new \F3\Fluid\SomeEmptyClass('Foo');
-
-		$mockVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
-		$mockVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue($exampleObject));
+		$exampleObject = new \F3\Fluid\Core\Parser\Fixtures\SomeEmptyClass('Foo');
 
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('exampleObject.subproperty');
-		$objectAccessorNode->setVariableContainer($mockVariableContainer);
+		$objectAccessorNode->setRenderingContext($this->renderingContext);
 
+		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue($exampleObject));
+		
 		$actualResult = $objectAccessorNode->evaluate();
 		$this->assertEquals('Foo', $actualResult, 'ObjectAccessorNode did not work for calling getters.');
 	}
@@ -74,14 +81,13 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function objectAccessorWorksWithDirectProperties() {
 		$expectedResult = 'This is a test';
-		$exampleObject = new \F3\Fluid\SomeEmptyClass('');
+		$exampleObject = new \F3\Fluid\Core\Parser\Fixtures\SomeEmptyClass('');
 		$exampleObject->publicVariable = $expectedResult;
 
-		$mockVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
-		$mockVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue($exampleObject));
-
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('exampleObject.publicVariable');
-		$objectAccessorNode->setVariableContainer($mockVariableContainer);
+		$objectAccessorNode->setRenderingContext($this->renderingContext);
+		
+		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue($exampleObject));
 
 		$actualResult = $objectAccessorNode->evaluate();
 		$this->assertEquals($expectedResult, $actualResult, 'ObjectAccessorNode did not work for direct properties.');
@@ -96,11 +102,10 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$expectedResult = 'My value';
 		$exampleArray = array('key' => array('key2' => $expectedResult));
 
-		$mockVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
-		$mockVariableContainer->expects($this->at(0))->method('get')->with('variable')->will($this->returnValue($exampleArray));
-
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('variable.key.key2');
-		$objectAccessorNode->setVariableContainer($mockVariableContainer);
+		$objectAccessorNode->setRenderingContext($this->renderingContext);
+		
+		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('variable')->will($this->returnValue($exampleArray));
 
 		$actualResult = $objectAccessorNode->evaluate();
 		$this->assertEquals($expectedResult, $actualResult, 'ObjectAccessorNode did not traverse associative arrays.');
@@ -116,7 +121,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$expected = 'My value';
 		$exampleArray = array('key' => array('key2' => $expected));
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('variable.key.key3');
-		$context = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('variable' => $exampleArray));
+		$context = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('variable' => $exampleArray));
 
 		$actual = $objectAccessorNode->evaluate();
 	}
@@ -133,7 +138,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$exampleObject = new \F3\Fluid\SomeEmptyClass("Hallo");
 		$exampleObject->publicVariable = $expected;
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode("exampleObject.publicVariableNotExisting");
-		$context = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('exampleObject' => $exampleObject));
+		$context = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('exampleObject' => $exampleObject));
 
 		$actual = $objectAccessorNode->evaluate($context);
 	}

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid;
+namespace F3\Fluid\Core\Fixtures;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -31,7 +31,7 @@ class PostParseFacetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHel
 	public function __construct() {
 	}
 
-	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $viewHelperNode, array $arguments, \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
+	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $viewHelperNode, array $arguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		self::$wasCalled = TRUE;
 	}
 

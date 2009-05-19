@@ -46,7 +46,7 @@ class ForViewHelperTest extends \F3\Testing\BaseTestCase {
 	public function forExecutesTheLoopCorrectly() {
 		$this->viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
 		
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array());
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 		
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);		
 		$this->viewHelper->setVariableContainer($variableContainer);

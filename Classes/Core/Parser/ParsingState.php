@@ -48,19 +48,19 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 
 	/**
 	 * Variable container where ViewHelpers implementing the PostParseFacet can store things in.
-	 * @var \F3\Fluid\Core\ViewHelper\VariableContainer
+	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $variableContainer;
 
 	/**
 	 * Injects a variable container. ViewHelpers implementing the PostParse Facet can store information inside this variableContainer.
 	 *
-	 * @param \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
-	public function injectVariableContainer(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
+	public function injectVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 
@@ -88,16 +88,14 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	}
 
 	/**
-	 * Render the parsed template with a variable container and a ViewHelper context
+	 * Render the parsed template with rendering context
 	 *
-	 * @param F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer The variable container having the containing the variables which can be used in the template
-	 * @param F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext The ViewHelperContext which carries important configuration for the ViewHelper
+	 * @param F3\Fluid\Core\RenderingContext $renderingContext The rendering context to use
 	 * @return Rendered string
 	 * @internal
 	 */
-	public function render(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer, \F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext) {
-		$this->rootNode->setVariableContainer($variableContainer);
-		$this->rootNode->setViewHelperContext($viewHelperContext);
+	public function render(\F3\Fluid\Core\RenderingContext $renderingContext) {
+		$this->rootNode->setRenderingContext($renderingContext);
 		return $this->rootNode->evaluate();
 	}
 
@@ -149,7 +147,7 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	/**
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *
-	 * @return \F3\Fluid\Core\ViewHelper\VariableContainer The variable container or NULL if none has been set yet
+	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer The variable container or NULL if none has been set yet
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 * @todo Rename to getPostParseVariableContainer

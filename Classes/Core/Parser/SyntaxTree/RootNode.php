@@ -41,8 +41,8 @@ class RootNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @internal
 	 */
 	public function evaluate() {
-		if ($this->viewHelperContext === NULL) {
-			throw new \F3\Fluid\Core\RuntimeException('ViewHelper context is null in RootNode, but necessary. If this error appears, please report a bug!', 1242669004);
+		if ($this->renderingContext === NULL) {
+			throw new \F3\Fluid\Core\RuntimeException('Rendering Context is null in RootNode, but necessary. If this error appears, please report a bug!', 1242669004);
 		}
 		$text = $this->evaluateChildNodes();
 		return $text;

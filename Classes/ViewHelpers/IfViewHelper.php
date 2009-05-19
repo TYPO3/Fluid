@@ -66,6 +66,11 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 	protected $childNodes = array();
 
 	/**
+	 * @var F3\Fluid\Core\RenderingContext
+	 */
+	protected $renderingContext;
+	
+	/**
 	 * Setter for ChildNodes - as defined in ChildNodeAccessInterface
 	 *
 	 * @param array $childNodes Child nodes of this syntax tree node
@@ -76,6 +81,16 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 		$this->childNodes = $childNodes;
 	}
 
+	/**
+	 * Sets the rendering context which needs to be passed on to child nodes
+	 * 
+	 * @param F3\Fluid\Core\RenderingContext $renderingContext the renderingcontext to use
+	 * @internal
+	 */
+	public function setRenderingContext(\F3\Fluid\Core\RenderingContext $renderingContext) {
+		$this->renderingContext = $renderingContext;
+	}
+	
 	/**
 	 * renders <f:then> child if $condition is true, otherwise renders <f:else> child.
 	 *
@@ -104,8 +119,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
-				$childNode->setVariableContainer($this->variableContainer);
-				$childNode->setViewHelperContext($this->viewHelperContext);
+				$childNode->setRenderingContext($this->renderingContext);
 				$data = $childNode->evaluate();
 				return $data;
 			}
@@ -124,8 +138,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
-				$childNode->setVariableContainer($this->variableContainer);
-				$childNode->setViewHelperContext($this->viewHelperContext);
+				$childNode->setRenderingContext($this->renderingContext);
 				return $childNode->evaluate();
 			}
 		}

@@ -33,19 +33,18 @@ namespace F3\Fluid\Core\Parser;
 interface ParsedTemplateInterface {
 
 	/**
-	 * Renders the parsed template with a variable container and a ViewHelper context
+	 * Render the parsed template with rendering context
 	 *
-	 * @param F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer The variable container having the containing the variables which can be used in the template
-	 * @param F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext The ViewHelperContext which carries important configuration for the ViewHelper
+	 * @param F3\Fluid\Core\RenderingContext $renderingContext The rendering context to use
 	 * @return Rendered string
 	 * @internal
 	 */
-	public function render(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer, \F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext);
+	public function render(\F3\Fluid\Core\RenderingContext $renderingContext);
 
 	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
-	 * @return \F3\Fluid\Core\ViewHelper\VariableContainer
+	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 * @internal
 	 */
 	// TODO

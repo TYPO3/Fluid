@@ -34,10 +34,10 @@ include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
 class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	public function setUp() {
-		$this->viewHelper = new \F3\Fluid\TestTagBasedViewHelper();
+		$this->viewHelper = new \F3\Fluid\Core\Fixtures\TestTagBasedViewHelper();
 	}
 	/**
-	 * @test
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -53,7 +53,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * @test
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */

@@ -69,15 +69,14 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
-		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
-		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperContext', array(), array(), '', FALSE);
+		$renderingContext = $this->getMock('F3\Fluid\Core\RenderingContext');
 
 		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
-		$rootNode->expects($this->once())->method('setVariableContainer')->with($variableContainer);
-		$rootNode->expects($this->once())->method('setViewHelperContext')->with($viewHelperContext);
+		$rootNode->expects($this->once())->method('setRenderingContext')->with($renderingContext);
+
 		$rootNode->expects($this->once())->method('evaluate')->will($this->returnValue('T3DD09 Rock!'));
 		$this->parsingState->setRootNode($rootNode);
-		$renderedValue = $this->parsingState->render($variableContainer, $viewHelperContext);
+		$renderedValue = $this->parsingState->render($renderingContext);
 		$this->assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
 	}
 

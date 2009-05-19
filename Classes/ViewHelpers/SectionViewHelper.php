@@ -48,13 +48,13 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments
-	 * @param \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
-		$viewHelperArguments['name']->setVariableContainer(new \F3\Fluid\Core\ViewHelper\VariableContainer());
-		$viewHelperArguments['name']->setViewHelperContext(new \F3\Fluid\Core\ViewHelper\ViewHelperContext());
+	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+		$viewHelperArguments['name']->setRenderingContext(new \F3\Fluid\Core\RenderingContext());
+
 		$sectionName = $viewHelperArguments['name']->evaluate();
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());

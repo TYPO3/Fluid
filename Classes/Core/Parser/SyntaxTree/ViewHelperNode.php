@@ -84,15 +84,15 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @internal
 	 */
 	public function evaluate() {
-		if ($this->viewHelperContext === NULL) {
-			throw new \F3\Fluid\Core\RuntimeException('ViewHelper context is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
+		if ($this->renderingContext === NULL) {
+			throw new \F3\Fluid\Core\RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
-		$objectFactory = $this->variableContainer->getObjectFactory();
+		$objectFactory = $this->renderingContext->getObjectFactory();
 		$viewHelper = $objectFactory->create($this->viewHelperClassName);
 		$argumentDefinitions = $viewHelper->prepareArguments();
 
-		$contextVariables = $this->variableContainer->getAllIdentifiers();
+		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
@@ -100,8 +100,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
-					$argumentValue->setVariableContainer($this->variableContainer);
-					$argumentValue->setViewHelperContext($this->viewHelperContext);
+					$argumentValue->setRenderingContext($this->renderingContext);
 					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue->evaluate(), $argumentDefinition->getType());
 				} else {
 					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
@@ -114,12 +113,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
 		$viewHelper->setArguments($viewHelperArguments);
-		$viewHelper->setVariableContainer($this->variableContainer);
-		$viewHelper->setViewHelperContext($this->viewHelperContext);
+		$viewHelper->setVariableContainer($this->renderingContext->getTemplateVariableContainer());
 		$viewHelper->setViewHelperNode($this);
 
 		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
 			$viewHelper->setChildNodes($this->childNodes);
+			$viewHelper->setRenderingContext($this->renderingContext);
 		}
 
 		$viewHelper->validateArguments();
@@ -131,8 +130,8 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			$output = $exception->getMessage();
 		}
 
-		if ($contextVariables != $this->variableContainer->getAllIdentifiers()) {
-			$endContextVariables = $this->variableContainer->getAllIdentifiers();
+		if ($contextVariables != $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers()) {
+			$endContextVariables = $this->renderingContext->getTemplateVariableContainer();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 
 			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);

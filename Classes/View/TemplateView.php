@@ -146,10 +146,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $this->contextVariables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
+		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
+		$renderingContext->setTemplateVariableContainer($variableContainer);
 
-		return $parsedTemplate->render($variableContainer, $viewHelperContext);
+		return $parsedTemplate->render($renderingContext);
 	}
 
 	/**
@@ -172,11 +173,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 		$section = $sections[$sectionName];
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $this->contextVariables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
+		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
+		$renderingContext->setTemplateVariableContainer($variableContainer);
 
-		$section->setVariableContainer($variableContainer);
-		$section->setViewHelperContext($viewHelperContext);
+		$section->setRenderingContext($renderingContext);
 		return $section->evaluate();
 	}
 
@@ -192,10 +193,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	public function renderWithLayout($layoutName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $this->contextVariables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
+		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
+		$renderingContext->setTemplateVariableContainer($variableContainer);
 
-		return $parsedTemplate->render($variableContainer, $viewHelperContext);
+		return $parsedTemplate->render($renderingContext);
 	}
 
 	/**
@@ -221,9 +223,12 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$partial = $this->parseTemplate($partialPathAndFileName);
 		$variables['view'] = $this;
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\VariableContainer', $variables);
-		$viewHelperContext = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperContext');
+		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 
+		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
+		$renderingContext->setTemplateVariableContainer($variableContainer);
+
+		return $parsedTemplate->render($renderingContext);
 		if ($sectionToRender !== NULL) {
 			$sections = $partial->getVariableContainer()->get('sections');
 			if(!array_key_exists($sectionToRender, $sections)) {
@@ -233,8 +238,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		} else {
 			$syntaxTree = $partial->getRootNode();
 		}
-		$syntaxTree->setVariableContainer($variableContainer);
-		$syntaxTree->setViewHelperContext($viewHelperContext);
+		$syntaxTree->setRenderingContext($renderingContext);
 		return $syntaxTree->evaluate();
 	}
 

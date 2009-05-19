@@ -42,7 +42,7 @@ class SectionViewHelperTest extends \F3\Testing\BaseTestCase {
 			'name' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('sectionName')
 		);
 		
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer();
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer();
 		
 		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 		

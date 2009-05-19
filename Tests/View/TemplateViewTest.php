@@ -43,17 +43,17 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
 		$objectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
 
-		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\VariableContainer');
-		$viewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperContext', array(), array(), '', FALSE);
+		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
+		$renderingContext = $this->getMock('F3\Fluid\Core\RenderingContext', array(), array(), '', FALSE);
 
-		$objectFactory->expects($this->exactly(2))->method('create')->will($this->onConsecutiveCalls($variableContainer, $viewHelperContext));
+		$objectFactory->expects($this->exactly(2))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingContext));
 
 		$templateView->_set('objectFactory', $objectFactory);
 
 		$templateView->expects($this->once())->method('parseTemplate')->will($this->returnValue($parsedTemplate));
 
 		// Real expectations
-		$parsedTemplate->expects($this->once())->method('render')->with($variableContainer, $viewHelperContext)->will($this->returnValue('Hello World'));
+		$parsedTemplate->expects($this->once())->method('render')->with($renderingContext)->will($this->returnValue('Hello World'));
 
 		$this->assertEquals('Hello World', $templateView->render(), 'The output of the ParsedTemplates render Method is not returned by the TemplateView');
 

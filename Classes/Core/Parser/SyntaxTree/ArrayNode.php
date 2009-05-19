@@ -59,14 +59,13 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @internal
 	 */
 	public function evaluate() {
-		if ($this->viewHelperContext === NULL) {
-			throw new \F3\Fluid\Core\RuntimeException('ViewHelper context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
+		if ($this->renderingContext === NULL) {
+			throw new \F3\Fluid\Core\RuntimeException('Rendering Context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
 		}
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
 			if ($value instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
-				$value->setVariableContainer($this->variableContainer);
-				$value->setViewHelperContext($this->viewHelperContext);
+				$value->setRenderingContext($this->renderingContext);
 				$arrayToBuild[$key] = $value->evaluate();
 			} else {
 				// TODO - this case should not happen!

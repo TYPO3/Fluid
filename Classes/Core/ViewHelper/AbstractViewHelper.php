@@ -58,7 +58,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Current variable container reference.
-	 * @var \F3\Fluid\Core\ViewHelper\VariableContainer
+	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $variableContainer;
 
@@ -90,12 +90,12 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	}
 
 	/**
-	 * @param \F3\Fluid\Core\ViewHelper\VariableContainer Variable Container to be used for rendering
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer Variable Container to be used for rendering
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @internal
 	 */
-	public function setVariableContainer(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
+	public function setVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 

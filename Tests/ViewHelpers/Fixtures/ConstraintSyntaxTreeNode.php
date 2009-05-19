@@ -31,7 +31,7 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
 class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	public $callProtocol = array();
 	
-	public function __construct(\F3\Fluid\Core\ViewHelper\VariableContainer $variableContainer) {
+	public function __construct(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 	

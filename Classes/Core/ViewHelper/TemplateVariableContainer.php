@@ -34,19 +34,13 @@ namespace F3\Fluid\Core\ViewHelper;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype
  */
-class VariableContainer {
+class TemplateVariableContainer {
 
 	/**
 	 * Objects stored in context
 	 * @var array
 	 */
 	protected $objects = array();
-
-	/**
-	 * Object factory
-	 * @var F3\FLOW3\Object\FactoryInterface
-	 */
-	protected $objectFactory;
 
 	/**
 	 * Constructor. Can take an array, and initializes the objects with it.
@@ -57,27 +51,6 @@ class VariableContainer {
 	public function __construct($objectArray = array()) {
 		if (!is_array($objectArray)) throw new \F3\Fluid\Core\RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
 		$this->objects = $objectArray;
-	}
-
-	/**
-	 * Inject object factory. Needed to instanciate view helpers in the syntax tree.
-	 *
-	 * @param \F3\FLOW3\Object\FactoryInterface Object Factory
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
-		$this->objectFactory = $objectFactory;
-	}
-
-	/**
-	 * Get object factory. Needed to instanciate view helpers in the syntax tree. For internal use only!
-	 *
-	 * @return \F3\FLOW3\Object\FactoryInterface Object Factory
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
-	 */
-	public function getObjectFactory() {
-		return $this->objectFactory;
 	}
 
 	/**

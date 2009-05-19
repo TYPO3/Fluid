@@ -16,5 +16,4 @@ class TestViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	}
 }
 
-
 ?>

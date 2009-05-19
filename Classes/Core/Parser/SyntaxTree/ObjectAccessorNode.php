@@ -74,7 +74,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		try {
 			$objectPathParts = explode('.', $this->objectPath);
 			$variableName = array_shift($objectPathParts);
-			$currentObject = $this->variableContainer->get($variableName);
+			$currentObject = $this->renderingContext->getTemplateVariableContainer()->get($variableName);
 
 			if (count($objectPathParts) > 0) {
 				foreach ($objectPathParts as $currentObjectPath) {

@@ -15,7 +15,7 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
-include_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
+//include_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
 /**
  * @package Fluid
  * @subpackage Tests
@@ -32,10 +32,14 @@ include_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
 class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 	/**
-	 * @var \F3\Fluid\TemplateParser
+	 * @var F3\Fluid\Core\Parser\TemplateParser
 	 */
 	protected $templateParser;
 
+	/**
+	 * @var F3\Fluid\Core\RenderingContext
+	 */
+	protected $renderingContext;
 	/**
 	 * Sets up this test case
 	 *
@@ -44,6 +48,9 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
 		$this->templateParser->injectObjectFactory($this->objectFactory);
+		
+		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingContext->injectObjectFactory($this->objectFactory);
 	}
 
 	/**
@@ -209,13 +216,12 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture07ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture07.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('id' => 1));
-		$variableContainer->injectObjectFactory($this->objectFactory);
+		$templateVariableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('id' => 1));
 
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
+		$this->renderingContext->setTemplateVariableContainer($templateVariableContainer);
 
 		$parsedTemplate = $this->templateParser->parse($templateSource);
-		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
+		$result = $parsedTemplate->render($this->renderingContext);
 		$expected = '1';
 		$this->assertEquals($expected, $result, 'Fixture 07 was not parsed correctly.');
 	}
@@ -227,13 +233,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture08ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture08.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
-		$variableContainer->injectObjectFactory($this->objectFactory);
-
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
-
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$this->renderingContext->setTemplateVariableContainer($variableContainer);
+		
 		$parsedTemplate = $this->templateParser->parse($templateSource);
-		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
+		$result = $parsedTemplate->render($this->renderingContext);
 
 		$expected = '0 1 2 3 4 5 ';
 		$this->assertEquals($expected, $result, 'Fixture 08 was not rendered correctly.');
@@ -246,13 +250,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture09ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture09.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
-		$variableContainer->injectObjectFactory($this->objectFactory);
-
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
-
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
+		$this->renderingContext->setTemplateVariableContainer($variableContainer);
+		
 		$parsedTemplate = $this->templateParser->parse($templateSource);
-		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
+		$result = $parsedTemplate->render($this->renderingContext);
 
 		$expected = '0 hallo test 3 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 09 was not rendered correctly. This is most likely due to problems in the array parser.');
@@ -265,13 +267,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture10ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture10.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
-		$variableContainer->injectObjectFactory($this->objectFactory);
-
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
-
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
+		$this->renderingContext->setTemplateVariableContainer($variableContainer);
+		
 		$parsedTemplate = $this->templateParser->parse($templateSource);
-		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
+		$result = $parsedTemplate->render($this->renderingContext);
 
 		$expected = '0 1 2 3 4 5 ';
 		$this->assertEquals($expected, $result, 'Fixture 10 was not rendered correctly. This has proboably something to do with line breaks inside tags.');
@@ -284,13 +284,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture11ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture11.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array());
-		$variableContainer->injectObjectFactory($this->objectFactory);
-
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
-
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$this->renderingContext->setTemplateVariableContainer($variableContainer);
+		
 		$parsedTemplate = $this->templateParser->parse($templateSource);
-		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
+		$result = $parsedTemplate->render($this->renderingContext);
 
 		$expected = '0 2 4 ';
 		$this->assertEquals($expected, $result, 'Fixture 11 was not rendered correctly.');
@@ -305,13 +303,11 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture12ReturnsCorrectlyRenderedResult() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture12_cdata.html', FILE_TEXT);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\VariableContainer(array());
-		$variableContainer->injectObjectFactory($this->objectFactory);
-
-		$viewHelperContext = new \F3\Fluid\Core\ViewHelper\ViewHelperContext();
-
+		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$this->renderingContext->setTemplateVariableContainer($variableContainer);
+		
 		$parsedTemplate = $this->templateParser->parse($templateSource);
-		$result = $parsedTemplate->render($variableContainer, $viewHelperContext);
+		$result = $parsedTemplate->render($this->renderingContext);
 
 		$expected = '<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array">' . chr(10) . '<f3:for each="{array}" as="value">{value} </f3:for>';
 		$this->assertEquals($expected, $result, 'Fixture 12 was not rendered correctly. This hints at some problem with CDATA handling.');

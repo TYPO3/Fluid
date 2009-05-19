@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Parser\Fixtures;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -18,29 +18,37 @@ namespace F3\Fluid\Core\Parser\Fixtures;
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id$
+ * @version $Id: ParsingStateTest.php 2247 2009-05-18 20:02:37Z sebastian $
  */
 /**
- * Example class
+ * Testcase for ParsingState
  *
  * @package Fluid
  * @subpackage Tests
- * @version $Id$
+ * @version $Id: ParsingStateTest.php 2247 2009-05-18 20:02:37Z sebastian $
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @author Sebastian Kurfürst <sebastian@typo3.org>
  */
-class SomeEmptyClass {
-	public $publicVariable = "Hallo";
-	protected $protectedVariable;
-	
-	public function __construct($protectedVariable) {
-		$this->protectedVariable = $protectedVariable;
+class RenderingContextTest extends \F3\Testing\BaseTestCase {
+
+	/**
+	 * Parsing state
+	 * @var \F3\Fluid\Core\RenderingContext
+	 */
+	protected $renderingContext;
+
+	public function setUp() {
+		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
 	}
 	
-	public function getSubproperty() {
-		return $this->protectedVariable;
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function templateVariableContainerCanBeReadCorrectly() {
+		$templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
+		$this->renderingContext->setTemplateVariableContainer($templateVariableContainer);
+		$this->assertSame($this->renderingContext->getTemplateVariableContainer(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
 	}
 }
-
 
 ?>

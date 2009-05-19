@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Parser\Fixtures;
+namespace F3\Fluid\Core;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -17,30 +17,43 @@ namespace F3\Fluid\Core\Parser\Fixtures;
 
 /**
  * @package Fluid
- * @subpackage Tests
- * @version $Id$
+ * @subpackage Core
+ * @version $Id: RuntimeException.php 2246 2009-05-18 17:56:39Z sebastian $
  */
+
 /**
- * Example class
+ * A Runtime Exception
  *
  * @package Fluid
- * @subpackage Tests
- * @version $Id$
+ * @subpackage Core
+ * @version $Id: RuntimeException.php 2246 2009-05-18 17:56:39Z sebastian $
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @author Sebastian Kurfürst <sebastian@typo3.org>
+ * @internal
+ * @scope prototype
  */
-class SomeEmptyClass {
-	public $publicVariable = "Hallo";
-	protected $protectedVariable;
+class RenderingContext {
+	/**
+	 * Template Variable Container. Contains all variables available through object accessors in the template
+	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 */
+	protected $templateVariableContainer;
 	
-	public function __construct($protectedVariable) {
-		$this->protectedVariable = $protectedVariable;
+	
+	protected $objectFactory;
+	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
+		$this->objectFactory = $objectFactory;
 	}
 	
-	public function getSubproperty() {
-		return $this->protectedVariable;
+	public function getObjectFactory() {
+		return $this->objectFactory;
+	}
+	
+	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
+		$this->templateVariableContainer = $templateVariableContainer;
+	}
+	
+	public function getTemplateVariableContainer() {
+		return $this->templateVariableContainer;
 	}
 }
-
-
 ?>
