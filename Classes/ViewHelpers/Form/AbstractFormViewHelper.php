@@ -36,6 +36,22 @@ namespace F3\Fluid\ViewHelpers\Form;
 abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 
 	/**
+	 * @var \F3\FLOW3\Persistence\ManagerInterface
+	 */
+	protected $persistenceManager;
+
+	/**
+	 * Injects the FLOW3 Persistence Manager
+	 *
+	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
+	 * @return void
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
+		$this->persistenceManager = $persistenceManager;
+	}
+
+	/**
 	 * Initialize arguments.
 	 *
 	 * @return void
@@ -54,13 +70,14 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 *
 	 * @return string Name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function getName() {
-		if ($this->isObjectAccessorMode()) {
-			return $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']';
-		} else {
-			return $this->arguments['name'];
+		$name = ($this->isObjectAccessorMode()) ? $this->variableContainer->get('__formName') . '[' . $this->arguments['property'] . ']' : $this->arguments['name'];
+		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getUUIDByObject($this->arguments['value'])) {
+			$name .= '[__identity]';
 		}
+		return $name;
 	}
 
 	/**
@@ -72,10 +89,17 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 */
 	protected function getValue() {
 		if ($this->isObjectAccessorMode() && $this->variableContainer->exists('__formObject') && ($this->arguments['value'] === NULL)) {
-			return $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
+			$value = $this->getObjectValue($this->variableContainer->get('__formObject'), $this->arguments['property']);
 		} else {
-			return $this->arguments['value'];
+			$value =  $this->arguments['value'];
 		}
+		if (is_object($value)) {
+			$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($value);
+			if ($uuid !== NULL) {
+				$value = $uuid;
+			}
+		}
+		return $value;
 	}
 
 	/**

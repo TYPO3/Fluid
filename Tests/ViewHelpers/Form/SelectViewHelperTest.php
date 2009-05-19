@@ -116,8 +116,15 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function selectOnDomainObjectsCreatesExpectedOptions() {
+		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
+		$mockPersistenceBackend->expects($this->any())->method('getUUIDByObject')->will($this->returnValue(NULL));
+
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+
 		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1">Ingmar</option>' . chr(10) . '<option value="2" selected="selected">Sebastian</option>' . chr(10) . '<option value="3">Robert</option>' . chr(10));
@@ -139,6 +146,7 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 			'name' => 'myName'
 		));
 
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
