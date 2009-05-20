@@ -70,11 +70,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	protected $variableContainer;
 
 	/**
-	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext
-	 */
-	protected $viewHelperContext;
-
-	/**
 	 * Validator resolver
 	 * @var \F3\FLOW3\Validation\ValidatorResolver
 	 */
@@ -104,16 +99,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 */
 	public function setVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
-	}
-
-	/**
-	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperContext $viewHelperContext
-	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
-	 */
-	public function setViewHelperContext($viewHelperContext) {
-		return $this->viewHelperContext = $viewHelperContext;
 	}
 
 	/**
