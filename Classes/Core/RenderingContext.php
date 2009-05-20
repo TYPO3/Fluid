@@ -46,20 +46,54 @@ class RenderingContext {
 	 */
 	protected $templateVariableContainer;
 
+	/**
+	 * Object factory which is bubbled through. The ViewHelperNode cannot get an ObjectFactory injected because
+	 * the whole syntax tree should be cacheable 
+	 * @var F3\FLOW3\Object\FactoryInterface
+	 */
 	protected $objectFactory;
 
+	/**
+	 * Inject the object factory
+	 * 
+	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
 	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
 		$this->objectFactory = $objectFactory;
 	}
 
+	/**
+	 * Returns the object factory. Only the ViewHelperNode should do this.
+	 * 
+	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
 	public function getObjectFactory() {
 		return $this->objectFactory;
 	}
 
+	/**
+	 * Sets the template variable container containing all variables available through ObjectAccessors
+	 * in the template
+	 * 
+	 * @param F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
 	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
 		$this->templateVariableContainer = $templateVariableContainer;
 	}
 
+	/**
+	 * Get the template variable container
+	 * 
+	 * @return F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
 	public function getTemplateVariableContainer() {
 		return $this->templateVariableContainer;
 	}

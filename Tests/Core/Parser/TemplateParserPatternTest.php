@@ -324,7 +324,4 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 		return str_replace('NAMESPACE', implode('|', $namespace), $regularExpression);
 	}
 }
-
-
-
 ?>

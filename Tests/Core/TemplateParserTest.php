@@ -405,6 +405,28 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		);
 		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
 	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function fixture14ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture14.html') {
+		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
+
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$arguments = array(
+			'arguments' => new \F3\Fluid\Core\Parser\SyntaxTree\RootNode(),
+		);
+		$arguments['arguments']->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ArrayNode(array('number' => 362525200)));
+
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\PrintfViewHelper', $arguments);
+		$rootNode->addChildNode($dynamicNode);
+		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%.3e'));
+
+		$expected = $rootNode;
+		$actual = $this->templateParser->parse($templateSource)->getRootNode();
+		$this->assertEquals($expected, $actual, 'Fixture 14 was not parsed correctly.');
+	}
 }
 
 ?>

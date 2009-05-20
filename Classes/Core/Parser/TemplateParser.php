@@ -100,33 +100,15 @@ class TemplateParser {
 	 */
 	public static $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
 		(
-			{                                                   # Start of shorthand syntax
-				(?:                                             # Shorthand syntax is either composed of...
-					[a-zA-Z0-9_.]+                              # Object accessors
-					|(?P<Array>                                 # Array
-						[a-zA-Z0-9_.]+                          # Array Key
-						\s*:\s*
-						(:                                      # Array Value
-							"(?:\\\"|[^"])*"                    # Double-quoted strings
-							|\'(?:\\\\\'|[^\'])*\'              # Single-quoted strings
-							|-?[0-9]+(?:\\.[0-9])?              # Numbers (negative as well, with floating point)
-							|{[a-zA-Z0-9_.]+}                   # Object Access
-							|(?P>Array)                         # recursive arrays
-						)                                       # End Array Value
-					)                                           # End Array
-					|(?:                                        # Inline ViewHelpers
-						(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)       # Have a namespace and an identifier
-						\\(                                     # After the ViewHelper name, (
-							(?:                                 # Start submatch: arguments for ViewHelpers
-								"(?:\\\"|[^"])*"                # Double-quoted strings
-								|\'(?:\\\\\'|[^\'])*\'          # Single-quoted strings
-								|[a-zA-Z0-9]+=                  # Variable name
-								|\s*                            # Spaces
-							)*                                  # End argument submatch
-						\\)                                     # closing argument bracket )
-					)                                           # End Inline ViewHelpers
-				)                                               # End Submatch: Shorthand syntax
-			}                                                   # End of shorthand syntax
+			{                                # Start of shorthand syntax
+				(?:                          # Shorthand syntax is either composed of...
+					[a-zA-Z0-9\-_:,.()=]     # Various characters
+					|"(?:\\\"|[^"])*"        # Double-quoted strings
+					|\'(?:\\\\\'|[^\'])*\'   # Single-quoted strings
+					|(?R)                    # Other shorthand syntaxes inside, albeit not in a quoted string
+					|\s+                     # Spaces
+				)+
+			}                                # End of shorthand syntax
 		)/x';
 
 	/**
@@ -584,6 +566,7 @@ class TemplateParser {
 	 */
 	protected function handler_textAndShorthandSyntax(\F3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$sections = preg_split($this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_SHORTHANDSYNTAX), $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+
 		foreach ($sections as $section) {
 			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
