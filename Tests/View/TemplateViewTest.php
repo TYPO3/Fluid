@@ -45,9 +45,12 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
 		
 		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$renderingContext = $this->getMock('F3\Fluid\Core\RenderingContext', array(), array(), '', FALSE);
+		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
 
-		$objectFactory->expects($this->exactly(2))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingContext));
+		$renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
+		
+		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\HTMLSpecialCharsPostProcessor');
+		$objectFactory->expects($this->exactly(4))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingConfiguration, $objectAccessorPostProcessor, $renderingContext ));
 
 		$templateView->_set('objectFactory', $objectFactory);
 		$templateView->setControllerContext($controllerContext);

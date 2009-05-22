@@ -136,6 +136,24 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
+	 * Build the rendering context
+	 */
+	protected function buildRenderingContext($variableContainer = NULL) {
+		if ($variableContainer === NULL) {
+			$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
+		}
+		$renderingConfiguration = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingConfiguration');
+		$renderingConfiguration->setObjectAccessorPostProcessor($this->objectFactory->create('F3\Fluid\Core\Rendering\HTMLSpecialCharsPostProcessor'));
+		
+		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingContext');
+		$renderingContext->setTemplateVariableContainer($variableContainer);
+		$renderingContext->setControllerContext($this->controllerContext);
+		$renderingContext->setRenderingConfiguration($renderingConfiguration);
+		
+
+		return $renderingContext;
+	}
+	/**
 	 * Find the XHTML template according to $this->templatePathAndFilenamePattern and render the template.
 	 * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
 	 *
@@ -153,11 +171,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
-		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
-		$renderingContext->setTemplateVariableContainer($variableContainer);
-		$renderingContext->setControllerContext($this->controllerContext);
-
+		$renderingContext = $this->buildRenderingContext();
 		return $parsedTemplate->render($renderingContext);
 	}
 
@@ -181,11 +195,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 		$section = $sections[$sectionName];
 
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
-		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
-		$renderingContext->setTemplateVariableContainer($variableContainer);
-		$renderingContext->setControllerContext($this->controllerContext);
-
+		$renderingContext = $this->buildRenderingContext();
 		$section->setRenderingContext($renderingContext);
 		return $section->evaluate();
 	}
@@ -201,12 +211,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	public function renderWithLayout($layoutName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
-
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
-		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
-		$renderingContext->setTemplateVariableContainer($variableContainer);
-		$renderingContext->setControllerContext($this->controllerContext);
-
+		
+		$renderingContext = $this->buildRenderingContext();
 		return $parsedTemplate->render($renderingContext);
 	}
 
@@ -234,12 +240,12 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$partial = $this->parseTemplate($partialPathAndFileName);
 		$variables['view'] = $this;
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
-
-		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\RenderingContext');
-		$renderingContext->setTemplateVariableContainer($variableContainer);
-		$renderingContext->setControllerContext($this->controllerContext);
-
+	
+		$renderingContext = $this->buildRenderingContext($variableContainer);
 		return $parsedTemplate->render($renderingContext);
+		
+		
+		// TODO -> Never executed???
 		if ($sectionToRender !== NULL) {
 			$sections = $partial->getVariableContainer()->get('sections');
 			if(!array_key_exists($sectionToRender, $sections)) {
