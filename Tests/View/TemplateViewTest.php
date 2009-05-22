@@ -42,13 +42,15 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('parseTemplate', 'resolveTemplatePathAndFilename'), array(), '', FALSE);
 		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
 		$objectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
-
+		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
+		
 		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$renderingContext = $this->getMock('F3\Fluid\Core\RenderingContext', array(), array(), '', FALSE);
 
 		$objectFactory->expects($this->exactly(2))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingContext));
 
 		$templateView->_set('objectFactory', $objectFactory);
+		$templateView->setControllerContext($controllerContext);
 
 		$templateView->expects($this->once())->method('parseTemplate')->will($this->returnValue($parsedTemplate));
 
