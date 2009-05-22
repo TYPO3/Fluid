@@ -50,6 +50,12 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	protected $templateVariableContainer;
 	
 	/**
+	 * 
+	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 */
+	protected $controllerContext;
+	
+	/**
 	 * Setup fixture
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -61,6 +67,9 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->renderingContext->setTemplateVariableContainer($this->templateVariableContainer);
+		
+		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
+		$this->renderingContext->setControllerContext($this->controllerContext);
 	}
 	
 	/**
@@ -137,23 +146,20 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$viewHelperNode->setRenderingContext($this->renderingContext);
 		$viewHelperNode->evaluate();
 	}
-
+	
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluateMethodPassesViewHelperContextToViewHelper() {
-		$mockViewHelperContext = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperContext', array(), array(), '', FALSE);
-
-		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setViewHelperContext'));
-		#$mockViewHelper->expects($this->at(0))->method('setViewHelperContext')->with($mockViewHelperContext);
-
+	public function evaluateMethodPassesControllerContextToViewHelper() {		
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setControllerContext'));
+		$mockViewHelper->expects($this->once())->method('setControllerContext')->with($this->controllerContext);
+		
+		$viewHelperNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array());
 		$mockViewHelperArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
 
 		$this->mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\Core\ViewHelper\AbstractViewHelper')->will($this->returnValue($mockViewHelper));
 		$this->mockObjectFactory->expects($this->at(1))->method('create')->with('F3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
-
-		$viewHelperNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array());
 		
 		$viewHelperNode->setRenderingContext($this->renderingContext);
 		$viewHelperNode->evaluate();

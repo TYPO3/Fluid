@@ -54,6 +54,12 @@ class RenderingContext {
 	protected $objectFactory;
 
 	/**
+	 * Controller context being passed to the ViewHelper
+	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 */
+	protected $controllerContext;
+	
+	/**
 	 * Inject the object factory
 	 * 
 	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
@@ -96,6 +102,28 @@ class RenderingContext {
 	 */
 	public function getTemplateVariableContainer() {
 		return $this->templateVariableContainer;
+	}
+	
+	/**
+	 * Set the controller context which will be passed to the ViewHelper
+	 * 
+	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+		$this->controllerContext = $controllerContext;
+	}
+	
+	/**
+	 * Get the controller context which will be passed to the ViewHelper
+	 * 
+	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function getControllerContext() {
+		return $this->controllerContext;
 	}
 }
 ?>

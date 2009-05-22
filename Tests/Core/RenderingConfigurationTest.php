@@ -18,49 +18,36 @@ namespace F3\Fluid\Core;
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id: ParsingStateTest.php 2247 2009-05-18 20:02:37Z sebastian $
+ * @version $Id: ParsingStateTest.php 2265 2009-05-19 18:52:02Z sebastian $
  */
 /**
- * Testcase for ParsingState
+ * Testcase for RenderingConfiguration
  *
  * @package Fluid
  * @subpackage Tests
- * @version $Id: ParsingStateTest.php 2247 2009-05-18 20:02:37Z sebastian $
+ * @version $Id: ParsingStateTest.php 2265 2009-05-19 18:52:02Z sebastian $
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class RenderingContextTest extends \F3\Testing\BaseTestCase {
+class RenderingCofigurationTest extends \F3\Testing\BaseTestCase {
 
 	/**
-	 * Parsing state
-	 * @var \F3\Fluid\Core\RenderingContext
+	 * RenderingConfiguration
+	 * @var \F3\Fluid\Core\RenderingConfiguration
 	 */
-	protected $renderingContext;
+	protected $renderingConfiguration;
 
 	public function setUp() {
-		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingConfiguration = new \F3\Fluid\Core\RenderingConfiguration();
 	}
 	
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function templateVariableContainerCanBeReadCorrectly() {
-		$templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->renderingContext->setTemplateVariableContainer($templateVariableContainer);
-		$this->assertSame($this->renderingContext->getTemplateVariableContainer(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
+	public function objectAccessorPostProcessorCanBeReadOutAgain() {
+		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\ObjectAccessorPostProcessorInterface');
+		$this->renderingConfiguration->setObjectAccessorPostProcessor($objectAccessorPostProcessor);
+		$this->assertSame($objectAccessorPostProcessor, $this->renderingConfiguration->getObjectAccessorPostProcessor());
 	}
-	
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function controllerContextCanBeReadCorrectly() {
-		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
-		$this->renderingContext->setControllerContext($controllerContext);
-		$this->assertSame($this->renderingContext->getControllerContext(), $controllerContext);
-	}
-	
-	
 }
-
 ?>
