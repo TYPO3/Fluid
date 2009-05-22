@@ -112,6 +112,10 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 					}
 				}
 			}
+			$postProcessor = $this->renderingContext->getRenderingConfiguration()->getObjectAccessorPostProcessor();
+			if ($postProcessor !== NULL) {
+				$currentObject = $postProcessor->process($currentObject, $this->renderingContext->isArgumentEvaluationMode());
+			}
 			return $currentObject;
 		} catch(\F3\Fluid\Core\RuntimeException $e) {
 			// DEPENDING ON THE CONTEXT / CONFIG, either fail silently or not. Currently we always fail silently.

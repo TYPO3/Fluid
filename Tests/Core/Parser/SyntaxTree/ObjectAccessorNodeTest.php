@@ -37,10 +37,14 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 	
 	protected $renderingContext;
 	
+	protected $renderingConfiguration;
+	
 	public function setUp() {
 		$this->mockTemplateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 		$this->renderingContext->setTemplateVariableContainer($this->mockTemplateVariableContainer);
+		$this->renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
+		$this->renderingContext->setRenderingConfiguration($this->renderingConfiguration);
 	}
 	/**
 	 * @test
@@ -143,9 +147,24 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$actual = $objectAccessorNode->evaluate($context);
 	}
 
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function objectAccessorPostProcessorIsCalled() {
+				$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('variable');
+		$objectAccessorNode->setRenderingContext($this->renderingContext);
+
+		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('variable')->will($this->returnValue('hallo'));
+		
+		$this->renderingContext->setArgumentEvaluationMode(TRUE);
+		
+		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\ObjectAccessorPostProcessor', array('process'));
+		$this->renderingConfiguration->expects($this->once())->method('getObjectAccessorPostProcessor')->will($this->returnValue($objectAccessorPostProcessor));
+		$objectAccessorPostProcessor->expects($this->once())->method('process')->with('hallo', TRUE)->will($this->returnValue('PostProcessed'));
+		$this->assertEquals('PostProcessed', $objectAccessorNode->evaluate());
+	}
 
 }
-
-
 
 ?>

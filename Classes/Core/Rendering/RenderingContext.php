@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\Core\Rendering;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -58,6 +58,18 @@ class RenderingContext {
 	 * @var F3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
+	
+	/**
+	 * Rendering Context
+	 * @var F3\Fluid\Core\Rendering\RenderingConfiguration
+	 */
+	protected $renderingConfiguration;
+	
+	/**
+	 * TRUE if the arguments of a ViewHelper are currently evaluated
+	 * @var boolean
+	 */
+	protected $argumentEvaluationMode = FALSE;
 	
 	/**
 	 * Inject the object factory
@@ -124,6 +136,52 @@ class RenderingContext {
 	 */
 	public function getControllerContext() {
 		return $this->controllerContext;
+	}
+	
+	/**
+	 * Set the rendering configuration for the current rendering process
+	 * 
+	 * @param F3\Fluid\Core\Rendering\RenderingConfiguration The Rendering Configuration to be set
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setRenderingConfiguration(\F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration) {
+		$this->renderingConfiguration = $renderingConfiguration;
+	}
+	
+	/**
+	 * Get the current rendering configuration
+	 * 
+	 * @return F3\Fluid\Core\Rendering\RenderingConfiguration The rendering configuration currently active
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function getRenderingConfiguration() {
+		return $this->renderingConfiguration;
+	}
+	
+	/**
+	 * Set the argument evaluation mode. Should be set to TRUE if the arguments are currently being parsed.
+	 * FALSE if we do not parse arguments currently
+	 * 
+	 * @param boolean $argumentEvaluationMode Argument evaluation mode to be set
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setArgumentEvaluationMode($argumentEvaluationMode) {
+		$this->argumentEvaluationMode = (boolean)$argumentEvaluationMode;
+	}
+	
+	/**
+	 * if TRUE, then we are currently in Argument Evaluation mode. False otherwise.
+	 * Is used to make sure that ObjectAccessors are PostProcessed if we are NOT in Argument Evaluation Mode
+	 * 
+	 * @return boolean TRUE if we are currently evaluating arguments, FALSE otherwise
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function isArgumentEvaluationMode() {
+		return $this->argumentEvaluationMode;
 	}
 }
 ?>

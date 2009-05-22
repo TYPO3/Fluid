@@ -33,7 +33,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Rendering Context
-	 * @var F3\Fluid\Core\RenderingContext
+	 * @var F3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 	
@@ -60,7 +60,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 		
 		$this->mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
 		$this->renderingContext->injectObjectFactory($this->mockObjectFactory);

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Format;
+namespace F3\Fluid\Core\Rendering;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -24,40 +24,26 @@ namespace F3\Fluid\ViewHelpers\Format;
 
 /**
  * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
+ * @subpackage Core
+ * @version $Id: RenderingContext.php 2294 2009-05-20 19:34:44Z sebastian $
  */
 
 /**
- * A view helper for escaping HTML. Any HTML character in the body of this tag will
- * be escaped to an HTML entity.
  *
- * = Examples =
- *
- * <code title="Example">
- * <f:format.htmlEscape><p>This will be <em>escaped</em></p></f:format.htmlEscape>
- * </code>
- *
- * Output:
- * &lt;p&gt;This will be &lt;em&gt;escaped&lt;/em&gt;&lt;/p&gt;
  *
  * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
+ * @subpackage Core
+ * @version $Id: RenderingContext.php 2294 2009-05-20 19:34:44Z sebastian $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @internal
  * @scope prototype
  */
-class HtmlEscapeViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
-
-	/**
-	 * HTML escape the content of this tag.
-	 *
-	 * @return string The HTML escaped body.
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function render() {
-		return htmlspecialchars($this->renderChildren());
+class HTMLSpecialCharsPostProcessor implements ObjectAccessorPostProcessorInterface {
+	public function process($object, $currentlyEvaluatingArguments) {
+		if (!$currentlyEvaluatingArguments) {
+			return htmlspecialchars($object);
+		}
+		return $object;
 	}
 }
 ?>

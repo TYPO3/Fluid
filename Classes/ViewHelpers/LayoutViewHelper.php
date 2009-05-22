@@ -61,7 +61,7 @@ class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	 */
 	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		if ($viewHelperArguments['name']) {
-			$viewHelperArguments['name']->setRenderingContext(new \F3\Fluid\Core\RenderingContext());
+			$viewHelperArguments['name']->setRenderingContext(new \F3\Fluid\Core\Rendering\RenderingContext());
 			$layoutName = $viewHelperArguments['name']->evaluate();
 		} else {
 			$layoutName = 'default';

@@ -29,7 +29,7 @@ class AbstractNodeTest extends \F3\Testing\BaseTestCase {
 	protected $childNode;
 
 	public function setUp() {
-		$this->renderingContext = $this->getMock('F3\Fluid\Core\RenderingContext', array(), array(), '', FALSE);
+		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
 
 		$this->abstractNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
 		$this->abstractNode->setRenderingContext($this->renderingContext);

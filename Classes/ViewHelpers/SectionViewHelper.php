@@ -60,7 +60,7 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
-		$viewHelperArguments['name']->setRenderingContext(new \F3\Fluid\Core\RenderingContext());
+		$viewHelperArguments['name']->setRenderingContext(new \F3\Fluid\Core\Rendering\RenderingContext());
 
 		$sectionName = $viewHelperArguments['name']->evaluate();
 		if (!$variableContainer->exists('sections')) {

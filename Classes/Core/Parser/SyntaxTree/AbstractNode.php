@@ -48,17 +48,17 @@ abstract class AbstractNode {
 
 	/**
 	 * The rendering context containing everything to correctly render the subtree
-	 * @var \F3\Fluid\Core\RenderingContext
+	 * @var \F3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 
 	/**
-	 * @param \F3\Fluid\Core\RenderingContext Rendering Context to be used for this evaluation
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext Rendering Context to be used for this evaluation
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
-	public function setRenderingContext(\F3\Fluid\Core\RenderingContext $renderingContext) {
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
 	}
 

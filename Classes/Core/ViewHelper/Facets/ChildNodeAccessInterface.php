@@ -57,10 +57,10 @@ interface ChildNodeAccessInterface {
 	/**
 	 * Sets the rendering context which needs to be passed on to child nodes
 	 *
-	 * @param F3\Fluid\Core\RenderingContext $renderingContext the renderingcontext to use
+	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext the renderingcontext to use
 	 * @internal
 	 */
-	public function setRenderingContext(\F3\Fluid\Core\RenderingContext $renderingContext);
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
 
 }
 

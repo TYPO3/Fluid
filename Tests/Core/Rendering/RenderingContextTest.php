@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\Core\Rendering;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -32,12 +32,12 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Parsing state
-	 * @var \F3\Fluid\Core\RenderingContext
+	 * @var \F3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 
 	public function setUp() {
-		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 	}
 	
 	/**
@@ -60,7 +60,25 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 		$this->assertSame($this->renderingContext->getControllerContext(), $controllerContext);
 	}
 	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderingConfiguationCanBeReadCorrectly() {
+		$renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
+		$this->renderingContext->setRenderingConfiguration($renderingConfiguration);
+		$this->assertSame($this->renderingContext->getRenderingConfiguration(), $renderingConfiguration);
+	}
 	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function argumentEvaluationModeCanBeReadCorrectly() {
+		$this->assertFalse($this->renderingContext->isArgumentEvaluationMode(), 'The default argument evaluation was not FALSE');
+		$this->renderingContext->setArgumentEvaluationMode(TRUE);
+		$this->assertTrue($this->renderingContext->isArgumentEvaluationMode());
+	}
 }
 
 ?>

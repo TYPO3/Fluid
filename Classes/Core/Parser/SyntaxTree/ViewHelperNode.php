@@ -103,6 +103,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
+		$this->renderingContext->setArgumentEvaluationMode(TRUE);
 		if (count($argumentDefinitions)) {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
@@ -117,6 +118,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 				}
 			}
 		}
+		$this->renderingContext->setArgumentEvaluationMode(FALSE);
 
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
 		$viewHelper->setArguments($viewHelperArguments);

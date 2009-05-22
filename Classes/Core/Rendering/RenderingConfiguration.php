@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\Core\Rendering;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -36,8 +36,17 @@ namespace F3\Fluid\Core;
  * @version $Id: RenderingContext.php 2294 2009-05-20 19:34:44Z sebastian $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @internal
+ * @scope prototype
  */
-interface ObjectAccessorPostProcessorInterface {
-	public function process($object);
+class RenderingConfiguration {
+	
+	protected $objectAccessorPostProcessor;
+	
+	public function setObjectAccessorPostProcessor(\F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface $objectAccessorPostProcessor) {
+		$this->objectAccessorPostProcessor = $objectAccessorPostProcessor;
+	}
+	public function getObjectAccessorPostProcessor() {
+		return $this->objectAccessorPostProcessor;
+	}
 }
 ?>

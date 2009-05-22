@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\Core\Rendering;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -28,16 +28,16 @@ namespace F3\Fluid\Core;
  * @version $Id: ParsingStateTest.php 2265 2009-05-19 18:52:02Z sebastian $
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class RenderingCofigurationTest extends \F3\Testing\BaseTestCase {
+class RenderingConfigurationTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * RenderingConfiguration
-	 * @var \F3\Fluid\Core\RenderingConfiguration
+	 * @var \F3\Fluid\Core\Rendering\RenderingConfiguration
 	 */
 	protected $renderingConfiguration;
 
 	public function setUp() {
-		$this->renderingConfiguration = new \F3\Fluid\Core\RenderingConfiguration();
+		$this->renderingConfiguration = new \F3\Fluid\Core\Rendering\RenderingConfiguration();
 	}
 	
 	/**
@@ -45,7 +45,7 @@ class RenderingCofigurationTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectAccessorPostProcessorCanBeReadOutAgain() {
-		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\ObjectAccessorPostProcessorInterface');
+		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface');
 		$this->renderingConfiguration->setObjectAccessorPostProcessor($objectAccessorPostProcessor);
 		$this->assertSame($objectAccessorPostProcessor, $this->renderingConfiguration->getObjectAccessorPostProcessor());
 	}

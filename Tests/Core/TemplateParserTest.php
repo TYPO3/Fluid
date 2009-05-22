@@ -37,7 +37,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	protected $templateParser;
 
 	/**
-	 * @var F3\Fluid\Core\RenderingContext
+	 * @var F3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 	/**
@@ -49,9 +49,10 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
 		$this->templateParser->injectObjectFactory($this->objectFactory);
 		
-		$this->renderingContext = new \F3\Fluid\Core\RenderingContext();
+		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 		$this->renderingContext->injectObjectFactory($this->objectFactory);
 		$this->renderingContext->setControllerContext(new \F3\FLOW3\MVC\Controller\ControllerContext());
+		$this->renderingContext->setRenderingConfiguration(new \F3\Fluid\Core\Rendering\RenderingConfiguration());
 	}
 
 	/**
