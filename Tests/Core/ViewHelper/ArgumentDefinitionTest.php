@@ -21,7 +21,7 @@ namespace F3\Fluid\Core;
  * @version $Id$
  */
 /**
- * Testcase for [insert classname here]
+ * Testcase for \F3\Fluid\Core\ViewHelper\ArgumentDefinition
  *
  * @package
  * @subpackage Tests

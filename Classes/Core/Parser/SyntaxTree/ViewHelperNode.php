@@ -157,22 +157,39 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @return mixed New value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @todo re-check boolean conditions
 	 */
 	protected function convertArgumentValue($value, $type) {
 		if ($type === 'boolean') {
-			if (is_string($value)) {
-				return (strtolower($value) !== 'false' && !empty($value));
-			}
-			if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
-				return count($value) > 0;
-			}
-			if (is_object($value)) {
-				return TRUE;
-			}
-			return FALSE;
+			return $this->convertToBoolean($value);
 		}
 		return $value;
+	}
+
+	/**
+	 * Convert argument strings to their equivalents. Needed to handle strings with a boolean meaning.
+	 *
+	 * @param mixed $value Value to be converted to boolean
+	 * @return mixed New value
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @todo this should be moved to another class
+	 */
+	protected function convertToBoolean($value) {
+		if (is_bool($value)) {
+			return $value;
+		}
+		if (is_string($value)) {
+			return (strtolower($value) !== 'false' && !empty($value));
+		}
+		if (is_numeric($value)) {
+			return $value > 0;
+		}
+		if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
+			return count($value) > 0;
+		}
+		if (is_object($value)) {
+			return TRUE;
+		}
+		return FALSE;
 	}
 }
 

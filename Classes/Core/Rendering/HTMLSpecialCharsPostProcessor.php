@@ -39,8 +39,16 @@ namespace F3\Fluid\Core\Rendering;
  * @scope prototype
  */
 class HTMLSpecialCharsPostProcessor implements ObjectAccessorPostProcessorInterface {
+
+	/**
+	 * @param mixed $object the object that is currently rendered
+	 * @param boolean $currentlyEvaluatingArguments TRUE if the current ObjectAccessorNode is within view helper arguments
+	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
 	public function process($object, $currentlyEvaluatingArguments) {
-		if (!$currentlyEvaluatingArguments) {
+		if (!$currentlyEvaluatingArguments && is_string($object)) {
 			return htmlspecialchars($object);
 		}
 		return $object;

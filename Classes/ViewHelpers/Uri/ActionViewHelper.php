@@ -64,12 +64,8 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '') {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$uri = $uriHelper->URIFor($action, $arguments, $controller, $package, $subpackage);
-		// @todo the URIBuilder should handle this
-		if ($section !== '') {
-			$uri .= '#' . $section;
-		}
+		$uriBuilder = $this->controllerContext->getURIBuilder();
+		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section);
 		return $uri;
 	}
 }

@@ -109,14 +109,15 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $packageName target package
 	 * @param string $subpackageName target subpackage
 	 * @param mixed $object object to use for the form. Use in conjunction with the "property" attribute on the sub tags
+	 * @param string $section The anchor to be added to the URI
 	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL) {
-		$uriHelper = $this->variableContainer->get('view')->getViewHelper('F3\FLOW3\MVC\View\Helper\URIHelper');
-		$formActionUrl = $uriHelper->URIFor($action, $arguments, $controllerName, $packageName, $subpackageName);
-		$this->tag->addAttribute('action', $formActionUrl);
+	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL, $section = '') {
+		$uriBuilder = $this->controllerContext->getURIBuilder();
+		$formActionUri = $uriBuilder->URIFor($action, $arguments, $controllerName, $packageName, $subpackageName, $section);
+		$this->tag->addAttribute('action', $formActionUri);
 
 		if (strtolower($this->arguments['method']) === 'get') {
 			$this->tag->addAttribute('method', 'get');
