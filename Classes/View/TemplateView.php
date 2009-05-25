@@ -144,12 +144,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 		$renderingConfiguration = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingConfiguration');
 		$renderingConfiguration->setObjectAccessorPostProcessor($this->objectFactory->create('F3\Fluid\Core\Rendering\HTMLSpecialCharsPostProcessor'));
-		
+
 		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingContext');
 		$renderingContext->setTemplateVariableContainer($variableContainer);
 		$renderingContext->setControllerContext($this->controllerContext);
 		$renderingContext->setRenderingConfiguration($renderingConfiguration);
-		
 
 		return $renderingContext;
 	}
@@ -211,7 +210,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	public function renderWithLayout($layoutName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
-		
+
 		$renderingContext = $this->buildRenderingContext();
 		return $parsedTemplate->render($renderingContext);
 	}
@@ -240,11 +239,10 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$partial = $this->parseTemplate($partialPathAndFileName);
 		$variables['view'] = $this;
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
-	
+
 		$renderingContext = $this->buildRenderingContext($variableContainer);
 		return $parsedTemplate->render($renderingContext);
-		
-		
+
 		// TODO -> Never executed???
 		if ($sectionToRender !== NULL) {
 			$sections = $partial->getVariableContainer()->get('sections');
