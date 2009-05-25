@@ -35,6 +35,7 @@ namespace F3\Fluid\Core\ViewHelper;
  * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @internal
  */
 class ArgumentDefinition {
 
@@ -84,6 +85,7 @@ class ArgumentDefinition {
 	 * @param mixed $defaultValue Default value
 	 * @param boolean $isMethodParameter TRUE if this argument is a method parameter
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function __construct($name, $type, $description, $required, $defaultValue = NULL, $isMethodParameter = FALSE) {
 		$this->name = $name;
@@ -99,6 +101,7 @@ class ArgumentDefinition {
 	 *
 	 * @return string Name of argument
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getName() {
 		return $this->name;
@@ -109,6 +112,7 @@ class ArgumentDefinition {
 	 *
 	 * @return string Type of argument
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getType() {
 		return $this->type;
@@ -119,6 +123,7 @@ class ArgumentDefinition {
 	 *
 	 * @return string Description of argument
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getDescription() {
 		return $this->description;
@@ -129,6 +134,7 @@ class ArgumentDefinition {
 	 *
 	 * @return boolean TRUE if argument is optional
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function isRequired() {
 		return $this->required;
@@ -139,6 +145,7 @@ class ArgumentDefinition {
 	 *
 	 * @return mixed Default value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function getDefaultValue() {
 		return $this->defaultValue;
@@ -149,6 +156,7 @@ class ArgumentDefinition {
 	 *
 	 * @return boolean TRUE if it's a method parameter
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
 	 */
 	public function isMethodParameter() {
 		return $this->isMethodParameter;
