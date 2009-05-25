@@ -49,7 +49,7 @@ class ForViewHelperTest extends \F3\Testing\BaseTestCase {
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 		
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);		
-		$this->viewHelper->setVariableContainer($variableContainer);
+		$this->viewHelper->setTemplateVariableContainer($variableContainer);
 		$this->viewHelper->setViewHelperNode($viewHelperNode);
 		$this->viewHelper->render(array(0,1,2,3), 'innerVariable');
 		

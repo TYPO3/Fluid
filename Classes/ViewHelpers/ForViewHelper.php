@@ -80,14 +80,14 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		}
 		$output = '';
 		foreach ($each as $keyValue => $singleElement) {
-			$this->variableContainer->add($as, $singleElement);
+			$this->templateVariableContainer->add($as, $singleElement);
 			if ($key !== '') {
-				$this->variableContainer->add($key, $keyValue);
+				$this->templateVariableContainer->add($key, $keyValue);
 			}
 			$output .= $this->renderChildren();
-			$this->variableContainer->remove($as);
+			$this->templateVariableContainer->remove($as);
 			if ($key !== '') {
-				$this->variableContainer->remove($key);
+				$this->templateVariableContainer->remove($key);
 			}
 		}
 		return $output;

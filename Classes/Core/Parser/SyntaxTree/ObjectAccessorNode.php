@@ -49,7 +49,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Constructor. Takes an object path as input.
 	 *
-	 * The first part of the object path has to be a variable in the VariableContainer.
+	 * The first part of the object path has to be a variable in the TemplateVariableContainer.
 	 * For the further parts, it is checked if the object has a getObjectname method. If yes, this is called.
 	 * If no, it is checked if a property "objectname" exists.
 	 * If no, an error is thrown.

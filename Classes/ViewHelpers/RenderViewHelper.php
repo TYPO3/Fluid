@@ -49,9 +49,9 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render($section = '', $partial = '', $arguments = array()) {
 		if ($partial !== '') {
-			return $this->variableContainer->get('view')->renderPartial($partial, $section, $arguments);
+			return $this->templateVariableContainer->get('view')->renderPartial($partial, $section, $arguments);
 		} elseif ($section !== '') {
-			return $this->variableContainer->get('view')->renderSection($section);
+			return $this->templateVariableContainer->get('view')->renderSection($section);
 		}
 		return '';
 	}

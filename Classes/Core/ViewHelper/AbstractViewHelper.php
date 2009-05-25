@@ -67,7 +67,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * Current variable container reference.
 	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
-	protected $variableContainer;
+	protected $templateVariableContainer;
 	
 	/**
 	 * Controller Context to use
@@ -98,13 +98,13 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	}
 
 	/**
-	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer Variable Container to be used for rendering
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer Variable Container to be used for rendering
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @internal
 	 */
-	public function setVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
-		$this->variableContainer = $variableContainer;
+	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
+		$this->templateVariableContainer = $templateVariableContainer;
 	}
 	
 	/**
@@ -304,7 +304,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Render method you need to implement for your custom view helper.
-	 * Available objects at this point are $this->arguments, and $this->variableContainer.
+	 * Available objects at this point are $this->arguments, and $this->templateVariableContainer.
 	 *
 	 * Besides, you often need $this->renderChildren().
 	 *
