@@ -2,8 +2,8 @@
 <package xmlns="http://typo3.org/ns/2008/flow3/package">
     <key>Fluid</key>
     <title>Fluid Templating Framework</title>
-    <description>Next-Generation Templating Framework for TYPO3 v5, to be backported to 5.x</description>
-    <version>0.0.1</version>
+    <description>Next-Generation Templating Framework for FLOW3 and TYPO3 5.0, also backported to TYPO3 4.x</description>
+    <version>1.0.0-dev</version>
     <state>Development</state>
     <categories/>
     <parties>
@@ -19,7 +19,7 @@
             <email>bastian@typo3.org</email>
             <website></website>
             <organisation></organisation>
-            <repositoryUserName></repositoryUserName>
+            <repositoryUserName>bwaidelich</repositoryUserName>
         </person>
     </parties>
     <constraints>
