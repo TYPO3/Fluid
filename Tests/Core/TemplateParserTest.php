@@ -48,11 +48,12 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
 		$this->templateParser->injectObjectFactory($this->objectFactory);
-		
+
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 		$this->renderingContext->injectObjectFactory($this->objectFactory);
 		$this->renderingContext->setControllerContext(new \F3\FLOW3\MVC\Controller\ControllerContext());
 		$this->renderingContext->setRenderingConfiguration(new \F3\Fluid\Core\Rendering\RenderingConfiguration());
+		$this->renderingContext->setViewHelperVariableContainer(new \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer());
 	}
 
 	/**
@@ -237,7 +238,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$this->renderingContext->setTemplateVariableContainer($variableContainer);
-		
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($this->renderingContext);
 
@@ -254,7 +255,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5), 'variableName' => 3));
 		$this->renderingContext->setTemplateVariableContainer($variableContainer);
-		
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($this->renderingContext);
 
@@ -271,7 +272,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array('idList' => array(0, 1, 2, 3, 4, 5)));
 		$this->renderingContext->setTemplateVariableContainer($variableContainer);
-		
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($this->renderingContext);
 
@@ -288,7 +289,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 		$this->renderingContext->setTemplateVariableContainer($variableContainer);
-		
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($this->renderingContext);
 
@@ -307,7 +308,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 		$this->renderingContext->setTemplateVariableContainer($variableContainer);
-		
+
 		$parsedTemplate = $this->templateParser->parse($templateSource);
 		$result = $parsedTemplate->render($this->renderingContext);
 
@@ -407,7 +408,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		);
 		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

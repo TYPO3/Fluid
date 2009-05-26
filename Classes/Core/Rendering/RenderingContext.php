@@ -48,7 +48,7 @@ class RenderingContext {
 
 	/**
 	 * Object factory which is bubbled through. The ViewHelperNode cannot get an ObjectFactory injected because
-	 * the whole syntax tree should be cacheable 
+	 * the whole syntax tree should be cacheable
 	 * @var F3\FLOW3\Object\FactoryInterface
 	 */
 	protected $objectFactory;
@@ -58,22 +58,28 @@ class RenderingContext {
 	 * @var F3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
-	
+
 	/**
 	 * Rendering Context
 	 * @var F3\Fluid\Core\Rendering\RenderingConfiguration
 	 */
 	protected $renderingConfiguration;
-	
+
+	/**
+	 * ViewHelper Variable Container
+	 * @var F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
+	 */
+	protected $viewHelperVariableContainer;
+
 	/**
 	 * TRUE if the arguments of a ViewHelper are currently evaluated
 	 * @var boolean
 	 */
 	protected $argumentEvaluationMode = FALSE;
-	
+
 	/**
 	 * Inject the object factory
-	 * 
+	 *
 	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -84,7 +90,7 @@ class RenderingContext {
 
 	/**
 	 * Returns the object factory. Only the ViewHelperNode should do this.
-	 * 
+	 *
 	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -96,7 +102,7 @@ class RenderingContext {
 	/**
 	 * Sets the template variable container containing all variables available through ObjectAccessors
 	 * in the template
-	 * 
+	 *
 	 * @param F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -107,7 +113,7 @@ class RenderingContext {
 
 	/**
 	 * Get the template variable container
-	 * 
+	 *
 	 * @return F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -115,10 +121,10 @@ class RenderingContext {
 	public function getTemplateVariableContainer() {
 		return $this->templateVariableContainer;
 	}
-	
+
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
-	 * 
+	 *
 	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -126,10 +132,10 @@ class RenderingContext {
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
-	
+
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
-	 * 
+	 *
 	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -137,10 +143,10 @@ class RenderingContext {
 	public function getControllerContext() {
 		return $this->controllerContext;
 	}
-	
+
 	/**
 	 * Set the rendering configuration for the current rendering process
-	 * 
+	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingConfiguration The Rendering Configuration to be set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -148,10 +154,10 @@ class RenderingContext {
 	public function setRenderingConfiguration(\F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration) {
 		$this->renderingConfiguration = $renderingConfiguration;
 	}
-	
+
 	/**
 	 * Get the current rendering configuration
-	 * 
+	 *
 	 * @return F3\Fluid\Core\Rendering\RenderingConfiguration The rendering configuration currently active
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -159,11 +165,11 @@ class RenderingContext {
 	public function getRenderingConfiguration() {
 		return $this->renderingConfiguration;
 	}
-	
+
 	/**
 	 * Set the argument evaluation mode. Should be set to TRUE if the arguments are currently being parsed.
 	 * FALSE if we do not parse arguments currently
-	 * 
+	 *
 	 * @param boolean $argumentEvaluationMode Argument evaluation mode to be set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
@@ -171,17 +177,40 @@ class RenderingContext {
 	public function setArgumentEvaluationMode($argumentEvaluationMode) {
 		$this->argumentEvaluationMode = (boolean)$argumentEvaluationMode;
 	}
-	
+
 	/**
 	 * if TRUE, then we are currently in Argument Evaluation mode. False otherwise.
 	 * Is used to make sure that ObjectAccessors are PostProcessed if we are NOT in Argument Evaluation Mode
-	 * 
+	 *
 	 * @return boolean TRUE if we are currently evaluating arguments, FALSE otherwise
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @internal
 	 */
 	public function isArgumentEvaluationMode() {
 		return $this->argumentEvaluationMode;
+	}
+
+	/**
+	 * Set the ViewHelperVariableContainer
+	 *
+	 * @param F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer $viewHelperVariableContainer
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
+		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
+	}
+
+	/**
+	 * Get the ViewHelperVariableContainer
+	 *
+	 * @return F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function getViewHelperVariableContainer() {
+		return $this->viewHelperVariableContainer;
 	}
 }
 ?>

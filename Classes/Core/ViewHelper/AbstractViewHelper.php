@@ -46,29 +46,29 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	private $argumentsInitialized = FALSE;
 
 	/**
-	 * Stores all \F3\Fluid\ArgumentDefinition instances
+	 * Stores all F3\Fluid\ArgumentDefinition instances
 	 * @var array
 	 */
 	private $argumentDefinitions = array();
 
 	/**
 	 * Current view helper node
-	 * @var \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+	 * @var F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 	 */
 	private $viewHelperNode;
 
 	/**
 	 * Arguments accessor.
-	 * @var \F3\Fluid\Core\ViewHelper\Arguments
+	 * @var F3\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $arguments;
 
 	/**
 	 * Current variable container reference.
-	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
-	
+
 	/**
 	 * Controller Context to use
 	 * @var F3\FLOW3\MVC\Controller\ControllerContext
@@ -76,14 +76,20 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	protected $controllerContext;
 
 	/**
+	 * ViewHelper Variable Container
+	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 */
+	protected $viewHelperVariableContainer;
+
+	/**
 	 * Validator resolver
-	 * @var \F3\FLOW3\Validation\ValidatorResolver
+	 * @var F3\FLOW3\Validation\ValidatorResolver
 	 */
 	private $validatorResolver;
 
 	/**
 	 * Reflection service
-	 * @var \F3\FLOW3\Reflection\Service
+	 * @var F3\FLOW3\Reflection\Service
 	 */
 	private $reflectionService;
 
@@ -106,7 +112,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
 		$this->templateVariableContainer = $templateVariableContainer;
 	}
-	
+
 	/**
 	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
@@ -115,6 +121,16 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 */
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
+	}
+
+	/**
+	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
+		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
 	}
 
 	/**

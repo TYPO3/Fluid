@@ -124,6 +124,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$viewHelper->setArguments($viewHelperArguments);
 		$viewHelper->setTemplateVariableContainer($this->renderingContext->getTemplateVariableContainer());
 		$viewHelper->setControllerContext($this->renderingContext->getControllerContext());
+		$viewHelper->setViewHelperVariableContainer($this->renderingContext->getViewHelperVariableContainer());
 		$viewHelper->setViewHelperNode($this);
 
 		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {

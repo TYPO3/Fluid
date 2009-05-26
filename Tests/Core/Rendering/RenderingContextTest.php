@@ -39,7 +39,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -49,7 +49,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 		$this->renderingContext->setTemplateVariableContainer($templateVariableContainer);
 		$this->assertSame($this->renderingContext->getTemplateVariableContainer(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -59,7 +59,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 		$this->renderingContext->setControllerContext($controllerContext);
 		$this->assertSame($this->renderingContext->getControllerContext(), $controllerContext);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -69,7 +69,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 		$this->renderingContext->setRenderingConfiguration($renderingConfiguration);
 		$this->assertSame($this->renderingContext->getRenderingConfiguration(), $renderingConfiguration);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -78,6 +78,16 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 		$this->assertFalse($this->renderingContext->isArgumentEvaluationMode(), 'The default argument evaluation was not FALSE');
 		$this->renderingContext->setArgumentEvaluationMode(TRUE);
 		$this->assertTrue($this->renderingContext->isArgumentEvaluationMode());
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function viewHelperVariableContainerCanBeReadCorrectly() {
+		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
 	}
 }
 

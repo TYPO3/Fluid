@@ -150,6 +150,9 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$renderingContext->setControllerContext($this->controllerContext);
 		$renderingContext->setRenderingConfiguration($renderingConfiguration);
 
+		$viewHelperVariableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+
 		return $renderingContext;
 	}
 	/**

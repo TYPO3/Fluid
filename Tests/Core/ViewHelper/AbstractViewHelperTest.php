@@ -136,7 +136,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$viewHelper->validateArguments();
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -144,9 +144,21 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	public function setControllerContextSetsTheControllerContext() {
 		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-		
+
 		$viewHelper->setControllerContext($controllerContext);
 		$this->assertSame($viewHelper->_get('controllerContext'), $controllerContext);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function setViewHelperVariableContainerSetsTheViewHelperVariableContainer() {
+		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+
+		$viewHelper->setViewHelperVariableContainer($viewHelperVariableContainer);
+		$this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
 	}
 }
 ?>
