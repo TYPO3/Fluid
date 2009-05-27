@@ -56,7 +56,7 @@ class DocumentationController extends \F3\FLOW3\MVC\Controller\ActionController 
 	 * @param string $targetFile
 	 * @return string
 	 */
-	public function generateAction($sourceNamespace, $targetFile) {
+	public function generateAction($sourceNamespace = 'F3\Fluid\ViewHelpers', $targetFile = '../Packages/Global/Fluid/Documentation/Manual/DocBook/en/ViewHelperLibrary.xml') {
 		$output = $this->docbookGenerator->generateDocbook($sourceNamespace);
 		file_put_contents($targetFile, $output);
 		return 'Documentation generated.';

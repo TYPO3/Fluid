@@ -25,16 +25,16 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * Email link view helper.
  * Generates an email link.
  *
- * = Examples 
+ * = Examples =
  *
  * <code title="basic email link">
  * <f:link.email email="foo@bar.tld" />
  * </code>
- * 
+ *
  * Output:
  * <a href="mailto:foo@bar.tld">foo@bar.tld</a>
  * (depending on your spamProtectEmailAddresses-settings)
- * 
+ *
  * <code title="Email link with custom linktext">
  * <f:link.email email="foo@bar.tld">some custom content</f:emaillink>
  * </code>

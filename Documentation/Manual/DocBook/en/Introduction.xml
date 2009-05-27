@@ -60,19 +60,19 @@
     <example>
       <title>Basic Fluid Example</title>
 
-      <programlisting>{namespace f3=F3\Fluid\ViewHelpers}<co
+      <programlisting>{namespace f=F3\Fluid\ViewHelpers}<co
           xml:id="intro.example.0" />
 &lt;html&gt;
 &lt;head&gt;&lt;title&gt;Blog&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;
 &lt;h1&gt;Blog Postings&lt;/h1&gt;
-&lt;f3:for each="{postings}" as="posting"&gt;<co xml:id="intro.example.1" />
+&lt;f:for each="{postings}" as="posting"&gt;<co xml:id="intro.example.1" />
   &lt;h2&gt;{posting.title}&lt;/h2&gt;
   &lt;div class="author"&gt;{posting.author.name} {posting.author.email}&lt;/div&gt;<co
           xml:id="intro.example.2" />
-  &lt;p&gt;&lt;f3:actionLink action="details" arguments="{id : posting.id}"&gt;{posting.teaser}&lt;/f3:actionLink&gt;&lt;/p&gt;<co
+  &lt;p&gt;&lt;f:link.action action="details" arguments="{id : posting.id}"&gt;{posting.teaser}&lt;/f:link.action&gt;&lt;/p&gt;<co
           xml:id="intro.example.3" />
-&lt;/f3:for&gt;
+&lt;/f:for&gt;
 &lt;/body&gt;
 &lt;/html&gt;</programlisting>
 
@@ -80,8 +80,8 @@
         <callout arearefs="intro.example.0">
           <para>The <emphasis>Namespace Import</emphasis> makes the
           <classname>F3\Fluid\ViewHelper</classname> namespace available under
-          the shorthand <code>f3</code>. This is important for View Helpers,
-          like the <code>&lt;f3:actionLink /&gt;</code> tag.</para>
+          the shorthand <code>f</code>. This is important for View Helpers,
+          like the <code>&lt;f:link.action /&gt;</code> tag.</para>
         </callout>
 
         <callout arearefs="intro.example.1">
@@ -97,7 +97,8 @@
         </callout>
 
         <callout arearefs="intro.example.3">
-          <para>The <code>&lt;f3:actionLink&gt;...&lt;/f3:actionLink&gt;</code> tag is a
+          <para>The
+          <code>&lt;f:link.action&gt;...&lt;/f:link.action&gt;</code> tag is a
           so-called <emphasis>ViewHelper</emphasis>. It calls arbitary PHP
           code, and in this case renders a link to the
           "details"-Action.</para>

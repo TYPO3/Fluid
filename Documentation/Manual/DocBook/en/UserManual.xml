@@ -100,24 +100,25 @@
       <para><example>
           <title>Tags and Namespace declarations</title>
 
-          <programlisting>{namespace f3=F3\Fluid\ViewHelpers}⁄<co
+          <programlisting>{namespace f=F3\Fluid\ViewHelpers}⁄<co
               xml:id="co.tags-example.1" />
-&lt;f3:actionLink controller="Administration"&gt;Administration&lt;/f3:actionLink&gt;<co
+&lt;f:link.action controller="Administration"&gt;Administration&lt;/f:link.action&gt;<co
               xml:id="co.tags-example.2" /></programlisting>
 
           <calloutlist>
             <callout arearefs="co.tags-example.1">
               <para><emphasis>Namespace Declaration:</emphasis> You import the
               PHP Namespace <code>F3\Fluid\ViewHelpers</code> under the prefix
-              <code>f3</code>.<footnote>
+              <code>f</code>. Hint: you can leave out this namespace import
+              because it is imported by default.<footnote>
                   <para>This is like an XML namespace import.</para>
                 </footnote></para>
             </callout>
 
             <callout arearefs="co.tags-example.2">
               <para>Calling the <emphasis>View Helper:</emphasis> The
-              <code>&lt;f3:actionLink...&gt; ... &lt;/f3:actionLink&gt;</code> tag renders
-              a link.</para>
+              <code>&lt;f:link.action...&gt; ... &lt;/f:link.action&gt;</code>
+              tag renders a link.</para>
             </callout>
           </calloutlist>
 
@@ -126,16 +127,16 @@
           view helper, there exists a corresponding PHP class.</emphasis>
           Let's see how this works for the example above:</para>
 
-          <para>The <code>&lt;f3:actionLink /&gt;</code> tag is implemented in the
-          class
-          <classname>\F3\Fluid\ViewHelpers\LinkViewHelper</classname>.</para>
+          <para>The <code>&lt;f3:link.action /&gt;</code> tag is implemented
+          in the class
+          <classname>\F3\Fluid\ViewHelpers\Link\ActionViewHelper</classname>.</para>
         </example></para>
 
       <para>The class name of such a view helper is constructed for a given
       tag as follows:<itemizedlist>
           <listitem>
             <para>The first part of the class name is the namespace which was
-            imported (the namespace prefix f3 was expanded to its full
+            imported (the namespace prefix f was expanded to its full
             namespace <code>F3\Fluid\ViewHelpers</code>)</para>
           </listitem>
 
@@ -174,18 +175,18 @@
         </itemizedlist></para>
 
       <para>Most view helpers have some parameters. These can be plain
-      strings, just like in <code>&lt;f3:actionLink
-      controller="Administration"&gt;...&lt;/f3:actionLink&gt;</code>, but as well
-      arbitary objects. Parameters of view helpers will just be parsed with
-      the same rules as the rest of the template, thus you can pass arrays or
-      objects as parameters.</para>
+      strings, just like in <code>&lt;f:link.action
+      controller="Administration"&gt;...&lt;/f:link.action&gt;</code>, but as
+      well arbitary objects. Parameters of view helpers will just be parsed
+      with the same rules as the rest of the template, thus you can pass
+      arrays or objects as parameters.</para>
 
       <para>This is often used when adding arguments to links:</para>
 
       <example>
         <title>Creating a link with arguments</title>
 
-        <programlisting>&lt;f3:actionLink controller="Blog" action="show" arguments="{id : blogPost.id}"&gt;... read more&lt;/f3:actionLink&gt;</programlisting>
+        <programlisting>&lt;f:link.action controller="Blog" action="show" arguments="{id : blogPost.id}"&gt;... read more&lt;/f:link.action&gt;</programlisting>
       </example>
 
       <para>Here, the view helper will get a parameter called
@@ -199,8 +200,8 @@
         string (as a string concatenation takes place).</para>
 
         <para>This also applies when using object accessors:
-        <code>&lt;f3:do.something with="{object}" /&gt;</code> and
-        <code>&lt;f3:do.something with=" {object}" /&gt;</code> are
+        <code>&lt;f:do.something with="{object}" /&gt;</code> and
+        <code>&lt;f:do.something with=" {object}" /&gt;</code> are
         substantially different: In the first case, the view helper will
         receive an <emphasis>object</emphasis> as argument, while in the
         second case, it will receive a <emphasis>string</emphasis> as
@@ -219,7 +220,7 @@
       arguments (mapping from internal to displayed name). See the following
       example how this works:</para>
 
-      <para><programlisting>&lt;f3:form.select options="{edit: 'Edit item', delete: 'Delete item'}" /&gt;</programlisting>The
+      <para><programlisting>&lt;f:form.select options="{edit: 'Edit item', delete: 'Delete item'}" /&gt;</programlisting>The
       array syntax used here is very similar to the JSON object
       syntax<footnote>
           <para>Actually, it should be the same. If not, please tell
@@ -300,13 +301,12 @@
       <example>
         <title>An example layout</title>
 
-        <programlisting>{namespace f3=F3\Fluid\ViewHelpers}
-&lt;html&gt;
+        <programlisting>&lt;html&gt;
 &lt;head&gt;&lt;title&gt;My fancy web application&lt;/title&gt;&lt;/head&gt;
 &lt;body&gt;
 &lt;div id="menu"&gt;... menu goes here ...&lt;/div&gt;
 &lt;div id="content"&gt;
-  <emphasis>&lt;f3:render section="content" /&gt;</emphasis><co
+  <emphasis>&lt;f:render section="content" /&gt;</emphasis><co
             xml:id="co.layout-example.1" />
 &lt;/div&gt;
 &lt;/body&gt;
@@ -326,7 +326,7 @@
 
       <para>Using a layout involves two steps:<itemizedlist>
           <listitem>
-            <para>Declare which layout to use: <code>&lt;f3:layout name="..."
+            <para>Declare which layout to use: <code>&lt;f:layout name="..."
             /&gt;</code> can be written anywhere on the page (though we
             suggest to write it on top, right after the namespace declaration)
             - the given name references the layout.</para>
@@ -334,8 +334,8 @@
 
           <listitem>
             <para>Provide the content for all sections used by the layout
-            using the <code>&lt;f3:section&gt;...&lt;/f3:section&gt;</code>
-            tag: <code>&lt;f3:section
+            using the <code>&lt;f:section&gt;...&lt;/f:section&gt;</code> tag:
+            <code>&lt;f:section
             name="content"&gt;...&lt;/f3:section&gt;</code></para>
           </listitem>
         </itemizedlist></para>
@@ -346,12 +346,11 @@
       <example>
         <title>A template for the above layout</title>
 
-        <programlisting>{namespace f3=F3\Fluid\ViewHelpers}
-&lt;f3:layout name="example.html" /&gt;
+        <programlisting>&lt;f:layout name="example.html" /&gt;
 
-&lt;f3:section name="content"&gt;
+&lt;f:section name="content"&gt;
 <replaceable>This HTML here will be outputted to inside the layout</replaceable>
-&lt;/f3:section&gt;</programlisting>
+&lt;/f:section&gt;</programlisting>
       </example>
     </section>
   </section>
@@ -402,9 +401,9 @@
 
           <listitem>
             <para><code>$this-&gt;variableContainer</code> is an instance of
-            <classname>F3\Fluid\Core\VariableContainer</classname>, with which
-            you have access to all variables currently available in the
-            template.</para>
+            <classname>F3\Fluid\Core\ViewHelper\TemplateVariableContainer</classname>,
+            with which you have access to all variables currently available in
+            the template.</para>
 
             <para>Additionally, you can add variables to the container with
             <code>$this-&gt;variableContainer-&gt;add($identifier,
@@ -528,7 +527,7 @@
       <title>TagBasedViewHelper</title>
 
       <para>Many view helpers output an HTML tag - for example
-      <code>&lt;f3:actionLink ...&gt; outputs </code>a <code>&lt;a
+      <code>&lt;f3:link.action ...&gt; outputs </code>a <code>&lt;a
       href="..."&gt;</code> tag. There are many view helpers which work that
       way.</para>
 
@@ -571,28 +570,42 @@
           </listitem>
         </itemizedlist></para>
 
-      <para>It also adds a method called <code>renderTagAttributes()</code>
-      which you can use inside <code>render()</code>, which will add all the
-      <code>tagname="tagvalue"</code>-style attributes to the tag.</para>
+      <para>Inside the TagBasedViewHelper, there is a TagBuilder object
+      available (with <code>$this-&gt;tag</code>) which makes building a tag a
+      lot more straightforward</para>
 
       <para>With the above methods we get, the <code>LinkViewHelper</code>
       from above can be condensed as follows:<programlisting>class LinkViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
-  public function initializeArguments() {
-    <emphasis>$this-&gt;registerUniversalTagAttributes();</emphasis>
-    ... and more ...
-  }
-  public function render() {
-    $output = '&lt;a href="..."' . <emphasis>$this-&gt;renderTagAttributes()</emphasis> . '&gt;';
-    ... and more ...
-    return $output;
-  }
+	public function initializeArguments() {
+		$this-&gt;registerUniversalTagAttributes();
+	}
+
+	/**
+	 * Render the link.
+	 *
+	 * @param string $action Target action
+	 * @param array $arguments Arguments
+	 * @param string $controller Target controller. If NULL current controllerName is used
+	 * @param string $package Target package. if NULL current package is used
+	 * @param string $subpackage Target subpackage. if NULL current subpackage is used
+	 * @param string $section The anchor to be added to the URI
+	 * @return string The rendered link
+	 */
+	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '') {
+		$uriBuilder = $this-&gt;controllerContext-&gt;getURIBuilder();
+		$uri = $uriBuilder-&gt;URIFor($action, $arguments, $controller, $package, $subpackage, $section);
+		$this-&gt;tag-&gt;addAttribute('href', $uri);
+		$this-&gt;tag-&gt;setContent($this-&gt;renderChildren());
+
+		return $this-&gt;tag-&gt;render();
+	}
 }</programlisting></para>
 
       <para>Additionally, we now already have support for all universal HTML
       attributes.</para>
 
       <para>You might now think that the building blocks are ready, but there
-      is one more nice thing to add: <code>additionalTagArguments</code>! Read
+      is one more nice thing to add: <code>additionalAttributes</code>! Read
       about it in the next section.</para>
 
       <section>
@@ -629,10 +642,10 @@
 
         <para>If the link tag from above needed a new attribute called
         <code>fadeDuration</code>, which is not part of HTML, you could do
-        that as follows:<programlisting>&lt;f3:actionLink ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f3:actionLink&gt;</programlisting></para>
+        that as follows:<programlisting>&lt;f:link.action ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f:link.action&gt;</programlisting></para>
 
         <para>This attribute is available in all tags that inherit from
-        <classname>F3\Fluid\Core\TagBasedViewHelper</classname>.</para>
+        <classname>F3\Fluid\Core\ViewHelper\TagBasedViewHelper</classname>.</para>
       </section>
     </section>
 
@@ -640,13 +653,16 @@
       <title>Facets</title>
 
       <para>The possibilities you get when you base your view helper on
-      <classname>F3\Fluid\Core\AbstractViewHelper</classname> should be enough
-      for most use cases - however, there are some cases when the view helper
-      needs to interact in a special way with its surroundings - an example is
-      the "if/else" view helper group.</para>
+      <classname>F3\Fluid\Core\ViewHelper\AbstractViewHelper</classname>
+      should be enough for most use cases - however, there are some cases when
+      the view helper needs to interact in a special way with its surroundings
+      - an example is the "if/else" view helper group.</para>
 
       <para>If a view helper needs to know more about its surroundings, it has
       to implement a certain facet. Facets are plain PHP interfaces.</para>
+
+      <para><emphasis>Currently, all facets are NOT YET PUBLIC API! Use them
+      at your own risk!</emphasis></para>
 
       <section>
         <title>SubNodeAccess Facet</title>
@@ -660,24 +676,24 @@
         <para>Let's take if/then/else as an example and start with two
         examples how this view helper is supposed to work:</para>
 
-        <para><programlisting>&lt;f3:if condition="..."&gt;
+        <para><programlisting>&lt;f:if condition="..."&gt;
    This text should only be rendered if the condition evaluates to TRUE.
-&lt;/f3:if&gt;</programlisting>This above case is the most simple case.
+&lt;/f:if&gt;</programlisting>This above case is the most simple case.
         However, we want to support if/else as well:</para>
 
-        <para><programlisting>&lt;f3:if condition="..."&gt;
-   &lt;f3:then&gt;If condition evaluated to TRUE, "then" should be rendered&lt;/f3:then&gt;
-   &lt;f3:else&gt;If condition evaluated to FALSE, "else" should be rendered&lt;/f3:else&gt;
-&lt;/f3:if&gt;</programlisting>To implement the functionality of the
-        <code>&lt;f3:if&gt;</code> view helper, a standard
+        <para><programlisting>&lt;f:if condition="..."&gt;
+   &lt;f:then&gt;If condition evaluated to TRUE, "then" should be rendered&lt;/f:then&gt;
+   &lt;f:else&gt;If condition evaluated to FALSE, "else" should be rendered&lt;/f:else&gt;
+&lt;/f:if&gt;</programlisting>To implement the functionality of the
+        <code>&lt;f:if&gt;</code> view helper, a standard
         <code>$this-&gt;renderChildren()</code> will not be sufficent, as the
         <code>if</code>-Tag has no control whether the
-        <code>&lt;f3:then&gt;</code> or <code>&lt;f3:else&gt;</code> is
-        rendered. Thus, the <code>&lt;f3:if&gt;</code> tag needs more
+        <code>&lt;f:then&gt;</code> or <code>&lt;f:else&gt;</code> is
+        rendered. Thus, the <code>&lt;f:if&gt;</code> tag needs more
         information about its environment, namely it needs access to its
         subnodes in the syntax tree.</para>
 
-        <para>To make this work, the <code>&lt;f3:if&gt;</code>-tag implements
+        <para>To make this work, the <code>&lt;f:if&gt;</code>-tag implements
         the
         <interfacename>F3\Fluid\Core\Facets\SubNodeAccessInterface</interfacename>.
         Now, the method <methodname>setChildren(array
@@ -700,18 +716,18 @@
 
         <para>Sometimes, the presence of a tag affects global rendering
         behavior - as seen in the template/layout subsystem: With the tag
-        <code>&lt;f3:layout name="..." /&gt;</code> the user can specify a
+        <code>&lt;f:layout name="..." /&gt;</code> the user can specify a
         layout name for the current template. Somehow, the parser needs to
         know if a layout was selected directly after parsing the template -
         before any data has been passed to it.</para>
 
         <para>Thus, if a view helper implements the
-        <interfacename>F3\Fluid\Core\Facets\PostParseInterface</interfacename>,
+        <interfacename>F3\Fluid\Core\ViewHelper\Facets\PostParseInterface</interfacename>,
         it can specify a callback which is called <emphasis>directly after the
         tag has been parsed in the template</emphasis>. The method signature
         looks as follows:</para>
 
-        <programlisting>static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\VariableContainer $variableContainer);</programlisting>
+        <programlisting>static public function postParseEvent(\F3\Fluid\Core\SyntaxTree\ViewHelperNode $syntaxTreeNode, $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer);</programlisting>
 
         <para>Note this method is <emphasis>static</emphasis><footnote>
             <para>It is static because the ViewHelper has not been

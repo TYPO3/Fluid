@@ -215,7 +215,7 @@ class DocbookGenerator {
 		$tbody = $tgroup->addChild('tbody');
 
 		foreach ($argumentDefinitions as $argumentDefinition) {
-			$this->addArgumentTableRow($tbody, $argumentDefinition->getName(), $argumentDefinition->getType(), $argumentDefinition->isRequired(), $argumentDefinition->getDescription(), $argumentDefinition->getDefaultValue());
+			$this->addArgumentTableRow($tbody, $argumentDefinition->getName(), $argumentDefinition->getType(), ($argumentDefinition->isRequired()?'yes':'no'), $argumentDefinition->getDescription(), $argumentDefinition->getDefaultValue());
 		}
 	}
 	private function addArgumentTableRow(\SimpleXMLElement $parent, $name, $type, $required, $description, $default) {
@@ -225,7 +225,7 @@ class DocbookGenerator {
 		$row->addChild('entry', $type);
 		$row->addChild('entry', $required);
 		$row->addChild('entry', $description);
-		$row->addChild('entry', $default);
+		$row->addChild('entry', (string)$default);
 	}
 
 	/**
@@ -275,7 +275,11 @@ class DocbookGenerator {
 				preg_match('/title="([^"]+)"/', $tmp[1], $titleMatch);
 
 				$example = $parentElement->addChild('example');
-				$example->addChild('title', trim($titleMatch[1]));
+				if (count($titleMatch)) {
+					$example->addChild('title', trim($titleMatch[1]));
+				} else {
+					$example->addChild('title', 'Example');
+				}
 				$example->addChild('programlisting', trim($tmp[2]));
 			} else {
 				$textParts = explode("\n", $singleMatch);
