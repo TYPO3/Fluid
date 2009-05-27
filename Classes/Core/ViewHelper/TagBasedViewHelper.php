@@ -116,7 +116,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function registerTagAttribute($name, $type, $description, $required = FALSE) {
-		$this->registerArgument($name, $type, $description, $required, '');
+		$this->registerArgument($name, $type, $description, $required, NULL);
 		$this->tagAttributes[] = $name;
 	}
 

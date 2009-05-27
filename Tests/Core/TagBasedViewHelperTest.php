@@ -101,7 +101,4 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelper->initialize();
 	}
 }
-
-
-
 ?>
