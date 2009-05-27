@@ -21,6 +21,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @version $Id$
  */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 /**
  * Test for the Abstract Form view helper
  *
@@ -29,7 +30,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class AbstractFormViewHelperTest extends \F3\Testing\BaseTestCase {
+class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
@@ -52,6 +53,69 @@ class AbstractFormViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->assertSame('foo[__identity]', $formViewHelper->_call('getName'));
 		$this->assertSame('6f487e40-4483-11de-8a39-0800200c9a66', $formViewHelper->_call('getValue'));
 	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getNameBuildsNameFromPropertyAndFormNameIfInObjectAccessorMode() {
+		$formViewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper'), array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
+		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName')->will($this->returnValue('myFormName'));
+
+		$formViewHelper->_set('arguments', array('name' => NULL, 'value' => NULL, 'property' => 'bla'));
+		$expected = 'myFormName[bla]';
+		$actual = $formViewHelper->_call('getName');
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getValueBuildsValueFromPropertyAndFormObjectIfInObjectAccessorMode() {
+		$formViewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper'), array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+
+		$className = 'test_' . uniqid();
+		$mockObject = eval('
+			class ' . $className . ' {
+				public function getSomething() {
+					return "MyString";
+				}
+			}
+			return new ' . $className . ';
+		');
+
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
+		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($mockObject));#
+		$this->viewHelperVariableContainer->expects($this->once())->method('exists')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue(TRUE));
+
+		$formViewHelper->_set('arguments', array('name' => NULL, 'value' => NULL, 'property' => 'something'));
+		$expected = 'MyString';
+		$actual = $formViewHelper->_call('getValue');
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function isObjectAccessorModeReturnsTrueIfPropertyIsSetAndFormObjectIsGiven() {
+		$formViewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper'), array('dummy'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+
+		$this->viewHelperVariableContainer->expects($this->once())->method('exists')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName')->will($this->returnValue(TRUE));
+
+		$formViewHelper->_set('arguments', array('name' => NULL, 'value' => NULL, 'property' => 'bla'));
+		$this->assertTrue($formViewHelper->_call('isObjectAccessorMode'));
+
+		$formViewHelper->_set('arguments', array('name' => NULL, 'value' => NULL, 'property' => NULL));
+		$this->assertFalse($formViewHelper->_call('isObjectAccessorMode'));
+	}
+
 
 }
 

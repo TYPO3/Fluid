@@ -109,7 +109,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function initializeView() {
-		$this->contextVariables['view'] = $this;
 	}
 
 	/**
@@ -151,6 +150,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$renderingContext->setRenderingConfiguration($renderingConfiguration);
 
 		$viewHelperVariableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelperVariableContainer->setView($this);
 		$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
 
 		return $renderingContext;
@@ -240,7 +240,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$partialPathAndFileName = $partialDirectoryName . '/' . $partialFileName;
 
 		$partial = $this->parseTemplate($partialPathAndFileName);
-		$variables['view'] = $this;
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 
 		$renderingContext = $this->buildRenderingContext($variableContainer);

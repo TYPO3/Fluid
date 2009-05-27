@@ -28,45 +28,25 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
  * @subpackage ViewHelpers
  * @version $Id:$
  */
-class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
-
-	/**
-	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldContainingTheObjectsUUID() {
-		$object = new \stdClass();
-
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getUUIDByObject')->with($object)->will($this->returnValue('123'));
-
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->once())->method('getBackend')->will($this->returnValue($mockBackend));
-
-		$expectedResult = '<input type="hidden" name="theName[__identity]" value="123" />';
-
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('dummy'), array(), '', FALSE);
-		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('name' => 'theName')));
-		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
-
-		$actualResult = $viewHelper->_call('renderHiddenIdentityField', $object);
-		$this->assertSame($expectedResult, $actualResult);
-	}
-
+class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderAddsObjectToTemplateVariableContainer() {
-		$formObject = new \stdClass();
+	public function renderTakesBaseURIFromControllerContext() {
+		$baseURI = 'http://typo3.org/';
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField'), array(), '', FALSE);
+		$request = $this->getMock('F3\FLOW3\MVC\Web\Request');
+		$request->expects($this->any())->method('getBaseURI')->will($this->returnValue($baseURI));
+
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($request));
+
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\BaseViewHelper'), array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-
-		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $formObject);
-		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-		$viewHelper->render('', array(), NULL, NULL, NULL, $formObject);
+		$expected = '<base href="http://typo3.org/"></base>';
+		$actual = $viewHelper->render();
+		$this->assertSame($expected, $actual);
 	}
 
 	/**

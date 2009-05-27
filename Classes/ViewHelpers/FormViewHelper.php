@@ -126,12 +126,12 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 		}
 
 		if ($this->arguments['name']) {
-			$this->templateVariableContainer->add('__formName', $this->arguments['name']);
+			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formName', $this->arguments['name']);
 		}
 		$hiddenIdentityFields = '';
 		if (!empty($object)) {
-			$this->templateVariableContainer->add('__formObject', $this->arguments['object']);
-			$hiddenIdentityFields = $this->renderHiddenIdentityField($this->arguments['object']);
+			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $object);
+			$hiddenIdentityFields = $this->renderHiddenIdentityField($object);
 		}
 
 		$content = $hiddenIdentityFields;
@@ -139,10 +139,10 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 		$this->tag->setContent($content);
 
 		if (!empty($object)) {
-			$this->templateVariableContainer->remove('__formObject');
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		}
 		if ($this->arguments['name']) {
-			$this->templateVariableContainer->remove('__formName');
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
 		}
 
 		return $this->tag->render();

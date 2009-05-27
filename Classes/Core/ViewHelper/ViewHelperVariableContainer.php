@@ -36,20 +36,27 @@ namespace F3\Fluid\Core\ViewHelper;
  * @scope prototype
  */
 class ViewHelperVariableContainer {
-	
+
 	/**
 	 * Two-dimensional object array storing the values. The first dimension is the fully qualified ViewHelper name,
 	 * and the second dimension is the identifier for the data the ViewHelper wants to store.
 	 * @var array
 	 */
 	protected $objects = array();
-	
+
+	/**
+	 *
+	 * @var F3\FLOW3\MVC\View\ViewInterface
+	 * @internal
+	 */
+	protected $view;
+
 	/**
 	 * Add a variable to the Variable Container. Make sure that $viewHelperName is ALWAYS set
 	 * to your fully qualified ViewHelper Class Name
-	 * 
+	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
-	 * @param string $key Key of the data 
+	 * @param string $key Key of the data
 	 * @param object $value The value to store
 	 * @return void
 	 * @throws F3\Fluid\Core\RuntimeException if there was no key with the specified name
@@ -62,12 +69,12 @@ class ViewHelperVariableContainer {
 		}
 		$this->objects[$viewHelperName][$key] = $value;
 	}
-	
+
 	/**
 	 * Gets a variable which is stored
-	 * 
+	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
-	 * @param string $key Key of the data 
+	 * @param string $key Key of the data
 	 * @return object The object stored
 	 * @throws F3\Fluid\Core\RuntimeException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -76,34 +83,61 @@ class ViewHelperVariableContainer {
 		if (!$this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\RuntimeException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
 		return $this->objects[$viewHelperName][$key];
 	}
-	
+
 	/**
 	 * Determine whether there is a variable stored for the given key
-	 * 
+	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
-	 * @param string $key Key of the data 
+	 * @param string $key Key of the data
 	 * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function exists($viewHelperName, $key) {
 		return isset($this->objects[$viewHelperName][$key]);
 	}
-	
+
 	/**
 	 * Remove a value from the variable container
-	 * 
+	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data to remove
 	 * @return void
 	 * @throws F3\Fluid\Core\RuntimeException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	
+
 	public function remove($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\RuntimeException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
 		unset($this->objects[$viewHelperName][$key]);
 	}
-	
+
+	/**
+	 * Set the view to pass it to ViewHelpers.
+	 *
+	 * !!! This is NOT a public API and might still change!!!
+	 *
+	 * @param F3\FLOW3\MVC\View\ViewInterface $view View to set
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function setView(\F3\FLOW3\MVC\View\ViewInterface $view) {
+		$this->view = $view;
+	}
+
+	/**
+	 * Get the view.
+	 *
+	 * !!! This is NOT a public API and might still change!!!
+	 *
+	 * @return F3\FLOW3\MVC\View\ViewInterface The View
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function getView() {
+		return $this->view;
+	}
+
 	/**
 	 * Clean up for serializing.
 	 *

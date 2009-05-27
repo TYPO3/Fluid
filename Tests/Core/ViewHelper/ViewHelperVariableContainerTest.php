@@ -34,11 +34,11 @@ include_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
 class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 
 	/**
-	 * 
+	 *
 	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
-	
+
 	protected function setUp() {
 		$this->viewHelperVariableContainer = new \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer();
 	}
@@ -51,10 +51,10 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->assertFalse($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\TestViewHelper', 'test'));
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\TestViewHelper', 'test', $variable);
 		$this->assertTrue($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\TestViewHelper', 'test'));
-		
+
 		$this->assertEquals($variable, $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\TestViewHelper', 'test'));
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -63,7 +63,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 	public function gettingNonNonExistentValueThrowsException() {
 		$this->viewHelperVariableContainer->get('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -73,7 +73,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -83,7 +83,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
 		$this->assertFalse($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'));
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -91,6 +91,16 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function removingNonExistentKeyThrowsException() {
 		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function viewCanBeReadOutAgain() {
+		$view = $this->getMock('F3\FLOW3\MVC\View\ViewInterface');
+		$this->viewHelperVariableContainer->setView($view);
+		$this->assertSame($view, $this->viewHelperVariableContainer->getView());
 	}
 }
 ?>

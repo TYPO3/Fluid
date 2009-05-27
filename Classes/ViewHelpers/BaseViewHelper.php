@@ -59,7 +59,7 @@ class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render() {
-		$currentRequest = $this->templateVariableContainer->get('view')->getRequest();
+		$currentRequest = $this->controllerContext->getRequest();
 		return '<base href="' . $currentRequest->getBaseURI() . '"></base>';
 	}
 }

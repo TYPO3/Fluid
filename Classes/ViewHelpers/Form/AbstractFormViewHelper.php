@@ -53,6 +53,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
+	 * @internal
 	 */
 	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
@@ -80,7 +81,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function getName() {
-		$name = ($this->isObjectAccessorMode()) ? $this->templateVariableContainer->get('__formName') . '[' . $this->arguments['property'] . ']' : $this->arguments['name'];
+		$name = ($this->isObjectAccessorMode()) ? $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName') . '[' . $this->arguments['property'] . ']' : $this->arguments['name'];
 		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getUUIDByObject($this->arguments['value'])) {
 			$name .= '[__identity]';
 		}
@@ -93,10 +94,11 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 *
 	 * @return string Value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function getValue() {
-		if ($this->isObjectAccessorMode() && $this->templateVariableContainer->exists('__formObject') && ($this->arguments['value'] === NULL)) {
-			$value = $this->getObjectValue($this->templateVariableContainer->get('__formObject'), $this->arguments['property']);
+		if ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject') && ($this->arguments['value'] === NULL)) {
+			$value = $this->getObjectValue($this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject'), $this->arguments['property']);
 		} else {
 			$value =  $this->arguments['value'];
 		}
@@ -115,8 +117,8 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * @return boolean TRUE if we should evaluate the domain object, FALSE otherwise.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	private function isObjectAccessorMode() {
-		return ($this->arguments['property'] && $this->templateVariableContainer->exists('__formName')) ? TRUE : FALSE;
+	protected function isObjectAccessorMode() {
+		return (($this->arguments['property'] !== NULL) && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formName')) ? TRUE : FALSE;
 	}
 
 	/**
