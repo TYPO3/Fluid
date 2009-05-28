@@ -72,9 +72,9 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function initializeView() {
-		$this->view->setRequest($this->request);
-	}
+	/*protected function initializeView(\F3\FLOW3\MVC\View\ViewInterface $view) {
+			$this->view->setRequest($this->request);
+	}*/
 
 	/**
 	 * Index action
