@@ -38,7 +38,7 @@ namespace F3\Fluid\Core\Rendering;
  * @internal
  * @scope prototype
  */
-class HTMLSpecialCharsPostProcessor implements ObjectAccessorPostProcessorInterface {
+class HTMLSpecialCharsPostProcessor implements \F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface {
 
 	/**
 	 * @param mixed $object the object that is currently rendered
