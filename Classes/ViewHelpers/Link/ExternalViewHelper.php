@@ -54,8 +54,10 @@ class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 */
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
-		$this->registerTagAttribute('target', 'string', 'Target of link', FALSE);
-		$this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document', FALSE);
+		$this->registerTagAttribute('name', 'string', 'Specifies the name of an anchor');
+		$this->registerTagAttribute('rel', 'string', 'Specifies the relationship between the current document and the linked document');
+		$this->registerTagAttribute('rev', 'string', 'Specifies the relationship between the linked document and the current document');
+		$this->registerTagAttribute('target', 'string', 'Specifies where to open the linked document');
 	}
 
 	/**
