@@ -18,7 +18,7 @@ namespace F3\Fluid\Core\ViewHelper;
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id: AbstractViewHelperTest.php 2336 2009-05-22 12:08:39Z sebastian $
+ * @version $Id$
  */
 
 include_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
@@ -28,7 +28,7 @@ include_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
  *
  * @package
  * @subpackage Tests
- * @version $Id: AbstractViewHelperTest.php 2336 2009-05-22 12:08:39Z sebastian $
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {

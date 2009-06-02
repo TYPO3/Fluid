@@ -22,7 +22,13 @@ namespace F3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+/**
+ * @package Fluid
+ * @subpackage ViewHelpers
+ */
+
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
+
 /**
  * @package Fluid
  * @subpackage ViewHelpers

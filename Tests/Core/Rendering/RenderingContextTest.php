@@ -18,14 +18,14 @@ namespace F3\Fluid\Core\Rendering;
 /**
  * @package Fluid
  * @subpackage Tests
- * @version $Id: ParsingStateTest.php 2247 2009-05-18 20:02:37Z sebastian $
+ * @version $Id$
  */
 /**
  * Testcase for ParsingState
  *
  * @package Fluid
  * @subpackage Tests
- * @version $Id: ParsingStateTest.php 2247 2009-05-18 20:02:37Z sebastian $
+ * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class RenderingContextTest extends \F3\Testing\BaseTestCase {

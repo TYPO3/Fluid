@@ -25,7 +25,7 @@ namespace F3\Fluid\Core\Rendering;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id: RenderingContext.php 2294 2009-05-20 19:34:44Z sebastian $
+ * @version $Id$
  */
 
 /**
@@ -33,7 +33,7 @@ namespace F3\Fluid\Core\Rendering;
  *
  * @package Fluid
  * @subpackage Core
- * @version $Id: RenderingContext.php 2294 2009-05-20 19:34:44Z sebastian $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @internal
  * @scope prototype

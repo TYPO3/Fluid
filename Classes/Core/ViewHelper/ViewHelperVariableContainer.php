@@ -25,13 +25,13 @@ namespace F3\Fluid\Core\ViewHelper;
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id: TemplateVariableContainer.php 2372 2009-05-25 15:17:39Z sebastian $
+ * @version $Id$
  */
 
 /**
  * @package Fluid
  * @subpackage Core
- * @version $Id: TemplateVariableContainer.php 2372 2009-05-25 15:17:39Z sebastian $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */

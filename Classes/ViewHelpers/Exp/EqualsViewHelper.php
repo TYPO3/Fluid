@@ -25,7 +25,7 @@ namespace F3\Fluid\ViewHelpers\Exp;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id: ForViewHelper.php 2378 2009-05-25 20:47:00Z sebastian $
+ * @version $Id$
  */
 
 /**
@@ -36,7 +36,7 @@ namespace F3\Fluid\ViewHelpers\Exp;
  * @internal
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id: ForViewHelper.php 2378 2009-05-25 20:47:00Z sebastian $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
