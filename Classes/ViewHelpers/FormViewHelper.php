@@ -154,10 +154,11 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param object $object The object to create an identity field for
 	 * @return string A hidden field containing the UUID of the given object or NULL if the object is unknown to the persistence framework
 	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object) {
-		if (!is_object($object)) {
+		if (!is_object($object) || ($object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface && $object->FLOW3_Persistence_isNew())) {
 			return '';
 		}
 		$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($object);

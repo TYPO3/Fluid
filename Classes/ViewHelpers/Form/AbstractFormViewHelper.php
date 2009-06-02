@@ -79,10 +79,12 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * @return string Name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function getName() {
 		$name = ($this->isObjectAccessorMode()) ? $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName') . '[' . $this->arguments['property'] . ']' : $this->arguments['name'];
-		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getUUIDByObject($this->arguments['value'])) {
+		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getUUIDByObject($this->arguments['value'])
+				&& ($this->arguments['value'] instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface && !$this->arguments['value']->FLOW3_Persistence_isNew())) {
 			$name .= '[__identity]';
 		}
 		return $name;

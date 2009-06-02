@@ -43,7 +43,18 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
 
-		$object = new \stdclass;
+		$className = 'Object' . uniqid();
+		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
+		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
+			public function FLOW3_Persistence_isNew() { return FALSE; }
+			public function FLOW3_Persistence_isDirty($propertyName) {}
+			public function FLOW3_Persistence_memorizeCleanState($joinPoint = NULL) {}
+			public function FLOW3_AOP_Proxy_getProperty($name) {}
+			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
+			public function __clone() {}
+		}');
+		$object = $this->getMock($fullClassName);
+		$object->expects($this->any())->method('FLOW3_Persistence_isNew')->will($this->returnValue(FALSE));
 
 		$formViewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper'), array('dummy'), array(), '', FALSE);
 		$formViewHelper->injectPersistenceManager($mockPersistenceManager);
