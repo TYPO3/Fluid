@@ -139,7 +139,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * @test
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -169,7 +169,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * @test
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateMethodPassesControllerContextToViewHelper() {
@@ -187,7 +187,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * @test
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateMethodPassesViewHelperVariableContainerToViewHelper() {
@@ -210,9 +210,13 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function convertArgumentValueCallsConvertToBooleanForArgumentsOfTypeBoolean() {
 		$viewHelperNode = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode'), array('convertToBoolean'), array(), '', FALSE);
+		$viewHelperNode->_set('renderingContext', $this->renderingContext);
+		$argumentViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'), array(), '', FALSE);
+		$argumentViewHelperNode->expects($this->once())->method('evaluate')->will($this->returnValue('foo'));
+
 		$viewHelperNode->expects($this->once())->method('convertToBoolean')->with('foo')->will($this->returnValue('bar'));
 
-		$actualResult = $viewHelperNode->_call('convertArgumentValue', 'foo', 'boolean');
+		$actualResult = $viewHelperNode->_call('convertArgumentValue', $argumentViewHelperNode, 'boolean');
 		$this->assertEquals('bar', $actualResult);
 	}
 
@@ -224,7 +228,6 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$viewHelperNode = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode'), array('dummy'), array(), '', FALSE);
 
 		$this->assertFalse($viewHelperNode->_call('convertToBoolean', FALSE));
-
 		$this->assertTrue($viewHelperNode->_call('convertToBoolean', TRUE));
 	}
 

@@ -86,6 +86,18 @@ abstract class AbstractNode {
 	}
 
 	/**
+	 * Returns all child nodes for a given node.
+	 * This is especially needed to implement the boolean expression language.
+	 *
+	 * @return array F3\Fluid\Core\Parser\SyntaxTree\AbstractNode A list of nodes
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function getChildNodes() {
+		return $this->childNodes;
+	}
+
+	/**
 	 * Appends a subnode to this node. Is used inside the parser to append children
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $subnode The subnode to add

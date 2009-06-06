@@ -210,6 +210,70 @@
         <para>This might first seem like a bug, but actually it is just
         consistent that it works that way.</para>
       </warning>
+
+      <section>
+        <title>Boolean expressions</title>
+
+        <para>Often, you need some kind of conditions inside your template.
+        For them, you will usually use the <code>&lt;f:if&gt;</code>
+        ViewHelper. Now let's imagine we have a list of blog postings and want
+        to display some additional information for the currently selected blog
+        posting. We assume that the currently selected blog is available in
+        <code>{currentBlogPosting}</code>. Now, let's have a look how this
+        works:</para>
+
+        <example>
+          <title>Using boolean expressions</title>
+
+          <para><programlisting>&lt;f:for each="{blogPosts}" as="post"&gt;
+  &lt;f:if condition="<emphasis>{post} == {currentBlogPosting}</emphasis>"&gt;... some special output here ...&lt;/f:if&gt; 
+&lt;/f:for&gt;</programlisting></para>
+        </example>
+
+        <para>In the above example, there is a bit of new syntax involved:
+        <code>{post} == {currentBlogPosting}</code>. Intuitively, this says
+        "if the post I''m currently iterating over is the same as
+        currentBlogPosting, do something."</para>
+
+        <para>Why can we use this boolean expression syntax? Well, because the
+        IfViewHelper has registered the argument <code>condition</code> as
+        <code>boolean</code>. Thus, the boolean expression syntax is available
+        in all arguments of ViewHelpers which are of type boolean.</para>
+
+        <para>All boolean expressions have the form <emphasis>XX Comparator
+        YY</emphasis>, where:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><emphasis>Comparator</emphasis> is one of the following:
+            <emphasis>==, &gt;, &gt;=, &lt;, &lt;=, %</emphasis>
+            (modulo)</para>
+          </listitem>
+
+          <listitem>
+            <para><emphasis>XX / YY</emphasis> is one of the following:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para>A number (integer or float</para>
+              </listitem>
+
+              <listitem>
+                <para>A JSON Array</para>
+              </listitem>
+
+              <listitem>
+                <para>A ViewHelper</para>
+              </listitem>
+
+              <listitem>
+                <para>An Object Accessor (this is probably the most used
+                example)</para>
+              </listitem>
+            </itemizedlist>
+          </listitem>
+        </itemizedlist>
+      </section>
     </section>
 
     <section>

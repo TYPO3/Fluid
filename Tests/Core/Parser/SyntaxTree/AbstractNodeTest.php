@@ -18,7 +18,7 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 /**
  * @package
  * @subpackage
- * @version $Id:$
+ * @version $Id$
  */
 class AbstractNodeTest extends \F3\Testing\BaseTestCase {
 
@@ -45,6 +45,14 @@ class AbstractNodeTest extends \F3\Testing\BaseTestCase {
 	public function evaluateChildNodesPassesRenderingContextToChildNodes() {
 		$this->childNode->expects($this->once())->method('setRenderingContext')->with($this->renderingContext);
 		$this->abstractNode->evaluateChildNodes();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function childNodeCanBeReadOutAgain() {
+		$this->assertSame($this->abstractNode->getChildNodes(), array($this->childNode));
 	}
 }
 

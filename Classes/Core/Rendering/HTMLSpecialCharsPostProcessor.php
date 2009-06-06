@@ -41,6 +41,8 @@ namespace F3\Fluid\Core\Rendering;
 class HTMLSpecialCharsPostProcessor implements \F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface {
 
 	/**
+	 * Process an Object Accessor by wrapping it into HTML
+	 *
 	 * @param mixed $object the object that is currently rendered
 	 * @param boolean $currentlyEvaluatingArguments TRUE if the current ObjectAccessorNode is within view helper arguments
 	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed

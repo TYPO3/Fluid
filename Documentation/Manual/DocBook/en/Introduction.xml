@@ -30,15 +30,13 @@
   <para>This templating engine should not be bloated, instead, we try to do it
   "The Zen Way" - you do not need to learn too many things, thus you can
   concentrate on getting your things done, while the template engine handles
-  everything you do not want to care about. In XML Schema aware editors (like
-  Eclipse), you even get autocompletion and inline help support while writing
-  your template.</para>
+  everything you do not want to care about.</para>
 
   <section>
     <title>What does it do?</title>
 
-    <para>In the current MVC system of FLOW3, the View currently does not have
-    a lot of functionality. The standard view provides a
+    <para>In many MVC systems, the view currently does not have a lot of
+    functionality. The standard view usually provides a
     <methodname>render</methodname> method, and nothing more. That makes it
     cumbersome to write powerful views, as most designers will not write PHP
     code.</para>
@@ -112,11 +110,11 @@
         </listitem>
 
         <listitem>
-          <para>Autocompletion in Eclipse</para>
+          <para>Custom View Helpers</para>
         </listitem>
 
         <listitem>
-          <para>Custom View Helpers</para>
+          <para>Boolean expression syntax</para>
         </listitem>
       </itemizedlist></para>
 
