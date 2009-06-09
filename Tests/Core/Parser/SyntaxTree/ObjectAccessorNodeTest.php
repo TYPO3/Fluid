@@ -157,7 +157,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 
 		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('variable')->will($this->returnValue('hallo'));
 		
-		$this->renderingContext->setArgumentEvaluationMode(TRUE);
+		$this->renderingContext->setObjectAccessorPostProcessorEnabled(TRUE);
 		
 		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\ObjectAccessorPostProcessor', array('process'));
 		$this->renderingConfiguration->expects($this->once())->method('getObjectAccessorPostProcessor')->will($this->returnValue($objectAccessorPostProcessor));

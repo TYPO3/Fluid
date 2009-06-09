@@ -39,16 +39,16 @@ class HTMLSpecialCharsPostProcessorTest extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->htmlSpecialCharsPostProcessor = new \F3\Fluid\Core\Rendering\HTMLSpecialCharsPostProcessor();
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function postProcessorReturnsObjectsIfInArgumentsMode() {
 		$string = 'Expected <p>';
-		$this->assertEquals($string, $this->htmlSpecialCharsPostProcessor->process($string, TRUE));
+		$this->assertEquals($string, $this->htmlSpecialCharsPostProcessor->process($string, FALSE));
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -56,7 +56,7 @@ class HTMLSpecialCharsPostProcessorTest extends \F3\Testing\BaseTestCase {
 	public function postProcessorReturnsChangedObjectsIfInArgumentsMode() {
 		$string = 'Expected <p>';
 		$expected = 'Expected &lt;p&gt;';
-		$this->assertEquals($expected, $this->htmlSpecialCharsPostProcessor->process($string, FALSE));
+		$this->assertEquals($expected, $this->htmlSpecialCharsPostProcessor->process($string, TRUE));
 	}
 }
 ?>

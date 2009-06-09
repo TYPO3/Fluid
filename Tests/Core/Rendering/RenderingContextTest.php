@@ -74,10 +74,10 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function argumentEvaluationModeCanBeReadCorrectly() {
-		$this->assertFalse($this->renderingContext->isArgumentEvaluationMode(), 'The default argument evaluation was not FALSE');
-		$this->renderingContext->setArgumentEvaluationMode(TRUE);
-		$this->assertTrue($this->renderingContext->isArgumentEvaluationMode());
+	public function ObjectAccessorPostProcessorEnabledCanBeReadCorrectly() {
+		$this->assertTrue($this->renderingContext->isObjectAccessorPostProcessorEnabled(), 'The default argument evaluation was not FALSE');
+		$this->renderingContext->setObjectAccessorPostProcessorEnabled(FALSE);
+		$this->assertFalse($this->renderingContext->isObjectAccessorPostProcessorEnabled());
 	}
 
 	/**

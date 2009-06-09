@@ -114,7 +114,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			}
 			$postProcessor = $this->renderingContext->getRenderingConfiguration()->getObjectAccessorPostProcessor();
 			if ($postProcessor !== NULL) {
-				$currentObject = $postProcessor->process($currentObject, $this->renderingContext->isArgumentEvaluationMode());
+				$currentObject = $postProcessor->process($currentObject, $this->renderingContext->isObjectAccessorPostProcessorEnabled());
 			}
 			return $currentObject;
 		} catch(\F3\Fluid\Core\RuntimeException $e) {

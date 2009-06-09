@@ -101,7 +101,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	public function childNodeAccessFacetWorksAsExpected() {
 		$childNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\TextNode', array(), array('foo'));
 
-		$mockViewHelper = $this->getMock('F3\Fluid\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render', 'prepareArguments', 'setRenderingContext'));
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render', 'prepareArguments', 'setRenderingContext', 'isObjectAccessorPostProcessorEnabled'));
 
 		$mockViewHelperArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
 
@@ -112,7 +112,8 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 		$viewHelperNode->addChildNode($childNode);
 
 		$mockViewHelper->expects($this->once())->method('setChildNodes')->with($this->equalTo(array($childNode)));
-		$mockViewHelper->expects($this->once())->method('setRenderingContext')->with($this->equalTo($this->renderingContext));
+		$mockViewHelper->expects($this->once())->method('isObjectAccessorPostProcessorEnabled')->will($this->returnValue(TRUE));
+		//$mockViewHelper->expects($this->once())->method('setRenderingContext')->with($this->renderingContext);
 
 		$viewHelperNode->setRenderingContext($this->renderingContext);
 		$viewHelperNode->evaluate();
@@ -139,7 +140,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * test
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -169,7 +170,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * test
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateMethodPassesControllerContextToViewHelper() {
@@ -187,7 +188,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * test
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateMethodPassesViewHelperVariableContainerToViewHelper() {

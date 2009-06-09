@@ -119,6 +119,9 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			throw new \F3\Fluid\Core\RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
+		// Store if the ObjectAccessorPostProcessor has been enabled before this ViewHelper, because we need to re-enable it if needed after this ViewHelper
+		$hasObjectAccessorPostProcessorBeenEnabledBeforeThisViewHelper = $this->renderingContext->isObjectAccessorPostProcessorEnabled();
+
 		$objectFactory = $this->renderingContext->getObjectFactory();
 		$viewHelper = $objectFactory->create($this->viewHelperClassName);
 		$argumentDefinitions = $viewHelper->prepareArguments();
@@ -127,7 +130,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
-		$this->renderingContext->setArgumentEvaluationMode(TRUE);
+		$this->renderingContext->setObjectAccessorPostProcessorEnabled(FALSE);
 		if (count($argumentDefinitions)) {
 			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
@@ -142,7 +145,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 				}
 			}
 		}
-		$this->renderingContext->setArgumentEvaluationMode(FALSE);
+		//$this->renderingContext->setObjectAccessorPostProcessorEnabled(TRUE);
 
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
 		$viewHelper->setArguments($viewHelperArguments);
@@ -157,6 +160,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		}
 
 		$viewHelper->validateArguments();
+		$this->renderingContext->setObjectAccessorPostProcessorEnabled($viewHelper->isObjectAccessorPostProcessorEnabled());
 		$viewHelper->initialize();
 		try {
 			$output = call_user_func_array(array($viewHelper, 'render'), $renderMethodParameters);
@@ -164,6 +168,8 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			// @todo [BW] rethrow exception, log, ignore.. depending on the current context
 			$output = $exception->getMessage();
 		}
+
+		$this->renderingContext->setObjectAccessorPostProcessorEnabled($hasObjectAccessorPostProcessorBeenEnabledBeforeThisViewHelper);
 
 		if ($contextVariables != $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers()) {
 			$endContextVariables = $this->renderingContext->getTemplateVariableContainer();

@@ -82,6 +82,15 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	protected $viewHelperVariableContainer;
 
 	/**
+	 * If the ObjectAccessorPostProcessor should be disabled inside this ViewHelper, then set this value to FALSE.
+	 * This is internal and NO part of the API. It is very likely to change.
+	 *
+	 * @var boolean
+	 * @internal
+	 */
+	protected $objectAccessorPostProcessorEnabled = TRUE;
+
+	/**
 	 * Validator resolver
 	 * @var F3\FLOW3\Validation\ValidatorResolver
 	 */
@@ -151,6 +160,18 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 */
 	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
 		$this->reflectionService = $reflectionService;
+	}
+
+	/**
+	 * Returns TRUE if the object accessor post processor should be disabled inside this ViewHelper.
+	 * This is internal and NO part of the API. It is very likely to change.
+	 *
+	 * @return boolean TRUE if Object accessor post processor is enabled, FALSE if disabled
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @internal
+	 */
+	public function isObjectAccessorPostProcessorEnabled() {
+		return $this->objectAccessorPostProcessorEnabled;
 	}
 
 	/**
