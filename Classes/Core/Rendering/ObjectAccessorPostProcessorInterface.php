@@ -42,7 +42,7 @@ interface ObjectAccessorPostProcessorInterface {
 	 * Post-Process an Object Accessor
 	 *
 	 * @param mixed $object the object that is currently rendered
-	 * @param boolean $currentlyEvaluatingArguments TRUE if the current ObjectAccessorNode is within view helper arguments
+	 * @param boolean $enabled TRUE if post processing is currently enabled.
 	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
 	 * @internal
 	 */

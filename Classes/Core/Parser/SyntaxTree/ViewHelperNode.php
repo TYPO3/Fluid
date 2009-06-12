@@ -145,7 +145,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 				}
 			}
 		}
-		//$this->renderingContext->setObjectAccessorPostProcessorEnabled(TRUE);
 
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
 		$viewHelper->setArguments($viewHelperArguments);
@@ -235,10 +234,8 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			$childNode->setRenderingContext($this->renderingContext);
 
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode && !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->evaluate())) {
-				//throw new \F3\Fluid\Core\RuntimeException('The subexpression "' . $childNode->evaluate() . '" contains invalid characters.', 1244202549);
 				$comparator = NULL;
 				break; // skip loop and fall back to classical to boolean conversion.
-				// TODO: Check if this really makes sense
 			}
 
 			if ($comparator !== NULL) {
