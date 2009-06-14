@@ -149,7 +149,9 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
 		$viewHelper->setArguments($viewHelperArguments);
 		$viewHelper->setTemplateVariableContainer($this->renderingContext->getTemplateVariableContainer());
-		$viewHelper->setControllerContext($this->renderingContext->getControllerContext());
+		if ($this->renderingContext->getControllerContext() !== NULL) {
+			$viewHelper->setControllerContext($this->renderingContext->getControllerContext());
+		}
 		$viewHelper->setViewHelperVariableContainer($this->renderingContext->getViewHelperVariableContainer());
 		$viewHelper->setViewHelperNode($this);
 
