@@ -25,9 +25,9 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
-class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
+abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');

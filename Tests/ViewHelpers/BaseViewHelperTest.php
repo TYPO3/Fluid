@@ -26,7 +26,7 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
  * @package Fluid
  * @subpackage ViewHelpers
- * @version $Id:$
+ * @version $Id$
  */
 class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	/**
@@ -47,23 +47,6 @@ class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$expected = '<base href="http://typo3.org/"></base>';
 		$actual = $viewHelper->render();
 		$this->assertSame($expected, $actual);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function renderAddsFormNameToTemplateVariableContainer() {
-		$formName = 'someFormName';
-
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField'), array(), '', FALSE);
-		$this->injectDependenciesIntoViewHelper($viewHelper);
-
-		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('name' => $formName)));
-
-		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName', $formName);
-		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
-		$viewHelper->render('', array(), NULL, NULL, NULL, NULL);
 	}
 }
 ?>
