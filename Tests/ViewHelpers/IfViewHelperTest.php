@@ -21,7 +21,7 @@ namespace F3\Fluid\ViewHelpers;
  * @version $Id$
  */
 /**
- * Testcase for [insert classname here]
+ * Testcase for IfViewHelper
  *
  * @package
  * @subpackage Tests

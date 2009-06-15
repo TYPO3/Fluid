@@ -28,6 +28,36 @@ namespace F3\Fluid\ViewHelpers;
  * @version $Id$
  */
 abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
+
+	/**
+	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 */
+	protected $viewHelperVariableContainer;
+
+	/**
+	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 */
+	protected $templateVariableContainer;
+
+	/**
+	 * @var \F3\FLOW3\MVC\Web\Routing\URIBuilder
+	 */
+	protected $uriBuilder;
+
+	/**
+	 * @var \F3\FLOW3\MVC\Controller\ControllerContext
+	 */
+	protected $controllerContext;
+
+	/**
+	 * @var \F3\Fluid\Core\ViewHelper\TagBuilder
+	 */
+	protected $tagBuilder;
+
+	/**
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function setUp() {
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
@@ -37,6 +67,11 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$this->tagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder');
 	}
 
+	/**
+	 * @param \F3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	protected function injectDependenciesIntoViewHelper(\F3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper) {
 		$viewHelper->setViewHelperVariableContainer($this->viewHelperVariableContainer);
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
