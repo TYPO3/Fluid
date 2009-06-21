@@ -89,10 +89,8 @@ class DocbookGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function generateDocbook($namespace) {
-		$tmp = str_replace('\\', '/', $namespace);
-
-		if (substr($namespace, -1) !== '\\') {
-			$namespace .= '\\';
+		if (substr($namespace, -1) !== \F3\Fluid\Fluid::NAMESPACE_SEPARATOR) {
+			$namespace .= \F3\Fluid\Fluid::NAMESPACE_SEPARATOR;
 		}
 
 		$classNames = $this->getClassNamesInNamespace($namespace);
@@ -179,7 +177,7 @@ class DocbookGenerator {
 	 */
 	protected function getTagNameForClass($className, $namespace) {
 		$strippedClassName = substr($className, strlen($namespace));
-		$classNameParts = explode('\\', $strippedClassName);
+		$classNameParts = explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $strippedClassName);
 
 		if (count($classNameParts) == 1) {
 			$tagName = lcfirst(substr($classNameParts[0], 0, -10)); // strip the "ViewHelper" ending
@@ -199,7 +197,7 @@ class DocbookGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addArguments($className, \SimpleXMLElement $docbookSection) {
-		$viewHelper = $this->objectManager->getObject($className);
+		$viewHelper = $this->instanciateViewHelper($className);
 		$argumentDefinitions = $viewHelper->prepareArguments();
 
 		if (count($argumentDefinitions) === 0) {
@@ -218,6 +216,11 @@ class DocbookGenerator {
 			$this->addArgumentTableRow($tbody, $argumentDefinition->getName(), $argumentDefinition->getType(), ($argumentDefinition->isRequired()?'yes':'no'), $argumentDefinition->getDescription(), $argumentDefinition->getDefaultValue());
 		}
 	}
+
+	protected function instanciateViewHelper($className) {
+		return $this->objectManager->getObject($className);
+	}
+
 	private function addArgumentTableRow(\SimpleXMLElement $parent, $name, $type, $required, $description, $default) {
 		$row = $parent->addChild('row');
 
@@ -280,16 +283,35 @@ class DocbookGenerator {
 				} else {
 					$example->addChild('title', 'Example');
 				}
-				$example->addChild('programlisting', trim($tmp[2]));
+				$this->addChildWithCData($example, 'programlisting', trim($tmp[2]));
 			} else {
 				$textParts = explode("\n", $singleMatch);
 				foreach ($textParts as $text) {
 					if (trim($text) === '') continue;
-					$parentElement->addChild('para', trim($text));
+					$this->addChildWithCData($parentElement, 'para', trim($text));
 				}
 			}
 		}
+	}
 
+	/**
+	 * Add a child node to $parentXMLNode, and wrap the contents inside a CDATA section.
+	 *
+	 * @param \SimpleXMLElement $parentXMLNode Parent XML Node to add the child to
+	 * @param string $childNodeName Name of the child node
+	 * @param string $nodeValue Value of the child node. Will be placed inside CDATA.
+	 * @return \SimpleXMLElement the new element
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function addChildWithCData(\SimpleXMLElement $parentXMLNode, $childNodeName, $childNodeValue) {
+		$parentDomNode = dom_import_simplexml($parentXMLNode);
+		$domDocument = new \DOMDocument();
+
+		$childNode = $domDocument->appendChild($domDocument->createElement($childNodeName));
+		$childNode->appendChild($domDocument->createCDATASection($childNodeValue));
+		$childNodeTarget = $parentDomNode->ownerDocument->importNode($childNode, true);
+		$parentDomNode->appendChild($childNodeTarget);
+		return simplexml_import_dom($childNodeTarget);
 	}
 
 }
