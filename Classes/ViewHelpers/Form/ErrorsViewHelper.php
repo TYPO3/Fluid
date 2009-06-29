@@ -81,12 +81,13 @@ class ErrorsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param string $propertyName The property name to look up
 	 * @param array $errors An array of F3\FLOW3\Error\Error objects
-	 * 
+	 * @return array An array of errors for $propertyName
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
-	protected function getErrorsForProperty($propertyName, &$errors) {
+	protected function getErrorsForProperty($propertyName, $errors) {
 		foreach ($errors as $error) {
 			if ($error instanceof \F3\FLOW3\Validation\PropertyError) {
-				if ($error->getPropertyName() == $propertyName) {
+				if ($error->getPropertyName() === $propertyName) {
 					return $error->getErrors();
 				}
 			}

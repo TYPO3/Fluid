@@ -36,7 +36,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code title="Defaults">
  * <link href="{f:uri.resource('css/stylesheet.css')}" rel="stylesheet" />
  * </code>
- * 
+ *
  * Output:
  * <link href="Resources/Packages/MyPackage/stylesheet.css" rel="stylesheet" />
  * (depending on current package)
@@ -52,12 +52,14 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Render the URI to the resource. The filename is used from child content.
 	 *
-	 * @param string $package Target package key. If not set, the current package key will be used
+	 * @param string $packageKey Target package key. If not set, the current package key will be used
 	 * @return string The URI to the resource
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
-	public function render($package = NULL) {
-		$packageKey = $package !== NULL ? $package : $this->controllerContext->getRequest()->getControllerPackageKey();
+	public function render($packageKey = NULL) {
+		if ($packageKey === NULL) {
+			$packageKey = $this->controllerContext->getRequest()->getControllerPackageKey();
+		}
 		$resource = $this->renderChildren();
 		$uri = 'Resources/Packages/' . $packageKey . '/' . $resource;
 		return $uri;
