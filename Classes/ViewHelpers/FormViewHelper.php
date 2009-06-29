@@ -135,6 +135,7 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 		}
 
 		$content = $hiddenIdentityFields;
+		$content .= $this->renderHiddenReferrerFields();
 		$content .= $this->renderChildren();
 		$this->tag->setContent($content);
 
@@ -163,6 +164,27 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 		}
 		$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($object);
 		return ($uuid === NULL) ? '<!-- Object of type ' . get_class($object) . ' is without identity -->' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $uuid .'" />';
+	}
+
+	/**
+	 * Renders hidden form fields for referrer information about
+	 * the current controller and action.
+	 *
+	 * @return string Hidden fields with referrer information
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @todo filter out referrer information that is equal to the target (e.g. same packageKey)
+	 */
+	protected function renderHiddenReferrerFields() {
+		$request = $this->controllerContext->getRequest();
+		$packageKey = $request->getControllerPackageKey();
+		$subpackageKey = $request->getControllerSubpackageKey();
+		$controllerName = $request->getControllerName();
+		$controllerActionName = $request->getControllerActionName();
+		$result = '';
+		foreach (array('__referrer[packageKey]' => $packageKey, '__referrer[subpackageKey]' => $subpackageKey, '__referrer[controllerName]' => $controllerName, '__referrer[actionName]' => $controllerActionName) as $fieldName => $fieldValue) {
+			$result .= PHP_EOL . '<input type="hidden" name="' . $fieldName . '" value="' . $fieldValue . '" />';
+		}
+		return $result;
 	}
 }
 

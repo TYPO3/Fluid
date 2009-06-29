@@ -66,7 +66,7 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	public function renderAddsObjectToTemplateVariableContainer() {
 		$formObject = new \stdClass();
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField'), array(), '', FALSE);
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 
@@ -82,7 +82,7 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	public function renderAddsFormNameToTemplateVariableContainer() {
 		$formName = 'someFormName';
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField'), array(), '', FALSE);
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('name' => $formName)));
@@ -90,6 +90,42 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName', $formName);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
 		$viewHelper->render('', array(), NULL, NULL, NULL, NULL);
+	}
+
+	/**
+	 * @test
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 */
+	public function renderCallsRenderHiddenReferrerFields() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenReferrerFields'), array(), '', FALSE);
+		$viewHelper->expects($this->once())->method('renderHiddenReferrerFields');
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$viewHelper->render('', array(), NULL, NULL, NULL, NULL);
+	}
+
+	/**
+	 * @test
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 */
+	public function renderHiddenReferrerFieldsAddCurrentControllerAndActionAsHiddenFields() {
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
+		$this->controllerContext->expects($this->atLeastOnce())->method('getRequest')->will($this->returnValue($mockRequest));
+
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('dummy'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$mockRequest->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('packageKey'));
+		$mockRequest->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subpackageKey'));
+		$mockRequest->expects($this->atLeastOnce())->method('getControllerName')->will($this->returnValue('controllerName'));
+		$mockRequest->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('controllerActionName'));
+
+		$hiddenFields = $viewHelper->_call('renderHiddenReferrerFields');
+		$expectedResult = PHP_EOL . '<input type="hidden" name="__referrer[packageKey]" value="packageKey" />' . PHP_EOL .
+			'<input type="hidden" name="__referrer[subpackageKey]" value="subpackageKey" />' . PHP_EOL .
+			'<input type="hidden" name="__referrer[controllerName]" value="controllerName" />' . PHP_EOL .
+			'<input type="hidden" name="__referrer[actionName]" value="controllerActionName" />';
+		$this->assertEquals($expectedResult, $hiddenFields);
 	}
 }
 ?>
