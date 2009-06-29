@@ -58,9 +58,14 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
+		$this->registerTagAttribute('disabled', 'string', 'The disabled attribute of the input field');
+		$this->registerTagAttribute('maxlength', 'int', 'The maxlength attribute of the input field (will not be validated)');
+		$this->registerTagAttribute('readonly', 'string', 'The readonly attribute of the input field');
+		$this->registerTagAttribute('size', 'int', 'The size of the input field');
 		$this->registerUniversalTagAttributes();
 	}
 
