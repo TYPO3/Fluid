@@ -17,6 +17,8 @@ namespace F3\Fluid\ViewHelpers\Form;
 
 include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
  * @package 
  * @subpackage 
@@ -31,7 +33,7 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
+class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * var \F3\Fluid\ViewHelpers\Form\TextboxViewHelper
@@ -39,7 +41,9 @@ class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\TextboxViewHelper();
+		parent::setUp();
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\TextboxViewHelper'), array('getErrorsForProperty'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
 
@@ -79,6 +83,14 @@ class TextboxViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 */
+	public function renderChecksForErrorsAndSetsCSSClassOnError() {
+		$this->markTestIncomplete('To be implemented');
 	}
 }
 

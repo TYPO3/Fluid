@@ -22,6 +22,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  */
 
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
  * Test for the Abstract Form view helper
  *
@@ -101,7 +102,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		');
 
 		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($mockObject));#
+		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($mockObject));
 		$this->viewHelperVariableContainer->expects($this->once())->method('exists')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue(TRUE));
 
 		$formViewHelper->_set('arguments', array('name' => NULL, 'value' => NULL, 'property' => 'something'));
@@ -127,7 +128,34 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		$this->assertFalse($formViewHelper->_call('isObjectAccessorMode'));
 	}
 
+	/**
+	 * @test
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 */
+	public function getErrorsForPropertyReturnsErrorsFromRequestIfPropertyIsSet() {
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
 
+		$formViewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper'), array('hasArgument'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+		$mockArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
+		$mockArguments->expects($this->once())->method('hasArgument')->with('property')->will($this->returnValue(TRUE));
+		$mockArguments->expects($this->once())->method('offsetGet')->with('property')->will($this->returnValue('bar'));
+		$formViewHelper->_set('arguments', $mockArguments);
+		$this->viewHelperVariableContainer->expects($this->any())->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formName')->will($this->returnValue('foo'));
+
+		$this->controllerContext->expects($this->once())->method('getRequest')->will($this->returnValue($mockRequest));
+		$mockArgumentError = $this->getMock('F3\FLOW3\MVC\Controller\ArgumentError', array(), array('foo'));
+		$mockArgumentError->expects($this->once())->method('getPropertyName')->will($this->returnValue('foo'));
+		$mockPropertyError = $this->getMock('F3\FLOW3\Validation\PropertyError', array(), array('bar'));
+		$mockPropertyError->expects($this->once())->method('getPropertyName')->will($this->returnValue('bar'));
+		$mockError = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockPropertyError->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockError)));
+		$mockArgumentError->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockPropertyError)));
+		$mockRequest->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockArgumentError)));
+		
+		$errors = $formViewHelper->_call('getErrorsForProperty');
+		$this->assertEquals(array($mockError), $errors);
+	}
 }
 
 ?>

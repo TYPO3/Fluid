@@ -135,6 +135,34 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		$getterMethodName = 'get' . ucfirst($propertyName);
 		return $object->$getterMethodName();
 	}
+
+	/**
+	 * Get errors for the property and form name of this view helper
+	 *
+	 * @return array An array of F3\FLOW3\Error\Error objects
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @internal
+	 */
+	protected function getErrorsForProperty() {
+		$errors = $this->controllerContext->getRequest()->getErrors();
+		$formName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+
+		if ($this->arguments->hasArgument('property')) {
+			$propertyName = $this->arguments['property'];
+			$formErrors = array();
+			foreach ($errors as $error) {
+				if ($error instanceof \F3\FLOW3\Validation\PropertyError && $error->getPropertyName() == $formName) {
+					$formErrors = $error->getErrors();
+					foreach ($formErrors as $formError) {
+						if ($formError instanceof \F3\FLOW3\Validation\PropertyError && $formError->getPropertyName() == $propertyName) {
+							return $formError->getErrors();
+						}
+					}
+				}
+			}
+		}
+		return array();
+	}
 }
 
 ?>
