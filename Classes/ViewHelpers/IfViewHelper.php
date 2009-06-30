@@ -30,7 +30,7 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  * This view helper implements an if/else condition.
- * @see F3\Fluid\Core\Parser\SyntaxTree\convertArgumentValue() to find see how boolean arguments are evaluated
+ * @see F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
  *
  * = Examples =
  *
