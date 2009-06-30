@@ -193,8 +193,7 @@ class XSDGenerator {
 	 */
 	protected function addAttributes($className, \SimpleXMLElement $xsdElement) {
 		$viewHelper = $this->objectManager->getObject($className);
-		$viewHelper->initializeArguments();
-		$argumentDefinitions = $viewHelper->getArgumentDefinitions();
+		$argumentDefinitions = $viewHelper->prepareArguments();
 
 		foreach ($argumentDefinitions as $argumentDefinition) {
 			$xsdAttribute = $xsdElement->addChild('xsd:attribute');
