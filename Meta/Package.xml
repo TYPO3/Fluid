@@ -4,7 +4,6 @@
     <title>Fluid Templating Framework</title>
     <description>Next-Generation Templating Framework for FLOW3 and TYPO3 5.0, also backported to TYPO3 4.x</description>
     <version>1.0.0-alpha2</version>
-    <state>Alpha</state>
     <categories/>
     <parties>
         <person role="LeadDeveloper">
