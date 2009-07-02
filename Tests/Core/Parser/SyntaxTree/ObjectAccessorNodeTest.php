@@ -34,11 +34,11 @@ require_once(__DIR__ . '/../Fixtures/SomeEmptyClass.php');
 class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 
 	protected $mockTemplateVariableContainer;
-	
+
 	protected $renderingContext;
-	
+
 	protected $renderingConfiguration;
-	
+
 	public function setUp() {
 		$this->mockTemplateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
@@ -54,7 +54,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 	public function objectAccessorWorksWithStrings() {
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('exampleObject');
 		$objectAccessorNode->setRenderingContext($this->renderingContext);
-		
+
 		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue('ExpectedString'));
 
 		$actualResult = $objectAccessorNode->evaluate();
@@ -73,7 +73,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 		$objectAccessorNode->setRenderingContext($this->renderingContext);
 
 		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue($exampleObject));
-		
+
 		$actualResult = $objectAccessorNode->evaluate();
 		$this->assertEquals('Foo', $actualResult, 'ObjectAccessorNode did not work for calling getters.');
 	}
@@ -90,7 +90,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('exampleObject.publicVariable');
 		$objectAccessorNode->setRenderingContext($this->renderingContext);
-		
+
 		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('exampleObject')->will($this->returnValue($exampleObject));
 
 		$actualResult = $objectAccessorNode->evaluate();
@@ -108,7 +108,7 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 
 		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('variable.key.key2');
 		$objectAccessorNode->setRenderingContext($this->renderingContext);
-		
+
 		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('variable')->will($this->returnValue($exampleArray));
 
 		$actualResult = $objectAccessorNode->evaluate();
@@ -152,14 +152,14 @@ class ObjectAccessorNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectAccessorPostProcessorIsCalled() {
-				$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('variable');
+		$objectAccessorNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('variable');
 		$objectAccessorNode->setRenderingContext($this->renderingContext);
 
 		$this->mockTemplateVariableContainer->expects($this->at(0))->method('get')->with('variable')->will($this->returnValue('hallo'));
-		
+
 		$this->renderingContext->setObjectAccessorPostProcessorEnabled(TRUE);
-		
-		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\ObjectAccessorPostProcessor', array('process'));
+
+		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface');
 		$this->renderingConfiguration->expects($this->once())->method('getObjectAccessorPostProcessor')->will($this->returnValue($objectAccessorPostProcessor));
 		$objectAccessorPostProcessor->expects($this->once())->method('process')->with('hallo', TRUE)->will($this->returnValue('PostProcessed'));
 		$this->assertEquals('PostProcessed', $objectAccessorNode->evaluate());
