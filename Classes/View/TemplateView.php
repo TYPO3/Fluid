@@ -228,7 +228,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		if ($partialName[0] === '/') {
-			$partialBasePath = str_replace('@package', $this->packageManager->getPackagePath($this->controllerContext->getRequest()->getControllerPackageKey()), $this->globalPartialBasePath);
+			$partialBasePath = str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->globalPartialBasePath);
 			$partialName = substr($partialName, 1);
 		} else {
 			$partialBasePath = dirname($this->resolveTemplatePathAndFilename());
@@ -335,7 +335,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				$subpackageName .= '/';
 			}
 			$controllerName = $matches['ControllerName'];
-			$templatePathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->controllerContext->getRequest()->getControllerPackageKey()), $this->templatePathAndFilenamePattern);
+			$templatePathAndFilename = str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->templatePathAndFilenamePattern);
 			$templatePathAndFilename = str_replace('@subpackage', $subpackageName, $templatePathAndFilename);
 			$templatePathAndFilename = str_replace('@controller', $controllerName, $templatePathAndFilename);
 			$templatePathAndFilename = str_replace('@action', strtolower($actionName), $templatePathAndFilename);
@@ -359,7 +359,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->layoutPathAndFilename) {
 			return $this->layoutPathAndFilename;
 		} else {
-			$layoutPathAndFilename = str_replace('@package', $this->packageManager->getPackagePath($this->controllerContext->getRequest()->getControllerPackageKey()), $this->layoutPathAndFilenamePattern);
+			$layoutPathAndFilename = str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->layoutPathAndFilenamePattern);
 			$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
 			return $layoutPathAndFilename;
 		}
