@@ -90,13 +90,13 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$xsdFileContents = $this->xsdGenerator->generateXSD($baseNamespace);
 
 		$path = 'Resources/Fluid/XSD/';
-		if (!is_dir(FLOW3_PATH_PUBLIC . $path)) {
-			\F3\FLOW3\Utility\Files::createDirectoryRecursively(FLOW3_PATH_PUBLIC . $path);
+		if (!is_dir(FLOW3_PATH_WEB . $path)) {
+			\F3\FLOW3\Utility\Files::createDirectoryRecursively(FLOW3_PATH_WEB . $path);
 		}
 
 		$filename = $path . str_replace('\\', '_', $baseNamespace) . '.xsd';
 
-		$fp = fopen(FLOW3_PATH_PUBLIC . $filename, 'w');
+		$fp = fopen(FLOW3_PATH_WEB . $filename, 'w');
 		fputs($fp, $xsdFileContents);
 		fclose($fp);
 
