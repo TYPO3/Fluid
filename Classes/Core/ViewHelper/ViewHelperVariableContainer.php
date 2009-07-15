@@ -61,6 +61,7 @@ class ViewHelperVariableContainer {
 	 * @return void
 	 * @throws F3\Fluid\Core\RuntimeException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function add($viewHelperName, $key, $value) {
 		if ($this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\RuntimeException('The key "' . $viewHelperName . '->' . $key . '" was already stored and you cannot override it.', 1243352010);
@@ -78,6 +79,7 @@ class ViewHelperVariableContainer {
 	 * @return object The object stored
 	 * @throws F3\Fluid\Core\RuntimeException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function get($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\RuntimeException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
@@ -91,6 +93,7 @@ class ViewHelperVariableContainer {
 	 * @param string $key Key of the data
 	 * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function exists($viewHelperName, $key) {
 		return isset($this->objects[$viewHelperName][$key]);
@@ -104,8 +107,8 @@ class ViewHelperVariableContainer {
 	 * @return void
 	 * @throws F3\Fluid\Core\RuntimeException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
-
 	public function remove($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\RuntimeException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
 		unset($this->objects[$viewHelperName][$key]);
@@ -114,12 +117,9 @@ class ViewHelperVariableContainer {
 	/**
 	 * Set the view to pass it to ViewHelpers.
 	 *
-	 * !!! This is NOT a public API and might still change!!!
-	 *
 	 * @param F3\FLOW3\MVC\View\ViewInterface $view View to set
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setView(\F3\FLOW3\MVC\View\ViewInterface $view) {
 		$this->view = $view;
@@ -132,7 +132,6 @@ class ViewHelperVariableContainer {
 	 *
 	 * @return F3\FLOW3\MVC\View\ViewInterface The View
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getView() {
 		return $this->view;
@@ -143,7 +142,6 @@ class ViewHelperVariableContainer {
 	 *
 	 * @return array
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function __sleep() {
 		return array('objects');

@@ -45,7 +45,6 @@ class RootNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @return object Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {

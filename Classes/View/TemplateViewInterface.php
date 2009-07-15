@@ -43,6 +43,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 *
 	 * @param \F3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
 	 * @return void
+	 * @api
 	 */
 	public function injectTemplateParser(\F3\Fluid\Core\Parser\TemplateParser $templateParser);
 
@@ -52,6 +53,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 *
 	 * @param string $templatePathAndFilename Template file path
 	 * @return void
+	 * @api
 	 */
 	public function setTemplatePathAndFilename($templatePathAndFilename);
 
@@ -60,6 +62,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 *
 	 * @param string $layoutPathAndFilename Path and filename of the layout file
 	 * @return void
+	 * @api
 	 */
 	public function setLayoutPathAndFilename($layoutPathAndFilename);
 
@@ -68,6 +71,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 *
 	 * @param string $sectionName Name of section to render
 	 * @return rendered template for the section
+	 * @api
 	 */
 	public function renderSection($sectionName);
 
@@ -76,6 +80,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 *
 	 * @param string $layoutName Name of layout
 	 * @return string rendered HTML
+	 * @api
 	 */
 	public function renderWithLayout($layoutName);
 
@@ -83,6 +88,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 * Return the current request
 	 *
 	 * @return \F3\FLOW3\MVC\Web\Request the current request
+	 * @api
 	 */
 	public function getRequest();
 
@@ -90,6 +96,7 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	 * Checks whether a template can be resolved for the current request context.
 	 *
 	 * @return boolean
+	 * @api
 	 */
 	public function hasTemplate();
 

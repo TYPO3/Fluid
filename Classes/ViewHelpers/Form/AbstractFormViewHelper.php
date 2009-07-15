@@ -53,7 +53,6 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
-	 * @internal
 	 */
 	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
@@ -64,6 +63,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
@@ -141,7 +141,6 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 *
 	 * @return array An array of F3\FLOW3\Error\Error objects
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @internal
 	 */
 	protected function getErrorsForProperty() {
 		$errors = $this->controllerContext->getRequest()->getErrors();

@@ -107,6 +107,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	protected function initializeView() {
 	}
@@ -118,6 +119,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param string $templatePathAndFilename Template file path
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function setTemplatePathAndFilename($templatePathAndFilename) {
 		$this->templatePathAndFilename = $templatePathAndFilename;
@@ -129,6 +131,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param string $layoutPathAndFilename Path and filename of the layout file
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function setLayoutPathAndFilename($layoutPathAndFilename) {
 		$this->layoutPathAndFilename = $layoutPathAndFilename;
@@ -162,6 +165,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param string $actionName If set, the view of the specified action will be rendered instead. Default is the action specified in the Request object
 	 * @return string Rendered Template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function render($actionName = NULL) {
 		$this->actionName = $actionName;
@@ -184,7 +188,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @return rendered template for the section
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function renderSection($sectionName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
@@ -209,7 +212,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @return string rendered HTML
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function renderWithLayout($layoutName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
@@ -224,7 +226,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		if ($partialName[0] === '/') {
@@ -267,6 +268,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param object $value Value of object
 	 * @return \F3\Fluid\View\TemplateView an instance of $this, to enable chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function assign($key, $value) {
 		if ($key === 'view') {
@@ -281,7 +283,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @return \F3\FLOW3\MVC\Web\Request the current request
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getRequest() {
 		return $this->controllerContext->getRequest();
@@ -292,6 +293,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @return boolean
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
 	public function hasTemplate() {
 		return file_exists($this->resolveTemplatePathAndFilename());

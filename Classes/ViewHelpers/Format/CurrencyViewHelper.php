@@ -61,6 +61,7 @@ class CurrencyViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $thousandsSeparator (optional) The thousands separator.
 	 * @return string the formatted amount.
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($currencySign = '', $decimalSeparator = ',', $thousandsSeparator = '.') {
 		$stringToFormat = $this->renderChildren();

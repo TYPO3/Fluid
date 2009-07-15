@@ -66,6 +66,7 @@ class CropViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @return string cropped text
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($maxCharacters, $append = '...') {
 		$stringToTruncate = $this->renderChildren();

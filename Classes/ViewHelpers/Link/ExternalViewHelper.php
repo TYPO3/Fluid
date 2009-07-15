@@ -25,7 +25,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * A view helper for creating links to external targets.
  *
  * = Examples =
- * 
+ *
  * <code>
  * <f:link.external uri="http://www.typo3.org" target="_blank">external link</f:link.external>
  * </code>
@@ -50,7 +50,8 @@ class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * Initialize arguments
 	 *
 	 * @return void
-	 * @author Sebastian Kurf�rst <sebastian@typo3.org>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
@@ -64,6 +65,7 @@ class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $uri the URI that will be put in the href attribute of the rendered link tag
 	 * @return string Rendered link
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($uri) {
 		$this->tag->addAttribute('href', $uri);

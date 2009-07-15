@@ -46,6 +46,7 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $arguments Arguments to pass to the partial.
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function render($section = '', $partial = '', $arguments = array()) {
 		if ($partial !== '') {

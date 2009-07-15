@@ -83,6 +83,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 	 * @param array $childNodes Child nodes of this syntax tree node
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function setChildNodes(array $childNodes) {
 		$this->childNodes = $childNodes;
@@ -92,7 +93,6 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 	 * Sets the rendering context which needs to be passed on to child nodes
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext the renderingcontext to use
-	 * @internal
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
@@ -105,6 +105,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 	 * @return string the rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($condition) {
 		if ($condition) {

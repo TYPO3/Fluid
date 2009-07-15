@@ -60,6 +60,7 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 *
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
@@ -81,6 +82,7 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '') {
 		$uriBuilder = $this->controllerContext->getURIBuilder();

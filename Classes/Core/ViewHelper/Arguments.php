@@ -51,6 +51,7 @@ class Arguments implements \ArrayAccess {
 	 *
 	 * @param array $arguments Array of arguments
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function __construct(array $arguments) {
 		$this->arguments = $arguments;
@@ -62,7 +63,6 @@ class Arguments implements \ArrayAccess {
 	 * @param string $key Key to check
 	 * @return boolean true if exists
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function offsetExists($key) {
 		return array_key_exists($key, $this->arguments);
@@ -74,7 +74,6 @@ class Arguments implements \ArrayAccess {
 	 * @param  $key Key to get.
 	 * @return object associated value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function offsetGet($key) {
 		if (!array_key_exists($key, $this->arguments)) {
@@ -90,7 +89,6 @@ class Arguments implements \ArrayAccess {
 	 * @param string $name
 	 * @param object $value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function offsetSet($name, $value) {
 		throw new \F3\Fluid\Core\RuntimeException('Tried to set argument "' . $name . '", but setting arguments is forbidden.', 1236080693);
@@ -101,7 +99,6 @@ class Arguments implements \ArrayAccess {
 	 *
 	 * @param string $name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function offsetUnset($name) {
 		throw new \F3\Fluid\Core\RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.', 1236080702);
@@ -114,7 +111,6 @@ class Arguments implements \ArrayAccess {
 	 * @return boolean TRUE if such an argument exists, otherwise FALSE
 	 * @see offsetExists()
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function hasArgument($argumentName) {
 		return $this->offsetExists($argumentName) && $this->arguments[$argumentName] !== NULL;

@@ -55,6 +55,7 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $packageKey Target package key. If not set, the current package key will be used
 	 * @return string The URI to the resource
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @api
 	 */
 	public function render($packageKey = NULL) {
 		if ($packageKey === NULL) {

@@ -61,6 +61,7 @@ class ErrorsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $as The name of the variable to store the current error
 	 * @return string Rendered string
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @api
 	 */
 	public function render($for = '', $as = 'error') {
 		$errors = $this->controllerContext->getRequest()->getErrors();

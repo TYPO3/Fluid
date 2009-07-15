@@ -51,7 +51,6 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param array $internalArray Array to store
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function __construct($internalArray) {
 		$this->internalArray = $internalArray;
@@ -63,7 +62,6 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {

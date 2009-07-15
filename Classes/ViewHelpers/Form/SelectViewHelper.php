@@ -90,6 +90,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
@@ -107,6 +108,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 * @return string rendered tag.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render() {
 		$name = $this->getName();

@@ -49,7 +49,6 @@ class HTMLSpecialCharsPostProcessor implements \F3\Fluid\Core\Rendering\ObjectAc
 	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function process($object, $enabled) {
 		if ($enabled === TRUE && is_string($object)) {

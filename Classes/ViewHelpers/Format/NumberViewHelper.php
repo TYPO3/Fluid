@@ -66,6 +66,7 @@ class NumberViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @return string The formatted number
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($decimals = 2, $decimalSeparator = '.', $thousandsSeparator = ',') {
 		$stringToFormat = $this->renderChildren();

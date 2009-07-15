@@ -59,6 +59,7 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @api
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
@@ -75,6 +76,7 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 *
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function render() {
 		$this->tag->addAttribute('type', 'text');

@@ -82,7 +82,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param string $viewHelperClassName Fully qualified class name of the view helper
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function __construct($viewHelperClassName, array $arguments) {
 		$this->viewHelperClassName = $viewHelperClassName;
@@ -94,7 +93,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @return string Class Name of associated view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getViewHelperClassName() {
 		return $this->viewHelperClassName;
@@ -112,7 +110,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {

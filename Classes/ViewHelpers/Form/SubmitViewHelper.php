@@ -65,6 +65,7 @@ class SubmitViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
@@ -79,6 +80,7 @@ class SubmitViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($name = '', $value = '') {
 		$this->tag->addAttribute('type', 'submit');

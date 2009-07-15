@@ -82,7 +82,6 @@ class RenderingContext {
 	 *
 	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
 		$this->objectFactory = $objectFactory;
@@ -93,7 +92,6 @@ class RenderingContext {
 	 *
 	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getObjectFactory() {
 		return $this->objectFactory;
@@ -105,7 +103,6 @@ class RenderingContext {
 	 *
 	 * @param F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
 		$this->templateVariableContainer = $templateVariableContainer;
@@ -116,7 +113,6 @@ class RenderingContext {
 	 *
 	 * @return F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getTemplateVariableContainer() {
 		return $this->templateVariableContainer;
@@ -127,7 +123,6 @@ class RenderingContext {
 	 *
 	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
@@ -138,7 +133,6 @@ class RenderingContext {
 	 *
 	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getControllerContext() {
 		return $this->controllerContext;
@@ -149,7 +143,6 @@ class RenderingContext {
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingConfiguration The Rendering Configuration to be set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setRenderingConfiguration(\F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration) {
 		$this->renderingConfiguration = $renderingConfiguration;
@@ -160,7 +153,6 @@ class RenderingContext {
 	 *
 	 * @return F3\Fluid\Core\Rendering\RenderingConfiguration The rendering configuration currently active
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getRenderingConfiguration() {
 		return $this->renderingConfiguration;
@@ -172,7 +164,6 @@ class RenderingContext {
 	 *
 	 * @param boolean $objectAccessorPostProcessorEnabled Argument evaluation mode to be set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setObjectAccessorPostProcessorEnabled($objectAccessorPostProcessorEnabled) {
 		$this->objectAccessorPostProcessorEnabled = (boolean)$objectAccessorPostProcessorEnabled;
@@ -184,7 +175,6 @@ class RenderingContext {
 	 *
 	 * @return boolean TRUE if we are currently evaluating arguments, FALSE otherwise
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function isObjectAccessorPostProcessorEnabled() {
 		return $this->objectAccessorPostProcessorEnabled;
@@ -196,7 +186,6 @@ class RenderingContext {
 	 * @param F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
 		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
@@ -207,7 +196,6 @@ class RenderingContext {
 	 *
 	 * @return F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getViewHelperVariableContainer() {
 		return $this->viewHelperVariableContainer;

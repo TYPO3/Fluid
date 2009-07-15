@@ -56,7 +56,6 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param string $objectPath An Object Path, like object1.object2.object3
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function __construct($objectPath) {
 		$this->objectPath = $objectPath;
@@ -75,7 +74,6 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @todo Depending on the context, either fail or not!!!
 	 * @todo make use of FLOW3 reflection
-	 * @internal
 	 */
 	public function evaluate() {
 		try {

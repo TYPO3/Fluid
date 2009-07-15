@@ -106,7 +106,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @param \F3\Fluid\Core\ViewHelper\Arguments
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function setArguments(\F3\Fluid\Core\ViewHelper\Arguments $arguments) {
 		$this->arguments = $arguments;
@@ -116,7 +115,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer Variable Container to be used for rendering
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
 		$this->templateVariableContainer = $templateVariableContainer;
@@ -126,7 +124,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
@@ -136,7 +133,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
 		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
@@ -146,7 +142,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * Inject a validator resolver
 	 * @param \F3\FLOW3\Validation\ValidatorResolver $validatorResolver Validator Resolver
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function injectValidatorResolver(\F3\FLOW3\Validation\ValidatorResolver $validatorResolver) {
 		$this->validatorResolver = $validatorResolver;
@@ -156,7 +151,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * Inject a Reflection service
 	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
 		$this->reflectionService = $reflectionService;
@@ -168,7 +162,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 *
 	 * @return boolean TRUE if Object accessor post processor is enabled, FALSE if disabled
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function isObjectAccessorPostProcessorEnabled() {
 		return $this->objectAccessorPostProcessorEnabled;
@@ -186,6 +179,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @return \F3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Object Factory usage!
+	 * @api
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
 		$this->argumentDefinitions[$name] = new \F3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $required, $defaultValue);
@@ -199,7 +193,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node View Helper node to be set.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	final public function setViewHelperNode(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
@@ -212,6 +205,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 *
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function initialize() {
 	}
@@ -223,6 +217,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @return mixed The finally rendered child nodes.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	protected function renderChildren() {
 		return $this->viewHelperNode->evaluateChildNodes();
@@ -233,7 +228,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 *
 	 * @return array Array of F3\Fluid\Core\ViewHelper\ArgumentDefinition instances.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function prepareArguments() {
 		if (!$this->argumentsInitialized) {
@@ -297,7 +291,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function validateArguments() {
 		$argumentDefinitions = $this->prepareArguments();
@@ -335,6 +328,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 	}
@@ -347,6 +341,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 *
 	 * @return string rendered string, view helper specific
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	//abstract public function render();
 }

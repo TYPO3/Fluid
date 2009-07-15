@@ -73,6 +73,7 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @return string Rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($each, $as, $key = '') {
 		if (empty($each)) {

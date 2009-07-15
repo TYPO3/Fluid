@@ -59,6 +59,7 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
@@ -70,6 +71,7 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 *
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function render() {
 		$this->tag->addAttribute('type', 'file');

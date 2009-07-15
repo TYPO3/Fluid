@@ -57,6 +57,7 @@ class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @return string "base"-Tag.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function render() {
 		$currentRequest = $this->controllerContext->getRequest();

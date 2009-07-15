@@ -72,6 +72,7 @@ class DateViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @return string Formatted date
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($format = 'Y-m-d') {
 		$stringToFormat = $this->renderChildren();

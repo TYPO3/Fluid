@@ -251,7 +251,6 @@ class TemplateParser {
 	 *
 	 * @return array Namespace identifiers and their component name prefix
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getNamespaces() {
 		return $this->namespaces;

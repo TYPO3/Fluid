@@ -66,6 +66,7 @@ class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $email The email address to be turned into a link.
 	 * @return string Rendered email link
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($email) {
 		$linkHref = 'mailto:' . $email;

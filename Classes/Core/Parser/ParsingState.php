@@ -65,7 +65,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function injectVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
@@ -77,7 +76,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $rootNode
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setRootNode(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $rootNode) {
 		$this->rootNode = $rootNode;
@@ -88,7 +86,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode The root node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getRootNode() {
 		return $this->rootNode;
@@ -99,7 +96,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext The rendering context to use
 	 * @return Rendered string
-	 * @internal
 	 */
 	public function render(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->rootNode->setRenderingContext($renderingContext);
@@ -112,7 +108,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node Node to push to node stack
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function pushNodeToStack(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node) {
 		array_push($this->nodeStack, $node);
@@ -123,7 +118,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getNodeFromStack() {
 		return $this->nodeStack[count($this->nodeStack)-1];
@@ -134,7 +128,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element, which was removed.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function popNodeFromStack() {
 		return array_pop($this->nodeStack);
@@ -145,7 +138,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @return integer Number of elements on the node stack (i.e. number of currently open Fluid tags)
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function countNodeStack() {
 		return count($this->nodeStack);
@@ -156,7 +148,6 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer The variable container or NULL if none has been set yet
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 * @todo Rename to getPostParseVariableContainer
 	 */
 	public function getVariableContainer() {

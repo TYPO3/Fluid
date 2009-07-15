@@ -44,7 +44,6 @@ interface ParsedTemplateInterface {
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext The rendering context to use
 	 * @return Rendered string
-	 * @internal
 	 */
 	public function render(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
 
@@ -52,7 +51,6 @@ interface ParsedTemplateInterface {
 	 * Returns a variable container used in the PostParse Facet.
 	 *
 	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
-	 * @internal
 	 */
 	// TODO
 	public function getVariableContainer(); // rename to getPostParseVariableContainer -- @internal definitely

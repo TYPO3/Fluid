@@ -71,6 +71,7 @@ class PrintfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @return string The formatted value
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render(array $arguments) {
 		$format = $this->renderChildren();

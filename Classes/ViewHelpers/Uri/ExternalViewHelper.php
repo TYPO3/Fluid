@@ -53,6 +53,7 @@ class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $uri the target URI
 	 * @return string rendered URI
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($uri) {
 		return $uri;

@@ -67,7 +67,6 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 * @param \F3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder Tag builder
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function injectTagBuilder(\F3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder) {
 		$this->tag = $tagBuilder;
@@ -77,6 +76,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 * Constructor
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function __construct() {
 		$this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', FALSE);
@@ -91,6 +91,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 *
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function initialize() {
 		parent::initialize();
@@ -114,6 +115,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	protected function registerTagAttribute($name, $type, $description, $required = FALSE) {
 		$this->registerArgument($name, $type, $description, $required, NULL);
@@ -126,6 +128,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	protected function registerUniversalTagAttributes() {
 		$this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');

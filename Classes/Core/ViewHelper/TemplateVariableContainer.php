@@ -54,6 +54,7 @@ class TemplateVariableContainer {
 	 *
 	 * @param array $objectArray
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function __construct($objectArray = array()) {
 		if (!is_array($objectArray)) throw new \F3\Fluid\Core\RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
@@ -67,6 +68,7 @@ class TemplateVariableContainer {
 	 * @param object $object
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function add($identifier, $object) {
 		if (array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Duplicate variable declarations!', 1224479063);
@@ -79,6 +81,7 @@ class TemplateVariableContainer {
 	 * @param string $identifier
 	 * @return object The object identified by $identifier
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function get($identifier) {
 		if (!array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
@@ -91,6 +94,7 @@ class TemplateVariableContainer {
 	 * @param string $identifier The identifier to remove
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function remove($identifier) {
 		if (!array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
@@ -102,6 +106,7 @@ class TemplateVariableContainer {
 	 *
 	 * @return array Array of identifier strings
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function getAllIdentifiers() {
 		return array_keys($this->objects);
@@ -113,6 +118,7 @@ class TemplateVariableContainer {
 	 * @param string $identifier
 	 * @return boolean TRUE if $identifier exists, FALSE otherwise
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function exists($identifier) {
 		return array_key_exists($identifier, $this->objects);
@@ -123,7 +129,6 @@ class TemplateVariableContainer {
 	 *
 	 * @return array
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function __sleep() {
 		return array('objects');

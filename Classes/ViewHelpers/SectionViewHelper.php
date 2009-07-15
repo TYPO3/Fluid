@@ -44,6 +44,7 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 *
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function initializeArguments() {
 		$this->registerArgument('name', 'string', 'Name of the section', TRUE);
@@ -77,6 +78,7 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 *
 	 * @return string HTML String of all child nodes.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
 	public function render() {
 		return $this->renderChildren();

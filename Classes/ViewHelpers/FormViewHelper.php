@@ -113,6 +113,7 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL, $section = '') {
 		$uriBuilder = $this->controllerContext->getURIBuilder();

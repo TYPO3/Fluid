@@ -56,7 +56,6 @@ abstract class AbstractNode {
 	 * @param \F3\Fluid\Core\Rendering\RenderingContext Rendering Context to be used for this evaluation
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
@@ -68,7 +67,6 @@ abstract class AbstractNode {
 	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	public function evaluateChildNodes() {
 		$output = NULL;
@@ -91,7 +89,6 @@ abstract class AbstractNode {
 	 *
 	 * @return array F3\Fluid\Core\Parser\SyntaxTree\AbstractNode A list of nodes
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getChildNodes() {
 		return $this->childNodes;
@@ -103,7 +100,6 @@ abstract class AbstractNode {
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $subnode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $subNode) {
 		$this->childNodes[] = $subNode;
@@ -115,7 +111,6 @@ abstract class AbstractNode {
 	 * @return object Evaluated node
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @internal
 	 */
 	abstract public function evaluate();
 }

@@ -54,6 +54,7 @@ class Nl2brViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @return string the altered string.
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render() {
 		$content = $this->renderChildren();

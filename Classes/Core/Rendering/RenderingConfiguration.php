@@ -54,7 +54,6 @@ class RenderingConfiguration {
 	 * @param F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface $objectAccessorPostProcessor The ObjectAccessorPostProcessor to set
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function setObjectAccessorPostProcessor(\F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface $objectAccessorPostProcessor) {
 		$this->objectAccessorPostProcessor = $objectAccessorPostProcessor;
@@ -65,7 +64,6 @@ class RenderingConfiguration {
 	 *
 	 * @return F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface The currently set ObjectAccessorPostProcessor, or NULL if none set.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @internal
 	 */
 	public function getObjectAccessorPostProcessor() {
 		return $this->objectAccessorPostProcessor;

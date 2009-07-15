@@ -63,6 +63,7 @@ class AliasViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $map 
 	 * @return string Rendered string
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
 	 */
 	public function render(array $map) {
 		foreach ($map as $aliasName => $value) {
