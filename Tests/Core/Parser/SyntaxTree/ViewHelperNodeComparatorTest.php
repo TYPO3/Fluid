@@ -16,15 +16,11 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
  * @version $Id: ViewHelperNodeTest.php 2411 2009-05-26 22:00:04Z sebastian $
  */
 /**
  * Testcase for [insert classname here]
  *
- * @package
- * @subpackage Tests
  * @version $Id: ViewHelperNodeTest.php 2411 2009-05-26 22:00:04Z sebastian $
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

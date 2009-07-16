@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Textarea view helper.
  * The value of the text area needs to be set via the "value" attribute, as with all other form ViewHelpers.
  *
@@ -41,8 +35,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Output:
  * <textarea name="myTextArea">This is shown inside the textarea</textarea>
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

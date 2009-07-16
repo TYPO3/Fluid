@@ -23,15 +23,11 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
  */
 
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id:$
  */
 class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {

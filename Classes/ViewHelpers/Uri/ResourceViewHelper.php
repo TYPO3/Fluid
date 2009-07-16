@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
- */
-
-/**
  * A view helper for creating URIs to resources.
  *
  * = Examples =
@@ -41,8 +35,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <link href="Resources/Packages/MyPackage/stylesheet.css" rel="stylesheet" />
  * (depending on current package)
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

@@ -16,15 +16,11 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
  * @version $Id$
  */
 /**
  * [Enter description here]
  *
- * @package
- * @subpackage
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

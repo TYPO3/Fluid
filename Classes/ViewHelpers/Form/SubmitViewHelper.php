@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Creates a submit button.
  *
  * = Examples =
@@ -47,8 +41,6 @@ namespace F3\Fluid\ViewHelpers\Form;
   * Output:
  * <input type="submit" name="mySubmit" value="Send Mail" />
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

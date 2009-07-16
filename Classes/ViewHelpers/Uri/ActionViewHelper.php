@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * A view helper for creating URIs to actions.
  *
  * = Examples =
@@ -49,8 +43,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2
  * (depending on routing setup)
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

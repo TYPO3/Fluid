@@ -16,8 +16,6 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
  * @version $Id$
  */
 class AbstractNodeTest extends \F3\Testing\BaseTestCase {

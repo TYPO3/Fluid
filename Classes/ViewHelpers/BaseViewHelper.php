@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * View helper which creates a <base href="..."></base> tag.
  *
  * = Examples =
@@ -41,8 +35,6 @@ namespace F3\Fluid\ViewHelpers;
  * <base href="http://yourdomain.tld/"></base>
  * (depending on your domain)
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

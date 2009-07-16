@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Formats a number with custom precision, decimal point and grouped thousands.
  * @see http://www.php.net/manual/en/function.number-format.php
  *
@@ -48,8 +42,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  * Output:
  * 423.423,2
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

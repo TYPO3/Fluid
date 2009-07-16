@@ -23,17 +23,9 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * "ELSE" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
  * @see F3\Fluid\ViewHelpers\IfViewHelper
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

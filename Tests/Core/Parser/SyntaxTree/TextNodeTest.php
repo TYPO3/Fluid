@@ -16,15 +16,11 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  */
 /**
  * Testcase for TextNode
  *
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

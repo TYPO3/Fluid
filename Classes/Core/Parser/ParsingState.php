@@ -23,17 +23,9 @@ namespace F3\Fluid\Core\Parser;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * Stores all information relevant for one parsing pass - that is, the root node,
  * and the current stack of open nodes (nodeStack) and a variable container used for PostParseFacets.
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * A view helper which generates an <input type="file"> HTML element.
  * Make sure to set enctype="multipart/form-data" on the form!
  *
@@ -41,8 +35,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Output:
  * <input type="file" name="file" />
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

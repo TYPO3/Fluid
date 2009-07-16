@@ -16,15 +16,11 @@ namespace F3\Fluid\View;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  */
 /**
  * Testcase for the TemplateView
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

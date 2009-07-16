@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * A view helper for creating URIs to external targets.
  * Currently the specified URI is simply passed through.
  *
@@ -41,8 +35,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * Output:
  * http://www.typo3.org
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

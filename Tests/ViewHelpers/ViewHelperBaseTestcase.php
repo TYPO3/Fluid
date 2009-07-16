@@ -23,8 +23,6 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  */
 abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {

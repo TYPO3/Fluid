@@ -23,20 +23,12 @@ namespace F3\Fluid\Core\ViewHelper;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * VariableContainer which stores template variables.
  * Is used in two contexts:
  *
  * 1) Holds the current variables in the template
  * 2) Holds variables being set during Parsing (set in view helpers implementing the PostParse facet)
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

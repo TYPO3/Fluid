@@ -16,15 +16,11 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  */
 /**
  * Testcase for \F3\Fluid\Core\ViewHelper\ArgumentDefinition
  *
- * @package
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

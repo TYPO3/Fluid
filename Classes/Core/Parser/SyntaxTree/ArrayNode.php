@@ -23,16 +23,8 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * Array Syntax Tree Node. Handles JSON-like arrays.
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

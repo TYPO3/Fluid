@@ -23,18 +23,10 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * The rendering configuration. Contains all configuration needed to configure the rendering of a SyntaxTree.
  * This currently contains:
  * - the active ObjectAccessorPostProcessor, if any
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @internal

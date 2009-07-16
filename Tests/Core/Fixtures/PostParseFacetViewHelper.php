@@ -16,8 +16,6 @@ namespace F3\Fluid\Core\Fixtures;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
  * @version $Id$
  */
 /**

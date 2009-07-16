@@ -23,16 +23,8 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * A Runtime Exception
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @internal

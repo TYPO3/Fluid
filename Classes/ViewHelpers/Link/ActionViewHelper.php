@@ -16,12 +16,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * A view helper for creating links to actions.
  * 
  * = Examples =
@@ -42,8 +36,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  * <a href="mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2">some link</a>
  * (depending on routing setup)
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype

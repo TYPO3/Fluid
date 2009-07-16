@@ -23,18 +23,10 @@ namespace F3\Fluid\Core\ViewHelper;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * Tag based view helper.
  * Sould be used as the base class for all view helpers which output simple tags, as it provides some
  * convenience methods to register default attributes, ...
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

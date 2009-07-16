@@ -23,8 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  */
 class NumberViewHelperTest extends \F3\Testing\BaseTestCase {

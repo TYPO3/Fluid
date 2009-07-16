@@ -16,15 +16,11 @@ namespace F3\Fluid\Core\Parser\Fixtures;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  */
 /**
  * Example class
  *
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @author Sebastian Kurfürst <sebastian@typo3.org>

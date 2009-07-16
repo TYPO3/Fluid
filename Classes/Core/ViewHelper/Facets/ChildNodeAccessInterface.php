@@ -23,12 +23,6 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * Child Node Access Facet. View Helpers should implement this interface if they need access to the direct children in the Syntax Tree at rendering-time.
  * This might happen if you only want to selectively render a part of the syntax tree depending on some conditions.
  *
@@ -36,8 +30,6 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *
  * See \F3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @internal

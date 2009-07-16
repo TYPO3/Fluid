@@ -15,19 +15,11 @@ namespace F3\Fluid\Core\ViewHelper;
  * Public License for more details.                                       *
  *                                                                        */
 
-/**
- * @package Fluid
- * @subpackage Tests
- * @version $Id$
- */
-
 include_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
 
 /**
  * Testcase for AbstractViewHelper
  *
- * @package
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

@@ -23,17 +23,9 @@ namespace F3\Fluid\Service;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Service
- * @version $Id$
- */
-
-/**
  * XML Schema (XSD) Generator. Will generate an XML schema which can be used for autocompletion
  * in schema-aware editors like Eclipse XML editor.
  *
- * @package Fluid
- * @subpackage Service
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */

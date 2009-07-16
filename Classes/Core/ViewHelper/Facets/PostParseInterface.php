@@ -23,12 +23,6 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * Post Parse Facet. Your view helper should implement this if you want a callback
  * to be called directly after the syntax tree node corresponding to this view helper has been built.
  *
@@ -37,8 +31,6 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *
  * Normally, this facet is not needed, except in really really rare cases.
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @internal

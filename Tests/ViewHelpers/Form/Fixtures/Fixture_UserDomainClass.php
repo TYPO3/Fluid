@@ -16,15 +16,11 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  */
 /**
  * Example domain class which can be used to test different view helpers, e.g. the "select" view helper.
  *
- * @package Fluid
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

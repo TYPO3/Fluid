@@ -23,16 +23,12 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
  */
 
 include_once(__DIR__ . '/../Fixtures/ConstraintSyntaxTreeNode.php');
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id:$
  */
 class ErrorsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {

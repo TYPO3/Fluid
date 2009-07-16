@@ -23,16 +23,8 @@ namespace F3\Fluid\Controller;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Controller
- * @version $Id$
- */
-
-/**
  * Controller which provides a web UI for generating ViewHelper XSD Definitons
  *
- * @package Fluid
- * @subpackage Controller
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */

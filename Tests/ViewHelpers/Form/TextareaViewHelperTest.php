@@ -18,16 +18,8 @@ namespace F3\Fluid\ViewHelpers\Form;
 include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 /**
- * @package 
- * @subpackage 
- * @version $Id$
- */
-
-/**
  * Test for the "Textarea" Form view helper
  *
- * @package
- * @subpackage
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

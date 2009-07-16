@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Use this view helper to crop the text between its opening and closing tags.
  *
  * = Examples =
@@ -50,8 +44,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  * WARNING: This tag does NOT handle tags currently.
  * WARNING: This tag doesn't care about multibyte charsets currently.
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Formats a given float to a currency representation.
  *
  * = Examples =
@@ -47,8 +41,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  * Output:
  * 54,321.00 $
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

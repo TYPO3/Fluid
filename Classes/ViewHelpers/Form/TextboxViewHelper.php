@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * View Helper which creates a simple Text Box (<input type="text">).
  *
   * = Examples =
@@ -40,8 +34,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Output:
  * <input type="text" name="myTextBox" value="default value" />
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

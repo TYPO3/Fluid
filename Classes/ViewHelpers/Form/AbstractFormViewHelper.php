@@ -23,19 +23,11 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Abstract Form View Helper. Bundles functionality related to direct property access of objects in other Form ViewHelpers.
  *
  * If you set the "property" attribute to the name of the property to resolve from the object, this class will
  * automatically set the name and value of a form element.
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

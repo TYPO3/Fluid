@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Formats a \DateTime object.
  *
  * = Examples =
@@ -57,8 +51,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  * 13.12.1980 - 21:03:42
  * (depending on the current time, see http://www.php.net/manual/en/function.strtotime.php)
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

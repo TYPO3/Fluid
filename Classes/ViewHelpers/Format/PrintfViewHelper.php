@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * A view helper for formatting values with printf. Either supply an array for
  * the arguments or a single value.
  * See http://www.php.net/manual/en/function.sprintf.php
@@ -56,8 +50,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  * Output:
  * We love TYPO3
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

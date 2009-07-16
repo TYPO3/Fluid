@@ -16,16 +16,8 @@ namespace F3\Fluid\Core\Parser\Fixtures;
  *                                                                        */
 
 /**
- * @package 
- * @subpackage 
- * @version $Id$
- */
-
-/**
  * Test fixture for the child node access facet.
  *
- * @package
- * @subpackage
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

@@ -15,19 +15,11 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Public License for more details.                                       *
  *                                                                        */
 
-/**
- * @package
- * @subpackage
- * @version $Id$
- */
-
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
  * Test for the Abstract Form view helper
  *
- * @package
- * @subpackage
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

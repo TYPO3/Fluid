@@ -15,19 +15,11 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
-/**
- * @package
- * @subpackage
- * @version $Id$
- */
-
 include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
 
 /**
  * Testcase for TagBasedViewHelper
  *
- * @package
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

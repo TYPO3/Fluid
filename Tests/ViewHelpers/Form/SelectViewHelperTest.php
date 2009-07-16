@@ -15,20 +15,12 @@ namespace F3\Fluid\ViewHelpers\Form;
  * Public License for more details.                                       *
  *                                                                        */
 
-/**
- * @package
- * @subpackage
- * @version $Id$
- */
-
 include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 
 /**
  * Test for the "Select" Form view helper
  *
- * @package
- * @subpackage
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

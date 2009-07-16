@@ -16,12 +16,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * A view helper for creating links to external targets.
  *
  * = Examples =
@@ -33,8 +27,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  * Output:
  * <a href="http://www.typo3.org" target="_blank">external link</a>
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype

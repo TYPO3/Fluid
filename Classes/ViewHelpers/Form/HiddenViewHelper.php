@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Renders an <input type="hidden" ...> tag.
  *
  * = Examples =
@@ -43,8 +37,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  * You can also use the "property" attribute if you have bound an object to the form.
  * See <f:form> for more documentation.
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

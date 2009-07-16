@@ -16,15 +16,11 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
  * @version $Id$
  */
 /**
  * Testcase for [insert classname here]
  *
- * @package
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

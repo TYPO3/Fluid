@@ -23,18 +23,10 @@ namespace F3\Fluid\Core\ViewHelper;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage Core
- * @version $Id$
- */
-
-/**
  * Arguments list. Wraps an array, but only allows read-only methods on it.
  * Is available inside every view helper as $this->arguments - and you use it as if it was an array.
  * However, you can only read, and not write to it.
  *
- * @package Fluid
- * @subpackage Core
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype

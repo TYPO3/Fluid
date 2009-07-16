@@ -16,16 +16,8 @@ namespace F3\Fluid\ViewHelpers\Link;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Testcase for the email link view helper
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype

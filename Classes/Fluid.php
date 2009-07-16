@@ -23,14 +23,8 @@ namespace F3\Fluid;
  *                                                                        */
 
 /**
- * @package Fluid
- * @version $Id$
- */
-
-/**
  * Settings class which is a holder for constants specific to Fluid on v5 and v4.
  *
- * @package Fluid
  * @version $Id$
  */
 class Fluid {

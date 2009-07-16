@@ -16,15 +16,11 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package
- * @subpackage
  * @version $Id$
  */
 /**
  * Testcase for IfViewHelper
  *
- * @package
- * @subpackage Tests
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */

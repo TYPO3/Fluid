@@ -16,12 +16,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Email link view helper.
  * Generates an email link.
  *
@@ -42,8 +36,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  * Output:
  * <a href="mailto:foo@bar.tld">some custom content</a>
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  * @scope prototype

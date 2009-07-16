@@ -23,12 +23,6 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * @package Fluid
- * @subpackage ViewHelpers
- * @version $Id$
- */
-
-/**
  * Alias view helper
  *
  * = Examples =
@@ -50,8 +44,6 @@ namespace F3\Fluid\ViewHelpers;
  * [name] or [name]
  * depending on {foo.bar.baz}
  *
- * @package Fluid
- * @subpackage ViewHelpers
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
