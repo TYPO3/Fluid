@@ -112,7 +112,7 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function selectOnDomainObjectsCreatesExpectedOptions() {
 		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockPersistenceBackend->expects($this->any())->method('getUUIDByObject')->will($this->returnValue(NULL));
+		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
@@ -176,6 +176,99 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUUIDForValueAndLabel() {
+		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
+		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
+
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="fakeUUID">fakeUUID</option>' . chr(10));
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+
+		$user = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				$user
+			),
+			'name' => 'myName'
+		));
+
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
+		$this->viewHelper->setArguments($arguments);
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesToStringForLabelIfAvailable() {
+		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
+		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
+
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="fakeUUID">toStringResult</option>' . chr(10));
+		$tagBuilderMock->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+
+		$user = $this->getMock('F3\Fluid\ViewHelpers\Fixtures\UserDomainClass', array('__toString'), array(1, 'Ingmar', 'Schlecht'));
+		$user->expects($this->atLeastOnce())->method('__toString')->will($this->returnValue('toStringResult'));
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				$user
+			),
+			'name' => 'myName'
+		));
+
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
+		$this->viewHelper->setArguments($arguments);
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
+	 */
+	public function selectOnDomainObjectsThrowsExceptionIfNoValueCanBeFound() {
+		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
+		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
+
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+
+		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+
+		$user = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				$user
+			),
+			'name' => 'myName'
+		));
+
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
+		$this->viewHelper->setArguments($arguments);
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
 }
 
 ?>

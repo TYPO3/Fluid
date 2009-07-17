@@ -61,7 +61,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		parent::initializeArguments();
 		$this->registerArgument('name', 'string', 'Name of input tag');
 		$this->registerArgument('value', 'mixed', 'Value of input tag');
-		$this->registerArgument('property', 'string', 'Name of Object Property. If used in conjunction with <f3:form object="...">, "name" and "value" properties will be ignored.');
+		$this->registerArgument('property', 'string', 'Name of Object Property. If used in conjunction with <f:form object="...">, "name" and "value" properties will be ignored.');
 	}
 
 	/**
@@ -75,7 +75,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 */
 	protected function getName() {
 		$name = ($this->isObjectAccessorMode()) ? $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName') . '[' . $this->arguments['property'] . ']' : $this->arguments['name'];
-		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getUUIDByObject($this->arguments['value'])
+		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getIdentifierByObject($this->arguments['value'])
 				&& ($this->arguments['value'] instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface && !$this->arguments['value']->FLOW3_Persistence_isNew())) {
 			$name .= '[__identity]';
 		}
@@ -97,7 +97,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 			$value =  $this->arguments['value'];
 		}
 		if (is_object($value)) {
-			$uuid = $this->persistenceManager->getBackend()->getUUIDByObject($value);
+			$uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
 			if ($uuid !== NULL) {
 				$value = $uuid;
 			}

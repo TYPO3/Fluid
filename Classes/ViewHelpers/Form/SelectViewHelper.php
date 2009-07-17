@@ -31,14 +31,14 @@ namespace F3\Fluid\ViewHelpers\Form;
  * The array key is used as option key, and the value is used as human-readable name.
  *
  * <code title="Basic usage">
- * <f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" />
+ * <f:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" />
  * </code>
  *
  * = Pre-select a value =
  *
  * To pre-select a value, set "selectedValue" to the option key which should be selected.
  * <code title="Default value">
- * <f3:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" />
+ * <f:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" />
  * </code>
  * Generates a dropdown box like above, except that "VISA Card" is selected.
  *
@@ -48,12 +48,13 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * If you want to output domain objects, you can just pass them as array into the "options" parameter.
  * To define what domain object value should be used as option key, use the "optionValueField" variable. Same goes for optionLabelField.
+ * If neither is given, the UUID and the __toString() method are tried as fallbacks.
  *
  * If the optionValueField variable is set, the getter named after that value is used to retrieve the option key.
  * If the optionLabelField variable is set, the getter named after that value is used to retrieve the option value.
  *
  * <code title="Domain objects">
- * <f3:form.select name="users" options="{userArray}" optionValueField="id" optionLabelField="firstName" />
+ * <f:form.select name="users" options="{userArray}" optionValueField="id" optionLabelField="firstName" />
  * </code>
  * In the above example, the userArray is an array of "User" domain objects, with no array key specified.
  *
@@ -135,16 +136,46 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 	 *
 	 * @return array an associative array of options, key will be the value of the option tag
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function getOptions() {
-		if (!$this->arguments->hasArgument('optionValueField')) {
-			return $this->arguments['options'];
-		}
 		$options = array();
-		foreach ($this->arguments['options'] as $domainObject) {
-			$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($domainObject, $this->arguments['optionValueField']);
-			$label = \F3\FLOW3\Reflection\ObjectAccess::getProperty($domainObject, $this->arguments['optionLabelField']);
-			$options[$value] = $label;
+		foreach ($this->arguments['options'] as $key => $value) {
+			if (is_object($value)) {
+
+				if ($this->arguments->hasArgument('optionValueField')) {
+					$key = \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
+					if (is_object($key)) {
+						if (method_exists($key, '__toString')) {
+							$key = (string)$key;
+						} else {
+							throw new \F3\Fluid\Core\ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
+						}
+					}
+				} elseif ($this->persistenceManager->getBackend()->getIdentifierByObject($value) !== NULL) {
+					$key = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
+				} elseif (method_exists($value, '__toString')) {
+					$key = (string)$value;
+				} else {
+					throw new \F3\Fluid\Core\ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
+				}
+
+				if ($this->arguments->hasArgument('optionLabelField')) {
+					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionLabelField']);
+					if (is_object($value)) {
+						if (method_exists($value, '__toString')) {
+							$value = (string)$value;
+						} else {
+							throw new \F3\Fluid\Core\ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.' , 1247827553);
+						}
+					}
+				} elseif (method_exists($value, '__toString')) {
+					$value = (string)$value;
+				} elseif ($this->persistenceManager->getBackend()->getIdentifierByObject($value) !== NULL) {
+					$value = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
+				}
+			}
+			$options[$key] = $value;
 		}
 		return $options;
 	}

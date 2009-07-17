@@ -34,17 +34,17 @@ namespace F3\Fluid\ViewHelpers;
  * </f:if>
  * </code>
  *
- * Everything inside the <f3:if> tag is being displayed if the condition evaluates to TRUE.
+ * Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
  *
  * <code title="If / then / else">
- * <f3:if condition="somecondition">
- *   <f3:then>
+ * <f:if condition="somecondition">
+ *   <f:then>
  *     This is being shown in case the condition matches.
- *   </f3:then>
- *   <f3:else>
+ *   </f:then>
+ *   <f:else>
  *     This is being displayed in case the condition evaluates to FALSE.
- *   </f3:else>
- * </f3:if>
+ *   </f:else>
+ * </f:if>
  * </code>
  *
  * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.

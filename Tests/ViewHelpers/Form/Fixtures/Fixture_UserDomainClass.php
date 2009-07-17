@@ -25,13 +25,13 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
 class UserDomainClass {
-	
+
 	protected $id;
-	
+
 	protected $firstName;
-	
+
 	protected $lastName;
-	
+
 	/**
 	 * Constructor.
 	 *
@@ -45,7 +45,7 @@ class UserDomainClass {
 		$this->firstName = $firstName;
 		$this->lastName = $lastName;
 	}
-	
+
 	/**
 	 * Return the ID
 	 *
@@ -55,7 +55,7 @@ class UserDomainClass {
 	public function getId() {
 		return $this->id;
 	}
-	
+
 	/**
 	 * Return the first name
 	 *
@@ -65,7 +65,7 @@ class UserDomainClass {
 	public function getFirstName() {
 		return $this->firstName;
 	}
-	
+
 	/**
 	 * Return the last name
 	 *
