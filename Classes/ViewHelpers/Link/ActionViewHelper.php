@@ -17,13 +17,13 @@ namespace F3\Fluid\ViewHelpers\Link;
 
 /**
  * A view helper for creating links to actions.
- * 
+ *
  * = Examples =
  *
  * <code title="Defaults">
  * <f:link.action>some link</f:link.action>
  * </code>
- * 
+ *
  * Output:
  * <a href="currentpackage/currentcontroller">some link</a>
  * (depending on routing setup and current package/controller/action)
@@ -31,7 +31,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * <code title="Additional arguments">
  * <f:link.action action="myAction" controller="MyController" package="MyPackage" subpackage="MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:link.action>
  * </code>
- * 
+ *
  * Output:
  * <a href="mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2">some link</a>
  * (depending on routing setup)
@@ -71,14 +71,15 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $package Target package. if NULL current package is used
 	 * @param string $subpackage Target subpackage. if NULL current subpackage is used
 	 * @param string $section The anchor to be added to the URI
+	 * @param string $format The requested format, e.g. ".html"
 	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '') {
+	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '') {
 		$uriBuilder = $this->controllerContext->getURIBuilder();
-		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section);
+		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section, $format);
 		$this->tag->addAttribute('href', $uri);
 		$this->tag->setContent($this->renderChildren());
 
