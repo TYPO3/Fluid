@@ -45,7 +45,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * File pattern for resolving the template file
 	 * @var string
 	 */
-	protected $templatePathAndFilenamePattern = '@packageResources/Private/Templates/@subpackage@controller/@action.html';
+	protected $templatePathAndFilenamePattern = '@packageResources/Private/Templates/@subpackage@controller/@action.@format';
 
 	/**
 	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
@@ -333,6 +333,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			$templatePathAndFilename = str_replace('@subpackage', $subpackageName, $templatePathAndFilename);
 			$templatePathAndFilename = str_replace('@controller', $controllerName, $templatePathAndFilename);
 			$templatePathAndFilename = str_replace('@action', strtolower($actionName), $templatePathAndFilename);
+			$templatePathAndFilename = str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $templatePathAndFilename);
 
 			return $templatePathAndFilename;
 		}

@@ -30,7 +30,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code title="Defaults">
  * <f:uri.action>some link</f:uri.action>
  * </code>
- * 
+ *
  * Output:
  * currentpackage/currentcontroller
  * (depending on routing setup and current package/controller/action)
@@ -38,7 +38,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code title="Additional arguments">
  * <f:uri.action action="myAction" controller="MyController" package="MyPackage" subpackage="MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:uri.action>
  * </code>
- * 
+ *
  * Output:
  * mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2
  * (depending on routing setup)
@@ -58,17 +58,18 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $package Target package. if NULL current package is used
 	 * @param string $subpackage Target subpackage. if NULL current subpackage is used
 	 * @param string $section The anchor to be added to the URI
+	 * @param string $format The requested format, e.g. ".html"
+	 * @param boolean $absolute If set, an absolute URI is rendered
 	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '') {
+	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE) {
 		$uriBuilder = $this->controllerContext->getURIBuilder();
-		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section);
+		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section, $format, $absolute);
 		return $uri;
 	}
 }
-
 
 ?>
