@@ -73,7 +73,7 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		$output = '';
 		if (is_object($each) && $each instanceof \SplObjectStorage) {
 			if ($key !== '') {
-				return '!CANT USE KEY ON SPLOBJECTSTORAGE!';
+				return '';
 			}
 			$eachArray = array();
 			foreach ($each as $singleElement) {
@@ -81,7 +81,7 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			}
 			$each = $eachArray;
 		} elseif (!is_array($each)) {
-			return '!CANT ITERATE OVER EACH!';
+			return '';
 		}
 
 		if ($reverse === TRUE) {
