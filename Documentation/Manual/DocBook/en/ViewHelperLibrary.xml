@@ -153,6 +153,18 @@
 
               <entry></entry>
             </row>
+
+            <row>
+              <entry>reverse</entry>
+
+              <entry>boolean</entry>
+
+              <entry>no</entry>
+
+              <entry>If enabled, the iterator runs reversely.</entry>
+
+              <entry>FALSE</entry>
+            </row>
           </tbody>
         </tgroup>
       </table>

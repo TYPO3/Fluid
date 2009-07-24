@@ -59,18 +59,35 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
-	 * @param array $each The array to be iterated over
+	 * @param array $each The array or \SplObjectStorage to iterated over
 	 * @param string $as The name of the iteration variable
 	 * @param string $key The name of the variable to store the current array key
+	 * @param boolean $reverse If enabled, the iterator will start with the last element and proceed reversely
 	 * @return string Rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($each, $as, $key = '') {
-		if (empty($each)) {
-			return '';
+	public function render($each, $as, $key = '', $reverse = FALSE) {
+		$output = '';
+		if (is_object($each) && $each instanceof \SplObjectStorage) {
+			if ($key !== '') {
+				return '!CANT USE KEY ON SPLOBJECTSTORAGE!';
+			}
+			$eachArray = array();
+			foreach ($each as $singleElement) {
+				$eachArray[] = $singleElement;
+			}
+			$each = $eachArray;
+		} elseif (!is_array($each)) {
+			return '!CANT ITERATE OVER EACH!';
 		}
+
+		if ($reverse === TRUE) {
+			$each = array_reverse($each);
+		}
+
 		$output = '';
 		foreach ($each as $keyValue => $singleElement) {
 			$this->templateVariableContainer->add($as, $singleElement);
