@@ -34,7 +34,7 @@ abstract class AbstractNode {
 
 	/**
 	 * List of Child Nodes.
-	 * @var array \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var array<\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode>
 	 */
 	protected $childNodes = array();
 
@@ -68,8 +68,15 @@ abstract class AbstractNode {
 			if ($output === NULL) {
 				$output = $subNode->evaluate();
 			} else {
+				if (is_object($output) && !method_exists($output, '__toString')) {
+					throw new \F3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($output) . '" to string.', 1248356140);
+				}
 				$output = (string)$output;
-				$output .= (string)$subNode->evaluate();
+				$subNodeOutput = $subNode->evaluate();
+				if (is_object($subNodeOutput) && !method_exists($subNodeOutput, '__toString')) {
+					throw new \F3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($subNodeOutput) . '" to string.', 1248356140);
+				}
+				$output .= (string)$subNodeOutput;
 			}
 		}
 		return $output;
