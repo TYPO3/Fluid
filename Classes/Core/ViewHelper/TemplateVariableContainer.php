@@ -98,7 +98,6 @@ class TemplateVariableContainer {
 	 *
 	 * @return array Array of identifier strings
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
 	 */
 	public function getAllIdentifiers() {
 		return array_keys($this->objects);

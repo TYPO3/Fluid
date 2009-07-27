@@ -42,7 +42,6 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @param \F3\Fluid\Service\XSDGenerator $xsdGenerator XSD Generator
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
 	 */
 	public function injectXSDGenerator(\F3\Fluid\Service\XSDGenerator $xsdGenerator) {
 		$this->xsdGenerator = $xsdGenerator;
