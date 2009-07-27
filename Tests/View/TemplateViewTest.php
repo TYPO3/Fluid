@@ -30,8 +30,131 @@ include_once(__DIR__ . '/Fixtures/TemplateViewFixture.php');
 
 class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
+
+
 	/**
 	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function expandGenericPathPatternWorksWithBubblingDisabledAndFormatNotOptional() {
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\Controller\MyController', 'html');
+
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath'), array(), '', FALSE);
+		$templateView->_set('controllerContext', $mockControllerContext);
+		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
+		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@controller/@action.@format', FALSE, FALSE);
+
+		$expected = array(
+			'Resources/Private/Templates/My/@action.html'
+		);
+		$this->assertEquals($expected, $actual);
+	}
+
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function expandGenericPathPatternWorksWithSubpackageAndBubblingDisabledAndFormatNotOptional() {
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath'), array(), '', FALSE);
+		$templateView->_set('controllerContext', $mockControllerContext);
+		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
+		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@controller/@action.@format', FALSE, FALSE);
+
+		$expected = array(
+			'Resources/Private/Templates/MySubPackage/My/@action.html'
+		);
+		$this->assertEquals($expected, $actual);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function expandGenericPathPatternWorksWithSubpackageAndBubblingDisabledAndFormatOptional() {
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath'), array(), '', FALSE);
+		$templateView->_set('controllerContext', $mockControllerContext);
+		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
+		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@controller/@action.@format', FALSE, TRUE);
+
+		$expected = array(
+			'Resources/Private/Templates/MySubPackage/My/@action.html',
+			'Resources/Private/Templates/MySubPackage/My/@action'
+		);
+		$this->assertEquals($expected, $actual);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function expandGenericPathPatternWorksWithSubpackageAndBubblingEnabledAndFormatOptional() {
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath'), array(), '', FALSE);
+		$templateView->_set('controllerContext', $mockControllerContext);
+		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
+		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@controller/@action.@format', TRUE, TRUE);
+
+		$expected = array(
+			'Resources/Private/Templates/MySubPackage/My/@action.html',
+			'Resources/Private/Templates/MySubPackage/My/@action',
+			'Resources/Private/Templates/MySubPackage/@action.html',
+			'Resources/Private/Templates/MySubPackage/@action',
+			'Resources/Private/Templates/@action.html',
+			'Resources/Private/Templates/@action',
+		);
+		$this->assertEquals($expected, $actual);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function expandGenericPathPatternWorksWithNoControllerAndSubpackageAndBubblingEnabledAndFormatOptional() {
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath'), array(), '', FALSE);
+		$templateView->_set('controllerContext', $mockControllerContext);
+		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
+		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@action.@format', TRUE, TRUE);
+
+		$expected = array(
+			'Resources/Private/Templates/MySubPackage/@action.html',
+			'Resources/Private/Templates/MySubPackage/@action',
+			'Resources/Private/Templates/@action.html',
+			'Resources/Private/Templates/@action',
+		);
+		$this->assertEquals($expected, $actual);
+	}
+
+	/**
+	 * Helper to build mock controller context needed to test expandGenericPathPattern.
+	 *
+	 * @param $controllerObjectName
+	 * @param $action
+	 * @param $format
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function setupMockControllerContextForPathResolving($controllerObjectName, $format) {
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
+		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue($controllerObjectName));
+		$mockRequest->expects($this->any())->method('getFormat')->will($this->returnValue($format));
+
+		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'));
+		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
+
+		return $mockControllerContext;
+	}
+
+
+	/**
+	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsRenderOnParsedTemplateInterface() {
@@ -59,6 +182,30 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		$this->assertEquals('Hello World', $templateView->render(), 'The output of the ParsedTemplates render Method is not returned by the TemplateView');
 
+	}
+
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function pathToPartialIsResolvedCorrectly() {
+	/*	$mockRequest = $this->getMock('F3\FLOW3\MVC\Request', array('getControllerPackageKey', ''));
+		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('DummyPackageKey'));
+		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'));
+		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
+
+		$mockPackage = $this->getMock('F3\FLOW3\Package\PackageInterface', array('getPackagePath'));
+		$mockPackage->expects($this->any())->method('getPackagePath')->will($this->returnValue('/ExamplePackagePath/'));
+		$mockPackageManager = $this->getMock('F3\FLOW3\Package\ManagerInterface', array('getPackage'));
+		$mockPackageManager->expects($this->any())->method('getPackage')->with('DummyPackageKey')->will($this->returnValue($mockPackage));
+
+		\vfsStreamWrapper::register();
+		$mockRootDirectory = vfsStreamDirectory::create('ExamplePackagePath/Resources/Private/Partials');
+		$mockRootDirectory->getChild('Resources/Private/Partials')->addChild('Partials')
+		\vfsStreamWrapper::setRoot($mockRootDirectory);
+
+		$this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array(''), array(), '', FALSE);*/
 	}
 
 	/**

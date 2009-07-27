@@ -42,23 +42,29 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	protected $templateParser;
 
 	/**
+	 * Pattern to be resolved for @templateRoot in the other patterns.
+	 * @var string
+	 */
+	protected $templateRootPathPattern = '@packageResources/Private';
+
+	/**
 	 * File pattern for resolving the template file
 	 * @var string
 	 */
-	protected $templatePathAndFilenamePattern = '@packageResources/Private/Templates/@subpackage@controller/@action.@format';
+	protected $templatePathAndFilenamePattern = '@templateRoot/Templates/@subpackage/@controller/@action.@format';
 
 	/**
 	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
 	 * @var string
 	 * @internal
 	 */
-	private $globalPartialBasePath = '@packageResources/Private/Templates';
+	private $partialPathAndFilenamePattern = '@templateRoot/Partials/@subpackage/@partial.@format';
 
 	/**
 	 * File pattern for resolving the layout
 	 * @var string
 	 */
-	protected $layoutPathAndFilenamePattern = '@packageResources/Private/Layouts/@layout.html';
+	protected $layoutPathAndFilenamePattern = '@templateRoot/Layouts/@layout.@format';
 
 	/**
 	 * Path and filename of the template file. If set,  overrides the templatePathAndFilenamePattern
@@ -71,12 +77,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @var string
 	 */
 	protected $layoutPathAndFilename = NULL;
-
-	/**
-	 * Name of current action to render
-	 * @var string
-	 */
-	protected $actionName;
 
 	/**
 	 * Inject the template parser
@@ -126,6 +126,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 	/**
 	 * Build the rendering context
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildRenderingContext($variableContainer = NULL) {
 		if ($variableContainer === NULL) {
@@ -145,6 +146,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		return $renderingContext;
 	}
+
 	/**
 	 * Find the XHTML template according to $this->templatePathAndFilenamePattern and render the template.
 	 * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
@@ -155,9 +157,9 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @api
 	 */
 	public function render($actionName = NULL) {
-		$this->actionName = $actionName;
+		$templatePathAndFilename = $this->resolveTemplatePathAndFilename($actionName);
 
-		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
+		$parsedTemplate = $this->parseTemplate($templatePathAndFilename);
 
 		$variableContainer = $parsedTemplate->getVariableContainer();
 		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
@@ -167,6 +169,34 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$renderingContext = $this->buildRenderingContext();
 		return $parsedTemplate->render($renderingContext);
 	}
+
+	/**
+	 * Resolve the template path and filename for the given action. If action is null, looks into the current request.
+	 *
+	 * @param string $actionName Name of the action. If NULL, will be taken from request.
+	 * @return string Full path to template
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function resolveTemplatePathAndFilename($actionName = NULL) {
+		if ($this->templatePathAndFilename !== NULL) {
+			return $this->templatePathAndFilename;
+		}
+
+		$actionName = ($actionName !== NULL ? $actionName : $this->controllerContext->getRequest()->getControllerActionName());
+		$actionName = strtolower($actionName);
+
+		$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
+
+		foreach ($paths as $key => $path) {
+			$path = str_replace('@action', $actionName, $path);
+			if (file_exists($path)) {
+				return $path;
+			}
+		}
+		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+	}
+
+
 
 	/**
 	 * Renders a given section.
@@ -208,7 +238,33 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
-	 * Renders a partial. If $partialName starts with /, the partial is resolved globally. Else, locally.
+	 * Resolve the path and file name of the layout fil, based on $this->layoutPathAndFilename and
+	 * $this->layoutPathAndFilenamePattern.
+	 *
+	 * In case a layout has already been set with setLayoutPathAndFilename(), this method returns that
+	 * path, otherwise a path and filename will be resolved using the layoutPathAndFilenamePattern.
+	 *
+	 * @param string $layoutName Name of the layout to use. If none given, use "default"
+	 * @return string Path and filename of layout file
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function resolveLayoutPathAndFilename($layoutName = 'default') {
+		if ($this->layoutPathAndFilename) {
+			return $this->layoutPathAndFilename;
+		}
+
+		$paths = $this->expandGenericPathPattern($this->layoutPathAndFilenamePattern, TRUE, TRUE);
+		foreach ($paths as $key => $path) {
+			$path = str_replace('@layout', $layoutName, $path);
+			if (file_exists($path)) {
+				return $path;
+			}
+		}
+		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+	}
+
+	/**
+	 * Renders a partial.
 	 * SHOULD NOT BE USED BY USERS!
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -216,33 +272,28 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
-		if ($partialName[0] === '/') {
-			$partialBasePath = str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->globalPartialBasePath);
-			$partialName = substr($partialName, 1);
-		} else {
-			$partialBasePath = dirname($this->resolveTemplatePathAndFilename());
-		}
-		$partialNameSplitted = explode('/', $partialName);
-		$partialFileName = '_' . array_pop($partialNameSplitted) . '.html';
-		$partialDirectoryName = $partialBasePath . '/' . implode('/', $partialNameSplitted);
-
-		$partialPathAndFileName = $partialDirectoryName . '/' . $partialFileName;
-
-		$partial = $this->parseTemplate($partialPathAndFileName);
+		$partial = $this->parseTemplate($this->resolvePartialPathAndFilename($partialName));
 		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 		$renderingContext = $this->buildRenderingContext($variableContainer);
 		return $partial->render($renderingContext);
 	}
 
-
 	/**
-	 * Return the current request
+	 * Figures out which partial to use.
 	 *
-	 * @return \F3\FLOW3\MVC\Web\Request the current request
+	 * @param string $partialName The name of the partial
+	 * @return string the full path which should be used. The path definitely exists.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function getRequest() {
-		return $this->controllerContext->getRequest();
+	protected function resolvePartialPathAndFilename($partialName) {
+		$paths = $this->expandGenericPathPattern($this->partialPathAndFilenamePattern, TRUE, TRUE);
+		foreach ($paths as $key => $path) {
+			$path = str_replace('@partial', $partialName, $path);
+			if (file_exists($path)) {
+				return $path;
+			}
+		}
+		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -250,10 +301,16 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @return boolean
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function hasTemplate() {
-		return file_exists($this->resolveTemplatePathAndFilename());
+		try {
+			$this->resolveTemplatePathAndFilename();
+			return TRUE;
+		} catch (\F3\Fluid\Core\RuntimeException $e) {
+			return FALSE;
+		}
 	}
 
 	/**
@@ -261,68 +318,93 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * Will cache the results for one call.
 	 *
-	 * @param $templatePathAndFilename absolute filename of the template to be parsed
+	 * @param string $templatePathAndFilename absolute filename of the template to be parsed
 	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface the parsed template tree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseTemplate($templatePathAndFilename) {
 		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
-		if ($templateSource === FALSE) {
-			throw new \F3\Fluid\Core\RuntimeException('The template file "' . $templatePathAndFilename . '" could not be loaded.', 1225709595);
-		}
+
 		return $this->templateParser->parse($templateSource);
 	}
 
 	/**
-	 * Resolve the path and name of the template, based on $this->templatePathAndFilename and $this->templatePathAndFilenamePattern.
-	 * In case a template has been set with $this->setTemplatePathAndFilename, it just uses the given template file.
-	 * Otherwise, it resolves the $this->templatePathAndFilenamePattern
-	 *
-	 * @return string Path and filename of template file
+	 * Resolves the template root to be used inside other paths.
+	 * @return string Path to template root directory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolveTemplatePathAndFilename() {
-		if ($this->templatePathAndFilename !== NULL) {
-			return $this->templatePathAndFilename;
-		} else {
-			$actionName = ($this->actionName !== NULL ? $this->actionName : $this->controllerContext->getRequest()->getControllerActionName());
-			$matches = array();
-			preg_match(self::PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
-			$subpackageName = '';
-			if ($matches['SubpackageName'] !== '') {
-				$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
-				$subpackageName .= '/';
-			}
-			$controllerName = $matches['ControllerName'];
-			$templatePathAndFilename = str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->templatePathAndFilenamePattern);
-			$templatePathAndFilename = str_replace('@subpackage', $subpackageName, $templatePathAndFilename);
-			$templatePathAndFilename = str_replace('@controller', $controllerName, $templatePathAndFilename);
-			$templatePathAndFilename = str_replace('@action', strtolower($actionName), $templatePathAndFilename);
-			$templatePathAndFilename = str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $templatePathAndFilename);
-
-			return $templatePathAndFilename;
-		}
+	protected function getTemplateRootPath() {
+		return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->templateRootPathPattern);
 	}
 
 	/**
-	 * Resolve the path and file name of the layout fil, based on $this->layoutPathAndFilename and
-	 * $this->layoutPathAndFilenamePattern.
+	 * Processes @templateRoot, @subpackage, @controller, and @format placeholders inside $pattern.
+	 * This method is used to generate "fallback chains" for file system locations where a certain Partial can reside.
 	 *
-	 * In case a layout has already been set with setLayoutPathAndFilename(), this method returns that
-	 * path, otherwise a path and filename will be resolved using the layoutPathAndFilenamePattern.
+	 * If $bubbleControllerAndSubpackage is FALSE and $formatIsOptional is FALSE, then the resulting array will only have one element
+	 * with all the above placeholders replaced.
 	 *
-	 * @param string $layoutName Name of the layout to use. If none used, use "default"
-	 * @return string Path and filename of layout file
+	 * If you set $bubbleControllerAndSubpackage to TRUE, then you will get an array with potentially many elements:
+	 * The first element of the array is like above. The second element has the @controller part set to "" (the empty string)
+	 * The third element now has the @controller part again stripped off, and has the last subpackage part stripped off as well.
+	 * This continues until both @subpackage and @controller are empty.
+	 *
+	 * Example for $bubbleControllerAndSubpackage is TRUE, we have the F3\MyPackage\MySubPackage\Controller\MyController as Controller Object Name and the current format is "html"
+	 * If pattern is @templateRoot/Templates/@subpackage/@controller/@action.@format, then the resulting array is:
+	 *  - Resources/Private/Templates/MySubPackage/My/@action.html
+	 *  - Resources/Private/Templates/MySubPackage/@action.html
+	 *  - Resources/Private/Templates/@action.html
+	 *
+	 * If you set $formatIsOptional to TRUE, then for any of the above arrays, every element will be duplicated  - once with @format
+	 * replaced by the current request format, and once with .@format stripped off.
+	 *
+	 * @param string $pattern Pattern to be resolved
+	 * @param boolean $bubbleControllerAndSubpackage if TRUE, then we successively split off parts from @controller and @subpackage until both are empty.
+	 * @param boolean $formatIsOptional if TRUE, then half of the resulting strings will have .@format stripped off, and the other half will have it.
+	 * @return array unix style path
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolveLayoutPathAndFilename($layoutName = 'default') {
-		if ($this->layoutPathAndFilename) {
-			return $this->layoutPathAndFilename;
-		} else {
-			$layoutPathAndFilename = str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->layoutPathAndFilenamePattern);
-			$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
-			return $layoutPathAndFilename;
+	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
+		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);
+
+		preg_match(self::PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
+		$subpackageName = '';
+		$subpackageParts = array();
+		if ($matches['SubpackageName'] !== '') {
+			$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
+			$subpackageParts = explode('/', $subpackageName);
 		}
+
+		$controllerName = NULL;
+		if (strpos($pattern, '@controller') !== FALSE) {
+			$controllerName = $matches['ControllerName'];
+		}
+
+		$results = array();
+
+		if ($controllerName !== NULL) {
+			$i = -1;
+		} else {
+			$i = 0;
+		}
+
+		do {
+			$temporaryPattern = $pattern;
+			if ($i < 0) {
+				$temporaryPattern = str_replace('@controller', $controllerName, $temporaryPattern);
+			} else {
+				$temporaryPattern = str_replace('//', '/', str_replace('@controller', '', $temporaryPattern));
+			}
+			$temporaryPattern = str_replace('@subpackage', implode('/', ($i<0 ? $subpackageParts : array_slice($subpackageParts, $i))), $temporaryPattern);
+
+			$results[] = \F3\FLOW3\Utility\Files::getUnixStylePath(str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $temporaryPattern));
+			if ($formatIsOptional) {
+				$results[] =  \F3\FLOW3\Utility\Files::getUnixStylePath(str_replace('.@format', '', $temporaryPattern));
+			}
+
+		} while($i++ < count($subpackageParts) && $bubbleControllerAndSubpackage);
+
+		return $results;
 	}
 }
 ?>
