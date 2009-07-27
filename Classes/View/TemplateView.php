@@ -61,11 +61,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	protected $layoutPathAndFilenamePattern = '@packageResources/Private/Layouts/@layout.html';
 
 	/**
-	 * @var array
-	 */
-	protected $contextVariables = array();
-
-	/**
 	 * Path and filename of the template file. If set,  overrides the templatePathAndFilenamePattern
 	 * @var string
 	 */
@@ -134,7 +129,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected function buildRenderingContext($variableContainer = NULL) {
 		if ($variableContainer === NULL) {
-			$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->contextVariables);
+			$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->viewData);
 		}
 		$renderingConfiguration = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingConfiguration');
 		$renderingConfiguration->setObjectAccessorPostProcessor($this->objectFactory->create('F3\Fluid\Core\Rendering\HTMLSpecialCharsPostProcessor'));
@@ -239,23 +234,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		return $partial->render($renderingContext);
 	}
 
-	/**
-	 * Add a variable to the context.
-	 * Can be chained, so $template->addVariable(..., ...)->addVariable(..., ...); is possible,
-	 *
-	 * @param string $key Key of variable
-	 * @param object $value Value of object
-	 * @return \F3\Fluid\View\TemplateView an instance of $this, to enable chaining.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
-	 */
-	public function assign($key, $value) {
-		if ($key === 'view') {
-			throw new \F3\Fluid\Core\RuntimeException('The variable "view" cannot be set using assign().', 1233317880);
-		}
-		$this->contextVariables[$key] = $value;
-		return $this;
-	}
 
 	/**
 	 * Return the current request
