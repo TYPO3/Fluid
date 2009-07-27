@@ -203,6 +203,26 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function multipleEvaluateCallsShareTheSameViewHelperInstance() {
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setViewHelperVariableContainer'));
+		$mockViewHelper->expects($this->any())->method('render')->will($this->returnValue('String'));
+
+		$viewHelperNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array());
+		$mockViewHelperArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
+
+		$this->mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\Core\ViewHelper\AbstractViewHelper')->will($this->returnValue($mockViewHelper));
+		$this->mockObjectFactory->expects($this->at(1))->method('create')->with('F3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
+		$this->mockObjectFactory->expects($this->at(2))->method('create')->with('F3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
+
+		$viewHelperNode->setRenderingContext($this->renderingContext);
+		$viewHelperNode->evaluate();
+		$viewHelperNode->evaluate();
+	}
+
+	/**
+	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function convertArgumentValueCallsConvertToBooleanForArgumentsOfTypeBoolean() {

@@ -45,6 +45,18 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	protected $arguments = array();
 
 	/**
+	 * The cached ViewHelper, to make sure every SyntaxTreeNode has exactly one ViewHelper associated to it.
+	 * @var F3\Fluid\Core\ViewHelper\AbstractViewHelper
+	 */
+	protected $cachedViewHelper = NULL;
+
+	/**
+	 * Cached argument definitions.
+	 * @var array
+	 */
+	protected $cachedArgumentDefinitions = NULL;
+
+	/**
 	 * List of comparators which are supported in the boolean expression language.
 	 *
 	 * Make sure that if one string is contained in one another, the longer string is listed BEFORE the shorter one.
@@ -111,10 +123,18 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		// Store if the ObjectAccessorPostProcessor has been enabled before this ViewHelper, because we need to re-enable it if needed after this ViewHelper
 		$hasObjectAccessorPostProcessorBeenEnabledBeforeThisViewHelper = $this->renderingContext->isObjectAccessorPostProcessorEnabled();
 
+		// Caching of ViewHelper and Argument Definitions
 		$objectFactory = $this->renderingContext->getObjectFactory();
-		$viewHelper = $objectFactory->create($this->viewHelperClassName);
-		$argumentDefinitions = $viewHelper->prepareArguments();
+		if ($this->cachedViewHelper !== NULL) {
+			$viewHelper = $this->cachedViewHelper;
+			$argumentDefinitions = $this->cachedArgumentDefinitions;
+		} else {
+			$viewHelper = $objectFactory->create($this->viewHelperClassName);
+			$argumentDefinitions = $viewHelper->prepareArguments();
 
+			$this->cachedViewHelper = $viewHelper;
+			$this->cachedArgumentDefinitions = $argumentDefinitions;
+		}
 		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
 
 		$evaluatedArguments = array();
@@ -335,6 +355,10 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	public function __sleep() {
+		return array('viewHelperClassName', 'arguments', 'childNodes');
 	}
 }
 
