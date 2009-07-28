@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0" xml:id="fluid.chapter.softwaredesign"
+<chapter version="5.0" xml:id="fluid.softwaredesign"
          xmlns="http://docbook.org/ns/docbook"
          xmlns:xl="http://www.w3.org/1999/xlink"
          xmlns:xi="http://www.w3.org/2001/XInclude"
@@ -13,7 +13,7 @@
   meant for people who want to help developing Fluid, and understand the inner
   workings of it.</para>
 
-  <section>
+  <section xml:id="fluid.softwaredesign.designdecisions">
     <title>Design Decisions</title>
 
     <para>Fluid was born in the context of FLOW3, but from the beginning, we
@@ -25,7 +25,8 @@
 
     <para><mediaobject>
         <imageobject>
-          <imagedata fileref="layered-architecture.png" scalefit="1" width="100%" contentdepth="100%"/>
+          <imagedata contentdepth="100%" fileref="layered-architecture.png"
+                     scalefit="1" width="100%"/>
         </imageobject>
       </mediaobject>Fluid Core consists of the parts which do not change
     depending on the environment, such as the template parser.</para>
@@ -37,7 +38,7 @@
     initialization code, etc.</para>
   </section>
 
-  <section>
+  <section xml:id="fluid.softwaredesign.core">
     <title>The Core</title>
 
     <para>Fluid Core consists of the following components:</para>
@@ -86,9 +87,9 @@
       </itemizedlist></para>
   </section>
 
-  <section>
+  <section xml:id="fluid.softwaredesign.flow3layers">
     <title>The upper layers for FLOW3</title>
 
-    <para></para>
+    <para/>
   </section>
 </chapter>
