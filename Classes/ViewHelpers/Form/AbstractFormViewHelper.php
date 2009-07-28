@@ -86,23 +86,40 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * Get the value of this form element.
 	 * Either returns arguments['value'], or the correct value for Object Access.
 	 *
-	 * @return string Value
+	 * @return mixed Value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getValue() {
-		if ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject') && ($this->arguments['value'] === NULL)) {
-			$value = $this->getObjectValue($this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject'), $this->arguments['property']);
-		} else {
-			$value =  $this->arguments['value'];
+		$value = NULL;
+		if ($this->arguments->hasArgument('value')) {
+			$value = $this->arguments['value'];
+		} elseif ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$value = $this->getPropertyValue();
 		}
 		if (is_object($value)) {
-			$uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
-			if ($uuid !== NULL) {
-				$value = $uuid;
+			$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
+			if ($identifier !== NULL) {
+				$value = $identifier;
 			}
 		}
 		return $value;
+	}
+
+	/**
+	 * Get the current property of the object bound to this form.
+	 *
+	 * @return mixed Value
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function getPropertyValue() {
+		$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		$propertyName = $this->arguments['property'];
+		if (is_array($formObject)) {
+			return isset($formObject[$propertyName]) ? $formObject[$propertyName] : NULL;
+		}
+		return \F3\FLOW3\Reflection\ObjectAccess::getProperty($formObject, $propertyName);
 	}
 
 	/**
@@ -115,17 +132,29 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		return (($this->arguments['property'] !== NULL) && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formName')) ? TRUE : FALSE;
 	}
 
+
 	/**
-	 * Get object value. Calls the appropriate getter.
+	 * Add an CSS class if this view helper has errors
 	 *
-	 * @param object $object Object to get the value from
-	 * @param string $propertyName Name of property to get.
-	 * @todo replace with something generic.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @return void
+	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	private function getObjectValue($object, $propertyName) {
-		$getterMethodName = 'get' . ucfirst($propertyName);
-		return $object->$getterMethodName();
+	protected function setErrorClassAttribute() {
+		if ($this->arguments->hasArgument('class')) {
+			$cssClass = $this->arguments['class'] . ' ';
+		} else {
+			$cssClass = '';
+		}
+		$errors = $this->getErrorsForProperty();
+		if (count($errors) > 0) {
+			if ($this->arguments->hasArgument('errorClass')) {
+				$cssClass .= $this->arguments['errorClass'];
+			} else {
+				$cssClass .= 'f3-form-error';
+			}
+			$this->tag->addAttribute('class', $cssClass);
+		}
 	}
 
 	/**
@@ -133,21 +162,22 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 *
 	 * @return array An array of F3\FLOW3\Error\Error objects
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getErrorsForProperty() {
+		if (!$this->arguments->hasArgument('property')) {
+			return array();
+		}
 		$errors = $this->controllerContext->getRequest()->getErrors();
 		$formName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
-
-		if ($this->arguments->hasArgument('property')) {
-			$propertyName = $this->arguments['property'];
-			$formErrors = array();
-			foreach ($errors as $error) {
-				if ($error instanceof \F3\FLOW3\Validation\PropertyError && $error->getPropertyName() == $formName) {
-					$formErrors = $error->getErrors();
-					foreach ($formErrors as $formError) {
-						if ($formError instanceof \F3\FLOW3\Validation\PropertyError && $formError->getPropertyName() == $propertyName) {
-							return $formError->getErrors();
-						}
+		$propertyName = $this->arguments['property'];
+		$formErrors = array();
+		foreach ($errors as $error) {
+			if ($error instanceof \F3\FLOW3\Validation\PropertyError && $error->getPropertyName() === $formName) {
+				$formErrors = $error->getErrors();
+				foreach ($formErrors as $formError) {
+					if ($formError instanceof \F3\FLOW3\Validation\PropertyError && $formError->getPropertyName() === $propertyName) {
+						return $formError->getErrors();
 					}
 				}
 			}

@@ -73,16 +73,13 @@ class DateViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperThrowsExceptionIfDateStringCantBeParsed() {
 		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-		try {
-			$viewHelper->render();
-			$this->fail('render() did not throw an exception although the specified date could not be parsed.');
-		} catch (\F3\Fluid\Core\ViewHelper\Exception $exception) {
-		}
+		$viewHelper->render();
 	}
 }
 ?>

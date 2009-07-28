@@ -23,54 +23,32 @@ namespace F3\Fluid\ViewHelpers\Uri;
  *                                                                        */
 
 /**
- * Email link view helper.
- * Generates an email link.
+ * Email uri view helper.
+ * Currently the specified email is simply prepended by "mailto:" but we might add spam protection.
  *
  * = Examples =
  *
- * <code title="basic email link">
- * <f:link.email email="foo@bar.tld" />
+ * <code title="basic email uri">
+ * <f:uri.email email="foo@bar.tld" />
  * </code>
  *
  * Output:
- * <a href="mailto:foo@bar.tld">foo@bar.tld</a>
- * (depending on your spamProtectEmailAddresses-settings)
- *
- * <code title="Email link with custom linktext">
- * <f:link.email email="foo@bar.tld">some custom content</f:emaillink>
- * </code>
- *
- * Output:
- * <a href="mailto:foo@bar.tld">some custom content</a>
+ * mailto:foo@bar.tld
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var	string
-	 */
-	protected $tagName = 'a';
-
-	/**
-	 * @param string $email The email address to be turned into a link.
-	 * @return string Rendered email link
+	 * @param string $email The email address to be turned into a mailto uri.
+	 * @return string Rendered email uri
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($email) {
-		$linkHref = 'mailto:' . $email;
-		$linkText = $email;
-		$tagContent = $this->renderChildren();
-		if ($tagContent !== NULL) {
-			$linkText = $tagContent;
-		}
-		$this->tag->setContent($linkText);
-		$this->tag->addAttribute('href', $linkHref);
-
-		return $this->tag->render();
+		return 'mailto:' . $email;
 	}
 }
 

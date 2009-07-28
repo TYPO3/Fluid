@@ -72,14 +72,15 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $subpackage Target subpackage. if NULL current subpackage is used
 	 * @param string $section The anchor to be added to the URI
 	 * @param string $format The requested format, e.g. ".html"
+	 * @param boolean $absolute If set, the URI of the rendered link is absolute
 	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '') {
+	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE) {
 		$uriBuilder = $this->controllerContext->getURIBuilder();
-		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section, $format);
+		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section, $format, $absolute);
 		$this->tag->addAttribute('href', $uri);
 		$this->tag->setContent($this->renderChildren());
 

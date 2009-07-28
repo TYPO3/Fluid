@@ -33,12 +33,6 @@ namespace F3\Fluid\ViewHelpers;
 class ThenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Initialize arguments. We require no arguments.
-	 * @api
-	 */
-	public function initializeArguments() {}
-
-	/**
 	 * Just render everything.
 	 *
 	 * @return string the rendered string

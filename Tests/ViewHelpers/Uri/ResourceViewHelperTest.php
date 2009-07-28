@@ -34,20 +34,41 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
+	 * var \F3\Fluid\ViewHelpers\Uri\ResourceViewHelper
+	 */
+	protected $viewHelper;
+
+	public function setUp() {
+		parent::setUp();
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper'), array('renderChildren'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
+	}
+
+	/**
 	 * @test
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceURI() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper'), array('renderChildren'), array(), '', FALSE);
-		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
 
 		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
 		$mockRequest->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
 		$this->controllerContext->expects($this->atLeastOnce())->method('getRequest')->will($this->returnValue($mockRequest));
 
-		$resourceUri = $viewHelper->render();
+		$resourceUri = $this->viewHelper->render();
 		$this->assertEquals('Resources/Packages/PackageKey/foo', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderUsesCustomPackageKeyIfSpecified() {
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+
+		$resourceUri = $this->viewHelper->render('SomePackage');
+		$this->assertEquals('Resources/Packages/SomePackage/foo', $resourceUri);
 	}
 }
 

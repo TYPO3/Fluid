@@ -57,7 +57,7 @@ class ErrorsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render($for = '', $as = 'error') {
 		$errors = $this->controllerContext->getRequest()->getErrors();
-		if ($for != '') {
+		if ($for !== '') {
 			$errors = $this->getErrorsForProperty($for, $errors);
 		}
 		$output = '';

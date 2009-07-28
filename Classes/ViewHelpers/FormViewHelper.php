@@ -146,7 +146,7 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * Renders a hidden form field containing the technical identity of the given object.
 	 *
 	 * @param object $object The object to create an identity field for
-	 * @return string A hidden field containing the UUID of the given object or NULL if the object is unknown to the persistence framework
+	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
@@ -155,8 +155,8 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 		if (!is_object($object) || $this->persistenceManager->getBackend()->isNewObject($object)) {
 			return '';
 		}
-		$uuid = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
-		return ($uuid === NULL) ? '<!-- Object of type ' . get_class($object) . ' is without identity -->' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $uuid .'" />';
+		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+		return ($identifier === NULL) ? '<!-- Object of type ' . get_class($object) . ' is without identity -->' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $identifier .'" />';
 	}
 
 	/**

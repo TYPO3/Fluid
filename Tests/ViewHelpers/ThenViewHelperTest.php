@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Link;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script is part of the TYPO3 project - inspiring people to share!  *
@@ -15,56 +15,27 @@ namespace F3\Fluid\ViewHelpers\Link;
  * Public License for more details.                                       *
  *                                                                        */
 
+require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
- * Email link view helper.
- * Generates an email link.
- *
- * = Examples =
- *
- * <code title="basic email link">
- * <f:link.email email="foo@bar.tld" />
- * </code>
- *
- * Output:
- * <a href="mailto:foo@bar.tld">foo@bar.tld</a>
- *
- * <code title="Email link with custom linktext">
- * <f:link.email email="foo@bar.tld">some custom content</f:emaillink>
- * </code>
- *
- * Output:
- * <a href="mailto:foo@bar.tld">some custom content</a>
+ * Testcase for ElseViewHelper
  *
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
- * @scope prototype
  */
-class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+
+class ThenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * @var	string
-	 */
-	protected $tagName = 'a';
-
-	/**
-	 * @param string $email The email address to be turned into a link.
-	 * @return string Rendered email link
+	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @api
 	 */
-	public function render($email) {
-		$linkHref = 'mailto:' . $email;
-		$linkText = $email;
-		$tagContent = $this->renderChildren();
-		if ($tagContent !== NULL) {
-			$linkText = $tagContent;
-		}
-		$this->tag->setContent($linkText);
-		$this->tag->addAttribute('href', $linkHref);
+	public function renderRendersChildren() {
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\ThenViewHelper', array('renderChildren'));
 
-		return $this->tag->render();
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+		$actualResult = $viewHelper->render();
+		$this->assertEquals('foo', $actualResult);
 	}
 }
-
 
 ?>

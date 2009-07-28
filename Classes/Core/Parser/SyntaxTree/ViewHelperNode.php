@@ -63,7 +63,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Example: put ">=" before ">"
 	 * @var array of comparators
 	 */
-	static protected $comparators = array('==', '%', '>=', '>', '<=', '<');
+	static protected $comparators = array('==', '!=', '%', '>=', '>', '<=', '<');
 
 	/**
 	 * A regular expression which checks the text nodes of a boolean expression.
@@ -298,6 +298,9 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			case '==':
 				return ($leftSide == $rightSide);
 				break;
+			case '!=':
+				return ($leftSide != $rightSide);
+				break;
 			case '%':
 				return (boolean)((int)$leftSide % (int)$rightSide);
 			case '>':
@@ -319,6 +322,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param string $string string to check for a comparator inside
 	 * @return string The comparator or NULL if none found.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getComparatorFromString($string) {
 		foreach (self::$comparators as $comparator) {
@@ -357,6 +361,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		return FALSE;
 	}
 
+	/**
+	 * Clean up for serializing.
+	 *
+	 * @return array
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
 	public function __sleep() {
 		return array('viewHelperClassName', 'arguments', 'childNodes');
 	}

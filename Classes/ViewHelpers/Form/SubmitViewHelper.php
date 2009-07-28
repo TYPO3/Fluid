@@ -61,6 +61,7 @@ class SubmitViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
+		$this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
 		$this->registerUniversalTagAttributes();
 	}
 

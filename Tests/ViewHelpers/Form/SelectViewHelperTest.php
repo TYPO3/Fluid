@@ -17,6 +17,7 @@ namespace F3\Fluid\ViewHelpers\Form;
 
 include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Select" Form view helper
@@ -24,7 +25,7 @@ include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
+class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * var \F3\Fluid\ViewHelpers\Form\SelectViewHelper
@@ -32,7 +33,9 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Form\SelectViewHelper();
+		parent::setUp();
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\SelectViewHelper'), array('setErrorClassAttribute'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
 
@@ -41,10 +44,14 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCorrectlySetsTagName() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('setTagName')->with('select');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
-		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('options' => array())));
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('setTagName')->with('select');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array()
+		));
+		$this->viewHelper->setArguments($arguments);
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -56,11 +63,11 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
-		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
@@ -70,8 +77,8 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 			'value' => 'value2',
 			'name' => 'myName'
 		));
-
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
@@ -81,12 +88,12 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
-		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
-		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
+		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
@@ -98,8 +105,8 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 			'name' => 'myName',
 			'multiple' => 'multiple',
 		));
-
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
@@ -116,16 +123,18 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
-		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1">Ingmar</option>' . chr(10) . '<option value="2" selected="selected">Sebastian</option>' . chr(10) . '<option value="3">Robert</option>' . chr(10));
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="1">Ingmar</option>' . chr(10) . '<option value="2" selected="selected">Sebastian</option>' . chr(10) . '<option value="3">Robert</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
 		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
 		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user_is,
@@ -137,9 +146,8 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 			'optionLabelField' => 'firstName',
 			'name' => 'myName'
 		));
-
-		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
@@ -149,16 +157,17 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectOnDomainObjectsCreatesExpectedOptions() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
-		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
-		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="1" selected="selected">Schlecht</option>' . chr(10) . '<option value="2">Kurfuerst</option>' . chr(10) . '<option value="3" selected="selected">Lemke</option>' . chr(10));
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
+		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="1" selected="selected">Schlecht</option>' . chr(10) . '<option value="2">Kurfuerst</option>' . chr(10) . '<option value="3" selected="selected">Lemke</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
 		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
 		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user_is,
@@ -171,8 +180,8 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 			'name' => 'myName',
 			'multiple' => 'multiple'
 		));
-
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
@@ -187,23 +196,24 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
-		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="fakeUUID">fakeUUID</option>' . chr(10));
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="fakeUUID">fakeUUID</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$user = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user
 			),
 			'name' => 'myName'
 		));
-
-		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
@@ -218,24 +228,25 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('name', 'myName');
-		$tagBuilderMock->expects($this->once())->method('setContent')->with('<option value="fakeUUID">toStringResult</option>' . chr(10));
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="fakeUUID">toStringResult</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$user = $this->getMock('F3\Fluid\ViewHelpers\Fixtures\UserDomainClass', array('__toString'), array(1, 'Ingmar', 'Schlecht'));
 		$user->expects($this->atLeastOnce())->method('__toString')->will($this->returnValue('toStringResult'));
+
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user
 			),
 			'name' => 'myName'
 		));
-
-		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
@@ -251,24 +262,38 @@ class SelectViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$user = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user
 			),
 			'name' => 'myName'
 		));
-
-		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
 
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderCallsSetErrorClassAttribute() {
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array()
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');
+		$this->viewHelper->render();
+	}
 }
 
 ?>

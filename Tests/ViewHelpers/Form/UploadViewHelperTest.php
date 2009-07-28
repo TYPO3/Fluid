@@ -18,22 +18,23 @@ namespace F3\Fluid\ViewHelpers\Form;
 include_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 include_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
- * Test for the "Textarea" Form view helper
+ * Test for the "Upload" Form view helper
  *
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-class TextareaViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class UploadViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Form\TextareaViewHelper
+	 * var \F3\Fluid\ViewHelpers\Form\UploadViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\TextareaViewHelper'), array('setErrorClassAttribute'));
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\UploadViewHelper'), array('setErrorClassAttribute'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -44,8 +45,9 @@ class TextareaViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 */
 	public function renderCorrectlySetsTagName() {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
-		$mockTagBuilder->expects($this->once())->method('setTagName')->with('textarea');
+		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array()));
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -56,19 +58,18 @@ class TextareaViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderCorrectlySetsNameAttributeAndContent() {
+	public function renderCorrectlySetsTypeNameAndValueAttributes() {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'NameOfTextarea');
-		$mockTagBuilder->expects($this->once())->method('setContent')->with('Current value');
+		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('type', 'file');
+		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'someName');
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
-			'name' => 'NameOfTextarea',
-			'value' => 'Current value'
+			'name' => 'someName',
 		));
-		$this->viewHelper->setArguments($arguments);
 
+		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();

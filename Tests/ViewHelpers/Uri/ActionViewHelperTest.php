@@ -22,6 +22,8 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
  * Testcase for the action uri view helper
  *
@@ -29,14 +31,57 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ActionViewHelperTest extends \F3\Testing\BaseTestCase {
+class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+
+	/**
+	 * var \F3\Fluid\ViewHelpers\Uri\ActionViewHelper
+	 */
+	protected $viewHelper;
+
+	public function setUp() {
+		parent::setUp();
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Uri\ActionViewHelper();
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
+	}
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function xy() {
-		$this->markTestIncomplete('Yet no test case has been written for the action uri view helper.');
+	public function renderReturnsUriReturnedFromUriBuilder() {
+		$this->uriBuilder->expects($this->any())->method('URIFor')->will($this->returnValue('some/uri'));
+
+		$this->viewHelper->initialize();
+		$actualResult = $this->viewHelper->render();
+
+		$this->assertEquals('some/uri', $actualResult);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderCorrectlyPassesDefaultArgumentsToUriBuilder() {
+		$this->uriBuilder->expects($this->any())->method('URIFor')->with(
+			NULL, array(), NULL, NULL, NULL, '', '', FALSE
+		);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderCorrectlyPassesAllArgumentsToUriBuilder() {
+		$this->uriBuilder->expects($this->any())->method('URIFor')->with(
+			'someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', TRUE
+		);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', TRUE);
 	}
 }
 

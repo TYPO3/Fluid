@@ -36,19 +36,19 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * = Pre-select a value =
  *
- * To pre-select a value, set "selectedValue" to the option key which should be selected.
+ * To pre-select a value, set "value" to the option key which should be selected.
  * <code title="Default value">
- * <f:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" selectedValue="visa" />
+ * <f:form.select name="paymentOptions" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" value="visa" />
  * </code>
  * Generates a dropdown box like above, except that "VISA Card" is selected.
  *
- * If the select box is a multi-select box (multiple="true"), then "selectedValue" can be an array as well.
+ * If the select box is a multi-select box (multiple="true"), then "value" can be an array as well.
  *
  * = Usage on domain objects =
  *
  * If you want to output domain objects, you can just pass them as array into the "options" parameter.
  * To define what domain object value should be used as option key, use the "optionValueField" variable. Same goes for optionLabelField.
- * If neither is given, the UUID and the __toString() method are tried as fallbacks.
+ * If neither is given, the Identifier (UUID/uid) and the __toString() method are tried as fallbacks.
  *
  * If the optionValueField variable is set, the getter named after that value is used to retrieve the option key.
  * If the optionLabelField variable is set, the getter named after that value is used to retrieve the option value.
@@ -60,7 +60,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * So, in the above example, the method $user->getId() is called to retrieve the key, and $user->getFirstName() to retrieve the displayed value of each entry.
  *
- * The "selectedValue" property now expects a domain object, and tests for object equivalence.
+ * The "value" property now expects a domain object, and tests for object equivalence.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -90,9 +90,11 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 		$this->registerUniversalTagAttributes();
 		$this->registerTagAttribute('multiple', 'string', 'if set, multiple select field');
 		$this->registerTagAttribute('size', 'string', 'Size of input field');
-		$this->registerArgument('options', 'array', 'Associative array with internal IDs as key, and the values are displayed in the select box', FALSE);
-		$this->registerArgument('optionValueField', 'string', 'If specified, will call the appropriate getter on each object to determine the value.', FALSE);
-		$this->registerArgument('optionLabelField', 'string', 'If specified, will call the appropriate getter on each object to determine the label.', FALSE);
+		$this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
+		$this->registerArgument('options', 'array', 'Associative array with internal IDs as key, and the values are displayed in the select box', TRUE);
+		$this->registerArgument('optionValueField', 'string', 'If specified, will call the appropriate getter on each object to determine the value.');
+		$this->registerArgument('optionLabelField', 'string', 'If specified, will call the appropriate getter on each object to determine the label.');
+		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
 	}
 
 	/**
@@ -111,6 +113,8 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper
 
 		$this->tag->addAttribute('name', $name);
 		$this->tag->setContent($this->renderOptionTags());
+
+		$this->setErrorClassAttribute();
 
 		return $this->tag->render();
 	}

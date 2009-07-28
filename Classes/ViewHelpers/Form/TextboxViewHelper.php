@@ -55,12 +55,12 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
-		$this->registerTagAttribute('disabled', 'string', 'The disabled attribute of the input field');
+		$this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
 		$this->registerTagAttribute('maxlength', 'int', 'The maxlength attribute of the input field (will not be validated)');
 		$this->registerTagAttribute('readonly', 'string', 'The readonly attribute of the input field');
 		$this->registerTagAttribute('size', 'int', 'The size of the input field');
-		$this->registerUniversalTagAttributes();
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerUniversalTagAttributes();
 	}
 
 	/**
@@ -75,29 +75,11 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$this->tag->addAttribute('name', $this->getName());
 		$this->tag->addAttribute('value', $this->getValue());
 
-		$this->addErrorStyleClass();
+		$this->setErrorClassAttribute();
 
 		return $this->tag->render();
 	}
 
-	/**
-	 * Add an CSS class if this view helper has errors
-	 *
-	 * @return void
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 */
-	protected function addErrorStyleClass() {
-		if ($this->arguments->hasArgument('class')) {
-			$styleClass = $this->arguments['class'] . ' ';
-		} else {
-			$styleClass = '';
-		}
-		$errors = $this->getErrorsForProperty();
-		if (count($errors) > 0) {
-			$styleClass .= $this->arguments['errorClass'];
-			$this->tag->addAttribute('class', $styleClass);
-		}
-	}
 }
 
 ?>

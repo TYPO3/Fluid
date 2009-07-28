@@ -34,9 +34,9 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function oneTagAttributeIsRenderedCorrectly() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('foo', 'bar');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array('foo' => 'bar'));
@@ -50,9 +50,9 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function additionalTagAttributesAreRenderedCorrectly() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('addAttribute')->with('foo', 'bar');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array('additionalAttributes' => array('foo' => 'bar')));
@@ -65,16 +65,16 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function standardTagAttributesAreRegistered() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');
-		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('dir', 'dirAttribute');
-		$tagBuilderMock->expects($this->at(2))->method('addAttribute')->with('id', 'idAttribute');
-		$tagBuilderMock->expects($this->at(3))->method('addAttribute')->with('lang', 'langAttribute');
-		$tagBuilderMock->expects($this->at(4))->method('addAttribute')->with('style', 'styleAttribute');
-		$tagBuilderMock->expects($this->at(5))->method('addAttribute')->with('title', 'titleAttribute');
-		$tagBuilderMock->expects($this->at(6))->method('addAttribute')->with('accesskey', 'accesskeyAttribute');
-		$tagBuilderMock->expects($this->at(7))->method('addAttribute')->with('tabindex', 'tabindexAttribute');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');
+		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('dir', 'dirAttribute');
+		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('id', 'idAttribute');
+		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('lang', 'langAttribute');
+		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('style', 'styleAttribute');
+		$mockTagBuilder->expects($this->at(5))->method('addAttribute')->with('title', 'titleAttribute');
+		$mockTagBuilder->expects($this->at(6))->method('addAttribute')->with('accesskey', 'accesskeyAttribute');
+		$mockTagBuilder->expects($this->at(7))->method('addAttribute')->with('tabindex', 'tabindexAttribute');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(
 			array(

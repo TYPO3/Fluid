@@ -34,7 +34,7 @@ class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\TextboxViewHelper'), array('getErrorsForProperty'));
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\TextboxViewHelper'), array('setErrorClassAttribute'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -43,11 +43,10 @@ class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function selectCorrectlySetsTagName() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->once())->method('setTagName')->with('input');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
-		$this->viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array()));
+	public function renderCorrectlySetsTagName() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -58,20 +57,20 @@ class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function textboxCorrectlySetsTypeNameAndValueAttributes() {
-		$tagBuilderMock = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
-		$tagBuilderMock->expects($this->at(0))->method('addAttribute')->with('type', 'text');
-		$tagBuilderMock->expects($this->at(1))->method('addAttribute')->with('name', 'NameOfTextbox');
-		$tagBuilderMock->expects($this->at(2))->method('addAttribute')->with('value', 'Current value');
-		$tagBuilderMock->expects($this->once())->method('render');
-		$this->viewHelper->injectTagBuilder($tagBuilderMock);
+	public function renderCorrectlySetsTypeNameAndValueAttributes() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('type', 'text');
+		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'NameOfTextbox');
+		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('value', 'Current value');
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
 			'name' => 'NameOfTextbox',
 			'value' => 'Current value'
 		));
-
 		$this->viewHelper->setArguments($arguments);
+
 		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -79,10 +78,11 @@ class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderChecksForErrorsAndSetsCSSClassOnError() {
-		$this->markTestIncomplete('To be implemented');
+	public function renderCallsSetErrorClassAttribute() {
+		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');
+		$this->viewHelper->render();
 	}
 }
 

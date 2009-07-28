@@ -50,7 +50,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
 class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Render the link.
+	 * Render the Uri.
 	 *
 	 * @param string $action Target action
 	 * @param array $arguments Arguments

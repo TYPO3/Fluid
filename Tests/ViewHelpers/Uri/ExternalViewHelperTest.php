@@ -22,6 +22,8 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
  * Testcase for the external uri view helper
  *
@@ -29,14 +31,29 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ExternalViewHelperTest extends \F3\Testing\BaseTestCase {
+class ExternalViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+
+	/**
+	 * var \F3\Fluid\ViewHelpers\Uri\ExternalViewHelper
+	 */
+	protected $viewHelper;
+
+	public function setUp() {
+		parent::setUp();
+		$this->viewHelper = new \F3\Fluid\ViewHelpers\Uri\ExternalViewHelper();
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
+	}
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function xy() {
-		$this->markTestIncomplete('Yet no test case has been written for the external uri view helper.');
+	public function renderReturnsSpecifiedUri() {
+		$this->viewHelper->initialize();
+		$actualResult = $this->viewHelper->render('http://www.some-domain.tld');
+
+		$this->assertEquals('http://www.some-domain.tld', $actualResult);
 	}
 }
 
