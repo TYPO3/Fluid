@@ -89,7 +89,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 *
 	 * @param array $childNodes Child nodes of this syntax tree node
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 * @api
 	 */
 	public function setChildNodes(array $childNodes) {
@@ -126,8 +126,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 * If no ThenViewHelper is found, all child nodes are rendered
 	 *
 	 * @return string rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	protected function renderThenChild() {
 		foreach ($this->childNodes as $childNode) {
@@ -145,8 +144,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 * Iterates through child nodes and renders ElseViewHelper.
 	 *
 	 * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	protected function renderElseChild() {
 		foreach ($this->childNodes as $childNode) {
