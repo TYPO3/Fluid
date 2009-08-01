@@ -34,7 +34,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Pattern for fetching information from controller object name
 	 * @var string
 	 */
-	const PATTERN_CONTROLLER = '/^F3\\\\\w*\\\\(?:(?P<SubpackageName>.*)\\\\)?Controller\\\\(?P<ControllerName>\w*)Controller$/';
+	protected $PATTERN_CONTROLLER = '/^F3FLUID_NAMESPACE_SEPARATOR\w*FLUID_NAMESPACE_SEPARATOR(?:(?P<SubpackageName>.*)FLUID_NAMESPACE_SEPARATOR)?ControllerFLUID_NAMESPACE_SEPARATOR(?P<ControllerName>\w*)Controller$/';
 
 	/**
 	 * @var \F3\Fluid\Core\Parser\TemplateParser
@@ -78,6 +78,14 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected $layoutPathAndFilename = NULL;
 
+	/**
+	 * Construct the TemplateView
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initializeObject() {
+		$this->PATTERN_CONTROLLER = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), $this->PATTERN_CONTROLLER);
+	}
 	/**
 	 * Inject the template parser
 	 *
@@ -367,12 +375,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
 		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);
 
-		preg_match(self::PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
-		$subpackageName = '';
+		preg_match($this->PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
+
 		$subpackageParts = array();
 		if ($matches['SubpackageName'] !== '') {
-			$subpackageName = str_replace('\\', '/', $matches['SubpackageName']);
-			$subpackageParts = explode('/', $subpackageName);
+			$subpackageParts = explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $matches['SubpackageName']);
 		}
 
 		$controllerName = NULL;
