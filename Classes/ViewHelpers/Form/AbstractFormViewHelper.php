@@ -76,7 +76,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	protected function getName() {
 		$name = ($this->isObjectAccessorMode()) ? $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName') . '[' . $this->arguments['property'] . ']' : $this->arguments['name'];
 		if (is_object($this->arguments['value']) && NULL !== $this->persistenceManager->getBackend()->getIdentifierByObject($this->arguments['value'])
-				&& ($this->arguments['value'] instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface && !$this->arguments['value']->FLOW3_Persistence_isNew())) {
+				&& (!$this->persistenceManager->getBackend()->isNewObject($this->arguments['value']))) {
 			$name .= '[__identity]';
 		}
 		return $name;

@@ -78,14 +78,9 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected $layoutPathAndFilename = NULL;
 
-	/**
-	 * Construct the TemplateView
-	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function initializeObject() {
-		$this->PATTERN_CONTROLLER = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), $this->PATTERN_CONTROLLER);
-	}
+	//PLACEHOLDER
+	// Here, the backporter can insert a constructor method, which is needed for Fluid v4.
+
 	/**
 	 * Inject the template parser
 	 *
@@ -375,6 +370,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
 		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);
 
+		$this->PATTERN_CONTROLLER = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), $this->PATTERN_CONTROLLER);
 		preg_match($this->PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
 
 		$subpackageParts = array();
