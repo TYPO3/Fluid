@@ -152,7 +152,10 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object) {
-		if (!is_object($object)) {
+		if (!is_object($object)
+			|| !$object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface
+			|| ($object->FLOW3_Persistence_isNew() && !$object->FLOW3_Persistence_isClone())
+			){
 			return '';
 		}
 		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
