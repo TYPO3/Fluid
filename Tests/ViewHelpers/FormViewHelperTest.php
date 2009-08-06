@@ -41,7 +41,6 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
 		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
-		$mockBackend->expects($this->once())->method('isNewObject')->with($object)->will($this->returnValue(FALSE));
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));

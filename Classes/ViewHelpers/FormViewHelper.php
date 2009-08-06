@@ -152,7 +152,7 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object) {
-		if (!is_object($object) || $this->persistenceManager->getBackend()->isNewObject($object)) {
+		if (!is_object($object)) {
 			return '';
 		}
 		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
