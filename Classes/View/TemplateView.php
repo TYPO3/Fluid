@@ -257,7 +257,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 
 		$paths = $this->expandGenericPathPattern($this->layoutPathAndFilenamePattern, TRUE, TRUE);
-		foreach ($paths as $key => $path) {
+		foreach ($paths as $key => &$path) {
 			$path = str_replace('@layout', $layoutName, $path);
 			if (file_exists($path)) {
 				return $path;
@@ -290,7 +290,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected function resolvePartialPathAndFilename($partialName) {
 		$paths = $this->expandGenericPathPattern($this->partialPathAndFilenamePattern, TRUE, TRUE);
-		foreach ($paths as $key => $path) {
+		foreach ($paths as $key => &$path) {
 			$path = str_replace('@partial', $partialName, $path);
 			if (file_exists($path)) {
 				return $path;
