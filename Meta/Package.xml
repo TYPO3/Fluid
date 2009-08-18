@@ -3,7 +3,7 @@
     <key>Fluid</key>
     <title>Fluid Templating Framework</title>
     <description>Next-Generation Templating Framework for FLOW3 and TYPO3 5.0, also backported to TYPO3 4.x</description>
-    <version>1.0.0-alpha3</version>
+    <version>1.0.0-alpha4</version>
     <categories/>
     <parties>
         <person role="LeadDeveloper">
