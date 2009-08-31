@@ -426,6 +426,17 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 14 was not parsed correctly.');
 	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function resolveViewHelperNameWorksWithMoreThanOneLevel() {
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$actual = $mockTemplateParser->_call('resolveViewHelperName', 'f', 'my.multi.level');
+		$expected = 'F3\Fluid\ViewHelpers\My\Multi\LevelViewHelper';
+		$this->assertEquals($expected, $actual, 'View Helper resolving does not support multiple nesting levels.');
+	}
 }
 
 ?>

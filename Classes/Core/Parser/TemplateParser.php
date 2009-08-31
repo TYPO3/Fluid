@@ -425,9 +425,7 @@ class TemplateParser {
 		$explodedViewHelperName = explode('.', $methodIdentifier);
 		$className = '';
 		if (count($explodedViewHelperName) > 1) {
-			$className = ucfirst($explodedViewHelperName[0]);
-			$className .= \F3\Fluid\Fluid::NAMESPACE_SEPARATOR;
-			$className .= ucfirst($explodedViewHelperName[1]);
+			$className = implode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, array_map('ucfirst', $explodedViewHelperName));
 		} else {
 			$className = ucfirst($explodedViewHelperName[0]);
 		}
