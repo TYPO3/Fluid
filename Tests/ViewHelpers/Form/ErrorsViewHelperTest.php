@@ -39,9 +39,7 @@ class ErrorsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	public function renderWithoutSpecifiedNameLoopsThroughRootErrors() {
 		$mockError1 = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
 		$mockError2 = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
-		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
-		$mockRequest->expects($this->atLeastOnce())->method('getErrors')->will($this->returnValue(array($mockError1, $mockError2)));
-		$this->controllerContext->expects($this->atLeastOnce())->method('getRequest')->will($this->returnValue($mockRequest));
+		$this->request->expects($this->atLeastOnce())->method('getErrors')->will($this->returnValue(array($mockError1, $mockError2)));
 
 		$viewHelper = new \F3\Fluid\ViewHelpers\Form\ErrorsViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);

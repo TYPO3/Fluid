@@ -38,7 +38,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string

@@ -76,6 +76,17 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
+	 * @author Jochen Rau <jochen.rau@typoplanet.de>
+	 */
+	public function viewHelperNameCanBeResolved() {
+		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$result = $mockTemplateParser->_call('resolveViewHelperName', 'f', 'foo.bar.baz');
+		$expected = 'F3\Fluid\ViewHelpers\Foo\Bar\BazViewHelper';
+		$this->assertEquals($result, $expected, 'The name of the View Helper Name could not be resolved.');
+	}
+
+	/**
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 */
@@ -426,7 +437,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 14 was not parsed correctly.');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

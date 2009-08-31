@@ -50,11 +50,8 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceURI() {
+		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
 		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-
-		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
-		$mockRequest->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
-		$this->controllerContext->expects($this->atLeastOnce())->method('getRequest')->will($this->returnValue($mockRequest));
 
 		$resourceUri = $this->viewHelper->render();
 		$this->assertEquals('Resources/Packages/PackageKey/foo', $resourceUri);

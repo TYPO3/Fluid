@@ -34,17 +34,14 @@ class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	public function renderTakesBaseURIFromControllerContext() {
 		$baseURI = 'http://typo3.org/';
 
-		$request = $this->getMock('F3\FLOW3\MVC\Web\Request');
-		$request->expects($this->any())->method('getBaseURI')->will($this->returnValue($baseURI));
+		$this->request->expects($this->any())->method('getBaseURI')->will($this->returnValue($baseURI));
 
-		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($request));
-
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\BaseViewHelper'), array('dummy'), array(), '', FALSE);
+		$viewHelper = new \F3\Fluid\ViewHelpers\BaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$expected = '<base href="http://typo3.org/"></base>';
-		$actual = $viewHelper->render();
-		$this->assertSame($expected, $actual);
+		$expectedResult = '<base href="' . $baseURI . '"></base>';
+		$actualResult = $viewHelper->render();
+		$this->assertSame($expectedResult, $actualResult);
 	}
 }
 ?>

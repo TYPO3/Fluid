@@ -58,6 +58,11 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 	protected $arguments;
 
 	/**
+	 * @var \F3\FLOW3\MVC\Web\Request
+	 */
+	protected $request;
+
+	/**
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -65,8 +70,10 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->uriBuilder = $this->getMock('F3\FLOW3\MVC\Web\Routing\URIBuilder');
+		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
 		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
 		$this->controllerContext->expects($this->any())->method('getURIBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->tagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder');
 		$this->arguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
 	}

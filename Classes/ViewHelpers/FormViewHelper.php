@@ -53,28 +53,12 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
 	/**
 	 * @var string
 	 */
 	protected $tagName = 'form';
-
-	/**
-	 * @var \F3\FLOW3\Persistence\ManagerInterface
-	 */
-	protected $persistenceManager;
-
-	/**
-	 * Injects the Persistence Manager
-	 *
-	 * @param \F3\FLOW3\Persistence\ManagerInterface $persistenceManager
-	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\ManagerInterface $persistenceManager) {
-		$this->persistenceManager = $persistenceManager;
-	}
 
 	/**
 	 * Initialize arguments.
@@ -102,12 +86,13 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $subpackageName target subpackage
 	 * @param mixed $object object to use for the form. Use in conjunction with the "property" attribute on the sub tags
 	 * @param string $section The anchor to be added to the URI
+	 * @param string $fieldNamePrefix Prefix that will be added to all field names within this form
 	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL, $section = '') {
+	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL, $section = '', $fieldNamePrefix = NULL) {
 		$uriBuilder = $this->controllerContext->getURIBuilder();
 		$formActionUri = $uriBuilder->URIFor($action, $arguments, $controllerName, $packageName, $subpackageName, $section);
 		$this->tag->addAttribute('action', $formActionUri);
@@ -118,26 +103,18 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 			$this->tag->addAttribute('method', 'post');
 		}
 
-		if ($this->arguments['name']) {
-			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formName', $this->arguments['name']);
-		}
-		$hiddenIdentityFields = '';
-		if (!empty($object)) {
-			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $object);
-			$hiddenIdentityFields = $this->renderHiddenIdentityField($object);
-		}
+		$this->addFormNameToViewHelperVariableContainer();
+		$this->addFormObjectToViewHelperVariableContainer();
+		$this->addFieldNamePrefixToViewHelperVariableContainer();
 
-		$content = $hiddenIdentityFields;
+		$content = $this->renderHiddenIdentityField();
 		$content .= $this->renderHiddenReferrerFields();
 		$content .= $this->renderChildren();
 		$this->tag->setContent($content);
 
-		if (!empty($object)) {
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-		}
-		if ($this->arguments['name']) {
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
-		}
+		$this->removeFieldNamePrefixFromViewHelperVariableContainer();
+		$this->removeFormObjectFromViewHelperVariableContainer();
+		$this->removeFormNameFromViewHelperVariableContainer();
 
 		return $this->tag->render();
 	}
@@ -145,13 +122,14 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	/**
 	 * Renders a hidden form field containing the technical identity of the given object.
 	 *
-	 * @param object $object The object to create an identity field for
 	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
-	protected function renderHiddenIdentityField($object) {
+	protected function renderHiddenIdentityField() {
+		$object = $this->arguments['object'];
 		if (!is_object($object)
 			|| !$object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface
 			|| ($object->FLOW3_Persistence_isNew() && !$object->FLOW3_Persistence_isClone())
@@ -159,7 +137,10 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 			return '';
 		}
 		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
-		return ($identifier === NULL) ? '<!-- Object of type ' . get_class($object) . ' is without identity -->' : '<input type="hidden" name="'. $this->arguments['name'] . '[__identity]" value="' . $identifier .'" />';
+		if ($identifier === NULL) {
+			return chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
+		}
+		return chr(10) . '<input type="hidden" name="'. $this->prefixFieldName($this->arguments['name']) . '[__identity]" value="' . $identifier .'" />' . chr(10);
 	}
 
 	/**
@@ -175,13 +156,88 @@ class FormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 		$packageKey = $request->getControllerPackageKey();
 		$subpackageKey = $request->getControllerSubpackageKey();
 		$controllerName = $request->getControllerName();
-		$controllerActionName = $request->getControllerActionName();
-		$result = '';
-		foreach (array('__referrer[packageKey]' => $packageKey, '__referrer[subpackageKey]' => $subpackageKey, '__referrer[controllerName]' => $controllerName, '__referrer[actionName]' => $controllerActionName) as $fieldName => $fieldValue) {
-			$result .= PHP_EOL . '<input type="hidden" name="' . $fieldName . '" value="' . $fieldValue . '" />';
-		}
+		$actionName = $request->getControllerActionName();
+		$result = chr(10);
+		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[packageKey]') . '" value="' . $packageKey . '" />' . chr(10);
+		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[subpackageKey]') . '" value="' . $subpackageKey . '" />' . chr(10);
+		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[controllerName]') . '" value="' . $controllerName . '" />' . chr(10);
+		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[actionName]') . '" value="' . $actionName . '" />' . chr(10);
 		return $result;
 	}
+
+	/**
+	 * Adds the form name to the ViewHelperVariableContainer if the name attribute is specified.
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function addFormNameToViewHelperVariableContainer() {
+		if ($this->arguments->hasArgument('name')) {
+			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formName', $this->arguments['name']);
+		}
+	}
+
+	/**
+	 * Removes the form name from the ViewHelperVariableContainer.
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function removeFormNameFromViewHelperVariableContainer() {
+		if ($this->arguments->hasArgument('name')) {
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+		}
+	}
+
+	/**
+	 * Adds the object that is bound to this form to the ViewHelperVariableContainer if the formObject attribute is specified.
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function addFormObjectToViewHelperVariableContainer() {
+		if ($this->arguments->hasArgument('object')) {
+			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $this->arguments['object']);
+		}
+	}
+
+	/**
+	 * Removes the form object from the ViewHelperVariableContainer.
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function removeFormObjectFromViewHelperVariableContainer() {
+		if ($this->arguments->hasArgument('object')) {
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		}
+	}
+
+	/**
+	 * Adds the field name prefix to the ViewHelperVariableContainer
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function addFieldNamePrefixToViewHelperVariableContainer() {
+		$fieldNamePrefix = '';
+		if ($this->arguments->hasArgument('fieldNamePrefix')) {
+			$fieldNamePrefix = $this->arguments['fieldNamePrefix'];
+		}
+		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $fieldNamePrefix);
+	}
+
+	/**
+	 * Removes field name prefix from the ViewHelperVariableContainer
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function removeFieldNamePrefixFromViewHelperVariableContainer() {
+		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
+	}
+
+
 }
 
 ?>
