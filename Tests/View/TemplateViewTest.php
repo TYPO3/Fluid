@@ -151,7 +151,18 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		return $mockControllerContext;
 	}
-
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getTemplateRootPathReturnsUserSpecifiedTemplatePath() {
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('dummy'), array(), '', FALSE);
+		$templateView->setTemplateRootPath('/foo/bar');
+		$expected = '/foo/bar';
+		$actual = $templateView->_call('getTemplateRootPath');
+		$this->assertEquals($expected, $actual, 'A set template root path was not returned correctly.');
+	}
 
 	/**
 	 * test

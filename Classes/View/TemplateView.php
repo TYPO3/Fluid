@@ -48,6 +48,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	protected $templateRootPathPattern = '@packageResources/Private';
 
 	/**
+	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
+	 */
+	protected $templateRootPath = NULL;
+	
+	/**
 	 * File pattern for resolving the template file
 	 * @var string
 	 */
@@ -199,8 +204,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
-
-
 	/**
 	 * Renders a given section.
 	 *
@@ -332,12 +335,30 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
+	 * Set the root path to the templates.
+	 * If set, overrides the one determined from $this->templateRootPathPattern
+	 * 
+	 * @param string $templateRootPath Root path to the templates. If set, overrides the one determined from $this->templateRootPathPattern
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
+	 */
+	public function setTemplateRootPath($templateRootPath) {
+		$this->templateRootPath = $templateRootPath;
+	}
+	
+	/**
 	 * Resolves the template root to be used inside other paths.
+	 * 
 	 * @return string Path to template root directory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getTemplateRootPath() {
-		return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->templateRootPathPattern);
+		if ($this->templateRootPath !== NULL) {
+			return $this->templateRootPath;
+		} else {
+			return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->templateRootPathPattern);
+		}
 	}
 
 	/**
