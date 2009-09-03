@@ -28,6 +28,19 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->viewHelper = new \F3\Fluid\Core\Fixtures\TestTagBasedViewHelper();
 	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function initializeResetsUnderlyingTagBuilder() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('reset'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('reset');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$this->viewHelper->initialize();
+	}
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

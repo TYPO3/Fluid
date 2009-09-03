@@ -87,6 +87,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 */
 	public function initialize() {
 		parent::initialize();
+		$this->tag->reset();
 		$this->tag->setTagName($this->tagName);
 		if (is_array($this->arguments['additionalAttributes'])) {
 			$this->tag->addAttributes($this->arguments['additionalAttributes']);

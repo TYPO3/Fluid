@@ -102,6 +102,16 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
+	public function contentCanBeRemoved() {
+		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag', 'some content');
+		$tagBuilder->setContent(NULL);
+		$this->assertEquals('<tag />', $tagBuilder->render());
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
 	public function renderReturnsOpeningAndClosingTagIfNoContentIsSpecifiedButForceClosingTagIsTrue() {
 		$tagBuilder = new \F3\Fluid\Core\ViewHelper\TagBuilder('tag');
 		$tagBuilder->forceClosingTag(TRUE);
@@ -151,6 +161,25 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 		$tagBuilder->addAttribute('attribute3', 'attribute3value');
 		$tagBuilder->removeAttribute('attribute2');
 		$this->assertEquals('<tag attribute1="attribute1value" attribute3="attribute3value" />', $tagBuilder->render());
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function resetResetsTagBuilder() {
+		$tagBuilder = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\TagBuilder'), array('dummy'));
+		$tagBuilder->setTagName('tagName');
+		$tagBuilder->setContent('some content');
+		$tagBuilder->forceClosingTag(TRUE);
+		$tagBuilder->addAttribute('attribute1', 'attribute1value');
+		$tagBuilder->addAttribute('attribute2', 'attribute2value');
+		$tagBuilder->reset();
+
+		$this->assertEquals('', $tagBuilder->_get('tagName'));
+		$this->assertEquals('', $tagBuilder->_get('content'));
+		$this->assertEquals(array(), $tagBuilder->_get('attributes'));
+		$this->assertFalse($tagBuilder->_get('forceClosingTag'));
 	}
 
 	/**

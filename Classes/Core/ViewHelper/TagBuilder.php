@@ -191,6 +191,20 @@ class TagBuilder {
 	}
 
 	/**
+	 * Resets the TagBuilder by setting all members to their default value
+	 *
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
+	 */
+	public function reset() {
+		$this->tagName = '';
+		$this->content = '';
+		$this->attributes = array();
+		$this->forceClosingTag = FALSE;
+	}
+
+	/**
 	 * Renders and returns the tag
 	 *
 	 * @return void
