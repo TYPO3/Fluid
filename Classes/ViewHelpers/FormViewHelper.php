@@ -81,21 +81,20 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 *
 	 * @param string $action target action
 	 * @param array $arguments additional arguments
-	 * @param string $controllerName target controller
-	 * @param string $packageName target package
-	 * @param string $subpackageName target subpackage
+	 * @param string $controller name of target controller
+	 * @param string $package name of target package
+	 * @param string $subpackage name of target subpackage
 	 * @param mixed $object object to use for the form. Use in conjunction with the "property" attribute on the sub tags
 	 * @param string $section The anchor to be added to the URI
 	 * @param string $fieldNamePrefix Prefix that will be added to all field names within this form
+	 * @param string $actionUri can be used to overwrite the "action" attribute of the form tag
 	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = '', array $arguments = array(), $controllerName = NULL, $packageName = NULL, $subpackageName = NULL, $object = NULL, $section = '', $fieldNamePrefix = NULL) {
-		$uriBuilder = $this->controllerContext->getURIBuilder();
-		$formActionUri = $uriBuilder->URIFor($action, $arguments, $controllerName, $packageName, $subpackageName, $section);
-		$this->tag->addAttribute('action', $formActionUri);
+	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $fieldNamePrefix = NULL, $actionUri = NULL) {
+		$this->setFormActionUri();
 
 		if (strtolower($this->arguments['method']) === 'get') {
 			$this->tag->addAttribute('method', 'get');
@@ -117,6 +116,23 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 		$this->removeFormNameFromViewHelperVariableContainer();
 
 		return $this->tag->render();
+	}
+
+	/**
+	 * Sets the "action" attribute of the form tag
+	 *
+	 * @return void
+	 */
+	protected function setFormActionUri() {
+		if ($this->arguments->hasArgument('actionUri')) {
+			$formActionUri = $this->arguments['actionUri'];
+		} else {
+			$uriBuilder = $this->controllerContext->getUriBuilder();
+			$formActionUri = $uriBuilder
+				->reset()
+				->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
+		}
+		$this->tag->addAttribute('action', $formActionUri);
 	}
 
 	/**

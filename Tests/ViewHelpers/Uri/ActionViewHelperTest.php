@@ -50,7 +50,7 @@ class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsUriReturnedFromUriBuilder() {
-		$this->uriBuilder->expects($this->any())->method('URIFor')->will($this->returnValue('some/uri'));
+		$this->uriBuilder->expects($this->any())->method('uriFor')->will($this->returnValue('some/uri'));
 
 		$this->viewHelper->initialize();
 		$actualResult = $this->viewHelper->render();
@@ -63,9 +63,12 @@ class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyPassesDefaultArgumentsToUriBuilder() {
-		$this->uriBuilder->expects($this->any())->method('URIFor')->with(
-			NULL, array(), NULL, NULL, NULL, '', '', FALSE
-		);
+		$this->uriBuilder->expects($this->once())->method('setSection')->with('');
+		$this->uriBuilder->expects($this->once())->method('setCreateAbsoluteUri')->with(FALSE);
+		$this->uriBuilder->expects($this->once())->method('setAddQueryString')->with(FALSE);
+		$this->uriBuilder->expects($this->once())->method('setArgumentsToBeExcludedFromQueryString')->with(array());
+		$this->uriBuilder->expects($this->once())->method('setFormat')->with('');
+		$this->uriBuilder->expects($this->once())->method('uriFor')->with(NULL, array(), NULL, NULL, NULL);
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -76,12 +79,15 @@ class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyPassesAllArgumentsToUriBuilder() {
-		$this->uriBuilder->expects($this->any())->method('URIFor')->with(
-			'someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', TRUE
-		);
+		$this->uriBuilder->expects($this->once())->method('setSection')->with('someSection');
+		$this->uriBuilder->expects($this->once())->method('setCreateAbsoluteUri')->with(TRUE);
+		$this->uriBuilder->expects($this->once())->method('setAddQueryString')->with(TRUE);
+		$this->uriBuilder->expects($this->once())->method('setArgumentsToBeExcludedFromQueryString')->with(array('arguments' => 'toBeExcluded'));
+		$this->uriBuilder->expects($this->once())->method('setFormat')->with('someFormat');
+		$this->uriBuilder->expects($this->once())->method('uriFor')->with('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage');
 
 		$this->viewHelper->initialize();
-		$this->viewHelper->render('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', TRUE);
+		$this->viewHelper->render('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', TRUE, TRUE, array('arguments' => 'toBeExcluded'));
 	}
 }
 

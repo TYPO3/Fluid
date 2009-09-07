@@ -73,14 +73,24 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @param string $section The anchor to be added to the URI
 	 * @param string $format The requested format, e.g. ".html"
 	 * @param boolean $absolute If set, the URI of the rendered link is absolute
+	 * @param boolean $addQueryString If set, the current query parameters will be kept in the URI
+	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
 	 * @return string The rendered link
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE) {
+	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
 		$uriBuilder = $this->controllerContext->getURIBuilder();
-		$uri = $uriBuilder->URIFor($action, $arguments, $controller, $package, $subpackage, $section, $format, $absolute);
+		$uri = $uriBuilder
+			->reset()
+			->setSection($section)
+			->setCreateAbsoluteUri($absolute)
+			->setAddQueryString($addQueryString)
+			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
+			->setFormat($format)
+			->uriFor($action, $arguments, $controller, $package, $subpackage);
+
 		$this->tag->addAttribute('href', $uri);
 		$this->tag->setContent($this->renderChildren());
 

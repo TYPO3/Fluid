@@ -70,6 +70,13 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->uriBuilder = $this->getMock('F3\FLOW3\MVC\Web\Routing\URIBuilder');
+		$this->uriBuilder->expects($this->any())->method('reset')->will($this->returnValue($this->uriBuilder));
+		$this->uriBuilder->expects($this->any())->method('setArguments')->will($this->returnValue($this->uriBuilder));
+		$this->uriBuilder->expects($this->any())->method('setSection')->will($this->returnValue($this->uriBuilder));
+		$this->uriBuilder->expects($this->any())->method('setFormat')->will($this->returnValue($this->uriBuilder));
+		$this->uriBuilder->expects($this->any())->method('setCreateAbsoluteUri')->will($this->returnValue($this->uriBuilder));
+		$this->uriBuilder->expects($this->any())->method('setAddQueryString')->will($this->returnValue($this->uriBuilder));
+		$this->uriBuilder->expects($this->any())->method('setArgumentsToBeExcludedFromQueryString')->will($this->returnValue($this->uriBuilder));
 		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
 		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
 		$this->controllerContext->expects($this->any())->method('getURIBuilder')->will($this->returnValue($this->uriBuilder));
