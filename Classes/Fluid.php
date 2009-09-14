@@ -28,7 +28,22 @@ namespace F3\Fluid;
  * @version $Id$
  */
 class Fluid {
+	/**
+	 * PHP Namespace separator. Backslash in v5, and _ in v4.
+	 */
 	const NAMESPACE_SEPARATOR = '\\';
+
+	/**
+	 * Can be used to enable the verbose mode of Fluid.
+	 *
+	 * This enables the following things:
+	 * - ViewHelper argument descriptions are being parsed from the PHPDoc
+	 *
+	 * This is NO PUBLIC API and the way this mode is enabled might change without
+	 * notice in the future.
+	 * @var boolean
+	 */
+	public static $debugMode = FALSE;
 
 }
 

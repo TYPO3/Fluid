@@ -242,11 +242,14 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 		if (count($methodParameters) === 0) {
 			return;
 		}
-		$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
 
-		$paramAnnotations = array();
-		if (isset($methodTags['param'])) {
-			$paramAnnotations = $methodTags['param'];
+		if (\F3\Fluid\Fluid::$debugMode) {
+			$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
+
+			$paramAnnotations = array();
+			if (isset($methodTags['param'])) {
+				$paramAnnotations = $methodTags['param'];
+			}
 		}
 
 		$i = 0;
@@ -262,7 +265,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 			}
 
 			$description = '';
-			if (isset($paramAnnotations[$i])) {
+			if (\F3\Fluid\Fluid::$debugMode && isset($paramAnnotations[$i])) {
 				$explodedAnnotation = explode(' ', $paramAnnotations[$i]);
 				array_shift($explodedAnnotation);
 				array_shift($explodedAnnotation);

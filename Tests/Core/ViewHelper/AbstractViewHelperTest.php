@@ -60,7 +60,9 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function prepareArgumentsRegistersAnnotationBasedArguments() {
+	public function prepareArgumentsRegistersAnnotationBasedArgumentsWithDescriptionIfDebugModeIsEnabled() {
+
+		\F3\Fluid\Fluid::$debugMode = TRUE;
 
 		$availableClassNames = array(
 			'F3\Fluid\Core\Fixtures\TestViewHelper',
@@ -80,7 +82,36 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 
 		$this->assertEquals($expected, $viewHelper->prepareArguments(), 'Annotation based arguments were not registered.');
 
+		\F3\Fluid\Fluid::$debugMode = FALSE;
 	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function prepareArgumentsRegistersAnnotationBasedArgumentsWithoutDescriptionIfDebugModeIsDisabled() {
+
+		\F3\Fluid\Fluid::$debugMode = FALSE;
+
+		$availableClassNames = array(
+			'F3\Fluid\Core\Fixtures\TestViewHelper',
+		);
+		$reflectionService = new \F3\FLOW3\Reflection\Service();
+		$reflectionService->setCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
+		$reflectionService->initialize($availableClassNames);
+
+		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
+		$viewHelper->injectReflectionService($reflectionService);
+
+		$expected = array(
+			'param1' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'integer', '', TRUE, null, TRUE),
+			'param2' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'array', '', TRUE, null, TRUE),
+			'param3' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('param3', 'string', '', FALSE, 'default', TRUE),
+		);
+
+		$this->assertEquals($expected, $viewHelper->prepareArguments(), 'Annotation based arguments were not registered.');
+	}
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

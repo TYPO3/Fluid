@@ -58,6 +58,7 @@ class XSDGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
+		\F3\Fluid\Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
 		$this->abstractViewHelperReflectionClass = new \F3\FLOW3\Reflection\ClassReflection('F3\Fluid\Core\ViewHelper\AbstractViewHelper');
 		$this->docCommentParser = new \F3\FLOW3\Reflection\DocCommentParser();
 	}
