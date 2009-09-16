@@ -23,79 +23,104 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * Loop view helper
+ * Grouped loop view helper.
+ * Loops through the specified values
  *
  * = Examples =
  *
  * <code title="Simple">
- * <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">{foo}</f:for>
+ * <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color">
+ *   <f:for each="{fruitsOfThisColor}" as="fruit">
+ *     {fruit.name}
+ *   </f:for>
+ * </f:groupedFor>
  * </code>
  *
  * Output:
- * 1234
+ * apple cherry strawberry banana
  *
- * <code title="Output array key">
+ * <code title="Two dimensional list">
  * <ul>
- *   <f:for each="{fruit1: 'apple', fruit2: 'pear', fruit3: 'banana', fruit4: 'cherry'}" as="fruit" key="label">
- *     <li>{label}: {fruit}</li>
- *   </f:for>
+ *   <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color" groupKey="color">
+ *     <li>
+ *       {color} fruits:
+ *       <ul>
+ *         <f:for each="{fruitsOfThisColor}" as="fruit" key="label">
+ *           <li>{label}: {fruit.name}</li>
+ *         </f:for>
+ *       </ul>
+ *     </li>
+ *   </f:groupedFor>
  * </ul>
  * </code>
  *
  * Output:
  * <ul>
- *   <li>fruit1: apple</li>
- *   <li>fruit2: pear</li>
- *   <li>fruit3: banana</li>
- *   <li>fruit4: cherry</li>
+ *   <li>green fruits
+ *     <ul>
+ *       <li>0: apple</li>
+ *     </ul>
+ *   </li>
+ *   <li>red fruits
+ *     <ul>
+ *       <li>1: cherry</li>
+ *     </ul>
+ *     <ul>
+ *       <li>3: strawberry</li>
+ *     </ul>
+ *   </li>
+  *   <li>yellow fruits
+ *     <ul>
+ *       <li>2: banana</li>
+ *     </ul>
+ *   </li>
  * </ul>
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class GroupedForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
 	 * @param array $each The array or \SplObjectStorage to iterated over
 	 * @param string $as The name of the iteration variable
-	 * @param string $key The name of the variable to store the current array key
-	 * @param boolean $reverse If enabled, the iterator will start with the last element and proceed reversely
+	 * @param string $groupBy Group by this property
+	 * @param string $groupKey The name of the variable to store the current group
 	 * @return string Rendered string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($each, $as, $key = '', $reverse = FALSE) {
+	public function render($each, $as, $groupBy, $groupKey = 'groupKey') {
 		$output = '';
 		if ($each === NULL) {
 			return '';
 		}
 		if (is_object($each)) {
 			if (!$each instanceof \Traversable) {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
+				throw new \F3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface' , 1253108907);
 			}
 			$each = $this->convertToArray($each);
 		}
-
-		if ($reverse === TRUE) {
-			$each = array_reverse($each);
-		}
-
-		$output = '';
+		$groups = array();
 		foreach ($each as $keyValue => $singleElement) {
-			$this->templateVariableContainer->add($as, $singleElement);
-			if ($key !== '') {
-				$this->templateVariableContainer->add($key, $keyValue);
+			if (is_array($singleElement)) {
+				$currentGroupKey = isset($singleElement[$groupBy]) ? $singleElement[$groupBy] : NULL;
+			} elseif (is_object($singleElement)) {
+				$currentGroupKey = \F3\FLOW3\Reflection\ObjectAccess::getProperty($singleElement, $groupBy);
+			} else {
+				throw new \F3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects' , 1253120365);
 			}
+			$groups[$currentGroupKey][$keyValue] = $singleElement;
+		}
+		foreach ($groups as $currentGroupKey => $group) {
+			$this->templateVariableContainer->add($groupKey, $currentGroupKey);
+			$this->templateVariableContainer->add($as, $group);
 			$output .= $this->renderChildren();
+			$this->templateVariableContainer->remove($groupKey);
 			$this->templateVariableContainer->remove($as);
-			if ($key !== '') {
-				$this->templateVariableContainer->remove($key);
-			}
 		}
 		return $output;
 	}

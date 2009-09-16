@@ -94,7 +94,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderReturnsEmptyStringIfObjectIsEmtyArray() {
+	public function renderReturnsEmptyStringIfObjectIsEmptyArray() {
 		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
 
 		$this->assertEquals('', $viewHelper->render(array(), 'foo'));
