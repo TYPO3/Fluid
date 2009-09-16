@@ -45,6 +45,23 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @expectedException F3\Fluid\Core\ViewHelper\Exception
+	 */
+	public function registeringTheSameArgumentNameAgainThrowsException() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render'), array(), '', FALSE);
+
+		$name = "shortName";
+		$description = "Example desc";
+		$type = "string";
+		$isRequired = TRUE;
+
+		$viewHelper->_call('registerArgument', $name, $type, $isRequired, $description);
+		$viewHelper->_call('registerArgument', $name, "integer", $isRequired, $description);
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function prepareArgumentsCallsInitializeArguments() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'initializeArguments'), array(), '', FALSE);

@@ -68,21 +68,15 @@ class SubmitViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	/**
 	 * Renders the submit button.
 	 *
-	 * @param string name Name of submit tag
-	 * @param string value Value of submit tag
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($name = '', $value = '') {
+	public function render() {
 		$this->tag->addAttribute('type', 'submit');
-		if ($name !== '') {
-			$this->tag->addAttribute('name', $name);
-		}
-		if ($value !== '') {
-			$this->tag->addAttribute('value', $value);
-		}
+		$this->tag->addAttribute('name', $this->getName());
+		$this->tag->addAttribute('value', $this->getValue());
 
 		return $this->tag->render();
 	}
