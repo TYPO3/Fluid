@@ -45,7 +45,7 @@ abstract class AbstractNode {
 	protected $renderingContext;
 
 	/**
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext Rendering Context to be used for this evaluation
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext Rendering Context to be used for this evaluation
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -96,12 +96,12 @@ abstract class AbstractNode {
 	/**
 	 * Appends a subnode to this node. Is used inside the parser to append children
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $subnode The subnode to add
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $childNode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $subNode) {
-		$this->childNodes[] = $subNode;
+	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $childNode) {
+		$this->childNodes[] = $childNode;
 	}
 
 	/**

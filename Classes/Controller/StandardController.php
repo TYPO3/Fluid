@@ -71,8 +71,8 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Generate the XSD file.
 	 *
-	 * @param $baseNamespace string
-	 * @param $namespacePrefix string
+	 * @param string $baseNamespace
+	 * @param string $namespacePrefix
 	 * @return string HTML string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Still has to be finished

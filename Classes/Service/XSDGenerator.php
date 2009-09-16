@@ -66,7 +66,7 @@ class XSDGenerator {
 	/**
 	 * Inject the object manager.
 	 *
-	 * @param \F3\FLOW3\Object\Manager $objectManager the object manager to inject
+	 * @param \F3\FLOW3\Object\ManagerInterface $objectManager the object manager to inject
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -228,7 +228,7 @@ class XSDGenerator {
 	 *
 	 * @param \SimpleXMLElement $parentXMLNode Parent XML Node to add the child to
 	 * @param string $childNodeName Name of the child node
-	 * @param string $nodeValue Value of the child node. Will be placed inside CDATA.
+	 * @param string $childNodeValue Value of the child node. Will be placed inside CDATA.
 	 * @return \SimpleXMLElement the new element
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

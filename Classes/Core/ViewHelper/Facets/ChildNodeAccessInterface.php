@@ -39,9 +39,8 @@ interface ChildNodeAccessInterface {
 	/**
 	 * Sets the direct child nodes of the current syntax tree node.
 	 *
-	 * @param array \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $childNodes
+	 * @param array<\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode> $childNodes
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodes(array $childNodes);
 
@@ -49,6 +48,7 @@ interface ChildNodeAccessInterface {
 	 * Sets the rendering context which needs to be passed on to child nodes
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext the renderingcontext to use
+	 * @return void
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
 

@@ -66,7 +66,7 @@ class DocbookGenerator {
 	/**
 	 * Inject the object manager.
 	 *
-	 * @param \F3\FLOW3\Object\Manager $objectManager the object manager to inject
+	 * @param \F3\FLOW3\Object\ManagerInterface $objectManager the object manager to inject
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -186,7 +186,7 @@ class DocbookGenerator {
 	 * Initializes the view helper and its arguments, and then reads out the list of arguments.
 	 *
 	 * @param string $className Class name where to add the attribute descriptions
-	 * @param \SimpleXMLElement $xsdElement XML element to add the attributes to.
+	 * @param \SimpleXMLElement $docbookSection DocBook section to add the attributes to.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -211,10 +211,25 @@ class DocbookGenerator {
 		}
 	}
 
+	/**
+	 * Instantiate a view helper.
+	 *
+	 * @param string $className
+	 * @return object
+	 */
 	protected function instanciateViewHelper($className) {
 		return $this->objectManager->getObject($className);
 	}
 
+	/**
+	 * @param \SimpleXMLElement $parent
+	 * @param string $name
+	 * @param string $type
+	 * @param boolean $required
+	 * @param string $description
+	 * @param string $default
+	 * @return void
+	 */
 	private function addArgumentTableRow(\SimpleXMLElement $parent, $name, $type, $required, $description, $default) {
 		$row = $parent->addChild('row');
 
@@ -234,7 +249,7 @@ class DocbookGenerator {
 	 * CDATA block AND to replace the < and > with their XML entities. (This is IMHO not XML conformant).
 	 *
 	 * @param string $documentation Documentation string to add.
-	 * @param \SimpleXMLElement $xsdParentNode Node to add the documentation to
+	 * @param \SimpleXMLElement $docbookSection Node to add the documentation to
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -255,6 +270,10 @@ class DocbookGenerator {
 		}
 	}
 
+	/**
+	 * @param string $text
+	 * @param \SimpleXMLElement $parentElement
+	 */
 	protected function addText($text, \SimpleXMLElement $parentElement) {
 		$splitRegex = '/
 		(<code(?:.*?)>
@@ -293,7 +312,7 @@ class DocbookGenerator {
 	 *
 	 * @param \SimpleXMLElement $parentXMLNode Parent XML Node to add the child to
 	 * @param string $childNodeName Name of the child node
-	 * @param string $nodeValue Value of the child node. Will be placed inside CDATA.
+	 * @param string $childNodeValue Value of the child node. Will be placed inside CDATA.
 	 * @return \SimpleXMLElement the new element
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

@@ -501,7 +501,7 @@ class TemplateParser {
 	 * Build up an argument object tree for the string in $argumentString.
 	 * This builds up the tree for a single argument value.
 	 *
-	 * @param string $argumentsString
+	 * @param string $argumentString
 	 * @return ArgumentObject the corresponding argument object tree.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -636,6 +636,7 @@ class TemplateParser {
 	/**
 	 * Text node handler
 	 *
+	 * @param \F3\Fluid\Core\Parser\ParsingState $state
 	 * @param string $text
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

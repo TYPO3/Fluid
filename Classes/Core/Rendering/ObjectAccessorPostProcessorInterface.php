@@ -30,6 +30,7 @@ namespace F3\Fluid\Core\Rendering;
  * @internal
  */
 interface ObjectAccessorPostProcessorInterface {
+
 	/**
 	 * Post-Process an Object Accessor
 	 *
@@ -38,5 +39,6 @@ interface ObjectAccessorPostProcessorInterface {
 	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
 	 */
 	public function process($object, $enabled);
+
 }
 ?>

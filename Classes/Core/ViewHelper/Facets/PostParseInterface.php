@@ -45,7 +45,7 @@ interface PostParseInterface {
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
 	 * @param array $viewHelperArguments View helper arguments as an array of SyntaxTrees. If you really need an argument, make sure to call $viewHelperArguments[$argName]->render(...)!
-	 * @param VariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
 	 * @return void
 	 * @internal
 	 */

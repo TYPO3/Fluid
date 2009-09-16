@@ -56,7 +56,7 @@ class TemplateViewCachingAspect {
 	/**
 	 * Injects the syntaxTreeCache
 	 *
-	 * @param \F3\FLOW3\Cache\Frontend\VariableFrontend $cache Cache for the reflection service
+	 * @param \F3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache Cache for the reflection service
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>

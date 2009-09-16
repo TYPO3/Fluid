@@ -53,7 +53,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	/**
 	 * Prefixes / namespaces the given name with the form field prefix
 	 *
-	 * @param string $name field name to be prefixed
+	 * @param string $fieldName field name to be prefixed
 	 * @return string namespaced field name
 	 */
 	protected function prefixFieldName($fieldName) {

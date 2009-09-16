@@ -133,7 +133,7 @@ class RenderingContext {
 	/**
 	 * Set the rendering configuration for the current rendering process
 	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingConfiguration The Rendering Configuration to be set
+	 * @param F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration The Rendering Configuration to be set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRenderingConfiguration(\F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration) {
@@ -175,7 +175,7 @@ class RenderingContext {
 	/**
 	 * Set the ViewHelperVariableContainer
 	 *
-	 * @param F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer $viewHelperVariableContainer
+	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -186,7 +186,7 @@ class RenderingContext {
 	/**
 	 * Get the ViewHelperVariableContainer
 	 *
-	 * @return F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
+	 * @return F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperVariableContainer() {

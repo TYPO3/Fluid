@@ -43,7 +43,7 @@ class DocumentationController extends \F3\FLOW3\MVC\Controller\ActionController 
 	 */
 	protected $docbookGenerator;
 
-	/*
+	/**
 	 * @param string $sourceNamespace
 	 * @param string $targetFile
 	 * @return string

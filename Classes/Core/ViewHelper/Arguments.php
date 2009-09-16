@@ -63,7 +63,7 @@ class Arguments implements \ArrayAccess {
 	/**
 	 * Returns the value to the given key.
 	 *
-	 * @param  $key Key to get.
+	 * @param string $key Key to get.
 	 * @return object associated value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -78,22 +78,22 @@ class Arguments implements \ArrayAccess {
 	/**
 	 * Throw exception if you try to set a value.
 	 *
-	 * @param string $name
+	 * @param string $key
 	 * @param object $value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function offsetSet($name, $value) {
-		throw new \F3\Fluid\Core\RuntimeException('Tried to set argument "' . $name . '", but setting arguments is forbidden.', 1236080693);
+	public function offsetSet($key, $value) {
+		throw new \F3\Fluid\Core\RuntimeException('Tried to set argument "' . $key . '", but setting arguments is forbidden.', 1236080693);
 	}
 
 	/**
 	 * Throw exception if you try to unset a value.
 	 *
-	 * @param string $name
+	 * @param string $key
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function offsetUnset($name) {
-		throw new \F3\Fluid\Core\RuntimeException('Tried to unset argument "' . $name . '", but setting arguments is forbidden.', 1236080702);
+	public function offsetUnset($key) {
+		throw new \F3\Fluid\Core\RuntimeException('Tried to unset argument "' . $key . '", but setting arguments is forbidden.', 1236080702);
 	}
 
 	/**
