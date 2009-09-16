@@ -68,7 +68,7 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @api
 	 */
 		public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
-		$uriBuilder = $this->controllerContext->getURIBuilder();
+		$uriBuilder = $this->controllerContext->getUriBuilder();
 		$uri = $uriBuilder
 			->reset()
 			->setSection($section)

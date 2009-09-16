@@ -81,7 +81,7 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 	 * @api
 	 */
 	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
-		$uriBuilder = $this->controllerContext->getURIBuilder();
+		$uriBuilder = $this->controllerContext->getUriBuilder();
 		$uri = $uriBuilder
 			->reset()
 			->setSection($section)

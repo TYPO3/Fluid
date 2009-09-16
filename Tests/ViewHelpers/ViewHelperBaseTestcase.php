@@ -38,7 +38,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 	protected $templateVariableContainer;
 
 	/**
-	 * @var \F3\FLOW3\MVC\Web\Routing\URIBuilder
+	 * @var \F3\FLOW3\MVC\Web\Routing\UriBuilder
 	 */
 	protected $uriBuilder;
 
@@ -69,7 +69,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->uriBuilder = $this->getMock('F3\FLOW3\MVC\Web\Routing\URIBuilder');
+		$this->uriBuilder = $this->getMock('F3\FLOW3\MVC\Web\Routing\UriBuilder');
 		$this->uriBuilder->expects($this->any())->method('reset')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setArguments')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setSection')->will($this->returnValue($this->uriBuilder));
@@ -79,7 +79,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$this->uriBuilder->expects($this->any())->method('setArgumentsToBeExcludedFromQueryString')->will($this->returnValue($this->uriBuilder));
 		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
 		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
-		$this->controllerContext->expects($this->any())->method('getURIBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->tagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder');
 		$this->arguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
