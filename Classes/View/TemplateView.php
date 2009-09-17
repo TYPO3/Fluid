@@ -45,31 +45,53 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Pattern to be resolved for @templateRoot in the other patterns.
 	 * @var string
 	 */
-	protected $templateRootPathPattern = '@packageResources/Private';
+	protected $templateRootPathPattern = '@packageResources/Private/Templates';
+
+	/**
+	 * Pattern to be resolved for @partialRoot in the other patterns.
+	 * @var string
+	 */
+	protected $partialRootPathPattern = '@packageResources/Private/Partials';
+
+	/**
+	 * Pattern to be resolved for @layoutRoot in the other patterns.
+	 * @var string
+	 */
+	protected $layoutRootPathPattern = '@packageResources/Private/Layouts';
 
 	/**
 	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
 	 */
 	protected $templateRootPath = NULL;
-	
+
+	/**
+	 * Path to the partial root. If NULL, then $this->partialRootPathPattern will be used.
+	 */
+	protected $partialRootPath = NULL;
+
+	/**
+	 * Path to the layout root. If NULL, then $this->layoutRootPathPattern will be used.
+	 */
+	protected $layoutRootPath = NULL;
+
 	/**
 	 * File pattern for resolving the template file
 	 * @var string
 	 */
-	protected $templatePathAndFilenamePattern = '@templateRoot/Templates/@subpackage/@controller/@action.@format';
+	protected $templatePathAndFilenamePattern = '@templateRoot/@subpackage/@controller/@action.@format';
 
 	/**
 	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
 	 * @var string
 	 * @internal
 	 */
-	private $partialPathAndFilenamePattern = '@templateRoot/Partials/@subpackage/@partial.@format';
+	private $partialPathAndFilenamePattern = '@partialRoot/@subpackage/@partial.@format';
 
 	/**
 	 * File pattern for resolving the layout
 	 * @var string
 	 */
-	protected $layoutPathAndFilenamePattern = '@templateRoot/Layouts/@layout.@format';
+	protected $layoutPathAndFilenamePattern = '@layoutRoot/@layout.@format';
 
 	/**
 	 * Path and filename of the template file. If set,  overrides the templatePathAndFilenamePattern
@@ -362,6 +384,60 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
+	 * Set the root path to the partials.
+	 * If set, overrides the one determined from $this->partialRootPathPattern
+	 *
+	 * @param string $partialRootPath Root path to the partials. If set, overrides the one determined from $this->partialRootPathPattern
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
+	 */
+	public function setPartialRootPath($partialRootPath) {
+		$this->partialRootPath = $partialRootPath;
+	}
+
+	/**
+	 * Resolves the partial root to be used inside other paths.
+	 *
+	 * @return string Path to partial root directory
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function getPartialRootPath() {
+		if ($this->partialRootPath !== NULL) {
+			return $this->partialRootPath;
+		} else {
+			return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->partialRootPathPattern);
+		}
+	}
+
+	/**
+	 * Set the root path to the layouts.
+	 * If set, overrides the one determined from $this->layoutRootPathPattern
+	 *
+	 * @param string $layoutRootPath Root path to the layouts. If set, overrides the one determined from $this->layoutRootPathPattern
+	 * @return void
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
+	 */
+	public function setLayoutRootPath($layoutRootPath) {
+		$this->layoutRootPath = $layoutRootPath;
+	}
+
+	/**
+	 * Resolves the layout root to be used inside other paths.
+	 *
+	 * @return string Path to layout root directory
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function getLayoutRootPath() {
+		if ($this->layoutRootPath !== NULL) {
+			return $this->layoutRootPath;
+		} else {
+			return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->layoutRootPathPattern);
+		}
+	}
+
+	/**
 	 * Processes @templateRoot, @subpackage, @controller, and @format placeholders inside $pattern.
 	 * This method is used to generate "fallback chains" for file system locations where a certain Partial can reside.
 	 *
@@ -374,7 +450,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * This continues until both @subpackage and @controller are empty.
 	 *
 	 * Example for $bubbleControllerAndSubpackage is TRUE, we have the F3\MyPackage\MySubPackage\Controller\MyController as Controller Object Name and the current format is "html"
-	 * If pattern is @templateRoot/Templates/@subpackage/@controller/@action.@format, then the resulting array is:
+	 * If pattern is @templateRoot/@subpackage/@controller/@action.@format, then the resulting array is:
 	 *  - Resources/Private/Templates/MySubPackage/My/@action.html
 	 *  - Resources/Private/Templates/MySubPackage/@action.html
 	 *  - Resources/Private/Templates/@action.html
@@ -390,6 +466,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
 		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);
+		$pattern = str_replace('@partialRoot', $this->getPartialRootPath(), $pattern);
+		$pattern = str_replace('@layoutRoot', $this->getLayoutRootPath(), $pattern);
 
 		$this->PATTERN_CONTROLLER = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), $this->PATTERN_CONTROLLER);
 		preg_match($this->PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);

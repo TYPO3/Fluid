@@ -165,6 +165,30 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function getPartialRootPathReturnsUserSpecifiedPartialPath() {
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('dummy'), array(), '', FALSE);
+		$templateView->setPartialRootPath('/foo/bar');
+		$expected = '/foo/bar';
+		$actual = $templateView->_call('getPartialRootPath');
+		$this->assertEquals($expected, $actual, 'A set partial root path was not returned correctly.');
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function getLayoutRootPathReturnsUserSpecifiedPartialPath() {
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('dummy'), array(), '', FALSE);
+		$templateView->setLayoutRootPath('/foo/bar');
+		$expected = '/foo/bar';
+		$actual = $templateView->_call('getLayoutRootPath');
+		$this->assertEquals($expected, $actual, 'A set partial root path was not returned correctly.');
+	}
+
+	/**
 	 * test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
