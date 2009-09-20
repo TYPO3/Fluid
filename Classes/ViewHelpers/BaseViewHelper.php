@@ -23,17 +23,19 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * View helper which creates a <base href="..."></base> tag.
+ * View helper which creates a <base href="..."></base> tag. The Base URI
+ * is taken from the current request.
+ * In FLOW3, you should always include this ViewHelper to make the links work.
  *
  * = Examples =
  *
  * <code title="Example">
  * <f:base />
  * </code>
- *
- * Output:
+ * <output>
  * <base href="http://yourdomain.tld/"></base>
  * (depending on your domain)
+ * </output>
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later

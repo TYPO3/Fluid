@@ -23,7 +23,10 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * With this tag, you can select a layout to be used.
+ * With this tag, you can select a layout to be used..
+ * <code><f:layout name="main" /></code>
+ * 
+ *
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later

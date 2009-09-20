@@ -23,16 +23,17 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * Loop view helper
+ * Loop view helper which can be used to interate over array.
+ * Implements what a basic foreach()-PHP-method does.
  *
  * = Examples =
  *
- * <code title="Simple">
+ * <code title="Simple Loop">
  * <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">{foo}</f:for>
  * </code>
- *
- * Output:
+ * <output>
  * 1234
+ * </output>
  *
  * <code title="Output array key">
  * <ul>
@@ -41,14 +42,14 @@ namespace F3\Fluid\ViewHelpers;
  *   </f:for>
  * </ul>
  * </code>
- *
- * Output:
+ * <output>
  * <ul>
  *   <li>fruit1: apple</li>
  *   <li>fruit2: pear</li>
  *   <li>fruit3: banana</li>
  *   <li>fruit4: cherry</li>
  * </ul>
+ * </output>
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later

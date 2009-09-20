@@ -23,7 +23,8 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * "ELSE" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
+ * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
+ * 
  * @see F3\Fluid\ViewHelpers\IfViewHelper
  *
  * @version $Id$
