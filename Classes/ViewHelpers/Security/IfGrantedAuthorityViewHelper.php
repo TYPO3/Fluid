@@ -23,30 +23,30 @@ namespace F3\Fluid\ViewHelpers\Security;
  *                                                                        */
 
 /**
- * This view helper implements an ifAccess/else condition.
+ * This view helper implements an ifGrantedAuthority/else condition.
  *
  * = Examples =
  *
  * <code title="Basic usage">
- * <f:security.ifAccess resource="someResource">
- *   This is being shown in case you have access to the given resource
- * </f:security.ifAccess>
+ * <f:security.ifGrantedAuthority grantedAuthority="Administrator">
+ *   This is being shown in case you have the Administrator granted authority (aka role).
+ * </f:security.ifGrantedAuthority>
  * </code>
  *
- * Everything inside the <f:ifAccess> tag is being displayed if you have access to the given resource.
+ * Everything inside the <f:ifGrantedAuthority> tag is being displayed if you have the given granted authority.
  *
- * <code title="IfAccess / then / else">
- * <f:security.ifAccess resource="someResource">
+ * <code title="IfGrantedAuthority / then / else">
+ * <f:security.ifGrantedAuthority grantedAuthority="Administrator">
  *   <f:then>
- *     This is being shown in case you have access.
+ *     This is being shown in case you have the granted authority.
  *   </f:then>
  *   <f:else>
- *     This is being displayed in case you do not have access.
+ *     This is being displayed in case you do not have the granted authority.
  *   </f:else>
- * </f:security.ifAccess>
+ * </f:security.ifGrantedAuthority>
  * </code>
  *
- * Everything inside the "then" tag is displayed if you have access.
+ * Everything inside the "then" tag is displayed if you have the role.
  * Otherwise, everything inside the "else"-tag is displayed.
  *
  *
@@ -55,7 +55,7 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+class IfGrantedAuthorityViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
 	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
@@ -69,20 +69,9 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	protected $renderingContext;
 
 	/**
-	 * @var F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
+	 * @var \F3\FLOW3\Security\Context
 	 */
-	protected $accessDecisionManager;
-
-	/**
-	 * Injects the access decision manager
-	 *
-	 * @param F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
-	 * @return void
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	public function injectAccessDecisionManager(\F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
-		$this->accessDecisionManager = $accessDecisionManager;
-	}
+	protected $securityContext;
 
 	/**
 	 * Setter for ChildNodes - as defined in ChildNodeAccessInterface
@@ -108,15 +97,27 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	}
 
 	/**
-	 * renders <f:then> child if access to the given resource is allowed, otherwise renders <f:else> child.
+	 * Injects the security context holder and fetches the security context from it
 	 *
-	 * @param string $resource ACL resource
+	 * @param \F3\FLOW3\Security\ContextHolderInterface $securityContextHolder The security context holder
+	 * @return void
+	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 */
+	public function injectSecurityContextHolder(\F3\FLOW3\Security\ContextHolderInterface $securityContextHolder) {
+		$this->securityContext = $securityContextHolder->getContext();
+	}
+
+	/**
+	 * renders <f:then> child if the granted authority could be found in the security context,
+	 * otherwise renders <f:else> child.
+	 *
+	 * @param string $grantedAuthority The granted authority
 	 * @return string the rendered string
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 * @api
 	 */
-	public function render($resource) {
-		if ($this->hasAccessToResource($resource)) {
+	public function render($grantedAuthority) {
+		if ($this->securityContext->hasGrantedAuthority($grantedAuthority)) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();
@@ -158,23 +159,6 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 			}
 		}
 		return '';
-	}
-
-	/**
-	 * Check if we currently have access to the given resource
-	 *
-	 * @param string $resource The resource to check
-	 * @return boolean TRUE if we currently have access to the given resource
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	protected function hasAccessToResource($resource) {
-		try {
-			$this->accessDecisionManager->decideOnResource($resource);
-		} catch (\F3\FLOW3\Security\Exception\AccessDenied $e) {
-			return FALSE;
-		}
-
-		return TRUE;
 	}
 }
 
