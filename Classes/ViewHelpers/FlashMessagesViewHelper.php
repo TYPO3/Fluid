@@ -31,12 +31,12 @@ namespace F3\Fluid\ViewHelpers;
  * = Examples =
  *
  * <code title="Simple">
- * <f:renderFlashMessages />
+ * <f:flashMessages />
  * </code>
  * Renders an ul-list of flash messages.
  *
  * <code title="Output with css class">
- * <f:renderFlashMessages class="specialClass" />
+ * <f:flashMessages class="specialClass" />
  * </code>
  *
  * Output:
@@ -48,7 +48,7 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class RenderFlashMessagesViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+class FlashMessagesViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
 
 	/**
 	 * @var string
@@ -74,7 +74,7 @@ class RenderFlashMessagesViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedVi
 	 * @api
 	 */
 	public function render() {
-		$flashMessages = $this->controllerContext->getFlashMessages()->getAllAndFlush();
+		$flashMessages = $this->controllerContext->getFlashMessageContainer()->getAllAndFlush();
 		if (count($flashMessages) > 0) {
 			$tagContent = '';
 			foreach ($flashMessages as $singleFlashMessage) {
