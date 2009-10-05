@@ -125,8 +125,8 @@ class DocbookGenerator {
 				$viewHelperClassNames[] = $registeredObjectName;
 			}
 		}
-		sort($registeredObjectNames);
-		return $registeredObjectNames;
+		sort($viewHelperClassNames);
+		return $viewHelperClassNames;
 	}
 
 	/**
