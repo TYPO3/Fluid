@@ -65,6 +65,16 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
 	}
+	
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function addOrUpdateWorks() {
+		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
+		$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
+		$this->assertEquals($this->viewHelperVariableContainer->get('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'), 'value2');
+	}
 
 	/**
 	 * @test

@@ -71,6 +71,29 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		}
 		return $fieldName;
 	}
+	
+	/**
+	 * Renders a hidden form field containing the technical identity of the given object.
+	 *
+	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
+	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
+	 */
+	protected function renderHiddenIdentityField($object, $name) {
+		if (!is_object($object)
+			|| !$object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface
+			|| ($object->FLOW3_Persistence_isNew() && !$object->FLOW3_Persistence_isClone())
+			){
+			return '';
+		}
+		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+		if ($identifier === NULL) {
+			return chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
+		}
+		return chr(10) . '<input type="hidden" name="'. $this->prefixFieldName($name) . '[__identity]" value="' . $identifier .'" />' . chr(10);
+	}
 }
 
 ?>

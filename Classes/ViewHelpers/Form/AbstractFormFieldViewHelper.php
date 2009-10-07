@@ -52,6 +52,8 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 * Get the name of this form element.
 	 * Either returns arguments['name'], or the correct name for Object Access.
 	 *
+	 * In case property is something like bla.blubb (hierarchical), then [bla][blubb] is generated.
+	 *
 	 * @return string Name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
@@ -62,7 +64,12 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 		if ($this->isObjectAccessorMode()) {
 			$formName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
 			if (!empty($formName)) {
-				$name = $formName . '[' . $this->arguments['property'] . ']';
+				$propertySegments = explode('.', $this->arguments['property']);
+				$properties = '';
+				foreach ($propertySegments as $segment) {
+					$properties .= '[' . $segment . ']';
+				}
+				$name = $formName . $properties;
 			} else {
 				$name = $this->arguments['property'];
 			}
@@ -92,6 +99,7 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 		if ($this->arguments->hasArgument('value')) {
 			$value = $this->arguments['value'];
 		} elseif ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$this->addAdditionalIdentityPropertiesIfNeeded();
 			$value = $this->getPropertyValue();
 		}
 		if (is_object($value)) {
@@ -101,6 +109,34 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 			}
 		}
 		return $value;
+	}
+	
+	/**
+	 * Add additional identity properties in case the current property is hierarchical (of the form "bla.blubb").
+	 * Then, [bla][__identity] has to be generated as well.
+	 * 
+	 * @author Sebastian Kurfuerst <sebastian@typo3.org>
+	 * @return void
+	 */
+	protected function addAdditionalIdentityPropertiesIfNeeded() {
+		$propertySegments = explode('.', $this->arguments['property']);
+		if (count($propertySegments) >= 2) {
+			// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
+			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+
+			$objectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+			// If Count == 2 -> we need to go through the for-loop exactly once
+			for ($i=1; $i < count($propertySegments); $i++) {
+				$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
+				$objectName .= '[' . $propertySegments[$i-1] . ']';
+				$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
+				
+				// Add the hidden identity field to the ViewHelperVariableContainer
+				$additionalIdentityProperties = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
+				$additionalIdentityProperties[$objectName] = $hiddenIdentityField;
+				$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', $additionalIdentityProperties);
+			}
+		}
 	}
 
 	/**
@@ -112,10 +148,11 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	protected function getPropertyValue() {
 		$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		$propertyName = $this->arguments['property'];
+
 		if (is_array($formObject)) {
 			return isset($formObject[$propertyName]) ? $formObject[$propertyName] : NULL;
 		}
-		return \F3\FLOW3\Reflection\ObjectAccess::getProperty($formObject, $propertyName);
+		return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, $propertyName);
 	}
 
 	/**

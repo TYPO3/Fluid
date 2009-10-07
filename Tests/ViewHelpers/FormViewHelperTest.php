@@ -31,124 +31,21 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
  * @version $Id:$
  */
 class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
-
-	/**
-	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldContainingTheObjectsUUID() {
-		$className = 'Object' . uniqid();
-		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
-		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
-			public function FLOW3_Persistence_isNew() { return FALSE; }
-			public function FLOW3_Persistence_isClone() { return FALSE; }
-			public function FLOW3_Persistence_isDirty($propertyName) {}
-			public function FLOW3_Persistence_memorizeCleanState($propertyName = NULL) {}
-			public function FLOW3_AOP_Proxy_getProperty($name) {}
-			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
-			public function __clone() {}
-		}');
-		$object = $this->getMock($fullClassName);
-
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
-
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));
-
-		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
-
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName'), array(), '', FALSE);
-		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('name' => 'theName', 'object' => $object)));
-		$viewHelper->expects($this->any())->method('prefixFieldName')->with('theName')->will($this->returnValue('prefix[theName]'));
-		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
-
-		$actualResult = $viewHelper->_call('renderHiddenIdentityField');
-		$this->assertSame($expectedResult, $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldIfObjectIsNewButAClone() {
-		$className = 'Object' . uniqid();
-		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
-		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
-			public function FLOW3_Persistence_isNew() { return TRUE; }
-			public function FLOW3_Persistence_isClone() { return TRUE; }
-			public function FLOW3_Persistence_isDirty($propertyName) {}
-			public function FLOW3_Persistence_memorizeCleanState($propertyName = NULL) {}
-			public function FLOW3_AOP_Proxy_getProperty($name) {}
-			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
-			public function __clone() {}
-		}');
-		$object = $this->getMock($fullClassName);
-
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
-
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));
-
-		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
-
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName'), array(), '', FALSE);
-		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('name' => 'theName', 'object' => $object)));
-		$viewHelper->expects($this->any())->method('prefixFieldName')->with('theName')->will($this->returnValue('prefix[theName]'));
-		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
-
-		$actualResult = $viewHelper->_call('renderHiddenIdentityField');
-		$this->assertSame($expectedResult, $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function renderHiddenIdentityFieldReturnsACommentIfTheObjectIsWithoutIdentity() {
-		$className = 'Object' . uniqid();
-		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
-		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
-			public function FLOW3_Persistence_isNew() { return FALSE; }
-			public function FLOW3_Persistence_isClone() { return FALSE; }
-			public function FLOW3_Persistence_isDirty($propertyName) {}
-			public function FLOW3_Persistence_memorizeCleanState($propertyName = NULL) {}
-			public function FLOW3_AOP_Proxy_getProperty($name) {}
-			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
-			public function __clone() {}
-		}');
-		$object = $this->getMock($fullClassName);
-
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue(NULL));
-
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));
-
-		$expectedResult = chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
-
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName'), array(), '', FALSE);
-		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('name' => 'theName', 'object' => $object)));
-		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
-
-		$actualResult = $viewHelper->_call('renderHiddenIdentityField');
-		$this->assertSame($expectedResult, $actualResult);
-	}
-
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderAddsObjectToTemplateVariableContainer() {
+	public function renderAddsObjectToViewHelperVariableContainer() {
 		$formObject = new \stdClass();
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'addFormNameToViewHelperVariableContainer', 'addFieldNamePrefixToViewHelperVariableContainer', 'removeFormNameFromViewHelperVariableContainer', 'removeFieldNamePrefixFromViewHelperVariableContainer'), array(), '', FALSE);
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField', 'renderAdditionalIdentityFields', 'renderHiddenReferrerFields', 'addFormNameToViewHelperVariableContainer', 'addFieldNamePrefixToViewHelperVariableContainer', 'removeFormNameFromViewHelperVariableContainer', 'removeFieldNamePrefixFromViewHelperVariableContainer'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('object' => $formObject)));
-		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $formObject);
-		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		$this->viewHelperVariableContainer->expects($this->at(0))->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $formObject);
+		$this->viewHelperVariableContainer->expects($this->at(1))->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', array());
+		$this->viewHelperVariableContainer->expects($this->at(2))->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		$this->viewHelperVariableContainer->expects($this->at(3))->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 		$viewHelper->render();
 	}
 
@@ -179,6 +76,53 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderCallsRenderHiddenIdentityField() {
+		$object = new \stdClass();
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('object' => $object, 'name' => 'MyName')));
+		$viewHelper->expects($this->once())->method('renderHiddenIdentityField')->with($object, 'MyName');
+
+		$viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderCallsRenderAdditionalIdentityFields() {
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderAdditionalIdentityFields'), array(), '', FALSE);
+		$viewHelper->expects($this->once())->method('renderAdditionalIdentityFields');
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$viewHelper->render();
+	}
+
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function renderAdditionalIdentityFieldsFetchesTheFieldsFromViewHelperVariableContainerAndBuildsHiddenFieldsForThem() {
+		$identityProperties = array(
+			'object1[object2]' => '<input type="hidden" name="object1[object2][__identity]" value="42" />',
+			'object1[object2][subobject]' => '<input type="hidden" name="object1[object2][subobject][__identity]" value="21" />'
+		);
+		$this->viewHelperVariableContainer->expects($this->once())->method('exists')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')->will($this->returnValue(TRUE));
+		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')->will($this->returnValue($identityProperties));
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$expected = chr(10) . '<input type="hidden" name="object1[object2][__identity]" value="42" />' . chr(10) .
+			'<input type="hidden" name="object1[object2][subobject][__identity]" value="21" />';
+		$actual = $viewHelper->_call('renderAdditionalIdentityFields');
+		$this->assertEquals($expected, $actual);
 	}
 
 	/**

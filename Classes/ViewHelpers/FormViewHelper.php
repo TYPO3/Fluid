@@ -106,9 +106,12 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 		$this->addFormObjectToViewHelperVariableContainer();
 		$this->addFieldNamePrefixToViewHelperVariableContainer();
 
-		$content = $this->renderHiddenIdentityField();
+		$formContent = $this->renderChildren();
+
+		$content = $this->renderHiddenIdentityField($this->arguments['object'], $this->arguments['name']);
+		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
-		$content .= $this->renderChildren();
+		$content .= $formContent;
 		$this->tag->setContent($content);
 
 		$this->removeFieldNamePrefixFromViewHelperVariableContainer();
@@ -136,27 +139,22 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	}
 
 	/**
-	 * Renders a hidden form field containing the technical identity of the given object.
+	 * Render additional identity fields which were registered by form elements.
+	 * This happens if a form field is defined like property="bla.blubb" - then we might need an identity property for the sub-object "bla".
 	 *
-	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
-	 * @author Robert Lemke <robert@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
+	 * @return string HTML-string for the additional identity properties
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function renderHiddenIdentityField() {
-		$object = $this->arguments['object'];
-		if (!is_object($object)
-			|| !$object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface
-			|| ($object->FLOW3_Persistence_isNew() && !$object->FLOW3_Persistence_isClone())
-			){
-			return '';
+	protected function renderAdditionalIdentityFields() {
+		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')) {
+			$additionalIdentityProperties = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
+			$output = '';
+			foreach ($additionalIdentityProperties as $identity) {
+				$output .= chr(10) . $identity;
+			}
+			return $output;
 		}
-		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
-		if ($identifier === NULL) {
-			return chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
-		}
-		return chr(10) . '<input type="hidden" name="'. $this->prefixFieldName($this->arguments['name']) . '[__identity]" value="' . $identifier .'" />' . chr(10);
+		return '';
 	}
 
 	/**
@@ -214,6 +212,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected function addFormObjectToViewHelperVariableContainer() {
 		if ($this->arguments->hasArgument('object')) {
 			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $this->arguments['object']);
+			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', array());
 		}
 	}
 
@@ -226,6 +225,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected function removeFormObjectFromViewHelperVariableContainer() {
 		if ($this->arguments->hasArgument('object')) {
 			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 		}
 	}
 
