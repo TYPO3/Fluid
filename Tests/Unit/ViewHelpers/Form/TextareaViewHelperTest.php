@@ -33,7 +33,7 @@ class TextareaViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\TextareaViewHelper'), array('setErrorClassAttribute'));
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\TextareaViewHelper'), array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -59,6 +59,7 @@ class TextareaViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	public function renderCorrectlySetsNameAttributeAndContent() {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'NameOfTextarea');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('NameOfTextarea');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('Current value');
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);

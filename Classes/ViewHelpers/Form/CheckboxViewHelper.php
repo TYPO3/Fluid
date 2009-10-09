@@ -102,6 +102,7 @@ class CheckboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 			}
 		}
 
+		$this->registerFieldNameForFormTokenGeneration($nameAttribute);
 		$this->tag->addAttribute('name', $nameAttribute);
 		$this->tag->addAttribute('value', $valueAttribute);
 		if ($checked) {

@@ -112,9 +112,22 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		}
 
 		$this->tag->addAttribute('name', $name);
-		$this->tag->setContent($this->renderOptionTags());
+
+		$options = $this->getOptions();
+		$this->tag->setContent($this->renderOptionTags($options));
 
 		$this->setErrorClassAttribute();
+
+		// register field name for token generation.
+		// in case it is a multi-select, we need to register the field name
+		// as often as there are elements in the box
+		if ($this->arguments->hasArgument('multiple')) {
+			for ($i=0; $i<count($options); $i++) {
+				$this->registerFieldNameForFormTokenGeneration($name);
+			}
+		} else {
+			$this->registerFieldNameForFormTokenGeneration($name);
+		}
 
 		return $this->tag->render();
 	}
@@ -122,12 +135,13 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	/**
 	 * Render the option tags.
 	 *
+	 * @param array $options the options for the form.
 	 * @return string rendered tags.
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	protected function renderOptionTags() {
+	protected function renderOptionTags($options) {
 		$output = '';
-		$options = $this->getOptions();
+
 		foreach ($options as $value => $label) {
 			$isSelected = $this->isSelected($value);
 			$output.= $this->renderOptionTag($value, $label, $isSelected) . chr(10);

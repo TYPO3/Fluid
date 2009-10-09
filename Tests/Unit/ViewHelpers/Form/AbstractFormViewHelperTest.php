@@ -51,7 +51,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName'), array(), '', FALSE);
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName', 'registerFieldNameForFormTokenGeneration'), array(), '', FALSE);
 		$viewHelper->expects($this->any())->method('prefixFieldName')->with('theName')->will($this->returnValue('prefix[theName]'));
 		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
 
@@ -85,7 +85,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName'), array(), '', FALSE);
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName', 'registerFieldNameForFormTokenGeneration'), array(), '', FALSE);
 		$viewHelper->expects($this->any())->method('prefixFieldName')->with('theName')->will($this->returnValue('prefix[theName]'));
 		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
 
@@ -119,7 +119,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 		$expectedResult = chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName'), array(), '', FALSE);
+		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\FormViewHelper'), array('prefixFieldName', 'registerFieldNameForFormTokenGeneration'), array(), '', FALSE);
 		$viewHelper->_set('persistenceManager', $mockPersistenceManager);
 
 		$actualResult = $viewHelper->_call('renderHiddenIdentityField', $object, 'theName');

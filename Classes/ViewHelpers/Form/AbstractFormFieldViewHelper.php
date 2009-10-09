@@ -110,11 +110,11 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 		}
 		return $value;
 	}
-	
+
 	/**
 	 * Add additional identity properties in case the current property is hierarchical (of the form "bla.blubb").
 	 * Then, [bla][__identity] has to be generated as well.
-	 * 
+	 *
 	 * @author Sebastian Kurfuerst <sebastian@typo3.org>
 	 * @return void
 	 */
@@ -130,7 +130,7 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 				$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
 				$objectName .= '[' . $propertySegments[$i-1] . ']';
 				$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
-				
+
 				// Add the hidden identity field to the ViewHelperVariableContainer
 				$additionalIdentityProperties = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 				$additionalIdentityProperties[$objectName] = $hiddenIdentityField;

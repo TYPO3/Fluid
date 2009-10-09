@@ -71,7 +71,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		}
 		return $fieldName;
 	}
-	
+
 	/**
 	 * Renders a hidden form field containing the technical identity of the given object.
 	 *
@@ -92,7 +92,23 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		if ($identifier === NULL) {
 			return chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
 		}
-		return chr(10) . '<input type="hidden" name="'. $this->prefixFieldName($name) . '[__identity]" value="' . $identifier .'" />' . chr(10);
+		$name = $this->prefixFieldName($name) . '[__identity]';
+		$this->registerFieldNameForFormTokenGeneration($name);
+
+		return chr(10) . '<input type="hidden" name="'. $name . '" value="' . $identifier .'" />' . chr(10);
+	}
+
+	/**
+	 * Register a field name for inclusion in the HMAC / Form Token generation
+	 *
+	 * @param string $fieldName name of the field to register
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function registerFieldNameForFormTokenGeneration($fieldName) {
+		$formFieldNames = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
+		$formFieldNames[] = $fieldName;
+		$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', $formFieldNames);
 	}
 }
 

@@ -32,7 +32,7 @@ class HiddenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\HiddenViewHelper'), array('setErrorClassAttribute', 'getName', 'getValue'));
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\HiddenViewHelper'), array('setErrorClassAttribute', 'getName', 'getValue', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -46,6 +46,7 @@ class HiddenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'hidden');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->once())->method('getName')->will($this->returnValue('foo'));

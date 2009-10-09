@@ -32,7 +32,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\CheckboxViewHelper'), array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue'));
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\CheckboxViewHelper'), array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -46,6 +46,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
@@ -125,6 +126,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo[]');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo[]');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));

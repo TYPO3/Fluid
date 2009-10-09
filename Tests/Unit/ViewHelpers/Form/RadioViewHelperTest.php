@@ -32,7 +32,7 @@ class RadioViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\RadioViewHelper'), array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue'));
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Form\RadioViewHelper'), array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -46,6 +46,7 @@ class RadioViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'radio');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
@@ -64,6 +65,7 @@ class RadioViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'radio');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
@@ -104,6 +106,7 @@ class RadioViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'radio');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
@@ -125,6 +128,7 @@ class RadioViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'radio');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
@@ -145,6 +149,7 @@ class RadioViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'radio');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 

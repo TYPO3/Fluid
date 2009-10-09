@@ -71,8 +71,11 @@ class PasswordViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 	 * @api
 	 */
 	public function render() {
+		$name = $this->getName();
+		$this->registerFieldNameForFormTokenGeneration($name);
+
 		$this->tag->addAttribute('type', 'password');
-		$this->tag->addAttribute('name', $this->getName());
+		$this->tag->addAttribute('name', $name);
 		$this->tag->addAttribute('value', $this->getValue());
 
 		$this->setErrorClassAttribute();

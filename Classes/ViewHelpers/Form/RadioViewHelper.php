@@ -98,6 +98,7 @@ class RadioViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHe
 			$checked = $propertyValue == $valueAttribute;
 		}
 
+		$this->registerFieldNameForFormTokenGeneration($nameAttribute);
 		$this->tag->addAttribute('name', $nameAttribute);
 		$this->tag->addAttribute('value', $valueAttribute);
 		if ($checked) {
