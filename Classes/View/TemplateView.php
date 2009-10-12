@@ -167,7 +167,9 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingContext');
 		$renderingContext->setTemplateVariableContainer($variableContainer);
-		$renderingContext->setControllerContext($this->controllerContext);
+		if ($this->controllerContext !== NULL) {
+			$renderingContext->setControllerContext($this->controllerContext);
+		}
 		$renderingContext->setRenderingConfiguration($renderingConfiguration);
 
 		$viewHelperVariableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
@@ -359,7 +361,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	/**
 	 * Set the root path to the templates.
 	 * If set, overrides the one determined from $this->templateRootPathPattern
-	 * 
+	 *
 	 * @param string $templateRootPath Root path to the templates. If set, overrides the one determined from $this->templateRootPathPattern
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -368,10 +370,10 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	public function setTemplateRootPath($templateRootPath) {
 		$this->templateRootPath = $templateRootPath;
 	}
-	
+
 	/**
 	 * Resolves the template root to be used inside other paths.
-	 * 
+	 *
 	 * @return string Path to template root directory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */

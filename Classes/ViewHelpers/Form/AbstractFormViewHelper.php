@@ -83,7 +83,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 */
 	protected function renderHiddenIdentityField($object, $name) {
 		if (!is_object($object)
-			|| !$object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface
+			|| !($object instanceof \F3\FLOW3\Persistence\Aspect\DirtyMonitoringInterface)
 			|| ($object->FLOW3_Persistence_isNew() && !$object->FLOW3_Persistence_isClone())
 			){
 			return '';
