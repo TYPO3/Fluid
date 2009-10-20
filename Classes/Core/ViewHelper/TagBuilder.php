@@ -102,7 +102,6 @@ class TagBuilder {
 	 * @param string $tagContent content of the tag to be rendered
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @todo remove $escapeSpecialCharacters
 	 * @api
 	 */
 	public function setContent($tagContent) {

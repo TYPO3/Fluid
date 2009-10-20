@@ -43,6 +43,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 * Tag builder instance
 	 *
 	 * @var \F3\Fluid\Core\ViewHelper\TagBuilder
+	 * @api
 	 */
 	protected $tag = NULL;
 
@@ -50,6 +51,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 	 * name of the tag to be created by this view helper
 	 *
 	 * @var string
+	 * @api
 	 */
 	protected $tagName = 'div';
 

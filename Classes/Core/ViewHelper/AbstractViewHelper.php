@@ -52,24 +52,28 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	/**
 	 * Arguments accessor.
 	 * @var F3\Fluid\Core\ViewHelper\Arguments
+	 * @api
 	 */
 	protected $arguments;
 
 	/**
 	 * Current variable container reference.
 	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @api
 	 */
 	protected $templateVariableContainer;
 
 	/**
 	 * Controller Context to use
 	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @api
 	 */
 	protected $controllerContext;
 
 	/**
 	 * ViewHelper Variable Container
 	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @api
 	 */
 	protected $viewHelperVariableContainer;
 
