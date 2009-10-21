@@ -60,6 +60,9 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 		if ($fieldName === NULL || $fieldName === '') {
 			return '';
 		}
+		if (!$this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')) {
+			return $fieldName;
+		}
 		$fieldNamePrefix = (string)$this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
 		if ($fieldNamePrefix === '') {
 			return $fieldName;
@@ -104,9 +107,14 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 	 * @param string $fieldName name of the field to register
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function registerFieldNameForFormTokenGeneration($fieldName) {
-		$formFieldNames = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
+		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames')) {
+			$formFieldNames = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
+		} else {
+			$formFieldNames = array();
+		}
 		$formFieldNames[] = $fieldName;
 		$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', $formFieldNames);
 	}
