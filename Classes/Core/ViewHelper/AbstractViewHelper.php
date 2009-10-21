@@ -187,13 +187,14 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Sets all needed attributes needed for the rendering. Called by the
-	 * framework. Populates $this->viewHelperNode
+	 * framework. Populates $this->viewHelperNode.
+	 * This is PURELY INTERNAL! Never override this method!!
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node View Helper node to be set.
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	final public function setViewHelperNode(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node) {
+	public function setViewHelperNode(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
 	}
 

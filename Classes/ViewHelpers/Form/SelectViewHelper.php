@@ -226,7 +226,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		if (!$this->arguments->hasArgument('optionValueField')) {
 			return $value;
 		}
-		if (!is_array($value)) {
+		if (!is_array($value) && !($value instanceof Iterator)) {
 			if (is_object($value)) {
 				return \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
 			} else {

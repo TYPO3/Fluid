@@ -24,7 +24,13 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
  */
-include_once(__DIR__ . '/../Fixtures/ChildNodeAccessFacetViewHelper.php');
+if (!class_exists('F3\Fluid\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper')) {
+	include_once(__DIR__ . '/../Fixtures/ChildNodeAccessFacetViewHelper.php');
+}
+if (!class_exists('F3\Fluid\Core\Fixtures\TestViewHelper')) {
+	include_once(__DIR__ . '/../../Fixtures/TestViewHelper.php');
+}
+
 class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
@@ -101,10 +107,10 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 		$mockViewHelperArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
 
-		$this->mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\ViewHelpers\TestViewHelper')->will($this->returnValue($mockViewHelper));
+		$this->mockObjectFactory->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper')->will($this->returnValue($mockViewHelper));
 		$this->mockObjectFactory->expects($this->at(1))->method('create')->with('F3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
 
-		$viewHelperNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\TestViewHelper', array());
+		$viewHelperNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper', array());
 		$viewHelperNode->addChildNode($childNode);
 
 		$mockViewHelper->expects($this->once())->method('setChildNodes')->with($this->equalTo(array($childNode)));

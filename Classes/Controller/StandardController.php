@@ -94,6 +94,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		return $this->view->assign('xsdPath', $filename)
 		                  ->assign('namespaceURI', 'http://typo3.org/ns/fluid/' . str_replace('\\', '/', $baseNamespace))
 		                  ->assign('namespacePrefix', $namespacePrefix)
+		                  ->assign('view', $this->view)
 		                  ->render();
 	}
 }

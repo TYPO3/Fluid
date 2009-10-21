@@ -14,9 +14,9 @@ namespace F3\Fluid\Core\ViewHelper;
  * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
  * Public License for more details.                                       *
  *                                                                        */
-
-include_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
-
+if (!class_exists('F3\Fluid\Core\Fixtures\TestViewHelper')) {
+	require_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
+}
 /**
  * Testcase for AbstractViewHelper
  *

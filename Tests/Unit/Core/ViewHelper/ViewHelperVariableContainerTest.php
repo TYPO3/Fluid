@@ -14,8 +14,9 @@ namespace F3\Fluid\Core\ViewHelper;
  * TABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General      *
  * Public License for more details.                                       *
  *                                                                        */
-
-include_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
+if (!class_exists('F3\Fluid\Core\Fixtures\TestViewHelper')) {
+	require_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
+}
 
 /**
  * Testcase for AbstractViewHelper
@@ -65,7 +66,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

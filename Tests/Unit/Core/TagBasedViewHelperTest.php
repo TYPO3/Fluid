@@ -15,8 +15,6 @@ namespace F3\Fluid\Core;
  * Public License for more details.                                       *
  *                                                                        */
 
-include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
-
 /**
  * Testcase for TagBasedViewHelper
  *
@@ -26,7 +24,7 @@ include_once(__DIR__ . '/Fixtures/TestTagBasedViewHelper.php');
 class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	public function setUp() {
-		$this->viewHelper = new \F3\Fluid\Core\Fixtures\TestTagBasedViewHelper();
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\TagBasedViewHelper'), array('dummy'), array(), '', FALSE);
 	}
 
 	/**
@@ -51,7 +49,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
+		$this->viewHelper->_call('registerTagAttribute', 'foo', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array('foo' => 'bar'));
 		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initialize();
@@ -67,7 +65,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$this->viewHelper->registerTagAttribute('foo', 'string', 'Description', FALSE);
+		$this->viewHelper->_call('registerTagAttribute', 'foo', 'string', 'Description', FALSE);
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array('additionalAttributes' => array('foo' => 'bar')));
 		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initialize();
@@ -101,6 +99,7 @@ class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 				'tabindex' => 'tabindexAttribute'
 			)
 		);
+		$this->viewHelper->_call('registerUniversalTagAttributes');
 		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->initializeArguments();
 		$this->viewHelper->initialize();
