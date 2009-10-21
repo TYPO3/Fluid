@@ -69,6 +69,9 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	public function evaluate() {
 		$objectPathParts = explode('.', $this->objectPath);
 		$variableName = array_shift($objectPathParts);
+		if (!$this->renderingContext->getTemplateVariableContainer()->exists($variableName)) {
+			return NULL;
+		}
 		$currentObject = $this->renderingContext->getTemplateVariableContainer()->get($variableName);
 		if (count($objectPathParts) > 0) {
 			return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($currentObject, implode('.', $objectPathParts));
