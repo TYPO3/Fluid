@@ -28,7 +28,7 @@ namespace F3\Fluid\ViewHelpers\Form;
   * = Examples =
  *
  * <code title="Example">
- * <f:textbox name="myTextBox" value="default value" />
+ * <f:form.textbox name="myTextBox" value="default value" />
  * </code>
  *
  * Output:
