@@ -31,6 +31,7 @@ namespace F3\Fluid\Core\ViewHelper;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  * @scope prototype
  */
 class TemplateVariableContainer {
@@ -49,7 +50,7 @@ class TemplateVariableContainer {
 	 * @api
 	 */
 	public function __construct($objectArray = array()) {
-		if (!is_array($objectArray)) throw new \F3\Fluid\Core\RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
+		if (!is_array($objectArray)) throw new \RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
 		$this->objects = $objectArray;
 	}
 
@@ -63,7 +64,7 @@ class TemplateVariableContainer {
 	 * @api
 	 */
 	public function add($identifier, $object) {
-		if (array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Duplicate variable declarations!', 1224479063);
+		if (array_key_exists($identifier, $this->objects)) throw new \RuntimeException('Duplicate variable declarations!', 1224479063);
 		$this->objects[$identifier] = $object;
 	}
 
@@ -76,7 +77,7 @@ class TemplateVariableContainer {
 	 * @api
 	 */
 	public function get($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
+		if (!array_key_exists($identifier, $this->objects)) throw new \RuntimeException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		return $this->objects[$identifier];
 	}
 
@@ -89,7 +90,7 @@ class TemplateVariableContainer {
 	 * @api
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->objects)) throw new \F3\Fluid\Core\RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+		if (!array_key_exists($identifier, $this->objects)) throw new \RuntimeException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
 		unset($this->objects[$identifier]);
 	}
 

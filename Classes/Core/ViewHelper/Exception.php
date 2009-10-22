@@ -27,6 +27,7 @@ namespace F3\Fluid\Core\ViewHelper;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  */
 class Exception extends \F3\Fluid\Core\Exception {
 }

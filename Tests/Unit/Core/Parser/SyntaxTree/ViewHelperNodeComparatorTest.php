@@ -437,29 +437,27 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\RuntimeException
+	 * @expectedException \RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {
 		$expression = '   5 ==5 {blubb} {bla} {blu}';
-		$expected = TRUE;
 
 		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
+		$this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
 	}
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\RuntimeException
+	 * @expectedException \RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function comparingStringsThrowsException() {
 		$this->markTestIncomplete('Not sure what the intended behavior should be. See TODO inside ViewHelperNode.');
 		$expression = '   blubb ==5 ';
-		$expected = TRUE;
 
 		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
+		$this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
 	}
 }
 

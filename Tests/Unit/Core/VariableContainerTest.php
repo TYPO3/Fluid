@@ -70,7 +70,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\RuntimeException
+	 * @expectedException \RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function contextTakesOnlyArraysInConstructor() {
@@ -79,7 +79,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\RuntimeException
+	 * @expectedException \RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
@@ -89,7 +89,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\RuntimeException
+	 * @expectedException \RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
@@ -98,7 +98,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\RuntimeException
+	 * @expectedException \RuntimeException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
@@ -114,7 +114,7 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->variableContainer->remove('variable');
 		try {
 			$this->variableContainer->get('variable');
-		} catch (\F3\Fluid\Core\RuntimeException $e) {}
+		} catch (\RuntimeException $e) {}
 	}
 }
 

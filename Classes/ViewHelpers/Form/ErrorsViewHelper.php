@@ -42,6 +42,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  *
  * @version $Id: ForViewHelper.php 2378 2009-05-25 20:47:00Z sebastian $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  * @scope prototype
  */
 class ErrorsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {

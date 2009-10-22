@@ -37,6 +37,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  *
  * @version $Id$
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License, version 2
+ * @api
  * @scope prototype
  */
 class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {

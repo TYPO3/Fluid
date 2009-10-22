@@ -27,6 +27,7 @@ namespace F3\Fluid\View;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  * @scope prototype
  */
 class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\View\TemplateViewInterface {
@@ -226,7 +227,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new \RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -244,7 +245,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		if(!array_key_exists($sectionName, $sections)) {
-			throw new \F3\Fluid\Core\RuntimeException('The given section does not exist!', 1227108982);
+			throw new \RuntimeException('The given section does not exist!', 1227108982);
 		}
 		$section = $sections[$sectionName];
 
@@ -291,7 +292,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new \RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -324,7 +325,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \F3\Fluid\Core\RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new \RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -339,7 +340,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		try {
 			$this->resolveTemplatePathAndFilename();
 			return TRUE;
-		} catch (\F3\Fluid\Core\RuntimeException $e) {
+		} catch (\RuntimeException $e) {
 			return FALSE;
 		}
 	}

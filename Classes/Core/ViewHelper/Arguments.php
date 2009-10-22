@@ -29,6 +29,7 @@ namespace F3\Fluid\Core\ViewHelper;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  * @scope prototype
  */
 class Arguments implements \ArrayAccess {
@@ -83,7 +84,7 @@ class Arguments implements \ArrayAccess {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetSet($key, $value) {
-		throw new \F3\Fluid\Core\RuntimeException('Tried to set argument "' . $key . '", but setting arguments is forbidden.', 1236080693);
+		throw new \RuntimeException('Tried to set argument "' . $key . '", but setting arguments is forbidden.', 1236080693);
 	}
 
 	/**
@@ -93,7 +94,7 @@ class Arguments implements \ArrayAccess {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetUnset($key) {
-		throw new \F3\Fluid\Core\RuntimeException('Tried to unset argument "' . $key . '", but setting arguments is forbidden.', 1236080702);
+		throw new \RuntimeException('Tried to unset argument "' . $key . '", but setting arguments is forbidden.', 1236080702);
 	}
 
 	/**

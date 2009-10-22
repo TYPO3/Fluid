@@ -57,7 +57,7 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {
-			throw new \F3\Fluid\Core\RuntimeException('Rendering Context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
+			throw new \RuntimeException('Rendering Context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
 		}
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {

@@ -117,7 +117,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {
-			throw new \F3\Fluid\Core\RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
+			throw new \RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
 		// Store if the ObjectAccessorPostProcessor has been enabled before this ViewHelper, because we need to re-enable it if needed after this ViewHelper
@@ -185,7 +185,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			$endContextVariables = $this->renderingContext->getTemplateVariableContainer();
 			$diff = array_intersect($endContextVariables, $contextVariables);
 
-			throw new \F3\Fluid\Core\RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);
+			throw new \RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);
 		}
 		return $output;
 	}
@@ -235,7 +235,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	protected function evaluateBooleanExpression(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode) {
 		$childNodes = $syntaxTreeNode->getChildNodes();
 		if (count($childNodes) > 3) {
-			throw new \F3\Fluid\Core\RuntimeException('The expression "' . $syntaxTreeNode->evaluate() . '" has more than tree parts.', 1244201848);
+			throw new \RuntimeException('The expression "' . $syntaxTreeNode->evaluate() . '" has more than tree parts.', 1244201848);
 		}
 
 		$leftSide = NULL;
@@ -312,7 +312,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			case '<=':
 				return ($leftSide <= $rightSide);
 			default:
-				throw new \F3\Fluid\Core\RuntimeException('Comparator "' . $comparator . '" was not implemented. Please report a bug.', 1244234398);
+				throw new \RuntimeException('Comparator "' . $comparator . '" was not implemented. Please report a bug.', 1244234398);
 		}
 	}
 

@@ -37,6 +37,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  *
  * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  * @scope prototype
  */
 class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
