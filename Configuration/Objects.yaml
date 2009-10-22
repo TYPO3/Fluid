@@ -5,4 +5,5 @@ F3\Fluid\View\Aspect\TemplateViewCachingAspect:
         factoryClassName: F3\FLOW3\Cache\Manager
         factoryMethodName: getCache
         arguments:
-          1: value: Fluid_SyntaxTreeCache
+          1:
+            value: Fluid_SyntaxTreeCache
