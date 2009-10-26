@@ -130,11 +130,9 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("Hallo"));
 		$rootNode->addChildNode($dynamicNode);
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("Second"));
 		$rootNode->addChildNode($dynamicNode);
 
 		$expected = $rootNode;
@@ -147,7 +145,6 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function fixture02ShorthandSyntaxReturnsCorrectObjectTree() {
-		$this->markTestSkipped("TODO");
 		$this->fixture02ReturnsCorrectObjectTree('/Fixtures/TemplateParserTestFixture02-shorthand.html');
 	}
 

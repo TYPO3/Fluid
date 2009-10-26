@@ -88,12 +88,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	protected $objectAccessorPostProcessorEnabled = TRUE;
 
 	/**
-	 * Validator resolver
-	 * @var F3\FLOW3\Validation\ValidatorResolver
-	 */
-	private $validatorResolver;
-
-	/**
 	 * Reflection service
 	 * @var F3\FLOW3\Reflection\Service
 	 */
@@ -133,15 +127,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 */
 	public function setViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
 		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
-	}
-
-	/**
-	 * Inject a validator resolver
-	 * @param \F3\FLOW3\Validation\ValidatorResolver $validatorResolver Validator Resolver
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectValidatorResolver(\F3\FLOW3\Validation\ValidatorResolver $validatorResolver) {
-		$this->validatorResolver = $validatorResolver;
 	}
 
 	/**
@@ -313,13 +298,13 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 					if (!is_bool($this->arguments[$argumentName])) {
 						throw new \RuntimeException('The argument "' . $argumentName . '" was registered with type "boolean", but is of type "' . gettype($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1240227732);
 					}
-				} else {
-					$validator = $this->validatorResolver->createValidator($type);
-					if (is_null($validator)) {
-						throw new \RuntimeException('No validator found for argument name "' . $argumentName . '" with type "' . $type . '" in view helper "' . get_class($this) . '".', 1237900534);
-					}
-					if (!$validator->isValid($this->arguments[$argumentName])) {
-						throw new \RuntimeException('Validation for argument name "' . $argumentName . '" in view helper "' . get_class($this) . '" FAILED. Expected type: "' . $type . '"; Given: "' . gettype($this->arguments[$argumentName]) . '".', 1237900686);
+				} elseif (class_exists($type)) {
+					if (! ($this->arguments[$argumentName] instanceof $type)) {
+						if (is_object($this->arguments[$argumentName])) {
+							throw new \RuntimeException('The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' . get_class($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1256475114);
+						} else {
+							throw new \RuntimeException('The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' . gettype($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1256475113);
+						}
 					}
 				}
 			}
