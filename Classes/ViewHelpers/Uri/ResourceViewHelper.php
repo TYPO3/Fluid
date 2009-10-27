@@ -43,19 +43,36 @@ namespace F3\Fluid\ViewHelpers\Uri;
 class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * @var \F3\FLOW3\Resource\Publisher
+	 */
+	protected $resourcePublisher;
+	
+	/**
+	 * Inject the FLOW3 resource publisher.
+	 *
+	 * @param \F3\FLOW3\Resource\Publisher $resourcePublisher
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function injectResourcePublisher(\F3\FLOW3\Resource\Publisher $resourcePublisher) {
+		$this->resourcePublisher = $resourcePublisher;
+	}
+
+	/**
 	 * Render the URI to the resource. The filename is used from child content.
 	 *
+	 * @param string $resource The path and filename of the resource (relative to Public resource directory)
 	 * @param string $packageKey Target package key. If not set, the current package key will be used
 	 * @return string The URI to the resource
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @api
 	 */
-	public function render($packageKey = NULL) {
+	public function render($resource, $packageKey = NULL) {
 		if ($packageKey === NULL) {
 			$packageKey = $this->controllerContext->getRequest()->getControllerPackageKey();
 		}
-		$resource = $this->renderChildren();
-		$uri = 'Resources/Packages/' . $packageKey . '/' . $resource;
+		$mirrorPath = $this->resourcePublisher->getMirrorDirectory();
+		$uri = $mirrorPath . 'Packages/' . $packageKey . '/' . $resource;
 		return $uri;
 	}
 }
