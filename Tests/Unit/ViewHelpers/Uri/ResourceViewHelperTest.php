@@ -52,7 +52,7 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceURI() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getMirrorDirectory')->will($this->returnValue('Resources/'));
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('Resources/'));
 		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
 
 		$resourceUri = $this->viewHelper->render('foo');
@@ -64,8 +64,8 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesCustomPackageKeyIfSpecified() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getMirrorDirectory')->will($this->returnValue('Resources/'));
-		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('Resources/'));
+		$resourceUri = $this->viewHelper->render('foo', FALSE, 'SomePackage');
 		$this->assertEquals('Resources/Packages/SomePackage/foo', $resourceUri);
 	}
 
@@ -74,9 +74,20 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function renderUsesConfiguredMirrorPath() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getMirrorDirectory')->will($this->returnValue('CustomMirrorDirectory/'));
-		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('CustomMirrorDirectory/'));
+		$resourceUri = $this->viewHelper->render('foo', FALSE, 'SomePackage');
 		$this->assertEquals('CustomMirrorDirectory/Packages/SomePackage/foo', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function renderReturnsAbsoluteUrlIfRequested() {
+		$this->request->expects($this->atLeastOnce())->method('getBaseURI')->will($this->returnValue('http://host.name/'));
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('CustomMirrorDirectory/'));
+		$resourceUri = $this->viewHelper->render('foo', TRUE, 'SomePackage');
+		$this->assertEquals('http://host.name/CustomMirrorDirectory/Packages/SomePackage/foo', $resourceUri);
 	}
 
 }

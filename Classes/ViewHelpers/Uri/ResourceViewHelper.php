@@ -60,20 +60,25 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Render the URI to the resource. The filename is used from child content.
 	 *
-	 * @param string $resource The path and filename of the resource (relative to Public resource directory)
+	 * @param string $path The path and filename of the resource (relative to Public resource directory of the package)
+	 * @param boolean $absolute Whether to return an absolute path instead of a relative one
 	 * @param string $packageKey Target package key. If not set, the current package key will be used
 	 * @return string The URI to the resource
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @api
 	 */
-	public function render($resource, $packageKey = NULL) {
+	public function render($path, $absolute = FALSE, $packageKey = NULL) {
 		if ($packageKey === NULL) {
 			$packageKey = $this->controllerContext->getRequest()->getControllerPackageKey();
 		}
-		$mirrorPath = $this->resourcePublisher->getMirrorDirectory();
-		$uri = $mirrorPath . 'Packages/' . $packageKey . '/' . $resource;
-		return $uri;
+		$mirrorPath = $this->resourcePublisher->getRelativeMirrorDirectory();
+
+		if ($absolute) {
+			return $this->controllerContext->getRequest()->getBaseURI() . $mirrorPath . 'Packages/' . $packageKey . '/' . $path;
+		} else {
+			return $mirrorPath . 'Packages/' . $packageKey . '/' . $path;
+		}
 	}
 }
 
