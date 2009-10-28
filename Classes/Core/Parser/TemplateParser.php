@@ -582,7 +582,7 @@ class TemplateParser {
 		$output = array();
 		foreach ($arguments as $argumentName => $argumentValue) {
 			$output[$argumentName] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
-			if ($argumentValue instanceof F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
+			if ($argumentValue instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
 				$output[$argumentName]->addChildNode($argumentValue);
 			} else {
 				$output[$argumentName]->addChildNode($node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', (string)$argumentValue));
