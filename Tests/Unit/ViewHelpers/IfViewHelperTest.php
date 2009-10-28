@@ -22,23 +22,41 @@ namespace F3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
+
 /**
  * Testcase for IfViewHelper
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class IfViewHelperTest extends \F3\Testing\BaseTestCase {
+class IfViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+
+	/**
+	 * var \F3\Fluid\ViewHelpers\IfViewHelper
+	 */
+	protected $viewHelper;
+
+	/**
+	 * var \F3\Fluid\Core\ViewHelper\Arguments
+	 */
+	protected $mockArguments;
+
+	public function setUp() {
+		parent::setUp();
+		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\IfViewHelper'), array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
+	}
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersChildrenIfConditionIsTrueAndNoThenViewHelperChildExists() {
-		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\IfViewHelper', array('renderChildren'));
-		$mockViewHelper->expects($this->at(0))->method('renderChildren')->will($this->returnValue('foo'));
+		$this->viewHelper->expects($this->at(0))->method('renderChildren')->will($this->returnValue('foo'));
 
-		$actualResult = $mockViewHelper->render(TRUE);
+		$actualResult = $this->viewHelper->render(TRUE);
 		$this->assertEquals('foo', $actualResult);
 	}
 
@@ -47,17 +65,16 @@ class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersThenViewHelperChildIfConditionIsTrueAndThenViewHelperChildExists() {
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
 
 		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockThenViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ThenViewHelper'));
-		$mockThenViewHelperNode->expects($this->at(1))->method('setRenderingContext')->with($renderingContext);
+		$mockThenViewHelperNode->expects($this->at(1))->method('setRenderingContext')->with($mockRenderingContext);
 		$mockThenViewHelperNode->expects($this->at(2))->method('evaluate')->will($this->returnValue('ThenViewHelperResults'));
 
-		$viewHelper = new \F3\Fluid\ViewHelpers\IfViewHelper();
-		$viewHelper->setChildNodes(array($mockThenViewHelperNode));
-		$viewHelper->setRenderingContext($renderingContext);
-		$actualResult = $viewHelper->render(TRUE);
+		$this->viewHelper->setChildNodes(array($mockThenViewHelperNode));
+		$this->viewHelper->setRenderingContext($mockRenderingContext);
+		$actualResult = $this->viewHelper->render(TRUE);
 		$this->assertEquals('ThenViewHelperResults', $actualResult);
 	}
 
@@ -66,9 +83,7 @@ class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfConditionIsFalseAndNoThenViewHelperChildExists() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\IfViewHelper();
-
-		$actualResult = $viewHelper->render(FALSE);
+		$actualResult = $this->viewHelper->render(FALSE);
 		$this->assertEquals('', $actualResult);
 	}
 
@@ -77,20 +92,84 @@ class IfViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersElseViewHelperChildIfConditionIsFalseAndNoThenViewHelperChildExists() {
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
 
 		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ElseViewHelper'));
-		$mockElseViewHelperNode->expects($this->at(1))->method('setRenderingContext')->with($renderingContext);
+		$mockElseViewHelperNode->expects($this->at(1))->method('setRenderingContext')->with($mockRenderingContext);
 		$mockElseViewHelperNode->expects($this->at(2))->method('evaluate')->will($this->returnValue('ElseViewHelperResults'));
 
-		$viewHelper = new \F3\Fluid\ViewHelpers\IfViewHelper();
-		$viewHelper->setChildNodes(array($mockElseViewHelperNode));
-		$viewHelper->setRenderingContext($this->getMock('F3\Fluid\Core\Rendering\RenderingContext'));
+		$this->viewHelper->setChildNodes(array($mockElseViewHelperNode));
+		$this->viewHelper->setRenderingContext($mockRenderingContext);
 
-		$actualResult = $viewHelper->render(FALSE);
+		$actualResult = $this->viewHelper->render(FALSE);
 		$this->assertEquals('ElseViewHelperResults', $actualResult);
 	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderReturnsValueOfThenArgumentIfConditionIsTrue() {
+		$this->arguments->expects($this->atLeastOnce())->method('hasArgument')->with('then')->will($this->returnValue(TRUE));
+		$this->arguments->expects($this->atLeastOnce())->method('offsetGet')->with('then')->will($this->returnValue('ThenArgument'));
+
+		$actualResult = $this->viewHelper->render(TRUE);
+		$this->assertEquals('ThenArgument', $actualResult);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function thenArgumentHasPriorityOverChildNodesIfConditionIsTrue() {
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+
+		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
+		$mockThenViewHelperNode->expects($this->never())->method('evaluate');
+
+		$this->viewHelper->setChildNodes(array($mockThenViewHelperNode));
+		$this->viewHelper->setRenderingContext($mockRenderingContext);
+
+		$this->arguments->expects($this->atLeastOnce())->method('hasArgument')->with('then')->will($this->returnValue(TRUE));
+		$this->arguments->expects($this->atLeastOnce())->method('offsetGet')->with('then')->will($this->returnValue('ThenArgument'));
+
+		$actualResult = $this->viewHelper->render(TRUE);
+		$this->assertEquals('ThenArgument', $actualResult);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderReturnsValueOfElseArgumentIfConditionIsFalse() {
+		$this->arguments->expects($this->atLeastOnce())->method('hasArgument')->with('else')->will($this->returnValue(TRUE));
+		$this->arguments->expects($this->atLeastOnce())->method('offsetGet')->with('else')->will($this->returnValue('ElseArgument'));
+
+		$actualResult = $this->viewHelper->render(FALSE);
+		$this->assertEquals('ElseArgument', $actualResult);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function elseArgumentHasPriorityOverChildNodesIfConditionIsFalse() {
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+
+		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
+		$mockElseViewHelperNode->expects($this->never())->method('evaluate');
+
+		$this->viewHelper->setChildNodes(array($mockElseViewHelperNode));
+		$this->viewHelper->setRenderingContext($mockRenderingContext);
+
+		$this->arguments->expects($this->atLeastOnce())->method('hasArgument')->with('else')->will($this->returnValue(TRUE));
+		$this->arguments->expects($this->atLeastOnce())->method('offsetGet')->with('else')->will($this->returnValue('ElseArgument'));
+
+		$actualResult = $this->viewHelper->render(FALSE);
+		$this->assertEquals('ElseArgument', $actualResult);
+	}
+
 }
 
 ?>

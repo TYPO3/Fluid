@@ -37,6 +37,12 @@ namespace F3\Fluid\Core\ViewHelper;
 class TemplateVariableContainer {
 
 	/**
+	 * List of reserved words that can't be used as object identifiers in Fluid templates
+	 * @var array
+	 */
+	static protected $reservedKeywords = array('true', 'false');
+
+	/**
 	 * Objects stored in context
 	 * @var array
 	 */
@@ -61,10 +67,12 @@ class TemplateVariableContainer {
 	 * @param object $object
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function add($identifier, $object) {
 		if (array_key_exists($identifier, $this->objects)) throw new \RuntimeException('Duplicate variable declarations!', 1224479063);
+		if (in_array(\F3\PHP6\Functions::strtolower($identifier), self::$reservedKeywords)) throw new \RuntimeException('"' . $identifier . '" is a reserved keyword and can\'t be used as variable identifier.', 1256730379);
 		$this->objects[$identifier] = $object;
 	}
 

@@ -32,8 +32,16 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * </code>
  *
  * Output:
- * <link href="Resources/Packages/MyPackage/stylesheet.css" rel="stylesheet" />
+ * <link href="Resources/Packages/MyPackage/css/stylesheet.css" rel="stylesheet" />
  * (depending on current package)
+ *
+ * <code title="All attributes">
+ * {f:uri.resource(path: 'gfx/SomeImage.png', package: 'DifferentPackage', absolute: true)}
+ * </code>
+ *
+ * Output:
+ * http://www.yourdomain.tld/Resources/Packages/DifferentPackage/gfx/SomeImage.png
+ * (depending on domain)
  *
  * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later

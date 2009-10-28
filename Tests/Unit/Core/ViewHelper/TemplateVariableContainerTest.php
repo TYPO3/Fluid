@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,12 +23,12 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * Testcase for VariableContainer
+ * Testcase for TemplateVariableContainer
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class VariableContainerTest extends \F3\Testing\BaseTestCase {
+class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -90,7 +90,16 @@ class VariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->variableContainer->add('variable', 'string1');
 		$this->variableContainer->add('variable', 'string2');
 	}
-	
+
+	/**
+	 * @test
+	 * @expectedException \RuntimeException
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function addingReservedIdentifiersThrowException() {
+		$this->variableContainer->add('True', 'someValue');
+	}
+
 	/**
 	 * @test
 	 * @expectedException \RuntimeException
