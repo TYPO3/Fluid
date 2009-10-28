@@ -579,16 +579,12 @@ class TemplateParser {
 	 * @todo This method should become superflous once the rest has been refactored, so that this code is not needed.
 	 */
 	protected function postProcessArgumentsForObjectAccessor(array $arguments) {
-		$output = array();
 		foreach ($arguments as $argumentName => $argumentValue) {
-			$output[$argumentName] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
-			if ($argumentValue instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
-				$output[$argumentName]->addChildNode($argumentValue);
-			} else {
-				$output[$argumentName]->addChildNode($node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', (string)$argumentValue));
+			if (!($argumentValue instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode)) {
+				$arguments[$argumentName] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', (string)$argumentValue);
 			}
 		}
-		return $output;
+		return $arguments;
 	}
 
 	/**
@@ -621,11 +617,17 @@ class TemplateParser {
 	 * Build up an argument object tree for the string in $argumentString.
 	 * This builds up the tree for a single argument value.
 	 *
+	 * This method also does some performance optimizations, so in case
+	 * no { or < is found, then we just return a TextNode.
+	 *
 	 * @param string $argumentString
 	 * @return ArgumentObject the corresponding argument object tree.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildArgumentObjectTree($argumentString) {
+		if (strstr($argumentString, '{') === FALSE && strstr($argumentString, '<') === FALSE) {
+			return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $argumentString);
+		}
 		$splittedArgument = $this->splitTemplateAtDynamicTags($argumentString);
 		$rootNode = $this->buildMainObjectTree($splittedArgument)->getRootNode();
 		return $rootNode;
@@ -734,8 +736,8 @@ class TemplateParser {
 							|| ( array_key_exists('SingleQuotedString', $singleMatch) && !empty($singleMatch['SingleQuotedString']) ) ) {
 					if (!array_key_exists('SingleQuotedString', $singleMatch)) $singleMatch['SingleQuotedString'] = '';
 					if (!array_key_exists('DoubleQuotedString', $singleMatch)) $singleMatch['DoubleQuotedString'] = '';
-
-					$arrayToBuild[$arrayKey] = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
+					$argumentString = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
+					$arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
 				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($singleMatch['Subarray']));
 				} else {
