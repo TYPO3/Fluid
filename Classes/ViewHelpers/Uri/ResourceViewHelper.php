@@ -28,7 +28,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * = Examples =
  *
  * <code title="Defaults">
- * <link href="{f:uri.resource('css/stylesheet.css')}" rel="stylesheet" />
+ * <link href="{f:uri.resource(path: 'css/stylesheet.css')}" rel="stylesheet" />
  * </code>
  *
  * Output:
