@@ -60,6 +60,7 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $subpackage Target subpackage. if NULL current subpackage is used
 	 * @param string $section The anchor to be added to the URI
 	 * @param string $format The requested format, e.g. ".html"
+	 * @param array $additionalParams additional query parameters that won't be prefixed like $arguments (overrule $arguments)
 	 * @param boolean $absolute If set, an absolute URI is rendered
 	 * @param boolean $addQueryString If set, the current query parameters will be kept in the URI
 	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
@@ -68,12 +69,13 @@ class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-		public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
+		public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',   array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
 		$uri = $uriBuilder
 			->reset()
 			->setSection($section)
 			->setCreateAbsoluteUri($absolute)
+			->setArguments($additionalParams)
 			->setAddQueryString($addQueryString)
 			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
 			->setFormat($format)

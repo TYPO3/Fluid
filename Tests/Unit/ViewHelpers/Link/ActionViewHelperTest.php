@@ -68,6 +68,7 @@ class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	public function renderCorrectlyPassesDefaultArgumentsToUriBuilder() {
 		$this->uriBuilder->expects($this->once())->method('setSection')->with('');
 		$this->uriBuilder->expects($this->once())->method('setCreateAbsoluteUri')->with(FALSE);
+		$this->uriBuilder->expects($this->once())->method('setArguments')->with(array());
 		$this->uriBuilder->expects($this->once())->method('setAddQueryString')->with(FALSE);
 		$this->uriBuilder->expects($this->once())->method('setArgumentsToBeExcludedFromQueryString')->with(array());
 		$this->uriBuilder->expects($this->once())->method('setFormat')->with('');
@@ -84,13 +85,14 @@ class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	public function renderCorrectlyPassesAllArgumentsToUriBuilder() {
 		$this->uriBuilder->expects($this->once())->method('setSection')->with('someSection');
 		$this->uriBuilder->expects($this->once())->method('setCreateAbsoluteUri')->with(TRUE);
+		$this->uriBuilder->expects($this->once())->method('setArguments')->with(array('additional' => 'Parameters'));
 		$this->uriBuilder->expects($this->once())->method('setAddQueryString')->with(TRUE);
 		$this->uriBuilder->expects($this->once())->method('setArgumentsToBeExcludedFromQueryString')->with(array('arguments' => 'toBeExcluded'));
 		$this->uriBuilder->expects($this->once())->method('setFormat')->with('someFormat');
 		$this->uriBuilder->expects($this->once())->method('uriFor')->with('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage');
 
 		$this->viewHelper->initialize();
-		$this->viewHelper->render('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', TRUE, TRUE, array('arguments' => 'toBeExcluded'));
+		$this->viewHelper->render('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', array('additional' => 'Parameters'), TRUE, TRUE, array('arguments' => 'toBeExcluded'));
 	}
 }
 
