@@ -72,7 +72,7 @@ class TemplateVariableContainer {
 	 */
 	public function add($identifier, $object) {
 		if (array_key_exists($identifier, $this->objects)) throw new \RuntimeException('Duplicate variable declarations!', 1224479063);
-		if (in_array(\F3\PHP6\Functions::strtolower($identifier), self::$reservedKeywords)) throw new \RuntimeException('"' . $identifier . '" is a reserved keyword and can\'t be used as variable identifier.', 1256730379);
+		if (in_array(strtolower($identifier), self::$reservedKeywords)) throw new \RuntimeException('"' . $identifier . '" is a reserved keyword and can\'t be used as variable identifier.', 1256730379);
 		$this->objects[$identifier] = $object;
 	}
 
