@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,13 +23,13 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * A generic Fluid Core exception.
+ * The most general Fluid exception.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class Exception extends \F3\Fluid\Exception {
+class Exception extends \F3\FLOW3\Exception {
 }
 
 ?>

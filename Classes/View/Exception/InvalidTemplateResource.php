@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\View\Exception;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,13 +23,13 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * A generic Fluid Core exception.
+ * An "Invalid Template Resource" exception
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class Exception extends \F3\Fluid\Exception {
+class InvalidTemplateResource extends \F3\Fluid\View\Exception {
 }
 
 ?>

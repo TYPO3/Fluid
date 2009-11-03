@@ -154,7 +154,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		return $mockControllerContext;
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -219,9 +219,32 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$parsedTemplate->expects($this->once())->method('render')->with($renderingContext)->will($this->returnValue('Hello World'));
 
 		$this->assertEquals('Hello World', $templateView->render(), 'The output of the ParsedTemplates render Method is not returned by the TemplateView');
-
 	}
 
+	/**
+	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function parseTemplateReadsTheGivenTemplateAndReturnsTheParsedResult() {
+		$mockTemplateParser = $this->getMock('F3\Fluid\Core\Parser\TemplateParser', array('parse'));
+		$mockTemplateParser->expects($this->once())->method('parse')->with('Unparsed Template')->will($this->returnValue('Parsed Template'));
+
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('dummy'), array(), '', FALSE);
+		$templateView->injectTemplateParser($mockTemplateParser);
+
+		$parsedTemplate = $templateView->_call('parseTemplate', __DIR__ . '/Fixtures/UnparsedTemplateFixture.html');
+		$this->assertSame('Parsed Template', $parsedTemplate);
+	}
+
+	/**
+	 * @test
+	 * @expectedException F3\Fluid\View\Exception\InvalidTemplateResource
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function parseTemplateThrowsAnExceptionIfTheSpecifiedTemplateResourceDoesNotExist() {
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('dummy'), array(), '', FALSE);
+		$templateView->_call('parseTemplate', 'foo');
+	}
 
 	/**
 	 * @test
