@@ -50,7 +50,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 		$this->renderingContext->injectObjectFactory($this->objectFactory);
-		$this->renderingContext->setControllerContext(new \F3\FLOW3\MVC\Controller\ControllerContext());
+		$this->renderingContext->setControllerContext($this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE));
 		$this->renderingContext->setRenderingConfiguration(new \F3\Fluid\Core\Rendering\RenderingConfiguration());
 		$this->renderingContext->setViewHelperVariableContainer(new \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer());
 	}

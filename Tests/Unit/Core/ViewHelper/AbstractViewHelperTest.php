@@ -203,7 +203,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setControllerContextSetsTheControllerContext() {
-		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
+		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
 
 		$viewHelper->setControllerContext($controllerContext);

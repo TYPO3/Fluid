@@ -79,7 +79,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$this->uriBuilder->expects($this->any())->method('setArgumentsToBeExcludedFromQueryString')->will($this->returnValue($this->uriBuilder));
 		// BACKPORTER TOKEN #1
 		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
-		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
+		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->tagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder');

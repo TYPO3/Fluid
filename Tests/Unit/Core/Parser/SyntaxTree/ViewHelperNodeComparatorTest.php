@@ -87,7 +87,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', array('dummy'));
 		$this->renderingContext->setTemplateVariableContainer($this->templateVariableContainer);
 
-		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
+		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->renderingContext->setControllerContext($this->controllerContext);
 
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
