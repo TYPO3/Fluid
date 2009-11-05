@@ -197,12 +197,16 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
 		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+
+		$dynamicNode1 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array());
+		$rootNode->addChildNode($dynamicNode1);
+
 		$arguments = array(
 			'decimals' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('1')
 		);
-		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\NumberViewHelper', $arguments);
-		$rootNode->addChildNode($dynamicNode);
-		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('number'));
+		$dynamicNode2 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\NumberViewHelper', $arguments);
+		$dynamicNode1->addChildNode($dynamicNode2);
+		$dynamicNode2->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('number'));
 
 		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();

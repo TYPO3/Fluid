@@ -145,7 +145,7 @@ class TemplateParser {
 			)?
 			(?P<AdditionalViewHelpers>                      # There can be more than one ViewHelper chained, by adding more -> and the ViewHelper (recursively)
 				(?:
-					->
+					\s*->\s*
 					(?P>ViewHelper)
 				)*
 			)
