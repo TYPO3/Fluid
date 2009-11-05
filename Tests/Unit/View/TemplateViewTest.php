@@ -206,7 +206,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		$renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
 
-		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\HTMLSpecialCharsPostProcessor');
+		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\HtmlSpecialCharsPostProcessor');
 		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$objectFactory->expects($this->exactly(5))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingConfiguration, $objectAccessorPostProcessor, $renderingContext, $viewHelperVariableContainer));
 

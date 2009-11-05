@@ -31,15 +31,15 @@ class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderTakesBaseURIFromControllerContext() {
-		$baseURI = 'http://typo3.org/';
+	public function renderTakesBaseUriFromControllerContext() {
+		$baseUri = 'http://typo3.org/';
 
-		$this->request->expects($this->any())->method('getBaseURI')->will($this->returnValue($baseURI));
+		$this->request->expects($this->any())->method('getBaseUri')->will($this->returnValue($baseUri));
 
 		$viewHelper = new \F3\Fluid\ViewHelpers\BaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$expectedResult = '<base href="' . $baseURI . '"></base>';
+		$expectedResult = '<base href="' . $baseUri . '"></base>';
 		$actualResult = $viewHelper->render();
 		$this->assertSame($expectedResult, $actualResult);
 	}

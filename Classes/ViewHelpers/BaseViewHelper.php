@@ -45,7 +45,7 @@ namespace F3\Fluid\ViewHelpers;
 class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Render the "Base" tag by outputting $request->getBaseURI()
+	 * Render the "Base" tag by outputting $request->getBaseUri()
 	 *
 	 * Note: renders as <base></base>, because IE6 will else refuse to display
 	 * the page...
@@ -56,7 +56,7 @@ class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render() {
 		$currentRequest = $this->controllerContext->getRequest();
-		return '<base href="' . $currentRequest->getBaseURI() . '"></base>';
+		return '<base href="' . $currentRequest->getBaseUri() . '"></base>';
 	}
 }
 

@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Fluid Autocompletion Generation Wizard</title>
 <style type="text/css">
 body {
 	font-family:Arial, Helvetica, sans-serif;
@@ -33,17 +33,17 @@ h2 {
 	<h2>Fluid Autocompletion Generation Wizard</h2>
 	<h2>Step 2<span style="color:#919191">/2</span></h2>
 	<p class="content">
-	The path to the XSD file is: <b><a href="{xsdPath}">{view.request.baseURI}{xsdPath}</a></b>. Please use the following snippet
+	The path to the XSD file is: <b><a href="{xsdPath}">{view.request.baseUri}{xsdPath}</a></b>. Please use the following snippet
 	for autocompletion:
 	<pre>
 &lt;?xml version="1.0"?&gt;
 &lt;html xmlns="http://typo3.org/ns/html-base"
 	xmlns:xsi="http://typo3.org/ns/html-base"
-	xmlns:{namespacePrefix}="{namespaceURI}"
+	xmlns:{namespacePrefix}="{namespaceUri}"
 	xsi:schemaLocation="http://typo3.org/ns/html-base
-		{view.request.baseURI}Resources/Packages/Fluid/html-base.xsd
-		{namespaceURI}
-		{view.request.baseURI}{xsdPath}"&gt;
+		{view.request.baseUri}Resources/Packages/Fluid/html-base.xsd
+		{namespaceUri}
+		{view.request.baseUri}{xsdPath}"&gt;
 	&lt;!-- Your content goes here --&gt;
 &lt;/html&gt;
 	</pre>

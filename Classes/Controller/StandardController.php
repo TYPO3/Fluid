@@ -32,7 +32,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * XSD Generator
-	 * @var F3\Fluid\Service\XSDGenerator
+	 * @var F3\Fluid\Service\XsdGenerator
 	 */
 	protected $xsdGenerator;
 
@@ -43,7 +43,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectXSDGenerator(\F3\Fluid\Service\XSDGenerator $xsdGenerator) {
+	public function injectXsdGenerator(\F3\Fluid\Service\XsdGenerator $xsdGenerator) {
 		$this->xsdGenerator = $xsdGenerator;
 	}
 
@@ -77,7 +77,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Still has to be finished
 	 */
-	public function generateXSDAction($baseNamespace, $namespacePrefix) {
+	public function generateXsdAction($baseNamespace, $namespacePrefix) {
 		$xsdFileContents = $this->xsdGenerator->generateXSD($baseNamespace);
 
 		$path = 'Resources/Fluid/XSD/';
@@ -92,7 +92,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 		fclose($fp);
 
 		return $this->view->assign('xsdPath', $filename)
-		                  ->assign('namespaceURI', 'http://typo3.org/ns/fluid/' . str_replace('\\', '/', $baseNamespace))
+		                  ->assign('namespaceUri', 'http://typo3.org/ns/fluid/' . str_replace('\\', '/', $baseNamespace))
 		                  ->assign('namespacePrefix', $namespacePrefix)
 		                  ->assign('view', $this->view)
 		                  ->render();

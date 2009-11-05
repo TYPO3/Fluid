@@ -23,13 +23,12 @@ namespace F3\Fluid\Service;
  *                                                                        */
 
 /**
- * XML Schema (XSD) Generator. Will generate an XML schema which can be used for autocompletion
- * in schema-aware editors like Eclipse XML editor.
+ * Common base class for XML generators.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class XSDGenerator {
+abstract class AbstractGenerator {
 
 	/**
 	 * Object manager.
@@ -75,33 +74,6 @@ class XSDGenerator {
 	}
 
 	/**
-	 * Generate the XML Schema definition for a given namespace.
-	 * It will generate an XSD file for all view helpers in this namespace.
-	 *
-	 * @param string $namespace Namespace identifier to generate the XSD for, without leading Backslash.
-	 * @return string XML Schema definition
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function generateXSD($namespace) {
-		$tmp = str_replace('\\', '/', $namespace);
-
-		if (substr($namespace, -1) !== '\\') {
-			$namespace .= '\\';
-		}
-
-		$classNames = $this->getClassNamesInNamespace($namespace);
-
-		$xmlRootNode = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-			<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://typo3.org/ns/fluid/' . $tmp . '"></xsd:schema>');
-
-		foreach ($classNames as $className) {
-			$this->generateXMLForClassName($className, $namespace, $xmlRootNode);
-		}
-
-		return $xmlRootNode->asXML();
-	}
-
-	/**
 	 * Get all class names inside this namespace and return them as array.
 	 *
 	 * @param string $namespace
@@ -117,40 +89,8 @@ class XSDGenerator {
 				$viewHelperClassNames[] = $registeredObjectName;
 			}
 		}
-
-		return $registeredObjectNames;
-	}
-
-	/**
-	 * Generate the XML Schema for a given class name.
-	 *
-	 * @param string $className Class name to generate the schema for.
-	 * @param string $namespace Namespace prefix. Used to split off the first parts of the class name.
-	 * @param \SimpleXMLElement $xmlRootNode XML root node where the xsd:element is appended.
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function generateXMLForClassName($className, $namespace, \SimpleXMLElement $xmlRootNode) {
-		$reflectionClass = new \F3\FLOW3\Reflection\ClassReflection($className);
-		if (!$reflectionClass->isSubclassOf($this->abstractViewHelperReflectionClass)) {
-			return;
-		}
-
-		$tagName = $this->getTagNameForClass($className, $namespace);
-
-		$xsdElement = $xmlRootNode->addChild('xsd:element');
-		$xsdElement['name'] = $tagName;
-		$this->docCommentParser->parseDocComment($reflectionClass->getDocComment());
-		$this->addDocumentation($this->docCommentParser->getDescription(), $xsdElement);
-
-		$xsdComplexType = $xsdElement->addChild('xsd:complexType');
-		$xsdComplexType['mixed'] = 'true';
-		$xsdSequence = $xsdComplexType->addChild('xsd:sequence');
-		$xsdAny = $xsdSequence->addChild('xsd:any');
-		$xsdAny['minOccurs'] = '0';
-		$xsdAny['maxOccurs'] = 'unbounded';
-
-		$this->addAttributes($className, $xsdComplexType);
+		sort($viewHelperClassNames);
+		return $viewHelperClassNames;
 	}
 
 	/**
@@ -165,7 +105,7 @@ class XSDGenerator {
 	 */
 	protected function getTagNameForClass($className, $namespace) {
 		$strippedClassName = substr($className, strlen($namespace));
-		$classNameParts = explode('\\', $strippedClassName);
+		$classNameParts = explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $strippedClassName);
 
 		if (count($classNameParts) == 1) {
 			$tagName = lcfirst(substr($classNameParts[0], 0, -10)); // strip the "ViewHelper" ending
@@ -176,64 +116,16 @@ class XSDGenerator {
 	}
 
 	/**
-	 * Add attribute descriptions to a given tag.
-	 * Initializes the view helper and its arguments, and then reads out the list of arguments.
+	 * Add a child node to $parentXmlNode, and wrap the contents inside a CDATA section.
 	 *
-	 * @param string $className Class name where to add the attribute descriptions
-	 * @param \SimpleXMLElement $xsdElement XML element to add the attributes to.
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function addAttributes($className, \SimpleXMLElement $xsdElement) {
-		$viewHelper = $this->objectManager->getObject($className);
-		$argumentDefinitions = $viewHelper->prepareArguments();
-
-		foreach ($argumentDefinitions as $argumentDefinition) {
-			$xsdAttribute = $xsdElement->addChild('xsd:attribute');
-			$xsdAttribute['type'] = 'xsd:string';
-			$xsdAttribute['name'] = $argumentDefinition->getName();
-			$this->addDocumentation($argumentDefinition->getDescription(), $xsdAttribute);
-			if ($argumentDefinition->isRequired()) {
-				$xsdAttribute['use'] = 'required';
-			}
-		}
-	}
-
-	/**
-	 * Add documentation XSD to a given XML node
-	 *
-	 * As Eclipse renders newlines only on new <xsd:documentation> tags, we wrap every line in a new
-	 * <xsd:documentation> tag.
-	 * Furthermore, eclipse strips out tags - the only way to prevent this is to have every line wrapped in a
-	 * CDATA block AND to replace the < and > with their XML entities. (This is IMHO not XML conformant).
-	 *
-	 * @param string $documentation Documentation string to add.
-	 * @param \SimpleXMLElement $xsdParentNode Node to add the documentation to
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function addDocumentation($documentation, \SimpleXMLElement $xsdParentNode) {
-		$xsdAnnotation = $xsdParentNode->addChild('xsd:annotation');
-		$documentationLines = explode("\n", $documentation);
-
-		foreach ($documentationLines as $documentationLine) {
-			$documentationLine = str_replace('<', '&lt;', $documentationLine);
-			$documentationLine = str_replace('>', '&gt;', $documentationLine);
-			$this->addChildWithCData($xsdAnnotation, 'xsd:documentation', $documentationLine);
-		}
-	}
-
-	/**
-	 * Add a child node to $parentXMLNode, and wrap the contents inside a CDATA section.
-	 *
-	 * @param \SimpleXMLElement $parentXMLNode Parent XML Node to add the child to
+	 * @param \SimpleXMLElement $parentXmlNode Parent XML Node to add the child to
 	 * @param string $childNodeName Name of the child node
 	 * @param string $childNodeValue Value of the child node. Will be placed inside CDATA.
 	 * @return \SimpleXMLElement the new element
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function addChildWithCData(\SimpleXMLElement $parentXMLNode, $childNodeName, $childNodeValue) {
-		$parentDomNode = dom_import_simplexml($parentXMLNode);
+	protected function addChildWithCData(\SimpleXMLElement $parentXmlNode, $childNodeName, $childNodeValue) {
+		$parentDomNode = dom_import_simplexml($parentXmlNode);
 		$domDocument = new \DOMDocument();
 
 		$childNode = $domDocument->appendChild($domDocument->createElement($childNodeName));
@@ -242,5 +134,6 @@ class XSDGenerator {
 		$parentDomNode->appendChild($childNodeTarget);
 		return simplexml_import_dom($childNodeTarget);
 	}
+
 }
 ?>

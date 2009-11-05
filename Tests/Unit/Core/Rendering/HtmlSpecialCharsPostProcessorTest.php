@@ -23,30 +23,40 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- *
+ * Testcase for HtmlSPecialChartPostProcessor
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @internal
- * @scope prototype
  */
-class HTMLSpecialCharsPostProcessor implements \F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface {
+class HtmlSpecialCharsPostProcessorTest extends \F3\Testing\BaseTestCase {
 
 	/**
-	 * Process an Object Accessor by wrapping it into HTML.
-	 * NOT part of public API.
-	 *
-	 * @param mixed $object the object that is currently rendered
-	 * @param boolean $enabled TRUE if post processing is currently enabled.
-	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * RenderingConfiguration
+	 * @var \F3\Fluid\Core\Rendering\RenderingConfiguration
 	 */
-	public function process($object, $enabled) {
-		if ($enabled === TRUE && is_string($object)) {
-			return htmlspecialchars($object);
-		}
-		return $object;
+	protected $htmlSpecialCharsPostProcessor;
+
+	public function setUp() {
+		$this->htmlSpecialCharsPostProcessor = new \F3\Fluid\Core\Rendering\HtmlSpecialCharsPostProcessor();
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function postProcessorReturnsObjectsIfInArgumentsMode() {
+		$string = 'Expected <p>';
+		$this->assertEquals($string, $this->htmlSpecialCharsPostProcessor->process($string, FALSE));
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function postProcessorReturnsChangedObjectsIfInArgumentsMode() {
+		$string = 'Expected <p>';
+		$expected = 'Expected &lt;p&gt;';
+		$this->assertEquals($expected, $this->htmlSpecialCharsPostProcessor->process($string, TRUE));
 	}
 }
 ?>

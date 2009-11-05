@@ -85,7 +85,7 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 		$uri = $mirrorPath . 'Packages/' . $package . '/' . $path;
 		if ($absolute) {
-			$uri = $this->controllerContext->getRequest()->getBaseURI() . $uri;
+			$uri = $this->controllerContext->getRequest()->getBaseUri() . $uri;
 		}
 		return $uri;
 	}
