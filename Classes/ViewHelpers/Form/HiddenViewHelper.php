@@ -28,7 +28,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * = Examples =
  *
  * <code title="Example">
- * <f:hidden name="myHiddenValue" value="42" />
+ * <f:form.hidden name="myHiddenValue" value="42" />
  * </code>
  *
  * Output:

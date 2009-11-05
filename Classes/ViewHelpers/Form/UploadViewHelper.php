@@ -29,7 +29,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * = Examples =
  *
  * <code title="Example">
- * <f:upload name="file" />
+ * <f:form.upload name="file" />
  * </code>
  *
  * Output:

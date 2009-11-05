@@ -28,7 +28,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * = Examples =
  *
  * <code title="Defaults">
- * <f:submit value="Send Mail" />
+ * <f:form.submit value="Send Mail" />
  * </code>
  *
  * Output:
