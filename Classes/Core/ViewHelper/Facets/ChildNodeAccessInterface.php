@@ -23,8 +23,10 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *                                                                        */
 
 /**
- * Child Node Access Facet. View Helpers should implement this interface if they need access to the direct children in the Syntax Tree at rendering-time.
- * This might happen if you only want to selectively render a part of the syntax tree depending on some conditions.
+ * Child Node Access Facet. View Helpers should implement this interface if they
+ * need access to the direct children in the Syntax Tree at rendering-time.
+ * This might happen if you only want to selectively render a part of the syntax
+ * tree depending on some conditions.
  *
  * In most cases, you will not need this view helper.
  *
@@ -32,7 +34,6 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @internal
  */
 interface ChildNodeAccessInterface {
 

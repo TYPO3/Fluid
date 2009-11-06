@@ -47,19 +47,19 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Pattern to be resolved for @templateRoot in the other patterns.
 	 * @var string
 	 */
-	protected $templateRootPathPattern = '@packageResources/Private/Templates';
+	protected $templateRootPathPattern = '@packageResourcesPath/Private/Templates';
 
 	/**
 	 * Pattern to be resolved for @partialRoot in the other patterns.
 	 * @var string
 	 */
-	protected $partialRootPathPattern = '@packageResources/Private/Partials';
+	protected $partialRootPathPattern = '@packageResourcesPath/Private/Partials';
 
 	/**
 	 * Pattern to be resolved for @layoutRoot in the other patterns.
 	 * @var string
 	 */
-	protected $layoutRootPathPattern = '@packageResources/Private/Layouts';
+	protected $layoutRootPathPattern = '@packageResourcesPath/Private/Layouts';
 
 	/**
 	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
@@ -85,7 +85,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	/**
 	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
 	 * @var string
-	 * @internal
 	 */
 	private $partialPathAndFilenamePattern = '@partialRoot/@subpackage/@partial.@format';
 
@@ -221,7 +220,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
 
-		foreach ($paths as $key => $path) {
+		foreach ($paths as &$path) {
 			$path = str_replace('@action', $actionName, $path);
 			if (file_exists($path)) {
 				return $path;
@@ -240,8 +239,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	public function renderSection($sectionName) {
 		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
-
-		$templateTree = $parsedTemplate->getRootNode();
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		if(!array_key_exists($sectionName, $sections)) {
@@ -270,11 +267,12 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
-	 * Resolve the path and file name of the layout fil, based on $this->layoutPathAndFilename and
-	 * $this->layoutPathAndFilenamePattern.
+	 * Resolve the path and file name of the layout file, based on
+	 * $this->layoutPathAndFilename and $this->layoutPathAndFilenamePattern.
 	 *
-	 * In case a layout has already been set with setLayoutPathAndFilename(), this method returns that
-	 * path, otherwise a path and filename will be resolved using the layoutPathAndFilenamePattern.
+	 * In case a layout has already been set with setLayoutPathAndFilename(),
+	 * this method returns that path, otherwise a path and filename will be
+	 * resolved using the layoutPathAndFilenamePattern.
 	 *
 	 * @param string $layoutName Name of the layout to use. If none given, use "default"
 	 * @return string Path and filename of layout file
@@ -352,14 +350,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @param string $templatePathAndFilename absolute filename of the template to be parsed
 	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface the parsed template tree
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResource
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseTemplate($templatePathAndFilename) {
 		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
-		if ($templateSource === FALSE) {
-			throw new \F3\Fluid\View\Exception\InvalidTemplateResource('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
-		}
+
 		return $this->templateParser->parse($templateSource);
 	}
 
@@ -386,7 +381,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->templateRootPath !== NULL) {
 			return $this->templateRootPath;
 		} else {
-			return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->templateRootPathPattern);
+			return str_replace('@packageResourcesPath', 'package://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->templateRootPathPattern);
 		}
 	}
 
@@ -413,7 +408,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->partialRootPath !== NULL) {
 			return $this->partialRootPath;
 		} else {
-			return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->partialRootPathPattern);
+			return str_replace('@packageResourcesPath', 'package://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->partialRootPathPattern);
 		}
 	}
 
@@ -440,7 +435,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->layoutRootPath !== NULL) {
 			return $this->layoutRootPath;
 		} else {
-			return str_replace('@package', $this->packageManager->getPackage($this->controllerContext->getRequest()->getControllerPackageKey())->getPackagePath(), $this->layoutRootPathPattern);
+			return str_replace('@packageResourcesPath', 'package://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->layoutRootPathPattern);
 		}
 	}
 
@@ -476,6 +471,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		$pattern = str_replace('@partialRoot', $this->getPartialRootPath(), $pattern);
 		$pattern = str_replace('@layoutRoot', $this->getLayoutRootPath(), $pattern);
 
+		$matches = array();
 		$this->PATTERN_CONTROLLER = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), $this->PATTERN_CONTROLLER);
 		preg_match($this->PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
 

@@ -83,7 +83,6 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * This is internal and NO part of the API. It is very likely to change.
 	 *
 	 * @var boolean
-	 * @internal
 	 */
 	protected $objectAccessorPostProcessorEnabled = TRUE;
 

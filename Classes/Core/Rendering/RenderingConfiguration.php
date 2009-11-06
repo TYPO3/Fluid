@@ -29,7 +29,6 @@ namespace F3\Fluid\Core\Rendering;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @internal
  * @scope prototype
  */
 class RenderingConfiguration {

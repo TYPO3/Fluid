@@ -24,12 +24,12 @@ namespace F3\Fluid\Core\Parser;
 
 /**
  * Stores all information relevant for one parsing pass - that is, the root node,
- * and the current stack of open nodes (nodeStack) and a variable container used for PostParseFacets.
+ * and the current stack of open nodes (nodeStack) and a variable container used
+ * for PostParseFacets.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
- * @internal
  */
 class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 
@@ -46,13 +46,15 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	protected $nodeStack = array();
 
 	/**
-	 * Variable container where ViewHelpers implementing the PostParseFacet can store things in.
+	 * Variable container where ViewHelpers implementing the PostParseFacet can
+	 * store things in.
 	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $variableContainer;
 
 	/**
-	 * Injects a variable container. ViewHelpers implementing the PostParse Facet can store information inside this variableContainer.
+	 * Injects a variable container. ViewHelpers implementing the PostParse
+	 * Facet can store information inside this variableContainer.
 	 *
 	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
@@ -95,7 +97,8 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	}
 
 	/**
-	 * Push a node to the node stack. The node stack holds all currently open templating tags.
+	 * Push a node to the node stack. The node stack holds all currently open
+	 * templating tags.
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node Node to push to node stack
 	 * @return void

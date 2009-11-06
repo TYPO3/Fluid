@@ -40,7 +40,6 @@ class ViewHelperVariableContainer {
 	/**
 	 *
 	 * @var F3\FLOW3\MVC\View\ViewInterface
-	 * @internal
 	 */
 	protected $view;
 
