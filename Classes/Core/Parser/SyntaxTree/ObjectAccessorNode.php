@@ -73,10 +73,17 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		}
 		$currentObject = $this->renderingContext->getTemplateVariableContainer()->get($variableName);
 		if (count($objectPathParts) > 0) {
-			return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($currentObject, implode('.', $objectPathParts));
+			$output = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($currentObject, implode('.', $objectPathParts));
 		} else {
-			return $currentObject;
+			$output = $currentObject;
 		}
+
+		$postProcessor = $this->renderingContext->getRenderingConfiguration()->getObjectAccessorPostProcessor();
+		if ($postProcessor !== NULL) {
+			$output = $postProcessor->process($output, $this->renderingContext->isObjectAccessorPostProcessorEnabled());
+		}
+
+		return $output;
 	}
 }
 ?>
