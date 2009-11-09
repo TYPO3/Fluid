@@ -33,8 +33,6 @@ include_once(__DIR__ . '/Fixtures/TemplateViewFixture.php');
  */
 class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
-
-
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -192,14 +190,14 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * test
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsRenderOnParsedTemplateInterface() {
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('parseTemplate', 'resolveTemplatePathAndFilename'), array(), '', FALSE);
 		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
 		$objectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
-		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext');
+		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
 
 		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
@@ -215,7 +213,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		$templateView->expects($this->once())->method('parseTemplate')->will($this->returnValue($parsedTemplate));
 
-		// Real expectations
+			// Real expectations
 		$parsedTemplate->expects($this->once())->method('render')->with($renderingContext)->will($this->returnValue('Hello World'));
 
 		$this->assertEquals('Hello World', $templateView->render(), 'The output of the ParsedTemplates render Method is not returned by the TemplateView');
@@ -251,7 +249,8 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pathToPartialIsResolvedCorrectly() {
-	/*	$mockRequest = $this->getMock('F3\FLOW3\MVC\Request', array('getControllerPackageKey', ''));
+		$this->markTestSkipped('Needs proper implementation.');
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request', array('getControllerPackageKey', ''));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('DummyPackageKey'));
 		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'));
 		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
@@ -263,10 +262,10 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		\vfsStreamWrapper::register();
 		$mockRootDirectory = vfsStreamDirectory::create('ExamplePackagePath/Resources/Private/Partials');
-		$mockRootDirectory->getChild('Resources/Private/Partials')->addChild('Partials')
+		$mockRootDirectory->getChild('Resources/Private/Partials')->addChild('Partials');
 		\vfsStreamWrapper::setRoot($mockRootDirectory);
 
-		$this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array(''), array(), '', FALSE);*/
+		$this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array(''), array(), '', FALSE);
 	}
 
 	/**
@@ -286,8 +285,6 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$templateParserMock = $this->getMock('F3\Fluid\Core\Parser\TemplateParser', array('parse'));
 		$templateParserMock->expects($this->any())->method('parse')->will($this->returnValue($parsingState));
 
-		//$mockSyntaxTreeCache = $this->getMock('F3\FLOW3\Cache\Frontend\variableFrontend', array(), array(), '', FALSE);
-
 		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
 		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
@@ -297,7 +294,6 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 		$templateView = new \F3\Fluid\View\Fixture\TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);
 		$templateView->injectTemplateParser($templateParserMock);
-		//$templateView->injectSyntaxTreeCache($mockSyntaxTreeCache);
 		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
 		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
 		$templateView->setControllerContext($mockControllerContext);
