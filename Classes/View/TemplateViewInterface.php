@@ -32,15 +32,6 @@ namespace F3\Fluid\View;
 interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 
 	/**
-	 * Inject the template parser
-	 *
-	 * @param \F3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
-	 * @return void
-	 * @api
-	 */
-	public function injectTemplateParser(\F3\Fluid\Core\Parser\TemplateParser $templateParser);
-
-	/**
 	 * Sets the path and name of of the template file. Effectively overrides the
 	 * dynamic resolving of a template file.
 	 *

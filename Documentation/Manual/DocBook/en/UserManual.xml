@@ -580,12 +580,12 @@
       <replaceable>$dataType</replaceable>,
       <replaceable>$description</replaceable>,
       <replaceable>$isRequired</replaceable>,
-      <replaceable>$defaultValue</replaceable>=NULL) inside.</code></para>
+      <replaceable>$defaultValue</replaceable>=NULL)</code> inside.</para>
 
-      <para><code>It depends how many arguments a view helper has. Sometimes,
+      <para>It depends how many arguments a view helper has. Sometimes,
       registering them as render() arguments is more beneficial, and sometimes
       it makes more sense to register them in
-      <methodname>initializeArguments()</methodname>.</code></para>
+      <methodname>initializeArguments()</methodname>.</para>
     </section>
 
     <section>
