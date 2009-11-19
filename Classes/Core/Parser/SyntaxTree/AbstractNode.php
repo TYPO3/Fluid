@@ -29,11 +29,11 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-abstract class AbstractNode {
+abstract class AbstractNode implements \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface {
 
 	/**
 	 * List of Child Nodes.
-	 * @var array<\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode>
+	 * @var array<\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface>
 	 */
 	protected $childNodes = array();
 
@@ -55,7 +55,7 @@ abstract class AbstractNode {
 	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
-	 * @return object Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -85,7 +85,7 @@ abstract class AbstractNode {
 	 * Returns all child nodes for a given node.
 	 * This is especially needed to implement the boolean expression language.
 	 *
-	 * @return array F3\Fluid\Core\Parser\SyntaxTree\AbstractNode A list of nodes
+	 * @return array<\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getChildNodes() {
@@ -95,22 +95,14 @@ abstract class AbstractNode {
 	/**
 	 * Appends a subnode to this node. Is used inside the parser to append children
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $childNode The subnode to add
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $childNode) {
+	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode) {
 		$this->childNodes[] = $childNode;
 	}
 
-	/**
-	 * Evaluates the node - can return not only strings, but arbitary objects.
-	 *
-	 * @return object Evaluated node
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	abstract public function evaluate();
 }
 
 ?>

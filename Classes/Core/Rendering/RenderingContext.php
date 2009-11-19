@@ -51,22 +51,10 @@ class RenderingContext {
 	protected $controllerContext;
 
 	/**
-	 * Rendering Context
-	 * @var F3\Fluid\Core\Rendering\RenderingConfiguration
-	 */
-	protected $renderingConfiguration;
-
-	/**
 	 * ViewHelper Variable Container
 	 * @var F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
-
-	/**
-	 * TRUE if the arguments of a ViewHelper are currently evaluated
-	 * @var boolean
-	 */
-	protected $objectAccessorPostProcessorEnabled = TRUE;
 
 	/**
 	 * Inject the object factory
@@ -127,48 +115,6 @@ class RenderingContext {
 	 */
 	public function getControllerContext() {
 		return $this->controllerContext;
-	}
-
-	/**
-	 * Set the rendering configuration for the current rendering process
-	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration The Rendering Configuration to be set
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setRenderingConfiguration(\F3\Fluid\Core\Rendering\RenderingConfiguration $renderingConfiguration) {
-		$this->renderingConfiguration = $renderingConfiguration;
-	}
-
-	/**
-	 * Get the current rendering configuration
-	 *
-	 * @return F3\Fluid\Core\Rendering\RenderingConfiguration The rendering configuration currently active
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function getRenderingConfiguration() {
-		return $this->renderingConfiguration;
-	}
-
-	/**
-	 * Set the argument evaluation mode. Should be set to TRUE if the arguments are currently being parsed.
-	 * FALSE if we do not parse arguments currently
-	 *
-	 * @param boolean $objectAccessorPostProcessorEnabled Argument evaluation mode to be set
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setObjectAccessorPostProcessorEnabled($objectAccessorPostProcessorEnabled) {
-		$this->objectAccessorPostProcessorEnabled = (boolean)$objectAccessorPostProcessorEnabled;
-	}
-
-	/**
-	 * if TRUE, then we are currently in Argument Evaluation mode. False otherwise.
-	 * Is used to make sure that ObjectAccessors are PostProcessed if we are NOT in Argument Evaluation Mode
-	 *
-	 * @return boolean TRUE if we are currently evaluating arguments, FALSE otherwise
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function isObjectAccessorPostProcessorEnabled() {
-		return $this->objectAccessorPostProcessorEnabled;
 	}
 
 	/**

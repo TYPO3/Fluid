@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,40 +23,20 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- * Testcase for HtmlSPecialChartPostProcessor
+ * Testcase for Interceptor\Resource
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class HtmlSpecialCharsPostProcessorTest extends \F3\Testing\BaseTestCase {
-
-	/**
-	 * RenderingConfiguration
-	 * @var \F3\Fluid\Core\Rendering\RenderingConfiguration
-	 */
-	protected $htmlSpecialCharsPostProcessor;
-
-	public function setUp() {
-		$this->htmlSpecialCharsPostProcessor = new \F3\Fluid\Core\Rendering\HtmlSpecialCharsPostProcessor();
-	}
+class ResourceTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function postProcessorReturnsObjectsIfInArgumentsMode() {
-		$string = 'Expected <p>';
-		$this->assertEquals($string, $this->htmlSpecialCharsPostProcessor->process($string, FALSE));
+	public function foo() {
+		$this->markTestIncomplete();
 	}
 
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function postProcessorReturnsChangedObjectsIfInArgumentsMode() {
-		$string = 'Expected <p>';
-		$expected = 'Expected &lt;p&gt;';
-		$this->assertEquals($expected, $this->htmlSpecialCharsPostProcessor->process($string, TRUE));
-	}
 }
+
 ?>

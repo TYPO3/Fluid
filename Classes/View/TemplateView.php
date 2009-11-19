@@ -63,16 +63,19 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 	/**
 	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
+	 * @var string
 	 */
 	protected $templateRootPath = NULL;
 
 	/**
 	 * Path to the partial root. If NULL, then $this->partialRootPathPattern will be used.
+	 * @var string
 	 */
 	protected $partialRootPath = NULL;
 
 	/**
 	 * Path to the layout root. If NULL, then $this->layoutRootPathPattern will be used.
+	 * @var string
 	 */
 	protected $layoutRootPath = NULL;
 
@@ -157,27 +160,42 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 	/**
 	 * Build the rendering context
+	 *
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @return \F3\Fluid\Core\Rendering\RenderingContext
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function buildRenderingContext($variableContainer = NULL) {
+	protected function buildRenderingContext(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer = NULL) {
 		if ($variableContainer === NULL) {
 			$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->viewData);
 		}
-		$renderingConfiguration = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingConfiguration');
-		$renderingConfiguration->setObjectAccessorPostProcessor($this->objectFactory->create('F3\Fluid\Core\Rendering\HtmlSpecialCharsPostProcessor'));
 
 		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingContext');
 		$renderingContext->setTemplateVariableContainer($variableContainer);
 		if ($this->controllerContext !== NULL) {
 			$renderingContext->setControllerContext($this->controllerContext);
 		}
-		$renderingContext->setRenderingConfiguration($renderingConfiguration);
 
 		$viewHelperVariableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$viewHelperVariableContainer->setView($this);
 		$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
 
 		return $renderingContext;
+	}
+
+	/**
+	 * Build parser configuration
+	 *
+	 * @return \F3\Fluid\Core\Parser\Configuration
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	protected function buildParserConfiguration() {
+		$parserConfiguration = $this->objectFactory->create('F3\Fluid\Core\Parser\Configuration');
+		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
+			$parserConfiguration->addValueInterceptor($this->objectManager->getObject('F3\Fluid\Core\Parser\Interceptor\Escape'));
+			$parserConfiguration->addTextInterceptor($this->objectManager->getObject('F3\Fluid\Core\Parser\Interceptor\Resource'));
+		}
+		return $parserConfiguration;
 	}
 
 	/**
@@ -192,6 +210,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	public function render($actionName = NULL) {
 		$templatePathAndFilename = $this->resolveTemplatePathAndFilename($actionName);
 
+		$this->templateParser->setConfiguration($this->buildParserConfiguration());
 		$parsedTemplate = $this->parseTemplate($templatePathAndFilename);
 
 		$variableContainer = $parsedTemplate->getVariableContainer();
@@ -199,8 +218,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 			return $this->renderWithLayout($variableContainer->get('layoutName'));
 		}
 
-		$renderingContext = $this->buildRenderingContext();
-		return $parsedTemplate->render($renderingContext);
+		return $parsedTemplate->render($this->buildRenderingContext());
 	}
 
 	/**
@@ -233,7 +251,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Renders a given section.
 	 *
 	 * @param string $sectionName Name of section to render
-	 * @return rendered template for the section
+	 * @return string rendered template for the section
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -295,8 +313,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 	/**
 	 * Renders a partial.
-	 * SHOULD NOT BE USED BY USERS!
 	 *
+	 * @param string $partialName
+	 * @param string $sectionToRender
+	 * @param array $variables
+	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>

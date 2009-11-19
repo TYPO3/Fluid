@@ -90,6 +90,35 @@
   <section xml:id="fluid.softwaredesign.flow3layers">
     <title>The upper layers for FLOW3</title>
 
-    <para/>
+    <section>
+      <title>TemplateView</title>
+
+      <para>Fluid comes with a <classname>TemplateView</classname> class that
+      can be used as a view for the FLOW3 MVC stack. In fact it is the default
+      view used if no other view is found in a package. It adds some further
+      configuration for the template parsing process resulting in the
+      following:<itemizedlist>
+          <listitem>
+            <para>Any variable used for a tag value will be run through the
+            <classname>EscapeViewHelper</classname> with it's default
+            settings</para>
+          </listitem>
+
+          <listitem>
+            <para>Variables used within ViewHelper arguments ("tags") will
+            <emphasis>not</emphasis> be escaped that way but left
+            unchanged</para>
+          </listitem>
+
+          <listitem>
+            <para>URIs found directly in a template will be checked for
+            pointing to a package resource and run through the
+            <classname>ResourceViewHelper</classname></para>
+          </listitem>
+        </itemizedlist>That means you usually don't need to worry about the
+      HTML coming out of the view not being escaped as expected and if you can
+      preview your template as-is it should also work when output through
+      FLOW3.</para>
+    </section>
   </section>
 </chapter>

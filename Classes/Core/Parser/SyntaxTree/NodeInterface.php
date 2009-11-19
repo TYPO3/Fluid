@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,29 +23,48 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- *
+ * Node in the syntax tree.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class HtmlSpecialCharsPostProcessor implements \F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface {
+interface NodeInterface {
 
 	/**
-	 * Process an Object Accessor by wrapping it into HTML.
-	 * NOT part of public API.
-	 *
-	 * @param mixed $object the object that is currently rendered
-	 * @param boolean $enabled TRUE if post processing is currently enabled.
-	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext Rendering Context to be used for this evaluation
+	 * @return void
 	 */
-	public function process($object, $enabled) {
-		if ($enabled === TRUE && is_string($object)) {
-			return htmlspecialchars($object);
-		}
-		return $object;
-	}
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
+
+	/**
+	 * Evaluate all child nodes and return the evaluated results.
+	 *
+	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+	 */
+	public function evaluateChildNodes();
+
+	/**
+	 * Returns all child nodes for a given node.
+	 *
+	 * @return array<\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
+	 */
+	public function getChildNodes();
+
+	/**
+	 * Appends a subnode to this node. Is used inside the parser to append children
+	 *
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
+	 * @return void
+	 */
+	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode);
+
+	/**
+	 * Evaluates the node - can return not only strings, but arbitary objects.
+	 *
+	 * @return mixed Evaluated node
+	 */
+	public function evaluate();
 }
+
 ?>

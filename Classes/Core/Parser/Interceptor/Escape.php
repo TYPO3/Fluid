@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,21 +23,39 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- *
+ * An interceptor adding the escape viewhelper to the suitable places.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-interface ObjectAccessorPostProcessorInterface {
+class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
-	 * Post-Process an Object Accessor
+	 * Inject object factory
 	 *
-	 * @param mixed $object the object that is currently rendered
-	 * @param boolean $enabled TRUE if post processing is currently enabled.
-	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
+	 * @param \F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @return void
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function process($object, $enabled);
+	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
+		$this->objectFactory = $objectFactory;
+	}
+
+	/**
+	 * Adds a ViewHelper node using the EscapeViewHelper to the given node.
+	 *
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode $node
+	 * @return \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
+		if (!($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode)) {
+			$up = new \InvalidArgumentException(__CLASS__ . ' only handles ObjectAccessorNode instances, ' . get_class($node) . ' was given.', 1258552518);
+			throw $up;
+		}
+
+		return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', 'F3\Fluid\ViewHelpers\EscapeViewHelper', array('value' => $node));
+	}
 
 }
 ?>

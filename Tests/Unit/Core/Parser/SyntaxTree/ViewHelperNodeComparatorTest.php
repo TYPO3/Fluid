@@ -70,11 +70,6 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	protected $viewHelperNode;
 
 	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingConfiguration
-	 */
-	protected $renderingConfiguration;
-
-	/**
 	 * Setup fixture
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -92,9 +87,6 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->renderingContext->setViewHelperVariableContainer($this->viewHelperVariableContainer);
-
-		$this->renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
-		$this->renderingContext->setRenderingConfiguration($this->renderingConfiguration);
 
 		$this->templateParser = $this->objectManager->getObject('F3\Fluid\Core\Parser\TemplateParser');
 
@@ -451,18 +443,6 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
 	}
 
-	/**
-	 * @test
-	 * @expectedException \RuntimeException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function comparingStringsThrowsException() {
-		$this->markTestIncomplete('Not sure what the intended behavior should be. See TODO inside ViewHelperNode.');
-		$expression = '   blubb ==5 ';
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-	}
 }
 
 ?>

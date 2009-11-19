@@ -222,20 +222,5 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
 	}
 
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function objectAccessorPostProcessorDisabledSettingIsReturnedToCorrectly() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-
-		$this->assertTrue($viewHelper->isObjectAccessorPostProcessorEnabled());
-
-		$viewHelper->_set('objectAccessorPostProcessorEnabled', FALSE);
-		$this->assertFalse($viewHelper->isObjectAccessorPostProcessorEnabled());
-
-		$viewHelper->_set('objectAccessorPostProcessorEnabled', TRUE);
-		$this->assertTrue($viewHelper->isObjectAccessorPostProcessorEnabled());
-	}
 }
 ?>

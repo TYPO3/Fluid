@@ -78,7 +78,7 @@ class TemplateParser {
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public static $SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:"(?P<ValueDoubleQuoted>(?:\\\"|[^"])*)"|\'(?P<ValueSingleQuoted>(?:\\\\\'|[^\'])*)\')\s*)/';
+	public static $SPLIT_PATTERN_TAGARGUMENTS = '/(?:\s*(?P<Argument>[a-zA-Z0-9:]+)=(?:(?P<ValueQuoted>(?:"(?:\\\"|[^"])*")|(?:\'(?:\\\\\'|[^\'])*\')))\s*)/';
 
 	/**
 	 * This pattern detects CDATA sections and outputs the text between opening
@@ -217,8 +217,10 @@ class TemplateParser {
 			(?P<Key>[a-zA-Z0-9\-_]+)                               # The keys of the array
 			\s*:\s*                                                   # Key|Value delimiter :
 			(?:                                                       # Possible value options:
-				"(?P<DoubleQuotedString>(?:\\\"|[^"])*)"              # Double qouoted string
-				|\'(?P<SingleQuotedString>(?:\\\\\'|[^\'])*)\'        # Single quoted string
+				(?P<QuotedString>                                     # Quoted string
+					(?:"(?:\\\"|[^"])*")
+					|(?:\'(?:\\\\\'|[^\'])*\')
+				)
 				|(?P<VariableIdentifier>[a-zA-Z][a-zA-Z0-9\-_.]*)    # variable identifiers have to start with a letter
 				|(?P<Number>[0-9.]+)                                  # Number
 				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*}              # Another sub-array
@@ -238,6 +240,11 @@ class TemplateParser {
 	 * @var \F3\FLOW3\Object\FactoryInterface
 	 */
 	protected $objectFactory;
+
+	/**
+	 * @var \F3\Fluid\Core\Parser\Configuration
+	 */
+	protected $configuration;
 
 	/**
 	 * Constructor. Preprocesses the $SCAN_PATTERN_NAMESPACEDECLARATION by
@@ -261,6 +268,17 @@ class TemplateParser {
 	}
 
 	/**
+	 * Set the configuration for the parser.
+	 *h
+	 * @param \F3\Fluid\Core\Parser\Configuration $configuration
+	 * @return void
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function setConfiguration(\F3\Fluid\Core\Parser\Configuration $configuration = NULL) {
+		$this->configuration = $configuration;
+	}
+
+	/**
 	 * Parses a given template and returns a parsed template object.
 	 *
 	 * @param string $templateString The template to parse as a string
@@ -274,8 +292,8 @@ class TemplateParser {
 		$this->initialize();
 
 		$templateString = $this->extractNamespaceDefinitions($templateString);
-		$splittedTemplate = $this->splitTemplateAtDynamicTags($templateString);
-		$parsingState = $this->buildMainObjectTree($splittedTemplate);
+		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
+		$parsingState = $this->buildObjectTree($splitTemplate);
 
 		return $parsingState;
 	}
@@ -340,13 +358,13 @@ class TemplateParser {
 	}
 
 	/**
-	 * Build object tree from the splitted template
+	 * Build object tree from the split template
 	 *
-	 * @param array $splittedTemplate The splitted template, so that every tag with a namespace declaration is already a seperate array element.
+	 * @param array $splitTemplate The split template, so that every tag with a namespace declaration is already a seperate array element.
 	 * @return \F3\Fluid\Core\Parser\ParsingState
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function buildMainObjectTree($splittedTemplate) {
+	protected function buildObjectTree($splitTemplate) {
 		$regularExpression_openingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
 		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 
@@ -355,7 +373,7 @@ class TemplateParser {
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
 
-		foreach ($splittedTemplate as $templateElement) {
+		foreach ($splitTemplate as $templateElement) {
 			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->textHandler($state, $matchedVariables[1]);
@@ -475,11 +493,11 @@ class TemplateParser {
 	}
 
 	/**
-	 * Resolve a view helper.
+	 * Resolve a viewhelper name.
 	 *
 	 * @param string $namespaceIdentifier Namespace identifier for the view helper.
 	 * @param string $methodIdentifier Method identifier, might be hierarchical like "link.url"
-	 * @return array An Array where the first argument is the object to call the method on, and the second argument is the method name
+	 * @return array The fully qualified class name of the viewhelper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier) {
@@ -563,6 +581,11 @@ class TemplateParser {
 			// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
 			$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
+			if ($this->configuration !== NULL) {
+				foreach($this->configuration->getValueInterceptors() as $interceptor) {
+					$node = $interceptor->process($node);
+				}
+			}
 			$state->getNodeFromStack()->addChildNode($node);
 		}
 
@@ -604,14 +627,14 @@ class TemplateParser {
 		$argumentsObjectTree = array();
 		$matches = array();
 		if (preg_match_all(self::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
+			$configurationBackup = $this->configuration;
+			$this->configuration = NULL;
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
-				if (!array_key_exists('ValueSingleQuoted', $singleMatch)) $singleMatch['ValueSingleQuoted'] = '';
-				if (!array_key_exists('ValueDoubleQuoted', $singleMatch)) $singleMatch['ValueDoubleQuoted'] = '';
-
-				$value = $this->unquoteArgumentString($singleMatch['ValueSingleQuoted'], $singleMatch['ValueDoubleQuoted']);
+				$value = $this->unquoteString($singleMatch['ValueQuoted']);
 				$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
 			}
+			$this->configuration = $configurationBackup;
 		}
 		return $argumentsObjectTree;
 	}
@@ -631,30 +654,30 @@ class TemplateParser {
 		if (strstr($argumentString, '{') === FALSE && strstr($argumentString, '<') === FALSE) {
 			return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $argumentString);
 		}
-		$splittedArgument = $this->splitTemplateAtDynamicTags($argumentString);
-		$rootNode = $this->buildMainObjectTree($splittedArgument)->getRootNode();
+		$splitArgument = $this->splitTemplateAtDynamicTags($argumentString);
+		$rootNode = $this->buildObjectTree($splitArgument)->getRootNode();
 		return $rootNode;
 	}
 
 	/**
-	 * Removes escapings from a given argument string. Expects two string
-	 * parameters, with one of them being empty.
-	 * The first parameter should be non-empty if the argument was quoted by
-	 * single quotes, and the second parameter should be non-empty if the
-	 * argument was quoted by double quotes.
+	 * Removes escapings from a given argument string and trims the outermost
+	 * quotes.
 	 *
 	 * This method is meant as a helper for regular expression results.
 	 *
-	 * @param string $singleQuotedValue Value, if quoted by single quotes
-	 * @param string $doubleQuotedValue Value, if quoted by double quotes
+	 * @param string $quotedValue Value to unquote
 	 * @return string Unquoted value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	protected function unquoteArgumentString($singleQuotedValue, $doubleQuotedValue) {
-		if ($singleQuotedValue != '') {
-			$value = str_replace("\\'", "'", $singleQuotedValue);
-		} else {
-			$value = str_replace('\"', '"', $doubleQuotedValue);
+	protected function unquoteString($quotedValue) {
+		switch ($quotedValue[0]) {
+			case '"':
+				$value = str_replace('\"', '"', trim($quotedValue, '"'));
+			break;
+			case '\'':
+				$value = str_replace('\\\'', '\'', trim($quotedValue, '\''));
+			break;
 		}
 		return str_replace('\\\\', '\\', $value);
 	}
@@ -707,8 +730,9 @@ class TemplateParser {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function arrayHandler(\F3\Fluid\Core\Parser\ParsingState $state, $arrayText) {
-		$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($arrayText));
-		$state->getNodeFromStack()->addChildNode($node);
+		$state->getNodeFromStack()->addChildNode(
+			$this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($arrayText))
+		);
 	}
 
 	/**
@@ -735,11 +759,8 @@ class TemplateParser {
 					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $singleMatch['VariableIdentifier']);
 				} elseif (array_key_exists('Number', $singleMatch) && ( !empty($singleMatch['Number']) || $singleMatch['Number'] === '0' ) ) {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
-				} elseif ( ( array_key_exists('DoubleQuotedString', $singleMatch) && !empty($singleMatch['DoubleQuotedString']) )
-							|| ( array_key_exists('SingleQuotedString', $singleMatch) && !empty($singleMatch['SingleQuotedString']) ) ) {
-					if (!array_key_exists('SingleQuotedString', $singleMatch)) $singleMatch['SingleQuotedString'] = '';
-					if (!array_key_exists('DoubleQuotedString', $singleMatch)) $singleMatch['DoubleQuotedString'] = '';
-					$argumentString = $this->unquoteArgumentString($singleMatch['SingleQuotedString'], $singleMatch['DoubleQuotedString']);
+				} elseif ( ( array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']) ) ) {
+					$argumentString = $this->unquoteString($singleMatch['QuotedString']);
 					$arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
 				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
 					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($singleMatch['Subarray']));
@@ -760,10 +781,17 @@ class TemplateParser {
 	 * @param string $text
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function textHandler(\F3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);
+		if ($this->configuration !== NULL) {
+			foreach($this->configuration->getTextInterceptors() as $interceptor) {
+				$node = $interceptor->process($node);
+			}
+		}
 		$state->getNodeFromStack()->addChildNode($node);
 	}
+
 }
 ?>

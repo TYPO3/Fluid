@@ -34,7 +34,7 @@ class RootNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 *
-	 * @return object Evaluated subtree
+	 * @return mixed Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluate() {

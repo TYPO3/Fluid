@@ -64,26 +64,6 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderingConfiguationCanBeReadCorrectly() {
-		$renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
-		$this->renderingContext->setRenderingConfiguration($renderingConfiguration);
-		$this->assertSame($this->renderingContext->getRenderingConfiguration(), $renderingConfiguration);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function ObjectAccessorPostProcessorEnabledCanBeReadCorrectly() {
-		$this->assertTrue($this->renderingContext->isObjectAccessorPostProcessorEnabled(), 'The default argument evaluation was not FALSE');
-		$this->renderingContext->setObjectAccessorPostProcessorEnabled(FALSE);
-		$this->assertFalse($this->renderingContext->isObjectAccessorPostProcessorEnabled());
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
 	public function viewHelperVariableContainerCanBeReadCorrectly() {
 		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
