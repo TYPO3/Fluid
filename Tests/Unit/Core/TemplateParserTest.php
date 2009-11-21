@@ -25,6 +25,9 @@ namespace F3\Fluid\Core;
 /**
  * Testcase for TemplateParser
  *
+ * This testcase needs heavy reworking to be "unit testy" or should be moved to
+ * the system test category.
+ *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
@@ -104,13 +107,14 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture01ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture01.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
-		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('b'));
+		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\BaseViewHelper');
+		$viewHelper->prepareArguments();
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
+		$expected->addChildNode($dynamicNode);
+		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('b'));
 
-		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 01 was not parsed correctly.');
 	}
@@ -130,15 +134,18 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture02ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture02.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
-		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
-		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\BaseViewHelper', array());
-		$rootNode->addChildNode($dynamicNode);
+		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\BaseViewHelper');
+		$viewHelper->prepareArguments();
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
+		$expected->addChildNode($dynamicNode);
+		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\BaseViewHelper');
+		$viewHelper->prepareArguments();
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
+		$expected->addChildNode($dynamicNode);
 
-		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 02 was not parsed correctly.');
 	}
@@ -178,13 +185,12 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture05ReturnsCorrectObjectTree() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture05.html', FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
+		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('posts.bla.Testing3');
-		$rootNode->addChildNode($dynamicNode);
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('b'));
+		$expected->addChildNode($dynamicNode);
+		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('b'));
 
-		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 05 was not parsed correctly.');
 	}
@@ -196,19 +202,22 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture06ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture06.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 
-		$dynamicNode1 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array());
-		$rootNode->addChildNode($dynamicNode1);
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper');
+		$viewHelper->prepareArguments();
+		$dynamicNode1 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
+		$expected->addChildNode($dynamicNode1);
 
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Format\NumberViewHelper');
+		$viewHelper->prepareArguments();
 		$arguments = array(
 			'decimals' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('1')
 		);
-		$dynamicNode2 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\NumberViewHelper', $arguments);
+		$dynamicNode2 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, $arguments);
 		$dynamicNode1->addChildNode($dynamicNode2);
 		$dynamicNode2->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode('number'));
 
-		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 06 was not parsed correctly.');
 	}
@@ -425,17 +434,18 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	public function fixture14ReturnsCorrectObjectTree($file = '/Fixtures/TemplateParserTestFixture14.html') {
 		$templateSource = file_get_contents(__DIR__ . $file, FILE_TEXT);
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$arguments = array(
 			'arguments' => new \F3\Fluid\Core\Parser\SyntaxTree\RootNode(),
 		);
 		$arguments['arguments']->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ArrayNode(array('number' => 362525200)));
 
-		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode('F3\Fluid\ViewHelpers\Format\PrintfViewHelper', $arguments);
-		$rootNode->addChildNode($dynamicNode);
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Format\PrintfViewHelper');
+		$viewHelper->prepareArguments();
+		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, $arguments);
+		$expected->addChildNode($dynamicNode);
 		$dynamicNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%.3e'));
 
-		$expected = $rootNode;
 		$actual = $this->templateParser->parse($templateSource)->getRootNode();
 		$this->assertEquals($expected, $actual, 'Fixture 14 was not parsed correctly.');
 	}
