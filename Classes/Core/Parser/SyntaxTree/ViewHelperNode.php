@@ -32,7 +32,7 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
-	 * Namespace of view helper
+	 * Class name of view helper
 	 * @var string
 	 */
 	protected $viewHelperClassName;
@@ -44,17 +44,10 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	protected $arguments = array();
 
 	/**
-	 * The cached ViewHelper, to make sure every SyntaxTreeNode has exactly one
-	 * ViewHelper associated to it.
-	 * @var F3\Fluid\Core\ViewHelper\AbstractViewHelper
+	 * The ViewHelper associated with this node
+	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperInterface
 	 */
-	protected $cachedViewHelper = NULL;
-
-	/**
-	 * Cached argument definitions.
-	 * @var array
-	 */
-	protected $cachedArgumentDefinitions = NULL;
+	protected $viewHelper = NULL;
 
 	/**
 	 * List of comparators which are supported in the boolean expression language.
@@ -84,13 +77,20 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $viewHelperClassName Fully qualified class name of the view helper
+	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperInterface $viewHelper The view helper
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function __construct($viewHelperClassName, array $arguments) {
-		$this->viewHelperClassName = $viewHelperClassName;
+	public function __construct(\F3\Fluid\Core\ViewHelper\ViewHelperInterface $viewHelper, array $arguments) {
+		$this->viewHelper = $viewHelper;
 		$this->arguments = $arguments;
+
+		if ($this->viewHelper instanceof \F3\FLOW3\AOP\ProxyInterface) {
+			$this->viewHelperClassName = $this->viewHelper->FLOW3_AOP_Proxy_getProxyTargetClassName();
+		} else {
+			$this->viewHelperClassName = get_class($this->viewHelper);
+		}
 	}
 
 	/**
@@ -115,30 +115,26 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @todo check recreation of viewhelper when revisiting caching
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {
 			throw new \RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
-			// Caching of ViewHelper and Argument Definitions
 		$objectFactory = $this->renderingContext->getObjectFactory();
-		if ($this->cachedViewHelper !== NULL) {
-			$viewHelper = $this->cachedViewHelper;
-			$argumentDefinitions = $this->cachedArgumentDefinitions;
-		} else {
-			$viewHelper = $objectFactory->create($this->viewHelperClassName);
-			$argumentDefinitions = $viewHelper->prepareArguments();
-
-			$this->cachedViewHelper = $viewHelper;
-			$this->cachedArgumentDefinitions = $argumentDefinitions;
-		}
 		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
+
+		if ($this->viewHelper === NULL) {
+				// we have been resurrected from the cache
+			$this->viewHelper = $objectFactory->create($this->viewHelperClassName);
+		}
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
-		if (count($argumentDefinitions)) {
-			foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+ 		if (count($this->viewHelper->prepareArguments())) {
+ 			foreach ($this->viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
 					$argumentValue->setRenderingContext($this->renderingContext);
@@ -153,25 +149,25 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		}
 
 		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
-		$viewHelper->setArguments($viewHelperArguments);
-		$viewHelper->setTemplateVariableContainer($this->renderingContext->getTemplateVariableContainer());
+		$this->viewHelper->setArguments($viewHelperArguments);
+		$this->viewHelper->setTemplateVariableContainer($this->renderingContext->getTemplateVariableContainer());
 		if ($this->renderingContext->getControllerContext() !== NULL) {
-			$viewHelper->setControllerContext($this->renderingContext->getControllerContext());
+			$this->viewHelper->setControllerContext($this->renderingContext->getControllerContext());
 		}
-		$viewHelper->setViewHelperVariableContainer($this->renderingContext->getViewHelperVariableContainer());
-		$viewHelper->setViewHelperNode($this);
+		$this->viewHelper->setViewHelperVariableContainer($this->renderingContext->getViewHelperVariableContainer());
+		$this->viewHelper->setViewHelperNode($this);
 
-		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
-			$viewHelper->setChildNodes($this->childNodes);
-			$viewHelper->setRenderingContext($this->renderingContext);
+		if ($this->viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
+			$this->viewHelper->setChildNodes($this->childNodes);
+			$this->viewHelper->setRenderingContext($this->renderingContext);
 		}
 
-		$viewHelper->validateArguments();
-		$viewHelper->initialize();
+		$this->viewHelper->validateArguments();
+		$this->viewHelper->initialize();
 		try {
-			$output = call_user_func_array(array($viewHelper, 'render'), $renderMethodParameters);
+			$output = call_user_func_array(array($this->viewHelper, 'render'), $renderMethodParameters);
 		} catch (\F3\Fluid\Core\ViewHelper\Exception $exception) {
-			// @todo [BW] rethrow exception, log, ignore.. depending on the current context
+				// @todo [BW] rethrow exception, log, ignore.. depending on the current context
 			$output = $exception->getMessage();
 		}
 

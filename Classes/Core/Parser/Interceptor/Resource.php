@@ -88,7 +88,8 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 				if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
 					$arguments['package'] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
 				}
-				$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', 'F3\Fluid\ViewHelpers\Uri\ResourceViewHelper', $arguments));
+				$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
+				$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
 			} else {
 				$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 			}

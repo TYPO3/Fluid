@@ -54,7 +54,8 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 			throw $up;
 		}
 
-		return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', 'F3\Fluid\ViewHelpers\EscapeViewHelper', array('value' => $node));
+		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\EscapeViewHelper');
+		return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, array('value' => $node));
 	}
 
 }

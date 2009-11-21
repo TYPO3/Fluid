@@ -430,26 +430,25 @@ class TemplateParser {
 	 * @param array $argumentsObjectTree Arguments object tree
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function initializeViewHelperAndAddItToStack(\F3\Fluid\Core\Parser\ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new \F3\Fluid\Core\Parser\Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
 
-		$viewHelperName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
-
-		$viewHelper = $this->objectFactory->create($viewHelperName);
+		$viewHelper = $this->objectFactory->create($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
 		$expectedViewHelperArguments = $viewHelper->prepareArguments();
 		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $argumentsObjectTree);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $argumentsObjectTree);
 
-		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelperName, $argumentsObjectTree);
+		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $argumentsObjectTree);
 
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 
 			// PostParse Facet
-		if (in_array('F3\Fluid\Core\ViewHelper\Facets\PostParseInterface', class_implements($viewHelperName))) {
-			call_user_func(array($viewHelperName, 'postParseEvent'), $currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
+		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface) {
+			$viewHelper::postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 
 		$state->pushNodeToStack($currentDynamicNode);
@@ -522,6 +521,7 @@ class TemplateParser {
 	 * @param string $namespaceIdentifier Namespace identifier for the closing tag.
 	 * @param string $methodIdentifier Method identifier.
 	 * @return void
+	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function closingViewHelperTagHandler(\F3\Fluid\Core\Parser\ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
