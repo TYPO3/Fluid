@@ -32,6 +32,12 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
+	 * Class name of view helper
+	 * @var string
+	 */
+	protected $viewHelperClassName;
+
+	/**
 	 * Arguments of view helper - References to RootNodes.
 	 * @var array
 	 */
@@ -79,6 +85,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	public function __construct(\F3\Fluid\Core\ViewHelper\ViewHelperInterface $viewHelper, array $arguments) {
 		$this->viewHelper = $viewHelper;
 		$this->arguments = $arguments;
+
+		if ($this->viewHelper instanceof \F3\FLOW3\AOP\ProxyInterface) {
+			$this->viewHelperClassName = $this->viewHelper->FLOW3_AOP_Proxy_getProxyTargetClassName();
+		} else {
+			$this->viewHelperClassName = get_class($this->viewHelper);
+		}
 	}
 
 	/**
@@ -89,11 +101,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function getViewHelperClassName() {
-		if ($this->viewHelper instanceof \F3\FLOW3\AOP\ProxyInterface) {
-			return $this->viewHelper->FLOW3_AOP_Proxy_getProxyTargetClassName();
-		} else {
-			return get_class($this->viewHelper);
-		}
+		return $this->viewHelperClassName;
 	}
 
 	/**
@@ -109,6 +117,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @todo check recreation of viewhelper when revisiting caching
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {
@@ -121,6 +130,11 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			// Caching of ViewHelper and Argument Definitions
 		$objectFactory = $this->renderingContext->getObjectFactory();
 		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
+
+		if ($this->viewHelper === NULL) {
+				// we have been resurrected from the cache
+			$this->viewHelper = $objectFactory->create($this->viewHelperClassName);
+		}
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
@@ -231,11 +245,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode && !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->evaluate())) {
 				$comparator = NULL;
-				break; // skip loop and fall back to classical to boolean conversion.
+					// skip loop and fall back to classical to boolean conversion.
+				break;
 			}
 
 			if ($comparator !== NULL) {
-				// comparator already set, we are evaluating the right side of the comparator
+					// comparator already set, we are evaluating the right side of the comparator
 				if ($rightSide === NULL) {
 					$rightSide = $childNode->evaluate();
 				} else {
@@ -243,7 +258,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 				}
 			} elseif ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode
 				&& ($comparator = $this->getComparatorFromString($childNode->evaluate()))) {
-				// comparator in current string segment
+					// comparator in current string segment
 				$explodedString = explode($comparator, $childNode->evaluate());
 				if (isset($explodedString[0]) && trim($explodedString[0]) !== '') {
 					$leftSide .= trim($explodedString[0]);
@@ -252,7 +267,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 					$rightSide .= trim($explodedString[1]);
 				}
 			} else {
-				// comparator not found yet, on the left side of the comparator
+					// comparator not found yet, on the left side of the comparator
 				if ($leftSide === NULL) {
 					$leftSide = $childNode->evaluate();
 				} else {
@@ -297,7 +312,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			case '<=':
 				return ($leftSide <= $rightSide);
 			default:
-				throw new \RuntimeException('Comparator "' . $comparator . '" was not implemented. Please report a bug.', 1244234398);
+				throw new \RuntimeException('Comparator "' . $comparator . '" was not implemented.', 1244234398);
 		}
 	}
 
@@ -323,7 +338,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Convert argument strings to their equivalents. Needed to handle strings with a boolean meaning.
 	 *
 	 * @param mixed $value Value to be converted to boolean
-	 * @return mixed New value
+	 * @return boolean
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @todo this should be moved to another class
 	 */

@@ -63,16 +63,19 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 	/**
 	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
+	 * @var string
 	 */
 	protected $templateRootPath = NULL;
 
 	/**
 	 * Path to the partial root. If NULL, then $this->partialRootPathPattern will be used.
+	 * @var string
 	 */
 	protected $partialRootPath = NULL;
 
 	/**
 	 * Path to the layout root. If NULL, then $this->layoutRootPathPattern will be used.
+	 * @var string
 	 */
 	protected $layoutRootPath = NULL;
 
@@ -157,9 +160,12 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 	/**
 	 * Build the rendering context
+	 *
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @return \F3\Fluid\Core\Rendering\RenderingContext
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function buildRenderingContext($variableContainer = NULL) {
+	protected function buildRenderingContext(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer = NULL) {
 		if ($variableContainer === NULL) {
 			$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->viewData);
 		}
@@ -233,7 +239,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Renders a given section.
 	 *
 	 * @param string $sectionName Name of section to render
-	 * @return rendered template for the section
+	 * @return string rendered template for the section
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -297,6 +303,10 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Renders a partial.
 	 * SHOULD NOT BE USED BY USERS!
 	 *
+	 * @param string $partialName
+	 * @param string $sectionToRender
+	 * @param array $variables
+	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
