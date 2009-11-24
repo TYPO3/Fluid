@@ -36,7 +36,7 @@ namespace F3\Fluid\ViewHelpers;
  * = A complex form with a specified encoding type =
  *
  * <code title="Form with enctype set">
- * <f:form action=".." controllerName="..." packageName="..." enctype="multipart/form-data">...</f:form>
+ * <f:form action=".." controller="..." package="..." enctype="multipart/form-data">...</f:form>
  * </code>
  *
  * = A Form which should render a domain object =
