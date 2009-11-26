@@ -115,6 +115,9 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		$this->tag->addAttribute('name', $name);
 
 		$options = $this->getOptions();
+		if (empty($options)) {
+			$options = array('' => '');
+		}
 		$this->tag->setContent($this->renderOptionTags($options));
 
 		$this->setErrorClassAttribute();
