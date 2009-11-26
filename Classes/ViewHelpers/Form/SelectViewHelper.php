@@ -95,6 +95,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		$this->registerArgument('options', 'array', 'Associative array with internal IDs as key, and the values are displayed in the select box', TRUE);
 		$this->registerArgument('optionValueField', 'string', 'If specified, will call the appropriate getter on each object to determine the value.');
 		$this->registerArgument('optionLabelField', 'string', 'If specified, will call the appropriate getter on each object to determine the label.');
+		$this->registerArgument('sortByOptionLabel', 'boolean', 'If true, List will be sorted by label.', FALSE, FALSE);
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
 	}
 
@@ -161,6 +162,9 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function getOptions() {
+		if (!is_array($this->arguments['options']) && !($this->arguments['options'] instanceof Iterator)) {
+			return array();
+		}
 		$options = array();
 		foreach ($this->arguments['options'] as $key => $value) {
 			if (is_object($value)) {
@@ -198,6 +202,9 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 				}
 			}
 			$options[$key] = $value;
+		}
+		if ($this->arguments['sortByOptionLabel']) {
+			asort($options);
 		}
 		return $options;
 	}
