@@ -44,18 +44,19 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Adds a ViewHelper node using the EscapeViewHelper to the given node.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode $node
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
-		if (!($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode)) {
-			$up = new \InvalidArgumentException(__CLASS__ . ' only handles ObjectAccessorNode instances, ' . get_class($node) . ' was given.', 1258552518);
-			throw $up;
+		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
+			$node = $this->objectFactory->create(
+				'F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+				$this->objectFactory->create('F3\Fluid\ViewHelpers\EscapeViewHelper'),
+				array('value' => $node)
+			);
 		}
-
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\EscapeViewHelper');
-		return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, array('value' => $node));
+		return $node;
 	}
 
 }

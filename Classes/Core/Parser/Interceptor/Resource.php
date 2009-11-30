@@ -68,30 +68,28 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * Looks for URIs pointing to package resources and in place of those adds
 	 * ViewHelperNode instances using the ResourceViewHelper.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\TextNode $node
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\TextNode
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
-		if (!($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode)) {
-			throw new \InvalidArgumentException(__CLASS__ . ' only handles TextNode instances, ' . get_class($node) . ' was given.', 1258552519);
-		}
-
-		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->evaluate(), -1, PREG_SPLIT_DELIM_CAPTURE);
-		$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
-		foreach ($textParts as $part) {
-			$matches = array();
-			if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
-				$arguments = array(
-					'path' => $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
-				);
-				if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
-					$arguments['package'] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
+		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode) {
+			$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->evaluate(), -1, PREG_SPLIT_DELIM_CAPTURE);
+			$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
+			foreach ($textParts as $part) {
+				$matches = array();
+				if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
+					$arguments = array(
+						'path' => $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
+					);
+					if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
+						$arguments['package'] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
+					}
+					$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
+					$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
+				} else {
+					$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 				}
-				$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
-				$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
-			} else {
-				$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 			}
 		}
 

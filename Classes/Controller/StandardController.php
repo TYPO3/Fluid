@@ -39,7 +39,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 	/**
 	 * Inject XSD Generator
 	 *
-	 * @param \F3\Fluid\Service\XSDGenerator $xsdGenerator XSD Generator
+	 * @param \F3\Fluid\Service\XsdGenerator $xsdGenerator XSD Generator
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
