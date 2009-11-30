@@ -92,7 +92,8 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 			'F3\Fluid\Core\Fixtures\TestViewHelper',
 		);
 		$reflectionService = new \F3\FLOW3\Reflection\Service();
-		$reflectionService->setCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
+		$reflectionService->setStatusCache($this->getMock('F3\FLOW3\Cache\Frontend\StringFrontend', array(), array(), '', FALSE));
+		$reflectionService->setDataCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
 		$reflectionService->initialize($availableClassNames);
 
 		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
@@ -121,7 +122,8 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 			'F3\Fluid\Core\Fixtures\TestViewHelper',
 		);
 		$reflectionService = new \F3\FLOW3\Reflection\Service();
-		$reflectionService->setCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
+		$reflectionService->setStatusCache($this->getMock('F3\FLOW3\Cache\Frontend\StringFrontend', array(), array(), '', FALSE));
+		$reflectionService->setDataCache($this->getMock('F3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE));
 		$reflectionService->initialize($availableClassNames);
 
 		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
