@@ -28,20 +28,36 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * = Examples =
  *
  * <code title="Defaults">
- * <link href="{f:uri.resource(path: 'css/stylesheet.css')}" rel="stylesheet" />
+ * <link href="{f:uri.resource(path: 'CSS/Stylesheet.css')}" rel="stylesheet" />
  * </code>
  *
  * Output:
- * <link href="Resources/Packages/MyPackage/css/stylesheet.css" rel="stylesheet" />
+ * <link href="http://yourdomain.tld/_Resources/Static/YourPackage/CSS/Stylesheet.css" rel="stylesheet" />
  * (depending on current package)
  *
- * <code title="All attributes">
- * {f:uri.resource(path: 'gfx/SomeImage.png', package: 'DifferentPackage', absolute: true)}
+ * <code title="Other package resource">
+ * {f:uri.resource(path: 'gfx/SomeImage.png', package: 'DifferentPackage')}
  * </code>
  *
  * Output:
- * http://www.yourdomain.tld/Resources/Packages/DifferentPackage/gfx/SomeImage.png
+ * http://yourdomain.tld/_Resources/Static/DifferentPackage/gfx/SomeImage.png
  * (depending on domain)
+ *
+ * <code title="Resource object">
+ * <img src="{f:uri.resource(object: {myImage.resource})}" />
+ * </code>
+ *
+ * Output:
+ * <img src="http://yourdomain.tld/_Resources/Persistent/69e73da3ce0ad08c717b7b9f1c759182d6650944.jpg" />
+ *
+ * (depending on your resource object)
+ *
+ * <code title="Resource object with title">
+ * <img src="{f:uri.resource(object: {myImage.resource}, title: 'My title')}" />
+ * </code>
+ *
+ * Output:
+ * <img src="http://yourdomain.tld/_Resources/Persistent/69e73da3ce0ad08c717b7b9f1c759182d6650944/my-title.jpg" />
  *
  * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -51,17 +67,16 @@ namespace F3\Fluid\ViewHelpers\Uri;
 class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \F3\FLOW3\Resource\Publisher
+	 * @var \F3\FLOW3\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
 	
 	/**
 	 * Inject the FLOW3 resource publisher.
 	 *
-	 * @param \F3\FLOW3\Resource\Publisher $resourcePublisher
-	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @param \F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher
 	 */
-	public function injectResourcePublisher(\F3\FLOW3\Resource\Publisher $resourcePublisher) {
+	public function injectResourcePublisher(\F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
 		$this->resourcePublisher = $resourcePublisher;
 	}
 
@@ -69,23 +84,24 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * Render the URI to the resource. The filename is used from child content.
 	 *
 	 * @param string $path The path and filename of the resource (relative to Public resource directory of the package)
-	 * @param boolean $absolute Whether to return an absolute path instead of a relative one
 	 * @param string $package Target package key. If not set, the current package key will be used
-	 * @return string The URI to the resource
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @param \F3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
+	 * @param string $title If specified, this title is added to the resource uri to make it more descriptive
+	 * @return string The absolute URI to the resource
+	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($path, $absolute = FALSE, $package = NULL) {
-		if ($package === NULL) {
-			$package = $this->controllerContext->getRequest()->getControllerPackageKey();
-		}
-		$mirrorPath = $this->resourcePublisher->getRelativeMirrorDirectory();
-
-		$uri = $mirrorPath . 'Packages/' . $package . '/' . $path;
-		if ($absolute) {
-			$uri = $this->controllerContext->getRequest()->getBaseUri() . $uri;
+	public function render($path = NULL, $package = NULL, $resource = NULL, $title = '') {
+		if ($resource === NULL) {
+			if ($path === NULL) {
+				return '!!! No path specified in uri.resource view helper !!!';
+			}
+			$uri = $this->resourcePublisher->getStaticResourcesWebBaseUri() . 'Packages/' . ($package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package ). '/' . $path;
+		} else {
+			$uri = $this->resourcePublisher->getPersistentResourceWebUri($resource, $title);
+			if ($uri === FALSE) {
+				$uri = $this->resourcePublisher->getStaticResourcesWebBaseUri() . 'BrokenResource';
+			}
 		}
 		return $uri;
 	}

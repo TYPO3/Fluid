@@ -40,7 +40,7 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	public function setUp() {
 		parent::setUp();
-		$this->mockResourcePublisher = $this->getMock('F3\FLOW3\Resource\Publisher');
+		$this->mockResourcePublisher = $this->getMock('F3\FLOW3\Resource\Publishing\ResourcePublisher');
 		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper'), array('renderChildren'), array(), '', FALSE);
 		$this->viewHelper->injectResourcePublisher($this->mockResourcePublisher);
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -52,7 +52,7 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceUri() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('Resources/'));
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
 		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
 
 		$resourceUri = $this->viewHelper->render('foo');
@@ -64,8 +64,8 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesCustomPackageKeyIfSpecified() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('Resources/'));
-		$resourceUri = $this->viewHelper->render('foo', FALSE, 'SomePackage');
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
+		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
 		$this->assertEquals('Resources/Packages/SomePackage/foo', $resourceUri);
 	}
 
@@ -73,21 +73,50 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @test
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function renderUsesConfiguredMirrorPath() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('CustomMirrorDirectory/'));
-		$resourceUri = $this->viewHelper->render('foo', FALSE, 'SomePackage');
-		$this->assertEquals('CustomMirrorDirectory/Packages/SomePackage/foo', $resourceUri);
+	public function renderUsesStaticResourcesBaseUri() {
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
+		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
+		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo', $resourceUri);
 	}
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function renderReturnsAbsoluteUrlIfRequested() {
-		$this->request->expects($this->atLeastOnce())->method('getBaseUri')->will($this->returnValue('http://host.name/'));
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getRelativeMirrorDirectory')->will($this->returnValue('CustomMirrorDirectory/'));
-		$resourceUri = $this->viewHelper->render('foo', TRUE, 'SomePackage');
-		$this->assertEquals('http://host.name/CustomMirrorDirectory/Packages/SomePackage/foo', $resourceUri);
+	public function renderUsesProvidedResourceObjectInsteadOfPackageAndPath() {
+		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+
+		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2.jpg'));
+
+		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource);
+		$this->assertEquals('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2.jpg', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function renderUsesTheGivenTitleAsFilenameForPublishingAGivenResource() {
+		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+
+		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource, 'Some Title')->will($this->returnValue('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2/Some-Title.jpg'));
+
+		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource, 'Some Title');
+		$this->assertEquals('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2/Some-Title.jpg', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function renderCreatesASpecialBrokenResourceUriIfTheResourceCouldNotBePublished() {
+		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+
+		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue(FALSE));
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('http://foo/MyOwnResources/'));
+
+		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource);
+		$this->assertEquals('http://foo/MyOwnResources/BrokenResource', $resourceUri);
 	}
 
 }

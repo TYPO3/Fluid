@@ -275,7 +275,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	public function viewIsPlacedInVariableContainer() {
 		$this->markTestSkipped('view will be placed in ViewHelperContext soon');
 		$packageManager = $this->objectManager->getObject('F3\FLOW3\Package\ManagerInterface');
-		$resourceManager = $this->objectManager->getObject('F3\FLOW3\Resource\Manager');
+		$resourceManager = $this->objectManager->getObject('F3\FLOW3\Resource\ResourceManager');
 
 		$syntaxTreeNode = new \F3\Fluid\View\Fixture\TransparentSyntaxTreeNode();
 
