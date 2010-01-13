@@ -178,8 +178,8 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 							throw new \F3\Fluid\Core\ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
 						}
 					}
-				} elseif ($this->persistenceManager->getBackend()->getIdentifierByObject($value) !== NULL) {
-					$key = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
+				} elseif ($this->persistenceManager->getIdentifierByObject($value) !== NULL) {
+					$key = $this->persistenceManager->getIdentifierByObject($value);
 				} elseif (method_exists($value, '__toString')) {
 					$key = (string)$value;
 				} else {
@@ -197,8 +197,8 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 					}
 				} elseif (method_exists($value, '__toString')) {
 					$value = (string)$value;
-				} elseif ($this->persistenceManager->getBackend()->getIdentifierByObject($value) !== NULL) {
-					$value = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
+				} elseif ($this->persistenceManager->getIdentifierByObject($value) !== NULL) {
+					$value = $this->persistenceManager->getIdentifierByObject($value);
 				}
 			}
 			$options[$key] = $value;

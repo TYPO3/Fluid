@@ -91,7 +91,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBased
 			){
 			return '';
 		}
-		$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($object);
+		$identifier = $this->persistenceManager->getIdentifierByObject($object);
 		if ($identifier === NULL) {
 			return chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
 		}

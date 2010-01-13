@@ -50,11 +50,8 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
-
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));
+		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
 
@@ -84,11 +81,8 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
-
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));
+		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
 
@@ -118,11 +112,8 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockBackend->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue(NULL));
-
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockBackend));
+		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue(NULL));
 
 		$expectedResult = chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);
 
