@@ -38,16 +38,14 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithBubblingDisabledAndFormatNotOptional() {
-		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\Controller\MyController', 'html');
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', NULL, 'My', 'html');
 
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath', 'getPartialRootPath', 'getLayoutRootPath'), array(), '', FALSE);
 		$templateView->_set('controllerContext', $mockControllerContext);
 		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
-		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@controller/@action.@format', FALSE, FALSE);
 
-		$expected = array(
-			'Resources/Private/Templates/My/@action.html'
-		);
+		$expected = array('Resources/Private/Templates/My/@action.html');
+		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@controller/@action.@format', FALSE, FALSE);
 		$this->assertEquals($expected, $actual);
 	}
 
@@ -57,7 +55,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithSubpackageAndBubblingDisabledAndFormatNotOptional() {
-		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', 'MySubPackage', 'My', 'html');
 
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath', 'getPartialRootPath', 'getLayoutRootPath'), array(), '', FALSE);
 		$templateView->_set('controllerContext', $mockControllerContext);
@@ -75,7 +73,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithSubpackageAndBubblingDisabledAndFormatOptional() {
-		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', 'MySubPackage', 'My', 'html');
 
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath', 'getPartialRootPath', 'getLayoutRootPath'), array(), '', FALSE);
 		$templateView->_set('controllerContext', $mockControllerContext);
@@ -94,7 +92,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithSubpackageAndBubblingEnabledAndFormatOptional() {
-		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
+		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', 'MySubPackage', 'My', 'html');
 
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath', 'getPartialRootPath', 'getLayoutRootPath'), array(), '', FALSE);
 		$templateView->_set('controllerContext', $mockControllerContext);
@@ -113,37 +111,23 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function expandGenericPathPatternWorksWithNoControllerAndSubpackageAndBubblingEnabledAndFormatOptional() {
-		$mockControllerContext = $this->setupMockControllerContextForPathResolving('F3\MyPackage\MySubPackage\Controller\MyController', 'html');
-
-		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('getTemplateRootPath', 'getPartialRootPath', 'getLayoutRootPath'), array(), '', FALSE);
-		$templateView->_set('controllerContext', $mockControllerContext);
-		$templateView->expects($this->any())->method('getTemplateRootPath')->will($this->returnValue('Resources/Private/'));
-		$actual = $templateView->_call('expandGenericPathPattern', '@templateRoot/Templates/@subpackage/@action.@format', TRUE, TRUE);
-
-		$expected = array(
-			'Resources/Private/Templates/MySubPackage/@action.html',
-			'Resources/Private/Templates/MySubPackage/@action',
-			'Resources/Private/Templates/@action.html',
-			'Resources/Private/Templates/@action',
-		);
-		$this->assertEquals($expected, $actual);
-	}
-
-	/**
 	 * Helper to build mock controller context needed to test expandGenericPathPattern.
 	 *
-	 * @param $controllerObjectName
-	 * @param $action
+	 * @param $packageKey
+	 * @param $subPackageKey
+	 * @param $controllerClassName
 	 * @param $format
 	 *
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	protected function setupMockControllerContextForPathResolving($controllerObjectName, $format) {
+	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
+		$controllerObjectName = "F3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
+
 		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
+		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue($packageKey));
+		$mockRequest->expects($this->any())->method('getControllerSubPackageKey')->will($this->returnValue($subPackageKey));
+		$mockRequest->expects($this->any())->method('getControllerName')->will($this->returnValue($controllerName));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue($controllerObjectName));
 		$mockRequest->expects($this->any())->method('getFormat')->will($this->returnValue($format));
 

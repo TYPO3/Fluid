@@ -72,7 +72,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			return NULL;
 		}
 		$currentObject = $this->renderingContext->getTemplateVariableContainer()->get($variableName);
-		if (count($objectPathParts) > 0) {
+		if (count($objectPathParts) > 0 && (is_object($currentObject) || is_array($currentObject))) {
 			$output = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($currentObject, implode('.', $objectPathParts));
 		} else {
 			$output = $currentObject;

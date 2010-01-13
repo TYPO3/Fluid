@@ -55,8 +55,7 @@ class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @api
 	 */
 	public function render() {
-		$currentRequest = $this->controllerContext->getRequest();
-		return '<base href="' . $currentRequest->getBaseUri() . '"></base>';
+		return '<base href="' . $this->controllerContext->getRequest()->getBaseUri() . '"></base>';
 	}
 }
 
