@@ -29,7 +29,7 @@ namespace F3\Fluid\View\Exception;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class InvalidTemplateResource extends \F3\Fluid\View\Exception {
+class InvalidTemplateResourceException extends \F3\Fluid\View\Exception {
 }
 
 ?>

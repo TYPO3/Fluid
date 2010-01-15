@@ -33,7 +33,7 @@ abstract class AbstractGenerator {
 	/**
 	 * Object manager.
 	 *
-	 * @var \F3\FLOW3\Object\Manager
+	 * @var \F3\FLOW3\Object\ObjectManager
 	 */
 	protected $objectManager;
 
@@ -65,11 +65,11 @@ abstract class AbstractGenerator {
 	/**
 	 * Inject the object manager.
 	 *
-	 * @param \F3\FLOW3\Object\ManagerInterface $objectManager the object manager to inject
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager the object manager to inject
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectObjectManager(\F3\FLOW3\Object\ManagerInterface $objectManager) {
+	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 

@@ -171,7 +171,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	protected function hasAccessToResource($resource) {
 		try {
 			$this->accessDecisionManager->decideOnResource($resource);
-		} catch (\F3\FLOW3\Security\Exception\AccessDenied $e) {
+		} catch (\F3\FLOW3\Security\Exception\AccessDeniedException $e) {
 			return FALSE;
 		}
 

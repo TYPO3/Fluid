@@ -354,13 +354,13 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @param string $templatePathAndFilename absolute filename of the template to be parsed
 	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface the parsed template tree
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResource
+	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseTemplate($templatePathAndFilename) {
 		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
 		if ($templateSource === FALSE) {
-			throw new \F3\Fluid\View\Exception\InvalidTemplateResource('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
+			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
 		return $this->templateParser->parse($templateSource);
 	}

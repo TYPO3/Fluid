@@ -131,7 +131,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue($controllerObjectName));
 		$mockRequest->expects($this->any())->method('getFormat')->will($this->returnValue($format));
 
-		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
+		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array('getRequest'), array(), '', FALSE);
 		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
 
 		return $mockControllerContext;
@@ -180,8 +180,8 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	public function renderCallsRenderOnParsedTemplateInterface() {
 		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('parseTemplate', 'resolveTemplatePathAndFilename'), array(), '', FALSE);
 		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
-		$objectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
-		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$objectFactory = $this->getMock('F3\FLOW3\Object\ObjectFactoryInterface');
+		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE);
 
 		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
@@ -220,7 +220,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\View\Exception\InvalidTemplateResource
+	 * @expectedException F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function parseTemplateThrowsAnExceptionIfTheSpecifiedTemplateResourceDoesNotExist() {
@@ -236,12 +236,12 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$this->markTestSkipped('Needs proper implementation.');
 		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request', array('getControllerPackageKey', ''));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('DummyPackageKey'));
-		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'));
+		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array('getRequest'));
 		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
 
 		$mockPackage = $this->getMock('F3\FLOW3\Package\PackageInterface', array('getPackagePath'));
 		$mockPackage->expects($this->any())->method('getPackagePath')->will($this->returnValue('/ExamplePackagePath/'));
-		$mockPackageManager = $this->getMock('F3\FLOW3\Package\ManagerInterface', array('getPackage'));
+		$mockPackageManager = $this->getMock('F3\FLOW3\Package\PackageManagerInterface', array('getPackage'));
 		$mockPackageManager->expects($this->any())->method('getPackage')->with('DummyPackageKey')->will($this->returnValue($mockPackage));
 
 		\vfsStreamWrapper::register();
@@ -258,7 +258,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function viewIsPlacedInVariableContainer() {
 		$this->markTestSkipped('view will be placed in ViewHelperContext soon');
-		$packageManager = $this->objectManager->getObject('F3\FLOW3\Package\ManagerInterface');
+		$packageManager = $this->objectManager->getObject('F3\FLOW3\Package\PackageManagerInterface');
 		$resourceManager = $this->objectManager->getObject('F3\FLOW3\Resource\ResourceManager');
 
 		$syntaxTreeNode = new \F3\Fluid\View\Fixture\TransparentSyntaxTreeNode();
@@ -273,7 +273,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('Fluid'));
-		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
+		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array('getRequest'), array(), '', FALSE);
 		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
 
 		$templateView = new \F3\Fluid\View\Fixture\TemplateViewFixture($this->objectFactory, $packageManager, $resourceManager, $this->objectManager);

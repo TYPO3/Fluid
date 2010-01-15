@@ -66,7 +66,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Controller Context to use
-	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var F3\FLOW3\MVC\Controller\Context
 	 * @api
 	 */
 	protected $controllerContext;
@@ -88,7 +88,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Reflection service
-	 * @var F3\FLOW3\Reflection\Service
+	 * @var F3\FLOW3\Reflection\ReflectionService
 	 */
 	private $reflectionService;
 
@@ -111,11 +111,11 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	}
 
 	/**
-	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \F3\FLOW3\MVC\Controller\Context $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\F3\FLOW3\MVC\Controller\Context $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
@@ -130,10 +130,10 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Inject a Reflection service
-	 * @param \F3\FLOW3\Reflection\Service $reflectionService Reflection service
+	 * @param \F3\FLOW3\Reflection\ReflectionService $reflectionService Reflection service
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectReflectionService(\F3\FLOW3\Reflection\Service $reflectionService) {
+	public function injectReflectionService(\F3\FLOW3\Reflection\ReflectionService $reflectionService) {
 		$this->reflectionService = $reflectionService;
 	}
 

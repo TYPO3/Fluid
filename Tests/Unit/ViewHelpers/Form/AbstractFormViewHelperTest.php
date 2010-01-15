@@ -50,7 +50,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
@@ -81,7 +81,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
@@ -112,7 +112,7 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue(NULL));
 
 		$expectedResult = chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);

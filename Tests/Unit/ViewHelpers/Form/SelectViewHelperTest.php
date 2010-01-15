@@ -208,7 +208,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
 		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
@@ -280,7 +280,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUuidForValueAndLabel() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
@@ -310,7 +310,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesToStringForLabelIfAvailable() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
@@ -345,7 +345,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
 		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
