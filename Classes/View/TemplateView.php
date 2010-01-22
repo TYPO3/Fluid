@@ -33,12 +33,6 @@ namespace F3\Fluid\View;
 class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\View\TemplateViewInterface {
 
 	/**
-	 * Pattern for fetching information from controller object name
-	 * @var string
-	 */
-	protected $PATTERN_CONTROLLER = '/^F3FLUID_NAMESPACE_SEPARATOR\w*FLUID_NAMESPACE_SEPARATOR(?:(?P<SubpackageName>.*)FLUID_NAMESPACE_SEPARATOR)?ControllerFLUID_NAMESPACE_SEPARATOR(?P<ControllerName>\w*)Controller$/';
-
-	/**
 	 * @var \F3\Fluid\Core\Parser\TemplateParser
 	 */
 	protected $templateParser;
@@ -371,13 +365,13 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @param string $templatePathAndFilename absolute filename of the template to be parsed
 	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface the parsed template tree
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResource
+	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseTemplate($templatePathAndFilename) {
 		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
 		if ($templateSource === FALSE) {
-			throw new \F3\Fluid\View\Exception\InvalidTemplateResource('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
+			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
 		return $this->templateParser->parse($templateSource);
 	}
@@ -489,25 +483,17 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param boolean $formatIsOptional if TRUE, then half of the resulting strings will have .@format stripped off, and the other half will have it.
 	 * @return array unix style path
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
 		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);
 		$pattern = str_replace('@partialRoot', $this->getPartialRootPath(), $pattern);
 		$pattern = str_replace('@layoutRoot', $this->getLayoutRootPath(), $pattern);
 
-		$matches = array();
-		$this->PATTERN_CONTROLLER = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR), $this->PATTERN_CONTROLLER);
-		preg_match($this->PATTERN_CONTROLLER, $this->controllerContext->getRequest()->getControllerObjectName(), $matches);
+		$subPackageKey = $this->controllerContext->getRequest()->getControllerSubpackageKey();
+		$controllerName = $this->controllerContext->getRequest()->getControllerName();
 
-		$subpackageParts = array();
-		if ($matches['SubpackageName'] !== '') {
-			$subpackageParts = explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $matches['SubpackageName']);
-		}
-
-		$controllerName = NULL;
-		if (strpos($pattern, '@controller') !== FALSE) {
-			$controllerName = $matches['ControllerName'];
-		}
+		$subpackageParts = ($subPackageKey !== '') ? explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $subPackageKey) : array();
 
 		$results = array();
 
@@ -536,4 +522,5 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		return $results;
 	}
 }
+
 ?>

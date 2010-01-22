@@ -23,27 +23,27 @@ namespace F3\Fluid\ViewHelpers\Security;
  *                                                                        */
 
 /**
- * This view helper implements an ifAccess/else condition.
+ * This view helper implements an ifAuthenticated/else condition.
  *
  * = Examples =
  *
  * <code title="Basic usage">
- * <f:security.ifAccess resource="someResource">
- *   This is being shown in case you have access to the given resource
- * </f:security.ifAccess>
+ * <f:security.ifAuthenticated>
+ *   This is being shown whenever a user is logged in
+ * </f:security.ifAuthenticated>
  * </code>
  *
- * Everything inside the <f:ifAccess> tag is being displayed if you have access to the given resource.
+ * Everything inside the <f:ifAuthenticated> tag is being displayed if you are authenticated with any account.
  *
- * <code title="IfAccess / then / else">
- * <f:security.ifAccess resource="someResource">
+ * <code title="IfAuthenticated / then / else">
+ * <f:security.ifAuthenticated>
  *   <f:then>
  *     This is being shown in case you have access.
  *   </f:then>
  *   <f:else>
  *     This is being displayed in case you do not have access.
  *   </f:else>
- * </f:security.ifAccess>
+ * </f:security.ifAuthenticated>
  * </code>
  *
  * Everything inside the "then" tag is displayed if you have access.
@@ -51,12 +51,12 @@ namespace F3\Fluid\ViewHelpers\Security;
  *
  *
  *
- * @version $Id: IfViewHelper.php 2832 2009-07-17 14:53:19Z k-fish $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */
-class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
 	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
@@ -70,19 +70,19 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	protected $renderingContext;
 
 	/**
-	 * @var F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
+	 * @var F3\FLOW3\Security\ContextHolderInterface
 	 */
-	protected $accessDecisionManager;
+	protected $securityContextHolder;
 
 	/**
-	 * Injects the access decision manager
+	 * Injects the Security Context Holder
 	 *
-	 * @param F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
+	 * @param F3\FLOW3\Security\ContextHolderInterface $securityContextHolder
 	 * @return void
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectAccessDecisionManager(\F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
-		$this->accessDecisionManager = $accessDecisionManager;
+	public function injectSecurityContextHolder(\F3\FLOW3\Security\ContextHolderInterface $securityContextHolder) {
+		$this->securityContextHolder = $securityContextHolder;
 	}
 
 	/**
@@ -102,26 +102,27 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext the renderingcontext to use
 	 * @return void
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
 	}
 
 	/**
-	 * renders <f:then> child if access to the given resource is allowed, otherwise renders <f:else> child.
+	 * Renders <f:then> child if any account is currently authenticated, otherwise renders <f:else> child.
 	 *
-	 * @param string $resource ACL resource
 	 * @return string the rendered string
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($resource) {
-		if ($this->hasAccessToResource($resource)) {
-			return $this->renderThenChild();
-		} else {
-			return $this->renderElseChild();
+	public function render() {
+		$activeTokens = $this->securityContextHolder->getContext()->getAuthenticationTokens();
+		foreach ($activeTokens as $token) {
+			if ($token->isAuthenticated()) {
+				return $this->renderThenChild();
+			}
 		}
+		return $this->renderElseChild();
 	}
 
 	/**
@@ -129,7 +130,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 * If no ThenViewHelper is found, all child nodes are rendered
 	 *
 	 * @return string rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function renderThenChild() {
 		foreach ($this->childNodes as $childNode) {
@@ -147,35 +148,17 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 * Iterates through child nodes and renders ElseViewHelper.
 	 *
 	 * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function renderElseChild() {
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
-
 				$childNode->setRenderingContext($this->renderingContext);
 				return $childNode->evaluate();
 			}
 		}
 		return '';
-	}
-
-	/**
-	 * Check if we currently have access to the given resource
-	 *
-	 * @param string $resource The resource to check
-	 * @return boolean TRUE if we currently have access to the given resource
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	protected function hasAccessToResource($resource) {
-		try {
-			$this->accessDecisionManager->decideOnResource($resource);
-		} catch (\F3\FLOW3\Security\Exception\AccessDeniedException $e) {
-			return FALSE;
-		}
-
-		return TRUE;
 	}
 }
 

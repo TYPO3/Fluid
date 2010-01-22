@@ -78,8 +78,8 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 			$name = $this->arguments['name'];
 		}
 		if ($this->arguments->hasArgument('value') && is_object($this->arguments['value'])) {
-			if (NULL !== $this->persistenceManager->getBackend()->getIdentifierByObject($this->arguments['value'])
-				&& (!$this->persistenceManager->getBackend()->isNewObject($this->arguments['value']))) {
+			if (NULL !== $this->persistenceManager->getIdentifierByObject($this->arguments['value'])
+				&& (!$this->persistenceManager->isNewObject($this->arguments['value']))) {
 				$name .= '[__identity]';
 			}
 		}
@@ -104,7 +104,7 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 			$value = $this->getPropertyValue();
 		}
 		if (is_object($value)) {
-			$identifier = $this->persistenceManager->getBackend()->getIdentifierByObject($value);
+			$identifier = $this->persistenceManager->getIdentifierByObject($value);
 			if ($identifier !== NULL) {
 				$value = $identifier;
 			}

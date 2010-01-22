@@ -41,7 +41,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Object factory mock
-	 * @var F3\FLOW3\Object\FactoryInterface
+	 * @var F3\FLOW3\Object\ObjectFactoryInterface
 	 */
 	protected $mockObjectFactory;
 
@@ -53,7 +53,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 *
-	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var F3\FLOW3\MVC\Controller\Context
 	 */
 	protected $controllerContext;
 
@@ -69,13 +69,13 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	public function setUp() {
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 
-		$this->mockObjectFactory = $this->getMock('F3\FLOW3\Object\FactoryInterface');
+		$this->mockObjectFactory = $this->getMock('F3\FLOW3\Object\ObjectFactoryInterface');
 		$this->renderingContext->injectObjectFactory($this->mockObjectFactory);
 
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->renderingContext->setTemplateVariableContainer($this->templateVariableContainer);
 
-		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE);
 		$this->renderingContext->setControllerContext($this->controllerContext);
 
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');

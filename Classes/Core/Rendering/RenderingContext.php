@@ -40,13 +40,13 @@ class RenderingContext {
 	/**
 	 * Object factory which is bubbled through. The ViewHelperNode cannot get an ObjectFactory injected because
 	 * the whole syntax tree should be cacheable
-	 * @var F3\FLOW3\Object\FactoryInterface
+	 * @var F3\FLOW3\Object\ObjectFactoryInterface
 	 */
 	protected $objectFactory;
 
 	/**
 	 * Controller context being passed to the ViewHelper
-	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var F3\FLOW3\MVC\Controller\Context
 	 */
 	protected $controllerContext;
 
@@ -59,17 +59,17 @@ class RenderingContext {
 	/**
 	 * Inject the object factory
 	 *
-	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @param F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\FactoryInterface $objectFactory) {
+	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
 		$this->objectFactory = $objectFactory;
 	}
 
 	/**
 	 * Returns the object factory. Only the ViewHelperNode should do this.
 	 *
-	 * @param F3\FLOW3\Object\FactoryInterface $objectFactory
+	 * @param F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getObjectFactory() {
@@ -100,17 +100,17 @@ class RenderingContext {
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
+	 * @param F3\FLOW3\MVC\Controller\Context $controllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\F3\FLOW3\MVC\Controller\Context $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @return F3\FLOW3\MVC\Controller\Context The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getControllerContext() {

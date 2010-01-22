@@ -23,14 +23,12 @@ namespace F3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * DEPRECATED: Use <f:form.textfield> instead!
- *
- * View Helper which creates a simple Text Box (<input type="text">).
+ * View Helper which creates a text field (<input type="text">).
  *
   * = Examples =
  *
  * <code title="Example">
- * <f:form.textbox name="myTextBox" value="default value" />
+ * <f:form.textfield name="myTextBox" value="default value" />
  * </code>
  *
  * Output:
@@ -40,9 +38,8 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
- * @deprecated since 1.0.0 alpha 7
  */
-class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class TextfieldViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string
@@ -53,8 +50,7 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldView
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -68,19 +64,35 @@ class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldView
 	}
 
 	/**
-	 * Renders the textbox.
+	 * Renders the textfield.
 	 *
+	 * @param boolean $required If the field is required or not
+	 * @param string $type The field type, e.g. "text", "email", "url" etc.
+	 * @param string $placeholder A string used as a placeholder for the value to enter
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render() {
+	public function render($required = NULL, $type = 'text', $placeholder = NULL) {
 		$name = $this->getName();
 		$this->registerFieldNameForFormTokenGeneration($name);
 
-		$this->tag->addAttribute('type', 'text');
+		$this->tag->addAttribute('type', $type);
 		$this->tag->addAttribute('name', $name);
-		$this->tag->addAttribute('value', $this->getValue());
+
+		$value = $this->getValue();
+
+		if ($placeholder !== NULL) {
+			$this->tag->addAttribute('placeholder', $placeholder);
+		}
+
+		if (!empty($value)) {
+			$this->tag->addAttribute('value', $value);
+		}
+
+		if ($required !== NULL) {
+			$this->tag->addAttribute('required', 'required');
+		}
 
 		$this->setErrorClassAttribute();
 

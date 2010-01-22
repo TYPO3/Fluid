@@ -91,6 +91,84 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$this->viewHelper->render();
 	}
 
+		/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function anEmptyOptionTagIsRenderedIfOptionsArrayIsEmptyToAssureXhtmlCompatibility() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value=""></option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(),
+			'value' => 'value2',
+			'name' => 'myName'
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function OrderOfOptionsIsNotAlteredByDefault() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value3">label3</option>' . chr(10) . '<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				'value3' => 'label3',
+				'value1' => 'label1',
+				'value2' => 'label2'
+			),
+			'value' => 'value2',
+			'name' => 'myName'
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function optionsAreSortedByLabelIfSortByOptionLabelIsSet() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3">label3</option>' . chr(10));
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				'value3' => 'label3',
+				'value1' => 'label1',
+				'value2' => 'label2'
+			),
+			'value' => 'value2',
+			'name' => 'myName',
+			'sortByOptionLabel' => TRUE
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
@@ -130,7 +208,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
 		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
@@ -201,12 +279,9 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @test
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUUIDForValueAndLabel() {
-		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
-
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUuidForValueAndLabel() {
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
@@ -235,11 +310,8 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesToStringForLabelIfAvailable() {
-		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
-		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
-
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
-		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
@@ -273,7 +345,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
 		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\ManagerInterface');
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getBackend')->will($this->returnValue($mockPersistenceBackend));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
