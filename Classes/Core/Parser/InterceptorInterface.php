@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,21 +23,22 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- *
+ * An interceptor interface. Interceptors are used in the parsing stage to change
+ * the syntax tree of a template, e.g. by adding viewhelper nodes.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-interface ObjectAccessorPostProcessorInterface {
+interface InterceptorInterface {
 
 	/**
-	 * Post-Process an Object Accessor
+	 * The interceptor can process the given node at will and must return a node
+	 * that will be used in place of the given node.
 	 *
-	 * @param mixed $object the object that is currently rendered
-	 * @param boolean $enabled TRUE if post processing is currently enabled.
-	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
-	public function process($object, $enabled);
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node);
 
 }
 ?>

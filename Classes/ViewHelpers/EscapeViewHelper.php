@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Parser\SyntaxTree;
+namespace F3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,43 +23,71 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * Text Syntax Tree Node - is a container for strings.
+ * The EscapeViewHelper is used to escape variable content in various ways. By
+ * default HTML is the target.
+ *
+ * = Examples =
+ *
+ * <code title="HTML">
+ * <f:escape>{text}</f:escape>
+ * </code>
+ *
+ * Output:
+ * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+ *
+ * <code title="Entities">
+ * <f:escape type="entities">{text}</f:escape>
+ * </code>
+ *
+ * Output:
+ * Text with all possible chars replaced by HTML entities (htmlentities applied).
+ *
+ * <code title="URL">
+ * <f:escape type="url">{text}</f:escape>
+ * </code>
+ *
+ * Output:
+ * Text encoded for URL use (rawurlencode applied).
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  * @scope prototype
  */
-class TextNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class EscapeViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Contents of the text node
-	 * @var string
-	 */
-	protected $text;
-
-	/**
-	 * Constructor.
+	 * Escapes special characters with their escaped counterparts as needed.
 	 *
-	 * @param string $text text to store in this textNode
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @param string $value
+	 * @param string $type The type, one of html, entities, url
+	 * @param string $encoding
+	 * @return string the altered string.
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @api
 	 */
-	public function __construct($text) {
-		if (!is_string($text)) {
-			throw new \F3\Fluid\Core\Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+	public function render($value = NULL, $type = 'html', $encoding = 'UTF-8') {
+		if ($value === NULL) {
+			$value = $this->renderChildren();
 		}
-		$this->text = $text;
-	}
 
-	/**
-	 * Return the text associated to the syntax tree. Text from child nodes is
-	 * appended to the text in the node's own text.
-	 *
-	 * @return string the text stored in this node/subtree.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function evaluate() {
-		return $this->text . $this->evaluateChildNodes();
+		if (!is_string($value)) {
+			return $value;
+		}
+
+		switch ($type) {
+			case 'html':
+				return htmlspecialchars($value, ENT_COMPAT, $encoding);
+			break;
+			case 'entities':
+				return htmlentities($value, ENT_COMPAT, $encoding);
+			break;
+			case 'url':
+				return rawurlencode($value);
+			default:
+				return $value;
+			break;
+		}
 	}
 }
-
 ?>

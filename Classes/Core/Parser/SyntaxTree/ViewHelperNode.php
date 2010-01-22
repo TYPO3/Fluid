@@ -98,7 +98,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @return string Class Name of associated view helper
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function getViewHelperClassName() {
 		return $this->viewHelperClassName;
@@ -124,10 +123,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			throw new \RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
-			// Store if the ObjectAccessorPostProcessor has been enabled before this ViewHelper, because we need to re-enable it if needed after this ViewHelper
-		$hasObjectAccessorPostProcessorBeenEnabledBeforeThisViewHelper = $this->renderingContext->isObjectAccessorPostProcessorEnabled();
-
-			// Caching of ViewHelper and Argument Definitions
 		$objectFactory = $this->renderingContext->getObjectFactory();
 		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
 
@@ -138,9 +133,8 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
-		$this->renderingContext->setObjectAccessorPostProcessorEnabled(FALSE);
-		if (count($this->viewHelper->prepareArguments())) {
-			foreach ($this->viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
+ 		if (count($this->viewHelper->prepareArguments())) {
+ 			foreach ($this->viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
 					$argumentValue->setRenderingContext($this->renderingContext);
@@ -169,16 +163,13 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		}
 
 		$this->viewHelper->validateArguments();
-		$this->renderingContext->setObjectAccessorPostProcessorEnabled($this->viewHelper->isObjectAccessorPostProcessorEnabled());
 		$this->viewHelper->initialize();
 		try {
 			$output = call_user_func_array(array($this->viewHelper, 'render'), $renderMethodParameters);
 		} catch (\F3\Fluid\Core\ViewHelper\Exception $exception) {
-			// @todo [BW] rethrow exception, log, ignore.. depending on the current context
+				// @todo [BW] rethrow exception, log, ignore.. depending on the current context
 			$output = $exception->getMessage();
 		}
-
-		$this->renderingContext->setObjectAccessorPostProcessorEnabled($hasObjectAccessorPostProcessorBeenEnabledBeforeThisViewHelper);
 
 		if ($contextVariables != $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers()) {
 			$endContextVariables = $this->renderingContext->getTemplateVariableContainer();

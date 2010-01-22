@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,29 +23,20 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- *
+ * Testcase for Interceptor\Resource
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope prototype
  */
-class HtmlSpecialCharsPostProcessor implements \F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface {
+class ResourceTest extends \F3\Testing\BaseTestCase {
 
 	/**
-	 * Process an Object Accessor by wrapping it into HTML.
-	 * NOT part of public API.
-	 *
-	 * @param mixed $object the object that is currently rendered
-	 * @param boolean $enabled TRUE if post processing is currently enabled.
-	 * @return mixed $object the original object. If not within arguments and of type string, the value is htmlspecialchar'ed
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @test
 	 */
-	public function process($object, $enabled) {
-		if ($enabled === TRUE && is_string($object)) {
-			return htmlspecialchars($object);
-		}
-		return $object;
+	public function foo() {
+		$this->markTestIncomplete();
 	}
+
 }
+
 ?>

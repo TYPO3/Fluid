@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,31 +23,48 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- * Testcase for RenderingConfiguration
+ * Node in the syntax tree.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @scope prototype
  */
-class RenderingConfigurationTest extends \F3\Testing\BaseTestCase {
+interface NodeInterface {
 
 	/**
-	 * RenderingConfiguration
-	 * @var \F3\Fluid\Core\Rendering\RenderingConfiguration
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext Rendering Context to be used for this evaluation
+	 * @return void
 	 */
-	protected $renderingConfiguration;
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
 
-	public function setUp() {
-		$this->renderingConfiguration = new \F3\Fluid\Core\Rendering\RenderingConfiguration();
-	}
-	
 	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * Evaluate all child nodes and return the evaluated results.
+	 *
+	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 */
-	public function objectAccessorPostProcessorCanBeReadOutAgain() {
-		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\ObjectAccessorPostProcessorInterface');
-		$this->renderingConfiguration->setObjectAccessorPostProcessor($objectAccessorPostProcessor);
-		$this->assertSame($objectAccessorPostProcessor, $this->renderingConfiguration->getObjectAccessorPostProcessor());
-	}
+	public function evaluateChildNodes();
+
+	/**
+	 * Returns all child nodes for a given node.
+	 *
+	 * @return array<\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
+	 */
+	public function getChildNodes();
+
+	/**
+	 * Appends a subnode to this node. Is used inside the parser to append children
+	 *
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
+	 * @return void
+	 */
+	public function addChildNode(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode);
+
+	/**
+	 * Evaluates the node - can return not only strings, but arbitary objects.
+	 *
+	 * @return mixed Evaluated node
+	 */
+	public function evaluate();
 }
+
 ?>

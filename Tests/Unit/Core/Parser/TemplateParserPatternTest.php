@@ -305,12 +305,10 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 				1 => 'a: b',
 				'Key' => 'a',
       			2 => 'a',
-      			'DoubleQuotedString' => '',
+      			'QuotedString' => '',
       			3 => '',
-				'SingleQuotedString' => '',
-      			4 => '',
       			'VariableIdentifier' => 'b',
-      			5 => 'b'
+      			4 => 'b'
 			),
 			1 => array(
 				0 => 'e: {c:d, e:f}',
@@ -318,16 +316,14 @@ class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {
 				1 => 'e: {c:d, e:f}',
 				'Key' => 'e',
       			2 => 'e',
-      			'DoubleQuotedString' => '',
+				'QuotedString' => '',
       			3 => '',
-				'SingleQuotedString' => '',
-      			4 => '',
       			'VariableIdentifier' => '',
-      			5 => '',
+      			4 => '',
       			'Number' => '',
-      			6 => '',
+      			5 => '',
       			'Subarray' => 'c:d, e:f',
-      			7 => 'c:d, e:f'
+      			6 => 'c:d, e:f'
 			)
 		);
 		$this->assertEquals($matches, $expected, 'The regular expression splitting the array apart does not work!');

@@ -33,6 +33,10 @@ include_once(__DIR__ . '/Fixtures/TemplateViewFixture.php');
  */
 class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
+	public function initializeViewSetsParserConfiguration() {
+		$this->markTestSkipped('incomplete, needs to be written!');
+	}
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -178,7 +182,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsRenderOnParsedTemplateInterface() {
-		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('parseTemplate', 'resolveTemplatePathAndFilename'), array(), '', FALSE);
+		$templateView = $this->getMock($this->buildAccessibleProxy('F3\Fluid\View\TemplateView'), array('parseTemplate', 'resolveTemplatePathAndFilename', 'buildParserConfiguration'), array(), '', FALSE);
 		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
 		$objectFactory = $this->getMock('F3\FLOW3\Object\ObjectFactoryInterface');
 		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE);
@@ -186,13 +190,11 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
 
-		$renderingConfiguration = $this->getMock('F3\Fluid\Core\Rendering\RenderingConfiguration');
-
-		$objectAccessorPostProcessor = $this->getMock('F3\Fluid\Core\Rendering\HtmlSpecialCharsPostProcessor');
 		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$objectFactory->expects($this->exactly(5))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingConfiguration, $objectAccessorPostProcessor, $renderingContext, $viewHelperVariableContainer));
+		$objectFactory->expects($this->exactly(3))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingContext, $viewHelperVariableContainer));
 
 		$templateView->_set('objectFactory', $objectFactory);
+		$templateView->injectTemplateParser($this->getMock('F3\Fluid\Core\Parser\TemplateParser'));
 		$templateView->setControllerContext($controllerContext);
 
 		$templateView->expects($this->once())->method('parseTemplate')->will($this->returnValue($parsedTemplate));
@@ -299,6 +301,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
 		$this->assertEquals($templateView->renderSection('mySection'), 'Output', 'Specific section was not rendered correctly!');
 	}
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

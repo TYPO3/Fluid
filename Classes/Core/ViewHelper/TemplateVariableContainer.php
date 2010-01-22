@@ -58,8 +58,6 @@ class TemplateVariableContainer {
 	public function __construct($objectArray = array()) {
 		if (!is_array($objectArray)) throw new \RuntimeException('Context has to be initialized with an array, ' . gettype($objectArray) . ' given.', 1224592343);
 		$this->objects = $objectArray;
-#		$this->objects['true'] = TRUE;
-#		$this->objects['false'] = FALSE;
 	}
 
 	/**

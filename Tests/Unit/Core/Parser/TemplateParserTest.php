@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core;
+namespace F3\Fluid\Core\Parser;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,10 +23,10 @@ namespace F3\Fluid\Core;
  *                                                                        */
 
 /**
- * Testcase for TemplateParser
+ * Testcase for TemplateParser.
  *
- * This testcase needs heavy reworking to be "unit testy" or should be moved to
- * the system test category.
+ * This is to at least half a system test, as it compares rendered results to
+ * expectations, and does not strictly check the parsing...
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -42,6 +42,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @var F3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
+
 	/**
 	 * Sets up this test case
 	 *
@@ -54,7 +55,6 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 		$this->renderingContext->injectObjectFactory($this->objectFactory);
 		$this->renderingContext->setControllerContext($this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE));
-		$this->renderingContext->setRenderingConfiguration(new \F3\Fluid\Core\Rendering\RenderingConfiguration());
 		$this->renderingContext->setViewHelperVariableContainer(new \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer());
 	}
 
@@ -163,7 +163,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function fixture03ThrowsExceptionBecauseWrongTagNesting() {
+	public function fixture03ThrowsExceptionBecauseOfWrongTagNesting() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture03.html', FILE_TEXT);
 		$this->templateParser->parse($templateSource);
 	}
@@ -173,7 +173,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function fixture04ThrowsExceptionBecauseClosingATagWhichWasNeverOpened() {
+	public function fixture04ThrowsExceptionBecauseOfClosingATagWhichWasNeverOpened() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture04.html', FILE_TEXT);
 		$this->templateParser->parse($templateSource);
 	}
@@ -341,23 +341,25 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @expectedException F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function fixture13ReturnsCorrectlyRenderedResult() {
+	public function fixture13ThrowsExceptionBecauseOfWrongArgument() {
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestFixture13_mandatoryInformation.html', FILE_TEXT);
 
 		$templateTree = $this->templateParser->parse($templateSource)->getRootNode();
 	}
 
 	/**
-	 *
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function postParseFacetIsCalledOnParse() {
+		$this->markTestIncomplete('this test need to be fixed');
+
 		$templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
 		$templateParser->injectObjectFactory($this->objectFactory);
 
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
 		$templateTree = $templateParser->parse($templateSource)->getRootNode();
-		$this->assertEquals(\F3\Fluid\PostParseFacetViewHelper::$wasCalled, TRUE, 'PostParse was not called!');
+		$this->assertTrue(F3\Fluid\Core\Fixtures\PostParseFacetViewHelper::$wasCalled, 'PostParse was not called!');
 	}
 
 	/**
@@ -459,6 +461,30 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$actual = $mockTemplateParser->_call('resolveViewHelperName', 'f', 'my.multi.level');
 		$expected = 'F3\Fluid\ViewHelpers\My\Multi\LevelViewHelper';
 		$this->assertEquals($expected, $actual, 'View Helper resolving does not support multiple nesting levels.');
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function valuesFromObjectAccessorsAreRunThroughValueInterceptors() {
+		$this->markTestIncomplete();
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function viewHelperArgumentsAreNotRunThroughValueInterceptors() {
+		$this->markTestIncomplete();
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function textNodesAreRunThroughTextInterceptors() {
+		$this->markTestIncomplete();
 	}
 }
 

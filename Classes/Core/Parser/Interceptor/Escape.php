@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Rendering;
+namespace F3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,40 +23,41 @@ namespace F3\Fluid\Core\Rendering;
  *                                                                        */
 
 /**
- * Testcase for HtmlSPecialChartPostProcessor
+ * An interceptor adding the escape viewhelper to the suitable places.
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class HtmlSpecialCharsPostProcessorTest extends \F3\Testing\BaseTestCase {
+class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
-	 * RenderingConfiguration
-	 * @var \F3\Fluid\Core\Rendering\RenderingConfiguration
+	 * Inject object factory
+	 *
+	 * @param \F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
+	 * @return void
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	protected $htmlSpecialCharsPostProcessor;
-
-	public function setUp() {
-		$this->htmlSpecialCharsPostProcessor = new \F3\Fluid\Core\Rendering\HtmlSpecialCharsPostProcessor();
+	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
+		$this->objectFactory = $objectFactory;
 	}
 
 	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * Adds a ViewHelper node using the EscapeViewHelper to the given node.
+	 *
+	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function postProcessorReturnsObjectsIfInArgumentsMode() {
-		$string = 'Expected <p>';
-		$this->assertEquals($string, $this->htmlSpecialCharsPostProcessor->process($string, FALSE));
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
+		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
+			$node = $this->objectFactory->create(
+				'F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+				$this->objectFactory->create('F3\Fluid\ViewHelpers\EscapeViewHelper'),
+				array('value' => $node)
+			);
+		}
+		return $node;
 	}
 
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function postProcessorReturnsChangedObjectsIfInArgumentsMode() {
-		$string = 'Expected <p>';
-		$expected = 'Expected &lt;p&gt;';
-		$this->assertEquals($expected, $this->htmlSpecialCharsPostProcessor->process($string, TRUE));
-	}
 }
 ?>
