@@ -23,27 +23,27 @@ namespace F3\Fluid\ViewHelpers\Security;
  *                                                                        */
 
 /**
- * This view helper implements an ifGrantedAuthority/else condition.
+ * This view helper implements an ifHasRole/else condition.
  *
  * = Examples =
  *
  * <code title="Basic usage">
- * <f:security.ifGrantedAuthority grantedAuthority="Administrator">
- *   This is being shown in case you have the Administrator granted authority (aka role).
- * </f:security.ifGrantedAuthority>
+ * <f:security.ifHasRole role="Administrator">
+ *   This is being shown in case you have the Administrator role (aka role).
+ * </f:security.ifHasRole>
  * </code>
  *
- * Everything inside the <f:ifGrantedAuthority> tag is being displayed if you have the given granted authority.
+ * Everything inside the <f:ifHasRole> tag is being displayed if you have the given role.
  *
- * <code title="IfGrantedAuthority / then / else">
- * <f:security.ifGrantedAuthority grantedAuthority="Administrator">
+ * <code title="IfRole / then / else">
+ * <f:security.ifHasRole role="Administrator">
  *   <f:then>
- *     This is being shown in case you have the granted authority.
+ *     This is being shown in case you have the role.
  *   </f:then>
  *   <f:else>
- *     This is being displayed in case you do not have the granted authority.
+ *     This is being displayed in case you do not have the role.
  *   </f:else>
- * </f:security.ifGrantedAuthority>
+ * </f:security.ifHasRole>
  * </code>
  *
  * Everything inside the "then" tag is displayed if you have the role.
@@ -56,7 +56,7 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @api
  * @scope prototype
  */
-class IfGrantedAuthorityViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+class IfHasRoleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
 	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
@@ -109,16 +109,16 @@ class IfGrantedAuthorityViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractVie
 	}
 
 	/**
-	 * renders <f:then> child if the granted authority could be found in the security context,
+	 * renders <f:then> child if the role could be found in the security context,
 	 * otherwise renders <f:else> child.
 	 *
-	 * @param string $grantedAuthority The granted authority
+	 * @param string $role The role
 	 * @return string the rendered string
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 * @api
 	 */
-	public function render($grantedAuthority) {
-		if ($this->securityContext->hasGrantedAuthority($grantedAuthority)) {
+	public function render($role) {
+		if ($this->securityContext->hasRole($role)) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();
