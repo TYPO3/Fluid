@@ -111,7 +111,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	/**
 	 * renders <f:then> child if access to the given resource is allowed, otherwise renders <f:else> child.
 	 *
-	 * @param string $resource ACL resource
+	 * @param string $resource Policy resource
 	 * @return string the rendered string
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 * @api
