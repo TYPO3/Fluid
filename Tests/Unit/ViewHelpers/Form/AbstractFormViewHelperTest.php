@@ -39,11 +39,8 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldContainingTheObjectsUUID() {
 		$className = 'Object' . uniqid();
 		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
-		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
-			public function FLOW3_Persistence_isNew() { return FALSE; }
+		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\PersistenceMagicInterface {
 			public function FLOW3_Persistence_isClone() { return FALSE; }
-			public function FLOW3_Persistence_isDirty($propertyName) {}
-			public function FLOW3_Persistence_memorizeCleanState($propertyName = NULL) {}
 			public function FLOW3_AOP_Proxy_getProperty($name) {}
 			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
 			public function __clone() {}
@@ -70,11 +67,8 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldIfObjectIsNewButAClone() {
 		$className = 'Object' . uniqid();
 		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
-		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
-			public function FLOW3_Persistence_isNew() { return TRUE; }
+		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\PersistenceMagicInterface {
 			public function FLOW3_Persistence_isClone() { return TRUE; }
-			public function FLOW3_Persistence_isDirty($propertyName) {}
-			public function FLOW3_Persistence_memorizeCleanState($propertyName = NULL) {}
 			public function FLOW3_AOP_Proxy_getProperty($name) {}
 			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
 			public function __clone() {}
@@ -101,11 +95,8 @@ class AbstractFormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 	public function renderHiddenIdentityFieldReturnsACommentIfTheObjectIsWithoutIdentity() {
 		$className = 'Object' . uniqid();
 		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
-		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\DirtyMonitoringInterface {
-			public function FLOW3_Persistence_isNew() { return FALSE; }
+		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' implements \\F3\\FLOW3\\Persistence\\Aspect\\PersistenceMagicInterface {
 			public function FLOW3_Persistence_isClone() { return FALSE; }
-			public function FLOW3_Persistence_isDirty($propertyName) {}
-			public function FLOW3_Persistence_memorizeCleanState($propertyName = NULL) {}
 			public function FLOW3_AOP_Proxy_getProperty($name) {}
 			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
 			public function __clone() {}
