@@ -23,7 +23,7 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * View helper which creates a <base href="..."></base> tag. The Base URI
+ * View helper which creates a <base href="..." /> tag. The Base URI
  * is taken from the current request.
  * In FLOW3, you should always include this ViewHelper to make the links work.
  *
@@ -33,7 +33,7 @@ namespace F3\Fluid\ViewHelpers;
  * <f:base />
  * </code>
  * <output>
- * <base href="http://yourdomain.tld/"></base>
+ * <base href="http://yourdomain.tld/" />
  * (depending on your domain)
  * </output>
  *
@@ -47,15 +47,12 @@ class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Render the "Base" tag by outputting $request->getBaseUri()
 	 *
-	 * Note: renders as <base></base>, because IE6 will else refuse to display
-	 * the page...
-	 *
 	 * @return string "base"-Tag.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {
-		return '<base href="' . $this->controllerContext->getRequest()->getBaseUri() . '"></base>';
+		return '<base href="' . $this->controllerContext->getRequest()->getBaseUri() . '" />';
 	}
 }
 
