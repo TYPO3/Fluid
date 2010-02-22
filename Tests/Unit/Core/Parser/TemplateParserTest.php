@@ -49,11 +49,13 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
+		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
+
 		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
-		$this->templateParser->injectObjectFactory($this->objectFactory);
+		$this->templateParser->injectObjectManager($mockObjectManager);
 
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
-		$this->renderingContext->injectObjectFactory($this->objectFactory);
+		$this->renderingContext->injectObjectManager($mockObjectManager);
 		$this->renderingContext->setControllerContext($this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE));
 		$this->renderingContext->setViewHelperVariableContainer(new \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer());
 	}
@@ -85,7 +87,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Jochen Rau <jochen.rau@typoplanet.de>
 	 */
 	public function viewHelperNameCanBeResolved() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$result = $mockTemplateParser->_call('resolveViewHelperName', 'f', 'foo.bar.baz');
 		$expected = 'F3\Fluid\ViewHelpers\Foo\Bar\BazViewHelper';
 		$this->assertEquals($result, $expected, 'The name of the View Helper Name could not be resolved.');
@@ -109,7 +111,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\na"));
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\BaseViewHelper');
+		$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\BaseViewHelper');
 		$viewHelper->prepareArguments();
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
 		$expected->addChildNode($dynamicNode);
@@ -136,12 +138,12 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\BaseViewHelper');
+		$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\BaseViewHelper');
 		$viewHelper->prepareArguments();
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
 		$expected->addChildNode($dynamicNode);
 		$expected->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode("\n"));
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\BaseViewHelper');
+		$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\BaseViewHelper');
 		$viewHelper->prepareArguments();
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
 		$expected->addChildNode($dynamicNode);
@@ -204,12 +206,12 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 
 		$expected = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
 
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper');
+		$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper');
 		$viewHelper->prepareArguments();
 		$dynamicNode1 = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, array());
 		$expected->addChildNode($dynamicNode1);
 
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Format\NumberViewHelper');
+		$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Format\NumberViewHelper');
 		$viewHelper->prepareArguments();
 		$arguments = array(
 			'decimals' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('1')
@@ -355,7 +357,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$this->markTestIncomplete('this test need to be fixed');
 
 		$templateParser = new \F3\Fluid\Core\Parser\TemplateParser();
-		$templateParser->injectObjectFactory($this->objectFactory);
+		$templateParser->injectObjectManager($this->objectManager);
 
 		$templateSource = file_get_contents(__DIR__ . '/Fixtures/TemplateParserTestPostParseFixture.html', FILE_TEXT);
 		$templateTree = $templateParser->parse($templateSource)->getRootNode();
@@ -368,7 +370,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfUnregisteredArgumentsExist() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', TRUE),
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', TRUE)
@@ -385,7 +387,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function makeSureThatAbortIfUnregisteredArgumentsExistDoesNotThrowExceptionIfEverythingIsOk() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', TRUE),
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', TRUE)
@@ -402,7 +404,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfRequiredArgumentsAreMissingShouldThrowExceptionIfRequiredArgumentIsMissing() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', TRUE),
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', FALSE)
@@ -418,7 +420,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfRequiredArgumentsAreMissingShouldNotThrowExceptionIfRequiredArgumentIsNotMissing() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$expectedArguments = array(
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name1', 'string', 'desc', FALSE),
 			new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('name2', 'string', 'desc', FALSE)
@@ -442,7 +444,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		);
 		$arguments['arguments']->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\ArrayNode(array('number' => 362525200)));
 
-		$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Format\PrintfViewHelper');
+		$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Format\PrintfViewHelper');
 		$viewHelper->prepareArguments();
 		$dynamicNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($viewHelper, $arguments);
 		$expected->addChildNode($dynamicNode);
@@ -457,7 +459,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function resolveViewHelperNameWorksWithMoreThanOneLevel() {
-		$mockTemplateParser = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\TemplateParser'), array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$actual = $mockTemplateParser->_call('resolveViewHelperName', 'f', 'my.multi.level');
 		$expected = 'F3\Fluid\ViewHelpers\My\Multi\LevelViewHelper';
 		$this->assertEquals($expected, $actual, 'View Helper resolving does not support multiple nesting levels.');

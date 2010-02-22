@@ -31,7 +31,7 @@ namespace F3\Fluid\Core;
 class TagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	public function setUp() {
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\TagBasedViewHelper'), array('dummy'), array(), '', FALSE);
+		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\TagBasedViewHelper', array('dummy'), array(), '', FALSE);
 	}
 
 	/**

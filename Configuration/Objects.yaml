@@ -2,7 +2,7 @@ F3\Fluid\View\Aspect\TemplateViewCachingAspect:
   properties:
     syntaxTreeCache:
       object:
-        factoryClassName: F3\FLOW3\Cache\CacheManager
+        factoryObjectName: F3\FLOW3\Cache\CacheManager
         factoryMethodName: getCache
         arguments:
           1:

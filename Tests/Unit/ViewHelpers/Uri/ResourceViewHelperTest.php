@@ -41,7 +41,7 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	public function setUp() {
 		parent::setUp();
 		$this->mockResourcePublisher = $this->getMock('F3\FLOW3\Resource\Publishing\ResourcePublisher');
-		$this->viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper'), array('renderChildren'), array(), '', FALSE);
+		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->viewHelper->injectResourcePublisher($this->mockResourcePublisher);
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();

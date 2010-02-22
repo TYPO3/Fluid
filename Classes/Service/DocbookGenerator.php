@@ -133,7 +133,7 @@ class DocbookGenerator extends \F3\Fluid\Service\AbstractGenerator {
 	 * @return object
 	 */
 	protected function instanciateViewHelper($className) {
-		return $this->objectManager->getObject($className);
+		return $this->objectManager->get($className);
 	}
 
 	/**

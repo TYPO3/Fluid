@@ -123,12 +123,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			throw new \RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
-		$objectFactory = $this->renderingContext->getObjectFactory();
+		$objectManager = $this->renderingContext->getObjectManager();
 		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
 
 		if ($this->viewHelper === NULL) {
 				// we have been resurrected from the cache
-			$this->viewHelper = $objectFactory->create($this->viewHelperClassName);
+			$this->viewHelper = $objectManager->create($this->viewHelperClassName);
 		}
 
 		$evaluatedArguments = array();
@@ -148,7 +148,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			}
 		}
 
-		$viewHelperArguments = $objectFactory->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
+		$viewHelperArguments = $objectManager->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
 		$this->viewHelper->setArguments($viewHelperArguments);
 		$this->viewHelper->setTemplateVariableContainer($this->renderingContext->getTemplateVariableContainer());
 		if ($this->renderingContext->getControllerContext() !== NULL) {

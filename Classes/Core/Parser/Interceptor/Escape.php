@@ -33,12 +33,12 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Inject object factory
 	 *
-	 * @param \F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
-		$this->objectFactory = $objectFactory;
+	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+		$this->objectManager = $objectManager;
 	}
 
 	/**
@@ -50,9 +50,9 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
 		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
-			$node = $this->objectFactory->create(
+			$node = $this->objectManager->create(
 				'F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
-				$this->objectFactory->create('F3\Fluid\ViewHelpers\EscapeViewHelper'),
+				$this->objectManager->create('F3\Fluid\ViewHelpers\EscapeViewHelper'),
 				array('value' => $node)
 			);
 		}

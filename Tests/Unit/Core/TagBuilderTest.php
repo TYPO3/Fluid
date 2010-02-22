@@ -175,7 +175,7 @@ class TagBuilderTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function resetResetsTagBuilder() {
-		$tagBuilder = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\TagBuilder'), array('dummy'));
+		$tagBuilder = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('dummy'));
 		$tagBuilder->setTagName('tagName');
 		$tagBuilder->setContent('some content');
 		$tagBuilder->forceClosingTag(TRUE);

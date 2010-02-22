@@ -38,11 +38,11 @@ class RenderingContext {
 	protected $templateVariableContainer;
 
 	/**
-	 * Object factory which is bubbled through. The ViewHelperNode cannot get an ObjectFactory injected because
+	 * Object factory which is bubbled through. The ViewHelperNode cannot get an ObjectManager injected because
 	 * the whole syntax tree should be cacheable
-	 * @var F3\FLOW3\Object\ObjectFactoryInterface
+	 * @var F3\FLOW3\Object\ObjectManagerInterface
 	 */
-	protected $objectFactory;
+	protected $objectManager;
 
 	/**
 	 * Controller context being passed to the ViewHelper
@@ -59,21 +59,21 @@ class RenderingContext {
 	/**
 	 * Inject the object factory
 	 *
-	 * @param F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
+	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
-		$this->objectFactory = $objectFactory;
+	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+		$this->objectManager = $objectManager;
 	}
 
 	/**
 	 * Returns the object factory. Only the ViewHelperNode should do this.
 	 *
-	 * @param F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
+	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function getObjectFactory() {
-		return $this->objectFactory;
+	public function getObjectManager() {
+		return $this->objectManager;
 	}
 
 	/**

@@ -161,16 +161,16 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected function buildRenderingContext(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer = NULL) {
 		if ($variableContainer === NULL) {
-			$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->viewData);
+			$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->viewData);
 		}
 
-		$renderingContext = $this->objectFactory->create('F3\Fluid\Core\Rendering\RenderingContext');
+		$renderingContext = $this->objectManager->create('F3\Fluid\Core\Rendering\RenderingContext');
 		$renderingContext->setTemplateVariableContainer($variableContainer);
 		if ($this->controllerContext !== NULL) {
 			$renderingContext->setControllerContext($this->controllerContext);
 		}
 
-		$viewHelperVariableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelperVariableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$viewHelperVariableContainer->setView($this);
 		$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
 
@@ -184,10 +184,10 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function buildParserConfiguration() {
-		$parserConfiguration = $this->objectFactory->create('F3\Fluid\Core\Parser\Configuration');
+		$parserConfiguration = $this->objectManager->create('F3\Fluid\Core\Parser\Configuration');
 		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
-			$parserConfiguration->addValueInterceptor($this->objectManager->getObject('F3\Fluid\Core\Parser\Interceptor\Escape'));
-			$parserConfiguration->addTextInterceptor($this->objectManager->getObject('F3\Fluid\Core\Parser\Interceptor\Resource'));
+			$parserConfiguration->addValueInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Escape'));
+			$parserConfiguration->addTextInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Resource'));
 		}
 		return $parserConfiguration;
 	}
@@ -318,7 +318,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	public function renderPartial($partialName, $sectionToRender, array $variables) {
 		$partial = $this->parseTemplate($this->resolvePartialPathAndFilename($partialName));
-		$variableContainer = $this->objectFactory->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
+		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 		$renderingContext = $this->buildRenderingContext($variableContainer);
 		return $partial->render($renderingContext);
 	}

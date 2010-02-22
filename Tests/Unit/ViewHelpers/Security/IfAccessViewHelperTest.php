@@ -107,7 +107,7 @@ class IfAccessViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockAccessDecisionManager = $this->getMock('F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
 		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource');
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper'), array('dummy'));
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('dummy'));
 		$viewHelper->injectAccessDecisionManager($mockAccessDecisionManager);
 
 		$this->assertTrue($viewHelper->_call('hasAccessToResource', 'myResource'));
@@ -121,7 +121,7 @@ class IfAccessViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockAccessDecisionManager = $this->getMock('F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
 		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource')->will($this->throwException(new \F3\FLOW3\Security\Exception\AccessDeniedException()));
 
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper'), array('dummy'));
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('dummy'));
 		$viewHelper->injectAccessDecisionManager($mockAccessDecisionManager);
 
 		$this->assertFalse($viewHelper->_call('hasAccessToResource', 'myResource'));

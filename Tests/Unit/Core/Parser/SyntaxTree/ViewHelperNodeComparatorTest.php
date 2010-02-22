@@ -38,9 +38,9 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Object factory mock
-	 * @var F3\FLOW3\Object\ObjectFactoryInterface
+	 * @var F3\FLOW3\Object\ObjectManagerInterface
 	 */
-	protected $mockObjectFactory;
+	protected $mockObjectManager;
 
 	/**
 	 * Template Variable Container
@@ -69,15 +69,23 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 */
 	protected $viewHelperNode;
 
+    /**
+	  * Makes getMock() public so that a callback can use it via $that
+	  */
+	public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE) {
+		return parent::getMock($originalClassName, $methods, $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload);
+	}
+
 	/**
 	 * Setup fixture
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function setUp() {
 		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
 
-		$this->mockObjectFactory = $this->getMock('F3\FLOW3\Object\ObjectFactoryInterface');
-		$this->renderingContext->injectObjectFactory($this->mockObjectFactory);
+		$this->mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
+		$this->renderingContext->injectObjectManager($this->mockObjectManager);
 
 		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', array('dummy'));
 		$this->renderingContext->setTemplateVariableContainer($this->templateVariableContainer);
@@ -88,9 +96,24 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->renderingContext->setViewHelperVariableContainer($this->viewHelperVariableContainer);
 
-		$this->templateParser = $this->objectManager->getObject('F3\Fluid\Core\Parser\TemplateParser');
+		$that = $this;
+		$objectManagerCallback = function($objectName) use ($that) {
+			$class = new \ReflectionClass($objectName);
+			if (func_num_args() > 1) {
+				return $class->newInstanceArgs(func_get_args());
+			} else {
+				return $class->newInstance();
+			}
+		};
 
-		$this->viewHelperNode = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode'), array('dummy'), array(), '', FALSE);
+		$templateParserMockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
+		$templateParserMockObjectManager->expects($this->any())->method('create')->will($this->returnCallback($objectManagerCallback));
+		$templateParserMockObjectManager->expects($this->any())->method('get')->will($this->returnCallback($objectManagerCallback));
+
+		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser;
+		$this->templateParser->injectObjectManager($templateParserMockObjectManager);
+
+		$this->viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
 		$this->viewHelperNode->setRenderingContext($this->renderingContext);
 	}
 
@@ -124,7 +147,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function comparingUnequalNumbersReturnsFals() {
+	public function comparingUnequalNumbersReturnsFalse() {
 		$expression = '5==3';
 		$expected = FALSE;
 

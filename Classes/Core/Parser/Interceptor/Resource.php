@@ -56,12 +56,12 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Inject object factory
 	 *
-	 * @param \F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
-		$this->objectFactory = $objectFactory;
+	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+		$this->objectManager = $objectManager;
 	}
 
 	/**
@@ -75,20 +75,20 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
 		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode) {
 			$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->evaluate(), -1, PREG_SPLIT_DELIM_CAPTURE);
-			$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
+			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
 			foreach ($textParts as $part) {
 				$matches = array();
 				if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
 					$arguments = array(
-						'path' => $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
+						'path' => $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
 					);
 					if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
-						$arguments['package'] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
+						$arguments['package'] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
 					}
-					$viewHelper = $this->objectFactory->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
-					$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
+					$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
+					$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
 				} else {
-					$node->addChildNode($this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
+					$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 				}
 			}
 		}

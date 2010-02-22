@@ -100,7 +100,7 @@ class XsdGenerator extends \F3\Fluid\Service\AbstractGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addAttributes($className, \SimpleXMLElement $xsdElement) {
-		$viewHelper = $this->objectManager->getObject($className);
+		$viewHelper = $this->objectManager->get($className);
 		$argumentDefinitions = $viewHelper->prepareArguments();
 
 		foreach ($argumentDefinitions as $argumentDefinition) {

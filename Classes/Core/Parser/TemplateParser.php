@@ -237,9 +237,9 @@ class TemplateParser {
 	);
 
 	/**
-	 * @var \F3\FLOW3\Object\ObjectFactoryInterface
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 */
-	protected $objectFactory;
+	protected $objectManager;
 
 	/**
 	 * @var \F3\Fluid\Core\Parser\Configuration
@@ -259,12 +259,12 @@ class TemplateParser {
 	/**
 	 * Inject object factory
 	 *
-	 * @param \F3\FLOW3\Object\ObjectFactoryInterface $objectFactory
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectObjectFactory(\F3\FLOW3\Object\ObjectFactoryInterface $objectFactory) {
-		$this->objectFactory = $objectFactory;
+	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+		$this->objectManager = $objectManager;
 	}
 
 	/**
@@ -368,8 +368,8 @@ class TemplateParser {
 		$regularExpression_openingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
 		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
 
-		$state = $this->objectFactory->create('F3\Fluid\Core\Parser\ParsingState');
-		$rootNode = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$state = $this->objectManager->create('F3\Fluid\Core\Parser\ParsingState');
+		$rootNode = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
 
@@ -437,12 +437,12 @@ class TemplateParser {
 			throw new \F3\Fluid\Core\Parser\Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
 
-		$viewHelper = $this->objectFactory->create($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
+		$viewHelper = $this->objectManager->create($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
 		$expectedViewHelperArguments = $viewHelper->prepareArguments();
 		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $argumentsObjectTree);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $argumentsObjectTree);
 
-		$currentDynamicNode = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $argumentsObjectTree);
+		$currentDynamicNode = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $argumentsObjectTree);
 
 		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
 
@@ -580,7 +580,7 @@ class TemplateParser {
 
 			// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
-			$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
+			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
 			if ($this->configuration !== NULL) {
 				foreach($this->configuration->getValueInterceptors() as $interceptor) {
 					$node = $interceptor->process($node);
@@ -607,7 +607,7 @@ class TemplateParser {
 	protected function postProcessArgumentsForObjectAccessor(array $arguments) {
 		foreach ($arguments as $argumentName => $argumentValue) {
 			if (!($argumentValue instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode)) {
-				$arguments[$argumentName] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', (string)$argumentValue);
+				$arguments[$argumentName] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', (string)$argumentValue);
 			}
 		}
 		return $arguments;
@@ -652,7 +652,7 @@ class TemplateParser {
 	 */
 	protected function buildArgumentObjectTree($argumentString) {
 		if (strstr($argumentString, '{') === FALSE && strstr($argumentString, '<') === FALSE) {
-			return $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $argumentString);
+			return $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $argumentString);
 		}
 		$splitArgument = $this->splitTemplateAtDynamicTags($argumentString);
 		$rootNode = $this->buildObjectTree($splitArgument)->getRootNode();
@@ -731,7 +731,7 @@ class TemplateParser {
 	 */
 	protected function arrayHandler(\F3\Fluid\Core\Parser\ParsingState $state, $arrayText) {
 		$state->getNodeFromStack()->addChildNode(
-			$this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($arrayText))
+			$this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($arrayText))
 		);
 	}
 
@@ -756,14 +756,14 @@ class TemplateParser {
 			foreach ($matches as $singleMatch) {
 				$arrayKey = $singleMatch['Key'];
 				if (!empty($singleMatch['VariableIdentifier'])) {
-					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $singleMatch['VariableIdentifier']);
+					$arrayToBuild[$arrayKey] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $singleMatch['VariableIdentifier']);
 				} elseif (array_key_exists('Number', $singleMatch) && ( !empty($singleMatch['Number']) || $singleMatch['Number'] === '0' ) ) {
 					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
 				} elseif ( ( array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']) ) ) {
 					$argumentString = $this->unquoteString($singleMatch['QuotedString']);
 					$arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
 				} elseif ( array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
-					$arrayToBuild[$arrayKey] = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($singleMatch['Subarray']));
+					$arrayToBuild[$arrayKey] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ArrayNode', $this->recursiveArrayHandler($singleMatch['Subarray']));
 				} else {
 					throw new \F3\Fluid\Core\Parser\Exception('This exception should never be thrown, as the array value has to be of some type (Value given: "' . var_export($singleMatch, TRUE) . '"). Please post your template to the bugtracker at forge.typo3.org.', 1225136013);
 				}
@@ -784,7 +784,7 @@ class TemplateParser {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function textHandler(\F3\Fluid\Core\Parser\ParsingState $state, $text) {
-		$node = $this->objectFactory->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);
+		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);
 		if ($this->configuration !== NULL) {
 			foreach($this->configuration->getTextInterceptors() as $interceptor) {
 				$node = $interceptor->process($node);

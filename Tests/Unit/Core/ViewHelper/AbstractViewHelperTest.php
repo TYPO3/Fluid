@@ -36,8 +36,10 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function argumentsCanBeRegistered() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render'), array(), '', FALSE);
-		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\ReflectionService'));
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
 
 		$name = "This is a name";
 		$description = "Example desc";
@@ -55,7 +57,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @expectedException F3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function registeringTheSameArgumentNameAgainThrowsException() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
 
 		$name = "shortName";
 		$description = "Example desc";
@@ -71,8 +73,10 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function prepareArgumentsCallsInitializeArguments() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'initializeArguments'), array(), '', FALSE);
-		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\ReflectionService'));
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'initializeArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array()));
 		$viewHelper->expects($this->once())->method('initializeArguments');
@@ -143,8 +147,10 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function validateArgumentsCallsPrepareArguments() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\ReflectionService'));
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array()));
 		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array()));
@@ -157,7 +163,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function validateArgumentsAcceptsAllObjectsImplemtingArrayAccessAsAnArray() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('test' => new \ArrayObject)));
 		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array('test' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('test', 'array', FALSE, 'documentation'))));
@@ -169,8 +175,10 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function validateArgumentsCallsTheRightValidators() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\ReflectionService'));
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('test' => 'Value of argument')));
 
@@ -187,8 +195,10 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @expectedException \RuntimeException
 	 */
 	public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong() {
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
-		$viewHelper->injectReflectionService($this->objectManager->getObject('F3\FLOW3\Reflection\ReflectionService'));
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
 
 		$viewHelper->setArguments(new \F3\Fluid\Core\ViewHelper\Arguments(array('test' => "test")));
 
@@ -206,7 +216,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function setControllerContextSetsTheControllerContext() {
 		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE);
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);
 
 		$viewHelper->setControllerContext($controllerContext);
 		$this->assertSame($viewHelper->_get('controllerContext'), $controllerContext);
@@ -218,7 +228,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function setViewHelperVariableContainerSetsTheViewHelperVariableContainer() {
 		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$viewHelper = $this->getMock($this->buildAccessibleProxy('F3\Fluid\Core\ViewHelper\AbstractViewHelper'), array('render', 'prepareArguments'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);
 
 		$viewHelper->setViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
