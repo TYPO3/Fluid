@@ -289,7 +289,7 @@ class TemplateParser {
 	public function parse($templateString) {
 		if (!is_string($templateString)) throw new \F3\Fluid\Core\Parser\Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
 
-		$this->initialize();
+		$this->reset();
 
 		$templateString = $this->extractNamespaceDefinitions($templateString);
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
@@ -314,7 +314,7 @@ class TemplateParser {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function initialize() {
+	protected function reset() {
 		$this->namespaces = array(
 			'f' => 'F3\Fluid\ViewHelpers'
 		);
@@ -378,17 +378,9 @@ class TemplateParser {
 			if (preg_match(self::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->textHandler($state, $matchedVariables[1]);
 			} elseif (preg_match($regularExpression_openingViewHelperTag, $templateElement, $matchedVariables) > 0) {
-				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
-				$methodIdentifier = $matchedVariables['MethodIdentifier'];
-				$selfclosing = $matchedVariables['Selfclosing'] === '' ? FALSE : TRUE;
-				$arguments = $matchedVariables['Attributes'];
-
-				$this->openingViewHelperTagHandler($state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing);
+				$this->openingViewHelperTagHandler($state, $matchedVariables['NamespaceIdentifier'], $matchedVariables['MethodIdentifier'], $matchedVariables['Attributes'], ($matchedVariables['Selfclosing'] === '' ? FALSE : TRUE));
 			} elseif (preg_match($regularExpression_closingViewHelperTag, $templateElement, $matchedVariables) > 0) {
-				$namespaceIdentifier = $matchedVariables['NamespaceIdentifier'];
-				$methodIdentifier = $matchedVariables['MethodIdentifier'];
-
-				$this->closingViewHelperTagHandler($state, $namespaceIdentifier, $methodIdentifier);
+				$this->closingViewHelperTagHandler($state, $matchedVariables['NamespaceIdentifier'], $matchedVariables['MethodIdentifier']);
 			} else {
 				$this->textAndShorthandSyntaxHandler($state, $templateElement);
 			}
@@ -455,11 +447,12 @@ class TemplateParser {
 	}
 
 	/**
-	 * Throw a ParsingException if there are arguments which were not registered
+	 * Throw an exception if there are arguments which were not registered
 	 * before.
 	 *
 	 * @param array $expectedArguments Array of F3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
+	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function abortIfUnregisteredArgumentsExist($expectedArguments, $actualArguments) {
@@ -476,10 +469,11 @@ class TemplateParser {
 	}
 
 	/**
-	 * Throw a ParsingException if required arguments are missing
+	 * Throw an exception if required arguments are missing
 	 *
 	 * @param array $expectedArguments Array of F3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
+	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments) {
@@ -545,6 +539,9 @@ class TemplateParser {
 	 *
 	 * @param \F3\Fluid\Core\Parser\ParsingState $state The current parsing state
 	 * @param string $objectAccessorString String which identifies which objects to fetch
+	 * @param string $delimiter
+	 * @param string $viewHelperString
+	 * @param string $additionalViewHelpersString
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -563,17 +560,15 @@ class TemplateParser {
 		$matches = array();
 		if (strlen($viewHelperString) > 0 && preg_match_all(self::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
 				// The last ViewHelper has to be added first for correct chaining.
-			$matches = array_reverse($matches);
-			foreach ($matches as $singleMatch) {
-				$namespaceIdentifier = $singleMatch['NamespaceIdentifier'];
-				$methodIdentifier = $singleMatch['MethodIdentifier'];
+			foreach (array_reverse($matches) as $singleMatch) {
 				if (strlen($singleMatch['ViewHelperArguments']) > 0) {
-					$arguments = $this->recursiveArrayHandler($singleMatch['ViewHelperArguments']);
-					$arguments = $this->postProcessArgumentsForObjectAccessor($arguments);
+					$arguments = $this->postProcessArgumentsForObjectAccessor(
+						$this->recursiveArrayHandler($singleMatch['ViewHelperArguments'])
+					);
 				} else {
 					$arguments = array();
 				}
-				$this->initializeViewHelperAndAddItToStack($state, $namespaceIdentifier, $methodIdentifier, $arguments);
+				$this->initializeViewHelperAndAddItToStack($state, $singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier'], $arguments);
 				$numberOfViewHelpers++;
 			}
 		}
@@ -597,7 +592,7 @@ class TemplateParser {
 
 	/**
 	 * Post process the arguments for the ViewHelpers in the object accessor
-	 * syntax. We need to convert an array into an array of ViewHelper Nodes
+	 * syntax. We need to convert an array into an array of (only) nodes
 	 *
 	 * @param array $arguments The arguments to be processed
 	 * @return array the processed array
@@ -675,8 +670,8 @@ class TemplateParser {
 			case '"':
 				$value = str_replace('\"', '"', trim($quotedValue, '"'));
 			break;
-			case '\'':
-				$value = str_replace('\\\'', '\'', trim($quotedValue, '\''));
+			case "'":
+				$value = str_replace("\'", "'", trim($quotedValue, "'"));
 			break;
 		}
 		return str_replace('\\\\', '\\', $value);
