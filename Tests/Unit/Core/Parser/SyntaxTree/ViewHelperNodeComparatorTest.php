@@ -23,195 +23,63 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * Testcase for [insert classname here]
+ * Testcase for ViewHelperNode's evaluateBooleanExpression()
  *
- * @version $Id: ViewHelperNodeTest.php 2411 2009-05-26 22:00:04Z sebastian $
+ * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
-
-	/**
-	 * Rendering Context
-	 * @var F3\Fluid\Core\Rendering\RenderingContext
-	 */
-	protected $renderingContext;
-
-	/**
-	 * Object factory mock
-	 * @var F3\FLOW3\Object\ObjectManagerInterface
-	 */
-	protected $mockObjectManager;
-
-	/**
-	 * Template Variable Container
-	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
-	 */
-	protected $templateVariableContainer;
-
-	/**
-	 *
-	 * @var F3\FLOW3\MVC\Controller\Context
-	 */
-	protected $controllerContext;
-
-	/**
-	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
-	 */
-	protected $viewHelperVariableContainer;
-
-	/**
-	 * @var F3\Fluid\Core\Parser\TemplateParser
-	 */
-	protected $templateParser;
 
 	/**
 	 * @var F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 	 */
 	protected $viewHelperNode;
 
-    /**
-	  * Makes getMock() public so that a callback can use it via $that
-	  */
-	public function getMock($originalClassName, $methods = array(), array $arguments = array(), $mockClassName = '', $callOriginalConstructor = TRUE, $callOriginalClone = TRUE, $callAutoload = TRUE) {
-		return parent::getMock($originalClassName, $methods, $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload);
-	}
-
 	/**
 	 * Setup fixture
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setUp() {
-		$this->renderingContext = new \F3\Fluid\Core\Rendering\RenderingContext();
-
-		$this->mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
-		$this->renderingContext->injectObjectManager($this->mockObjectManager);
-
-		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', array('dummy'));
-		$this->renderingContext->setTemplateVariableContainer($this->templateVariableContainer);
-
-		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\Context', array(), array(), '', FALSE);
-		$this->renderingContext->setControllerContext($this->controllerContext);
-
-		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$this->renderingContext->setViewHelperVariableContainer($this->viewHelperVariableContainer);
-
-		$that = $this;
-		$objectManagerCallback = function($objectName) use ($that) {
-			$class = new \ReflectionClass($objectName);
-			if (func_num_args() > 1) {
-				return $class->newInstanceArgs(func_get_args());
-			} else {
-				return $class->newInstance();
-			}
-		};
-
-		$templateParserMockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
-		$templateParserMockObjectManager->expects($this->any())->method('create')->will($this->returnCallback($objectManagerCallback));
-		$templateParserMockObjectManager->expects($this->any())->method('get')->will($this->returnCallback($objectManagerCallback));
-
-		$this->templateParser = new \F3\Fluid\Core\Parser\TemplateParser;
-		$this->templateParser->injectObjectManager($templateParserMockObjectManager);
-
 		$this->viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-		$this->viewHelperNode->setRenderingContext($this->renderingContext);
+		$this->viewHelperNode->setRenderingContext(new \F3\Fluid\Core\Rendering\RenderingContext());
 	}
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @expectedException \RuntimeException
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {
+		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$rootNode->expects($this->once())->method('getChildNodes')->will($this->returnValue(array(1,2,3,4)));
+
+		$this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode);
+	}
+
+	/**
+	 * @test
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function comparingEqualNumbersReturnsTrue() {
-		$expression = '5==5';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function comparingEqualNumbersWithSpacesReturnsTrue() {
-		$expression = '   5 ==5';
-		$expected = TRUE;
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function comparingUnequalNumbersReturnsFalse() {
-		$expression = '5==3';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function comparingEqualObjectsWithSpacesReturnsTrue() {
-		$expression = '{value1} =={value2}';
-		$expected = TRUE;
-		$this->templateVariableContainer->add('value1', 'Hello everybody');
-		$this->templateVariableContainer->add('value2', 'Hello everybody');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function comparingUnequalObjectsWithSpacesReturnsFalse() {
-		$expression = '{value1} =={value2}';
-		$expected = FALSE;
-		$this->templateVariableContainer->add('value1', 'Hello everybody');
-		$this->templateVariableContainer->add('value2', 'Hello nobody');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function comparingEqualNumberStoredInVariableWithNumberReturnsTrue() {
-		$expression = '{value1} ==42';
-		$expected = TRUE;
-		$this->templateVariableContainer->add('value1', '42');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function comparingUnequalNumberStoredInVariableWithNumberReturnsFalse() {
-		$expression = '{value1} ==42';
-		$expected = FALSE;
-		$this->templateVariableContainer->add('value1', '41');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -219,12 +87,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function notEqualReturnsFalseIfNumbersAreEqual() {
-		$expression = '5!=5';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -232,70 +100,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function notEqualReturnsTrueIfNumbersAreNotEqual() {
-		$expression = '5!=3';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function notEqualReturnsFalseForTwoObjectsWithEqualValues() {
-		$expression = '{value1} !={value2}';
-		$expected = FALSE;
-		$this->templateVariableContainer->add('value1', 'Hello everybody');
-		$this->templateVariableContainer->add('value2', 'Hello everybody');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function notEqualReturnsTrueForTwoObjectsWithUnequalValues() {
-		$expression = '{value1} !={value2}';
-		$expected = TRUE;
-		$this->templateVariableContainer->add('value1', 'Hello everybody');
-		$this->templateVariableContainer->add('value2', 'Hello nobody');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function notEqualReturnsFalseForOneObjectAndOneNumberWithEqualValues() {
-		$expression = '{value1} !=42';
-		$expected = FALSE;
-		$this->templateVariableContainer->add('value1', '42');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function notEqualReturnsTrueForOneObjectAndOneNumberWithUnequalValues() {
-		$expression = '{value1} !=42';
-		$expected = TRUE;
-		$this->templateVariableContainer->add('value1', '41');
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -303,12 +113,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function oddNumberModulo2ReturnsTrue() {
-		$expression = '43 % 2';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('43'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -316,12 +126,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evenNumberModulo2ReturnsFalse() {
-		$expression = '42 % 2';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('42'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -329,12 +139,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterThanReturnsTrueIfNumberIsReallyGreater() {
-		$expression = '10 > 9';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -342,12 +152,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterThanReturnsFalseIfNumberIsEqual() {
-		$expression = '10 > 10';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -355,12 +165,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater() {
-		$expression = '10 >= 9';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -368,12 +178,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnsTrueIfNumberIsEqual() {
-		$expression = '10 >= 10';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -381,12 +191,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnFalseIfNumberIsSmaller() {
-		$expression = '10 >= 11';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -394,12 +204,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessThanReturnsTrueIfNumberIsReallyless() {
-		$expression = '9 < 10';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -407,12 +217,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessThanReturnsFalseIfNumberIsEqual() {
-		$expression = '10 < 10';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -420,12 +230,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnsTrueIfNumberIsReallyLess() {
-		$expression = '9 <= 10';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -433,12 +243,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnsTrueIfNumberIsEqual() {
-		$expression = '10 <= 10';
-		$expected = TRUE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 	/**
@@ -446,24 +256,12 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnFalseIfNumberIsBigger() {
-		$expression = '11 <= 10';
-		$expected = FALSE;
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$result = $this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
-		$this->assertEquals($expected, $result);
-	}
-
-	/**
-	 * @test
-	 * @expectedException \RuntimeException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {
-		$expression = '   5 ==5 {blubb} {bla} {blu}';
-
-		$parsedTemplate = $this->templateParser->parse($expression);
-		$this->viewHelperNode->_call('evaluateBooleanExpression', $parsedTemplate->getRootNode());
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
 	}
 
 }

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Fixtures;
+namespace F3\Fluid\Core\Parser\Fixtures;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
