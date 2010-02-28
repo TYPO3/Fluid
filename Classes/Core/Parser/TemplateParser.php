@@ -120,7 +120,7 @@ class TemplateParser {
 	public static $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
 		^{                                                      # Start of shorthand syntax
 			                                                 # A shorthand syntax is either...
-			(?P<Object>[a-zA-Z0-9\-_.]*)                                     # ... an object accessor
+			(?P<Object>@?[a-zA-Z0-9\-_.]*)                                     # ... an object accessor
 			\s*(?P<Delimiter>(?:->)?)\s*
 
 			(?P<ViewHelper>                                 # ... a ViewHelper
@@ -575,11 +575,15 @@ class TemplateParser {
 
 			// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
-			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
-			if ($this->configuration !== NULL) {
-				foreach($this->configuration->getValueInterceptors() as $interceptor) {
-					$node = $interceptor->process($node);
+			if ($objectAccessorString[0] !== '@') {
+				$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
+				if ($this->configuration !== NULL) {
+					foreach($this->configuration->getValueInterceptors() as $interceptor) {
+						$node = $interceptor->process($node);
+					}
 				}
+			} else {
+				$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', substr($objectAccessorString, 1));
 			}
 			$state->getNodeFromStack()->addChildNode($node);
 		}

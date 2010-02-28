@@ -474,7 +474,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function valuesFromObjectAccessorsAreRunThroughValueInterceptors() {
+	public function valuesFromObjectAccessorsAreRunThroughValueInterceptorsByDefault() {
 		$objectAccessorNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
 		$objectAccessorNodeInterceptor = $this->getMock('F3\Fluid\Core\Parser\InterceptorInterface');
 		$objectAccessorNodeInterceptor->expects($this->once())->method('process')->with($objectAccessorNode)->will($this->returnArgument(0));
@@ -494,6 +494,30 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$templateParser->_set('configuration', $parserConfiguration);
 
 		$templateParser->_call('objectAccessorHandler', $mockState, 'objectAccessorString', '', '', '');
+	}
+
+	/**
+	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function valuesFromObjectAccessorsAreNotRunThroughValueInterceptorsIfPathIsPrependedWithAtSign() {
+		$objectAccessorNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
+
+		$parserConfiguration = $this->getMock('F3\Fluid\Core\Parser\Configuration');
+		$parserConfiguration->expects($this->never())->method('getValueInterceptors');
+
+		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
+		$mockObjectManager->expects($this->once())->method('create')->will($this->returnValue($objectAccessorNode));
+
+		$mockNodeOnStack = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array(), array(), '', FALSE);
+		$mockState = $this->getMock('F3\Fluid\Core\Parser\ParsingState');
+		$mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
+
+		$templateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->injectObjectManager($mockObjectManager);
+		$templateParser->_set('configuration', $parserConfiguration);
+
+		$templateParser->_call('objectAccessorHandler', $mockState, '@objectAccessorString', '', '', '');
 	}
 
 	/**
