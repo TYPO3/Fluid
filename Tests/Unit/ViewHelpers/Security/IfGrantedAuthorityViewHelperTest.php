@@ -38,11 +38,8 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(TRUE));
 
-		$mockSecurityContextHolder = $this->getMock('F3\FLOW3\Security\ContextHolderInterface', array(), array(), '', FALSE);
-		$mockSecurityContextHolder->expects($this->once())->method('getContext')->will($this->returnValue($mockSecurityContext));
-
 		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('renderChildren', 'hasAccessToResource'));
-		$mockViewHelper->injectSecurityContextHolder($mockSecurityContextHolder);
+		$mockViewHelper->injectSecurityContext($mockSecurityContext);
 		$mockViewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
 
 		$actualResult = $mockViewHelper->render('someGA');
@@ -64,11 +61,8 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(TRUE));
 
-		$mockSecurityContextHolder = $this->getMock('F3\FLOW3\Security\ContextHolderInterface', array(), array(), '', FALSE);
-		$mockSecurityContextHolder->expects($this->once())->method('getContext')->will($this->returnValue($mockSecurityContext));
-
 		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('dummy'));
-		$viewHelper->injectSecurityContextHolder($mockSecurityContextHolder);
+		$viewHelper->injectSecurityContext($mockSecurityContext);
 
 		$viewHelper->setChildNodes(array($mockThenViewHelperNode));
 		$viewHelper->setRenderingContext($renderingContext);
@@ -85,11 +79,8 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(FALSE));
 
-		$mockSecurityContextHolder = $this->getMock('F3\FLOW3\Security\ContextHolderInterface', array(), array(), '', FALSE);
-		$mockSecurityContextHolder->expects($this->once())->method('getContext')->will($this->returnValue($mockSecurityContext));
-
 		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('dummy'));
-		$viewHelper->injectSecurityContextHolder($mockSecurityContextHolder);
+		$viewHelper->injectSecurityContext($mockSecurityContext);
 
 		$actualResult = $viewHelper->render('someGA');
 		$this->assertEquals('', $actualResult);
@@ -110,11 +101,8 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(FALSE));
 
-		$mockSecurityContextHolder = $this->getMock('F3\FLOW3\Security\ContextHolderInterface', array(), array(), '', FALSE);
-		$mockSecurityContextHolder->expects($this->once())->method('getContext')->will($this->returnValue($mockSecurityContext));
-
 		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('dummy'));
-		$viewHelper->injectSecurityContextHolder($mockSecurityContextHolder);
+		$viewHelper->injectSecurityContext($mockSecurityContext);
 
 		$viewHelper->setChildNodes(array($mockElseViewHelperNode));
 		$viewHelper->setRenderingContext($this->getMock('F3\Fluid\Core\Rendering\RenderingContext'));

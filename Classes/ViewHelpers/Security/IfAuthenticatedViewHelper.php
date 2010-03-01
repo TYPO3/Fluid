@@ -70,19 +70,19 @@ class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHe
 	protected $renderingContext;
 
 	/**
-	 * @var F3\FLOW3\Security\ContextHolderInterface
+	 * @var F3\FLOW3\Security\Context
 	 */
-	protected $securityContextHolder;
+	protected $securityContext;
 
 	/**
-	 * Injects the Security Context Holder
+	 * Injects the Security Context
 	 *
-	 * @param F3\FLOW3\Security\ContextHolderInterface $securityContextHolder
+	 * @param F3\FLOW3\Security\Context $securityContext
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectSecurityContextHolder(\F3\FLOW3\Security\ContextHolderInterface $securityContextHolder) {
-		$this->securityContextHolder = $securityContextHolder;
+	public function injectSecurityContext(\F3\FLOW3\Security\Context $securityContext) {
+		$this->securityContext = $securityContext;
 	}
 
 	/**
@@ -116,7 +116,7 @@ class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHe
 	 * @api
 	 */
 	public function render() {
-		$activeTokens = $this->securityContextHolder->getContext()->getAuthenticationTokens();
+		$activeTokens = $this->securityContext->getAuthenticationTokens();
 		foreach ($activeTokens as $token) {
 			if ($token->isAuthenticated()) {
 				return $this->renderThenChild();

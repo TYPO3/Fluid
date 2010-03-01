@@ -98,14 +98,14 @@ class IfHasRoleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper i
 	}
 
 	/**
-	 * Injects the security context holder and fetches the security context from it
+	 * Injects the security context
 	 *
-	 * @param \F3\FLOW3\Security\ContextHolderInterface $securityContextHolder The security context holder
+	 * @param \F3\FLOW3\Security\Context $securityContext The security context
 	 * @return void
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
-	public function injectSecurityContextHolder(\F3\FLOW3\Security\ContextHolderInterface $securityContextHolder) {
-		$this->securityContext = $securityContextHolder->getContext();
+	public function injectSecurityContext(\F3\FLOW3\Security\Context $securityContext) {
+		$this->securityContext = $securityContext;
 	}
 
 	/**
