@@ -205,7 +205,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function selectOnDomainObjectsCreatesExpectedOptions() {
-		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
+		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\Backend\BackendInterface');
 		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
@@ -342,7 +342,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function selectOnDomainObjectsThrowsExceptionIfNoValueCanBeFound() {
-		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\BackendInterface');
+		$mockPersistenceBackend = $this->getMock('F3\FLOW3\Persistence\Backend\BackendInterface');
 		$mockPersistenceBackend->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 
 		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
