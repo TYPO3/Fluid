@@ -119,8 +119,8 @@ class TemplateParser {
 	 */
 	public static $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
 		^{                                                      # Start of shorthand syntax
-			                                                 # A shorthand syntax is either...
-			(?P<Object>@?[a-zA-Z0-9\-_.]*)                                     # ... an object accessor
+			                                                # A shorthand syntax is either...
+			(?P<Object>[a-zA-Z0-9\-_.]*)                                     # ... an object accessor
 			\s*(?P<Delimiter>(?:->)?)\s*
 
 			(?P<ViewHelper>                                 # ... a ViewHelper
@@ -158,7 +158,7 @@ class TemplateParser {
 	 */
 	public static $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
 
-		(?P<NamespaceIdentifier>[a-zA-Z0-9]+)                               # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
+		(?P<NamespaceIdentifier>[a-zA-Z0-9]+)       # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
 		:
 		(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)
 		\(                                          # Opening parameter brackets of ViewHelper
@@ -575,16 +575,14 @@ class TemplateParser {
 
 			// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
-			if ($objectAccessorString[0] !== '@') {
-				$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
-				if ($this->configuration !== NULL) {
-					foreach($this->configuration->getValueInterceptors() as $interceptor) {
-						$node = $interceptor->process($node);
-					}
+			
+			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
+			if ($this->configuration !== NULL) {
+				foreach($this->configuration->getValueInterceptors() as $interceptor) {
+					$node = $interceptor->process($node);
 				}
-			} else {
-				$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', substr($objectAccessorString, 1));
 			}
+
 			$state->getNodeFromStack()->addChildNode($node);
 		}
 
@@ -785,6 +783,10 @@ class TemplateParser {
 	protected function textHandler(\F3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);
 		if ($this->configuration !== NULL) {
+			// $this->configuration is UNSET inside the arguments of a ViewHelper.
+			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
+			// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
+			// TODO: Clean up this.
 			foreach($this->configuration->getTextInterceptors() as $interceptor) {
 				$node = $interceptor->process($node);
 			}
