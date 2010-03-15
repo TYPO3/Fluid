@@ -33,8 +33,35 @@ class ResourceTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 */
-	public function foo() {
-		$this->markTestIncomplete();
+	public function resourcesInCssUrlsAreReplacedCorrectly() {
+		$mockDummyNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface');
+		$mockPathNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface');
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperInterface');
+
+		$originalText1 = '<style type="text/css">
+			#loginscreen {
+				height: 768px;
+				background-image: url(';
+		$originalText2 = '../../../../Public/Backend/Media/Images/Login/MockLoginScreen.png';
+		$path = 'Backend/Media/Images/Login/MockLoginScreen.png';
+		$originalText3 = ')
+				background-repeat: no-repeat;
+			}';
+		$originalText = $originalText1 . $originalText2 . $originalText3;
+		$mockTextNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\TextNode', array('evaluateChildNodes'), array($originalText));
+		$this->assertEquals($originalText, $mockTextNode->evaluate());
+		
+		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
+		$mockObjectManager->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '')->will($this->returnValue($mockDummyNode));
+		$mockObjectManager->expects($this->at(1))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $originalText1)->will($this->returnValue($mockDummyNode));
+		$mockObjectManager->expects($this->at(2))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $path)->will($this->returnValue($mockPathNode));
+		$mockObjectManager->expects($this->at(3))->method('create')->with('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper')->will($this->returnValue($mockViewHelper));
+		$mockObjectManager->expects($this->at(4))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $mockViewHelper, array('path' => $mockPathNode))->will($this->returnValue($mockDummyNode));
+		$mockObjectManager->expects($this->at(5))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $originalText3)->will($this->returnValue($mockDummyNode));
+
+		$interceptor = new \F3\Fluid\Core\Parser\Interceptor\Resource();
+		$interceptor->injectObjectManager($mockObjectManager);
+		$interceptor->process($mockTextNode);
 	}
 
 }

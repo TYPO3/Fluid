@@ -44,7 +44,7 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * Split a text at what seems to be a package resource URI
 	 * @var string
 	 */
-	const PATTERN_SPLIT_AT_RESOURCE_URIS = '!((?:(?:../)|(?:[^"]+/))*Public/[^"]+)!';
+	const PATTERN_SPLIT_AT_RESOURCE_URIS = '!((?:(?:../)|(?:[^"\'(]+/))*Public/[^"\')]+)!';
 
 	/**
 	 * Is the text at hand a resource URI and what are path/package?
