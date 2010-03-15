@@ -135,7 +135,7 @@ abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractView
 		$this->registerTagAttribute('title', 'string', 'Tooltip text of element');
 		$this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
 		$this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
-		$this->registerTagAttribute('onClick', 'string', 'JavaScript evaluated for the onClick event');
+		$this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
 	}
 }
 ?>
