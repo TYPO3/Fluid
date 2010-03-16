@@ -33,7 +33,7 @@ namespace F3\Fluid\ViewHelpers;
  * <f:base />
  * </code>
  * <output>
- * <base href="http://yourdomain.tld/"></base>
+ * <base href="http://yourdomain.tld/" />
  * (depending on your domain)
  * </output>
  *
@@ -55,7 +55,7 @@ class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @api
 	 */
 	public function render() {
-		return '<base href="' . $this->controllerContext->getRequest()->getBaseUri() . '"></base>';
+		return '<base href="' . $this->controllerContext->getRequest()->getBaseUri() . '" />';
 	}
 }
 
