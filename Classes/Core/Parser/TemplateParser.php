@@ -441,7 +441,9 @@ class TemplateParser {
 
 			// PostParse Facet
 		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface) {
-			$viewHelper::postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
+			// Don't just use $viewHelper::postParseEvent(...),
+			// as this will break with PHP < 5.3.
+			call_user_func(array($viewHelper, 'postParseEvent'), $currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 
 		$this->callInterceptor($currentDynamicNode, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
