@@ -85,6 +85,14 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	private $reflectionService;
 
 	/**
+	 * With this flag, you can disable the escaping interceptor inside this ViewHelper.
+	 * THIS MIGHT CHANGE WITHOUT NOTICE, NO PUBLIC API!
+	 * @var boolean
+	 * @internal
+	 */
+	protected $escapingInterceptorEnabled = TRUE;
+
+	/**
 	 * @param \F3\Fluid\Core\ViewHelper\Arguments $arguments
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
@@ -127,6 +135,18 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 */
 	public function injectReflectionService(\F3\FLOW3\Reflection\ReflectionService $reflectionService) {
 		$this->reflectionService = $reflectionService;
+	}
+
+	/**
+	 * Returns whether the escaping interceptor should be disabled or enabled inside the tags contents.
+	 *
+	 * THIS METHOD MIGHT CHANGE WITHOUT NOTICE; NO PUBLIC API!
+	 *
+	 * @internal
+	 * @return boolean
+	 */
+	public function isEscapingInterceptorEnabled() {
+		return $this->escapingInterceptorEnabled;
 	}
 
 	/**

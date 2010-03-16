@@ -408,7 +408,8 @@ class TemplateParser {
 		$this->initializeViewHelperAndAddItToStack($state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree);
 
 		if ($selfclosing) {
-			$state->popNodeFromStack();
+			$node = $state->popNodeFromStack();
+			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
 		}
 	}
 
@@ -442,6 +443,8 @@ class TemplateParser {
 		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface) {
 			$viewHelper::postParseEvent($currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
+
+		$this->callInterceptor($currentDynamicNode, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
 
 		$state->pushNodeToStack($currentDynamicNode);
 	}
@@ -529,6 +532,7 @@ class TemplateParser {
 		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier)) {
 			throw new \F3\Fluid\Core\Parser\Exception('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier), 1224485398);
 		}
+		$this->callInterceptor($lastStackElement, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
 	}
 
 	/**
@@ -577,18 +581,38 @@ class TemplateParser {
 		if (strlen($objectAccessorString) > 0) {
 			
 			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
-			if ($this->configuration !== NULL) {
-				foreach($this->configuration->getValueInterceptors() as $interceptor) {
-					$node = $interceptor->process($node);
-				}
-			}
+			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
 
 			$state->getNodeFromStack()->addChildNode($node);
 		}
 
 			// Close ViewHelper Tags if needed.
 		for ($i=0; $i<$numberOfViewHelpers; $i++) {
-			$state->popNodeFromStack();
+			$node = $state->popNodeFromStack();
+			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
+		}
+	}
+
+	/**
+	 * Call all interceptors registered for a given interception point.
+	 *
+	 * @param F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node The syntax tree node which can be modified by the interceptors.
+	 * @param int the interception point. One of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function callInterceptor(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint) {
+		if ($this->configuration !== NULL) {
+			// $this->configuration is UNSET inside the arguments of a ViewHelper.
+			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
+			// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
+			// TODO: Clean up this.
+			$interceptors = $this->configuration->getInterceptors($interceptionPoint);
+			if (count($interceptors) > 0) {
+				foreach($interceptors as $interceptor) {
+					$node = $interceptor->process($node, $interceptionPoint);
+				}
+			}
 		}
 	}
 
@@ -782,15 +806,8 @@ class TemplateParser {
 	 */
 	protected function textHandler(\F3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);
-		if ($this->configuration !== NULL) {
-			// $this->configuration is UNSET inside the arguments of a ViewHelper.
-			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
-			// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
-			// TODO: Clean up this.
-			foreach($this->configuration->getTextInterceptors() as $interceptor) {
-				$node = $interceptor->process($node);
-			}
-		}
+		$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT);
+		
 		$state->getNodeFromStack()->addChildNode($node);
 	}
 

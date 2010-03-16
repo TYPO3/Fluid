@@ -69,10 +69,11 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * ViewHelperNode instances using the ResourceViewHelper.
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param int One of the INTERCEPT_* constants for the current interception point
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node) {
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
 		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode) {
 			$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->evaluate(), -1, PREG_SPLIT_DELIM_CAPTURE);
 			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
@@ -94,6 +95,17 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 		}
 
 		return $node;
+	}
+
+	/**
+	 * This interceptor wants to hook into text nodes.
+	 *
+	 * @return array Array of INTERCEPT_* constants
+	 */
+	public function getInterceptionPoints() {
+		return array(
+			\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT
+		);
 	}
 }
 ?>

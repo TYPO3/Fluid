@@ -39,7 +39,7 @@ class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelper = new \F3\Fluid\ViewHelpers\BaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$expectedResult = '<base href="' . $baseUri . '" />';
+		$expectedResult = '<base href="' . $baseUri . '"></base>';
 		$actualResult = $viewHelper->render();
 		$this->assertSame($expectedResult, $actualResult);
 	}

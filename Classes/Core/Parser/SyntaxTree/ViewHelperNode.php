@@ -94,6 +94,16 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
+	 * Returns the attached ViewHelper for this ViewHelperNode.
+	 * We need this method because sometimes Interceptors need to ask some information from the ViewHelper.
+	 *
+	 * @return \F3\Fluid\Core\ViewHelper\AbstractViewHelper the attached ViewHelper, if it is initialized
+	 */
+	public function getViewHelper() {
+		return $this->viewHelper;
+	}
+
+	/**
 	 * Get class name of view helper
 	 *
 	 * @return string Class Name of associated view helper

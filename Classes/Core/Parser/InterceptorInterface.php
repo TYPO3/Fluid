@@ -31,14 +31,26 @@ namespace F3\Fluid\Core\Parser;
  */
 interface InterceptorInterface {
 
+	const INTERCEPT_OPENING_VIEWHELPER = 1;
+	const INTERCEPT_CLOSING_VIEWHELPER = 2;
+	const INTERCEPT_TEXT = 3;
+	const INTERCEPT_OBJECTACCESSOR = 4;
+
 	/**
 	 * The interceptor can process the given node at will and must return a node
 	 * that will be used in place of the given node.
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param int One of the INTERCEPT_* constants for the current interception point
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node);
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition);
 
+	/**
+	 * The interceptor should define at which interception positions it wants to be called.
+	 *
+	 * @return array Array of INTERCEPT_* constants
+	 */
+	public function getInterceptionPoints();
 }
 ?>

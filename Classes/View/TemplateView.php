@@ -186,8 +186,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	protected function buildParserConfiguration() {
 		$parserConfiguration = $this->objectManager->create('F3\Fluid\Core\Parser\Configuration');
 		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
-			$parserConfiguration->addValueInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Escape'));
-			$parserConfiguration->addTextInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Resource'));
+			$parserConfiguration->addInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Escape'));
+			$parserConfiguration->addInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Resource'));
 		}
 		return $parserConfiguration;
 	}

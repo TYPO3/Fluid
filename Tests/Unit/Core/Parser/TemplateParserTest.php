@@ -250,7 +250,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function openingViewHelperTagHandlerPopsNodeFromStackForSelfClosingTags() {
 		$mockState = $this->getMock('F3\Fluid\Core\Parser\ParsingState');
-		$mockState->expects($this->once())->method('popNodeFromStack');
+		$mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface')));
 
 		$templateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('parseArguments', 'initializeViewHelperAndAddItToStack'));
 
@@ -438,7 +438,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function objectAccessorHandlerCallsInitializeViewHelperAndAddItToStackIfViewHelperSyntaxIsPresent() {
 		$mockState = $this->getMock('F3\Fluid\Core\Parser\ParsingState');
-		$mockState->expects($this->exactly(2))->method('popNodeFromStack');
+		$mockState->expects($this->exactly(2))->method('popNodeFromStack')->will($this->returnValue($this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface')));
 
 		$templateParser = $this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array('recursiveArrayHandler', 'postProcessArgumentsForObjectAccessor', 'initializeViewHelperAndAddItToStack'));
 		$templateParser->expects($this->at(0))->method('recursiveArrayHandler')->with('format: "H:i"')->will($this->returnValue(array('format' => 'H:i')));
@@ -480,7 +480,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$objectAccessorNodeInterceptor->expects($this->once())->method('process')->with($objectAccessorNode)->will($this->returnArgument(0));
 
 		$parserConfiguration = $this->getMock('F3\Fluid\Core\Parser\Configuration');
-		$parserConfiguration->expects($this->once())->method('getValueInterceptors')->will($this->returnValue(array($objectAccessorNodeInterceptor)));
+		$parserConfiguration->expects($this->once())->method('getInterceptors')->with(\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR)->will($this->returnValue(array($objectAccessorNodeInterceptor)));
 
 		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
 		$mockObjectManager->expects($this->once())->method('create')->will($this->returnValue($objectAccessorNode));
@@ -634,7 +634,7 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 		$textInterceptor->expects($this->once())->method('process')->with($textNode)->will($this->returnArgument(0));
 
 		$parserConfiguration = $this->getMock('F3\Fluid\Core\Parser\Configuration');
-		$parserConfiguration->expects($this->once())->method('getTextInterceptors')->will($this->returnValue(array($textInterceptor)));
+		$parserConfiguration->expects($this->once())->method('getInterceptors')->with(\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT)->will($this->returnValue(array($textInterceptor)));
 
 		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
 		$mockObjectManager->expects($this->once())->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', 'string')->will($this->returnValue($textNode));

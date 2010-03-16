@@ -33,18 +33,10 @@ namespace F3\Fluid\Core\Parser;
 class Configuration {
 
 	/**
-	 * Value interceptors (applied to values coming from object accessors)
-	 * registered with the configuration.
-	 * @var \SplObjectStorage
+	 * generic interceptors registered with the configuration.
+	 * @var array<\SplObjectStorage>
 	 */
-	protected $valueInterceptors;
-
-	/**
-	 * text interceptors (applied to values coming from text nodes)
-	 * registered with the configuration.
-	 * @var \SplObjectStorage
-	 */
-	protected $textInterceptors;
+	protected $interceptors;
 
 	/**
 	 * Set up the internals...
@@ -52,8 +44,7 @@ class Configuration {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function __construct() {
-		$this->valueInterceptors = new \SplObjectStorage();
-		$this->textInterceptors = new \SplObjectStorage();
+		$this->interceptors = array();
 	}
 
 	/**
@@ -63,9 +54,14 @@ class Configuration {
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function addValueInterceptor(\F3\Fluid\Core\Parser\InterceptorInterface $interceptor) {
-		if (!$this->valueInterceptors->contains($interceptor)) {
-			$this->valueInterceptors->attach($interceptor);
+	public function addInterceptor(\F3\Fluid\Core\Parser\InterceptorInterface $interceptor) {
+		foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
+			if (!isset($this->interceptors[$interceptionPoint])) {
+				$this->interceptors[$interceptionPoint] = new \SplObjectStorage();
+			}
+			if (!$this->interceptors[$interceptionPoint]->contains($interceptor)) {
+				$this->interceptors[$interceptionPoint]->attach($interceptor);
+			}
 		}
 	}
 
@@ -76,56 +72,27 @@ class Configuration {
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function removeValueInterceptor($interceptor) {
-		if ($this->valueInterceptors->contains($interceptor)) {
-			$this->valueInterceptors->detach($interceptor);
+	public function removeInterceptor($interceptor) {
+		foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
+			if ($this->interceptors[$interceptionPoint]->contains($interceptor)) {
+				$this->interceptors[$interceptionPoint]->detach($interceptor);
+			}
 		}
+		
 	}
 
 	/**
-	 * Returns all interceptors to apply to values coming from object accessors.
+	 * Returns all interceptors for a given Interception Point.
 	 *
+	 * @param int $inerceptionPoint one of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
 	 * @return \SplObjectStorage<\F3\Fluid\Core\Parser\InterceptorInterface>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function getValueInterceptors() {
-		return $this->valueInterceptors;
-	}
-
-	/**
-	 * Adds an interceptor to apply to values coming from text nodes.
-	 *
-	 * @param \F3\Fluid\Core\Parser\InterceptorInterface $interceptor
-	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function addTextInterceptor($interceptor) {
-		if (!$this->textInterceptors->contains($interceptor)) {
-			$this->textInterceptors->attach($interceptor);
+	public function getInterceptors($interceptionPoint) {
+		if ($this->interceptors[$interceptionPoint] instanceof \SplObjectStorage) {
+			return $this->interceptors[$interceptionPoint];
 		}
-	}
-
-	/**
-	 * Removes an interceptor to apply to values coming from text nodes.
-	 *
-	 * @param \F3\Fluid\Core\Parser\InterceptorInterface $interceptor
-	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function removeTextInterceptor($interceptor) {
-		if ($this->textInterceptors->contains($interceptor)) {
-			$this->textInterceptors->detach($interceptor);
-		}
-	}
-
-	/**
-	 * Returns all interceptors to apply to values coming from text nodes.
-	 *
-	 * @return \SplObjectStorage<\F3\Fluid\Core\Parser\InterceptorInterface>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function getTextInterceptors() {
-		return $this->textInterceptors;
+		return new \SplObjectStorage();
 	}
 
 }
