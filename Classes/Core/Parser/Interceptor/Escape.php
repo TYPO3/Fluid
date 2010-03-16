@@ -68,7 +68,6 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
 		if ($interceptorPosition === \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
 			if (!$node->getViewHelper()->isEscapingInterceptorEnabled()) {
-				echo "JAA";
 				$this->interceptorEnabled = FALSE;
 				$this->viewHelperNodesWhichDisableTheInterceptor[] = $node;
 			}
