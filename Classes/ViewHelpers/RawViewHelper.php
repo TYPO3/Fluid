@@ -23,18 +23,16 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * Outputs an argument without any escaping. Is normally used to output
+ * Outputs an argument/value without any escaping. Is normally used to output
  * an ObjectAccessor which should not be escaped, but output as-is.
  *
- * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting), as the output
- * is NOT SANITIZED!
- *
- * Backgroud: If you use an ObjectAccessor inside the template, it is automatically escaped.
- * If you use an object accessor as an argument for a ViewHelper, it is NOT escaped.
+ * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+ * as the output is NOT SANITIZED!
  *
  * = Examples =
  *
- * <code title="Simple escaping">
+ * <code title="No escaping">
+ * <f:raw>{string}</f:raw>
  * <f:raw value="{string}" />
  * {f:raw(value: string)}
  * </code>
@@ -51,13 +49,19 @@ namespace F3\Fluid\ViewHelpers;
  */
 class RawViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
+	var $escapingInterceptorEnabled = FALSE;
+
 	/**
 	 *
 	 * @param mixed $value The value to output
-	 * @return string HTML
+	 * @return string
 	 */
-	public function render($value) {
-		return $value;
+	public function render($value = NULL) {
+		if ($value === NULL) {
+			return $this->renderChildren();
+		} else {
+			return $value;
+		}
 	}
 }
 
