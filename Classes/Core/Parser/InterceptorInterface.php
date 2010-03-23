@@ -41,7 +41,7 @@ interface InterceptorInterface {
 	 * that will be used in place of the given node.
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
-	 * @param int One of the INTERCEPT_* constants for the current interception point
+	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition);

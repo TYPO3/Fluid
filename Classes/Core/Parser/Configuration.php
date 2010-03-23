@@ -84,7 +84,7 @@ class Configuration {
 	/**
 	 * Returns all interceptors for a given Interception Point.
 	 *
-	 * @param int $inerceptionPoint one of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
+	 * @param int $interceptionPoint one of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
 	 * @return \SplObjectStorage<\F3\Fluid\Core\Parser\InterceptorInterface>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
