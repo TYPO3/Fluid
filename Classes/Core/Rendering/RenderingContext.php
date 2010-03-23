@@ -46,7 +46,7 @@ class RenderingContext {
 
 	/**
 	 * Controller context being passed to the ViewHelper
-	 * @var F3\FLOW3\MVC\Controller\Context
+	 * @var F3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -100,17 +100,17 @@ class RenderingContext {
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param F3\FLOW3\MVC\Controller\Context $controllerContext The controller context to set
+	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setControllerContext(\F3\FLOW3\MVC\Controller\Context $controllerContext) {
+	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return F3\FLOW3\MVC\Controller\Context The controller context to set
+	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getControllerContext() {

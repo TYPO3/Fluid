@@ -66,7 +66,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 
 	/**
 	 * Controller Context to use
-	 * @var F3\FLOW3\MVC\Controller\Context
+	 * @var F3\FLOW3\MVC\Controller\ControllerContext
 	 * @api
 	 */
 	protected $controllerContext;
@@ -111,11 +111,11 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	}
 
 	/**
-	 * @param \F3\FLOW3\MVC\Controller\Context $controllerContext Controller context which is available inside the view
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setControllerContext(\F3\FLOW3\MVC\Controller\Context $controllerContext) {
+	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
