@@ -162,7 +162,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function getOptions() {
-		if (!is_array($this->arguments['options']) && !($this->arguments['options'] instanceof Iterator)) {
+		if (!is_array($this->arguments['options']) && !($this->arguments['options'] instanceof \Traversable)) {
 			return array();
 		}
 		$options = array();
