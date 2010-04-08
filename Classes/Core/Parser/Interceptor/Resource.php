@@ -69,7 +69,7 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * ViewHelperNode instances using the ResourceViewHelper.
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
-	 * @param int One of the INTERCEPT_* constants for the current interception point
+	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
