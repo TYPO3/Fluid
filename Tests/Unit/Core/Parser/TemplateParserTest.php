@@ -497,14 +497,6 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	}
 
 	/**
-	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function viewHelperArgumentsAreNotRunThroughValueInterceptors() {
-		$this->markTestIncomplete('Needs implementation!');
-	}
-
-	/**
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function argumentsStrings() {

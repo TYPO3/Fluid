@@ -58,12 +58,5 @@ class ErrorsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs');
 	}
 
-	/**
-	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 */
-	public function renderWithForSpecifiedTriesToGetSpecificPropertyError() {
-		$this->markTestIncomplete('Not yet implemented');
-	}
 }
 ?>
