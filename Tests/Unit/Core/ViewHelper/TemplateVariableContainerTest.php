@@ -42,6 +42,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	public function tearDown() {
 		unset($this->variableContainer);
 	}
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -51,6 +52,17 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 		$this->variableContainer->add("variable", $object);
 		$this->assertSame($this->variableContainer->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
 	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function addedObjectsCanBeRetrievedAgainUsingArrayAccess() {
+		$object = "StringObject";
+		$this->variableContainer['variable'] = $object;
+		$this->assertSame($this->variableContainer->get('variable'), $object);
+		$this->assertSame($this->variableContainer['variable'], $object);
+	}
 	
 	/**
 	 * @test
@@ -59,7 +71,8 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	public function addedObjectsExistInArray() {
 		$object = "StringObject";
 		$this->variableContainer->add("variable", $object);
-		$this->assertSame($this->variableContainer->exists('variable'), TRUE, 'The object is reported to not be in the VariableContainer, but it is.');
+		$this->assertTrue($this->variableContainer->exists('variable'));
+		$this->assertTrue(isset($this->variableContainer['variable']));
 	}
 	
 	/**
@@ -88,7 +101,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function duplicateIdentifiersThrowException() {
 		$this->variableContainer->add('variable', 'string1');
-		$this->variableContainer->add('variable', 'string2');
+		$this->variableContainer['variable'] = 'string2';
 	}
 
 	/**
@@ -97,7 +110,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function addingReservedIdentifiersThrowException() {
-		$this->variableContainer->add('True', 'someValue');
+		$this->variableContainer->add('TrUe', 'someValue');
 	}
 
 	/**

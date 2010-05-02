@@ -64,20 +64,9 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @todo Depending on the context, either fail or not!!!
 	 */
 	public function evaluate() {
-		$objectPathParts = explode('.', $this->objectPath);
-		$variableName = array_shift($objectPathParts);
-		if (!$this->renderingContext->getTemplateVariableContainer()->exists($variableName)) {
-			return NULL;
-		}
-		$currentObject = $this->renderingContext->getTemplateVariableContainer()->get($variableName);
-		if (count($objectPathParts) > 0) {
-			return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($currentObject, implode('.', $objectPathParts));
-		} else {
-			return $currentObject;
-		}
+		return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->renderingContext->getTemplateVariableContainer(), $this->objectPath);
 	}
 }
 ?>

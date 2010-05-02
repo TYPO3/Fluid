@@ -34,7 +34,7 @@ namespace F3\Fluid\Core\ViewHelper;
  * @api
  * @scope prototype
  */
-class TemplateVariableContainer {
+class TemplateVariableContainer implements \ArrayAccess {
 
 	/**
 	 * List of reserved words that can't be used as variable identifiers in Fluid templates
@@ -132,6 +132,51 @@ class TemplateVariableContainer {
 	 */
 	public function __sleep() {
 		return array('variables');
+	}
+
+	/**
+	 * Adds a variable to the context.
+	 *
+	 * @param string $identifier Identifier of the variable to add
+	 * @param mixed $value The variable's value
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function offsetSet($identifier, $value) {
+		return $this->add($identifier, $value);
+	}
+
+	/**
+	 * Remove a variable from context. Throws exception if variable is not found in context.
+	 *
+	 * @param string $identifier The identifier to remove
+	 * @return void
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function offsetUnset($identifier) {
+		return $this->remove($identifier);
+	}
+
+	/**
+	 * Checks if this property exists in the VariableContainer.
+	 *
+	 * @param string $identifier
+	 * @return boolean TRUE if $identifier exists, FALSE otherwise
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function offsetExists($identifier) {
+		return $this->exists($identifier);
+	}
+
+	/**
+	 * Get a variable from the context. Throws exception if variable is not found in context.
+	 *
+	 * @param string $identifier
+	 * @return variable The variable identified by $identifier
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function offsetGet($identifier) {
+		return $this->get($identifier);
 	}
 }
 ?>
