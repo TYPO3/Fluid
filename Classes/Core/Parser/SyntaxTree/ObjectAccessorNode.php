@@ -66,7 +66,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluate() {
-		return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->renderingContext->getTemplateVariableContainer(), $this->objectPath);
+		return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->renderingContext->getTemplateVariableContainer(), $this->objectPath, TRUE);
 	}
 }
 ?>
