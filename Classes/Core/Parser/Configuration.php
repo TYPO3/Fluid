@@ -89,7 +89,7 @@ class Configuration {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function getInterceptors($interceptionPoint) {
-		if ($this->interceptors[$interceptionPoint] instanceof \SplObjectStorage) {
+		if (isset($this->interceptors[$interceptionPoint]) && $this->interceptors[$interceptionPoint] instanceof \SplObjectStorage) {
 			return $this->interceptors[$interceptionPoint];
 		}
 		return new \SplObjectStorage();

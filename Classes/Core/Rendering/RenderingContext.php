@@ -38,7 +38,7 @@ class RenderingContext {
 	protected $templateVariableContainer;
 
 	/**
-	 * Object factory which is bubbled through. The ViewHelperNode cannot get an ObjectManager injected because
+	 * Object manager which is bubbled through. The ViewHelperNode cannot get an ObjectManager injected because
 	 * the whole syntax tree should be cacheable
 	 * @var F3\FLOW3\Object\ObjectManagerInterface
 	 */
