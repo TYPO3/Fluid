@@ -39,14 +39,14 @@ class ViewHelperVariableContainer {
 
 	/**
 	 *
-	 * @var F3\FLOW3\MVC\View\ViewInterface
+	 * @var object
 	 */
 	protected $view;
 
 	/**
 	 * Add a variable to the Variable Container. Make sure that $viewHelperName is ALWAYS set
 	 * to your fully qualified ViewHelper Class Name
-	 * 
+	 *
 	 * In case the value is already inside, an exception is thrown.
 	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
@@ -79,7 +79,7 @@ class ViewHelperVariableContainer {
 		}
 		$this->objects[$viewHelperName][$key] = $value;
 	}
-	
+
 	/**
 	 * Gets a variable which is stored
 	 *
@@ -126,11 +126,11 @@ class ViewHelperVariableContainer {
 	/**
 	 * Set the view to pass it to ViewHelpers.
 	 *
-	 * @param F3\FLOW3\MVC\View\ViewInterface $view View to set
+	 * @param object $view View to set
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setView(\F3\FLOW3\MVC\View\ViewInterface $view) {
+	public function setView($view) {
 		$this->view = $view;
 	}
 
@@ -139,7 +139,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * !!! This is NOT a public API and might still change!!!
 	 *
-	 * @return F3\FLOW3\MVC\View\ViewInterface The View
+	 * @return object The View
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getView() {
