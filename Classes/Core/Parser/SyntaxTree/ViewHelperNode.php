@@ -181,12 +181,6 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			$output = $exception->getMessage();
 		}
 
-		if ($contextVariables != $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers()) {
-			$endContextVariables = $this->renderingContext->getTemplateVariableContainer();
-			$diff = array_intersect($endContextVariables, $contextVariables);
-
-			throw new \RuntimeException('The following context variable has been changed after the view helper "' . $this->viewHelperClassName . '" has been called: ' .implode(', ', $diff), 1236081302);
-		}
 		return $output;
 	}
 

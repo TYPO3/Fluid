@@ -57,7 +57,7 @@ class RenderingContext {
 	protected $viewHelperVariableContainer;
 
 	/**
-	 * Inject the object factory
+	 * Inject the object manager
 	 *
 	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -67,7 +67,7 @@ class RenderingContext {
 	}
 
 	/**
-	 * Returns the object factory. Only the ViewHelperNode should do this.
+	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
 	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

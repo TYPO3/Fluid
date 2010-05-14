@@ -72,8 +72,9 @@ abstract class AbstractNode implements \F3\Fluid\Core\Parser\SyntaxTree\NodeInte
 				}
 				$output = (string)$output;
 				$subNodeOutput = $subNode->evaluate();
+
 				if (is_object($subNodeOutput) && !method_exists($subNodeOutput, '__toString')) {
-					throw new \F3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($subNodeOutput) . '" to string.', 1248356140);
+					throw new \F3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($subNodeOutput) . '" to string.', 1273753083);
 				}
 				$output .= (string)$subNodeOutput;
 			}

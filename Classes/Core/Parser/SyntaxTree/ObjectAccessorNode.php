@@ -66,7 +66,39 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluate() {
-		return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->renderingContext->getTemplateVariableContainer(), $this->objectPath, TRUE);
+		return $this->getPropertyPath($this->renderingContext->getTemplateVariableContainer(), $this->objectPath);
 	}
+
+	/**
+	 * Gets a property path from a given object or array.
+	 *
+	 * If propertyPath is "bla.blubb", then we first call getProperty($object, 'bla'),
+	 * and on the resulting object we call getProperty(..., 'blubb').
+	 *
+	 * For arrays the keys are checked likewise.
+	 *
+	 * @param mixed $subject An object or array
+	 * @param string $propertyPath
+	 * @return mixed Value of the property
+	 */
+	protected function getPropertyPath($subject, $propertyPath) {
+		$propertyPathSegments = explode('.', $propertyPath);
+		foreach ($propertyPathSegments as $pathSegment) {
+			if (is_object($subject) && \F3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($subject, $pathSegment)) {
+				$subject = \F3\FLOW3\Reflection\ObjectAccess::getProperty($subject, $pathSegment);
+			} elseif ((is_array($subject) || $subject instanceof \ArrayAccess) && isset($subject[$pathSegment])) {
+				$subject = $subject[$pathSegment];
+			} else {
+				return NULL;
+			}
+
+			if ($subject instanceof \F3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
+				$subject->setRenderingContext($this->renderingContext);
+			}
+		}
+		return $subject;
+	}
+
+
 }
 ?>
