@@ -228,7 +228,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 
 		$actionName = ($actionName !== NULL ? $actionName : $this->controllerContext->getRequest()->getControllerActionName());
-		$actionName = strtolower($actionName);
+		$actionName = ucfirst($actionName);
 
 		$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
 
@@ -238,7 +238,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new \RuntimeException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
 	}
 
 	/**

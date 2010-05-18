@@ -313,6 +313,42 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
 		$this->assertEquals($templateView->renderWithLayout('LayoutFixture'), '<div>Output</div>', 'Specific section was not rendered correctly!');
 	}
+
+	/**
+	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function resolveTemplatePathAndFilenameChecksDifferentPathPatternsAndReturnsTheFirstPathWhichExists() {
+		\vfsStreamWrapper::register();
+		mkdir('vfs://MyTemplates');
+		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', '');
+
+		$paths = array(
+			 'vfs://NonExistantDir/UnknowFile.html',
+			 'vfs://MyTemplates/@action.html'
+		);
+
+		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('expandGenericPathPattern'), array(), '', FALSE);
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@templateRoot/@subpackage/@controller/@action.@format', FALSE, FALSE)->will($this->returnValue($paths));
+
+		$templateView->setTemplateRootPath('MyTemplates');
+		$templateView->setPartialRootPath('MyPartials');
+		$templateView->setLayoutRootPath('MyLayouts');
+
+		$this->assertSame('vfs://MyTemplates/MyCoolAction.html', $templateView->_call('resolveTemplatePathAndFilename', 'myCoolAction'));
+		
+	}
+
+	/**
+	 * @test
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function resolveTemplatePathAndFilenameReturnsTheExplicitlyConfiguredTemplatePathAndFilename() {
+		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
+		$templateView->_set('templatePathAndFilename', 'Foo/Bar/Baz.html');
+
+		$this->assertSame('Foo/Bar/Baz.html', $templateView->_call('resolveTemplatePathAndFilename'));
+  	}
 }
 
 ?>
