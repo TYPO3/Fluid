@@ -126,7 +126,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
-		$controllerObjectName = "F3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
+     	$controllerObjectName = "F3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
 
 		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue($packageKey));
@@ -182,7 +182,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsRenderOnParsedTemplateInterface() {
-		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('parseTemplate', 'resolveTemplatePathAndFilename', 'buildParserConfiguration'), array(), '', FALSE);
+     	$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('parseTemplate', 'resolveTemplatePathAndFilename', 'buildParserConfiguration'), array(), '', FALSE);
 		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
 		$objectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
 		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);

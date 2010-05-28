@@ -497,12 +497,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$results = array();
 
-		if ($controllerName !== NULL) {
-			$i = -1;
-		} else {
-			$i = 0;
-		}
-
+		$i = ($controllerName === NULL) ? 0 : -1;
 		do {
 			$temporaryPattern = $pattern;
 			if ($i < 0) {
