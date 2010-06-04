@@ -399,7 +399,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->templateRootPath !== NULL) {
 			return $this->templateRootPath;
 		} else {
-			return str_replace('@packageResourcesPath', 'package://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->templateRootPathPattern);
+			return str_replace('@packageResourcesPath', 'resource://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->templateRootPathPattern);
 		}
 	}
 
@@ -426,7 +426,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->partialRootPath !== NULL) {
 			return $this->partialRootPath;
 		} else {
-			return str_replace('@packageResourcesPath', 'package://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->partialRootPathPattern);
+			return str_replace('@packageResourcesPath', 'resource://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->partialRootPathPattern);
 		}
 	}
 
@@ -453,7 +453,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		if ($this->layoutRootPath !== NULL) {
 			return $this->layoutRootPath;
 		} else {
-			return str_replace('@packageResourcesPath', 'package://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->layoutRootPathPattern);
+			return str_replace('@packageResourcesPath', 'resource://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->layoutRootPathPattern);
 		}
 	}
 
