@@ -216,10 +216,12 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
-	 * Resolve the template path and filename for the given action. If action is null, looks into the current request.
+	 * Resolve the template path and filename for the given action. If $actionName
+	 * is NULL, looks into the current request.
 	 *
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
+	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function resolveTemplatePathAndFilename($actionName = NULL) {
@@ -238,7 +240,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \RuntimeException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
+		throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
 	}
 
 	/**
@@ -246,6 +248,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @param string $sectionName Name of section to render
 	 * @return string rendered template for the section
+	 * @throws \F3\Fluid\View\Exception\InvalidSectionException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -254,7 +257,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		if(!array_key_exists($sectionName, $sections)) {
-			throw new \RuntimeException('The given section does not exist!', 1227108982);
+			throw new \F3\Fluid\View\Exception\InvalidSectionException('The given section does not exist!', 1227108982);
 		}
 		$section = $sections[$sectionName];
 
@@ -288,6 +291,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @param string $layoutName Name of the layout to use. If none given, use "default"
 	 * @return string Path and filename of layout file
+	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function resolveLayoutPathAndFilename($layoutName = 'default') {
@@ -302,7 +306,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -328,6 +332,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 *
 	 * @param string $partialName The name of the partial
 	 * @return string the full path which should be used. The path definitely exists.
+	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function resolvePartialPathAndFilename($partialName) {
@@ -338,7 +343,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 				return $path;
 			}
 		}
-		throw new \RuntimeException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -353,7 +358,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		try {
 			$this->resolveTemplatePathAndFilename();
 			return TRUE;
-		} catch (\RuntimeException $e) {
+		} catch (\F3\Fluid\View\Exception\InvalidTemplateResourceException $e) {
 			return FALSE;
 		}
 	}

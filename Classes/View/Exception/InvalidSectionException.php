@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Parser\SyntaxTree;
+namespace F3\Fluid\View\Exception;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,53 +23,13 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
- * Array Syntax Tree Node. Handles JSON-like arrays.
+ * An "Invalid Section" exception
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope prototype
+ * @api
  */
-class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
-
-	/**
-	 * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
-	 * @var array
-	 */
-	protected $internalArray = array();
-
-	/**
-	 * Constructor.
-	 *
-	 * @param array $internalArray Array to store
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function __construct($internalArray) {
-		$this->internalArray = $internalArray;
-	}
-
-	/**
-	 * Evaluate the array and return an evaluated array
-	 *
-	 * @return array An associative array with literal values
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function evaluate() {
-		if ($this->renderingContext === NULL) {
-			throw new \F3\Fluid\Core\Parser\Exception('Rendering Context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
-		}
-		$arrayToBuild = array();
-		foreach ($this->internalArray as $key => $value) {
-			if ($value instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
-				$value->setRenderingContext($this->renderingContext);
-				$arrayToBuild[$key] = $value->evaluate();
-			} else {
-				// TODO - this case should not happen!
-				$arrayToBuild[$key] = $value;
-			}
-		}
-		return $arrayToBuild;
-	}
+class InvalidSectionException extends \F3\Fluid\View\Exception {
 }
 
 ?>

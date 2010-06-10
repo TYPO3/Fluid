@@ -87,7 +87,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \RuntimeException
+	 * @expectedException \PHPUnit_Framework_Error
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function contextTakesOnlyArraysInConstructor() {
@@ -96,7 +96,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
@@ -106,7 +106,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function addingReservedIdentifiersThrowException() {
@@ -115,7 +115,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
@@ -124,7 +124,7 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
@@ -133,14 +133,13 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function deleteReallyDeletesObjects() {
+	public function removeReallyRemovesVariables() {
 		$this->variableContainer->add('variable', 'string1');
 		$this->variableContainer->remove('variable');
-		try {
-			$this->variableContainer->get('variable');
-		} catch (\RuntimeException $e) {}
+		$this->variableContainer->get('variable');
 	}
 }
 

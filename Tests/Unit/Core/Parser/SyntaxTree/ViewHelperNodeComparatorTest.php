@@ -46,7 +46,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\Parser\Exception
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {

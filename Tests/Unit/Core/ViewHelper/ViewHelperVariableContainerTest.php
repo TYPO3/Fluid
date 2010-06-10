@@ -57,7 +57,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function gettingNonNonExistentValueThrowsException() {
 		$this->viewHelperVariableContainer->get('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
@@ -66,7 +66,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function settingKeyWhichIsAlreadyStoredThrowsException() {
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
@@ -96,7 +96,7 @@ class ViewHelperVariableContainerTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \RuntimeException
+	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function removingNonExistentKeyThrowsException() {
 		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');

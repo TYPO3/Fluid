@@ -192,7 +192,7 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \RuntimeException
+	 * @expectedException \InvalidArgumentException
 	 */
 	public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong() {
 		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);

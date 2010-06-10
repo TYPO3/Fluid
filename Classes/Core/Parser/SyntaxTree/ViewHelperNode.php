@@ -130,7 +130,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 */
 	public function evaluate() {
 		if ($this->renderingContext === NULL) {
-			throw new \RuntimeException('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
+			throw new \F3\Fluid\Core\Parser\Exception('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
 		}
 
 		$objectManager = $this->renderingContext->getObjectManager();
@@ -224,12 +224,13 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode Value to be converted
 	 * @return boolean Evaluated value
+	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function evaluateBooleanExpression(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode) {
 		$childNodes = $syntaxTreeNode->getChildNodes();
 		if (count($childNodes) > 3) {
-			throw new \RuntimeException('The expression "' . $syntaxTreeNode->evaluate() . '" has more than tree parts.', 1244201848);
+			throw new \F3\Fluid\Core\Parser\Exception('The expression "' . $syntaxTreeNode->evaluate() . '" has more than tree parts.', 1244201848);
 		}
 
 		$leftSide = NULL;
@@ -286,6 +287,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param mixed $leftSide Left side to compare
 	 * @param mixed $rightSide Right side to compare
 	 * @return boolean TRUE if comparison of left and right side using the comparator emit TRUE, false otherwise
+	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function evaluateComparator($comparator, $leftSide, $rightSide) {
@@ -307,7 +309,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			case '<=':
 				return ($leftSide <= $rightSide);
 			default:
-				throw new \RuntimeException('Comparator "' . $comparator . '" was not implemented.', 1244234398);
+				throw new \F3\Fluid\Core\Parser\Exception('Comparator "' . $comparator . '" is not implemented.', 1244234398);
 		}
 	}
 
