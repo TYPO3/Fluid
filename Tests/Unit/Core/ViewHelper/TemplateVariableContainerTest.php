@@ -87,15 +87,6 @@ class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
 	
 	/**
 	 * @test
-	 * @expectedException \PHPUnit_Framework_Error
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function contextTakesOnlyArraysInConstructor() {
-		new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer("string");
-	}
-	
-	/**
-	 * @test
 	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
