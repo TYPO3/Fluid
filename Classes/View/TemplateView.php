@@ -315,15 +315,19 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @param string $partialName
 	 * @param string $sectionToRender
 	 * @param array $variables
+	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer the View Helper Variable container to use.
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function renderPartial($partialName, $sectionToRender, array $variables) {
+	public function renderPartial($partialName, $sectionToRender, array $variables, $viewHelperVariableContainer = NULL) {
 		$partial = $this->parseTemplate($this->resolvePartialPathAndFilename($partialName));
 		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 		$renderingContext = $this->buildRenderingContext($variableContainer);
+		if ($viewHelperVariableContainer !== NULL) {
+			$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+		}
 		return $partial->render($renderingContext);
 	}
 
