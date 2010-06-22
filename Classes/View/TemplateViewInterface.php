@@ -51,24 +51,6 @@ interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 	public function setLayoutPathAndFilename($layoutPathAndFilename);
 
 	/**
-	 * Renders a given section.
-	 *
-	 * @param string $sectionName Name of section to render
-	 * @return rendered template for the section
-	 * @api
-	 */
-	public function renderSection($sectionName);
-
-	/**
-	 * Render a template with a given layout.
-	 *
-	 * @param string $layoutName Name of layout
-	 * @return string rendered HTML
-	 * @api
-	 */
-	public function renderWithLayout($layoutName);
-
-	/**
 	 * Checks whether a template can be resolved for the current request context.
 	 *
 	 * @return boolean

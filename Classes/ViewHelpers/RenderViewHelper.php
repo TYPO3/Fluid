@@ -41,11 +41,11 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
-	public function render($section = '', $partial = '', $arguments = array()) {
-		if ($partial !== '') {
-			return $this->viewHelperVariableContainer->getView()->renderPartial($partial, $section, $arguments, $this->viewHelperVariableContainer);
-		} elseif ($section !== '') {
-			return $this->viewHelperVariableContainer->getView()->renderSection($section);
+	public function render($section = NULL, $partial = NULL, $arguments = array()) {
+		if ($partial !== NULL) {
+			return $this->viewHelperVariableContainer->getView()->renderPartial($partial, $section, $arguments);
+		} elseif ($section !== NULL) {
+			return $this->viewHelperVariableContainer->getView()->renderSection($section, $arguments);
 		}
 		return '';
 	}

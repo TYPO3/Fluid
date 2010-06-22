@@ -74,7 +74,11 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 * @api
 	 */
 	public function render() {
-		return $this->renderChildren();
+		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection')) {
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection');
+			return $this->renderChildren();
+		}
+		return '';
 	}
 }
 

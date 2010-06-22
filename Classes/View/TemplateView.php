@@ -103,6 +103,18 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected $layoutPathAndFilename = NULL;
 
+	/**
+	 * Stack containing the current rendering type, the current rendering context, and the current parsed template
+	 * Do not manipulate directly, instead use the methods"getCurrent*()", "startRendering(...)" and "stopRendering()"
+	 * @var array
+	 */
+	protected $renderingStack = array();
+
+	// constants defining possible rendering types.
+	const RENDERING_TEMPLATE = 1;
+	const RENDERING_PARTIAL = 2;
+	const RENDERING_LAYOUT = 3;
+
 	//PLACEHOLDER
 	// Here, the backporter can insert a constructor method, which is needed for Fluid v4.
 
@@ -155,15 +167,11 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	/**
 	 * Build the rendering context
 	 *
-	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return \F3\Fluid\Core\Rendering\RenderingContext
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function buildRenderingContext(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer = NULL) {
-		if ($variableContainer === NULL) {
-			$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->variables);
-		}
-
+	protected function buildRenderingContext() {
+		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->variables);
 		$renderingContext = $this->objectManager->create('F3\Fluid\Core\Rendering\RenderingContext');
 		$renderingContext->setTemplateVariableContainer($variableContainer);
 		if ($this->controllerContext !== NULL) {
@@ -206,13 +214,45 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 
 		$this->templateParser->setConfiguration($this->buildParserConfiguration());
 		$parsedTemplate = $this->parseTemplate($templatePathAndFilename);
+		$renderingContext = $this->buildRenderingContext();
 
-		$variableContainer = $parsedTemplate->getVariableContainer();
-		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
-			return $this->renderWithLayout($variableContainer->get('layoutName'));
+		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
+			$this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $renderingContext); // we use $parsedTemplate and NOT $parsedLayout in this method invocation, as <f:render section="..." > should render a section inside the TEMPLATE.
+			$parsedLayout = $this->parseTemplate($this->resolveLayoutPathAndFilename($this->getLayoutInTemplate($parsedTemplate)));
+			$output = $parsedLayout->render($renderingContext);
+			$this->stopRendering();
+			return $output;
+		} else {
+			$this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $renderingContext);
+			$output = $parsedTemplate->render($renderingContext);
+			$this->stopRendering();
+			return $output;
 		}
+	}
 
-		return $parsedTemplate->render($this->buildRenderingContext());
+	/**
+	 * Returns TRUE if there is a layout defined in the given template via a <f:layout name="..." /> tag.
+	 *
+	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
+	 * @return boolean TRUE if a layout has been defined, FALSE otherwise.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function isLayoutDefinedInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
+		$variableContainer = $parsedTemplate->getVariableContainer();
+		return ($variableContainer !== NULL && $variableContainer->exists('layoutName'));
+	}
+
+	/**
+	 * Returns the name of the layout defined in the template, if one exists.
+	 *
+	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
+	 * @return string the Layout name
+	 */
+	protected function getLayoutInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
+		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
+			return $parsedTemplate->getVariableContainer()->get('layoutName');
+		}
+		return NULL;
 	}
 
 	/**
@@ -247,13 +287,14 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Renders a given section.
 	 *
 	 * @param string $sectionName Name of section to render
+	 * @param array the variables to use.
 	 * @return string rendered template for the section
 	 * @throws \F3\Fluid\View\Exception\InvalidSectionException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderSection($sectionName) {
-		$parsedTemplate = $this->parseTemplate($this->resolveTemplatePathAndFilename());
+	public function renderSection($sectionName, $variables) {
+		$parsedTemplate = $this->getCurrentParsedTemplate();
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		if(!array_key_exists($sectionName, $sections)) {
@@ -261,24 +302,25 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		}
 		$section = $sections[$sectionName];
 
-		$renderingContext = $this->buildRenderingContext();
+		$renderingContext = $this->getCurrentRenderingContext();
+		if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
+			// in case we render a layout right now, we will render a section inside a TEMPLATE.
+			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
+		} else {
+			$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
+			$renderingContext = clone $renderingContext;
+			$renderingContext->setTemplateVariableContainer($variableContainer);
+			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
+		}
+
 		$section->setRenderingContext($renderingContext);
-		return $section->evaluate();
-	}
+		$renderingContext->getViewHelperVariableContainer()->add('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection', 'TRUE');
 
-	/**
-	 * Render a template with a given layout.
-	 *
-	 * @param string $layoutName Name of layout
-	 * @return string rendered HTML
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function renderWithLayout($layoutName) {
-		$parsedTemplate = $this->parseTemplate($this->resolveLayoutPathAndFilename($layoutName));
+		$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
+		$output = $section->evaluate();
+		$this->stopRendering();
 
-		$renderingContext = $this->buildRenderingContext();
-		return $parsedTemplate->render($renderingContext);
+		return $output;
 	}
 
 	/**
@@ -313,7 +355,7 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * Renders a partial.
 	 *
 	 * @param string $partialName
-	 * @param string $sectionToRender
+	 * @param string $sectionName
 	 * @param array $variables
 	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer the View Helper Variable container to use.
 	 * @return string
@@ -321,14 +363,21 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function renderPartial($partialName, $sectionToRender, array $variables, $viewHelperVariableContainer = NULL) {
+	public function renderPartial($partialName, $sectionName, array $variables) {
 		$partial = $this->parseTemplate($this->resolvePartialPathAndFilename($partialName));
 		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
-		$renderingContext = $this->buildRenderingContext($variableContainer);
-		if ($viewHelperVariableContainer !== NULL) {
-			$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+		$renderingContext = clone $this->getCurrentRenderingContext();
+		$renderingContext->setTemplateVariableContainer($variableContainer);
+
+		$this->startRendering(self::RENDERING_PARTIAL, $partial, $renderingContext);
+		if ($sectionName !== NULL) {
+			$output = $this->renderSection($sectionName, $variables);
+		} else {
+			$output = $partial->render($renderingContext);
 		}
-		return $partial->render($renderingContext);
+		$this->stopRendering();
+
+		return $output;
 	}
 
 	/**
@@ -524,6 +573,61 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		} while($i++ < count($subpackageParts) && $bubbleControllerAndSubpackage);
 
 		return $results;
+	}
+
+	/**
+	 * Get the current rendering type.
+	 *
+	 * @return one of RENDERING_* constants
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getCurrentRenderingType() {
+		$currentRendering = end($this->renderingStack);
+		return $currentRendering['type'];
+	}
+
+	/**
+	 * Get the parsed template which is currently being rendered.
+	 *
+	 * @return F3\Fluid\Core\Parser\ParsedTemplateInterface
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getCurrentParsedTemplate() {
+		$currentRendering = end($this->renderingStack);
+		return $currentRendering['parsedTemplate'];
+	}
+
+	/**
+	 * Get the rendering context which is currently used.
+	 *
+	 * @return F3\Fluid\Core\Rendering\RenderingContext
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function getCurrentRenderingContext() {
+		$currentRendering = end($this->renderingStack);
+		return $currentRendering['renderingContext'];
+	}
+
+	/**
+	 * Start a new nested rendering. Pushes the given information onto the $renderingStack.
+	 *
+	 * @param int $type one of the RENDERING_* constants
+	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function startRendering($type, \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+		array_push($this->renderingStack, array('type' => $type, 'parsedTemplate' => $parsedTemplate, 'renderingContext' => $renderingContext));
+	}
+
+	/**
+	 * Stops the current rendering. Removes one element from the $renderingStack. Make sure to always call this
+	 * method pair-wise with startRendering().
+	 *
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function stopRendering() {
+		array_pop($this->renderingStack);
 	}
 }
 
