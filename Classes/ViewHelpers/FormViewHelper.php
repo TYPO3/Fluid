@@ -102,7 +102,12 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @param string $package name of target package
 	 * @param string $subpackage name of target subpackage
 	 * @param mixed $object object to use for the form. Use in conjunction with the "property" attribute on the sub tags
-	 * @param string $section The anchor to be added to the URI
+	 * @param string $section The anchor to be added to the action URI (only active if $actionUri is not set)
+	 * @param string $format The requested format (e.g. ".html") of the target page (only active if $actionUri is not set)
+	 * @param array $additionalParams additional action URI query parameters that won't be prefixed like $arguments (overrule $arguments) (only active if $actionUri is not set)
+	 * @param boolean $absolute If set, an absolute action URI is rendered (only active if $actionUri is not set)
+	 * @param boolean $addQueryString If set, the current query parameters will be kept in the action URI (only active if $actionUri is not set)
+	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the action URI. Only active if $addQueryString = TRUE and $actionUri is not set
 	 * @param string $fieldNamePrefix Prefix that will be added to all field names within this form
 	 * @param string $actionUri can be used to overwrite the "action" attribute of the form tag
 	 * @return string rendered form
@@ -110,7 +115,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $fieldNamePrefix = NULL, $actionUri = NULL) {
+	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL) {
 		$this->setFormActionUri();
 
 		if (strtolower($this->arguments['method']) === 'get') {
@@ -152,8 +157,19 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 			$formActionUri = $this->arguments['actionUri'];
 		} else {
 			$uriBuilder = $this->controllerContext->getUriBuilder();
-			$formActionUri = $uriBuilder
+			$uriBuilder
 				->reset()
+				->setSection($this->arguments['section'])
+				->setCreateAbsoluteUri($this->arguments['absolute'])
+				->setAddQueryString($this->arguments['addQueryString'])
+				->setFormat($this->arguments['format']);
+			if (is_array($this->arguments['additionalParams'])) {
+				$uriBuilder->setArguments($this->arguments['additionalParams']);
+			}
+			if (is_array($this->arguments['argumentsToBeExcludedFromQueryString'])) {
+				$uriBuilder->setArgumentsToBeExcludedFromQueryString($this->arguments['argumentsToBeExcludedFromQueryString']);
+			}
+			$formActionUri = $uriBuilder
 				->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
 		}
 		$this->tag->addAttribute('action', $formActionUri);
