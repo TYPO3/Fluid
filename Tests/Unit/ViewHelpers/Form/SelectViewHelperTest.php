@@ -379,6 +379,57 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');
 		$this->viewHelper->render();
 	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function allOptionsAreSelectedIfSelectAllIsTrue() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				'value1' => 'label1',
+				'value2' => 'label2',
+				'value3' => 'label3'
+			),
+			'name' => 'myName',
+			'multiple' => 'multiple',
+			'selectAllByDefault' => TRUE
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function selectAllHasNoEffectIfValueIsSet() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3">label3</option>' . chr(10));
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'options' => array(
+				'value1' => 'label1',
+				'value2' => 'label2',
+				'value3' => 'label3'
+			),
+			'value' => array('value2', 'value1'),
+			'name' => 'myName',
+			'multiple' => 'multiple',
+			'selectAllByDefault' => TRUE
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
 }
 
 ?>
