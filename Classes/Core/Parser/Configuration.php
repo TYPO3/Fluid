@@ -33,19 +33,10 @@ namespace F3\Fluid\Core\Parser;
 class Configuration {
 
 	/**
-	 * generic interceptors registered with the configuration.
+	 * Generic interceptors registered with the configuration.
 	 * @var array<\SplObjectStorage>
 	 */
-	protected $interceptors;
-
-	/**
-	 * Set up the internals...
-	 *
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function __construct() {
-		$this->interceptors = array();
-	}
+	protected $interceptors = array();
 
 	/**
 	 * Adds an interceptor to apply to values coming from object accessors.
