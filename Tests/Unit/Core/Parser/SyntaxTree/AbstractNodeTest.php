@@ -38,7 +38,6 @@ class AbstractNodeTest extends \F3\Testing\BaseTestCase {
 		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
 
 		$this->abstractNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
-		$this->abstractNode->setRenderingContext($this->renderingContext);
 
 		$this->childNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
 		$this->abstractNode->addChildNode($this->childNode);
@@ -49,8 +48,8 @@ class AbstractNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateChildNodesPassesRenderingContextToChildNodes() {
-		$this->childNode->expects($this->once())->method('setRenderingContext')->with($this->renderingContext);
-		$this->abstractNode->evaluateChildNodes();
+		$this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext);
+		$this->abstractNode->evaluateChildNodes($this->renderingContext);
 	}
 
 	/**

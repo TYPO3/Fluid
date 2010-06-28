@@ -72,9 +72,7 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
 
 		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
-		$rootNode->expects($this->once())->method('setRenderingContext')->with($renderingContext);
-
-		$rootNode->expects($this->once())->method('evaluate')->will($this->returnValue('T3DD09 Rock!'));
+		$rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
 		$this->parsingState->setRootNode($rootNode);
 		$renderedValue = $this->parsingState->render($renderingContext);
 		$this->assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');

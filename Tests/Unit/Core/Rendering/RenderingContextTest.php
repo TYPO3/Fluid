@@ -46,7 +46,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function templateVariableContainerCanBeReadCorrectly() {
 		$templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->renderingContext->setTemplateVariableContainer($templateVariableContainer);
+		$this->renderingContext->injectTemplateVariableContainer($templateVariableContainer);
 		$this->assertSame($this->renderingContext->getTemplateVariableContainer(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
 	}
 
@@ -66,7 +66,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function viewHelperVariableContainerCanBeReadCorrectly() {
 		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+		$this->renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
 	}
 }

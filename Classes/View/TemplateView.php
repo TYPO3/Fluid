@@ -30,12 +30,7 @@ namespace F3\Fluid\View;
  * @api
  * @scope prototype
  */
-class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\View\TemplateViewInterface {
-
-	/**
-	 * @var \F3\Fluid\Core\Parser\TemplateParser
-	 */
-	protected $templateParser;
+class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * Pattern to be resolved for @templateRoot in the other patterns.
@@ -103,41 +98,8 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 */
 	protected $layoutPathAndFilename = NULL;
 
-	/**
-	 * Stack containing the current rendering type, the current rendering context, and the current parsed template
-	 * Do not manipulate directly, instead use the methods"getCurrent*()", "startRendering(...)" and "stopRendering()"
-	 * @var array
-	 */
-	protected $renderingStack = array();
-
-	// constants defining possible rendering types.
-	const RENDERING_TEMPLATE = 1;
-	const RENDERING_PARTIAL = 2;
-	const RENDERING_LAYOUT = 3;
-
 	//PLACEHOLDER
 	// Here, the backporter can insert a constructor method, which is needed for Fluid v4.
-
-	/**
-	 * Inject the template parser
-	 *
-	 * @param \F3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectTemplateParser(\F3\Fluid\Core\Parser\TemplateParser $templateParser) {
-		$this->templateParser = $templateParser;
-	}
-
-	/**
-	 * Initialize view
-	 *
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
-	 */
-	protected function initializeView() {
-	}
 
 	/**
 	 * Sets the path and name of of the template file. Effectively overrides the
@@ -165,94 +127,33 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	}
 
 	/**
-	 * Build the rendering context
+	 * Checks whether a template can be resolved for the current request context.
 	 *
-	 * @return \F3\Fluid\Core\Rendering\RenderingContext
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function buildRenderingContext() {
-		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $this->variables);
-		$renderingContext = $this->objectManager->create('F3\Fluid\Core\Rendering\RenderingContext');
-		$renderingContext->setTemplateVariableContainer($variableContainer);
-		if ($this->controllerContext !== NULL) {
-			$renderingContext->setControllerContext($this->controllerContext);
-		}
-
-		$viewHelperVariableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$viewHelperVariableContainer->setView($this);
-		$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
-
-		return $renderingContext;
-	}
-
-	/**
-	 * Build parser configuration
-	 *
-	 * @return \F3\Fluid\Core\Parser\Configuration
+	 * @return boolean
 	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	protected function buildParserConfiguration() {
-		$parserConfiguration = $this->objectManager->create('F3\Fluid\Core\Parser\Configuration');
-		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
-			$parserConfiguration->addInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Escape'));
-			$parserConfiguration->addInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Resource'));
-		}
-		return $parserConfiguration;
-	}
-
-	/**
-	 * Find the XHTML template according to $this->templatePathAndFilenamePattern and render the template.
-	 * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
-	 *
-	 * @param string $actionName If set, the view of the specified action will be rendered instead. Default is the action specified in the Request object
-	 * @return string Rendered Template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
-	public function render($actionName = NULL) {
-		$templatePathAndFilename = $this->resolveTemplatePathAndFilename($actionName);
-
-		$this->templateParser->setConfiguration($this->buildParserConfiguration());
-		$parsedTemplate = $this->parseTemplate($templatePathAndFilename);
-		$renderingContext = $this->buildRenderingContext();
-
-		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
-			$this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $renderingContext); // we use $parsedTemplate and NOT $parsedLayout in this method invocation, as <f:render section="..." > should render a section inside the TEMPLATE.
-			$parsedLayout = $this->parseTemplate($this->resolveLayoutPathAndFilename($this->getLayoutInTemplate($parsedTemplate)));
-			$output = $parsedLayout->render($renderingContext);
-			$this->stopRendering();
-			return $output;
-		} else {
-			$this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $renderingContext);
-			$output = $parsedTemplate->render($renderingContext);
-			$this->stopRendering();
-			return $output;
+	public function hasTemplate() {
+		try {
+			$this->getTemplateSource();
+			return TRUE;
+		} catch (\F3\Fluid\View\Exception\InvalidTemplateResourceException $e) {
+			return FALSE;
 		}
 	}
 
-	/**
-	 * Returns TRUE if there is a layout defined in the given template via a <f:layout name="..." /> tag.
+		/**
+	 * Set the root path to the templates.
+	 * If set, overrides the one determined from $this->templateRootPathPattern
 	 *
-	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @return boolean TRUE if a layout has been defined, FALSE otherwise.
+	 * @param string $templateRootPath Root path to the templates. If set, overrides the one determined from $this->templateRootPathPattern
+	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @api
 	 */
-	protected function isLayoutDefinedInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
-		$variableContainer = $parsedTemplate->getVariableContainer();
-		return ($variableContainer !== NULL && $variableContainer->exists('layoutName'));
-	}
-
-	/**
-	 * Returns the name of the layout defined in the template, if one exists.
-	 *
-	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @return string the Layout name
-	 */
-	protected function getLayoutInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
-		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
-			return $parsedTemplate->getVariableContainer()->get('layoutName');
-		}
-		return NULL;
+	public function setTemplateRootPath($templateRootPath) {
+		$this->templateRootPath = $templateRootPath;
 	}
 
 	/**
@@ -264,63 +165,32 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolveTemplatePathAndFilename($actionName = NULL) {
+	protected function getTemplateSource($actionName = NULL) {
 		if ($this->templatePathAndFilename !== NULL) {
-			return $this->templatePathAndFilename;
-		}
+			$templatePathAndFilename = $this->templatePathAndFilename;
+		} else {
+			$actionName = ($actionName !== NULL ? $actionName : $this->controllerContext->getRequest()->getControllerActionName());
+			$actionName = ucfirst($actionName);
 
-		$actionName = ($actionName !== NULL ? $actionName : $this->controllerContext->getRequest()->getControllerActionName());
-		$actionName = ucfirst($actionName);
-
-		$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
-
-		foreach ($paths as &$path) {
-			$path = str_replace('@action', $actionName, $path);
-			if (file_exists($path)) {
-				return $path;
+			$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
+			$found = FALSE;
+			foreach ($paths as &$templatePathAndFilename) {
+				$templatePathAndFilename = str_replace('@action', $actionName, $templatePathAndFilename);
+				if (file_exists($templatePathAndFilename)) {
+					$found = TRUE;
+					break;
+				}
+			}
+			if (!$found) {
+				throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
 			}
 		}
-		throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
-	}
 
-	/**
-	 * Renders a given section.
-	 *
-	 * @param string $sectionName Name of section to render
-	 * @param array the variables to use.
-	 * @return string rendered template for the section
-	 * @throws \F3\Fluid\View\Exception\InvalidSectionException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function renderSection($sectionName, $variables) {
-		$parsedTemplate = $this->getCurrentParsedTemplate();
-
-		$sections = $parsedTemplate->getVariableContainer()->get('sections');
-		if(!array_key_exists($sectionName, $sections)) {
-			throw new \F3\Fluid\View\Exception\InvalidSectionException('The given section does not exist!', 1227108982);
+		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+		if ($templateSource === FALSE) {
+			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
-		$section = $sections[$sectionName];
-
-		$renderingContext = $this->getCurrentRenderingContext();
-		if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
-			// in case we render a layout right now, we will render a section inside a TEMPLATE.
-			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
-		} else {
-			$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
-			$renderingContext = clone $renderingContext;
-			$renderingContext->setTemplateVariableContainer($variableContainer);
-			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
-		}
-
-		$section->setRenderingContext($renderingContext);
-		$renderingContext->getViewHelperVariableContainer()->add('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection', 'TRUE');
-
-		$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-		$output = $section->evaluate();
-		$this->stopRendering();
-
-		return $output;
+		return $templateSource;
 	}
 
 	/**
@@ -336,48 +206,30 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolveLayoutPathAndFilename($layoutName = 'default') {
-		if ($this->layoutPathAndFilename) {
-			return $this->layoutPathAndFilename;
-		}
+	protected function getLayoutSource($layoutName = 'default') {
+		if ($this->layoutPathAndFilename !== NULL) {
+			 $layoutPathAndFilename = $this->layoutPathAndFilename;
+		} else {
+			$paths = $this->expandGenericPathPattern($this->layoutPathAndFilenamePattern, TRUE, TRUE);
+			$found = FALSE;
+			foreach ($paths as &$layoutPathAndFilename) {
+				$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
+				if (file_exists($layoutPathAndFilename)) {
+					$found = TRUE;
+					break;
+				}
+			}
 
-		$paths = $this->expandGenericPathPattern($this->layoutPathAndFilenamePattern, TRUE, TRUE);
-		foreach ($paths as &$path) {
-			$path = str_replace('@layout', $layoutName, $path);
-			if (file_exists($path)) {
-				return $path;
+			if (!$found) {
+				throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 			}
 		}
-		throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
-	}
 
-	/**
-	 * Renders a partial.
-	 *
-	 * @param string $partialName
-	 * @param string $sectionName
-	 * @param array $variables
-	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer the View Helper Variable container to use.
-	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function renderPartial($partialName, $sectionName, array $variables) {
-		$partial = $this->parseTemplate($this->resolvePartialPathAndFilename($partialName));
-		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
-		$renderingContext = clone $this->getCurrentRenderingContext();
-		$renderingContext->setTemplateVariableContainer($variableContainer);
-
-		$this->startRendering(self::RENDERING_PARTIAL, $partial, $renderingContext);
-		if ($sectionName !== NULL) {
-			$output = $this->renderSection($sectionName, $variables);
-		} else {
-			$output = $partial->render($renderingContext);
+		$layoutSource = \F3\FLOW3\Utility\Files::getFileContents($layoutPathAndFilename, FILE_TEXT);
+		if ($layoutSource === FALSE) {
+			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $layoutPathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
-		$this->stopRendering();
-
-		return $output;
+		return $layoutSource;
 	}
 
 	/**
@@ -388,63 +240,24 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function resolvePartialPathAndFilename($partialName) {
+	protected function getPartialSource($partialName) {
 		$paths = $this->expandGenericPathPattern($this->partialPathAndFilenamePattern, TRUE, TRUE);
-		foreach ($paths as &$path) {
-			$path = str_replace('@partial', $partialName, $path);
-			if (file_exists($path)) {
-				return $path;
+		$found = FALSE;
+		foreach ($paths as &$partialPathAndFilename) {
+			$partialPathAndFilename = str_replace('@partial', $partialName, $partialPathAndFilename);
+			if (file_exists($partialPathAndFilename)) {
+				$found = TRUE;
+				break;
 			}
 		}
-		throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
-	}
-
-	/**
-	 * Checks whether a template can be resolved for the current request context.
-	 *
-	 * @return boolean
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
-	 */
-	public function hasTemplate() {
-		try {
-			$this->resolveTemplatePathAndFilename();
-			return TRUE;
-		} catch (\F3\Fluid\View\Exception\InvalidTemplateResourceException $e) {
-			return FALSE;
+		if (!$found) {
+			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 		}
-	}
-
-	/**
-	 * Parse the given template and return it.
-	 *
-	 * Will cache the results for one call.
-	 *
-	 * @param string $templatePathAndFilename absolute filename of the template to be parsed
-	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface the parsed template tree
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function parseTemplate($templatePathAndFilename) {
-		$templateSource = \F3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
-		if ($templateSource === FALSE) {
-			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
+		$partialSource = \F3\FLOW3\Utility\Files::getFileContents($partialPathAndFilename, FILE_TEXT);
+		if ($partialSource === FALSE) {
+			throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $partialPathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
-		return $this->templateParser->parse($templateSource);
-	}
-
-	/**
-	 * Set the root path to the templates.
-	 * If set, overrides the one determined from $this->templateRootPathPattern
-	 *
-	 * @param string $templateRootPath Root path to the templates. If set, overrides the one determined from $this->templateRootPathPattern
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
-	 */
-	public function setTemplateRootPath($templateRootPath) {
-		$this->templateRootPath = $templateRootPath;
+		return $partialSource;
 	}
 
 	/**
@@ -575,60 +388,6 @@ class TemplateView extends \F3\FLOW3\MVC\View\AbstractView implements \F3\Fluid\
 		return $results;
 	}
 
-	/**
-	 * Get the current rendering type.
-	 *
-	 * @return one of RENDERING_* constants
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function getCurrentRenderingType() {
-		$currentRendering = end($this->renderingStack);
-		return $currentRendering['type'];
-	}
-
-	/**
-	 * Get the parsed template which is currently being rendered.
-	 *
-	 * @return F3\Fluid\Core\Parser\ParsedTemplateInterface
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function getCurrentParsedTemplate() {
-		$currentRendering = end($this->renderingStack);
-		return $currentRendering['parsedTemplate'];
-	}
-
-	/**
-	 * Get the rendering context which is currently used.
-	 *
-	 * @return F3\Fluid\Core\Rendering\RenderingContext
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function getCurrentRenderingContext() {
-		$currentRendering = end($this->renderingStack);
-		return $currentRendering['renderingContext'];
-	}
-
-	/**
-	 * Start a new nested rendering. Pushes the given information onto the $renderingStack.
-	 *
-	 * @param int $type one of the RENDERING_* constants
-	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function startRendering($type, \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
-		array_push($this->renderingStack, array('type' => $type, 'parsedTemplate' => $parsedTemplate, 'renderingContext' => $renderingContext));
-	}
-
-	/**
-	 * Stops the current rendering. Removes one element from the $renderingStack. Make sure to always call this
-	 * method pair-wise with startRendering().
-	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function stopRendering() {
-		array_pop($this->renderingStack);
-	}
 }
 
 ?>

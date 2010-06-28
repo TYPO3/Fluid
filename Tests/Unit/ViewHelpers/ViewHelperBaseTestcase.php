@@ -63,6 +63,11 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 	protected $request;
 
 	/**
+	 * @var F3\Fluid\Core\Rendering\RenderingContext
+	 */
+	protected $renderingContext;
+
+	/**
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -84,6 +89,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->tagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder');
 		$this->arguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
+		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
 	}
 
 	/**
@@ -95,6 +101,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$viewHelper->setViewHelperVariableContainer($this->viewHelperVariableContainer);
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
 		$viewHelper->setControllerContext($this->controllerContext);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->setArguments($this->arguments);
 		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\TagBasedViewHelper) {
 			$viewHelper->injectTagBuilder($this->tagBuilder);

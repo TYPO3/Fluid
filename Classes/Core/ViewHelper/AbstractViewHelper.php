@@ -72,6 +72,11 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	protected $controllerContext;
 
 	/**
+	 * @var \F3\Fluid\Core\Rendering\RenderingContext
+	 */
+	private $renderingContext;
+
+	/**
 	 * ViewHelper Variable Container
 	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 * @api
@@ -118,6 +123,16 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
+
+	/**
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @return void
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	 $this->renderingContext = $renderingContext;
+	}
+
 
 	/**
 	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
@@ -206,7 +221,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @api
 	 */
 	protected function renderChildren() {
-		return $this->viewHelperNode->evaluateChildNodes();
+		return $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
 	}
 
 	/**

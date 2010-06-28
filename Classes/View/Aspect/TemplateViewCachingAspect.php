@@ -27,7 +27,7 @@ namespace F3\Fluid\View\Aspect;
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @aspect
+ * aspect
  */
 class TemplateViewCachingAspect {
 

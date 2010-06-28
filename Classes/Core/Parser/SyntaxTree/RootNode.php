@@ -34,15 +34,12 @@ class RootNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return mixed Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate() {
-		if ($this->renderingContext === NULL) {
-			throw new \F3\Fluid\Core\Parser\Exception('Rendering Context is NULL in RootNode, but necessary. If this error appears, please report a bug!', 1242669004);
-		}
-		$result = $this->evaluateChildNodes();
-		return $result;
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+		return $this->evaluateChildNodes($renderingContext);
 	}
 }
 

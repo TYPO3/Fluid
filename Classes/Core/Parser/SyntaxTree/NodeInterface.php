@@ -32,17 +32,12 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 interface NodeInterface {
 
 	/**
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext Rendering Context to be used for this evaluation
-	 * @return void
-	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
-
-	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 */
-	public function evaluateChildNodes();
+	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
 
 	/**
 	 * Returns all child nodes for a given node.
@@ -62,9 +57,10 @@ interface NodeInterface {
 	/**
 	 * Evaluates the node - can return not only strings, but arbitary objects.
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return mixed Evaluated node
 	 */
-	public function evaluate();
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
 }
 
 ?>

@@ -136,8 +136,7 @@ class IfHasRoleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper i
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
-				$childNode->setRenderingContext($this->renderingContext);
-				$data = $childNode->evaluate();
+				$data = $childNode->evaluate($this->renderingContext);
 				return $data;
 			}
 		}
@@ -154,9 +153,7 @@ class IfHasRoleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper i
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
-
-				$childNode->setRenderingContext($this->renderingContext);
-				return $childNode->evaluate();
+				return $childNode->evaluate($this->renderingContext);
 			}
 		}
 		return '';

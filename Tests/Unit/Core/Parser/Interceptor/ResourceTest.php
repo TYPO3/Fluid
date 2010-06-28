@@ -49,7 +49,7 @@ class ResourceTest extends \F3\Testing\BaseTestCase {
 			}';
 		$originalText = $originalText1 . $originalText2 . $originalText3;
 		$mockTextNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\TextNode', array('evaluateChildNodes'), array($originalText));
-		$this->assertEquals($originalText, $mockTextNode->evaluate());
+		$this->assertEquals($originalText, $mockTextNode->evaluate($this->getMock('F3\Fluid\Core\Rendering\RenderingContext')));
 		
 		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
 		$mockObjectManager->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '')->will($this->returnValue($mockDummyNode));

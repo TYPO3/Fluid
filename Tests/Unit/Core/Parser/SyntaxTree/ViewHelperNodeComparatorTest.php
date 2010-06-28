@@ -36,12 +36,17 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	protected $viewHelperNode;
 
 	/**
+	 * @var F3\Fluid\Core\Rendering\RenderingContext
+	 */
+	protected $renderingContext;
+
+	/**
 	 * Setup fixture
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setUp() {
 		$this->viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-		$this->viewHelperNode->setRenderingContext(new \F3\Fluid\Core\Rendering\RenderingContext());
+		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
 	}
 
 	/**
@@ -53,7 +58,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('getChildNodes')->will($this->returnValue(array(1,2,3,4)));
 
-		$this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode);
+		$this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext);
 	}
 
 	/**
@@ -66,7 +71,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -79,7 +84,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -92,7 +97,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -105,7 +110,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -118,7 +123,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -131,7 +136,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -144,7 +149,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -157,7 +162,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -170,7 +175,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -183,7 +188,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -196,7 +201,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -209,7 +214,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -222,7 +227,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -235,7 +240,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -248,7 +253,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 	/**
@@ -261,7 +266,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
 		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
-		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode));
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
 }

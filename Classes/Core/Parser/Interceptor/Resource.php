@@ -75,7 +75,7 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
 		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode) {
-			$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->evaluate(), -1, PREG_SPLIT_DELIM_CAPTURE);
+			$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
 			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
 			foreach ($textParts as $part) {
 				$matches = array();

@@ -32,25 +32,6 @@ namespace F3\Fluid\View;
 interface TemplateViewInterface extends \F3\FLOW3\MVC\View\ViewInterface {
 
 	/**
-	 * Sets the path and name of of the template file. Effectively overrides the
-	 * dynamic resolving of a template file.
-	 *
-	 * @param string $templatePathAndFilename Template file path
-	 * @return void
-	 * @api
-	 */
-	public function setTemplatePathAndFilename($templatePathAndFilename);
-
-	/**
-	 * Sets the path and name of the layout file. Overrides the dynamic resolving of the layout file.
-	 *
-	 * @param string $layoutPathAndFilename Path and filename of the layout file
-	 * @return void
-	 * @api
-	 */
-	public function setLayoutPathAndFilename($layoutPathAndFilename);
-
-	/**
 	 * Checks whether a template can be resolved for the current request context.
 	 *
 	 * @return boolean

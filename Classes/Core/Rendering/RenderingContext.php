@@ -33,6 +33,7 @@ class RenderingContext {
 
 	/**
 	 * Template Variable Container. Contains all variables available through object accessors in the template
+	 *
 	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
@@ -40,18 +41,21 @@ class RenderingContext {
 	/**
 	 * Object manager which is bubbled through. The ViewHelperNode cannot get an ObjectManager injected because
 	 * the whole syntax tree should be cacheable
+	 *
 	 * @var F3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
 	 * Controller context being passed to the ViewHelper
+	 *
 	 * @var F3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
 	 * ViewHelper Variable Container
+	 *
 	 * @var F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
@@ -77,13 +81,13 @@ class RenderingContext {
 	}
 
 	/**
-	 * Sets the template variable container containing all variables available through ObjectAccessors
+	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
 	 *
 	 * @param F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
+	public function injectTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
 		$this->templateVariableContainer = $templateVariableContainer;
 	}
 
@@ -124,7 +128,7 @@ class RenderingContext {
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
+	public function injectViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
 		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
 	}
 

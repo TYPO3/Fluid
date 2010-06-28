@@ -47,7 +47,14 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * The ViewHelper associated with this node
 	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperInterface
 	 */
-	protected $viewHelper = NULL;
+	protected $uninitializedViewHelper = NULL;
+
+	/**
+	 * A mapping RenderingContext -> ViewHelper to only re-initialize ViewHelpers
+	 * when a context change occurs.
+	 * @var \SplObjectStorage
+	 */
+	protected $viewHelpersByContext = NULL;
 
 	/**
 	 * List of comparators which are supported in the boolean expression language.
@@ -83,24 +90,26 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function __construct(\F3\Fluid\Core\ViewHelper\ViewHelperInterface $viewHelper, array $arguments) {
-		$this->viewHelper = $viewHelper;
+		$this->uninitializedViewHelper = $viewHelper;
+		$this->viewHelpersByContext = new \SplObjectStorage();
 		$this->arguments = $arguments;
 
-		if ($this->viewHelper instanceof \F3\FLOW3\AOP\ProxyInterface) {
-			$this->viewHelperClassName = $this->viewHelper->FLOW3_AOP_Proxy_getProxyTargetClassName();
+		if ($this->uninitializedViewHelper instanceof \F3\FLOW3\AOP\ProxyInterface) {
+			$this->viewHelperClassName = $this->uninitializedViewHelper->FLOW3_AOP_Proxy_getProxyTargetClassName();
 		} else {
-			$this->viewHelperClassName = get_class($this->viewHelper);
+			$this->viewHelperClassName = get_class($this->uninitializedViewHelper);
 		}
 	}
 
 	/**
-	 * Returns the attached ViewHelper for this ViewHelperNode.
+	 * Returns the attached (but still uninitialized) ViewHelper for this ViewHelperNode.
 	 * We need this method because sometimes Interceptors need to ask some information from the ViewHelper.
 	 *
 	 * @return \F3\Fluid\Core\ViewHelper\AbstractViewHelper the attached ViewHelper, if it is initialized
 	 */
 	public function getViewHelper() {
-		return $this->viewHelper;
+		// TODO: rename
+		return $this->uninitializedViewHelper;
 	}
 
 	/**
@@ -123,32 +132,30 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @todo check recreation of viewhelper when revisiting caching
 	 */
-	public function evaluate() {
-		if ($this->renderingContext === NULL) {
-			throw new \F3\Fluid\Core\Parser\Exception('RenderingContext is null in ViewHelperNode, but necessary. If this error appears, please report a bug!', 1242669031);
-		}
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+		$objectManager = $renderingContext->getObjectManager();
+		$contextVariables = $renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
 
-		$objectManager = $this->renderingContext->getObjectManager();
-		$contextVariables = $this->renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
-
-		if ($this->viewHelper === NULL) {
-				// we have been resurrected from the cache
-			$this->viewHelper = $objectManager->create($this->viewHelperClassName);
+		if ($this->viewHelpersByContext->contains($renderingContext)) {
+			$viewHelper = $this->viewHelpersByContext[$renderingContext];
+		} else {
+			$viewHelper = clone $this->uninitializedViewHelper;
+			$this->viewHelpersByContext->attach($renderingContext, $viewHelper);
 		}
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
- 		if (count($this->viewHelper->prepareArguments())) {
- 			foreach ($this->viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
+ 		if (count($viewHelper->prepareArguments())) {
+ 			foreach ($viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
-					$argumentValue->setRenderingContext($this->renderingContext);
-					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue, $argumentDefinition->getType());
+					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue, $argumentDefinition->getType(), $renderingContext);
 				} else {
 					$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 				}
@@ -159,23 +166,23 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		}
 
 		$viewHelperArguments = $objectManager->create('F3\Fluid\Core\ViewHelper\Arguments', $evaluatedArguments);
-		$this->viewHelper->setArguments($viewHelperArguments);
-		$this->viewHelper->setTemplateVariableContainer($this->renderingContext->getTemplateVariableContainer());
-		if ($this->renderingContext->getControllerContext() !== NULL) {
-			$this->viewHelper->setControllerContext($this->renderingContext->getControllerContext());
+		$viewHelper->setArguments($viewHelperArguments);
+		$viewHelper->setTemplateVariableContainer($renderingContext->getTemplateVariableContainer());
+		if ($renderingContext->getControllerContext() !== NULL) {
+			$viewHelper->setControllerContext($renderingContext->getControllerContext());
 		}
-		$this->viewHelper->setViewHelperVariableContainer($this->renderingContext->getViewHelperVariableContainer());
-		$this->viewHelper->setViewHelperNode($this);
+		$viewHelper->setViewHelperVariableContainer($renderingContext->getViewHelperVariableContainer());
+		$viewHelper->setViewHelperNode($this);
+		$viewHelper->setRenderingContext($renderingContext);
 
-		if ($this->viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
-			$this->viewHelper->setChildNodes($this->childNodes);
-			$this->viewHelper->setRenderingContext($this->renderingContext);
+		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
+			$viewHelper->setChildNodes($this->childNodes);
 		}
 
-		$this->viewHelper->validateArguments();
-		$this->viewHelper->initialize();
+		$viewHelper->validateArguments();
+		$viewHelper->initialize();
 		try {
-			$output = call_user_func_array(array($this->viewHelper, 'render'), $renderMethodParameters);
+			$output = call_user_func_array(array($viewHelper, 'render'), $renderMethodParameters);
 		} catch (\F3\Fluid\Core\ViewHelper\Exception $exception) {
 				// @todo [BW] rethrow exception, log, ignore.. depending on the current context
 			$output = $exception->getMessage();
@@ -193,11 +200,11 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	protected function convertArgumentValue(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, $type) {
+	protected function convertArgumentValue(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, $type, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		if ($type === 'boolean') {
-			return $this->evaluateBooleanExpression($syntaxTreeNode);
+			return $this->evaluateBooleanExpression($syntaxTreeNode, $renderingContext);
 		}
-		return $syntaxTreeNode->evaluate();
+		return $syntaxTreeNode->evaluate($renderingContext);
 	}
 
 	/**
@@ -223,23 +230,22 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Then, we evaluate the obtained left and right side using the given comparator. This is done inside the evaluateComparator method.
 	 *
 	 * @param F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode Value to be converted
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return boolean Evaluated value
 	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function evaluateBooleanExpression(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode) {
+	protected function evaluateBooleanExpression(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$childNodes = $syntaxTreeNode->getChildNodes();
 		if (count($childNodes) > 3) {
-			throw new \F3\Fluid\Core\Parser\Exception('The expression "' . $syntaxTreeNode->evaluate() . '" has more than tree parts.', 1244201848);
+			throw new \F3\Fluid\Core\Parser\Exception('The expression "' . $syntaxTreeNode->evaluate($renderingContext) . '" has more than tree parts.', 1244201848);
 		}
 
 		$leftSide = NULL;
 		$rightSide = NULL;
 		$comparator = NULL;
 		foreach ($childNodes as $childNode) {
-			$childNode->setRenderingContext($this->renderingContext);
-
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode && !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->evaluate())) {
+			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode && !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->evaluate($renderingContext))) {
 				$comparator = NULL;
 					// skip loop and fall back to classical to boolean conversion.
 				break;
@@ -248,14 +254,14 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			if ($comparator !== NULL) {
 					// comparator already set, we are evaluating the right side of the comparator
 				if ($rightSide === NULL) {
-					$rightSide = $childNode->evaluate();
+					$rightSide = $childNode->evaluate($renderingContext);
 				} else {
-					$rightSide .= $childNode->evaluate();
+					$rightSide .= $childNode->evaluate($renderingContext);
 				}
 			} elseif ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode
-				&& ($comparator = $this->getComparatorFromString($childNode->evaluate()))) {
+				&& ($comparator = $this->getComparatorFromString($childNode->evaluate($renderingContext)))) {
 					// comparator in current string segment
-				$explodedString = explode($comparator, $childNode->evaluate());
+				$explodedString = explode($comparator, $childNode->evaluate($renderingContext));
 				if (isset($explodedString[0]) && trim($explodedString[0]) !== '') {
 					$leftSide .= trim($explodedString[0]);
 				}
@@ -265,9 +271,9 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			} else {
 					// comparator not found yet, on the left side of the comparator
 				if ($leftSide === NULL) {
-					$leftSide = $childNode->evaluate();
+					$leftSide = $childNode->evaluate($renderingContext);
 				} else {
-					$leftSide .= $childNode->evaluate();
+					$leftSide .= $childNode->evaluate($renderingContext);
 				}
 			}
 		}
@@ -275,8 +281,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		if ($comparator !== NULL) {
 			return $this->evaluateComparator($comparator, $leftSide, $rightSide);
 		} else {
-			$syntaxTreeNode->setRenderingContext($this->renderingContext);
-			return $this->convertToBoolean($syntaxTreeNode->evaluate());
+			return $this->convertToBoolean($syntaxTreeNode->evaluate($renderingContext));
 		}
 	}
 

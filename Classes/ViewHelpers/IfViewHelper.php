@@ -120,9 +120,11 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 	 * Sets the rendering context which needs to be passed on to child nodes
 	 *
 	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext the renderingcontext to use
+	 * @return void
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
+		parent::setRenderingContext($renderingContext);
 	}
 
 	/**
@@ -160,8 +162,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
-				$childNode->setRenderingContext($this->renderingContext);
-				$data = $childNode->evaluate();
+				$data = $childNode->evaluate($this->renderingContext);
 				return $data;
 			}
 		}
@@ -181,8 +182,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implemen
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
-				$childNode->setRenderingContext($this->renderingContext);
-				return $childNode->evaluate();
+				return $childNode->evaluate($this->renderingContext);
 			}
 		}
 		if ($this->arguments->hasArgument('else')) {

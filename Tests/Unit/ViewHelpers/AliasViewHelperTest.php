@@ -47,6 +47,7 @@ class AliasViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
 		$viewHelper->setViewHelperNode($mockViewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('someAlias' => 'someValue'));
 	}
 
@@ -67,6 +68,7 @@ class AliasViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
 		$viewHelper->setViewHelperNode($mockViewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('someAlias' => 'someValue', 'someOtherAlias' => 'someOtherValue'));
 	}
 
@@ -85,6 +87,7 @@ class AliasViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
 		$viewHelper->setViewHelperNode($mockViewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 
 		$this->assertEquals('foo', $viewHelper->render(array()));
 	}

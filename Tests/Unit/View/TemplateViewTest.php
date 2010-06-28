@@ -181,72 +181,11 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function renderCallsRenderOnParsedTemplateInterface() {
-     	$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('parseTemplate', 'resolveTemplatePathAndFilename', 'buildParserConfiguration'), array(), '', FALSE);
-		$parsedTemplate = $this->getMock('F3\Fluid\Core\Parser\ParsedTemplateInterface');
-		$objectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
-		$controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
-
-		$variableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
-
-		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$objectManager->expects($this->exactly(3))->method('create')->will($this->onConsecutiveCalls($variableContainer, $renderingContext, $viewHelperVariableContainer));
-
-		$templateView->_set('objectManager', $objectManager);
-		$templateView->injectTemplateParser($this->getMock('F3\Fluid\Core\Parser\TemplateParser'));
-		$templateView->setControllerContext($controllerContext);
-
-		$templateView->expects($this->once())->method('parseTemplate')->will($this->returnValue($parsedTemplate));
-
-			// Real expectations
-		$parsedTemplate->expects($this->once())->method('render')->with($renderingContext)->will($this->returnValue('Hello World'));
-
-		$this->assertEquals('Hello World', $templateView->render(), 'The output of the ParsedTemplates render Method is not returned by the TemplateView');
-	}
-
-	/**
-	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function parseTemplateReadsTheGivenTemplateAndReturnsTheParsedResult() {
-		$mockTemplateParser = $this->getMock('F3\Fluid\Core\Parser\TemplateParser', array('parse'));
-		$mockTemplateParser->expects($this->once())->method('parse')->with('Unparsed Template')->will($this->returnValue('Parsed Template'));
-
-		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
-		$templateView->injectTemplateParser($mockTemplateParser);
-
-		$parsedTemplate = $templateView->_call('parseTemplate', __DIR__ . '/Fixtures/UnparsedTemplateFixture.html');
-		$this->assertSame('Parsed Template', $parsedTemplate);
-	}
-
-	/**
-	 * @test
-	 * @expectedException F3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function parseTemplateThrowsAnExceptionIfTheSpecifiedTemplateResourceDoesNotExist() {
-		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
-		$templateView->_call('parseTemplate', 'foo');
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
 	public function pathToPartialIsResolvedCorrectly() {
-		$this->markTestSkipped('Needs proper implementation.');
-		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request', array('getControllerPackageKey', ''));
-		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('DummyPackageKey'));
-		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'));
-		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
-
-		$mockPackage = $this->getMock('F3\FLOW3\Package\PackageInterface', array('getPackagePath'));
-		$mockPackage->expects($this->any())->method('getPackagePath')->will($this->returnValue('/ExamplePackagePath/'));
-		$mockPackageManager = $this->getMock('F3\FLOW3\Package\PackageManagerInterface', array('getPackage'));
-		$mockPackageManager->expects($this->any())->method('getPackage')->with('DummyPackageKey')->will($this->returnValue($mockPackage));
-
+		$this->markTestIncomplete('Needs to be finished');
 		\vfsStreamWrapper::register();
+		mkdir('vfs://MyTemplates');
+		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
 		$mockRootDirectory = vfsStreamDirectory::create('ExamplePackagePath/Resources/Private/Partials');
 		$mockRootDirectory->getChild('Resources/Private/Partials')->addChild('Partials');
 		\vfsStreamWrapper::setRoot($mockRootDirectory);
@@ -258,60 +197,15 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function viewIsPlacedInVariableContainer() {
-		$this->markTestSkipped('view will be placed in ViewHelperContext soon');
-		$packageManager = $this->objectManager->get('F3\FLOW3\Package\PackageManagerInterface');
-		$resourceManager = $this->objectManager->get('F3\FLOW3\Resource\ResourceManager');
-
-		$syntaxTreeNode = new \F3\Fluid\View\Fixture\TransparentSyntaxTreeNode();
-
-		$parsingState = new \F3\Fluid\Core\Parser\ParsingState();
-		$parsingState->setRootNode($syntaxTreeNode);
-
-		$templateParserMock = $this->getMock('F3\Fluid\Core\Parser\TemplateParser', array('parse'));
-		$templateParserMock->expects($this->any())->method('parse')->will($this->returnValue($parsingState));
-
-		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
-		$mockRequest->expects($this->any())->method('getControllerActionName')->will($this->returnValue('index'));
-		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue('F3\Fluid\Foo\Bar\Controller\BazController'));
-		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue('Fluid'));
-		$mockControllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
-		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
-
-		$templateView = new \F3\Fluid\View\Fixture\TemplateViewFixture($this->objectManager, $packageManager, $resourceManager, $this->objectManager);
-		$templateView->injectTemplateParser($templateParserMock);
-		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
-		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
-		$templateView->setControllerContext($mockControllerContext);
-		$templateView->initializeObject();
-		$templateView->addVariable('name', 'value');
-		$templateView->render();
-
-		$this->assertSame($templateView, $syntaxTreeNode->variableContainer->get('view'), 'The view has not been placed in the variable container.');
-		$this->assertEquals('value', $syntaxTreeNode->variableContainer->get('name'), 'Context variable has been set.');
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function renderSingleSectionWorks() {
-		$this->markTestSkipped('needs refactoring - this is a functional test with too many side effects');
+	public function viewIsPlacedInViewHelperVariableContainer() {
 		$templateView = new \F3\Fluid\View\TemplateView();
-		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
-		$this->assertEquals($templateView->renderSection('mySection'), 'Output', 'Specific section was not rendered correctly!');
-	}
 
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function layoutEngineMergesTemplateAndLayout() {
-		$this->markTestSkipped('needs refactoring - this is a functional test with too many side effects');
-		$templateView = new \F3\Fluid\View\TemplateView();
-		$templateView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TemplateViewSectionFixture.html');
-		$templateView->setLayoutPathAndFilename(__DIR__ . '/Fixtures/LayoutFixture.html');
-		$this->assertEquals($templateView->renderWithLayout('LayoutFixture'), '<div>Output</div>', 'Specific section was not rendered correctly!');
+		$mockViewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer'));
+		$mockRenderingContext->expects($this->once())->method('getViewHelperVariableContainer')->will($this->returnValue($mockViewHelperVariableContainer));
+
+		$mockViewHelperVariableContainer->expects($this->once())->method('setView')->with($templateView);
+		$templateView->injectRenderingContext($mockRenderingContext);
 	}
 
 	/**
@@ -321,7 +215,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	public function resolveTemplatePathAndFilenameChecksDifferentPathPatternsAndReturnsTheFirstPathWhichExists() {
 		\vfsStreamWrapper::register();
 		mkdir('vfs://MyTemplates');
-		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', '');
+		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
 
 		$paths = array(
 			 'vfs://NonExistantDir/UnknowFile.html',
@@ -335,7 +229,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$templateView->setPartialRootPath('MyPartials');
 		$templateView->setLayoutRootPath('MyLayouts');
 
-		$this->assertSame('vfs://MyTemplates/MyCoolAction.html', $templateView->_call('resolveTemplatePathAndFilename', 'myCoolAction'));
+		$this->assertSame('contentsOfMyCoolAction', $templateView->_call('getTemplateSource', 'myCoolAction'));
 		
 	}
 
@@ -344,10 +238,14 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function resolveTemplatePathAndFilenameReturnsTheExplicitlyConfiguredTemplatePathAndFilename() {
-		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
-		$templateView->_set('templatePathAndFilename', 'Foo/Bar/Baz.html');
+		\vfsStreamWrapper::register();
+		mkdir('vfs://MyTemplates');
+		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
 
-		$this->assertSame('Foo/Bar/Baz.html', $templateView->_call('resolveTemplatePathAndFilename'));
+		$templateView = $this->getAccessibleMock('F3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
+		$templateView->_set('templatePathAndFilename', 'vfs://MyTemplates/MyCoolAction.html');
+
+		$this->assertSame('contentsOfMyCoolAction', $templateView->_call('getTemplateSource'));
   	}
 }
 

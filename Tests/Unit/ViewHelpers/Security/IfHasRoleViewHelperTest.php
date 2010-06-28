@@ -22,13 +22,15 @@ namespace F3\Fluid\ViewHelpers\Security;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
  * Testcase for IfHasRoleViewHelper
  *
  * @version $Id: IfViewHelperTest.php 2813 2009-07-16 14:02:34Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
+class IfHasRoleViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
@@ -51,12 +53,9 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function viewHelperRendersThenViewHelperChildIfHasRoleReturnsTrueAndThenViewHelperChildExists() {
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
-
 		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockThenViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ThenViewHelper'));
-		$mockThenViewHelperNode->expects($this->at(1))->method('setRenderingContext')->with($renderingContext);
-		$mockThenViewHelperNode->expects($this->at(2))->method('evaluate')->will($this->returnValue('ThenViewHelperResults'));
+		$mockThenViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ThenViewHelperResults'));
 
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(TRUE));
@@ -65,7 +64,7 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 		$viewHelper->injectSecurityContext($mockSecurityContext);
 
 		$viewHelper->setChildNodes(array($mockThenViewHelperNode));
-		$viewHelper->setRenderingContext($renderingContext);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$actualResult = $viewHelper->render('someGA');
 
 		$this->assertEquals('ThenViewHelperResults', $actualResult);
@@ -91,12 +90,9 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function viewHelperRendersElseViewHelperChildIfHasRoleReturnsFalseAndElseViewHelperChildExists() {
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
-
 		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ElseViewHelper'));
-		$mockElseViewHelperNode->expects($this->at(1))->method('setRenderingContext')->with($renderingContext);
-		$mockElseViewHelperNode->expects($this->at(2))->method('evaluate')->will($this->returnValue('ElseViewHelperResults'));
+		$mockElseViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ElseViewHelperResults'));
 
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(FALSE));
@@ -105,7 +101,7 @@ class IfHasRoleViewHelperTest extends \F3\Testing\BaseTestCase {
 		$viewHelper->injectSecurityContext($mockSecurityContext);
 
 		$viewHelper->setChildNodes(array($mockElseViewHelperNode));
-		$viewHelper->setRenderingContext($this->getMock('F3\Fluid\Core\Rendering\RenderingContext'));
+		$viewHelper->setRenderingContext($this->renderingContext);
 
 		$actualResult = $viewHelper->render('someGA');
 		$this->assertEquals('ElseViewHelperResults', $actualResult);

@@ -37,7 +37,7 @@ class TextNodeTest extends \F3\Testing\BaseTestCase {
 	public function renderReturnsSameStringAsGivenInConstructor() {
 		$string = 'I can work quite effectively in a train!';
 		$node = new \F3\Fluid\Core\Parser\SyntaxTree\TextNode($string);
-		$this->assertEquals($node->evaluate(), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+		$this->assertEquals($node->evaluate($this->getMock('F3\Fluid\Core\Rendering\RenderingContext')), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
 	}
 
 	/**

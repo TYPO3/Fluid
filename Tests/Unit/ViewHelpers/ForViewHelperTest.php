@@ -46,6 +46,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array(0,1,2,3), 'innerVariable');
 
 		$expectedCallProtocol = array(
@@ -69,6 +70,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('key1' => 'value1', 'key2' => 'value2'), 'innerVariable', 'someKey');
 
 		$expectedCallProtocol = array(
@@ -121,6 +123,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
 		$viewHelper->setViewHelperNode($mockViewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('foo' => 'bar', 'FLOW3' => 'Fluid'), 'innerVariable');
 	}
 
@@ -144,6 +147,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$this->templateVariableContainer->expects($this->at(7))->method('remove')->with('someKey');
 
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->setViewHelperNode($mockViewHelperNode);
 		$viewHelper->render(array('foo' => 'bar', 'FLOW3' => 'Fluid'), 'innerVariable', 'someKey');
 	}
@@ -160,6 +164,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array(0,1,2,3), 'innerVariable', '', TRUE);
 
 		$expectedCallProtocol = array(
@@ -183,6 +188,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('key1' => 'value1', 'key2' => 'value2'), 'innerVariable', 'someKey', TRUE);
 
 		$expectedCallProtocol = array(
@@ -210,6 +216,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('foo', 'bar', 'baz'), 'innerVariable', 'someKey');
 
 		$expectedCallProtocol = array(
@@ -241,6 +248,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->render(array('foo', 'bar', 'baz'), 'innerVariable', 'someKey', TRUE);
 
 		$expectedCallProtocol = array(
@@ -285,6 +293,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$traversableObject = new \ArrayObject(array('key1' => 'value1', 'key2' => 'value2'));
 		$viewHelper->render($traversableObject, 'innerVariable');
 
@@ -307,6 +316,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$iteratorObject = new \ArrayIterator(array('key1' => 'value1', 'key2' => 'value2'));
 		$viewHelper->render($iteratorObject, 'innerVariable', 'someKey');
 
@@ -335,6 +345,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
+		$viewHelper->setRenderingContext($this->renderingContext);
 		$splObjectStorageObject = new \SplObjectStorage();
 		$object1 = new \stdClass();
 		$splObjectStorageObject->attach($object1);

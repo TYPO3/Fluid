@@ -54,11 +54,23 @@ class TextNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Return the text associated to the syntax tree. Text from child nodes is
 	 * appended to the text in the node's own text.
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return string the text stored in this node/subtree.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @todo TextNode shouldn't have child nodes
 	 */
-	public function evaluate() {
-		return $this->text . $this->evaluateChildNodes();
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+		return $this->text . $this->evaluateChildNodes($renderingContext);
+	}
+
+	/**
+	 * Getter for text
+	 *
+	 * @return string The text of this node
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function getText() {
+		return $this->text;
 	}
 }
 

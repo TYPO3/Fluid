@@ -60,6 +60,7 @@ class IdentityViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	}
 
 	/**
+	 * Renders the output of this view helper
 	 *
 	 * @param object $object The persisted object
 	 * @return string Identity
@@ -67,6 +68,9 @@ class IdentityViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @api
 	 */
 	public function render($object) {
+		if (!is_object($object)) {
+			return 'IdentityViewHelper expects an object, ' . \gettype($object) . ' given.';
+		}
 		$identifier = $this->persistenceManager->getIdentifierByObject($object);
 		if ($identifier === NULL) {
 			return '';

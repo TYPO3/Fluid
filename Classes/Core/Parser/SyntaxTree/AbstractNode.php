@@ -38,40 +38,24 @@ abstract class AbstractNode implements \F3\Fluid\Core\Parser\SyntaxTree\NodeInte
 	protected $childNodes = array();
 
 	/**
-	 * The rendering context containing everything to correctly render the subtree
-	 * @var \F3\Fluid\Core\Rendering\RenderingContext
-	 */
-	protected $renderingContext;
-
-	/**
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext Rendering Context to be used for this evaluation
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
-		$this->renderingContext = $renderingContext;
-	}
-
-	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluateChildNodes() {
+	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$output = NULL;
 		foreach ($this->childNodes as $subNode) {
-			$subNode->setRenderingContext($this->renderingContext);
-
 			if ($output === NULL) {
-				$output = $subNode->evaluate();
+				$output = $subNode->evaluate($renderingContext);
 			} else {
 				if (is_object($output) && !method_exists($output, '__toString')) {
 					throw new \F3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($output) . '" to string.', 1248356140);
 				}
 				$output = (string)$output;
-				$subNodeOutput = $subNode->evaluate();
+				$subNodeOutput = $subNode->evaluate($renderingContext);
 
 				if (is_object($subNodeOutput) && !method_exists($subNodeOutput, '__toString')) {
 					throw new \F3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($subNodeOutput) . '" to string.', 1273753083);

@@ -50,19 +50,16 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the array and return an evaluated array
 	 *
+	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluate() {
-		if ($this->renderingContext === NULL) {
-			throw new \F3\Fluid\Core\Parser\Exception('Rendering Context is null in ArrayNode, but necessary. If this error appears, please report a bug!', 1242668976);
-		}
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
 			if ($value instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
-				$value->setRenderingContext($this->renderingContext);
-				$arrayToBuild[$key] = $value->evaluate();
+				$arrayToBuild[$key] = $value->evaluate($renderingContext);
 			} else {
 				// TODO - this case should not happen!
 				$arrayToBuild[$key] = $value;
