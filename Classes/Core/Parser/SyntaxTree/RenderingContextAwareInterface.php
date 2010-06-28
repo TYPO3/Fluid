@@ -38,7 +38,7 @@ interface RenderingContextAwareInterface {
 	 * @param $renderingContext
 	 * @return void
 	 */
-	public function setRenderingContext($renderingContext);
+	public function injectRenderingContext($renderingContext);
 
 }
 
