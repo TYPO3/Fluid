@@ -41,7 +41,7 @@ namespace F3\Fluid\Core\Parser\Interceptor;
 class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
-	 * Split a text at what seems to be a package resource URI
+	 * Split a text at what seems to be a package resource URI.
 	 * @var string
 	 */
 	const PATTERN_SPLIT_AT_RESOURCE_URIS = '!((?:(?:../)|(?:[^"\'(]+/))*Public/[^"\')]+)!';
@@ -52,6 +52,13 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * @see \F3\FLOW3\Pckage\Package::PATTERN_MATCH_PACKAGEKEY
 	 */
 	const PATTERN_MATCH_RESOURCE_URI = '!(?:../)*(?:(?P<Package>[A-Z][A-Za-z0-9_]+)/Resources/)?Public/(?P<Path>[^"]+)!';
+
+	/**
+	 * The default package key to use when rendering resource links without a
+	 * package key in the source URL.
+	 * @var string
+	 */
+	protected $defaultPackageKey;
 
 	/**
 	 * Inject object factory
@@ -65,6 +72,19 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	}
 
 	/**
+	 *
+	 * @param string $defaultPackageKey
+	 * @return void
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function setDefaultPackageKey($defaultPackageKey) {
+		if (!preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {
+			throw new \InvalidArgumentException('The given argument was not a valid package key.', 1277287099);
+		}
+		$this->defaultPackageKey = $defaultPackageKey;
+	}
+
+	/**
 	 * Looks for URIs pointing to package resources and in place of those adds
 	 * ViewHelperNode instances using the ResourceViewHelper.
 	 *
@@ -74,23 +94,23 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
-		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\TextNode) {
-			$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
-			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
-			foreach ($textParts as $part) {
-				$matches = array();
-				if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
-					$arguments = array(
-						'path' => $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
-					);
-					if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
-						$arguments['package'] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
-					}
-					$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
-					$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
-				} else {
-					$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
+		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
+		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
+		foreach ($textParts as $part) {
+			$matches = array();
+			if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
+				$arguments = array(
+					'path' => $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
+				);
+				if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
+					$arguments['package'] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
+				} elseif ($this->defaultPackageKey !== NULL) {
+					$arguments['package'] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $this->defaultPackageKey);
 				}
+				$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
+				$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
+			} else {
+				$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 			}
 		}
 

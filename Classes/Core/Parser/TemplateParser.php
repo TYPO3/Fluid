@@ -269,13 +269,23 @@ class TemplateParser {
 
 	/**
 	 * Set the configuration for the parser.
-	 *h
+	 *
 	 * @param \F3\Fluid\Core\Parser\Configuration $configuration
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setConfiguration(\F3\Fluid\Core\Parser\Configuration $configuration = NULL) {
 		$this->configuration = $configuration;
+	}
+
+	/**
+	 * Get the configuration for the parser.
+	 *
+	 * @return \F3\Fluid\Core\Parser\Configuration
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 */
+	public function getConfiguration() {
+		return $this->configuration;
 	}
 
 	/**
