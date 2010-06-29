@@ -182,7 +182,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pathToPartialIsResolvedCorrectly() {
-		$this->markTestIncomplete('Needs to be finished');
+		$this->markTestSkipped('Needs to be finished');
 		\vfsStreamWrapper::register();
 		mkdir('vfs://MyTemplates');
 		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
