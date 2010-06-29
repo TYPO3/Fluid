@@ -106,6 +106,7 @@ class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHe
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
+		parent::setRenderingContext($renderingContext);
 	}
 
 	/**

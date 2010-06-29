@@ -106,6 +106,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	 */
 	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
 		$this->renderingContext = $renderingContext;
+		parent::setRenderingContext($renderingContext);
 	}
 
 	/**
