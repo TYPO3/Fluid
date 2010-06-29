@@ -57,25 +57,9 @@ class Configuration {
 	}
 
 	/**
-	 * Removes an interceptor to apply to values coming from object accessors.
-	 *
-	 * @param \F3\Fluid\Core\Parser\InterceptorInterface $interceptor
-	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function removeInterceptor($interceptor) {
-		foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
-			if ($this->interceptors[$interceptionPoint]->contains($interceptor)) {
-				$this->interceptors[$interceptionPoint]->detach($interceptor);
-			}
-		}
-		
-	}
-
-	/**
 	 * Returns all interceptors for a given Interception Point.
 	 *
-	 * @param int $interceptionPoint one of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
+	 * @param integer $interceptionPoint one of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
 	 * @return \SplObjectStorage<\F3\Fluid\Core\Parser\InterceptorInterface>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
