@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\ViewHelpers\Persistence;
+namespace F3\Fluid\ViewHelpers\Identity;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,61 +22,54 @@ namespace F3\Fluid\ViewHelpers\Persistence;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
- * Renders the identity of a persisted object (if it has an identity).
- * Useful for using the identity outside of the form view helpers
- * (e.g. JavaScript and AJAX).
- *
- * = Examples =
- *
- * <code title="Single alias">
- * <f:persistence.identity object="{post.blog}" />
- * </code>
- * <output>
- * 97e7e90a-413c-44ef-b2d0-ddfa4387b5ca
- * </output>
+ * Testcase for IdentityViewHelper
  *
  * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @api
- * @scope prototype
  */
-class IdentityViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class JsonIdentityViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
-	 */
-	protected $persistenceManager;
-
-	/**
-	 * Injects the FLOW3 Persistence Manager
-	 *
-	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
-	 * @return void
+	 * @test
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
-		$this->persistenceManager = $persistenceManager;
+	public function renderGetsIdentityForObjectFromPersistenceManager() {
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->injectPersistenceManager($mockPersistenceManager);
+
+		$object = new \stdClass();
+
+		$mockPersistenceManager->expects($this->atLeastOnce())->method('getIdentifierByObject')->with($object)->will($this->returnValue('6f487e40-4483-11de-8a39-0800200c9a66'));
+
+		$output = $viewHelper->render($object);
+
+		$this->assertEquals('{"__identity":"6f487e40-4483-11de-8a39-0800200c9a66"}', $output, 'Identity is rendered as is');
 	}
 
 	/**
-	 * Renders the output of this view helper
-	 *
-	 * @param object $object The persisted object
-	 * @return string Identity
+	 * @test
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @api
 	 */
-	public function render($object) {
-		if (!is_object($object)) {
-			return 'IdentityViewHelper expects an object, ' . \gettype($object) . ' given.';
-		}
-		$identifier = $this->persistenceManager->getIdentifierByObject($object);
-		if ($identifier === NULL) {
-			return '';
-		} else {
-			return $identifier;
-		}
+	public function renderOutputsEmptyJsonObjectForNullIdentity() {
+		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->injectPersistenceManager($mockPersistenceManager);
+
+		$object = new \stdClass();
+
+		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
+
+		$output = $viewHelper->render($object);
+
+		$this->assertEquals('{}', $output, 'NULL Identity is rendered as empty string');
 	}
 }
 
