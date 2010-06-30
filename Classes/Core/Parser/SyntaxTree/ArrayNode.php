@@ -50,12 +50,12 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the array and return an evaluated array
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
 			if ($value instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {

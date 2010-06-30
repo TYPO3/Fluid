@@ -117,7 +117,7 @@ class IfViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function thenArgumentHasPriorityOverChildNodesIfConditionIsTrue() {
-		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
 
 		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockThenViewHelperNode->expects($this->never())->method('evaluate');
@@ -149,7 +149,7 @@ class IfViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function elseArgumentHasPriorityOverChildNodesIfConditionIsFalse() {
-		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
 
 		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockElseViewHelperNode->expects($this->never())->method('evaluate');

@@ -88,10 +88,10 @@ class ParsingState implements \F3\Fluid\Core\Parser\ParsedTemplateInterface {
 	/**
 	 * Render the parsed template with rendering context
 	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext The rendering context to use
+	 * @param F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext The rendering context to use
 	 * @return Rendered string
 	 */
-	public function render(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function render(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->rootNode->evaluate($renderingContext);
 	}
 

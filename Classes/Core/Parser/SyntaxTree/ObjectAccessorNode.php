@@ -61,12 +61,12 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * The first part of the object path has to be a variable in the
 	 * TemplateVariableContainer.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->getPropertyPath($renderingContext->getTemplateVariableContainer(), $this->objectPath, $renderingContext);
 	}
 
@@ -82,7 +82,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param string $propertyPath
 	 * @return mixed Value of the property
 	 */
-	protected function getPropertyPath($subject, $propertyPath, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	protected function getPropertyPath($subject, $propertyPath, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$propertyPathSegments = explode('.', $propertyPath);
 		foreach ($propertyPathSegments as $pathSegment) {
 			if (is_object($subject) && \F3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($subject, $pathSegment)) {
@@ -94,7 +94,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			}
 
 			if ($subject instanceof \F3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
-				$subject->injectRenderingContext($renderingContext);
+				$subject->setRenderingContext($renderingContext);
 			}
 		}
 		return $subject;

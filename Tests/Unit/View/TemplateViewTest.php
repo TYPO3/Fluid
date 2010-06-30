@@ -205,7 +205,7 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		$mockRenderingContext->expects($this->once())->method('getViewHelperVariableContainer')->will($this->returnValue($mockViewHelperVariableContainer));
 
 		$mockViewHelperVariableContainer->expects($this->once())->method('setView')->with($templateView);
-		$templateView->injectRenderingContext($mockRenderingContext);
+		$templateView->setRenderingContext($mockRenderingContext);
 	}
 
 	/**

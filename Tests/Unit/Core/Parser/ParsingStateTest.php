@@ -69,7 +69,7 @@ class ParsingStateTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
 
 		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));

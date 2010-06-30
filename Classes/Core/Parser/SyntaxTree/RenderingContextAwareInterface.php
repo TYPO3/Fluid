@@ -35,10 +35,10 @@ interface RenderingContextAwareInterface {
 	/**
 	 * Sets the current rendering context
 	 *
-	 * @param object $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
 	 */
-	public function injectRenderingContext($renderingContext);
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
 
 }
 

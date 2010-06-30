@@ -40,12 +40,12 @@ abstract class AbstractNode implements \F3\Fluid\Core\Parser\SyntaxTree\NodeInte
 	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$output = NULL;
 		foreach ($this->childNodes as $subNode) {
 			if ($output === NULL) {

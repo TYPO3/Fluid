@@ -65,7 +65,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	protected $childNodes = array();
 
 	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingContext
+	 * @var F3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $renderingContext;
 
@@ -100,11 +100,11 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper im
 	/**
 	 * Sets the rendering context which needs to be passed on to child nodes
 	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingContext $renderingContext the renderingcontext to use
+	 * @param F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext the renderingcontext to use
 	 * @return void
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$this->renderingContext = $renderingContext;
 		parent::setRenderingContext($renderingContext);
 	}

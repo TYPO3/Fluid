@@ -59,7 +59,7 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	 * Due to the rendering stack, another rendering context might be active
 	 * at certain points while rendering the template.
 	 *
-	 * @var \F3\Fluid\Core\Rendering\RenderingContext
+	 * @var \F3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $baseRenderingContext;
 
@@ -95,13 +95,14 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	/**
 	 * Injects a fresh rendering context
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$this->baseRenderingContext = $renderingContext;
 		$this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
+		$this->controllerContext = $renderingContext->getControllerContext();
 	}
 
 	/**
@@ -328,11 +329,11 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	 *
 	 * @param int $type one of the RENDERING_* constants
 	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function startRendering($type, \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	protected function startRendering($type, \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		array_push($this->renderingStack, array('type' => $type, 'parsedTemplate' => $parsedTemplate, 'renderingContext' => $renderingContext));
 	}
 
@@ -372,7 +373,7 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	/**
 	 * Get the rendering context which is currently used.
 	 *
-	 * @return F3\Fluid\Core\Rendering\RenderingContext
+	 * @return F3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getCurrentRenderingContext() {

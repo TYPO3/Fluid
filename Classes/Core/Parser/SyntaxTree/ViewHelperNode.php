@@ -132,13 +132,13 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return object evaluated node after the view helper has been called.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @todo check recreation of viewhelper when revisiting caching
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$objectManager = $renderingContext->getObjectManager();
 		$contextVariables = $renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
 
@@ -200,7 +200,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	protected function convertArgumentValue(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, $type, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	protected function convertArgumentValue(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, $type, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		if ($type === 'boolean') {
 			return $this->evaluateBooleanExpression($syntaxTreeNode, $renderingContext);
 		}
@@ -230,12 +230,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Then, we evaluate the obtained left and right side using the given comparator. This is done inside the evaluateComparator method.
 	 *
 	 * @param F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode Value to be converted
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return boolean Evaluated value
 	 * @throws \F3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function evaluateBooleanExpression(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	protected function evaluateBooleanExpression(\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$childNodes = $syntaxTreeNode->getChildNodes();
 		if (count($childNodes) > 3) {
 			throw new \F3\Fluid\Core\Parser\Exception('The expression "' . $syntaxTreeNode->evaluate($renderingContext) . '" has more than tree parts.', 1244201848);

@@ -34,10 +34,10 @@ interface NodeInterface {
 	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 */
-	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
+	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
 
 	/**
 	 * Returns all child nodes for a given node.
@@ -57,10 +57,10 @@ interface NodeInterface {
 	/**
 	 * Evaluates the node - can return not only strings, but arbitary objects.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Evaluated node
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext);
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
 }
 
 ?>

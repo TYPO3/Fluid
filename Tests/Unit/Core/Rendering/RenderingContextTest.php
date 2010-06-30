@@ -32,7 +32,7 @@ class RenderingContextTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * Parsing state
-	 * @var \F3\Fluid\Core\Rendering\RenderingContext
+	 * @var \F3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $renderingContext;
 

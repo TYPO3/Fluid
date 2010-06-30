@@ -35,7 +35,7 @@ class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelp
 		$this->variableContainer = $variableContainer;
 	}
 	
-	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$identifiers = $this->variableContainer->getAllIdentifiers();
 		$callElement = array();
 		foreach ($identifiers as $identifier) {
@@ -44,7 +44,7 @@ class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelp
 		$this->callProtocol[] = $callElement;
 	}
 	
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {}
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {}
 }
 
 

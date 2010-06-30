@@ -36,7 +36,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	protected $viewHelperNode;
 
 	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingContext
+	 * @var F3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $renderingContext;
 
@@ -46,7 +46,7 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 	 */
 	public function setUp() {
 		$this->viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
 	}
 
 	/**

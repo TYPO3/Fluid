@@ -72,7 +72,7 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	protected $controllerContext;
 
 	/**
-	 * @var \F3\Fluid\Core\Rendering\RenderingContext
+	 * @var \F3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	private $renderingContext;
 
@@ -125,11 +125,11 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	}
 
 	/**
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 	 $this->renderingContext = $renderingContext;
 	}
 

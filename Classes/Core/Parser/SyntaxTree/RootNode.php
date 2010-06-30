@@ -34,11 +34,11 @@ class RootNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContext $renderingContext
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContext $renderingContext) {
+	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->evaluateChildNodes($renderingContext);
 	}
 }
