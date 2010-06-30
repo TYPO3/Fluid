@@ -87,11 +87,20 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $package Target package key. If not set, the current package key will be used
 	 * @param \F3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
 	 * @param string $title If specified, this title is added to the resource uri to make it more descriptive
+	 * @param string $uri A resource URI, a relative / absolute path or URL
 	 * @return string The absolute URI to the resource
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($path = NULL, $package = NULL, $resource = NULL, $title = '') {
+	public function render($path = NULL, $package = NULL, $resource = NULL, $title = '', $uri = NULL) {
+		if ($uri !== NULL) {
+			if (\preg_match('#resource://([^/]*)/Public/(.*)#', $uri, $matches) > 0) {
+				$package = $matches[1];
+				$path = $matches[2];
+			} else {
+				return $uri;
+			}
+		}
 		if ($resource === NULL) {
 			if ($path === NULL) {
 				return '!!! No path specified in uri.resource view helper !!!';
