@@ -112,6 +112,16 @@ class TemplateVariableContainer implements \ArrayAccess {
 	}
 
 	/**
+	 * Returns the variables array.
+	 *
+	 * @return array Identifiers and values of all variables
+	 * @author Robert Lemke <robert@typo3.org>
+	 */
+	public function getAll() {
+		return $this->variables;
+	}
+
+	/**
 	 * Checks if this property exists in the VariableContainer.
 	 *
 	 * @param string $identifier
