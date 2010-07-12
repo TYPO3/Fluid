@@ -348,6 +348,21 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 * @api
 	 */
 	//abstract public function render();
+
+	/**
+	 * Get the rendering context interface.
+	 * THIS METHOD IS NO PUBLIC API AND ONLY CALLABLE INSIDE THE FRAMEWORK!
+	 *
+	 * @return F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function getRenderingContext() {
+		if ($this instanceof \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
+			return $this->renderingContext;
+		} else {
+			throw new \F3\Fluid\Core\ViewHelper\Exception\RenderingContextNotAccessibleException('It is forbidden to call getRenderingContext() if you do not implement \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface. But beware, this interface is NO PUBLIC API! If you want to implement conditions, you should subclass \F3\Fluid\Core\ViewHelper\ConditionViewHelper.', 127895038);
+		}
+	}
 }
 
 ?>

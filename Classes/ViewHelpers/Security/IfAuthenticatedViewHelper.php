@@ -56,19 +56,7 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @api
  * @scope prototype
  */
-class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
-
-	/**
-	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
-	 * @var array
-	 */
-	protected $childNodes = array();
-
-	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingContextInterface
-	 */
-	protected $renderingContext;
-
+class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\ConditionViewHelper {
 	/**
 	 * @var F3\FLOW3\Security\Context
 	 */
@@ -83,30 +71,6 @@ class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHe
 	 */
 	public function injectSecurityContext(\F3\FLOW3\Security\Context $securityContext) {
 		$this->securityContext = $securityContext;
-	}
-
-	/**
-	 * Setter for ChildNodes - as defined in ChildNodeAccessInterface
-	 *
-	 * @param array $childNodes Child nodes of this syntax tree node
-	 * @return void
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 * @api
-	 */
-	public function setChildNodes(array $childNodes) {
-		$this->childNodes = $childNodes;
-	}
-
-	/**
-	 * Sets the rendering context which needs to be passed on to child nodes
-	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext the renderingcontext to use
-	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
-		$this->renderingContext = $renderingContext;
-		parent::setRenderingContext($renderingContext);
 	}
 
 	/**
@@ -125,40 +89,5 @@ class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHe
 		}
 		return $this->renderElseChild();
 	}
-
-	/**
-	 * Iterates through child nodes and renders ThenViewHelper.
-	 * If no ThenViewHelper is found, all child nodes are rendered
-	 *
-	 * @return string rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	protected function renderThenChild() {
-		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
-				$data = $childNode->evaluate($this->renderingContext);
-				return $data;
-			}
-		}
-		return $this->renderChildren();
-	}
-
-	/**
-	 * Iterates through child nodes and renders ElseViewHelper.
-	 *
-	 * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
-	protected function renderElseChild() {
-		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
-				return $childNode->evaluate($this->renderingContext);
-			}
-		}
-		return '';
-	}
 }
-
 ?>

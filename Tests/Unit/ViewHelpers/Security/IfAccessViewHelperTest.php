@@ -35,10 +35,11 @@ class IfAccessViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	/**
 	 * @test
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function viewHelperRendersChildrenIfHasAccessToResourceReturnsTrueAndNoThenViewHelperChildExists() {
-		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('renderChildren', 'hasAccessToResource'));
-		$mockViewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+	public function viewHelperRendersThenIfHasAccessToResourceReturnsTrue() {
+		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('renderThenChild', 'hasAccessToResource'));
+		$mockViewHelper->expects($this->once())->method('renderThenChild')->will($this->returnValue('foo'));
 		$mockViewHelper->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(TRUE));
 
 		$actualResult = $mockViewHelper->render('someResource');
@@ -48,48 +49,12 @@ class IfAccessViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	/**
 	 * @test
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function viewHelperRendersThenViewHelperChildIfHasAccessToResourceReturnsTrueAndThenViewHelperChildExists() {
-		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
-		$mockThenViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ThenViewHelper'));
-		$mockThenViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ThenViewHelperResults'));
-
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('hasAccessToResource'));
-		$viewHelper->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(TRUE));
-
-		$viewHelper->setChildNodes(array($mockThenViewHelperNode));
-		$viewHelper->setRenderingContext($this->renderingContext);
-		$actualResult = $viewHelper->render('someResource');
-
-		$this->assertEquals('ThenViewHelperResults', $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	public function renderReturnsEmptyStringIfHasAccessToResourceReturnsFalseAndNoElseViewHelperChildExists() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('hasAccessToResource'));
+	public function viewHelperRendersElseIfHasAccessToResourceReturnsFalse() {
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('hasAccessToResource', 'renderElseChild'));
 		$viewHelper->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(FALSE));
-
-		$actualResult = $viewHelper->render('someResource');
-		$this->assertEquals('', $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	public function viewHelperRendersElseViewHelperChildIfHasAccessToResourceReturnsFalseAndElseViewHelperChildExists() {
-		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
-		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ElseViewHelper'));
-		$mockElseViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ElseViewHelperResults'));
-
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('hasAccessToResource'));
-		$viewHelper->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(FALSE));
-
-		$viewHelper->setChildNodes(array($mockElseViewHelperNode));
-		$viewHelper->setRenderingContext($this->renderingContext);
+		$viewHelper->expects($this->once())->method('renderElseChild')->will($this->returnValue('ElseViewHelperResults'));
 
 		$actualResult = $viewHelper->render('someResource');
 		$this->assertEquals('ElseViewHelperResults', $actualResult);

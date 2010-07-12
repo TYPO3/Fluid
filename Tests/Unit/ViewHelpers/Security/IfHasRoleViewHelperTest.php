@@ -35,14 +35,15 @@ class IfHasRoleViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	/**
 	 * @test
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function viewHelperRendersChildrenIfHasRoleReturnsTrueAndNoThenViewHelperChildExists() {
+	public function viewHelperRendersThenPartIfHasRoleReturnsTrue() {
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(TRUE));
 
-		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('renderChildren', 'hasAccessToResource'));
+		$mockViewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('renderThenChild', 'hasAccessToResource'));
 		$mockViewHelper->injectSecurityContext($mockSecurityContext);
-		$mockViewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+		$mockViewHelper->expects($this->once())->method('renderThenChild')->will($this->returnValue('foo'));
 
 		$actualResult = $mockViewHelper->render('someGA');
 		$this->assertEquals('foo', $actualResult);
@@ -51,57 +52,15 @@ class IfHasRoleViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	/**
 	 * @test
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function viewHelperRendersThenViewHelperChildIfHasRoleReturnsTrueAndThenViewHelperChildExists() {
-		$mockThenViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
-		$mockThenViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ThenViewHelper'));
-		$mockThenViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ThenViewHelperResults'));
-
-		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
-		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(TRUE));
-
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('dummy'));
-		$viewHelper->injectSecurityContext($mockSecurityContext);
-
-		$viewHelper->setChildNodes(array($mockThenViewHelperNode));
-		$viewHelper->setRenderingContext($this->renderingContext);
-		$actualResult = $viewHelper->render('someGA');
-
-		$this->assertEquals('ThenViewHelperResults', $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	public function renderReturnsEmptyStringIfHasRoleReturnsFalseAndNoElseViewHelperChildExists() {
+	public function viewHelperRendersElsePartIfConditionIsFalse() {
 		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
 		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(FALSE));
 
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('dummy'));
+		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('renderElseChild'));
+		$viewHelper->expects($this->once())->method('renderElseChild')->will($this->returnValue('ElseViewHelperResults'));
 		$viewHelper->injectSecurityContext($mockSecurityContext);
-
-		$actualResult = $viewHelper->render('someGA');
-		$this->assertEquals('', $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 */
-	public function viewHelperRendersElseViewHelperChildIfHasRoleReturnsFalseAndElseViewHelperChildExists() {
-		$mockElseViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
-		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('F3\Fluid\ViewHelpers\ElseViewHelper'));
-		$mockElseViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ElseViewHelperResults'));
-
-		$mockSecurityContext = $this->getMock('F3\FLOW3\Security\Context', array(), array(), '', FALSE);
-		$mockSecurityContext->expects($this->once())->method('hasRole')->with('someGA')->will($this->returnValue(FALSE));
-
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('dummy'));
-		$viewHelper->injectSecurityContext($mockSecurityContext);
-
-		$viewHelper->setChildNodes(array($mockElseViewHelperNode));
-		$viewHelper->setRenderingContext($this->renderingContext);
 
 		$actualResult = $viewHelper->render('someGA');
 		$this->assertEquals('ElseViewHelperResults', $actualResult);

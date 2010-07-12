@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\ViewHelper\Facets;
+namespace F3\Fluid\Core\ViewHelper\Exception;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,28 +23,13 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *                                                                        */
 
 /**
- * Child Node Access Facet. View Helpers should implement this interface if they
- * need access to the direct children in the Syntax Tree at rendering-time.
- * This might happen if you only want to selectively render a part of the syntax
- * tree depending on some conditions.
- * To render subnodes, you can fetch the RenderingContext via $this->getRenderingContext().
+ * A "Rendering Context not Accessible" exception.
  *
- * In most cases, you will not need this facet, and it is NO PUBLIC API!
- * Right now it is only used internally for conditions, so by subclassing F3\Fluid\Core\ViewHelpers\ConditionViewHelper, this should be all you need.
- *
- * See \F3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
- *
- * @version $Id$
+ * @version $Id: InvalidVariableException.php 4483 2010-06-10 13:57:32Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
  */
-interface ChildNodeAccessInterface {
-	/**
-	 * Sets the direct child nodes of the current syntax tree node.
-	 *
-	 * @param array<\F3\Fluid\Core\Parser\SyntaxTree\AbstractNode> $childNodes
-	 * @return void
-	 */
-	public function setChildNodes(array $childNodes);
+class RenderingContextNotAccessibleException extends \F3\Fluid\Core\ViewHelper\Exception {
 }
 
 ?>

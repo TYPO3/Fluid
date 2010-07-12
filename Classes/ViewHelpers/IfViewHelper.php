@@ -91,105 +91,23 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
-
-	/**
-	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
-	 * @var array
-	 */
-	protected $childNodes = array();
-
-	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingContextInterface
-	 */
-	protected $renderingContext;
-
-	/**
-	 * Setter for ChildNodes - as defined in ChildNodeAccessInterface
-	 *
-	 * @param array $childNodes Child nodes of this syntax tree node
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @api
-	 */
-	public function setChildNodes(array $childNodes) {
-		$this->childNodes = $childNodes;
-	}
-
-	/**
-	 * Sets the rendering context which needs to be passed on to child nodes
-	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext the renderingcontext to use
-	 * @return void
-	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
-		$this->renderingContext = $renderingContext;
-		parent::setRenderingContext($renderingContext);
-	}
+class IfViewHelper extends \F3\Fluid\Core\ViewHelper\ConditionViewHelper {
 
 	/**
 	 * renders <f:then> child if $condition is true, otherwise renders <f:else> child.
 	 *
 	 * @param boolean $condition View helper condition
-	 * @param string $then String to be returned if the condition is met
-	 * @param string $else String to be returned if the condition is not met
 	 * @return string the rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($condition, $then = NULL, $else = NULL) {
+	public function render($condition) {
 		if ($condition) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();
 		}
 	}
-
-	/**
-	 * Returns value of "then" attribute.
-	 * If then attribute is not set, iterates through child nodes and renders ThenViewHelper.
-	 * If then attribute is not set and no ThenViewHelper is found, all child nodes are rendered
-	 *
-	 * @return string rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	protected function renderThenChild() {
-		if ($this->arguments->hasArgument('then')) {
-			return $this->arguments['then'];
-		}
-		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
-				$data = $childNode->evaluate($this->renderingContext);
-				return $data;
-			}
-		}
-		return $this->renderChildren();
-	}
-
-	/**
-	 * Returns value of "else" attribute.
-	 * If else attribute is not set, iterates through child nodes and renders ElseViewHelper.
-	 * If else attribute is not set and no ElseViewHelper is found, an empty string will be returned.
-	 *
-	 * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	protected function renderElseChild() {
-		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
-				return $childNode->evaluate($this->renderingContext);
-			}
-		}
-		if ($this->arguments->hasArgument('else')) {
-			return $this->arguments['else'];
-		}
-		return '';
-	}
 }
-
 ?>
