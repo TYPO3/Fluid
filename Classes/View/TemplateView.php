@@ -175,11 +175,13 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 			$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
 			$found = FALSE;
 			foreach ($paths as &$templatePathAndFilename) {
+				// These tokens are replaced by the Backporter for the graceful fallback in version 4.
+				// TOKEN-1
 				$templatePathAndFilename = str_replace('@action', $actionName, $templatePathAndFilename);
 				if (file_exists($templatePathAndFilename)) {
 					$found = TRUE;
 					break;
-				}
+				} // TOKEN-2
 			}
 			if (!$found) {
 				throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);

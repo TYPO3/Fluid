@@ -39,7 +39,7 @@ class ViewHelperVariableContainer {
 
 	/**
 	 *
-	 * @var object
+	 * @var F3\Fluid\View\AbstractTemplateView
 	 */
 	protected $view;
 
@@ -126,11 +126,11 @@ class ViewHelperVariableContainer {
 	/**
 	 * Set the view to pass it to ViewHelpers.
 	 *
-	 * @param object $view View to set
+	 * @param F3\Fluid\View\AbstractTemplateView $view View to set
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setView($view) {
+	public function setView(\F3\Fluid\View\AbstractTemplateView $view) {
 		$this->view = $view;
 	}
 
@@ -139,7 +139,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * !!! This is NOT a public API and might still change!!!
 	 *
-	 * @return object The View
+	 * @return F3\Fluid\View\AbstractTemplateView The View
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getView() {

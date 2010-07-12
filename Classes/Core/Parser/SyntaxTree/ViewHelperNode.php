@@ -107,8 +107,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @return \F3\Fluid\Core\ViewHelper\AbstractViewHelper the attached ViewHelper, if it is initialized
 	 */
-	public function getViewHelper() {
-		// TODO: rename
+	public function getUninitializedViewHelper() {
 		return $this->uninitializedViewHelper;
 	}
 

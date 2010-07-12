@@ -279,16 +279,6 @@ class TemplateParser {
 	}
 
 	/**
-	 * Get the configuration for the parser.
-	 *
-	 * @return \F3\Fluid\Core\Parser\Configuration
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 */
-	public function getConfiguration() {
-		return $this->configuration;
-	}
-
-	/**
 	 * Parses a given template and returns a parsed template object.
 	 *
 	 * @param string $templateString The template to parse as a string
