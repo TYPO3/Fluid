@@ -258,7 +258,7 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	 * @return string Full path to template
 	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException in case the template was not found
 	 */
-	abstract protected function getTemplateSource($actionName);
+	abstract protected function getTemplateSource($actionName = NULL);
 
 	/**
 	 * Resolve the path and file name of the layout file, based on
