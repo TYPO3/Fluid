@@ -59,7 +59,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * Output:
  * <img src="http://yourdomain.tld/_Resources/Persistent/69e73da3ce0ad08c717b7b9f1c759182d6650944/my-title.jpg" />
  *
- * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

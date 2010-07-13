@@ -25,7 +25,6 @@ namespace F3\Fluid\ViewHelpers;
 /**
  * Testcase for SectionViewHelper
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class SectionViewHelperTest extends \F3\Testing\BaseTestCase {

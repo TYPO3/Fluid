@@ -27,7 +27,6 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * marked with this interface will get the current rendering context injected
  * by the ObjectAccessorNode on trying to evaluate them.
  *
- * @version $Id: NodeInterface.php 3751 2010-01-22 15:56:47Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface RenderingContextAwareInterface {

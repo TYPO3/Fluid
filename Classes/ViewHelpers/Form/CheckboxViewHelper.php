@@ -50,7 +50,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  * <input type="checkbox" name="user[interests][]" value="TYPO3" checked="checked" />
  * (depending on property "interests")
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

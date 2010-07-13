@@ -35,7 +35,6 @@ namespace F3\Fluid\Core\Parser\Interceptor;
  *  [../]Public/Some/<Path/To/Resource> (will use current package)
  *  [../]<PackageKey>/Resources/Public/<Path/To/Resource> (will use given package)
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {

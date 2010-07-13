@@ -35,7 +35,6 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * Output:
  * http://www.typo3.org
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

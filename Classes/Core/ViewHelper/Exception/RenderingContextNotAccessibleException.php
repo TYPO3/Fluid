@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\ViewHelper\Exception;
 /**
  * A "Rendering Context not Accessible" exception.
  *
- * @version $Id: InvalidVariableException.php 4483 2010-06-10 13:57:32Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */

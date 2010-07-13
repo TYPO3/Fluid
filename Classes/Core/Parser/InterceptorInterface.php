@@ -26,7 +26,6 @@ namespace F3\Fluid\Core\Parser;
  * An interceptor interface. Interceptors are used in the parsing stage to change
  * the syntax tree of a template, e.g. by adding viewhelper nodes.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface InterceptorInterface {

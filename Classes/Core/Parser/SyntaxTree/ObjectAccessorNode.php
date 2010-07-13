@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */

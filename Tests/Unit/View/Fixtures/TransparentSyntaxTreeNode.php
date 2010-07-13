@@ -25,7 +25,6 @@ namespace F3\Fluid\View\Fixture;
 /**
  * [Enter description here]
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class TransparentSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {

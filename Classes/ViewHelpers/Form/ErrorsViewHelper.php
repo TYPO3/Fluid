@@ -40,7 +40,6 @@ namespace F3\Fluid\ViewHelpers\Form;
  *   <li>1234567890: Validation errors for argument "newBlog"</li>
  * </ul>
  *
- * @version $Id: ForViewHelper.php 2378 2009-05-25 20:47:00Z sebastian $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

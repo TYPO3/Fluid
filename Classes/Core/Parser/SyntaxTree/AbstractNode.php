@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 /**
  * Abstract node in the syntax tree which has been built.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */

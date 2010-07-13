@@ -25,7 +25,6 @@ namespace F3\Fluid\Service;
 /**
  * Common base class for XML generators.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 abstract class AbstractGenerator {

@@ -26,7 +26,6 @@ namespace F3\Fluid\ViewHelpers;
  * "THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
  * @see F3\Fluid\ViewHelpers\IfViewHelper
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

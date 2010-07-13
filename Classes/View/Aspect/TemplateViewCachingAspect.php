@@ -25,7 +25,6 @@ namespace F3\Fluid\View\Aspect;
 /**
  * Caching of parseTemplate() call on the TemplateView.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * aspect
  */

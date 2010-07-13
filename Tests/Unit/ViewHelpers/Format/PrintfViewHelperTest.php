@@ -23,7 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @version $Id$
  */
 class PrintfViewHelperTest extends \F3\Testing\BaseTestCase {
 

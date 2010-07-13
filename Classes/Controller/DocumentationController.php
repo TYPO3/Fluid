@@ -25,7 +25,6 @@ namespace F3\Fluid\Controller;
 /**
  * Controller for documentation rendering
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class DocumentationController extends \F3\FLOW3\MVC\Controller\ActionController {

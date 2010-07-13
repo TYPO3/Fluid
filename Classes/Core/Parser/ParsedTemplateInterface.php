@@ -26,7 +26,6 @@ namespace F3\Fluid\Core\Parser;
  * This interface is returned by \F3\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface ParsedTemplateInterface {

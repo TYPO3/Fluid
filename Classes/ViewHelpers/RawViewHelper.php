@@ -41,7 +41,6 @@ namespace F3\Fluid\ViewHelpers;
  * </output>
  *
  *
- * @version $Id: LayoutViewHelper.php 3751 2010-01-22 15:56:47Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

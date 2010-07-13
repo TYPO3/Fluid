@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\ViewHelper;
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

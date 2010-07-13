@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\Parser\Fixtures;
 /**
  * Test fixture for the child node access facet.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 abstract class ChildNodeAccessFacetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {

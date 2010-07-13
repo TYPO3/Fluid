@@ -23,7 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @version $Id$
  */
 class CurrencyViewHelperTest extends \F3\Testing\BaseTestCase {
 

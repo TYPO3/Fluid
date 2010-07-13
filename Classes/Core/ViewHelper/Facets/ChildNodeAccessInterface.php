@@ -34,7 +34,6 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *
  * See \F3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface ChildNodeAccessInterface {

@@ -27,7 +27,6 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 /**
  * Test for the "Hidden" Form view helper
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class HiddenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {

@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\ViewHelper;
 /**
  * The abstract base class for all view helpers.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

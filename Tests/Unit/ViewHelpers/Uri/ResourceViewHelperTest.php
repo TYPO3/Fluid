@@ -27,7 +27,6 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 /**
  * Testcase for the resource uri view helper
  *
- * @version $Id: AliasViewHelper.php 2614 2009-06-15 18:13:18Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */

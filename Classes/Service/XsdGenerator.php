@@ -26,7 +26,6 @@ namespace F3\Fluid\Service;
  * XML Schema (XSD) Generator. Will generate an XML schema which can be used for autocompletion
  * in schema-aware editors like Eclipse XML editor.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class XsdGenerator extends \F3\Fluid\Service\AbstractGenerator {

@@ -29,7 +29,6 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 /**
  * Test for the "Textbox" Form view helper
  *
- * @version $Id: TextboxViewHelperTest.php 2914 2009-07-28 18:26:38Z bwaidelich $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class PasswordViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {

@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\Rendering;
 /**
  * Testcase for ParsingState
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class RenderingContextTest extends \F3\Testing\BaseTestCase {

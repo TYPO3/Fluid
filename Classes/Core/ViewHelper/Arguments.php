@@ -27,7 +27,6 @@ namespace F3\Fluid\Core\ViewHelper;
  * Is available inside every view helper as $this->arguments - and you use it as if it was an array.
  * However, you can only read, and not write to it.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

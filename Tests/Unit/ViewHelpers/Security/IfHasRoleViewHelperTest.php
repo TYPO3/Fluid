@@ -27,7 +27,6 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 /**
  * Testcase for IfHasRoleViewHelper
  *
- * @version $Id: IfViewHelperTest.php 2813 2009-07-16 14:02:34Z k-fish $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class IfHasRoleViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {

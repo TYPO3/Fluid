@@ -43,7 +43,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  * <a href="mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2">some link</a>
  * (depending on routing setup)
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

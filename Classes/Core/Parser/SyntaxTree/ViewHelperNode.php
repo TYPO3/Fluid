@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
 /**
  * Node which will call a ViewHelper associated with this node.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */

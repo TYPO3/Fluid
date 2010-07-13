@@ -23,7 +23,6 @@ namespace F3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 /**
- * @version $Id$
  */
 class Nl2brViewHelperTest extends \F3\Testing\BaseTestCase {
 

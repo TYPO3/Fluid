@@ -26,7 +26,6 @@ namespace F3\Fluid\Core\Parser;
  * The parser configuration. Contains all configuration needed to configure
  * the building of a SyntaxTree.
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */

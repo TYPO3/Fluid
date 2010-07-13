@@ -42,7 +42,6 @@ namespace F3\Fluid\ViewHelpers\Link;
  * Output:
  * <a href="mailto:foo@bar.tld">some custom content</a>
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype

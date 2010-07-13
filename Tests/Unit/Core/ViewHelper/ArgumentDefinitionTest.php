@@ -25,7 +25,6 @@ namespace F3\Fluid\Core;
 /**
  * Testcase for \F3\Fluid\Core\ViewHelper\ArgumentDefinition
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class ArgumentDefinitionTest extends \F3\Testing\BaseTestCase {

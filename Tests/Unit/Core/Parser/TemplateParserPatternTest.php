@@ -25,7 +25,6 @@ namespace F3\Fluid\Core\Parser;
 /**
  * Testcase for Regular expressions in parser
  *
- * @version $Id$
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class TemplateParserPatternTest extends \F3\Testing\BaseTestCase {

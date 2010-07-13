@@ -40,7 +40,6 @@ namespace F3\Fluid\Core\ViewHelper;
  * @see F3\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
  * Make sure to NOT OVERRIDE the constructor.
  *
- * @version $Id: IfViewHelper.php 4671 2010-06-30 08:25:50Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
