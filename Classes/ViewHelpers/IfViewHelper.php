@@ -91,7 +91,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class IfViewHelper extends \F3\Fluid\Core\ViewHelper\ConditionViewHelper {
+class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
 	 * renders <f:then> child if $condition is true, otherwise renders <f:else> child.

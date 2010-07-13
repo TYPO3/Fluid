@@ -49,7 +49,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class FlashMessagesViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+class FlashMessagesViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
 	 * @var string

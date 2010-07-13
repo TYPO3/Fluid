@@ -56,7 +56,7 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @api
  * @scope prototype
  */
-class IfHasRoleViewHelper extends \F3\Fluid\Core\ViewHelper\ConditionViewHelper {
+class IfHasRoleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 	/**
 	 * @var \F3\FLOW3\Security\Context
 	 */

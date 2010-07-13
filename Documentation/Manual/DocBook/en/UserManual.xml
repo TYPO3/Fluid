@@ -589,7 +589,7 @@
     </section>
 
     <section>
-      <title>TagBasedViewHelper</title>
+      <title>AbstractTagBasedViewHelper</title>
 
       <para>Many view helpers output an HTML tag - for example
       <code>&lt;f3:link.action ...&gt; outputs </code>a <code>&lt;a
@@ -600,7 +600,7 @@
       an <code>&lt;a href="..."&gt;</code> tag. This often leads to repetitive
       code like below. (Don't look at the code too thoroughly, it should just
       demonstrate the boring and repetitive task one would have without the
-      TagBasedViewHelper).<programlisting>class LinkViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+      AbstractTagBasedViewHelper).<programlisting>class LinkViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
   public function initializeArguments() {
     $this-&gt;registerArgument('class', 'string', 'CSS class to add to the link');
     $this-&gt;registerArgument('target', 'string', 'Target for the link');
@@ -620,7 +620,7 @@
   }
 }</programlisting></para>
 
-      <para>Now, the TagBasedViewHelper introduces two more methods you can
+      <para>Now, the AbstractTagBasedViewHelper introduces two more methods you can
       use inside <code>initializeArguments()</code>:<itemizedlist>
           <listitem>
             <para><code>registerTagAttribute($name, $type, $description,
@@ -635,7 +635,7 @@
           </listitem>
         </itemizedlist></para>
 
-      <para>Inside the TagBasedViewHelper, there is a TagBuilder object
+      <para>Inside the AbstractTagBasedViewHelper, there is a TagBuilder object
       available (with <code>$this-&gt;tag</code>) which makes building a tag a
       lot more straightforward</para>
 
@@ -698,7 +698,7 @@
         this. Our solution looks as follows:</para>
 
         <para><emphasis>Every view helper which inherits from
-        <code>TagBasedViewHelper</code> has a special property called
+        <code>AbstractTagBasedViewHelper</code> has a special property called
         <code>additionalAttributes</code> which allows you to add arbitary
         HTML attributes to the tag.</emphasis></para>
 
@@ -710,7 +710,7 @@
         that as follows:<programlisting>&lt;f:link.action ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f:link.action&gt;</programlisting></para>
 
         <para>This attribute is available in all tags that inherit from
-        <classname>F3\Fluid\Core\ViewHelper\TagBasedViewHelper</classname>.</para>
+        <classname>F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper</classname>.</para>
       </section>
     </section>
 

@@ -32,7 +32,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
 	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface

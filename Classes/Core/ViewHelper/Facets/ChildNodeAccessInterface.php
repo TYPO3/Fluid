@@ -30,7 +30,7 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  * To render subnodes, you can fetch the RenderingContext via $this->getRenderingContext().
  *
  * In most cases, you will not need this facet, and it is NO PUBLIC API!
- * Right now it is only used internally for conditions, so by subclassing F3\Fluid\Core\ViewHelpers\ConditionViewHelper, this should be all you need.
+ * Right now it is only used internally for conditions, so by subclassing F3\Fluid\Core\ViewHelpers\AbstractConditionViewHelper, this should be all you need.
  *
  * See \F3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
  *

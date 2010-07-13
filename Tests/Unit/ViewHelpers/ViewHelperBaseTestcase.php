@@ -103,7 +103,7 @@ abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
 		$viewHelper->setControllerContext($this->controllerContext);
 		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->setArguments($this->arguments);
-		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\TagBasedViewHelper) {
+		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper) {
 			$viewHelper->injectTagBuilder($this->tagBuilder);
 		}
 	}

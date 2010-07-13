@@ -32,7 +32,7 @@ namespace F3\Fluid\Core\ViewHelper;
  * @api
  * @scope prototype
  */
-abstract class TagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+abstract class AbstractTagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Names of all registered tag attributes

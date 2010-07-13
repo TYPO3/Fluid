@@ -48,7 +48,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * @api
  * @scope prototype
  */
-class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\TagBasedViewHelper {
+class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
 	 * @var string

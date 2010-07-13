@@ -30,10 +30,10 @@ require_once(__DIR__ . '/../../ViewHelpers/ViewHelperBaseTestcase.php');
  * @version $Id: IfViewHelperTest.php 4671 2010-06-30 08:25:50Z robert $
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ConditionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class AbstractConditionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\Core\ViewHelper\ConditionViewHelper
+	 * var \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper
 	 */
 	protected $viewHelper;
 
@@ -44,7 +44,7 @@ class ConditionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\ConditionViewHelper', array('getRenderingContext', 'renderChildren'));
+		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper', array('getRenderingContext', 'renderChildren'));
 		$this->viewHelper->expects($this->any())->method('getRenderingContext')->will($this->returnValue($this->renderingContext));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}

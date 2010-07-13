@@ -45,7 +45,7 @@ namespace F3\Fluid\Core\ViewHelper;
  * @api
  * @scope prototype
  */
-abstract class ConditionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
 	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
@@ -67,7 +67,6 @@ abstract class ConditionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractVie
 	/**
 	 * Initializes the "then" and "else" arguments
 	 *
-	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {

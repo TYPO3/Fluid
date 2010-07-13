@@ -56,7 +56,7 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @api
  * @scope prototype
  */
-class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\ConditionViewHelper {
+class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
 	 * @var F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
