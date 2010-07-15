@@ -69,6 +69,43 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 
 	/**
 	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function overrideArgumentOverwritesExistingArgumentDefinition() {
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
+
+		$name = 'argumentName';
+		$description = 'argument description';
+		$overriddenDescription = 'overwritten argument description';
+		$type = 'string';
+		$overriddenType = 'integer';
+		$isRequired = TRUE;
+		$expected = new \F3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $overriddenType, $overriddenDescription, $isRequired);
+
+		$viewHelper->_call('registerArgument', $name, $type, $isRequired, $description);
+		$viewHelper->_call('overrideArgument', $name, $overriddenType, $isRequired, $overriddenDescription);
+		$this->assertEquals($viewHelper->prepareArguments(), array($name => $expected), 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @expectedException F3\Fluid\Core\ViewHelper\Exception
+	 */
+	public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument() {
+		$mockReflectionService = $this->getMock('F3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
+		$viewHelper->injectReflectionService($mockReflectionService);
+
+		$viewHelper->_call('overrideArgument', 'argumentName', 'string', TRUE, 'description');
+	}
+
+	/**
+	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function prepareArgumentsCallsInitializeArguments() {

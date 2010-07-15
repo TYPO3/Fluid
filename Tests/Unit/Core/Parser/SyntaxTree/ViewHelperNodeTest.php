@@ -262,6 +262,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 
 		$this->assertFalse($viewHelperNode->_call('convertToBoolean', 0));
 		$this->assertFalse($viewHelperNode->_call('convertToBoolean', -1));
+		$this->assertFalse($viewHelperNode->_call('convertToBoolean', '-1'));
 		$this->assertFalse($viewHelperNode->_call('convertToBoolean', -.5));
 
 		$this->assertTrue($viewHelperNode->_call('convertToBoolean', 1));

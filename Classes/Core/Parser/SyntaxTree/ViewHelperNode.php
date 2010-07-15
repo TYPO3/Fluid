@@ -346,11 +346,11 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		if (is_bool($value)) {
 			return $value;
 		}
-		if (is_string($value)) {
-			return (!empty($value) && strtolower($value) !== 'false');
-		}
 		if (is_numeric($value)) {
 			return $value > 0;
+		}
+		if (is_string($value)) {
+			return (!empty($value) && strtolower($value) !== 'false');
 		}
 		if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
 			return count($value) > 0;

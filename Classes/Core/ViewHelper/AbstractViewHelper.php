@@ -186,6 +186,29 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	}
 
 	/**
+	 * Overrides a registered argument. Call this method from your ViewHelper subclass
+	 * inside the initializeArguments() method if you want to override a previously registered argument.
+	 * @see registerArgument()
+	 *
+	 * @param string $name Name of the argument
+	 * @param string $type Type of the argument
+	 * @param string $description Description of the argument
+	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
+	 * @param mixed $defaultValue Default value of argument
+	 * @return \F3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @todo Object Factory usage!
+	 * @api
+	 */
+	protected function overrideArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
+		if (!array_key_exists($name, $this->argumentDefinitions)) {
+			throw new \F3\Fluid\Core\ViewHelper\Exception('Argument "' . $name . '" has not been defined, thus it can\'t be overridden.', 1279212461);
+		}
+		$this->argumentDefinitions[$name] = new \F3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+		return $this;
+	}
+
+	/**
 	 * Sets all needed attributes needed for the rendering. Called by the
 	 * framework. Populates $this->viewHelperNode.
 	 * This is PURELY INTERNAL! Never override this method!!
