@@ -217,6 +217,33 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 		}
 		return array();
 	}
+
+	/**
+	 * Renders a hidden field with the same name as the element, to make sure the empty value is submitted
+	 * in case nothing is selected. This is needed for checkbox and multiple select fields
+	 *
+	 * @return string the hidden field.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function renderHiddenFieldForEmptyValue() {
+		$hiddenFieldNames = array();
+		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'renderedHiddenFields')) {
+			$hiddenFieldNames = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'renderedHiddenFields');
+		}
+
+		$fieldName = $this->getName();
+		if (substr($fieldName, -2) === '[]') {
+			$fieldName = substr($fieldName, 0, -2);
+		}
+		if (!in_array($fieldName, $hiddenFieldNames)) {
+			$hiddenFieldNames[] = $fieldName;
+			$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelpers\FormViewHelper', 'renderedHiddenFields', $hiddenFieldNames);
+
+			return '<input type="hidden" name="' . htmlspecialchars($fieldName) . '" value="" />';
+		}
+		return '';
+	}
 }
 
 ?>

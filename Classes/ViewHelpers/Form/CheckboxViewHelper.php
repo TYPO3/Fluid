@@ -111,7 +111,8 @@ class CheckboxViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 
 		$this->setErrorClassAttribute();
 
-		return $this->tag->render();
+		$hiddenField = $this->renderHiddenFieldForEmptyValue();
+		return $hiddenField . $this->tag->render();
 	}
 }
 
