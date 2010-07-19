@@ -130,10 +130,13 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
 		$formContent = $this->renderChildren();
 
-		$content = $this->renderHiddenIdentityField($this->arguments['object'], $this->arguments['name']);
+			// wrap hidden field in div container in order to create XHTML valid output
+		$content = chr(10) . '<div style="display: none">';
+		$content .= $this->renderHiddenIdentityField($this->arguments['object'], $this->arguments['name']);
 		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
 		$content .= $this->renderRequestHashField(); // Render hmac after everything else has been rendered
+		$content .= chr(10) . '</div>' . chr(10);
 		$content .= $formContent;
 
 		$this->tag->setContent($content);
