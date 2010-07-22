@@ -79,7 +79,7 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			if (!$each instanceof \Traversable) {
 				throw new \F3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
 			}
-			$each = $this->convertToArray($each);
+			$each = iterator_to_array($each);
 		}
 
 		if ($reverse === TRUE) {
@@ -99,22 +99,6 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			}
 		}
 		return $output;
-	}
-
-	/**
-	 * Turns the given object into an array.
-	 * The object has to implement the \Traversable interface
-	 *
-	 * @param \Traversable $object The object to be turned into an array. If the object implements \Iterator the key will be preserved.
-	 * @return array The resulting array
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	protected function convertToArray(\Traversable $object) {
-		$array = array();
-		foreach ($object as $keyValue => $singleElement) {
-			$array[$keyValue] = $singleElement;
-		}
-		return $array;
 	}
 }
 

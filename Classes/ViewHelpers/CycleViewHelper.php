@@ -109,27 +109,11 @@ class CycleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			if (!$values instanceof \Traversable) {
 				throw new \F3\Fluid\Core\ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
 			}
-			$this->values = $this->convertToArray($values);
+			$this->values = iterator_to_array($values, FALSE);
 		} else {
 			$this->values = array_values($values);
 		}
 		$this->currentCycleIndex = 0;
-	}
-
-	/**
-	 * Turns the given object into an array.
-	 * The object has to implement the \Traversable interface
-	 *
-	 * @param \Traversable $object The object to be turned into an array. If the object implements \Iterator the key will NOT be preserved.
-	 * @return array The resulting array
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	protected function convertToArray(\Traversable $object) {
-		$array = array();
-		foreach ($object as $singleElement) {
-			$array[] = $singleElement;
-		}
-		return $array;
 	}
 }
 

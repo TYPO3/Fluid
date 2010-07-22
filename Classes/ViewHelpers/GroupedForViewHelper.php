@@ -102,7 +102,7 @@ class GroupedForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper 
 			if (!$each instanceof \Traversable) {
 				throw new \F3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface' , 1253108907);
 			}
-			$each = $this->convertToArray($each);
+			$each = iterator_to_array($each);
 		}
 
 		$groups = $this->groupElements($each, $groupBy);
@@ -115,22 +115,6 @@ class GroupedForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper 
 			$this->templateVariableContainer->remove($as);
 		}
 		return $output;
-	}
-
-	/**
-	 * Turns the given object into an array.
-	 * The object has to implement the \Traversable interface
-	 *
-	 * @param \Traversable $object The object to be turned into an array. If the object implements \Iterator the key will be preserved.
-	 * @return array The resulting array
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	protected function convertToArray(\Traversable $object) {
-		$array = array();
-		foreach ($object as $keyValue => $singleElement) {
-			$array[$keyValue] = $singleElement;
-		}
-		return $array;
 	}
 
 	/**
