@@ -117,6 +117,17 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	}
 
 	/**
+	 * Returns the template parser that is used to parse this views template
+	 *
+	 * @return \F3\Fluid\Core\Parser\TemplateParser
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @api
+	 */
+	public function getTemplateParser() {
+		return $this->templateParser;
+	}
+
+	/**
 	 * Assign a value to the variable container.
 	 *
 	 * @param string $key The key of a view variable to set

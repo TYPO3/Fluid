@@ -92,14 +92,15 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if ($each === NULL) {
 			return '';
 		}
-		if (is_object($each)) {
-			if (!$each instanceof \Traversable) {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
-			}
-			$each = iterator_to_array($each);
+		if (is_object($each) && !$each instanceof \Traversable) {
+			throw new \F3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
 		}
 
 		if ($reverse === TRUE) {
+				// array_reverse only supports arrays
+			if (is_object($each)) {
+				$each = iterator_to_array($each);
+			}
 			$each = array_reverse($each);
 		}
 		$iterationData = array(
