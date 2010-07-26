@@ -109,12 +109,13 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the action URI. Only active if $addQueryString = TRUE and $actionUri is not set
 	 * @param string $fieldNamePrefix Prefix that will be added to all field names within this form
 	 * @param string $actionUri can be used to overwrite the "action" attribute of the form tag
+	 * @param string $objectName name of the object that is bound to this form. If this argument is not specified, the name attribute of this form is used to determine the FormObjectName
 	 * @return string rendered form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL) {
+	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL) {
 		$this->setFormActionUri();
 
 		if (strtolower($this->arguments['method']) === 'get') {
@@ -123,7 +124,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 			$this->tag->addAttribute('method', 'post');
 		}
 
-		$this->addFormNameToViewHelperVariableContainer();
+		$this->addFormObjectNameToViewHelperVariableContainer();
 		$this->addFormObjectToViewHelperVariableContainer();
 		$this->addFieldNamePrefixToViewHelperVariableContainer();
 		$this->addFormFieldNamesToViewHelperVariableContainer();
@@ -143,7 +144,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
 		$this->removeFieldNamePrefixFromViewHelperVariableContainer();
 		$this->removeFormObjectFromViewHelperVariableContainer();
-		$this->removeFormNameFromViewHelperVariableContainer();
+		$this->removeFormObjectNameFromViewHelperVariableContainer();
 		$this->removeFormFieldNamesFromViewHelperVariableContainer();
 
 		return $this->tag->render();
@@ -219,27 +220,47 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	}
 
 	/**
-	 * Adds the form name to the ViewHelperVariableContainer if the name attribute is specified.
+	 * Adds the form object name to the ViewHelperVariableContainer if "objectName" argument or "name" attribute is specified.
 	 *
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	protected function addFormNameToViewHelperVariableContainer() {
-		if ($this->arguments->hasArgument('name')) {
-			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formName', $this->arguments['name']);
+	protected function addFormObjectNameToViewHelperVariableContainer() {
+		$formObjectName = $this->getFormObjectName();
+		if ($formObjectName !== NULL) {
+			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName', $formObjectName);
 		}
 	}
 
 	/**
-	 * Removes the form name from the ViewHelperVariableContainer.
+	 * Removes the form object name from the ViewHelperVariableContainer.
 	 *
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	protected function removeFormNameFromViewHelperVariableContainer() {
-		if ($this->arguments->hasArgument('name')) {
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+	protected function removeFormObjectNameFromViewHelperVariableContainer() {
+		$formObjectName = $this->getFormObjectName();
+		if ($formObjectName !== NULL) {
+			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 		}
+	}
+
+	/**
+	 * Returns the name of the object that is bound to this form.
+	 * If the "objectName" argument has been specified, this is returned. Otherwise the name attribute of this form.
+	 * If neither objectName nor name arguments have been set, NULL is returned.
+	 *
+	 * @return string specified Form name or NULL if neither $objectName nor $name arguments have been specified
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function getFormObjectName() {
+		$formObjectName = NULL;
+		if ($this->arguments->hasArgument('objectName')) {
+			$formObjectName = $this->arguments['objectName'];
+		} elseif ($this->arguments->hasArgument('name')) {
+			$formObjectName = $this->arguments['name'];
+		}
+		return $formObjectName;
 	}
 
 	/**

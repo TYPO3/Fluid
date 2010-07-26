@@ -62,14 +62,14 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 */
 	protected function getName() {
 		if ($this->isObjectAccessorMode()) {
-			$formName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
-			if (!empty($formName)) {
+			$formObjectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
+			if (!empty($formObjectName)) {
 				$propertySegments = explode('.', $this->arguments['property']);
 				$properties = '';
 				foreach ($propertySegments as $segment) {
 					$properties .= '[' . $segment . ']';
 				}
-				$name = $formName . $properties;
+				$name = $formObjectName . $properties;
 			} else {
 				$name = $this->arguments['property'];
 			}
@@ -124,7 +124,7 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 			// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
 			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 
-			$objectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+			$objectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 			// If Count == 2 -> we need to go through the for-loop exactly once
 			for ($i=1; $i < count($propertySegments); $i++) {
 				$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
@@ -163,7 +163,7 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 */
 	protected function isObjectAccessorMode() {
 		return $this->arguments->hasArgument('property')
-			&& $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+			&& $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 	}
 
 	/**
@@ -202,11 +202,11 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 			return array();
 		}
 		$errors = $this->controllerContext->getRequest()->getErrors();
-		$formName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formName');
+		$formObjectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 		$propertyName = $this->arguments['property'];
 		$formErrors = array();
 		foreach ($errors as $error) {
-			if ($error instanceof \F3\FLOW3\Validation\PropertyError && $error->getPropertyName() === $formName) {
+			if ($error instanceof \F3\FLOW3\Validation\PropertyError && $error->getPropertyName() === $formObjectName) {
 				$formErrors = $error->getErrors();
 				foreach ($formErrors as $formError) {
 					if ($formError instanceof \F3\FLOW3\Validation\PropertyError && $formError->getPropertyName() === $propertyName) {
