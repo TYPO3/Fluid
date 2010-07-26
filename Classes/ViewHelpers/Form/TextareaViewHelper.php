@@ -76,7 +76,7 @@ class TextareaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 
 		$this->tag->forceClosingTag(TRUE);
 		$this->tag->addAttribute('name', $name);
-		$this->tag->setContent($this->getValue());
+		$this->tag->setContent(htmlspecialchars($this->getValue()));
 
 		$this->setErrorClassAttribute();
 

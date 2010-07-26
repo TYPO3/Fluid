@@ -90,6 +90,29 @@ class TextareaViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');
 		$this->viewHelper->render();
 	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderEscapesTextareaContent() {
+		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'NameOfTextarea');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('NameOfTextarea');
+		$mockTagBuilder->expects($this->once())->method('setContent')->with('some &lt;tag&gt; &amp; &quot;quotes&quot;');
+		$mockTagBuilder->expects($this->once())->method('render');
+		$this->viewHelper->injectTagBuilder($mockTagBuilder);
+
+		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+			'name' => 'NameOfTextarea',
+			'value' => 'some <tag> & "quotes"'
+		));
+		$this->viewHelper->setArguments($arguments);
+
+		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
+		$this->viewHelper->initialize();
+		$this->viewHelper->render();
+	}
 }
 
 ?>
