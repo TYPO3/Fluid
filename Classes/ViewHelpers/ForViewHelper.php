@@ -51,6 +51,22 @@ namespace F3\Fluid\ViewHelpers;
  * </ul>
  * </output>
  *
+ * <code title="Iteration information">
+ * <ul>
+ *   <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo" iteration="fooIterator">
+ *     <li>Index: {fooIterator.index} Cycle: {fooIterator.cycle} Total: {fooIterator.total}{f:if(condition: fooIterator.isEven, then: ' Even')}{f:if(condition: fooIterator.isOdd, then: ' Odd')}{f:if(condition: fooIterator.isFirst, then: ' First')}{f:if(condition: fooIterator.isLast, then: ' Last')}</li>
+ *   </f:for>
+ * </ul>
+ * </code>
+ * <output>
+ * <ul>
+ *   <li>Index: 0 Cycle: 1 Total: 4 Odd First</li>
+ *   <li>Index: 1 Cycle: 2 Total: 4 Even</li>
+ *   <li>Index: 2 Cycle: 3 Total: 4 Odd</li>
+ *   <li>Index: 3 Cycle: 4 Total: 4 Even Last</li>
+ * </ul>
+ * </output>
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
@@ -64,13 +80,14 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $as The name of the iteration variable
 	 * @param string $key The name of the variable to store the current array key
 	 * @param boolean $reverse If enabled, the iterator will start with the last element and proceed reversely
+	 * @param string $iteration The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)
 	 * @return string Rendered string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($each, $as, $key = '', $reverse = FALSE) {
+	public function render($each, $as, $key = '', $reverse = FALSE, $iteration = NULL) {
 		$output = '';
 		if ($each === NULL) {
 			return '';
@@ -85,6 +102,11 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if ($reverse === TRUE) {
 			$each = array_reverse($each);
 		}
+		$iterationData = array(
+			'index' => 0,
+			'cycle' => 1,
+			'total' => count($each)
+		);
 
 		$output = '';
 		foreach ($each as $keyValue => $singleElement) {
@@ -92,10 +114,22 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			if ($key !== '') {
 				$this->templateVariableContainer->add($key, $keyValue);
 			}
+			if ($iteration !== NULL) {
+				$iterationData['isFirst'] = $iterationData['cycle'] === 1;
+				$iterationData['isLast'] = $iterationData['cycle'] === $iterationData['total'];
+				$iterationData['isEven'] = $iterationData['cycle'] % 2 === 0;
+				$iterationData['isOdd'] = !$iterationData['isEven'];
+				$this->templateVariableContainer->add($iteration, $iterationData);
+				$iterationData['index'] ++;
+				$iterationData['cycle'] ++;
+			}
 			$output .= $this->renderChildren();
 			$this->templateVariableContainer->remove($as);
 			if ($key !== '') {
 				$this->templateVariableContainer->remove($key);
+			}
+			if ($iteration !== NULL) {
+				$this->templateVariableContainer->remove($iteration);
 			}
 		}
 		return $output;
