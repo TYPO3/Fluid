@@ -125,9 +125,9 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 
 		$content = '';
 
-		// register field name for token generation.
-		// in case it is a multi-select, we need to register the field name
-		// as often as there are elements in the box
+			// register field name for token generation.
+			// in case it is a multi-select, we need to register the field name
+			// as often as there are elements in the box
 		if ($this->arguments->hasArgument('multiple') && $this->arguments['multiple'] !== '') {
 			$content .= $this->renderHiddenFieldForEmptyValue();
 			for ($i=0; $i<count($options); $i++) {

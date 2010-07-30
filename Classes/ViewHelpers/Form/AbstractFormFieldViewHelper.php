@@ -65,11 +65,11 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 			$formObjectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 			if (!empty($formObjectName)) {
 				$propertySegments = explode('.', $this->arguments['property']);
-				$properties = '';
+				$propertyPath = '';
 				foreach ($propertySegments as $segment) {
-					$properties .= '[' . $segment . ']';
+					$propertyPath .= '[' . $segment . ']';
 				}
-				$name = $formObjectName . $properties;
+				$name = $formObjectName . $propertyPath;
 			} else {
 				$name = $this->arguments['property'];
 			}
@@ -121,17 +121,17 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	protected function addAdditionalIdentityPropertiesIfNeeded() {
 		$propertySegments = explode('.', $this->arguments['property']);
 		if (count($propertySegments) >= 2) {
-			// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
+				// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
 			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 
 			$objectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-			// If Count == 2 -> we need to go through the for-loop exactly once
+				// If Count == 2 -> we need to go through the for-loop exactly once
 			for ($i=1; $i < count($propertySegments); $i++) {
 				$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
 				$objectName .= '[' . $propertySegments[$i-1] . ']';
 				$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
 
-				// Add the hidden identity field to the ViewHelperVariableContainer
+					// Add the hidden identity field to the ViewHelperVariableContainer
 				$additionalIdentityProperties = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 				$additionalIdentityProperties[$objectName] = $hiddenIdentityField;
 				$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', $additionalIdentityProperties);
