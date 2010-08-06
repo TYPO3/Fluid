@@ -127,12 +127,15 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 		return $this->templateParser;
 	}
 
+	//PLACEHOLDER
+	// Here, the backporter can insert the initializeView method, which is needed for Fluid v4.
+
 	/**
 	 * Assign a value to the variable container.
 	 *
 	 * @param string $key The key of a view variable to set
 	 * @param mixed $value The value of the view variable
-	 * @return void
+	 * @return \F3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
@@ -142,6 +145,7 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 			$templateVariableContainer->remove($key);
 		}
 		$templateVariableContainer->add($key, $value);
+		return $this;
 	}
 
 	/**
@@ -149,7 +153,7 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 	 * However, only the key "value" is accepted.
 	 *
 	 * @param array $values Keys and values - only a value with key "value" is considered
-	 * @return void
+	 * @return \F3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
@@ -161,6 +165,7 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 			}
 			$templateVariableContainer->add($key, $value);
 		}
+		return $this;
 	}
 
 	/**

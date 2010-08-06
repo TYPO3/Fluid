@@ -32,10 +32,6 @@ include_once(__DIR__ . '/Fixtures/TemplateViewFixture.php');
  */
 class TemplateViewTest extends \F3\Testing\BaseTestCase {
 
-	public function initializeViewSetsParserConfiguration() {
-		$this->markTestSkipped('incomplete, needs to be written!');
-	}
-
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -190,21 +186,6 @@ class TemplateViewTest extends \F3\Testing\BaseTestCase {
 		\vfsStreamWrapper::setRoot($mockRootDirectory);
 
 		$this->getAccessibleMock('F3\Fluid\Core\Parser\TemplateParser', array(''), array(), '', FALSE);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function viewIsPlacedInViewHelperVariableContainer() {
-		$templateView = new \F3\Fluid\View\TemplateView();
-
-		$mockViewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
-		$mockRenderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer'));
-		$mockRenderingContext->expects($this->once())->method('getViewHelperVariableContainer')->will($this->returnValue($mockViewHelperVariableContainer));
-
-		$mockViewHelperVariableContainer->expects($this->once())->method('setView')->with($templateView);
-		$templateView->setRenderingContext($mockRenderingContext);
 	}
 
 	/**
