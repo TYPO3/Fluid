@@ -133,7 +133,8 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
-	public function hasTemplate() {
+	public function canRender(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+		$this->setControllerContext($controllerContext);
 		try {
 			$this->getTemplateSource();
 			return TRUE;

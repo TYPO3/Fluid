@@ -29,7 +29,7 @@ namespace F3\Fluid\View;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterface {
+abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface {
 
 	/**
 	 * Constants defining possible rendering types
@@ -395,6 +395,21 @@ abstract class AbstractTemplateView implements \F3\Fluid\View\TemplateViewInterf
 		$currentRendering = end($this->renderingStack);
 		return $currentRendering['renderingContext'];
 	}
+
+	/**
+	 * Tells if the view implementation can render the view for the given context.
+	 *
+	 * By default we assume that the view implementation can handle all kinds of
+	 * contexts. Override this method if that is not the case.
+	 *
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext
+	 * @return boolean TRUE if the view has something useful to display, otherwise FALSE
+	 * @api
+	 */
+	public function canRender(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+		return TRUE;
+	}
+
 }
 
 ?>
