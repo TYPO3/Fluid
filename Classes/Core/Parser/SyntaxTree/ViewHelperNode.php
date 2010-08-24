@@ -75,8 +75,12 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		(?:               # start repeat
 			COMPARATORS   # We allow all comparators
 			|\s*          # Arbitary spaces
-			|[0-9]        # Numbers
-			|\\.          # And the dot.
+			|-?           # Numbers, possibly with the "minus" symbol in front.
+				[0-9]+    # some digits
+				(?:       # and optionally a dot, followed by some more digits
+					\\.
+					[0-9]+
+				)?
 		)*
 		$/x';
 

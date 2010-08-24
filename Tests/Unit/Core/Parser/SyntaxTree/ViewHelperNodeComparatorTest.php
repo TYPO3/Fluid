@@ -268,6 +268,16 @@ class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
 
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber() {
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11 <= -2.1'));
+
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
+	}
 }
 
 ?>
