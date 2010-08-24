@@ -44,7 +44,7 @@ class TemplateParser {
 					(?:                                   # Begin tag arguments
 						\s*[a-zA-Z0-9:]+                  # Argument Keys
 						=                                 # =
-						(?:                               # either...
+						(?>                               # either... If we have found an argument, we will not back-track (That does the Atomic Bracket)
 							"(?:\\\"|[^"])*"              # a double-quoted string
 							|\'(?:\\\\\'|[^\'])*\'        # or a single quoted string
 						)\s*                              #
@@ -73,7 +73,7 @@ class TemplateParser {
 				\s*
 				[a-zA-Z0-9:]+                             # The attribute name
 				=                                         # =
-				(?:                                       # either...
+				(?>                                       # either... # If we have found an argument, we will not back-track (That does the Atomic Bracket)
 					"(?:\\\"|[^"])*"                      # a double-quoted string
 					|\'(?:\\\\\'|[^\'])*\'                # or a single quoted string
 				)                                         #
@@ -104,7 +104,7 @@ class TemplateParser {
 				[a-zA-Z0-9:]+                            #
 			)                                            #
 			=                                            # =
-			(?:                                          # obsolete I guess
+			(?>                                          # If we have found an argument, we will not back-track (That does the Atomic Bracket)
 				(?P<ValueQuoted>                         # either...
 					(?:"(?:\\\"|[^"])*")                 # a double-quoted string
 					|(?:\'(?:\\\\\'|[^\'])*\')           # or a single quoted string
