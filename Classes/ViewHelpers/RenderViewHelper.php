@@ -41,6 +41,9 @@ class RenderViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @api
 	 */
 	public function render($section = NULL, $partial = NULL, $arguments = array()) {
+		if (!isset($arguments['settings'])) {
+			$arguments['settings'] = $this->templateVariableContainer->get('settings');
+		}
 		if ($partial !== NULL) {
 			return $this->viewHelperVariableContainer->getView()->renderPartial($partial, $section, $arguments);
 		} elseif ($section !== NULL) {
