@@ -270,5 +270,19 @@ class AbstractViewHelperTest extends \F3\Testing\BaseTestCase {
 		$this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
 	}
 
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods() {
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('validateArguments', 'initialize', 'callRenderMethod'));
+		$viewHelper->expects($this->at(0))->method('validateArguments');
+		$viewHelper->expects($this->at(1))->method('initialize');
+		$viewHelper->expects($this->at(2))->method('callRenderMethod')->with(array('argument1' => 'value1'))->will($this->returnValue('Output'));
+
+		$expectedOutput = 'Output';
+		$actualOutput = $viewHelper->initializeArgumentsAndRender(array('argument1' => 'value1'));
+		$this->assertEquals($expectedOutput, $actualOutput);
+	}
 }
 ?>

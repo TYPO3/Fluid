@@ -29,7 +29,7 @@ namespace F3\Fluid\Core\ViewHelper;
  * @api
  * @scope prototype
  */
-abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelperInterface {
+abstract class AbstractViewHelper {
 
 	/**
 	 * TRUE if arguments have already been initialized
@@ -219,6 +219,35 @@ abstract class AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\ViewHelpe
 	 */
 	public function setViewHelperNode(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
+	}
+
+	/**
+	 * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
+	 *
+	 * @param array $renderMethodParameters the parameters of the render() method.
+	 * @return string the rendered ViewHelper.
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initializeArgumentsAndRender(array $renderMethodParameters) {
+		$this->validateArguments();
+		$this->initialize();
+		return $this->callRenderMethod($renderMethodParameters);
+	}
+
+	/**
+	 * Call the render() method and handle errors.
+	 *
+	 * @param array $renderMethodParameters the parameters of the render() method.
+	 * @return string the rendered ViewHelper
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	protected function callRenderMethod(array $renderMethodParameters) {
+		try {
+			return call_user_func_array(array($this, 'render'), $renderMethodParameters);
+		} catch (\F3\Fluid\Core\ViewHelper\Exception $exception) {
+				// @todo [BW] rethrow exception, log, ignore.. depending on the current context
+			return $exception->getMessage();
+		}
 	}
 
 	/**

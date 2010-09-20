@@ -190,7 +190,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * Renders a given section.
 	 *
 	 * @param string $sectionName Name of section to render
-	 * @param array the variables to use.
+	 * @param array $variables the variables to use.
 	 * @return string rendered template for the section
 	 * @throws \F3\Fluid\View\Exception\InvalidSectionException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

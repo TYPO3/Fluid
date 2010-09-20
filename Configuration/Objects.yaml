@@ -12,3 +12,7 @@ F3\Fluid\View\TemplateView:
   properties:
     renderingContext:
       object: F3\Fluid\Core\Rendering\RenderingContext
+
+F3\Fluid\Core\Widget\WidgetRequestHandler:
+  arguments:
+    4: { object: F3\Fluid\Core\Widget\WidgetRequestBuilder }

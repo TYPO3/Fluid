@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\ViewHelper;
+namespace F3\Fluid\ViewHelpers\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,10 +23,48 @@ namespace F3\Fluid\Core\ViewHelper;
  *                                                                        */
 
 /**
+ * This ViewHelper renders a Pagination of objects.
+ *
+ * = Examples =
+ *
+ * <code>
+ * <f:widget.paginate itemsPerPage="10" objects="{blogs}" as="paginatedBlogs">
+ *   // use {paginatedBlogs} as you used {blogs} before, most certainly inside
+ *   // a <f:for> loop.
+ * </f:widget.paginate>
+ * </code>
+ *
+ * = Performance characteristics =
+ *
+ * In the above example, it looks like {blogs} contains all Blog objects, thus
+ * you might wonder if all objects were fetched from the database.
+ * However, the blogs are NOT fetched from the database until you actually use them,
+ * so the paginate ViewHelper will adjust the query sent to the database and receive
+ * only the small subset of objects.
+ * So, there is no negative performance overhead in using the Paginate Widget.
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @api
+ * @scope prototype
  */
-interface ViewHelperInterface {
+class PaginateViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
+	/**
+	 * @inject
+	 * @var F3\Fluid\ViewHelpers\Widget\Controller\PaginateController
+	 */
+	protected $controller;
+
+	/**
+	 *
+	 * @param \F3\FLOW3\Persistence\QueryResult $objects
+	 * @param string $as
+	 * @param array $configuration
+	 * @return string
+	 */
+	public function render(\F3\FLOW3\Persistence\QueryResult $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE)) {
+		return $this->initiateSubRequest();
+	}
 }
 
 ?>

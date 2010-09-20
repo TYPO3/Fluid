@@ -86,7 +86,7 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function constructorSetsViewHelperAndArguments() {
-		$viewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperInterface');
+		$viewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper');
 		$arguments = array('foo' => 'bar');
 		$viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array($viewHelper, $arguments));
 
@@ -121,9 +121,9 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function validateArgumentsIsCalledByViewHelperNode() {
-		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments'));
-		$mockViewHelper->expects($this->once())->method('validateArguments');
+	public function initializeArgumentsAndRenderIsCalledByViewHelperNode() {
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('initializeArgumentsAndRender', 'prepareArguments'));
+		$mockViewHelper->expects($this->once())->method('initializeArgumentsAndRender');
 
 		$mockViewHelperArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
 
@@ -139,16 +139,16 @@ class ViewHelperNodeTest extends \F3\Testing\BaseTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderMethodIsCalledWithCorrectArguments() {
+	public function initializeArgumentsAndRenderIsCalledWithCorrectArguments() {
 		$arguments = array(
 			'param0' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, null, FALSE),
 			'param1' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, null, TRUE),
 			'param2' => new \F3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'string', 'Hallo', TRUE, null, TRUE)
 		);
 
-		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments'));
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper', array('initializeArgumentsAndRender', 'prepareArguments'));
 		$mockViewHelper->expects($this->any())->method('prepareArguments')->will($this->returnValue($arguments));
-		$mockViewHelper->expects($this->once())->method('render')->with('a', 'b');
+		$mockViewHelper->expects($this->once())->method('initializeArgumentsAndRender')->with(array('param1' => 'a', 'param2' => 'b'));
 
 		$mockViewHelperArguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
 

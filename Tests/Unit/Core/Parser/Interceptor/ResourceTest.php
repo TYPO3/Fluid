@@ -35,7 +35,7 @@ class ResourceTest extends \F3\Testing\BaseTestCase {
 	public function resourcesInCssUrlsAreReplacedCorrectly() {
 		$mockDummyNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface');
 		$mockPathNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface');
-		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperInterface');
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\ViewHelper\AbstractViewHelper');
 
 		$originalText1 = '<style type="text/css">
 			#loginscreen {
@@ -49,7 +49,7 @@ class ResourceTest extends \F3\Testing\BaseTestCase {
 		$originalText = $originalText1 . $originalText2 . $originalText3;
 		$mockTextNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\TextNode', array('evaluateChildNodes'), array($originalText));
 		$this->assertEquals($originalText, $mockTextNode->evaluate($this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface')));
-		
+
 		$mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
 		$mockObjectManager->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '')->will($this->returnValue($mockDummyNode));
 		$mockObjectManager->expects($this->at(1))->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $originalText1)->will($this->returnValue($mockDummyNode));
