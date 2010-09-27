@@ -44,20 +44,13 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * (depending on domain)
  *
  * <code title="Resource object">
- * <img src="{f:uri.resource(object: {myImage.resource})}" />
+ * <img src="{f:uri.resource(resource: myImage.resource)}" />
  * </code>
  *
  * Output:
  * <img src="http://yourdomain.tld/_Resources/Persistent/69e73da3ce0ad08c717b7b9f1c759182d6650944.jpg" />
  *
  * (depending on your resource object)
- *
- * <code title="Resource object with title">
- * <img src="{f:uri.resource(object: {myImage.resource}, title: 'My title')}" />
- * </code>
- *
- * Output:
- * <img src="http://yourdomain.tld/_Resources/Persistent/69e73da3ce0ad08c717b7b9f1c759182d6650944/my-title.jpg" />
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
@@ -69,11 +62,12 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @var \F3\FLOW3\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
-	
+
 	/**
 	 * Inject the FLOW3 resource publisher.
 	 *
 	 * @param \F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher
+	 * @return void
 	 */
 	public function injectResourcePublisher(\F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
 		$this->resourcePublisher = $resourcePublisher;
@@ -85,15 +79,14 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $path The path and filename of the resource (relative to Public resource directory of the package)
 	 * @param string $package Target package key. If not set, the current package key will be used
 	 * @param \F3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
-	 * @param string $title If specified, this title is added to the resource uri to make it more descriptive
 	 * @param string $uri A resource URI, a relative / absolute path or URL
 	 * @return string The absolute URI to the resource
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function render($path = NULL, $package = NULL, $resource = NULL, $title = '', $uri = NULL) {
+	public function render($path = NULL, $package = NULL, $resource = NULL, $uri = NULL) {
 		if ($uri !== NULL) {
-			if (\preg_match('#resource://([^/]*)/Public/(.*)#', $uri, $matches) > 0) {
+			if (preg_match('#resource://([^/]*)/Public/(.*)#', $uri, $matches) > 0) {
 				$package = $matches[1];
 				$path = $matches[2];
 			} else {
@@ -106,7 +99,7 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			}
 			$uri = $this->resourcePublisher->getStaticResourcesWebBaseUri() . 'Packages/' . ($package === NULL ? $this->controllerContext->getRequest()->getControllerPackageKey() : $package ). '/' . $path;
 		} else {
-			$uri = $this->resourcePublisher->getPersistentResourceWebUri($resource, $title);
+			$uri = $this->resourcePublisher->getPersistentResourceWebUri($resource);
 			if ($uri === FALSE) {
 				$uri = $this->resourcePublisher->getStaticResourcesWebBaseUri() . 'BrokenResource';
 			}

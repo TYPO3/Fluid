@@ -95,19 +95,6 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @test
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function renderUsesTheGivenTitleAsFilenameForPublishingAGivenResource() {
-		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
-
-		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource, 'Some Title')->will($this->returnValue('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2/Some-Title.jpg'));
-
-		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource, 'Some Title');
-		$this->assertEquals('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2/Some-Title.jpg', $resourceUri);
-	}
-
-	/**
-	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
-	 */
 	public function renderCreatesASpecialBrokenResourceUriIfTheResourceCouldNotBePublished() {
 		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
 
@@ -117,7 +104,6 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource);
 		$this->assertEquals('http://foo/MyOwnResources/BrokenResource', $resourceUri);
 	}
-
 }
 
 ?>
