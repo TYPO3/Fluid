@@ -314,8 +314,8 @@ class TemplateParserTest extends \F3\Testing\BaseTestCase {
 	 * @test
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function initializeViewHelperAndAddItToStackhandlesPostParseFacets() {
-		$mockViewHelper = $this->getMock('F3\Fluid\Core\Parser\Fixtures\PostParseFacetViewHelper');
+	public function initializeViewHelperAndAddItToStackHandlesPostParseFacets() {
+		$mockViewHelper = $this->getMock('F3\Fluid\Core\Parser\Fixtures\PostParseFacetViewHelper', array('prepareArguments'));
 		$mockViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
 
 		$mockNodeOnStack = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\NodeInterface');
