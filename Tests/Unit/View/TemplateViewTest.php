@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\View;
+namespace F3\Fluid\Tests\Unit\View;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
