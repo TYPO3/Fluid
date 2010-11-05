@@ -363,10 +363,10 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 		$pattern = str_replace('@partialRoot', $this->getPartialRootPath(), $pattern);
 		$pattern = str_replace('@layoutRoot', $this->getLayoutRootPath(), $pattern);
 
-		$subPackageKey = $this->controllerContext->getRequest()->getControllerSubpackageKey();
+		$subpackageKey = $this->controllerContext->getRequest()->getControllerSubpackageKey();
 		$controllerName = $this->controllerContext->getRequest()->getControllerName();
 
-		$subpackageParts = ($subPackageKey !== '') ? explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $subPackageKey) : array();
+		$subpackageParts = ($subpackageKey !== NULL) ? explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $subpackageKey) : array();
 
 		$results = array();
 
