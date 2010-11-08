@@ -51,7 +51,7 @@ class AbstractWidgetControllerTest extends \F3\Testing\BaseTestCase {
 
 		$response = $this->getMock('F3\FLOW3\MVC\ResponseInterface');
 
-		$abstractWidgetController = $this->getAccessibleMock('F3\Fluid\Core\Widget\AbstractWidgetController', array('initializeUriBuilder', 'resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'resolveView', 'callActionMethod'), array(), '', FALSE);
+		$abstractWidgetController = $this->getAccessibleMock('F3\Fluid\Core\Widget\AbstractWidgetController', array('initializeUriBuilder', 'resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'), array(), '', FALSE);
 
 		$objectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
 		$abstractWidgetController->_set('objectManager', $objectManager);
