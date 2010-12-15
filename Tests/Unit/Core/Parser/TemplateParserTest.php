@@ -32,7 +32,7 @@ require_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TemplateParserTest extends \F3\Testing\BaseTestCase {
+class TemplateParserTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test

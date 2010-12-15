@@ -27,7 +27,7 @@ namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ViewHelperNodeComparatorTest extends \F3\Testing\BaseTestCase {
+class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @var F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode

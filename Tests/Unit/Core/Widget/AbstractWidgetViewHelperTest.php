@@ -27,7 +27,7 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AbstractWidgetViewHelperTest extends \F3\Testing\BaseTestCase {
+class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @var F3\Fluid\Core\Widget\AbstractWidgetViewHelper

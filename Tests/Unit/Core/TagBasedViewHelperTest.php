@@ -27,7 +27,7 @@ namespace F3\Fluid\Tests\Unit\Core;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AbstractTagBasedViewHelperTest extends \F3\Testing\BaseTestCase {
+class AbstractTagBasedViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	public function setUp() {
 		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper', array('dummy'), array(), '', FALSE);

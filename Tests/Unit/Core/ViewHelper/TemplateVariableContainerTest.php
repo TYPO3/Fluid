@@ -27,7 +27,7 @@ namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TemplateVariableContainerTest extends \F3\Testing\BaseTestCase {
+class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

@@ -24,7 +24,7 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  */
-abstract class ViewHelperBaseTestcase extends \F3\Testing\BaseTestCase {
+abstract class ViewHelperBaseTestcase extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer

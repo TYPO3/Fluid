@@ -24,7 +24,7 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class Nl2brViewHelperTest extends \F3\Testing\BaseTestCase {
+class Nl2brViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test

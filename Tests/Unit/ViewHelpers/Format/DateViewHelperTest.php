@@ -24,7 +24,7 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class DateViewHelperTest extends \F3\Testing\BaseTestCase {
+class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test

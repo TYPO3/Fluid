@@ -27,7 +27,7 @@ namespace F3\Fluid\Tests\Unit\Core;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TagBuilderTest extends \F3\Testing\BaseTestCase {
+class TagBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
