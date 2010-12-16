@@ -188,6 +188,45 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
+	public function renderHiddenReferrerFieldsAddCurrentControllerAndActionOfParentAndSubRequestAsHiddenFields() {
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\FormViewHelper', array('dummy'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$mockSubRequest = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array(), array(), '', FALSE);
+		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('subRequestPackageKey'));
+		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subRequestSubpackageKey'));
+		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerName')->will($this->returnValue('subRequestControllerName'));
+		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('subRequestControllerActionName'));
+		$mockSubRequest->expects($this->any())->method('getParentRequest')->will($this->returnValue($this->request));
+		$mockSubRequest->expects($this->any())->method('getArgumentNamespace')->will($this->returnValue('subRequestArgumentNamespace'));
+
+		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('packageKey'));
+		$this->request->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subpackageKey'));
+		$this->request->expects($this->atLeastOnce())->method('getControllerName')->will($this->returnValue('controllerName'));
+		$this->request->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('controllerActionName'));
+
+		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockSubRequest));
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$hiddenFields = $viewHelper->_call('renderHiddenReferrerFields');
+		$expectedResult = chr(10) . '<input type="hidden" name="subRequestArgumentNamespace[__referrer][packageKey]" value="subRequestPackageKey" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][subpackageKey]" value="subRequestSubpackageKey" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][controllerName]" value="subRequestControllerName" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][actionName]" value="subRequestControllerActionName" />' . chr(10) .
+			'<input type="hidden" name="__referrer[packageKey]" value="packageKey" />' . chr(10) .
+			'<input type="hidden" name="__referrer[subpackageKey]" value="subpackageKey" />' . chr(10) .
+			'<input type="hidden" name="__referrer[controllerName]" value="controllerName" />' . chr(10) .
+			'<input type="hidden" name="__referrer[actionName]" value="controllerActionName" />' . chr(10);
+
+		$this->assertEquals($expectedResult, $hiddenFields);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
 	public function renderAddsSpecifiedPrefixToTemplateVariableContainer() {
 		$prefix = 'somePrefix';
 
@@ -209,6 +248,26 @@ class FormViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$expectedPrefix = '';
 
 		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'renderRequestHashField', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $expectedPrefix);
+		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
+		$viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderAddsDefaultFieldNamePrefixToTemplateVariableContainerIfNoPrefixIsSpecifiedAndRequestIsASubRequest() {
+		$expectedPrefix = 'someArgumentPrefix';
+		$mockSubRequest = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array(), array(), '', FALSE);
+		$mockSubRequest->expects($this->once())->method('getArgumentNamespace')->will($this->returnValue($expectedPrefix));
+
+		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'renderRequestHashField', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer'), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockSubRequest));
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $expectedPrefix);

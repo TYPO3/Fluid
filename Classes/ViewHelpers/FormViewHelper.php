@@ -203,19 +203,34 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 *
 	 * @return string Hidden fields with referrer information
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @todo filter out referrer information that is equal to the target (e.g. same packageKey)
 	 */
 	protected function renderHiddenReferrerFields() {
-		$request = $this->controllerContext->getRequest();
-		$packageKey = $request->getControllerPackageKey();
-		$subpackageKey = $request->getControllerSubpackageKey();
-		$controllerName = $request->getControllerName();
-		$actionName = $request->getControllerActionName();
 		$result = chr(10);
-		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[packageKey]') . '" value="' . $packageKey . '" />' . chr(10);
-		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[subpackageKey]') . '" value="' . $subpackageKey . '" />' . chr(10);
-		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[controllerName]') . '" value="' . $controllerName . '" />' . chr(10);
-		$result .= '<input type="hidden" name="' . $this->prefixFieldName('__referrer[actionName]') . '" value="' . $actionName . '" />' . chr(10);
+		$request = $this->controllerContext->getRequest();
+		if ($request instanceof \F3\FLOW3\MVC\Web\SubRequest) {
+			$argumentNamespace = $request->getArgumentNamespace();
+			$referrer = array(
+				'packageKey' => $request->getControllerPackageKey(),
+				'subpackageKey' => $request->getControllerSubpackageKey(),
+				'controllerName' => $request->getControllerName(),
+				'actionName' => $request->getControllerActionName(),
+			);
+			foreach($referrer as $referrerKey => $referrerValue) {
+				$result .= '<input type="hidden" name="' . $argumentNamespace . '[__referrer][' . $referrerKey . ']" value="' . $referrerValue . '" />' . chr(10);
+			}
+			$request = $request->getParentRequest();
+		}
+		$referrer = array(
+			'packageKey' => $request->getControllerPackageKey(),
+			'subpackageKey' => $request->getControllerSubpackageKey(),
+			'controllerName' => $request->getControllerName(),
+			'actionName' => $request->getControllerActionName(),
+		);
+		foreach($referrer as $referrerKey => $referrerValue) {
+			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']' . '" value="' . $referrerValue . '" />' . chr(10);
+		}
 		return $result;
 	}
 
@@ -296,11 +311,25 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function addFieldNamePrefixToViewHelperVariableContainer() {
-		$fieldNamePrefix = '';
 		if ($this->arguments->hasArgument('fieldNamePrefix')) {
 			$fieldNamePrefix = $this->arguments['fieldNamePrefix'];
+		} else {
+			$fieldNamePrefix = $this->getDefaultFieldNamePrefix();
 		}
 		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $fieldNamePrefix);
+	}
+
+	/**
+	 * Retrieves the default field name prefix for this form
+	 *
+	 * @return string default field name prefix
+	 */
+	protected function getDefaultFieldNamePrefix() {
+		$request = $this->controllerContext->getRequest();
+		if ($request instanceof \F3\FLOW3\MVC\Web\SubRequest) {
+			return $request->getArgumentNamespace();
+		}
+		return '';
 	}
 
 	/**
