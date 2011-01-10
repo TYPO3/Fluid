@@ -30,9 +30,16 @@ namespace F3\Fluid\ViewHelpers\Link;
  * <code>
  * <f:link.external uri="http://www.typo3.org" target="_blank">external link</f:link.external>
  * </code>
- *
- * Output:
+ * <output>
  * <a href="http://www.typo3.org" target="_blank">external link</a>
+ * </output>
+ *
+ * <code title="custom default scheme">
+ * <f:link.external uri="typo3.org" defaultScheme="ftp">external ftp link</f:link.external>
+ * </code>
+ * <output>
+ * <a href="ftp://typo3.org">external ftp link</a>
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
@@ -62,11 +69,16 @@ class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewH
 
 	/**
 	 * @param string $uri the URI that will be put in the href attribute of the rendered link tag
+	 * @param string $defaultScheme scheme the href attribute will be prefixed with if specified $uri does not contain a scheme already
 	 * @return string Rendered link
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($uri) {
+	public function render($uri, $defaultScheme = 'http') {
+		$scheme = parse_url($uri, PHP_URL_SCHEME);
+		if ($scheme === NULL && $defaultScheme !== '') {
+			$uri = $defaultScheme . '://' . $uri;
+		}
 		$this->tag->addAttribute('href', $uri);
 		$this->tag->setContent($this->renderChildren());
 

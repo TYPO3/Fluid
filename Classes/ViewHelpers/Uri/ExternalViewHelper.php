@@ -31,9 +31,16 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code>
  * <f:uri.external uri="http://www.typo3.org" />
  * </code>
- *
- * Output:
+ * <output>
  * http://www.typo3.org
+ * </output>
+ *
+ * <code title="custom default scheme">
+ * <f:uri.external uri="typo3.org" defaultScheme="ftp" />
+ * </code>
+ * <output>
+ * ftp://typo3.org
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
@@ -42,12 +49,17 @@ namespace F3\Fluid\ViewHelpers\Uri;
 class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @param string $uri the target URI
-	 * @return string rendered URI
+	 * @param string $uri target URI
+	 * @param string $defaultScheme scheme the href attribute will be prefixed with if specified $uri does not contain a scheme already
+	 * @return string Rendered URI
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($uri) {
+	public function render($uri, $defaultScheme = 'http') {
+		$scheme = parse_url($uri, PHP_URL_SCHEME);
+		if ($scheme === NULL && $defaultScheme !== '') {
+			$uri = $defaultScheme . '://' . $uri;
+		}
 		return $uri;
 	}
 }
