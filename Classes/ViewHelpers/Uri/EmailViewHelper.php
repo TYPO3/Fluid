@@ -31,9 +31,9 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code title="basic email uri">
  * <f:uri.email email="foo@bar.tld" />
  * </code>
- *
- * Output:
+ * <output>
  * mailto:foo@bar.tld
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api

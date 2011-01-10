@@ -74,16 +74,18 @@ namespace F3\Fluid\ViewHelpers;
  *   </f:else>
  * </f:if>
  * </code>
- *
+ * <output>
  * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
  * Otherwise, everything inside the "else"-tag is displayed.
+ * </output>
  *
  * <code title="inline notation">
  * {f:if(condition: someCondition, then: 'condition is met', else: 'condition is not met')}
  * </code>
- *
+ * <output>
  * The value of the "then" attribute is displayed if the condition evaluates to TRUE.
  * Otherwise, everything the value of the "else"-attribute is displayed.
+ * </output>
  *
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later

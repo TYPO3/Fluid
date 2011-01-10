@@ -35,9 +35,9 @@ namespace F3\Fluid\ViewHelpers;
  *   </f:for>
  * </f:groupedFor>
  * </code>
- *
- * Output:
+ * <output>
  * apple cherry strawberry banana
+ * </output>
  *
  * <code title="Two dimensional list">
  * <ul>
@@ -53,8 +53,7 @@ namespace F3\Fluid\ViewHelpers;
  *   </f:groupedFor>
  * </ul>
  * </code>
- *
- * Output:
+ * <output>
  * <ul>
  *   <li>green fruits
  *     <ul>
@@ -75,6 +74,7 @@ namespace F3\Fluid\ViewHelpers;
  *     </ul>
  *   </li>
  * </ul>
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api

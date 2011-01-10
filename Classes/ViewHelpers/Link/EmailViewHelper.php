@@ -31,16 +31,16 @@ namespace F3\Fluid\ViewHelpers\Link;
  * <code title="basic email link">
  * <f:link.email email="foo@bar.tld" />
  * </code>
- *
- * Output:
+ * <output>
  * <a href="mailto:foo@bar.tld">foo@bar.tld</a>
+ * </output>
  *
  * <code title="Email link with custom linktext">
  * <f:link.email email="foo@bar.tld">some custom content</f:emaillink>
  * </code>
- *
- * Output:
+ * <output>
  * <a href="mailto:foo@bar.tld">some custom content</a>
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api

@@ -30,27 +30,26 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code title="Defaults">
  * <link href="{f:uri.resource(path: 'CSS/Stylesheet.css')}" rel="stylesheet" />
  * </code>
- *
- * Output:
+ * <output>
  * <link href="http://yourdomain.tld/_Resources/Static/YourPackage/CSS/Stylesheet.css" rel="stylesheet" />
  * (depending on current package)
+ * </output>
  *
  * <code title="Other package resource">
  * {f:uri.resource(path: 'gfx/SomeImage.png', package: 'DifferentPackage')}
  * </code>
- *
- * Output:
+ * <output>
  * http://yourdomain.tld/_Resources/Static/DifferentPackage/gfx/SomeImage.png
  * (depending on domain)
+ * </output>
  *
  * <code title="Resource object">
  * <img src="{f:uri.resource(resource: myImage.resource)}" />
  * </code>
- *
- * Output:
+ * <output>
  * <img src="http://yourdomain.tld/_Resources/Persistent/69e73da3ce0ad08c717b7b9f1c759182d6650944.jpg" />
- *
  * (depending on your resource object)
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api

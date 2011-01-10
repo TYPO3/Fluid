@@ -170,7 +170,8 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 			return array();
 		}
 		$options = array();
-		foreach ($this->arguments['options'] as $key => $value) {
+		$optionsArgument = $this->arguments['options'];
+		foreach ($optionsArgument as $key => $value) {
 			if (is_object($value)) {
 
 				if ($this->arguments->hasArgument('optionValueField')) {

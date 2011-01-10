@@ -30,18 +30,18 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * <code title="Defaults">
  * <f:uri.action>some link</f:uri.action>
  * </code>
- *
- * Output:
+ * <output>
  * currentpackage/currentcontroller
  * (depending on routing setup and current package/controller/action)
+ * </output>
  *
  * <code title="Additional arguments">
  * <f:uri.action action="myAction" controller="MyController" package="MyPackage" subpackage="MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:uri.action>
  * </code>
- *
- * Output:
+ * <output>
  * mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2
  * (depending on routing setup)
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api

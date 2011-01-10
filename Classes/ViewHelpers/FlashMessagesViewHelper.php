@@ -38,11 +38,11 @@ namespace F3\Fluid\ViewHelpers;
  * <code title="Output with css class">
  * <f:flashMessages class="specialClass" />
  * </code>
- *
- * Output:
+ * <output>
  * <ul class="specialClass">
  *  ...
  * </ul>
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api

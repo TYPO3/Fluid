@@ -30,16 +30,16 @@ namespace F3\Fluid\ViewHelpers\Format;
  * <code title="Defaults">
  * <f:format.crop maxCharacters="10">This is some very long text</f:format.crop>
  * </code>
- *
- * Output:
+ * <output>
  * This is so...
+ * </output>
  *
  * <code title="Custom suffix">
  * <f:format.crop maxCharacters="17" append=" [more]">This is some very long text</f:format.crop>
  * </code>
- *
- * Output:
+ * <output>
  * This is some very [more]
+ * </output>
  *
  * WARNING: This tag does NOT handle tags currently.
  * WARNING: This tag doesn't care about multibyte charsets currently.
