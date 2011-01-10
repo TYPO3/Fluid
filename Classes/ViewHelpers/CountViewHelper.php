@@ -34,6 +34,13 @@ namespace F3\Fluid\ViewHelpers;
  * 4
  * </output>
  *
+ * <code title="inline notation">
+ * {objects -> f:count()}
+ * </code>
+ * <output>
+ * 10 (depending on the number of items in {objects})
+ * </output>
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
@@ -49,9 +56,12 @@ class CountViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
-	public function render($subject) {
+	public function render($subject = NULL) {
+		if ($subject === NULL) {
+			$subject = $this->renderChildren();
+		}
 		if (is_object($subject) && !$subject instanceof \Countable) {
-			throw new \F3\Fluid\Core\ViewHelper\Exception('CountViewHelper only supports arrays and objects implementing \Countable interface', 1279808078);
+			throw new \F3\Fluid\Core\ViewHelper\Exception('CountViewHelper only supports arrays and objects implementing \Countable interface. Given: "' . get_class($subject) . '"', 1279808078);
 		}
 		return count($subject);
 	}

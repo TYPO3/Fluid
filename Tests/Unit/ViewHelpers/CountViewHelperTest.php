@@ -38,7 +38,7 @@ class CountViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\CountViewHelper();
+		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\CountViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -77,7 +77,20 @@ class CountViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderReturnsZeroIfGivenArrayIsNull() {
+	public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull() {
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(array('foo', 'bar', 'baz')));
+		$expectedResult = 3;
+		$actualResult = $this->viewHelper->render(NULL);
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull() {
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(NULL));
 		$expectedResult = 0;
 		$actualResult = $this->viewHelper->render(NULL);
 		$this->assertSame($expectedResult, $actualResult);
