@@ -43,7 +43,16 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * Split a text at what seems to be a package resource URI.
 	 * @var string
 	 */
-	const PATTERN_SPLIT_AT_RESOURCE_URIS = '!((?:(?:../)|(?:[^"\'(]+/))*Public/[^"\')]+)!';
+	const PATTERN_SPLIT_AT_RESOURCE_URIS = '!
+		(
+			(?:                       # Start URL Part
+				\.\./                 # Either the string "../"
+				|[^"\'(]+/            # ... or a string with no quotes, and no opening bracket.
+			)*                        # a URL consists of multiple URL parts
+			Public/                   # the string "Public/"
+			[^"\')]+                  # followed by arbitrary characters except quotes or closing brackets.
+		)
+		!x';
 
 	/**
 	 * Is the text at hand a resource URI and what are path/package?
@@ -89,10 +98,13 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface the modified node
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
+		if (strpos($node->getText(), 'Public/') === FALSE) {
+			return $node;
+		}
 		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
 		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
 		foreach ($textParts as $part) {
