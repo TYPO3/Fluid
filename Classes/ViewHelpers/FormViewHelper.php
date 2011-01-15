@@ -61,22 +61,6 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected $tagName = 'form';
 
 	/**
-	 * @var F3\FLOW3\Security\Channel\RequestHashService
-	 */
-	protected $requestHashService;
-
-	/**
-	 * Inject a request hash service
-	 *
-	 * @param F3\FLOW3\Security\Channel\RequestHashService $requestHashService The request hash service
-	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function injectRequestHashService(\F3\FLOW3\Security\Channel\RequestHashService $requestHashService) {
-		$this->requestHashService = $requestHashService;
-	}
-
-	/**
 	 * Initialize arguments.
 	 *
 	 * @return void
@@ -136,7 +120,6 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 		$content .= $this->renderHiddenIdentityField($this->arguments['object'], $this->getFormObjectName());
 		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
-		$content .= $this->renderRequestHashField(); // Render hmac after everything else has been rendered
 		$content .= chr(10) . '</div>' . chr(10);
 		$content .= $formContent;
 
@@ -360,34 +343,6 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 */
 	protected function removeFormFieldNamesFromViewHelperVariableContainer() {
 		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
-	}
-
-	/**
-	 * Render the request hash field
-	 *
-	 * @return string the hmac field
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function renderRequestHashField() {
-		$formFieldNames = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
-		$this->postProcessUriArgumentsForRequesthash($this->controllerContext->getUriBuilder()->getLastArguments(), $formFieldNames);
-		$requestHash = $this->requestHashService->generateRequestHash($formFieldNames);
-		return '<input type="hidden" name="__hmac" value="' . htmlspecialchars($requestHash) . '" />';
-	}
-
-	/**
-	 * Add the URI arguments after postprocessing to the request hash as well.
-	 */
-	protected function postProcessUriArgumentsForRequestHash($arguments, &$results, $currentPrefix = '', $level = 0) {
-		if (!count($arguments)) return;
-		foreach ($arguments as $argumentName => $argumentValue) {
-			if (is_array($argumentValue)) {
-				$prefix = ($level==0 ? $argumentName : $currentPrefix . '[' . $argumentName . ']');
-				$this->postProcessUriArgumentsForRequestHash($argumentValue, $results, $prefix, $level+1);
-			} else {
-				$results[] = ($level==0 ? $argumentName : $currentPrefix . '[' . $argumentName . ']');
-			}
-		}
 	}
 
 }
