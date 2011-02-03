@@ -204,12 +204,13 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 	 * this method returns that path, otherwise a path and filename will be
 	 * resolved using the layoutPathAndFilenamePattern.
 	 *
-	 * @param string $layoutName Name of the layout to use. If none given, use "default"
+	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string Path and filename of layout file
 	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function getLayoutSource($layoutName = 'default') {
+	protected function getLayoutSource($layoutName = 'Default') {
+		$layoutName = ucfirst($layoutName);
 		if ($this->layoutPathAndFilename !== NULL) {
 			 $layoutPathAndFilename = $this->layoutPathAndFilename;
 		} else {

@@ -49,7 +49,7 @@ class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	 * @api
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "default" is used.', TRUE);
+		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.', TRUE);
 	}
 
 	/**
@@ -65,7 +65,7 @@ class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 		if (isset($viewHelperArguments['name'])) {
 			$layoutName = $viewHelperArguments['name']->getText();
 		} else {
-			$layoutName = 'default';
+			$layoutName = 'Default';
 		}
 
 		$variableContainer->add('layoutName', $layoutName);

@@ -272,11 +272,11 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * this method returns that path, otherwise a path and filename will be
 	 * resolved using the layoutPathAndFilenamePattern.
 	 *
-	 * @param string $layoutName Name of the layout to use. If none given, use "default"
+	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string Path and filename of layout file
 	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
-	abstract protected function getLayoutSource($layoutName = 'default');
+	abstract protected function getLayoutSource($layoutName = 'Default');
 
 	/**
 	 * Figures out which partial to use.
