@@ -86,10 +86,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\Abstract
 	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object, $name) {
-		if (!is_object($object)
-			|| !($object instanceof \F3\FLOW3\Persistence\Aspect\PersistenceMagicInterface)
-			|| ($this->persistenceManager->isNewObject($object) && !$object->FLOW3_Persistence_isClone())
-			){
+		if (!is_object($object) || $this->persistenceManager->isNewObject($object)) {
 			return '';
 		}
 		$identifier = $this->persistenceManager->getIdentifierByObject($object);
