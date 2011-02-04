@@ -217,6 +217,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	/**
 	 * Render the option tags.
 	 *
+	 * @param mixed $value Value to check for
 	 * @return boolean TRUE if the value should be marked a s selected; FALSE otherwise
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @author Jochen Rau <jochen.rau@typoplanet.de>

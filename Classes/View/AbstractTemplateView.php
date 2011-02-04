@@ -107,7 +107,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Sets the current controller context
 	 *
-	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
@@ -391,7 +391,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * By default we assume that the view implementation can handle all kinds of
 	 * contexts. Override this method if that is not the case.
 	 *
-	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean TRUE if the view has something useful to display, otherwise FALSE
 	 * @api
 	 */

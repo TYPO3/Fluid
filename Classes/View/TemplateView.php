@@ -128,6 +128,7 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 	/**
 	 * Checks whether a template can be resolved for the current request context.
 	 *
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>

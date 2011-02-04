@@ -85,7 +85,7 @@ class AbstractFormFieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 		$actual = $formViewHelper->_call('getName');
 		$this->assertSame($expected, $actual);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -373,7 +373,7 @@ class AbstractFormFieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 
 		$formViewHelper->_call('setErrorClassAttribute');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -386,7 +386,7 @@ class AbstractFormFieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 		$formFieldViewHelper->_set('arguments', $arguments);
 		$formFieldViewHelper->_call('addAdditionalIdentityPropertiesIfNeeded');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -407,19 +407,19 @@ class AbstractFormFieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 		$property = 'value.something';
 		$objectName = 'myObject';
 		$expectedProperty = 'myObject[value]';
-		
+
 		$formFieldViewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('renderHiddenIdentityField'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formFieldViewHelper);
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array('property' => $property));
 		$formFieldViewHelper->_set('arguments', $arguments);
 		$this->viewHelperVariableContainer->expects($this->at(0))->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($mockFormObject));
 		$this->viewHelperVariableContainer->expects($this->at(1))->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue($objectName));
-		
+
 		$formFieldViewHelper->expects($this->once())->method('renderHiddenIdentityField')->with($mockFormObject, $expectedProperty);
-		
+
 		$formFieldViewHelper->_call('addAdditionalIdentityPropertiesIfNeeded');
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -441,17 +441,17 @@ class AbstractFormFieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 		$objectName = 'myObject';
 		$expectedProperty1 = 'myObject[value]';
 		$expectedProperty2 = 'myObject[value][value]';
-		
+
 		$formFieldViewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('renderHiddenIdentityField'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formFieldViewHelper);
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array('property' => $property));
 		$formFieldViewHelper->_set('arguments', $arguments);
 		$this->viewHelperVariableContainer->expects($this->at(0))->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($mockFormObject));
 		$this->viewHelperVariableContainer->expects($this->at(1))->method('get')->with('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue($objectName));
-		
+
 		$formFieldViewHelper->expects($this->at(0))->method('renderHiddenIdentityField')->with($mockFormObject, $expectedProperty1);
 		$formFieldViewHelper->expects($this->at(1))->method('renderHiddenIdentityField')->with($mockFormObject, $expectedProperty2);
-		
+
 		$formFieldViewHelper->_call('addAdditionalIdentityPropertiesIfNeeded');
 	}
 

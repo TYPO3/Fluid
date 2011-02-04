@@ -77,6 +77,8 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\Abstract
 	/**
 	 * Renders a hidden form field containing the technical identity of the given object.
 	 *
+	 * @param object $object Object to create the identity field for
+	 * @param string $name Name
 	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>

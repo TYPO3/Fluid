@@ -191,6 +191,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param F3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode Value to be converted
 	 * @param string $type Target type
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed New value
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>

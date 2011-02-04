@@ -193,7 +193,7 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	/**
 	 * Get errors for the property and form name of this view helper
 	 *
-	 * @return array An array of F3\FLOW3\Error\Error objects
+	 * @return array<\F3\FLOW3\Error\Error> Array of errors
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */

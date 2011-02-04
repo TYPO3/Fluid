@@ -79,6 +79,7 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param mixed $subject An object or array
 	 * @param string $propertyPath
+	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Value of the property
 	 */
 	protected function getPropertyPath($subject, $propertyPath, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
