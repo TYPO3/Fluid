@@ -320,10 +320,16 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
 	 * @return string the Layout name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Rens Admiraal <r.admiraal@drecomm.nl>
 	 */
 	protected function getLayoutNameInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
 		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
-			return $parsedTemplate->getVariableContainer()->get('layoutName');
+			$layoutNameNode = $parsedTemplate->getVariableContainer()->get('layoutName');
+			$layoutName = $layoutNameNode->evaluate($this->baseRenderingContext);
+			if (!empty($layoutName)) {
+				return $layoutName;
+			}
+			throw new \F3\Fluid\View\Exception('The layoutName could not be evaluated to a string', 1296805368);
 		}
 		return NULL;
 	}

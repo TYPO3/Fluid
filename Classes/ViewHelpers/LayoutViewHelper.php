@@ -63,12 +63,12 @@ class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	 */
 	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		if (isset($viewHelperArguments['name'])) {
-			$layoutName = $viewHelperArguments['name']->getText();
+			$layoutNameNode = $viewHelperArguments['name'];
 		} else {
-			$layoutName = 'Default';
+			$layoutNameNode = new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('Default');
 		}
 
-		$variableContainer->add('layoutName', $layoutName);
+		$variableContainer->add('layoutName', $layoutNameNode);
 	}
 
 	/**
@@ -81,6 +81,5 @@ class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	public function render() {
 	}
 }
-
 
 ?>
