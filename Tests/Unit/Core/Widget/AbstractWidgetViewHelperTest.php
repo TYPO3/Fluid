@@ -201,5 +201,38 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		// SubResponse is returned
 		$this->assertSame($response, $output);
 	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function initiateSubRequestSetsIndexActionIfNoActionSet() {
+		$controller = $this->getMock('F3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);
+		$this->viewHelper->_set('controller', $controller);
+
+		// Initial Setup
+		$widgetRequest = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest');
+		$response = $this->getMock('F3\FLOW3\MVC\Web\Response');
+		$this->objectManager->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Widget\WidgetRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(1))->method('create')->with('F3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
+
+		// Widget Context is set
+		$widgetRequest->expects($this->once())->method('setWidgetContext')->with($this->widgetContext);
+
+		// The namespaced arguments are passed to the sub-request
+		// and the action name is exctracted from the namespace.
+		$this->controllerContext->expects($this->once())->method('getRequest')->will($this->returnValue($this->request));
+		$this->widgetContext->expects($this->once())->method('getWidgetIdentifier')->will($this->returnValue('widget-1'));
+		$this->request->expects($this->once())->method('getArguments')->will($this->returnValue(array(
+			'k1' => 'k2',
+			'widget-1' => array(
+				'arg1' => 'val1',
+				'arg2' => 'val2',
+			)
+		)));
+		$widgetRequest->expects($this->once())->method('setControllerActionName')->with('index');
+
+		$output = $this->viewHelper->_call('initiateSubRequest');
+	}
 }
 ?>

@@ -181,13 +181,16 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 	private function passArgumentsToSubRequest(\F3\Fluid\Core\Widget\WidgetRequest $subRequest) {
 		$arguments = $this->controllerContext->getRequest()->getArguments();
 		$widgetIdentifier = $this->widgetContext->getWidgetIdentifier();
+
+		$controllerActionName = 'index';
 		if (isset($arguments[$widgetIdentifier])) {
 			if (isset($arguments[$widgetIdentifier]['action'])) {
-				$subRequest->setControllerActionName($arguments[$widgetIdentifier]['action']);
+				$controllerActionName = $arguments[$widgetIdentifier]['action'];
 				unset($arguments[$widgetIdentifier]['action']);
 			}
 			$subRequest->setArguments($arguments[$widgetIdentifier]);
 		}
+		$subRequest->setControllerActionName($controllerActionName);
 	}
 
 	/**

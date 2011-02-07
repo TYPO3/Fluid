@@ -57,8 +57,11 @@ class AutocompleteController extends \F3\Fluid\Core\Widget\AbstractWidgetControl
 		$results = $query->execute();
 
 		$output = array();
+		$values = array();
 		foreach ($results as $singleResult) {
 			$val = \F3\FLOW3\Reflection\ObjectAccess::getProperty($singleResult, $searchProperty);
+			if (isset($values[$val])) continue;
+			$values[$val] = TRUE;
 			$output[] = array(
 				'id' => $val,
 				'label' => $val,
@@ -68,5 +71,4 @@ class AutocompleteController extends \F3\Fluid\Core\Widget\AbstractWidgetControl
 		return json_encode($output);
 	}
 }
-
 ?>
