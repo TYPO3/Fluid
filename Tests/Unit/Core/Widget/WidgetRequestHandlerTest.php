@@ -38,12 +38,12 @@ class WidgetRequestHandlerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @var F3\FLOW3\Utility\Environment
 	 */
 	protected $mockEnvironment;
-	
+
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment');
+		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
 
 		$this->widgetRequestHandler = $this->getAccessibleMock('F3\Fluid\Core\Widget\WidgetRequestHandler', array('dummy'), array(), '', FALSE);
 		$this->widgetRequestHandler->_set('environment', $this->mockEnvironment);

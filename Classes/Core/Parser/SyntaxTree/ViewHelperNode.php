@@ -96,12 +96,7 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$this->uninitializedViewHelper = $viewHelper;
 		$this->viewHelpersByContext = new \SplObjectStorage();
 		$this->arguments = $arguments;
-
-		if ($this->uninitializedViewHelper instanceof \F3\FLOW3\AOP\ProxyInterface) {
-			$this->viewHelperClassName = $this->uninitializedViewHelper->FLOW3_AOP_Proxy_getProxyTargetClassName();
-		} else {
-			$this->viewHelperClassName = get_class($this->uninitializedViewHelper);
-		}
+		$this->viewHelperClassName = get_class($this->uninitializedViewHelper);
 	}
 
 	/**

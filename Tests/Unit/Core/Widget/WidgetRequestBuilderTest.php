@@ -78,18 +78,8 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->widgetRequestBuilder->injectAjaxWidgetContextHolder($this->mockAjaxWidgetContextHolder);
 		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->will($this->returnValue($this->mockWidgetContext));
 
-		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment');
+		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
 		$this->widgetRequestBuilder->_set('environment', $this->mockEnvironment);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function buildInjectsEnvironmentInRequest() {
-		$this->mockWidgetRequest->expects($this->once())->method('injectEnvironment')->with($this->mockEnvironment);
-
-		$this->widgetRequestBuilder->build();
 	}
 
 	/**

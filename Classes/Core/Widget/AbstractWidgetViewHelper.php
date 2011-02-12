@@ -118,7 +118,7 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 		$this->widgetContext->setWidgetConfiguration($this->getWidgetConfiguration());
 		$this->initializeWidgetIdentifier();
 
-		$controllerObjectName = ($this->controller instanceof \F3\FLOW3\AOP\ProxyInterface) ? $this->controller->FLOW3_AOP_Proxy_getProxyTargetClassName() : get_class($this->controller);
+		$controllerObjectName = get_class($this->controller);
 		$this->widgetContext->setControllerObjectName($controllerObjectName);
 	}
 
