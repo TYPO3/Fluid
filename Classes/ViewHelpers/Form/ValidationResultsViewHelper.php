@@ -57,7 +57,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @api
  * @scope prototype
  */
-class ErrorsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ValidationResultsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Iterates through selected errors of the request.
@@ -69,40 +69,17 @@ class ErrorsViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
-	public function render($for = '', $as = 'error') {
-		$errors = $this->controllerContext->getRequest()->getErrors();
-		if ($for !== '') {
-			$propertyPath = explode('.', $for);
-			foreach ($propertyPath as $currentPropertyName) {
-				$errors = $this->getErrorsForProperty($currentPropertyName, $errors);
-			}
-		}
-		$output = '';
-		foreach ($errors as $errorKey => $error) {
-			$this->templateVariableContainer->add($as, $error);
-			$output .= $this->renderChildren();
-			$this->templateVariableContainer->remove($as);
-		}
-		return $output;
-	}
+	public function render($for = '', $as = 'validationResults') {
+		$validationResults = $this->controllerContext->getRequest()->getOriginalRequestMappingResults();
 
-	/**
-	 * Find errors for a specific property in the given errors array
-	 *
-	 * @param string $propertyName The property name to look up
-	 * @param array $errors An array of F3\FLOW3\Error\Error objects
-	 * @return array An array of errors for $propertyName
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 */
-	protected function getErrorsForProperty($propertyName, $errors) {
-		foreach ($errors as $error) {
-			if ($error instanceof \F3\FLOW3\Validation\PropertyError) {
-				if ($error->getPropertyName() === $propertyName) {
-					return $error->getErrors();
-				}
-			}
+		if ($for !== '') {
+			$validationResults = $validationResults->forProperty($for);
 		}
-		return array();
+		$this->templateVariableContainer->add($as, $validationResults);
+		$output = $this->renderChildren();
+		$this->templateVariableContainer->remove($as);
+		
+		return $output;
 	}
 }
 

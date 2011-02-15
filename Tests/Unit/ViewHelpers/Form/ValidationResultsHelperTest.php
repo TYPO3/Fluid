@@ -22,25 +22,27 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-/**
- */
-
 include_once(__DIR__ . '/../Fixtures/ConstraintSyntaxTreeNode.php');
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
+ * Test for the Validation Results view helper
+ *
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ErrorsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ValidationResultsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+
 	/**
 	 * @test
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderWithoutSpecifiedNameLoopsThroughRootErrors() {
+		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
 		$mockError1 = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
 		$mockError2 = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
 		$this->request->expects($this->atLeastOnce())->method('getErrors')->will($this->returnValue(array($mockError1, $mockError2)));
 
-		$viewHelper = new \F3\Fluid\ViewHelpers\Form\ErrorsViewHelper();
+		$viewHelper = new \F3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());

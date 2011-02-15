@@ -28,6 +28,7 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class AbstractWidgetControllerTest extends \F3\FLOW3\Tests\UnitTestCase {
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -52,7 +53,7 @@ class AbstractWidgetControllerTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$response = $this->getMock('F3\FLOW3\MVC\ResponseInterface');
 
 		$abstractWidgetController = $this->getAccessibleMock('F3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
-		$abstractWidgetController->_set('argumentsMappingResults', new \F3\FLOW3\Property\MappingResults());
+		$abstractWidgetController->_set('argumentsMappingResults', new \F3\FLOW3\Error\Result());
 		$abstractWidgetController->injectFlashMessageContainer(new \F3\FLOW3\MVC\Controller\FlashMessageContainer());
 
 		$abstractWidgetController->processRequest($request, $response);

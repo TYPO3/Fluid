@@ -61,6 +61,19 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected $tagName = 'form';
 
 	/**
+	 * @var \F3\FLOW3\Object\ObjectSerializer
+	 */
+	protected $objectSerializer;
+
+	/**
+	 * @param \F3\FLOW3\Object\ObjectSerializer $objectSerializer
+	 * @return void
+	 */
+	public function injectObjectSerializer(\F3\FLOW3\Object\ObjectSerializer $objectSerializer) {
+		$this->objectSerializer = $objectSerializer;
+	}
+
+	/**
 	 * Initialize arguments.
 	 *
 	 * @return void
@@ -199,20 +212,24 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 				'subpackageKey' => $request->getControllerSubpackageKey(),
 				'controllerName' => $request->getControllerName(),
 				'actionName' => $request->getControllerActionName(),
+				'arguments' => serialize($this->objectSerializer->serializeObjectAsPropertyArray(new \ArrayObject($request->getArguments())))
 			);
 			foreach($referrer as $referrerKey => $referrerValue) {
+				$referrerValue = \htmlspecialchars($referrerValue);
 				$result .= '<input type="hidden" name="' . $argumentNamespace . '[__referrer][' . $referrerKey . ']" value="' . $referrerValue . '" />' . chr(10);
 			}
 			$request = $request->getParentRequest();
 		}
+
 		$referrer = array(
 			'packageKey' => $request->getControllerPackageKey(),
 			'subpackageKey' => $request->getControllerSubpackageKey(),
 			'controllerName' => $request->getControllerName(),
 			'actionName' => $request->getControllerActionName(),
+			'arguments' => serialize($this->objectSerializer->serializeObjectAsPropertyArray(new \ArrayObject($request->getArguments())))
 		);
 		foreach($referrer as $referrerKey => $referrerValue) {
-			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']' . '" value="' . $referrerValue . '" />' . chr(10);
+			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']' . '" value="' . htmlspecialchars($referrerValue) . '" />' . chr(10);
 		}
 		return $result;
 	}

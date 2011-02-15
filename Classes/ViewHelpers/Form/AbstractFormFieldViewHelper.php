@@ -61,6 +61,20 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getName() {
+		$name = $this->getNameWithoutPrefix();
+		return $this->prefixFieldName($name);
+	}
+
+	/**
+	 * Get the name of this form element, without prefix.
+	 *
+	 * @return string name
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Robert Lemke <robert@typo3.org>
+	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	protected function getNameWithoutPrefix() {
 		if ($this->isObjectAccessorMode()) {
 			$formObjectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 			if (!empty($formObjectName)) {
@@ -82,7 +96,8 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 				$name .= '[__identity]';
 			}
 		}
-		return $this->prefixFieldName($name);
+
+		return $name;
 	}
 
 	/**
@@ -146,6 +161,11 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getPropertyValue() {
+		if ($this->controllerContext->getRequest()->getOriginalRequest() !== NULL) {
+			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
+			return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->controllerContext->getRequest()->getOriginalRequest()->getArguments(), $propertyPath);
+		}
+
 		$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		$propertyName = $this->arguments['property'];
 
@@ -179,8 +199,8 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 		} else {
 			$cssClass = '';
 		}
-		$errors = $this->getErrorsForProperty();
-		if (count($errors) > 0) {
+		$mappingResultsForProperty = $this->getMappingResultsForProperty();
+		if ($mappingResultsForProperty->hasErrors()) {
 			if ($this->arguments->hasArgument('errorClass')) {
 				$cssClass .= $this->arguments['errorClass'];
 			} else {
@@ -196,26 +216,16 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 * @return array<\F3\FLOW3\Error\Error> Array of errors
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function getErrorsForProperty() {
+	protected function getMappingResultsForProperty() {
 		if (!$this->isObjectAccessorMode()) {
-			return array();
+			return new \F3\FLOW3\Error\Result();
 		}
-		$errors = $this->controllerContext->getRequest()->getErrors();
+		$originalRequestMappingResults = $this->controllerContext->getRequest()->getOriginalRequestMappingResults();
 		$formObjectName = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-		$propertyName = $this->arguments['property'];
-		$formErrors = array();
-		foreach ($errors as $error) {
-			if ($error instanceof \F3\FLOW3\Validation\PropertyError && $error->getPropertyName() === $formObjectName) {
-				$formErrors = $error->getErrors();
-				foreach ($formErrors as $formError) {
-					if ($formError instanceof \F3\FLOW3\Validation\PropertyError && $formError->getPropertyName() === $propertyName) {
-						return $formError->getErrors();
-					}
-				}
-			}
-		}
-		return array();
+
+		return $originalRequestMappingResults->forProperty($formObjectName)->forProperty($this->arguments['property']);
 	}
 
 	/**
