@@ -26,6 +26,7 @@ namespace F3\Fluid\Core\Widget;
  * Builds the WidgetRequest if an AJAX widget is called.
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @scope singleton
  */
 class WidgetRequestBuilder extends \F3\FLOW3\MVC\Web\RequestBuilder {
 
