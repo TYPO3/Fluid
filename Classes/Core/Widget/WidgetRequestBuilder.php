@@ -52,6 +52,8 @@ class WidgetRequestBuilder extends \F3\FLOW3\MVC\Web\RequestBuilder {
 	 */
 	public function build() {
 		$request = $this->objectManager->create('F3\Fluid\Core\Widget\WidgetRequest');
+		$request->setRequestUri($this->environment->getRequestUri());
+		$request->setBaseUri($this->environment->getBaseUri());
 		$request->setMethod($this->environment->getRequestMethod());
 		$this->setArgumentsFromRawRequestData($request);
 
