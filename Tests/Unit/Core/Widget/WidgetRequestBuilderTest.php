@@ -79,6 +79,8 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->will($this->returnValue($this->mockWidgetContext));
 
 		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
+		$this->mockEnvironment->expects($this->any())->method('getRequestUri')->will($this->returnValue(new \F3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/some/widget/request')));
+		$this->mockEnvironment->expects($this->any())->method('getBaseUri')->will($this->returnValue(new \F3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/')));
 		$this->widgetRequestBuilder->_set('environment', $this->mockEnvironment);
 	}
 
