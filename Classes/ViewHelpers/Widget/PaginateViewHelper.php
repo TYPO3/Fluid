@@ -57,12 +57,12 @@ class PaginateViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper 
 
 	/**
 	 *
-	 * @param \F3\FLOW3\Persistence\QueryResult $objects
+	 * @param \F3\FLOW3\Persistence\QueryResultInterface $objects
 	 * @param string $as
 	 * @param array $configuration
 	 * @return string
 	 */
-	public function render(\F3\FLOW3\Persistence\QueryResult $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE)) {
+	public function render(\F3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE)) {
 		return $this->initiateSubRequest();
 	}
 }

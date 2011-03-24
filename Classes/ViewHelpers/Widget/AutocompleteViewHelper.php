@@ -52,12 +52,12 @@ class AutocompleteViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHel
 
 	/**
 	 *
-	 * @param \F3\FLOW3\Persistence\QueryResult $objects
+	 * @param \F3\FLOW3\Persistence\QueryResultInterface $objects
 	 * @param string $for
 	 * @param string $searchProperty
 	 * @return string
 	 */
-	public function render(\F3\FLOW3\Persistence\QueryResult $objects, $for, $searchProperty) {
+	public function render(\F3\FLOW3\Persistence\QueryResultInterface $objects, $for, $searchProperty) {
 		return $this->initiateSubRequest();
 	}
 }
