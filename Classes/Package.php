@@ -1,9 +1,9 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Fluid\Core\Widget;
+namespace F3\Fluid;
 
-/*
- * This script belongs to the FLOW3 package "Fluid".                      *
+/*                                                                        *
+ * This script belongs to the FLOW3 framework.                            *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License as published by the *
@@ -22,48 +22,15 @@ namespace F3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use \F3\FLOW3\Package\Package as BasePackage;
+
 /**
- * Widget request handler, which handles the request if
- * f3-fluid-widget-id is found.
- *
- * This Request Handler gets the WidgetRequestBuilder injected.
+ * The Fluid Package
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope singleton
  */
-class WidgetRequestHandler extends \F3\FLOW3\MVC\Web\RequestHandler {
+class Package extends BasePackage {
 
-	/**
-	 * @var \F3\FLOW3\Utility\Environment
-	 */
-	protected $environment;
-
-	/**
-	 * @param \F3\FLOW3\Utility\Environment $environment
-	 * @return void
-	 */
-	public function injectEnvironment(\F3\FLOW3\Utility\Environment $environment) {
-		$this->environment = $environment;
-	}
-
-	/**
-	 * @return boolean TRUE if it is an AJAX widget request
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function canHandleRequest() {
-		$rawGetArguments = $this->environment->getRawGetArguments();
-		return isset($rawGetArguments['f3-fluid-widget-id']);
-	}
-
-	/**
-	 * This request handler has a higher priority than the default request handler.
-	 *
-	 * @return integer
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function getPriority() {
-		return 200;
-	}
 }
 
 ?>
