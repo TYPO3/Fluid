@@ -27,13 +27,19 @@ namespace F3\Fluid\ViewHelpers\Widget;
  *
  * = Examples =
  *
- * <code>
- * <f:widget.paginate itemsPerPage="10" objects="{blogs}" as="paginatedBlogs">
+ * <code title="simple configuration">
+ * <f:widget.paginate objects="{blogs}" as="paginatedBlogs" configuration="{itemsPerPage: 5}">
  *   // use {paginatedBlogs} as you used {blogs} before, most certainly inside
  *   // a <f:for> loop.
  * </f:widget.paginate>
  * </code>
  *
+ * <code title="full configuration">
+ * <f:widget.paginate objects="{blogs}" as="paginatedBlogs" configuration="{itemsPerPage: 5, insertAbove: 1, insertBelow: 0, maximumNumberOfLinks: 10}">
+ *   // This example will display at the maximum 10 links and tries to the settings
+ *   // pagesBefore and pagesAfter into account to get the best result
+ * </f:widget.paginate>
+ * </code>
  * = Performance characteristics =
  *
  * In the above example, it looks like {blogs} contains all Blog objects, thus
@@ -62,7 +68,7 @@ class PaginateViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper 
 	 * @param array $configuration
 	 * @return string
 	 */
-	public function render(\F3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE)) {
+	public function render(\F3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE, 'maximumNumberOfLinks' => 99)) {
 		return $this->initiateSubRequest();
 	}
 }
