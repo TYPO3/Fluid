@@ -32,7 +32,7 @@ interface RenderingContextInterface {
 	/**
 	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
-	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 */
 	public function getObjectManager();
 
@@ -40,35 +40,35 @@ interface RenderingContextInterface {
 	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
 	 *
-	 * @param F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
 	 */
 	public function injectTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer);
 
 	/**
 	 * Get the template variable container
 	 *
-	 * @return F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
+	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
 	 */
 	public function getTemplateVariableContainer();
 
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
 	 */
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext);
 
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @return \F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext();
 
 	/**
 	 * Set the ViewHelperVariableContainer
 	 *
-	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
 	 */
 	public function injectViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer);
@@ -76,7 +76,7 @@ interface RenderingContextInterface {
 	/**
 	 * Get the ViewHelperVariableContainer
 	 *
-	 * @return F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @return \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	public function getViewHelperVariableContainer();
 }

@@ -33,7 +33,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Template Variable Container. Contains all variables available through object accessors in the template
 	 *
-	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
 
@@ -41,28 +41,28 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	 * Object manager which is bubbled through. The ViewHelperNode cannot get an ObjectManager injected because
 	 * the whole syntax tree should be cacheable
 	 *
-	 * @var F3\FLOW3\Object\ObjectManagerInterface
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
 	 * Controller context being passed to the ViewHelper
 	 *
-	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \F3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
 	 * ViewHelper Variable Container
 	 *
-	 * @var F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
+	 * @var \F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 
 	/**
 	 * Inject the object manager
 	 *
-	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
@@ -72,7 +72,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
-	 * @param F3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getObjectManager() {
@@ -83,7 +83,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
 	 *
-	 * @param F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
+	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
@@ -93,7 +93,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Get the template variable container
 	 *
-	 * @return F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
+	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getTemplateVariableContainer() {
@@ -103,7 +103,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
+	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
@@ -113,7 +113,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @return \F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getControllerContext() {
@@ -123,7 +123,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Set the ViewHelperVariableContainer
 	 *
-	 * @param F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -134,7 +134,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * Get the ViewHelperVariableContainer
 	 *
-	 * @return F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @return \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperVariableContainer() {

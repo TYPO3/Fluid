@@ -58,14 +58,14 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * Current variable container reference.
-	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 * @api
 	 */
 	protected $templateVariableContainer;
 
 	/**
 	 * Controller Context to use
-	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \F3\FLOW3\MVC\Controller\ControllerContext
 	 * @api
 	 */
 	protected $controllerContext;
@@ -77,14 +77,14 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * ViewHelper Variable Container
-	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 * @api
 	 */
 	protected $viewHelperVariableContainer;
 
 	/**
 	 * Reflection service
-	 * @var F3\FLOW3\Reflection\ReflectionService
+	 * @var \F3\FLOW3\Reflection\ReflectionService
 	 */
 	private $reflectionService;
 
@@ -404,7 +404,7 @@ abstract class AbstractViewHelper {
 	 * Get the rendering context interface.
 	 * THIS METHOD IS NO PUBLIC API AND ONLY CALLABLE INSIDE THE FRAMEWORK!
 	 *
-	 * @return F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @return \F3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRenderingContext() {
