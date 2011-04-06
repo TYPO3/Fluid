@@ -113,6 +113,9 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 		$value = NULL;
 		if ($this->arguments->hasArgument('value')) {
 			$value = $this->arguments['value'];
+		} elseif ($this->controllerContext->getRequest()->getOriginalRequest() !== NULL) {
+			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
+			$value = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->controllerContext->getRequest()->getOriginalRequest()->getArguments(), $propertyPath);
 		} elseif ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
 			$this->addAdditionalIdentityPropertiesIfNeeded();
 			$value = $this->getPropertyValue();
@@ -161,10 +164,6 @@ abstract class AbstractFormFieldViewHelper extends \F3\Fluid\ViewHelpers\Form\Ab
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getPropertyValue() {
-		if ($this->controllerContext->getRequest()->getOriginalRequest() !== NULL) {
-			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
-			return \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->controllerContext->getRequest()->getOriginalRequest()->getArguments(), $propertyPath);
-		}
 
 		$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		$propertyName = $this->arguments['property'];
