@@ -60,12 +60,13 @@ namespace F3\Fluid\ViewHelpers;
 class CycleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var array|\SplObjectStorage the values to be iterated through
+	 * array|\SplObjectStorage the values to be iterated through
+	 * @var array
 	 */
 	protected $values = NULL;
 
 	/**
-	 * @var integer current values index
+	 * @var integer
 	 */
 	protected $currentCycleIndex = NULL;
 

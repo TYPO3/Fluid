@@ -61,14 +61,14 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Make sure that if one string is contained in one another, the longer
 	 * string is listed BEFORE the shorter one.
 	 * Example: put ">=" before ">"
-	 * @var array of comparators
+	 * @var array
 	 */
 	static protected $comparators = array('==', '!=', '%', '>=', '>', '<=', '<');
 
 	/**
 	 * A regular expression which checks the text nodes of a boolean expression.
 	 * Used to define how the regular expression language should look like.
-	 * @var string Regular expression
+	 * @var string
 	 */
 	static protected $booleanExpressionTextNodeCheckerRegularExpression = '/
 		^                 # Start with first input symbol

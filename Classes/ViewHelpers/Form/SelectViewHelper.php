@@ -74,7 +74,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	protected $tagName = 'select';
 
 	/**
-	 * @var mixed the selected value
+	 * @var mixed
 	 */
 	protected $selectedValue = NULL;
 
