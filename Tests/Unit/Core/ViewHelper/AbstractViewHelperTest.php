@@ -137,7 +137,7 @@ class AbstractViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
 		$reflectionService->setDataCache($dataCacheMock);
-		$reflectionService->initialize($availableClassNames);
+		$reflectionService->buildReflectionData($availableClassNames);
 
 		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
 		$viewHelper->injectReflectionService($reflectionService);
@@ -170,7 +170,7 @@ class AbstractViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
 		$reflectionService->setDataCache($dataCacheMock);
-		$reflectionService->initialize($availableClassNames);
+		$reflectionService->buildReflectionData($availableClassNames);
 
 		$viewHelper = new \F3\Fluid\Core\Fixtures\TestViewHelper();
 		$viewHelper->injectReflectionService($reflectionService);

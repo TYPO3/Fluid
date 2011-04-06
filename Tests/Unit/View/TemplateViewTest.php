@@ -123,7 +123,7 @@ class TemplateViewTest extends \F3\FLOW3\Tests\UnitTestCase {
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
      	$controllerObjectName = "F3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
 
-		$mockRequest = $this->getMock('F3\FLOW3\MVC\RequestInterface');
+		$mockRequest = $this->getMock('F3\FLOW3\MVC\Request');
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue($packageKey));
 		$mockRequest->expects($this->any())->method('getControllerSubPackageKey')->will($this->returnValue($subPackageKey));
 		$mockRequest->expects($this->any())->method('getControllerName')->will($this->returnValue($controllerName));
@@ -210,7 +210,7 @@ class TemplateViewTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$templateView->setLayoutRootPath('MyLayouts');
 
 		$this->assertSame('contentsOfMyCoolAction', $templateView->_call('getTemplateSource', 'myCoolAction'));
-		
+
 	}
 
 	/**
