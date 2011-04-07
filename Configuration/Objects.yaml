@@ -15,5 +15,5 @@ F3\Fluid\View\TemplateView:
 
 F3\Fluid\Core\Widget\WidgetRequestHandler:
   arguments:
-    4:
+    2:
       object: F3\Fluid\Core\Widget\WidgetRequestBuilder
