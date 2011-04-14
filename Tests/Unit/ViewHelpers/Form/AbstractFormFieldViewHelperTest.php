@@ -43,8 +43,6 @@ class AbstractFormFieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 		$className = 'Object' . uniqid();
 		$fullClassName = 'F3\\Fluid\\ViewHelpers\\Form\\' . $className;
 		eval('namespace F3\\Fluid\\ViewHelpers\\Form; class ' . $className . ' {
-			public function FLOW3_AOP_Proxy_getProperty($name) {}
-			public function FLOW3_AOP_Proxy_getProxyTargetClassName() {}
 			public function __clone() {}
 		}');
 		$object = $this->getMock($fullClassName);
