@@ -201,7 +201,8 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		if(!array_key_exists($sectionName, $sections)) {
-			throw new \F3\Fluid\View\Exception\InvalidSectionException('The given section does not exist!', 1227108982);
+			$controllerObjectName = $this->controllerContext->getRequest()->getControllerObjectName();
+			throw new \F3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
 		}
 		$section = $sections[$sectionName];
 
