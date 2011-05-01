@@ -230,6 +230,10 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$childNodes = $syntaxTreeNode->getChildNodes();
 		if (count($childNodes) > 3) {
 			throw new \F3\Fluid\Core\Parser\Exception('The expression "' . $syntaxTreeNode->evaluate($renderingContext) . '" has more than tree parts.', 1244201848);
+		} elseif (count($childNodes) === 0) {
+				// In this case, we do not have child nodes; i.e. the current SyntaxTreeNode
+				// is a text node with a literal comparison like "1 == 1"
+			$childNodes = array($syntaxTreeNode);
 		}
 
 		$leftSide = NULL;
@@ -277,7 +281,16 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * Do the actual comparison. Compares $leftSide and $rightSide with $comparator and emits a boolean value
+	 * Do the actual comparison. Compares $leftSide and $rightSide with $comparator and emits a boolean value.
+	 *
+	 * Some special rules apply:
+	 * - The == and != operators are comparing the Object Identity using === and !==, when one of the two
+	 *   operands are objects.
+	 * - For arithmetic comparisons (%, >, >=, <, <=), some special rules apply:
+	 *   - arrays are only comparable with arrays, else the comparison yields FALSE
+	 *   - objects are only comparable with objects, else the comparison yields FALSE
+	 *   - the comparison is FALSE when two types are not comparable according to the table
+	 *     "Comparison with various types" on http://php.net/manual/en/language.operators.comparison.php
 	 *
 	 * @param string $comparator One of self::$comparators
 	 * @param mixed $leftSide Left side to compare
@@ -289,24 +302,60 @@ class ViewHelperNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	protected function evaluateComparator($comparator, $leftSide, $rightSide) {
 		switch ($comparator) {
 			case '==':
-				return ($leftSide == $rightSide);
+				if (is_object($leftSide) || is_object($rightSide)) {
+					return ($leftSide === $rightSide);
+				} else {
+					return ($leftSide == $rightSide);
+				}
 				break;
 			case '!=':
-				return ($leftSide != $rightSide);
+				if (is_object($leftSide) || is_object($rightSide)) {
+					return ($leftSide !== $rightSide);
+				} else {
+					return ($leftSide != $rightSide);
+				}
 				break;
 			case '%':
+				if (!$this->isComparable($leftSide, $rightSide)) return FALSE;
 				return (boolean)((int)$leftSide % (int)$rightSide);
 			case '>':
+				if (!$this->isComparable($leftSide, $rightSide)) return FALSE;
 				return ($leftSide > $rightSide);
 			case '>=':
+				if (!$this->isComparable($leftSide, $rightSide)) return FALSE;
 				return ($leftSide >= $rightSide);
 			case '<':
+				if (!$this->isComparable($leftSide, $rightSide)) return FALSE;
 				return ($leftSide < $rightSide);
 			case '<=':
+				if (!$this->isComparable($leftSide, $rightSide)) return FALSE;
 				return ($leftSide <= $rightSide);
 			default:
 				throw new \F3\Fluid\Core\Parser\Exception('Comparator "' . $comparator . '" is not implemented.', 1244234398);
 		}
+	}
+
+	/**
+	 * Checks whether two operands are comparable (based on their types). This implements
+	 * the "Comparison with various types" table from http://php.net/manual/en/language.operators.comparison.php,
+	 * only leaving out "array" with "anything" and "object" with anything; as we specify
+	 * that arrays and objects are incomparable with anything else than their type.
+	 *
+	 * @param mixed $operand1 the first operand
+	 * @param mixed $operand2 the second operand
+	 * @return boolean TRUE if the operands can be compared using arithmetic operators, FALSE otherwise.
+	 */
+	protected function isComparable($operand1, $operand2) {
+		if ((is_null($operand1) || is_string($operand1))
+			&& is_string($operand2)) return TRUE;
+		if (is_bool($operand1) || is_null($operand1)) return TRUE;
+		if (is_object($operand1)
+			&& is_object($operand2)) return TRUE;
+		if ((is_string($operand1) || is_resource($operand1) || is_numeric($operand1))
+			&& (is_string($operand2) || is_resource($operand2) || is_numeric($operand2))) return TRUE;
+		if (is_array($operand1) && is_array($operand2)) return TRUE;
+
+		return FALSE;
 	}
 
 	/**

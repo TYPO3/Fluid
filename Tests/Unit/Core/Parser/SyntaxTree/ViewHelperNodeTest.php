@@ -219,7 +219,7 @@ class ViewHelperNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	public function convertArgumentValueCallsConvertToBooleanForArgumentsOfTypeBoolean() {
 		$viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('convertToBoolean'), array(), '', FALSE);
 		$argumentViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'), array(), '', FALSE);
-		$argumentViewHelperNode->expects($this->once())->method('evaluate')->will($this->returnValue('foo'));
+		$argumentViewHelperNode->expects($this->any())->method('evaluate')->will($this->returnValue('foo'));
 
 		$viewHelperNode->expects($this->once())->method('convertToBoolean')->with('foo')->will($this->returnValue('bar'));
 

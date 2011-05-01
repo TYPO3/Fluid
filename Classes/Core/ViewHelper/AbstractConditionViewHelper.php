@@ -76,7 +76,7 @@ abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * Returns value of "then" attribute.
 	 * If then attribute is not set, iterates through child nodes and renders ThenViewHelper.
-	 * If then attribute is not set and no ThenViewHelper is found, all child nodes are rendered
+	 * If then attribute is not set and no ThenViewHelper and no ElseViewHelper is found, all child nodes are rendered
 	 *
 	 * @return string rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -87,14 +87,25 @@ abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\Abs
 		if ($this->arguments->hasArgument('then')) {
 			return $this->arguments['then'];
 		}
+
+		$elseViewHelperEncountered = FALSE;
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
 				$data = $childNode->evaluate($this->getRenderingContext());
 				return $data;
 			}
+			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
+				$elseViewHelperEncountered = TRUE;
+			}
 		}
-		return $this->renderChildren();
+
+		if ($elseViewHelperEncountered) {
+			return '';
+		} else {
+			return $this->renderChildren();
+		}
 	}
 
 	/**
@@ -108,14 +119,15 @@ abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\Abs
 	 * @api
 	 */
 	protected function renderElseChild() {
+		if ($this->arguments->hasArgument('else')) {
+			return $this->arguments['else'];
+		}
+
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
 				return $childNode->evaluate($this->getRenderingContext());
 			}
-		}
-		if ($this->arguments->hasArgument('else')) {
-			return $this->arguments['else'];
 		}
 		return '';
 	}
