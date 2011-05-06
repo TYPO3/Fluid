@@ -82,6 +82,7 @@ class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelp
 		}
 		$this->tag->setContent($linkText);
 		$this->tag->addAttribute('href', $linkHref);
+		$this->tag->forceClosingTag(TRUE);
 
 		return $this->tag->render();
 	}

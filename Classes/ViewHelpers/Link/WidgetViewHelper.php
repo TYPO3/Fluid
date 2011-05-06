@@ -70,6 +70,7 @@ class WidgetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHel
 		}
 		$this->tag->addAttribute('href', $uri);
 		$this->tag->setContent($this->renderChildren());
+		$this->tag->forceClosingTag(TRUE);
 
 		return $this->tag->render();
 	}
