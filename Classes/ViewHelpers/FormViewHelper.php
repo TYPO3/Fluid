@@ -61,19 +61,6 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected $tagName = 'form';
 
 	/**
-	 * @var \F3\FLOW3\Object\ObjectSerializer
-	 */
-	protected $objectSerializer;
-
-	/**
-	 * @param \F3\FLOW3\Object\ObjectSerializer $objectSerializer
-	 * @return void
-	 */
-	public function injectObjectSerializer(\F3\FLOW3\Object\ObjectSerializer $objectSerializer) {
-		$this->objectSerializer = $objectSerializer;
-	}
-
-	/**
 	 * Initialize arguments.
 	 *
 	 * @return void
@@ -205,15 +192,16 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected function renderHiddenReferrerFields() {
 		$result = chr(10);
 		$request = $this->controllerContext->getRequest();
+		$argumentNamespace = NULL;
 		if ($request instanceof \F3\FLOW3\MVC\Web\SubRequest) {
 			$argumentNamespace = $request->getArgumentNamespace();
-			$this->objectSerializer->clearState();
+
 			$referrer = array(
-				'packageKey' => $request->getControllerPackageKey(),
-				'subpackageKey' => $request->getControllerSubpackageKey(),
-				'controllerName' => $request->getControllerName(),
-				'actionName' => $request->getControllerActionName(),
-				'arguments' => serialize($this->objectSerializer->serializeObjectAsPropertyArray(new \F3\FLOW3\MVC\Controller\ReferrerArgumentsHolder($request->getArguments())))
+				'@package' => $request->getControllerPackageKey(),
+				'@subpackage' => $request->getControllerSubpackageKey(),
+				'@controller' => $request->getControllerName(),
+				'@action' => $request->getControllerActionName(),
+				'arguments' => serialize($request->getArguments())
 			);
 			foreach($referrer as $referrerKey => $referrerValue) {
 				$referrerValue = \htmlspecialchars($referrerValue);
@@ -222,14 +210,21 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 			$request = $request->getParentRequest();
 		}
 
-		$this->objectSerializer->clearState();
+		$arguments = $request->getArguments();
+		if ($argumentNamespace !== NULL && isset($arguments[$argumentNamespace])) {
+				// A sub request was there; thus we can unset the sub requests arguments,
+				// as they are transferred separately via the code block shown above.
+			unset($arguments[$argumentNamespace]);
+		}
+
 		$referrer = array(
-			'packageKey' => $request->getControllerPackageKey(),
-			'subpackageKey' => $request->getControllerSubpackageKey(),
-			'controllerName' => $request->getControllerName(),
-			'actionName' => $request->getControllerActionName(),
-			'arguments' => serialize($this->objectSerializer->serializeObjectAsPropertyArray(new \F3\FLOW3\MVC\Controller\ReferrerArgumentsHolder($request->getArguments())))
+			'@package' => $request->getControllerPackageKey(),
+			'@subpackage' => $request->getControllerSubpackageKey(),
+			'@controller' => $request->getControllerName(),
+			'@action' => $request->getControllerActionName(),
+			'arguments' => serialize($arguments)
 		);
+
 		foreach($referrer as $referrerKey => $referrerValue) {
 			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']' . '" value="' . htmlspecialchars($referrerValue) . '" />' . chr(10);
 		}
