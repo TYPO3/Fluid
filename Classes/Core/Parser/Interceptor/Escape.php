@@ -38,11 +38,11 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * A stack of ViewHelperNodes which currently disable the interceptor.
 	 * Needed to enable the interceptor again.
-	 * 
+	 *
 	 * @var array<\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface>
 	 */
 	protected $viewHelperNodesWhichDisableTheInterceptor = array();
-	
+
 	/**
 	 * Inject object factory
 	 *
@@ -60,11 +60,12 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
+	 * @param \F3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if ($interceptorPosition === \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
 			if (!$node->getUninitializedViewHelper()->isEscapingInterceptorEnabled()) {
 				$this->interceptorEnabled = FALSE;

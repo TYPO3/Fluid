@@ -60,7 +60,7 @@ class ResourceTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 		$interceptor = new \F3\Fluid\Core\Parser\Interceptor\Resource();
 		$interceptor->injectObjectManager($mockObjectManager);
-		$interceptor->process($mockTextNode, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT);
+		$interceptor->process($mockTextNode, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT, $this->getMock('F3\Fluid\Core\Parser\ParsingState'));
 	}
 
 }
