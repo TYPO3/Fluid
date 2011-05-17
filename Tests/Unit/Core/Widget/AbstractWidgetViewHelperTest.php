@@ -18,32 +18,32 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper
+	 * @var \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper
 	 */
 	protected $viewHelper;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	protected $ajaxWidgetContextHolder;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @var \TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	protected $widgetContext;
 
 	/**
-	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var TYPO3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
-	 * @var TYPO3\FLOW3\MVC\Web\Request
+	 * @var \TYPO3\FLOW3\MVC\Web\Request
 	 */
 	protected $request;
 
@@ -168,7 +168,7 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 			'widget-1' => array(
 				'arg1' => 'val1',
 				'arg2' => 'val2',
-				'action' => 'myAction'
+				'@action' => 'myAction'
 			)
 		)));
 		$widgetRequest->expects($this->once())->method('setArguments')->with(array(

@@ -187,9 +187,9 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 
 		$controllerActionName = 'index';
 		if (isset($arguments[$widgetIdentifier])) {
-			if (isset($arguments[$widgetIdentifier]['action'])) {
-				$controllerActionName = $arguments[$widgetIdentifier]['action'];
-				unset($arguments[$widgetIdentifier]['action']);
+			if (isset($arguments[$widgetIdentifier]['@action'])) {
+				$controllerActionName = $arguments[$widgetIdentifier]['@action'];
+				unset($arguments[$widgetIdentifier]['@action']);
 			}
 			$subRequest->setArguments($arguments[$widgetIdentifier]);
 		}

@@ -45,12 +45,16 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	protected function getAjaxUri() {
 		$action = $this->arguments['action'];
+		$format = $this->arguments['format'];
 		$arguments = $this->arguments['arguments'];
 
 		if ($action === NULL) {
 			$action = $this->controllerContext->getRequest()->getControllerActionName();
 		}
-		$arguments['action'] = $action;
+		$arguments['@action'] = $action;
+		if ($format) {
+			$arguments['@format'] = $format;
+		}
 		$widgetContext = $this->controllerContext->getRequest()->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
 			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:uri.widget>', 1307450639);

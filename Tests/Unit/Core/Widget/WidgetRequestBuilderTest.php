@@ -18,32 +18,32 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\WidgetRequestBuilder
+	 * @var \TYPO3\Fluid\Core\Widget\WidgetRequestBuilder
 	 */
 	protected $widgetRequestBuilder;
 
 	/**
-	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $mockObjectManager;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\WidgetRequest
+	 * @var \TYPO3\Fluid\Core\Widget\WidgetRequest
 	 */
 	protected $mockWidgetRequest;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	protected $mockAjaxWidgetContextHolder;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @var \TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	protected $mockWidgetContext;
 
 	/**
-	 * @var TYPO3\FLOW3\Utility\Environment
+	 * @var \TYPO3\FLOW3\Utility\Environment
 	 */
 	protected $mockEnvironment;
 
@@ -94,7 +94,7 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function buildSetsControllerActionNameFromGetArguments() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('action' => 'myaction', 'typo3-fluid-widget-id' => '')));
+		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('@action' => 'myaction', 'typo3-fluid-widget-id' => '')));
 		$this->mockWidgetRequest->expects($this->once())->method('setControllerActionName')->with('myaction');
 
 		$this->widgetRequestBuilder->build();

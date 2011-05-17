@@ -46,9 +46,11 @@ class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 		$this->setArgumentsFromRawRequestData($request);
 
 		$rawGetArguments = $this->environment->getRawGetArguments();
-			// TODO: rename to @action, to be consistent with normal naming?
-		if (isset($rawGetArguments['action'])) {
-			$request->setControllerActionName($rawGetArguments['action']);
+		if (isset($rawGetArguments['@action'])) {
+			$request->setControllerActionName($rawGetArguments['@action']);
+		}
+		if (isset($rawGetArguments['@format'])) {
+			$request->setFormat($rawGetArguments['@format']);
 		}
 
 		$widgetContext = $this->ajaxWidgetContextHolder->get($rawGetArguments['typo3-fluid-widget-id']);
