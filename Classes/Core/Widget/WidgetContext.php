@@ -54,12 +54,21 @@ class WidgetContext {
 
 	/**
 	 * User-supplied widget configuration, available inside the widget
-	 * controller as $this->widgetConfiguration.
+	 * controller as $this->widgetConfiguration, if being inside an AJAX
+	 * request
 	 *
 	 * @var array
 	 */
-	protected $widgetConfiguration;
+	protected $ajaxWidgetConfiguration;
 
+	/**
+	 * User-supplied widget configuration, available inside the widget
+	 * controller as $this->widgetConfiguration, if being inside a non-AJAX
+	 * request
+	 *
+	 * @var array
+	 */
+	protected $nonAjaxWidgetConfiguration;
 	/**
 	 * The fully qualified object name of the Controller which this widget uses.
 	 *
@@ -124,16 +133,28 @@ class WidgetContext {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getWidgetConfiguration() {
-		return $this->widgetConfiguration;
+		if (is_array($this->nonAjaxWidgetConfiguration)) {
+			return $this->nonAjaxWidgetConfiguration;
+		} else {
+			return $this->ajaxWidgetConfiguration;
+		}
 	}
 
 	/**
-	 * @param array $widgetConfiguration
+	 * @param array $ajaxWidgetConfiguration
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setWidgetConfiguration($widgetConfiguration) {
-		$this->widgetConfiguration = $widgetConfiguration;
+	public function setAjaxWidgetConfiguration($ajaxWidgetConfiguration) {
+		$this->ajaxWidgetConfiguration = $ajaxWidgetConfiguration;
+	}
+
+	/**
+	 * @param array $nonAjaxWidgetConfiguration
+	 * @return void
+	 */
+	public function setNonAjaxWidgetConfiguration($nonAjaxWidgetConfiguration) {
+		$this->nonAjaxWidgetConfiguration = $nonAjaxWidgetConfiguration;
 	}
 
 	/**
@@ -178,6 +199,15 @@ class WidgetContext {
 	 */
 	public function getViewHelperChildNodeRenderingContext() {
 		return $this->viewHelperChildNodeRenderingContext;
+	}
+
+	/**
+	 * Serialize everything *except* the viewHelperChildNodes, viewHelperChildNodeRenderingContext and nonAjaxWidgetConfiguration
+	 *
+	 * @return array
+	 */
+	public function __sleep() {
+		return array('widgetIdentifier', 'ajaxWidgetIdentifier', 'ajaxWidgetConfiguration', 'controllerObjectName');
 	}
 }
 ?>

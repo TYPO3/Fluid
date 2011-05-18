@@ -113,9 +113,10 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 	private function initializeWidgetContext() {
 		if ($this->ajaxWidget === TRUE) {
 			$this->ajaxWidgetContextHolder->store($this->widgetContext);
+			$this->widgetContext->setAjaxWidgetConfiguration($this->getAjaxWidgetConfiguration());
 		}
 
-		$this->widgetContext->setWidgetConfiguration($this->getWidgetConfiguration());
+		$this->widgetContext->setNonAjaxWidgetConfiguration($this->getNonAjaxWidgetConfiguration());
 		$this->initializeWidgetIdentifier();
 
 		$controllerObjectName = get_class($this->controller);
@@ -147,6 +148,28 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 	 */
 	protected function getWidgetConfiguration() {
 		return $this->arguments;
+	}
+
+	/**
+	 * Generate the configuration for this widget in AJAX context.
+	 *
+	 * By default, returns getWidgetConfiguration(). Should become API later.
+	 *
+	 * @return array
+	 */
+	protected function getAjaxWidgetConfiguration() {
+		return $this->getWidgetConfiguration();
+	}
+
+	/**
+	 * Generate the configuration for this widget in non-AJAX context.
+	 *
+	 * By default, returns getWidgetConfiguration(). Should become API later.
+	 *
+	 * @return array
+	 */
+	protected function getNonAjaxWidgetConfiguration() {
+		return $this->getWidgetConfiguration();
 	}
 
 	/**

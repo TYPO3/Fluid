@@ -63,9 +63,22 @@ class WidgetContextTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function widgetConfigurationCanBeReadAgain() {
-		$this->widgetContext->setWidgetConfiguration(array('key' => 'value'));
+	public function nonAjaxWidgetConfigurationIsReturnedWhenContextIsNotSerialized() {
+		$this->widgetContext->setNonAjaxWidgetConfiguration(array('key' => 'value'));
+		$this->widgetContext->setAjaxWidgetConfiguration(array('keyAjax' => 'valueAjax'));
 		$this->assertEquals(array('key' => 'value'), $this->widgetContext->getWidgetConfiguration());
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function aWidgetConfigurationIsReturnedWhenContextIsSerialized() {
+		$this->widgetContext->setNonAjaxWidgetConfiguration(array('key' => 'value'));
+		$this->widgetContext->setAjaxWidgetConfiguration(array('keyAjax' => 'valueAjax'));
+		$this->widgetContext = serialize($this->widgetContext);
+		$this->widgetContext = unserialize($this->widgetContext);
+		$this->assertEquals(array('keyAjax' => 'valueAjax'), $this->widgetContext->getWidgetConfiguration());
 	}
 
 	/**

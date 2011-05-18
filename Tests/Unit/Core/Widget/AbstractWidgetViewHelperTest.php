@@ -109,8 +109,8 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->viewHelper->setViewHelperVariableContainer($viewHelperVariableContainer);
 
-		$this->viewHelper->expects($this->once())->method('getWidgetConfiguration')->will($this->returnValue('Some Widget Configuration'));
-		$this->widgetContext->expects($this->once())->method('setWidgetConfiguration')->with('Some Widget Configuration');
+		$this->viewHelper->expects($this->any())->method('getWidgetConfiguration')->will($this->returnValue('Some Widget Configuration'));
+		$this->widgetContext->expects($this->once())->method('setNonAjaxWidgetConfiguration')->with('Some Widget Configuration');
 
 		$this->widgetContext->expects($this->once())->method('setWidgetIdentifier')->with('__widget_0');
 
