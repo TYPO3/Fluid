@@ -133,7 +133,7 @@ class WidgetContext {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getWidgetConfiguration() {
-		if (is_array($this->nonAjaxWidgetConfiguration)) {
+		if ($this->nonAjaxWidgetConfiguration !== NULL) {
 			return $this->nonAjaxWidgetConfiguration;
 		} else {
 			return $this->ajaxWidgetConfiguration;
