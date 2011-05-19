@@ -47,6 +47,12 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	protected $tagName = 'input';
 
 	/**
+	 * @var F3\FLOW3\Property\PropertyMapper
+	 * @inject
+	 */
+	protected $propertyMapper;
+
+	/**
 	 * Initialize the arguments.
 	 *
 	 * @return void
@@ -71,12 +77,40 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		$name = $this->getName();
 		$this->registerFieldNameForFormTokenGeneration($name);
 
+		$output = '';
+		$resourceObject = NULL;
+		if ($this->hasMappingErrorOccured()) {
+			$value = $this->getLastSubmittedFormData();
+		} else {
+			$value = $this->getValue();
+		}
+		if ($value) {
+
+				// The form data which was submitted at the last request was in a format
+				// which the PropertyMapper understands; so we re-build the Resource object
+				// using the property mapper
+			$resourceObject = $this->propertyMapper->convert($value, 'F3\FLOW3\Resource\Resource');
+		}
+		$fileNameIdAttribute = $resourcePointerIdAttribute = '';
+		if ($this->arguments->hasArgument('id')) {
+			$fileNameIdAttribute = ' id="' . $this->arguments['id'] . '-fileName"';
+			$resourcePointerIdAttribute = ' id="' . $this->arguments['id'] . '-resourcePointer"';
+		}
+		$fileNameValue = $resourcePointerValue = '';
+		if ($resourceObject instanceof \F3\FLOW3\Resource\Resource) {
+			$fileNameValue = $resourceObject->getFileName();
+			$resourcePointerValue = $resourceObject->getResourcePointer();
+		}
+		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][fileName]" value="' . $fileNameValue . '"' . $fileNameIdAttribute . ' />';
+		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][resourcePointer]" value="' . $resourcePointerValue . '"' . $resourcePointerIdAttribute . ' />';
+
 		$this->tag->addAttribute('type', 'file');
 		$this->tag->addAttribute('name', $name);
 
 		$this->setErrorClassAttribute();
 
-		return $this->tag->render();
+		$output .= $this->tag->render();
+		return $output;
 	}
 }
 
