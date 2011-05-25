@@ -442,7 +442,7 @@ class TemplateParser {
 
 		if ($selfclosing) {
 			$node = $state->popNodeFromStack();
-			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
+			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
 		}
 	}
 
@@ -479,7 +479,7 @@ class TemplateParser {
 			call_user_func(array($viewHelper, 'postParseEvent'), $currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 
-		$this->callInterceptor($currentDynamicNode, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
+		$this->callInterceptor($currentDynamicNode, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
 
 		$state->pushNodeToStack($currentDynamicNode);
 	}
@@ -567,7 +567,7 @@ class TemplateParser {
 		if ($lastStackElement->getViewHelperClassName() != $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier)) {
 			throw new \F3\Fluid\Core\Parser\Exception('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier), 1224485398);
 		}
-		$this->callInterceptor($lastStackElement, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
+		$this->callInterceptor($lastStackElement, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
 	}
 
 	/**
@@ -614,9 +614,9 @@ class TemplateParser {
 
 			// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
-			
+
 			$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', $objectAccessorString);
-			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
+			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $state);
 
 			$state->getNodeFromStack()->addChildNode($node);
 		}
@@ -624,7 +624,7 @@ class TemplateParser {
 			// Close ViewHelper Tags if needed.
 		for ($i=0; $i<$numberOfViewHelpers; $i++) {
 			$node = $state->popNodeFromStack();
-			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
+			$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
 		}
 	}
 
@@ -633,10 +633,11 @@ class TemplateParser {
 	 *
 	 * @param F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node The syntax tree node which can be modified by the interceptors.
 	 * @param integer $interceptionPoint the interception point. One of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
+	 * @param ParsingState the parsing state
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function callInterceptor(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint) {
+	protected function callInterceptor(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint, ParsingState $state) {
 		if ($this->configuration !== NULL) {
 			// $this->configuration is UNSET inside the arguments of a ViewHelper.
 			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
@@ -645,7 +646,7 @@ class TemplateParser {
 			$interceptors = $this->configuration->getInterceptors($interceptionPoint);
 			if (count($interceptors) > 0) {
 				foreach($interceptors as $interceptor) {
-					$node = $interceptor->process($node, $interceptionPoint);
+					$node = $interceptor->process($node, $interceptionPoint, $state);
 				}
 			}
 		}
@@ -841,8 +842,8 @@ class TemplateParser {
 	 */
 	protected function textHandler(\F3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);
-		$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT);
-		
+		$this->callInterceptor($node, \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT, $state);
+
 		$state->getNodeFromStack()->addChildNode($node);
 	}
 

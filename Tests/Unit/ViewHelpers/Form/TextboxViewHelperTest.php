@@ -27,20 +27,20 @@ require_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
- * Test for the "Textbox" Form view helper
+ * Test for the "Textfield" Form view helper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class TextfieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Form\TextboxViewHelper
+	 * var \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\TextboxViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\TextfieldViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -66,14 +66,14 @@ class TextboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	public function renderCorrectlySetsTypeNameAndValueAttributes() {
 		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('type', 'text');
-		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'NameOfTextbox');
-		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('NameOfTextbox');
+		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'NameOfTextfield');
+		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('NameOfTextfield');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('value', 'Current value');
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
-			'name' => 'NameOfTextbox',
+			'name' => 'NameOfTextfield',
 			'value' => 'Current value'
 		));
 		$this->viewHelper->setArguments($arguments);

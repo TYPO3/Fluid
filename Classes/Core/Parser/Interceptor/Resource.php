@@ -98,10 +98,11 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
+	 * @param \F3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface the modified node
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition) {
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if (strpos($node->getText(), 'Public/') === FALSE) {
 			return $node;
 		}
