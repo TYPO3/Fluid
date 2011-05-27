@@ -46,6 +46,6 @@ class PrintfViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%2$s %1$d %3$s %2$s'));
 		$actualResult = $viewHelper->render(array(123, 'foo', 'bar'));
 		$this->assertEquals('foo 123 bar foo', $actualResult);
-	}	
+	}
 }
 ?>

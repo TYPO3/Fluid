@@ -55,7 +55,7 @@ class RenderingContext implements \F3\Fluid\Core\Rendering\RenderingContextInter
 	/**
 	 * ViewHelper Variable Container
 	 *
-	 * @var \F3\Fluid\Core\ViewHelpers\ViewHelperVariableContainer
+	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 

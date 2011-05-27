@@ -35,6 +35,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	public function setUp() {
 		$this->variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer();
 	}
+
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
@@ -62,7 +63,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->assertSame($this->variableContainer->get('variable'), $object);
 		$this->assertSame($this->variableContainer['variable'], $object);
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -73,7 +74,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->assertTrue($this->variableContainer->exists('variable'));
 		$this->assertTrue(isset($this->variableContainer['variable']));
 	}
-	
+
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -83,7 +84,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->variableContainer->add("variable", $object);
 		$this->assertEquals($this->variableContainer->getAllIdentifiers(), array('variable'), 'Added key is not visible in getAllIdentifiers');
 	}
-	
+
 	/**
 	 * @test
 	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
@@ -111,7 +112,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	public function gettingNonexistentValueThrowsException() {
 		$this->variableContainer->get('nonexistent');
 	}
-	
+
 	/**
 	 * @test
 	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
@@ -120,7 +121,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	public function deletingNonexistentValueThrowsException() {
 		$this->variableContainer->remove('nonexistent');
 	}
-	
+
 	/**
 	 * @test
 	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException

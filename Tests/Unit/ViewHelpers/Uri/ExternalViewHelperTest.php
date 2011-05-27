@@ -28,7 +28,6 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  * Testcase for the external uri view helper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope prototype
  */
 class ExternalViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
@@ -54,7 +53,6 @@ class ExternalViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 		$this->assertEquals('http://www.some-domain.tld', $actualResult);
 	}
-
 
 	/**
 	 * @test

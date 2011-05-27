@@ -44,7 +44,12 @@ class Escape implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	protected $viewHelperNodesWhichDisableTheInterceptor = array();
 
 	/**
-	 * Inject object factory
+	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 */
+	protected $objectManager;
+
+	/**
+	 * Inject object manager
 	 *
 	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
