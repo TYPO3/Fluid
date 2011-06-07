@@ -65,10 +65,10 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 	public function setUp() {
 		$this->widgetRequestBuilder = $this->getAccessibleMock('F3\Fluid\Core\Widget\WidgetRequestBuilder', array('setArgumentsFromRawRequestData'));
 
-		$this->mockWidgetRequest = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest');
+		$this->mockWidgetRequest = $this->getMock('F3\FLOW3\MVC\Web\Request');
 
 		$this->mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
-		$this->mockObjectManager->expects($this->once())->method('create')->with('F3\Fluid\Core\Widget\WidgetRequest')->will($this->returnValue($this->mockWidgetRequest));
+		$this->mockObjectManager->expects($this->once())->method('create')->with('F3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
 
 		$this->widgetRequestBuilder->_set('objectManager', $this->mockObjectManager);
 
@@ -123,7 +123,7 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 	public function buildSetsWidgetContext() {
 		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('f3-fluid-widget-id' => '123')));
 		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->with('123')->will($this->returnValue($this->mockWidgetContext));
-		$this->mockWidgetRequest->expects($this->once())->method('setWidgetContext')->with($this->mockWidgetContext);
+		$this->mockWidgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->mockWidgetContext);
 
 		$this->widgetRequestBuilder->build();
 	}

@@ -185,9 +185,11 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 			throw new \F3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @inject annotation in your widget class.', 1284401632);
 		}
 
-		$subRequest = $this->objectManager->create('F3\Fluid\Core\Widget\WidgetRequest');
-		$subRequest->setWidgetContext($this->widgetContext);
+		$subRequest = $this->objectManager->create('F3\FLOW3\MVC\Web\SubRequest', $this->controllerContext->getRequest());
 		$this->passArgumentsToSubRequest($subRequest);
+		$subRequest->setArgument('__widgetContext', $this->widgetContext);
+		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
+		$subRequest->setArgumentNamespace($this->widgetContext->getWidgetIdentifier());
 
 		$subResponse = $this->objectManager->create('F3\FLOW3\MVC\Web\Response');
 		$this->controller->processRequest($subRequest, $subResponse);
@@ -197,11 +199,11 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 	/**
 	 * Pass the arguments of the widget to the subrequest.
 	 *
-	 * @param \F3\Fluid\Core\Widget\WidgetRequest $subRequest
+	 * @param \F3\FLOW3\MVC\Web\Request $subRequest
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	private function passArgumentsToSubRequest(\F3\Fluid\Core\Widget\WidgetRequest $subRequest) {
+	private function passArgumentsToSubRequest(\F3\FLOW3\MVC\Web\Request $subRequest) {
 		$arguments = $this->controllerContext->getRequest()->getArguments();
 		$widgetIdentifier = $this->widgetContext->getWidgetIdentifier();
 
@@ -231,7 +233,7 @@ abstract class AbstractWidgetViewHelper extends \F3\Fluid\Core\ViewHelper\Abstra
 		} else {
 			$widgetCounter = $this->viewHelperVariableContainer->get('F3\Fluid\Core\Widget\AbstractWidgetViewHelper', 'nextWidgetNumber');
 		}
-		$widgetIdentifier = '__widget_' . $widgetCounter;
+		$widgetIdentifier = '@widget_' . $widgetCounter;
 		$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\Core\Widget\AbstractWidgetViewHelper', 'nextWidgetNumber', $widgetCounter + 1);
 
 		$this->widgetContext->setWidgetIdentifier($widgetIdentifier);

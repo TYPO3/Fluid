@@ -49,7 +49,7 @@ class RenderChildrenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseT
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsEvaluateOnTheRootNodeAndRegistersTheArguments() {
-		$this->request = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest');
+		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->viewHelper->setControllerContext($this->controllerContext);
 		$this->viewHelper->initializeArguments();
@@ -66,7 +66,7 @@ class RenderChildrenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseT
 		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
 
 		$widgetContext = $this->getMock('F3\Fluid\Core\Widget\WidgetContext');
-		$this->request->expects($this->any())->method('getWidgetContext')->will($this->returnValue($widgetContext));
+		$this->request->expects($this->any())->method('getInternalArgument')->with('__widgetContext')->will($this->returnValue($widgetContext));
 		$widgetContext->expects($this->any())->method('getViewHelperChildNodeRenderingContext')->will($this->returnValue($renderingContext));
 		$widgetContext->expects($this->any())->method('getViewHelperChildNodes')->will($this->returnValue($rootNode));
 
@@ -78,7 +78,7 @@ class RenderChildrenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseT
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\Widget\Exception\WidgetRequestNotFoundException
+	 * @expectedException F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderThrowsExceptionIfTheRequestIsNotAWidgetRequest() {
@@ -96,13 +96,13 @@ class RenderChildrenViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseT
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderThrowsExceptionIfTheChildNodeRenderingContextIsNotThere() {
-		$this->request = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest');
+		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->viewHelper->setControllerContext($this->controllerContext);
 		$this->viewHelper->initializeArguments();
 
 		$widgetContext = $this->getMock('F3\Fluid\Core\Widget\WidgetContext');
-		$this->request->expects($this->any())->method('getWidgetContext')->will($this->returnValue($widgetContext));
+		$this->request->expects($this->any())->method('getInternalArgument')->with('__widgetContext')->will($this->returnValue($widgetContext));
 		$widgetContext->expects($this->any())->method('getViewHelperChildNodeRenderingContext')->will($this->returnValue(NULL));
 		$widgetContext->expects($this->any())->method('getViewHelperChildNodes')->will($this->returnValue(NULL));
 

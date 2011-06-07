@@ -26,8 +26,8 @@ namespace F3\Fluid\Core\Widget;
  * The WidgetContext stores all information a widget needs to know about the
  * environment.
  *
- * The WidgetContext can be fetched from the current WidgetRequest, and is thus
- * available throughout the whole sub-request of the widget. It is used internally
+ * The WidgetContext can be fetched from the current request as internal argument __widgetContext,
+ * and is thus available throughout the whole sub-request of the widget. It is used internally
  * by various ViewHelpers (like <f:link.widget>, <f:uri.widget>, <f:widget.renderChildren>),
  * to get knowledge over the current widget's configuration.
  *

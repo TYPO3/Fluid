@@ -31,24 +31,28 @@ class AbstractWidgetControllerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 * @expectedException F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function canHandleWidgetRequest() {
-		$request = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest', array('dummy'), array(), '', FALSE);
+	public function processRequestShouldThrowExceptionIfWidgetContextNotFound() {
+		$request = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
+		$response = $this->getMock('F3\FLOW3\MVC\ResponseInterface');
+
 		$abstractWidgetController = $this->getMock('F3\Fluid\Core\Widget\AbstractWidgetController', array('dummy'), array(), '', FALSE);
-		$this->assertTrue($abstractWidgetController->canProcessRequest($request));
+		$abstractWidgetController->processRequest($request, $response);
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function processRequestSetsWidgetConfiguration() {
+	public function processRequestShouldSetWidgetConfiguration() {
+
 		$widgetContext = $this->getMock('F3\Fluid\Core\Widget\WidgetContext', array('getWidgetConfiguration'));
 		$widgetContext->expects($this->once())->method('getWidgetConfiguration')->will($this->returnValue('myConfiguration'));
 
-		$request = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest', array('getWidgetContext', 'getControllerObjectName', 'getControllerActionName'), array(), '', FALSE);
-		$request->expects($this->once())->method('getWidgetContext')->will($this->returnValue($widgetContext));
+		$request = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
+		$request->setArgument('__widgetContext', $widgetContext);
 
 		$response = $this->getMock('F3\FLOW3\MVC\ResponseInterface');
 

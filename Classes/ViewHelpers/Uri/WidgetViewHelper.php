@@ -66,7 +66,11 @@ class WidgetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			$action = $this->controllerContext->getRequest()->getControllerActionName();
 		}
 		$arguments['action'] = $action;
-		$arguments['f3-fluid-widget-id'] = $this->controllerContext->getRequest()->getWidgetContext()->getAjaxWidgetIdentifier();
+		$widgetContext = $this->controllerContext->getRequest()->getInternalArgument('__widgetContext');
+		if ($widgetContext === NULL) {
+			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:uri.widget>', 1307450639);
+		}
+		$arguments['f3-fluid-widget-id'] = $widgetContext->getAjaxWidgetIdentifier();
 		return '?' . http_build_query($arguments, NULL, '&');
 	}
 
@@ -88,7 +92,6 @@ class WidgetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 		return $uriBuilder
 			->reset()
-			->setArgumentPrefix($this->controllerContext->getRequest()->getWidgetContext()->getWidgetIdentifier())
 			->setSection($this->arguments['section'])
 			->setCreateAbsoluteUri(TRUE)
 			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
