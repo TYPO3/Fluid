@@ -42,6 +42,13 @@ namespace F3\Fluid\ViewHelpers;
  * Text with all possible chars replaced by HTML entities (htmlentities applied).
  * </output>
  *
+ * <code title="XML">
+ * <f:escape type="xml">{text}</f:escape>
+ * </code>
+ * <output>
+ * Replaces only "<", ">" and "&" by entities as required for valid XML.
+ * </output>
+ *
  * <code title="URL">
  * <f:escape type="url">{text}</f:escape>
  * </code>
@@ -80,6 +87,9 @@ class EscapeViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			break;
 			case 'entities':
 				return htmlentities($value, ENT_COMPAT, $encoding);
+			break;
+			case 'xml':
+				return htmlspecialchars($value, ENT_NOQUOTES, $encoding);
 			break;
 			case 'url':
 				return rawurlencode($value);
