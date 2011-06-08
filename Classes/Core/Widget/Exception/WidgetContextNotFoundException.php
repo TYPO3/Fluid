@@ -23,7 +23,7 @@ namespace F3\Fluid\Core\Widget\Exception;
  *                                                                        */
 
 /**
- * An exception if no widget context could be found inside the AjaxWidgetContextHolder.
+ * An exception if no widget context could be found.
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */

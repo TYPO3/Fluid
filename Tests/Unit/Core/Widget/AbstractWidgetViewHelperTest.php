@@ -112,7 +112,7 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->viewHelper->expects($this->any())->method('getWidgetConfiguration')->will($this->returnValue('Some Widget Configuration'));
 		$this->widgetContext->expects($this->once())->method('setNonAjaxWidgetConfiguration')->with('Some Widget Configuration');
 
-		$this->widgetContext->expects($this->once())->method('setWidgetIdentifier')->with('__widget_0');
+		$this->widgetContext->expects($this->once())->method('setWidgetIdentifier')->with('@widget_0');
 
 		$this->viewHelper->_set('controller', new \stdClass());
 		$this->widgetContext->expects($this->once())->method('setControllerObjectName')->with('stdClass');
@@ -168,18 +168,18 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->viewHelper->_set('controller', $controller);
 
 		// Initial Setup
-		$widgetRequest = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest');
+		$widgetRequest = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('F3\FLOW3\MVC\Web\Request')));
 		$response = $this->getMock('F3\FLOW3\MVC\Web\Response');
-		$this->objectManager->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Widget\WidgetRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(0))->method('create')->with('F3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
 		$this->objectManager->expects($this->at(1))->method('create')->with('F3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
 
 		// Widget Context is set
-		$widgetRequest->expects($this->once())->method('setWidgetContext')->with($this->widgetContext);
+		$widgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->widgetContext);
 
 		// The namespaced arguments are passed to the sub-request
 		// and the action name is exctracted from the namespace.
-		$this->controllerContext->expects($this->once())->method('getRequest')->will($this->returnValue($this->request));
-		$this->widgetContext->expects($this->once())->method('getWidgetIdentifier')->will($this->returnValue('widget-1'));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
+		$this->widgetContext->expects($this->any())->method('getWidgetIdentifier')->will($this->returnValue('widget-1'));
 		$this->request->expects($this->once())->method('getArguments')->will($this->returnValue(array(
 			'k1' => 'k2',
 			'widget-1' => array(
@@ -211,18 +211,18 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->viewHelper->_set('controller', $controller);
 
 		// Initial Setup
-		$widgetRequest = $this->getMock('F3\Fluid\Core\Widget\WidgetRequest');
+		$widgetRequest = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('F3\FLOW3\MVC\Web\Request')));
 		$response = $this->getMock('F3\FLOW3\MVC\Web\Response');
-		$this->objectManager->expects($this->at(0))->method('create')->with('F3\Fluid\Core\Widget\WidgetRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(0))->method('create')->with('F3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
 		$this->objectManager->expects($this->at(1))->method('create')->with('F3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
 
 		// Widget Context is set
-		$widgetRequest->expects($this->once())->method('setWidgetContext')->with($this->widgetContext);
+		$widgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->widgetContext);
 
 		// The namespaced arguments are passed to the sub-request
 		// and the action name is exctracted from the namespace.
-		$this->controllerContext->expects($this->once())->method('getRequest')->will($this->returnValue($this->request));
-		$this->widgetContext->expects($this->once())->method('getWidgetIdentifier')->will($this->returnValue('widget-1'));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
+		$this->widgetContext->expects($this->any())->method('getWidgetIdentifier')->will($this->returnValue('widget-1'));
 		$this->request->expects($this->once())->method('getArguments')->will($this->returnValue(array(
 			'k1' => 'k2',
 			'widget-1' => array(

@@ -33,11 +33,6 @@ namespace F3\Fluid\Core\Widget;
 abstract class AbstractWidgetController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 	/**
-	 * @var array
-	 */
-	protected $supportedRequestTypes = array('F3\Fluid\Core\Widget\WidgetRequest');
-
-	/**
 	 * Configuration for this widget.
 	 *
 	 * @var array
@@ -54,7 +49,11 @@ abstract class AbstractWidgetController extends \F3\FLOW3\MVC\Controller\ActionC
 	 * @api
 	 */
 	public function processRequest(\F3\FLOW3\MVC\RequestInterface $request, \F3\FLOW3\MVC\ResponseInterface $response) {
-		$this->widgetConfiguration = $request->getWidgetContext()->getWidgetConfiguration();
+		$widgetContext = $request->getInternalArgument('__widgetContext');
+		if ($widgetContext === NULL) {
+			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The widget context could not be found in the request.', 1307450180);
+		}
+		$this->widgetConfiguration = $widgetContext->getWidgetConfiguration();
 		parent::processRequest($request, $response);
 	}
 

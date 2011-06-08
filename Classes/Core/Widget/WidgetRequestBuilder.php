@@ -47,11 +47,11 @@ class WidgetRequestBuilder extends \F3\FLOW3\MVC\Web\RequestBuilder {
 	/**
 	 * Builds a widget request object from the raw HTTP information
 	 *
-	 * @return F3\Fluid\Core\Widget\WidgetRequest The widget request as an object
+	 * @return \F3\FLOW3\MVC\Web\Request The widget request as an object
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function build() {
-		$request = $this->objectManager->create('F3\Fluid\Core\Widget\WidgetRequest');
+		$request = $this->objectManager->create('F3\FLOW3\MVC\Web\Request');
 		$request->setRequestUri($this->environment->getRequestUri());
 		$request->setBaseUri($this->environment->getBaseUri());
 		$request->setMethod($this->environment->getRequestMethod());
@@ -64,7 +64,8 @@ class WidgetRequestBuilder extends \F3\FLOW3\MVC\Web\RequestBuilder {
 		}
 
 		$widgetContext = $this->ajaxWidgetContextHolder->get($rawGetArguments['f3-fluid-widget-id']);
-		$request->setWidgetContext($widgetContext);
+		$request->setArgument('__widgetContext', $widgetContext);
+		$request->setControllerObjectName($widgetContext->getControllerObjectName());
 		return $request;
 	}
 }

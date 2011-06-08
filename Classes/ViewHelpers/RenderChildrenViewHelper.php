@@ -79,11 +79,12 @@ class RenderChildrenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHel
 	 */
 	protected function getWidgetContext() {
 		$request = $this->controllerContext->getRequest();
-		if (!($request instanceof \F3\Fluid\Core\Widget\WidgetRequest)) {
-			throw new \F3\Fluid\Core\Widget\Exception\WidgetRequestNotFoundException('The Request is not a WidgetRequest! <f:renderChildren> must be called inside a Widget Template.', 1284986120);
+		$widgetContext = $request->getInternalArgument('__widgetContext');
+		if ($widgetContext === NULL) {
+			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The Request does not contain a widget context! <f:renderChildren> must be called inside a Widget Template.', 1284986120);
 		}
 
-		return $request->getWidgetContext();
+		return $widgetContext;
 	}
 
 	/**
