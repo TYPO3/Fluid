@@ -215,6 +215,18 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 
 		$this->widgetContext->setWidgetIdentifier($widgetIdentifier);
 	}
+
+	/**
+	 * Resets the ViewHelper state by creating a fresh WidgetContext
+	 *
+	 * @return void
+	 */
+	public function resetState() {
+		if ($this->ajaxWidget) {
+			$this->widgetContext = $this->objectManager->create('TYPO3\Fluid\Core\Widget\WidgetContext');
+		}
+	}
+
 }
 
 ?>

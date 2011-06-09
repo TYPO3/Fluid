@@ -104,6 +104,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		if ($this->viewHelpersByContext->contains($renderingContext)) {
 			$viewHelper = $this->viewHelpersByContext[$renderingContext];
+			$viewHelper->resetState();
 		} else {
 			$viewHelper = clone $this->uninitializedViewHelper;
 			$this->viewHelpersByContext->attach($renderingContext, $viewHelper);

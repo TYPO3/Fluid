@@ -460,6 +460,16 @@ abstract class AbstractViewHelper {
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return NULL;
 	}
+
+	/**
+	 * Resets the ViewHelper state.
+	 *
+	 * Overwrite this method if you need to get a clean state of your ViewHelper.
+	 *
+	 * @return void
+	 */
+	public function resetState() {
+	}
 }
 
 ?>

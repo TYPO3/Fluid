@@ -41,11 +41,15 @@ abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\Pars
 	public function getViewHelper($uniqueCounter, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, $viewHelperName) {
 		if (\TYPO3\FLOW3\Core\Bootstrap::$staticObjectManager->getScope($viewHelperName) === \TYPO3\FLOW3\Object\Configuration\Configuration::SCOPE_SINGLETON) {
 			// if ViewHelper is Singleton, do NOT instanciate with NEW, but re-use it.
-			return \TYPO3\FLOW3\Core\Bootstrap::$staticObjectManager->get($viewHelperName);
+			$viewHelper = \TYPO3\FLOW3\Core\Bootstrap::$staticObjectManager->get($viewHelperName);
+			$viewHelper->resetState();
+			return $viewHelper;
 		}
 		if (isset($this->viewHelpersByPositionAndContext[$uniqueCounter])) {
 			if ($this->viewHelpersByPositionAndContext[$uniqueCounter]->contains($renderingContext)) {
-				return $this->viewHelpersByPositionAndContext[$uniqueCounter][$renderingContext];
+				$viewHelper = $this->viewHelpersByPositionAndContext[$uniqueCounter][$renderingContext];
+				$viewHelper->resetState();
+				return $viewHelper;
 			} else {
 				$viewHelperInstance = new $viewHelperName;
 				$this->viewHelpersByPositionAndContext[$uniqueCounter]->attach($renderingContext, $viewHelperInstance);
