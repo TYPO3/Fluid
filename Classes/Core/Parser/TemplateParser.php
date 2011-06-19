@@ -632,11 +632,11 @@ class TemplateParser {
 	 *
 	 * @param F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node The syntax tree node which can be modified by the interceptors.
 	 * @param integer $interceptionPoint the interception point. One of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
-	 * @param ParsingState the parsing state
+	 * @param \F3\Fluid\Core\Parser\ParsingState the parsing state
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function callInterceptor(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint, ParsingState $state) {
+	protected function callInterceptor(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint, \F3\Fluid\Core\Parser\ParsingState $state) {
 		if ($this->configuration !== NULL) {
 			// $this->configuration is UNSET inside the arguments of a ViewHelper.
 			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument

@@ -40,7 +40,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @scope prototype
  * @deprecated since 1.0.0 alpha 7
  */
-class TextboxViewHelper extends TextfieldViewHelper {
+class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper {
 }
 
 ?>

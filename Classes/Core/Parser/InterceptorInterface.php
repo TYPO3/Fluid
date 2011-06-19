@@ -40,10 +40,10 @@ interface InterceptorInterface {
 	 *
 	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @param ParsingState $parsingState the parsing state
+	 * @param \F3\Fluid\Core\Parser\ParsingState $parsingState the parsing state
 	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, ParsingState $parsingState);
+	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState);
 
 	/**
 	 * The interceptor should define at which interception positions it wants to be called.
