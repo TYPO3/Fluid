@@ -277,6 +277,53 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
+
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function objectsAreComparedStrictly() {
+		$object1 = new \stdClass();
+		$object2 = new \stdClass();
+
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+
+		$object1Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
+
+		$object2Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
+
+		$rootNode->addChildNode($object1Node);
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
+		$rootNode->addChildNode($object2Node);
+
+		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 */
+	public function objectsAreComparedStrictlyInUnequalComparison() {
+		$object1 = new \stdClass();
+		$object2 = new \stdClass();
+
+		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+
+		$object1Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
+
+		$object2Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
+
+		$rootNode->addChildNode($object1Node);
+		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
+		$rootNode->addChildNode($object2Node);
+
+		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
+	}
 }
 
 ?>

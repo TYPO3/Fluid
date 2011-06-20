@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core;
+namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
