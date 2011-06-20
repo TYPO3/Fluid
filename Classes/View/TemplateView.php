@@ -180,8 +180,9 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 				$templatePathAndFilename = str_replace('@action', $actionName, $templatePathAndFilename);
 				if (file_exists($templatePathAndFilename)) {
 					$found = TRUE;
+					// TOKEN-2
 					break;
-				} // TOKEN-2
+				} // TOKEN-3
 			}
 			if (!$found) {
 				throw new \F3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
@@ -216,11 +217,13 @@ class TemplateView extends \F3\Fluid\View\AbstractTemplateView {
 			$paths = $this->expandGenericPathPattern($this->layoutPathAndFilenamePattern, TRUE, TRUE);
 			$found = FALSE;
 			foreach ($paths as &$layoutPathAndFilename) {
+				// These tokens are replaced by the Backporter for the graceful fallback in version 4.
+				// TOKEN-LAYOUT-1
 				$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
 				if (file_exists($layoutPathAndFilename)) {
 					$found = TRUE;
 					break;
-				}
+				} // TOKEN-LAYOUT-3
 			}
 
 			if (!$found) {
