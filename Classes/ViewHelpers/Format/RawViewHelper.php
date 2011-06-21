@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace F3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,15 +22,54 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * This view helper is deprecated. Use f:format.raw instead
- * @see \F3\Fluid\ViewHelpers\Format\RawViewHelper
+ * Outputs an argument/value without any escaping. Is normally used to output
+ * an ObjectAccessor which should not be escaped, but output as-is.
+ *
+ * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+ * as the output is NOT SANITIZED!
+ *
+ * = Examples =
+ *
+ * <code title="Child nodes">
+ * <f:format.raw>{string}</f:format.raw>
+ * </code>
+ * <output>
+ * (Content of {string} without any conversion/escaping)
+ * </output>
+ *
+ * <code title="Value attribute">
+ * <f:format.raw value="{string}" />
+ * </code>
+ * <output>
+ * (Content of {string} without any conversion/escaping)
+ * </output>
+ *
+ * <code title="Inline notation">
+ * {string -> f:format.raw()}
+ * </code>
+ * <output>
+ * (Content of {string} without any conversion/escaping)
+ * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
- * @deprecated since 1.0.0 alpha 7; use \F3\Fluid\ViewHelpers\Format\RawViewHelper instead
  */
-class RawViewHelper extends \F3\Fluid\ViewHelpers\Format\RawViewHelper {
+class RawViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
+	var $escapingInterceptorEnabled = FALSE;
+
+	/**
+	 * @param mixed $value The value to output
+	 * @return string
+	 */
+	public function render($value = NULL) {
+		if ($value === NULL) {
+			return $this->renderChildren();
+		} else {
+			return $value;
+		}
+	}
 }
+
 
 ?>
