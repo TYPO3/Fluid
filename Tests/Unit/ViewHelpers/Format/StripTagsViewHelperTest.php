@@ -23,15 +23,15 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Format\StripTagsViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
-		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\RawViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\StripTagsViewHelper', array('renderChildren'));
 	}
 
 	/**
@@ -46,22 +46,53 @@ class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderReturnsUnmodifiedValueIfSpecified() {
-		$value = 'input value " & äöüß@';
+	public function renderUsesValueAsSourceIfSpecified() {
 		$this->viewHelper->expects($this->never())->method('renderChildren');
-		$actualResult = $this->viewHelper->render($value);
-		$this->assertEquals($value, $actualResult);
+		$actualResult = $this->viewHelper->render('Some string');
+		$this->assertEquals('Some string', $actualResult);
 	}
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderReturnsUnmodifiedChildNodesIfNoValueIsSpecified() {
-		$childNodes = 'input value " & äöüß@';
-		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue($childNodes));
+	public function renderUsesChildnodesAsSourceIfSpecified() {
+		$this->viewHelper->expects($this->atLeastOnce())->method('renderChildren')->will($this->returnValue('Some string'));
 		$actualResult = $this->viewHelper->render();
-		$this->assertEquals($childNodes, $actualResult);
+		$this->assertEquals('Some string', $actualResult);
+	}
+
+	/**
+	 * Data Provider for the render tests
+	 *
+	 * @return array
+	 */
+	public function testStrings() {
+		return array(
+			array('This is a sample text without special characters.', 'This is a sample text without special characters.'),
+			array('This is a sample text <b>with <i>some</i> tags</b>.', 'This is a sample text with some tags.'),
+			array('This text contains some &quot;&Uuml;mlaut&quot;.', 'This text contains some &quot;&Uuml;mlaut&quot;.')
+		);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider testStrings
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderCorrectlyConvertsIntoPlaintext($source, $expectedResult) {
+		$actualResult = $this->viewHelper->render($source);
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+	/**
+	 * @test
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 */
+	public function renderReturnsUnmodifiedSourceIfItIsNoString() {
+		$source = new \stdClass();
+		$actualResult = $this->viewHelper->render($source);
+		$this->assertSame($source, $actualResult);
 	}
 }
 ?>

@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,51 +22,29 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * The EscapeViewHelper is used to escape variable content in various ways. By
- * default HTML is the target.
+ * Applies html_entity_decode() to a value
+ * @see http://www.php.net/html_entity_decode
  *
  * = Examples =
  *
- * <code title="HTML">
- * <f:escape>{text}</f:escape>
+ * <code title="default notation">
+ * <f:format.htmlentitiesDecode>{text}</f:format.htmlentitiesDecode>
  * </code>
  * <output>
- * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+ * Text with &amp; &quot; &lt; &gt; replaced by unescaped entities (html_entity_decode applied).
  * </output>
  *
- * <code title="Entities">
- * <f:escape type="entities">{text}</f:escape>
+ * <code title="inline notation">
+ * {text -> f:format.htmlentitiesDecode(encoding: 'ISO-8859-1')}
  * </code>
  * <output>
- * Text with all possible chars replaced by HTML entities (htmlentities applied).
- * </output>
- *
- * <code title="XML">
- * <f:escape type="xml">{text}</f:escape>
- * </code>
- * <output>
- * Replaces only "<", ">" and "&" by entities as required for valid XML.
- * </output>
- *
- * <code title="URL">
- * <f:escape type="url">{text}</f:escape>
- * </code>
- * <output>
- * Text encoded for URL use (rawurlencode applied).
- * </output>
- *
- * <code title="Text">
- * <f:escape type="text">{someHtml}</f:escape>
- * </code>
- * <output>
- * Strips all tags from the HTML or XML input and returns plain text.
+ * Text with &amp; &quot; &lt; &gt; replaced by unescaped entities (html_entity_decode applied).
  * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
- * @deprecated since 1.0.0 alpha 7; use corresponding f:format.* ViewHelpers instead
  */
-class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class HtmlentitiesDecodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
@@ -74,45 +52,29 @@ class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @var boolean
 	 */
-	var $escapingInterceptorEnabled = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
-	 * Escapes special characters with their escaped counterparts as needed.
+	 * Converts all HTML entities to their applicable characters as needed using PHPs html_entity_decode() function.
 	 *
-	 * @param string $value
-	 * @param string $type The type, one of html, entities, url
+	 * @param string $value string to format
+	 * @param boolean $keepQuotes if TRUE, single and double quotes won't be replaced (sets ENT_NOQUOTES flag)
 	 * @param string $encoding
-	 * @return string the altered string.
-	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @return string the altered string
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @see http://www.php.net/html_entity_decode
 	 * @api
 	 */
-	public function render($value = NULL, $type = 'html', $encoding = 'UTF-8') {
+	public function render($value = NULL, $keepQuotes = FALSE, $encoding = 'UTF-8') {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-
 		if (!is_string($value)) {
 			return $value;
 		}
-
-		switch ($type) {
-			case 'html':
-				return htmlspecialchars($value, ENT_COMPAT, $encoding);
-			break;
-			case 'entities':
-				return htmlentities($value, ENT_COMPAT, $encoding);
-			break;
-			case 'xml':
-				return htmlspecialchars($value, ENT_NOQUOTES, $encoding);
-			break;
-			case 'url':
-				return rawurlencode($value);
-			case 'text':
-				return strip_tags($value);
-			default:
-				return $value;
-			break;
-		}
+		$flags = $keepQuotes ? ENT_NOQUOTES : ENT_COMPAT;
+		return html_entity_decode($value, $flags, $encoding);
 	}
+
 }
 ?>

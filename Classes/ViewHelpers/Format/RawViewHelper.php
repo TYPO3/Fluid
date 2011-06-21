@@ -57,6 +57,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 class RawViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
+	 * can decode the text's entities.
+	 *
 	 * @var boolean
 	 */
 	var $escapingInterceptorEnabled = FALSE;

@@ -100,7 +100,7 @@
       following:<itemizedlist>
           <listitem>
             <para>Any variable used for a tag value will be run through the
-            <classname>EscapeViewHelper</classname> with it's default
+            <classname>Format\HtmlentitiesViewHelper</classname> with it's default
             settings</para>
           </listitem>
 

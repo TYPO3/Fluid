@@ -59,7 +59,7 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	}
 
 	/**
-	 * Adds a ViewHelper node using the EscapeViewHelper to the given node.
+	 * Adds a ViewHelper node using the Format\HtmlentitiesViewHelper to the given node.
 	 * If "escapingInterceptorEnabled" in the ViewHelper is FALSE, will disable itself inside the ViewHelpers body.
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
@@ -68,6 +68,7 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if ($interceptorPosition === \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
@@ -83,9 +84,10 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 				}
 			}
 		} elseif ($this->interceptorEnabled && $node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
+			$escapeViewHelper = $this->objectManager->create('TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesViewHelper');
 			$node = $this->objectManager->create(
 				'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
-				$this->objectManager->create('TYPO3\Fluid\ViewHelpers\EscapeViewHelper'),
+				$escapeViewHelper,
 				array('value' => $node)
 			);
 		}

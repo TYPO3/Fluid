@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,51 +22,29 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * The EscapeViewHelper is used to escape variable content in various ways. By
- * default HTML is the target.
+ * Encodes the given string according to http://www.faqs.org/rfcs/rfc3986.html (applying PHPs rawurlencode() function)
+ * @see http://www.php.net/manual/function.rawurlencode.php
  *
  * = Examples =
  *
- * <code title="HTML">
- * <f:escape>{text}</f:escape>
+ * <code title="default notation">
+ * <f:format.rawurlencode>foo @+%/</f:format.rawurlencode>
  * </code>
  * <output>
- * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+ * foo%20%40%2B%25%2F (rawurlencode() applied)
  * </output>
  *
- * <code title="Entities">
- * <f:escape type="entities">{text}</f:escape>
+ * <code title="inline notation">
+ * {text -> f:format.urlencode()}
  * </code>
  * <output>
- * Text with all possible chars replaced by HTML entities (htmlentities applied).
- * </output>
- *
- * <code title="XML">
- * <f:escape type="xml">{text}</f:escape>
- * </code>
- * <output>
- * Replaces only "<", ">" and "&" by entities as required for valid XML.
- * </output>
- *
- * <code title="URL">
- * <f:escape type="url">{text}</f:escape>
- * </code>
- * <output>
- * Text encoded for URL use (rawurlencode applied).
- * </output>
- *
- * <code title="Text">
- * <f:escape type="text">{someHtml}</f:escape>
- * </code>
- * <output>
- * Strips all tags from the HTML or XML input and returns plain text.
+ * Url encoded text (rawurlencode() applied)
  * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
- * @deprecated since 1.0.0 alpha 7; use corresponding f:format.* ViewHelpers instead
  */
-class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class UrlencodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
@@ -74,45 +52,26 @@ class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @var boolean
 	 */
-	var $escapingInterceptorEnabled = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
-	 * Escapes special characters with their escaped counterparts as needed.
+	 * Escapes special characters with their escaped counterparts as needed using PHPs rawurlencode() function.
 	 *
-	 * @param string $value
-	 * @param string $type The type, one of html, entities, url
-	 * @param string $encoding
-	 * @return string the altered string.
+	 * @param string $value string to format
 	 * @author Karsten Dambekalns <karsten@typo3.org>
+	 * @author Bastian Waidelich <bastian@typo3.org>
+	 * @see http://www.php.net/manual/function.rawurlencode.php
 	 * @api
 	 */
-	public function render($value = NULL, $type = 'html', $encoding = 'UTF-8') {
+	public function render($value = NULL) {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-
 		if (!is_string($value)) {
 			return $value;
 		}
-
-		switch ($type) {
-			case 'html':
-				return htmlspecialchars($value, ENT_COMPAT, $encoding);
-			break;
-			case 'entities':
-				return htmlentities($value, ENT_COMPAT, $encoding);
-			break;
-			case 'xml':
-				return htmlspecialchars($value, ENT_NOQUOTES, $encoding);
-			break;
-			case 'url':
-				return rawurlencode($value);
-			case 'text':
-				return strip_tags($value);
-			default:
-				return $value;
-			break;
-		}
+		return rawurlencode($value);
 	}
+
 }
 ?>
