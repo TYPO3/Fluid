@@ -55,6 +55,13 @@ namespace F3\Fluid\ViewHelpers;
  * Text encoded for URL use (rawurlencode applied).
  * </output>
  *
+ * <code title="Text">
+ * <f:escape type="text">{someHtml}</f:escape>
+ * </code>
+ * <output>
+ * Strips all tags from the HTML or XML input and returns plain text.
+ * </output>
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
@@ -92,6 +99,8 @@ class EscapeViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			break;
 			case 'url':
 				return rawurlencode($value);
+			case 'text':
+				return strip_tags($value);
 			default:
 				return $value;
 			break;
