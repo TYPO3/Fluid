@@ -41,6 +41,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @deprecated since 1.0.0 alpha 7
  */
 class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper {
+	// BACKPORTER-TOKEN-1
 }
 
 ?>
