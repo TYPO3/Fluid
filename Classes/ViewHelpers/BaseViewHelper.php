@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -40,7 +40,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class BaseViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class BaseViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Render the "Base" tag by outputting $request->getBaseUri()

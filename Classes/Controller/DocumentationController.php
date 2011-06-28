@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Controller;
+namespace TYPO3\Fluid\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,17 +26,17 @@ namespace F3\Fluid\Controller;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class DocumentationController extends \F3\FLOW3\MVC\Controller\ActionController {
+class DocumentationController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * Defines the supported request types of this controller
 	 *
 	 * @var array
 	 */
-	protected $supportedRequestTypes = array('F3\FLOW3\MVC\CLI\Request');
+	protected $supportedRequestTypes = array('TYPO3\FLOW3\MVC\CLI\Request');
 
 	/**
-	 * @var F3\Fluid\Service\DocbookGenerator
+	 * @var TYPO3\Fluid\Service\DocbookGenerator
 	 * @inject
 	 */
 	protected $docbookGenerator;
@@ -46,7 +46,7 @@ class DocumentationController extends \F3\FLOW3\MVC\Controller\ActionController 
 	 * @param string $targetFile
 	 * @return string
 	 */
-	public function generateAction($sourceNamespace = 'F3\Fluid\ViewHelpers', $targetFile = 'Packages/Framework/Fluid/Documentation/Manual/DocBook/en/ViewHelperLibrary.xml') {
+	public function generateAction($sourceNamespace = 'TYPO3\Fluid\ViewHelpers', $targetFile = 'Packages/Framework/Fluid/Documentation/Manual/DocBook/en/ViewHelperLibrary.xml') {
 		$output = $this->docbookGenerator->generateDocbook($sourceNamespace);
 		file_put_contents($targetFile, $output);
 		return 'Documentation generated.';

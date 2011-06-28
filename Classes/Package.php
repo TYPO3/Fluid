@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid;
+namespace TYPO3\Fluid;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -21,7 +21,7 @@ namespace F3\Fluid;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\FLOW3\Package\Package as BasePackage;
+use \TYPO3\FLOW3\Package\Package as BasePackage;
 
 /**
  * The Fluid Package

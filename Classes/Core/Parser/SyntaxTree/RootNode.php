@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,16 +27,16 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class RootNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class RootNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * Evaluate the root node, by evaluating the subtree.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Evaluated subtree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->evaluateChildNodes($renderingContext);
 	}
 }

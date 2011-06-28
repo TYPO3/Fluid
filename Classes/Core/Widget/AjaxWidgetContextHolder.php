@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget;
+namespace TYPO3\Fluid\Core\Widget;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -53,13 +53,13 @@ class AjaxWidgetContextHolder {
 	 * Get the widget context for the given $ajaxWidgetId.
 	 *
 	 * @param integer $ajaxWidgetId
-	 * @return F3\Fluid\Core\Widget\WidgetContext
+	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function get($ajaxWidgetId) {
 		$ajaxWidgetId = (int) $ajaxWidgetId;
 		if (!isset($this->widgetContexts[$ajaxWidgetId])) {
-			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('No widget context was found for the Ajax Widget Identifier "' . $ajaxWidgetId . '". This only happens if AJAX URIs are called without including the widget on a page.', 1284793775);
+			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('No widget context was found for the Ajax Widget Identifier "' . $ajaxWidgetId . '". This only happens if AJAX URIs are called without including the widget on a page.', 1284793775);
 		}
 		return $this->widgetContexts[$ajaxWidgetId];
 	}
@@ -68,11 +68,11 @@ class AjaxWidgetContextHolder {
 	 * Stores the WidgetContext inside the Context, and sets the
 	 * AjaxWidgetIdentifier inside the Widget Context correctly.
 	 *
-	 * @param F3\Fluid\Core\Widget\WidgetContext $widgetContext
+	 * @param \TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function store(\F3\Fluid\Core\Widget\WidgetContext $widgetContext) {
+	public function store(\TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext) {
 		$ajaxWidgetId = $this->nextFreeAjaxWidgetId++;
 		$widgetContext->setAjaxWidgetIdentifier($ajaxWidgetId);
 		$this->widgetContexts[$ajaxWidgetId] = $widgetContext;

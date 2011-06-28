@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Uri;
+namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -35,7 +35,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * </output>
  *
  * <code title="Additional arguments">
- * <f:uri.action action="myAction" controller="MyController" package="MyPackage" subpackage="MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:uri.action>
+ * <f:uri.action action="myAction" controller="MyController" package="YourCompanyName.MyPackage" subpackage="YourCompanyName.MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:uri.action>
  * </code>
  * <output>
  * mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2
@@ -46,7 +46,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * @api
  * @scope prototype
  */
-class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Render the Uri.

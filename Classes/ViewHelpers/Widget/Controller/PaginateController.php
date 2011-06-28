@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Widget\Controller;
+namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -24,7 +24,7 @@ namespace F3\Fluid\ViewHelpers\Widget\Controller;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class PaginateController extends \F3\Fluid\Core\Widget\AbstractWidgetController {
+class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 
 	/**
@@ -62,7 +62,7 @@ class PaginateController extends \F3\Fluid\Core\Widget\AbstractWidgetController 
 	 */
 	public function initializeAction() {
 		$this->objects = $this->widgetConfiguration['objects'];
-		$this->configuration = \F3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
+		$this->configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
 		$this->numberOfPages = ceil(count($this->objects) / (integer)$this->configuration['itemsPerPage']);
 		$this->maximumNumberOfLinks = (integer)$this->configuration['maximumNumberOfLinks'];
 	}

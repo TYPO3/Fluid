@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,11 +22,11 @@ namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
  *                                                                        */
 
 /**
- * Testcase for \F3\Fluid\Core\ViewHelper\ArgumentDefinition
+ * Testcase for \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ArgumentDefinitionTest extends \F3\FLOW3\Tests\UnitTestCase {
+class ArgumentDefinitionTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
@@ -38,7 +38,7 @@ class ArgumentDefinitionTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$type = "string";
 		$isRequired = TRUE;
 		$isMethodParameter = TRUE;
-		$argumentDefinition = new \F3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $isRequired, null, $isMethodParameter);
+		$argumentDefinition = new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $isRequired, null, $isMethodParameter);
 
 		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');

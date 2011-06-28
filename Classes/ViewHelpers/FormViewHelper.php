@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -52,7 +52,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 
 	/**
 	 * @var string
@@ -168,8 +168,8 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function renderAdditionalIdentityFields() {
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')) {
-			$additionalIdentityProperties = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')) {
+			$additionalIdentityProperties = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 			$output = '';
 			foreach ($additionalIdentityProperties as $identity) {
 				$output .= chr(10) . $identity;
@@ -192,7 +192,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 		$result = chr(10);
 		$request = $this->controllerContext->getRequest();
 		$argumentNamespace = NULL;
-		if ($request instanceof \F3\FLOW3\MVC\Web\SubRequest) {
+		if ($request instanceof \TYPO3\FLOW3\MVC\Web\SubRequest) {
 			$argumentNamespace = $request->getArgumentNamespace();
 
 			$referrer = array(
@@ -239,7 +239,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected function addFormObjectNameToViewHelperVariableContainer() {
 		$formObjectName = $this->getFormObjectName();
 		if ($formObjectName !== NULL) {
-			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName', $formObjectName);
+			$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName', $formObjectName);
 		}
 	}
 
@@ -252,7 +252,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	protected function removeFormObjectNameFromViewHelperVariableContainer() {
 		$formObjectName = $this->getFormObjectName();
 		if ($formObjectName !== NULL) {
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
+			$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 		}
 	}
 
@@ -282,8 +282,8 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 */
 	protected function addFormObjectToViewHelperVariableContainer() {
 		if ($this->arguments->hasArgument('object')) {
-			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $this->arguments['object']);
-			$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', array());
+			$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $this->arguments['object']);
+			$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', array());
 		}
 	}
 
@@ -295,8 +295,8 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 */
 	protected function removeFormObjectFromViewHelperVariableContainer() {
 		if ($this->arguments->hasArgument('object')) {
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
+			$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+			$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 		}
 	}
 
@@ -312,7 +312,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 		} else {
 			$fieldNamePrefix = $this->getDefaultFieldNamePrefix();
 		}
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $fieldNamePrefix);
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $fieldNamePrefix);
 	}
 
 	/**
@@ -322,7 +322,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 */
 	protected function getDefaultFieldNamePrefix() {
 		$request = $this->controllerContext->getRequest();
-		if ($request instanceof \F3\FLOW3\MVC\Web\SubRequest) {
+		if ($request instanceof \TYPO3\FLOW3\MVC\Web\SubRequest) {
 			return $request->getArgumentNamespace();
 		}
 		return '';
@@ -335,7 +335,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function removeFieldNamePrefixFromViewHelperVariableContainer() {
-		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
+		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
 	}
 
 	/**
@@ -345,7 +345,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addFormFieldNamesToViewHelperVariableContainer() {
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', array());
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', array());
 	}
 
 	/**
@@ -355,7 +355,7 @@ class FormViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function removeFormFieldNamesFromViewHelperVariableContainer() {
-		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
+		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
 	}
 
 }

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Uri;
+namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -45,7 +45,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * @api
  * @scope prototype
  */
-class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ExternalViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @param string $uri target URI

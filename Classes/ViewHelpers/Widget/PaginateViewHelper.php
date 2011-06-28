@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Widget;
+namespace TYPO3\Fluid\ViewHelpers\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -52,22 +52,22 @@ namespace F3\Fluid\ViewHelpers\Widget;
  * @api
  * @scope prototype
  */
-class PaginateViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	/**
 	 * @inject
-	 * @var F3\Fluid\ViewHelpers\Widget\Controller\PaginateController
+	 * @var TYPO3\Fluid\ViewHelpers\Widget\Controller\PaginateController
 	 */
 	protected $controller;
 
 	/**
 	 *
-	 * @param \F3\FLOW3\Persistence\QueryResultInterface $objects
+	 * @param \TYPO3\FLOW3\Persistence\QueryResultInterface $objects
 	 * @param string $as
 	 * @param array $configuration
 	 * @return string
 	 */
-	public function render(\F3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE, 'maximumNumberOfLinks' => 99)) {
+	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE, 'maximumNumberOfLinks' => 99)) {
 		return $this->initiateSubRequest();
 	}
 }

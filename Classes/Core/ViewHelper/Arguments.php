@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -82,7 +82,7 @@ class Arguments implements \ArrayAccess {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetSet($key, $value) {
-		throw new \F3\Fluid\Core\Exception('Tried to set argument "' . $key . '", but setting arguments is forbidden.', 1236080693);
+		throw new \TYPO3\Fluid\Core\Exception('Tried to set argument "' . $key . '", but setting arguments is forbidden.', 1236080693);
 	}
 
 	/**
@@ -92,7 +92,7 @@ class Arguments implements \ArrayAccess {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetUnset($key) {
-		throw new \F3\Fluid\Core\Exception('Tried to unset argument "' . $key . '", but setting arguments is forbidden.', 1236080702);
+		throw new \TYPO3\Fluid\Core\Exception('Tried to unset argument "' . $key . '", but setting arguments is forbidden.', 1236080702);
 	}
 
 	/**

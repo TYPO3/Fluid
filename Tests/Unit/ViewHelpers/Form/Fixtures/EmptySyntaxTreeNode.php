@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Fixtures;
+namespace TYPO3\Fluid\ViewHelpers\Fixtures;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,7 +26,7 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class EmptySyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
+class EmptySyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	
 	public function __construct() {
 		

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser\Fixtures;
+namespace TYPO3\Fluid\Core\Parser\Fixtures;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -25,14 +25,14 @@ namespace F3\Fluid\Core\Parser\Fixtures;
  * Enter description here...
  * @scope prototype
  */
-class PostParseFacetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
+class PostParseFacetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
 	public static $wasCalled = FALSE;
 
 	public function __construct() {
 	}
 
-	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $viewHelperNode, array $arguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $viewHelperNode, array $arguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		self::$wasCalled = TRUE;
 	}
 

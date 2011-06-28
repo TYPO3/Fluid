@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -29,7 +29,7 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
@@ -37,11 +37,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderExecutesTheLoopCorrectly() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -61,11 +61,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPreservesKeys() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -89,7 +89,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfObjectIsNull() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
 		$this->assertEquals('', $viewHelper->render(NULL, 'foo'));
 	}
@@ -99,7 +99,7 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfObjectIsEmptyArray() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
 		$this->assertEquals('', $viewHelper->render(array(), 'foo'));
 	}
@@ -109,9 +109,9 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsCurrentValueToTemplateVariableContainerAndRemovesItAfterRendering() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$mockViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('evaluateChildNodes'), array(), '', FALSE);
+		$mockViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('evaluateChildNodes'), array(), '', FALSE);
 		$mockViewHelperNode->expects($this->any())->method('evaluateChildNodes')->will($this->returnValue('foo'));
 
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'bar');
@@ -130,9 +130,9 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsCurrentKeyToTemplateVariableContainerAndRemovesItAfterRendering() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$mockViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('evaluateChildNodes'), array(), '', FALSE);
+		$mockViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('evaluateChildNodes'), array(), '', FALSE);
 		$mockViewHelperNode->expects($this->any())->method('evaluateChildNodes')->will($this->returnValue('foo'));
 
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'bar');
@@ -155,11 +155,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIteratesElementsInReverseOrderIfReverseIsTrue() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -179,11 +179,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPreservesKeysIfReverseIsTrue() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -207,11 +207,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function keyContainsNumericalIndexIfTheGivenArrayDoesNotHaveAKey() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -239,11 +239,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function keyContainsNumericalIndexInAscendingOrderEvenIfReverseIsTrueIfTheGivenArrayDoesNotHaveAKey() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -268,11 +268,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 		$object = new \stdClass();
 
 		$viewHelper->render($object, 'innerVariable', 'someKey');
@@ -284,11 +284,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIteratesThroughElementsOfTraversableObjects() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -307,11 +307,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPreservesKeyWhenIteratingThroughElementsOfObjectsThatImplementIteratorInterface() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -336,11 +336,11 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function keyContainsTheNumericalIndexWhenIteratingThroughElementsOfObjectsOfTyeSplObjectStorage() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
 
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setRenderingContext($this->renderingContext);
@@ -375,9 +375,9 @@ class ForViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function iterationDataIsAddedToTemplateVariableContainerIfIterationArgumentIsSet() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\ForViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
 
-		$mockViewHelperNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('evaluateChildNodes'), array(), '', FALSE);
+		$mockViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('evaluateChildNodes'), array(), '', FALSE);
 		$mockViewHelperNode->expects($this->any())->method('evaluateChildNodes')->will($this->returnValue('foo'));
 
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'bar');

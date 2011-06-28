@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,7 +26,7 @@ namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TextNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
+class TextNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
@@ -34,17 +34,17 @@ class TextNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function renderReturnsSameStringAsGivenInConstructor() {
 		$string = 'I can work quite effectively in a train!';
-		$node = new \F3\Fluid\Core\Parser\SyntaxTree\TextNode($string);
-		$this->assertEquals($node->evaluate($this->getMock('F3\Fluid\Core\Rendering\RenderingContext')), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+		$node = new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode($string);
+		$this->assertEquals($node->evaluate($this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext')), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
 	}
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\Parser\Exception
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function constructorThrowsExceptionIfNoStringGiven() {
-		new \F3\Fluid\Core\Parser\SyntaxTree\TextNode(123);
+		new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode(123);
 	}
 }
 

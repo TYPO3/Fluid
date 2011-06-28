@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget;
+namespace TYPO3\Fluid\Core\Widget;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,30 +27,30 @@ namespace F3\Fluid\Core\Widget;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class WidgetRequestBuilder extends \F3\FLOW3\MVC\Web\RequestBuilder {
+class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 
 	/**
-	 * @var F3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	private $ajaxWidgetContextHolder;
 
 	/**
-	 * @param F3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder
+	 * @param \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectAjaxWidgetContextHolder(\F3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
+	public function injectAjaxWidgetContextHolder(\TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
 		$this->ajaxWidgetContextHolder = $ajaxWidgetContextHolder;
 	}
 
 	/**
 	 * Builds a widget request object from the raw HTTP information
 	 *
-	 * @return \F3\FLOW3\MVC\Web\Request The widget request as an object
+	 * @return \TYPO3\FLOW3\MVC\Web\Request The widget request as an object
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function build() {
-		$request = $this->objectManager->create('F3\FLOW3\MVC\Web\Request');
+		$request = $this->objectManager->create('TYPO3\FLOW3\MVC\Web\Request');
 		$request->setRequestUri($this->environment->getRequestUri());
 		$request->setBaseUri($this->environment->getBaseUri());
 		$request->setMethod($this->environment->getRequestMethod());
@@ -62,7 +62,7 @@ class WidgetRequestBuilder extends \F3\FLOW3\MVC\Web\RequestBuilder {
 			$request->setControllerActionName($rawGetArguments['action']);
 		}
 
-		$widgetContext = $this->ajaxWidgetContextHolder->get($rawGetArguments['f3-fluid-widget-id']);
+		$widgetContext = $this->ajaxWidgetContextHolder->get($rawGetArguments['typo3-fluid-widget-id']);
 		$request->setArgument('__widgetContext', $widgetContext);
 		$request->setControllerObjectName($widgetContext->getControllerObjectName());
 		return $request;

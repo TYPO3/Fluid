@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -66,7 +66,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class EscapeViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Escapes special characters with their escaped counterparts as needed.

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Rendering;
+namespace TYPO3\Fluid\Core\Rendering;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -31,7 +31,7 @@ interface RenderingContextInterface {
 	/**
 	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
-	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 */
 	public function getObjectManager();
 
@@ -39,43 +39,43 @@ interface RenderingContextInterface {
 	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
 	 *
-	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
+	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
 	 */
-	public function injectTemplateVariableContainer(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer);
+	public function injectTemplateVariableContainer(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer);
 
 	/**
 	 * Get the template variable container
 	 *
-	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
+	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
 	 */
 	public function getTemplateVariableContainer();
 
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
+	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
 	 */
-	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext);
+	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext);
 
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return \F3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @return \TYPO3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext();
 
 	/**
 	 * Set the ViewHelperVariableContainer
 	 *
-	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+	 * @param \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
 	 */
-	public function injectViewHelperVariableContainer(\F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer);
+	public function injectViewHelperVariableContainer(\TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer);
 
 	/**
 	 * Get the ViewHelperVariableContainer
 	 *
-	 * @return \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @return \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	public function getViewHelperVariableContainer();
 }

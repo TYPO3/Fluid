@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\View\Exception;
+namespace TYPO3\Fluid\View\Exception;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\View\Exception;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class InvalidSectionException extends \F3\Fluid\View\Exception {
+class InvalidSectionException extends \TYPO3\Fluid\View\Exception {
 }
 
 ?>

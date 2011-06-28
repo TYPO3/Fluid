@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Uri;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,16 +28,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ExternalViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Uri\ExternalViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\Uri\ExternalViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Uri\ExternalViewHelper();
+		$this->viewHelper = new \TYPO3\Fluid\ViewHelpers\Uri\ExternalViewHelper();
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

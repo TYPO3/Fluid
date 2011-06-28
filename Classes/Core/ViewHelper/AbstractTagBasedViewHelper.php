@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -30,7 +30,7 @@ namespace F3\Fluid\Core\ViewHelper;
  * @api
  * @scope prototype
  */
-abstract class AbstractTagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Names of all registered tag attributes
@@ -41,7 +41,7 @@ abstract class AbstractTagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\Abst
 	/**
 	 * Tag builder instance
 	 *
-	 * @var \F3\Fluid\Core\ViewHelper\TagBuilder
+	 * @var \TYPO3\Fluid\Core\ViewHelper\TagBuilder
 	 * @api
 	 */
 	protected $tag = NULL;
@@ -57,11 +57,11 @@ abstract class AbstractTagBasedViewHelper extends \F3\Fluid\Core\ViewHelper\Abst
 	/**
 	 * Inject a TagBuilder
 	 *
-	 * @param \F3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder Tag builder
+	 * @param \TYPO3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder Tag builder
 	 * @return void
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function injectTagBuilder(\F3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder) {
+	public function injectTagBuilder(\TYPO3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder) {
 		$this->tag = $tagBuilder;
 	}
 

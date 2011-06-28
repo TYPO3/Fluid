@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,14 +23,14 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class CurrencyViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class CurrencyViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRoundsFloatCorrectly() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123.456));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('123,46', $actualResult);
@@ -41,7 +41,7 @@ class CurrencyViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersCurrencySign() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123));
 		$actualResult = $viewHelper->render('foo');
 		$this->assertEquals('123,00 foo', $actualResult);
@@ -52,7 +52,7 @@ class CurrencyViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsDecimalSeparator() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(12345));
 		$actualResult = $viewHelper->render('', '|');
 		$this->assertEquals('12.345|00', $actualResult);
@@ -63,7 +63,7 @@ class CurrencyViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsThousandsSeparator() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(12345));
 		$actualResult = $viewHelper->render('', ',', '|');
 		$this->assertEquals('12|345,00', $actualResult);
@@ -74,7 +74,7 @@ class CurrencyViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersNullValues() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(NULL));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('0,00', $actualResult);
@@ -85,7 +85,7 @@ class CurrencyViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRendersNegativeAmounts() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(-123.456));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('-123,46', $actualResult);

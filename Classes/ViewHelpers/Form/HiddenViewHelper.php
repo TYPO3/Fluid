@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -40,7 +40,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @api
  * @scope prototype
  */
-class HiddenViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class HiddenViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string

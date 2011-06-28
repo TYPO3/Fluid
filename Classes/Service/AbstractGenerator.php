@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Service;
+namespace TYPO3\Fluid\Service;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -31,21 +31,21 @@ abstract class AbstractGenerator {
 	/**
 	 * Object manager.
 	 *
-	 * @var \F3\FLOW3\Object\ObjectManager
+	 * @var \TYPO3\FLOW3\Object\ObjectManager
 	 */
 	protected $objectManager;
 
 	/**
 	 * The reflection class for AbstractViewHelper. Is needed quite often, that's why we use a pre-initialized one.
 	 *
-	 * @var \F3\FLOW3\Reflection\ClassReflection
+	 * @var \TYPO3\FLOW3\Reflection\ClassReflection
 	 */
 	protected $abstractViewHelperReflectionClass;
 
 	/**
 	 * The doc comment parser.
 	 *
-	 * @var \F3\FLOW3\Reflection\DocCommentParser
+	 * @var \TYPO3\FLOW3\Reflection\DocCommentParser
 	 */
 	protected $docCommentParser;
 
@@ -55,19 +55,19 @@ abstract class AbstractGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
-		\F3\Fluid\Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
-		$this->abstractViewHelperReflectionClass = new \F3\FLOW3\Reflection\ClassReflection('F3\Fluid\Core\ViewHelper\AbstractViewHelper');
-		$this->docCommentParser = new \F3\FLOW3\Reflection\DocCommentParser();
+		\TYPO3\Fluid\Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
+		$this->abstractViewHelperReflectionClass = new \TYPO3\FLOW3\Reflection\ClassReflection('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
+		$this->docCommentParser = new \TYPO3\FLOW3\Reflection\DocCommentParser();
 	}
 
 	/**
 	 * Inject the object manager.
 	 *
-	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager the object manager to inject
+	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager the object manager to inject
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -93,8 +93,8 @@ abstract class AbstractGenerator {
 
 	/**
 	 * Get a tag name for a given ViewHelper class.
-	 * Example: For the View Helper F3\Fluid\ViewHelpers\Form\SelectViewHelper, and the
-	 * namespace prefix F3\Fluid\ViewHelpers\, this method returns "form.select".
+	 * Example: For the View Helper TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper, and the
+	 * namespace prefix TYPO3\Fluid\ViewHelpers\, this method returns "form.select".
 	 *
 	 * @param string $className Class name
 	 * @param string $namespace Base namespace to use
@@ -103,7 +103,7 @@ abstract class AbstractGenerator {
 	 */
 	protected function getTagNameForClass($className, $namespace) {
 		$strippedClassName = substr($className, strlen($namespace));
-		$classNameParts = explode(\F3\Fluid\Fluid::NAMESPACE_SEPARATOR, $strippedClassName);
+		$classNameParts = explode(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR, $strippedClassName);
 
 		if (count($classNameParts) == 1) {
 			$tagName = lcfirst(substr($classNameParts[0], 0, -10)); // strip the "ViewHelper" ending

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget;
+namespace TYPO3\Fluid\Core\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\Core\Widget;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class Exception extends \F3\Fluid\Core\Exception {
+class Exception extends \TYPO3\Fluid\Core\Exception {
 }
 
 ?>

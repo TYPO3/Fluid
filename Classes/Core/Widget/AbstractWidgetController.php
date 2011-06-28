@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget;
+namespace TYPO3\Fluid\Core\Widget;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -29,7 +29,7 @@ namespace F3\Fluid\Core\Widget;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-abstract class AbstractWidgetController extends \F3\FLOW3\MVC\Controller\ActionController {
+abstract class AbstractWidgetController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * Configuration for this widget.
@@ -42,15 +42,15 @@ abstract class AbstractWidgetController extends \F3\FLOW3\MVC\Controller\ActionC
 	/**
 	 * Handles a request. The result output is returned by altering the given response.
 	 *
-	 * @param \F3\FLOW3\MVC\RequestInterface $request The request object
-	 * @param \F3\FLOW3\MVC\ResponseInterface $response The response, modified by this handler
+	 * @param \TYPO3\FLOW3\MVC\RequestInterface $request The request object
+	 * @param \TYPO3\FLOW3\MVC\ResponseInterface $response The response, modified by this handler
 	 * @return void
 	 * @api
 	 */
-	public function processRequest(\F3\FLOW3\MVC\RequestInterface $request, \F3\FLOW3\MVC\ResponseInterface $response) {
+	public function processRequest(\TYPO3\FLOW3\MVC\RequestInterface $request, \TYPO3\FLOW3\MVC\ResponseInterface $response) {
 		$widgetContext = $request->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
-			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The widget context could not be found in the request.', 1307450180);
+			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The widget context could not be found in the request.', 1307450180);
 		}
 		$this->widgetConfiguration = $widgetContext->getWidgetConfiguration();
 		parent::processRequest($request, $response);

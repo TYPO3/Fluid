@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget;
+namespace TYPO3\Fluid\Core\Widget;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,25 +23,25 @@ namespace F3\Fluid\Core\Widget;
 
 /**
  * Widget request handler, which handles the request if
- * f3-fluid-widget-id is found.
+ * typo3-fluid-widget-id is found.
  *
  * This Request Handler gets the WidgetRequestBuilder injected.
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class WidgetRequestHandler extends \F3\FLOW3\MVC\Web\RequestHandler {
+class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 
 	/**
-	 * @var \F3\FLOW3\Utility\Environment
+	 * @var \TYPO3\FLOW3\Utility\Environment
 	 */
 	protected $environment;
 
 	/**
-	 * @param \F3\FLOW3\Utility\Environment $environment
+	 * @param \TYPO3\FLOW3\Utility\Environment $environment
 	 * @return void
 	 */
-	public function injectEnvironment(\F3\FLOW3\Utility\Environment $environment) {
+	public function injectEnvironment(\TYPO3\FLOW3\Utility\Environment $environment) {
 		$this->environment = $environment;
 	}
 
@@ -51,7 +51,7 @@ class WidgetRequestHandler extends \F3\FLOW3\MVC\Web\RequestHandler {
 	 */
 	public function canHandleRequest() {
 		$rawGetArguments = $this->environment->getRawGetArguments();
-		return isset($rawGetArguments['f3-fluid-widget-id']);
+		return isset($rawGetArguments['typo3-fluid-widget-id']);
 	}
 
 	/**

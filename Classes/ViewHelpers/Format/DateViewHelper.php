@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Format;
+namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -78,7 +78,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @api
  * @scope prototype
  */
-class DateViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Render the supplied DateTime object as a formatted date.
@@ -101,7 +101,7 @@ class DateViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			try {
 				$date = new \DateTime($date);
 			} catch (\Exception $exception) {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579);
 			}
 		}
 		return $date->format($format);

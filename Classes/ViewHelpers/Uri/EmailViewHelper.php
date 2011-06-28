@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Uri;
+namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -38,7 +38,7 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * @api
  * @scope prototype
  */
-class EmailViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class EmailViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @param string $email The email address to be turned into a mailto uri.

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,15 +23,15 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class RawViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var F3\Fluid\ViewHelpers\Format\RawViewHelper
+	 * @var TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
-		$this->viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\RawViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\RawViewHelper', array('renderChildren'));
 	}
 
 	/**

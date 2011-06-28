@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Identity;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Identity;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,16 +28,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class JsonIdentityViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class JsonIdentityViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderGetsIdentityForObjectFromPersistenceManager() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
 
-		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->injectPersistenceManager($mockPersistenceManager);
 
@@ -55,9 +55,9 @@ class JsonIdentityViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTes
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderOutputsEmptyJsonObjectForNullIdentity() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
 
-		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->injectPersistenceManager($mockPersistenceManager);
 

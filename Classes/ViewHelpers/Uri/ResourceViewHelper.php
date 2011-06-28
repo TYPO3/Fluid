@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Uri;
+namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -54,20 +54,20 @@ namespace F3\Fluid\ViewHelpers\Uri;
  * @api
  * @scope prototype
  */
-class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ResourceViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \F3\FLOW3\Resource\Publishing\ResourcePublisher
+	 * @var \TYPO3\FLOW3\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
 
 	/**
 	 * Inject the FLOW3 resource publisher.
 	 *
-	 * @param \F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher
+	 * @param \TYPO3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher
 	 * @return void
 	 */
-	public function injectResourcePublisher(\F3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
+	public function injectResourcePublisher(\TYPO3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
 		$this->resourcePublisher = $resourcePublisher;
 	}
 
@@ -76,7 +76,7 @@ class ResourceViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param string $path The path and filename of the resource (relative to Public resource directory of the package)
 	 * @param string $package Target package key. If not set, the current package key will be used
-	 * @param \F3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
+	 * @param \TYPO3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
 	 * @param string $uri A resource URI, a relative / absolute path or URL
 	 * @return string The absolute URI to the resource
 	 * @author Robert Lemke <robert@typo3.org>

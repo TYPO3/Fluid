@@ -1,19 +1,19 @@
-F3\Fluid\View\Aspect\TemplateViewCachingAspect:
+TYPO3\Fluid\View\Aspect\TemplateViewCachingAspect:
   properties:
     syntaxTreeCache:
       object:
-        factoryObjectName: F3\FLOW3\Cache\CacheManager
+        factoryObjectName: TYPO3\FLOW3\Cache\CacheManager
         factoryMethodName: getCache
         arguments:
           1:
             value: Fluid_SyntaxTreeCache
 
-F3\Fluid\View\TemplateView:
+TYPO3\Fluid\View\TemplateView:
   properties:
     renderingContext:
-      object: F3\Fluid\Core\Rendering\RenderingContext
+      object: TYPO3\Fluid\Core\Rendering\RenderingContext
 
-F3\Fluid\Core\Widget\WidgetRequestHandler:
+TYPO3\Fluid\Core\Widget\WidgetRequestHandler:
   arguments:
     2:
-      object: F3\Fluid\Core\Widget\WidgetRequestBuilder
+      object: TYPO3\Fluid\Core\Widget\WidgetRequestBuilder

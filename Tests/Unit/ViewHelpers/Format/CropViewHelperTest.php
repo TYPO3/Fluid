@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,14 +23,14 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class CropViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class CropViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDoesNotCropTextIfMaxCharactersIsLargerThanNumberOfCharacters() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('some text'));
 		$actualResult = $viewHelper->render(50);
 		$this->assertEquals('some text', $actualResult);
@@ -41,7 +41,7 @@ class CropViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperAppendsEllipsisToTruncatedText() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('some text'));
 		$actualResult = $viewHelper->render(5);
 		$this->assertEquals('some ...', $actualResult);
@@ -52,7 +52,7 @@ class CropViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperAppendsCustomSuffix() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('some text'));
 		$actualResult = $viewHelper->render(3, '[custom suffix]');
 		$this->assertEquals('som[custom suffix]', $actualResult);
@@ -63,7 +63,7 @@ class CropViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperAppendsSuffixEvenIfResultingTextIsLongerThanMaxCharacters() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('some text'));
 		$actualResult = $viewHelper->render(8);
 		$this->assertEquals('some tex...', $actualResult);

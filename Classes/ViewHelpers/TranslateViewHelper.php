@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -66,19 +66,19 @@ namespace F3\Fluid\ViewHelpers;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class TranslateViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \F3\FLOW3\I18n\Translator
+	 * @var \TYPO3\FLOW3\I18n\Translator
 	 */
 	protected $translator;
 
 	/**
-	 * @param \F3\FLOW3\I18n\Translator $translator
+	 * @param \TYPO3\FLOW3\I18n\Translator $translator
 	 * @return void
 	 * @author Karol Gusak <firstname@lastname.eu>
 	 */
-	public function injectTranslator(\F3\FLOW3\I18n\Translator $translator) {
+	public function injectTranslator(\TYPO3\FLOW3\I18n\Translator $translator) {
 		$this->translator = $translator;
 	}
 
@@ -102,9 +102,9 @@ class TranslateViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		$localeObject = NULL;
 		if ($locale !== NULL) {
 			try {
-				$localeObject = new \F3\FLOW3\I18n\Locale($locale);
-			} catch (\F3\FLOW3\I18n\Exception\InvalidLocaleIdentifierException $e) {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
+				$localeObject = new \TYPO3\FLOW3\I18n\Locale($locale);
+			} catch (\TYPO3\FLOW3\I18n\Exception\InvalidLocaleIdentifierException $e) {
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
 			}
 		}
 		$originalLabel = $default !== NULL ? $default : $this->renderChildren();

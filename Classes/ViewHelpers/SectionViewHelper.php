@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -65,7 +65,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
+class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
 	/**
 	 * Initialize the arguments.
@@ -82,13 +82,13 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 * Save the associated view helper node in a static public class variable.
 	 * called directly after the view helper was built.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments
-	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$sectionName = $viewHelperArguments['name']->getText();
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
@@ -107,8 +107,8 @@ class SectionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper imp
 	 * @api
 	 */
 	public function render() {
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection')) {
-			$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection')) {
+			$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection');
 			return $this->renderChildren();
 		}
 		return '';

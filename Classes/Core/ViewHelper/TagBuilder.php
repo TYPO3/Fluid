@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *

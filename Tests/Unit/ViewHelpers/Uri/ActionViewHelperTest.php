@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Uri;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -29,16 +29,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ActionViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Uri\ActionViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\Uri\ActionViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = new \F3\Fluid\ViewHelpers\Uri\ActionViewHelper();
+		$this->viewHelper = new \TYPO3\Fluid\ViewHelpers\Uri\ActionViewHelper();
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

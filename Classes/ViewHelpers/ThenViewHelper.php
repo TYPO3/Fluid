@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,13 +23,13 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  * "THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
- * @see F3\Fluid\ViewHelpers\IfViewHelper
+ * @see TYPO3\Fluid\ViewHelpers\IfViewHelper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */
-class ThenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ThenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Just render everything.

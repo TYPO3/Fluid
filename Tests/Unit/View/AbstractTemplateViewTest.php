@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\View;
+namespace TYPO3\Fluid\Tests\Unit\View;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,25 +26,25 @@ namespace F3\Fluid\Tests\Unit\View;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AbstractTemplateViewTest extends \F3\FLOW3\Tests\UnitTestCase {
+class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var \F3\Fluid\View\AbstractTemplateView
+	 * @var \TYPO3\Fluid\View\AbstractTemplateView
 	 */
 	protected $view;
 
 	/**
-	 * @var \F3\Fluid\Core\Rendering\RenderingContext
+	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 
 	/**
-	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @var \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 
 	/**
-	 * @var F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
 
@@ -53,12 +53,12 @@ class AbstractTemplateViewTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', array('exists', 'remove', 'add'));
-		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
-		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getTemplateVariableContainer'));
+		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', array('exists', 'remove', 'add'));
+		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
+		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getTemplateVariableContainer'));
 		$this->renderingContext->expects($this->any())->method('getViewHelperVariableContainer')->will($this->returnValue($this->viewHelperVariableContainer));
 		$this->renderingContext->expects($this->any())->method('getTemplateVariableContainer')->will($this->returnValue($this->templateVariableContainer));
-		$this->view = $this->getMock('F3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'canRender'));
+		$this->view = $this->getMock('TYPO3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'canRender'));
 		$this->view->setRenderingContext($this->renderingContext);
 	}
 

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Controller;
+namespace TYPO3\Fluid\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,33 +26,33 @@ namespace F3\Fluid\Controller;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
+class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * XSD Generator
-	 * @var F3\Fluid\Service\XsdGenerator
+	 * @var TYPO3\Fluid\Service\XsdGenerator
 	 */
 	protected $xsdGenerator;
 
 	/**
 	 * Inject XSD Generator
 	 *
-	 * @param \F3\Fluid\Service\XsdGenerator $xsdGenerator XSD Generator
+	 * @param \TYPO3\Fluid\Service\XsdGenerator $xsdGenerator XSD Generator
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectXsdGenerator(\F3\Fluid\Service\XsdGenerator $xsdGenerator) {
+	public function injectXsdGenerator(\TYPO3\Fluid\Service\XsdGenerator $xsdGenerator) {
 		$this->xsdGenerator = $xsdGenerator;
 	}
 
 	/**
 	 * Inject a TemplateView
 	 *
-	 * @param \F3\Fluid\View\TemplateView $view The Fluid View Instance
+	 * @param \TYPO3\Fluid\View\TemplateView $view The Fluid View Instance
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectView(\F3\Fluid\View\TemplateView $view) {
+	public function injectView(\TYPO3\Fluid\View\TemplateView $view) {
 		$this->view = $view;
 	}
 
@@ -80,7 +80,7 @@ class StandardController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 		$path = 'Resources/Fluid/XSD/';
 		if (!is_dir(FLOW3_PATH_WEB . $path)) {
-			\F3\FLOW3\Utility\Files::createDirectoryRecursively(FLOW3_PATH_WEB . $path);
+			\TYPO3\FLOW3\Utility\Files::createDirectoryRecursively(FLOW3_PATH_WEB . $path);
 		}
 
 		$filename = $path . str_replace('\\', '_', $baseNamespace) . '.xsd';

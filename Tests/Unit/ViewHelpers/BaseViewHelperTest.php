@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -24,7 +24,7 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers;
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
  */
-class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -34,7 +34,7 @@ class BaseViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 		$this->request->expects($this->any())->method('getBaseUri')->will($this->returnValue($baseUri));
 
-		$viewHelper = new \F3\Fluid\ViewHelpers\BaseViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\BaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$expectedResult = '<base href="' . $baseUri . '" />';

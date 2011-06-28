@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Widget;
+namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,15 +26,15 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class WidgetRequestHandlerTest extends \F3\FLOW3\Tests\UnitTestCase {
+class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var F3\Fluid\Core\Widget\WidgetRequestHandler
+	 * @var TYPO3\Fluid\Core\Widget\WidgetRequestHandler
 	 */
 	protected $widgetRequestHandler;
 
 	/**
-	 * @var F3\FLOW3\Utility\Environment
+	 * @var TYPO3\FLOW3\Utility\Environment
 	 */
 	protected $mockEnvironment;
 
@@ -42,9 +42,9 @@ class WidgetRequestHandlerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
+		$this->mockEnvironment = $this->getMock('TYPO3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
 
-		$this->widgetRequestHandler = $this->getAccessibleMock('F3\Fluid\Core\Widget\WidgetRequestHandler', array('dummy'), array(), '', FALSE);
+		$this->widgetRequestHandler = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestHandler', array('dummy'), array(), '', FALSE);
 		$this->widgetRequestHandler->_set('environment', $this->mockEnvironment);
 	}
 
@@ -53,7 +53,7 @@ class WidgetRequestHandlerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function canHandleRequestReturnsTrueIfCorrectGetParameterIsSet() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('f3-fluid-widget-id' => '123')));
+		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('typo3-fluid-widget-id' => '123')));
 		$this->assertTrue($this->widgetRequestHandler->canHandleRequest());
 	}
 
@@ -71,7 +71,7 @@ class WidgetRequestHandlerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function priorityIsHigherThanDefaultRequestHandler() {
-		$defaultWebRequestHandler = $this->getMock('F3\FLOW3\MVC\Web\RequestHandler', array('dummy'), array(), '', FALSE);
+		$defaultWebRequestHandler = $this->getMock('TYPO3\FLOW3\MVC\Web\RequestHandler', array('dummy'), array(), '', FALSE);
 		$this->assertTrue($this->widgetRequestHandler->getPriority() > $defaultWebRequestHandler->getPriority());
 	}
 }

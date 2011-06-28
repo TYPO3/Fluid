@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget;
+namespace TYPO3\Fluid\Core\Widget;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -79,7 +79,7 @@ class WidgetContext {
 	 * The child nodes of the Widget ViewHelper.
 	 * Only available inside non-AJAX requests.
 	 *
-	 * @var F3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
 	 * @transient
 	 */
 	protected $viewHelperChildNodes; // TODO: rename to something more meaningful.
@@ -88,7 +88,7 @@ class WidgetContext {
 	 * The rendering context of the ViewHelperChildNodes.
 	 * Only available inside non-AJAX requests.
 	 *
-	 * @var F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @var TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @transient
 	 */
 	protected $viewHelperChildNodeRenderingContext;
@@ -174,18 +174,18 @@ class WidgetContext {
 	}
 
 	/**
-	 * @param F3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes
-	 * @param F3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setViewHelperChildNodes(\F3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes, \F3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext) {
+	public function setViewHelperChildNodes(\TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext) {
 		$this->viewHelperChildNodes = $viewHelperChildNodes;
 		$this->viewHelperChildNodeRenderingContext = $viewHelperChildNodeRenderingContext;
 	}
 
 	/**
-	 * @return F3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperChildNodes() {
@@ -193,7 +193,7 @@ class WidgetContext {
 	}
 
 	/**
-	 * @return F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperChildNodeRenderingContext() {

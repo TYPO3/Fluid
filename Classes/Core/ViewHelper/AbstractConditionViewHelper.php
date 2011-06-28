@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,7 +23,7 @@ namespace F3\Fluid\Core\ViewHelper;
 
 /**
  * This view helper is an abstract ViewHelper which implements an if/else condition.
- * @see F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
+ * @see TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
  *
  * = Usage =
  *
@@ -36,17 +36,17 @@ namespace F3\Fluid\Core\ViewHelper;
  * <[aConditionViewHelperName] .... then="condition true" else="condition false" />,
  * or as well use the "then" and "else" child nodes.
  *
- * @see F3\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
+ * @see TYPO3\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
  * Make sure to NOT OVERRIDE the constructor.
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */
-abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
-	 * An array of \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * An array of \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 * @var array
 	 */
 	private $childNodes = array();
@@ -89,13 +89,13 @@ abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\Abs
 
 		$elseViewHelperEncountered = FALSE;
 		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ThenViewHelper') {
+			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ThenViewHelper') {
 				$data = $childNode->evaluate($this->getRenderingContext());
 				return $data;
 			}
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
+			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
 				$elseViewHelperEncountered = TRUE;
 			}
 		}
@@ -123,8 +123,8 @@ abstract class AbstractConditionViewHelper extends \F3\Fluid\Core\ViewHelper\Abs
 		}
 
 		foreach ($this->childNodes as $childNode) {
-			if ($childNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'F3\Fluid\ViewHelpers\ElseViewHelper') {
+			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
 				return $childNode->evaluate($this->getRenderingContext());
 			}
 		}

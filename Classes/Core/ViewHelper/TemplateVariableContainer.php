@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -68,8 +68,8 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function add($identifier, $value) {
-		if (array_key_exists($identifier, $this->variables)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declarations!', 1224479063);
-		if (in_array(strtolower($identifier), self::$reservedVariableNames)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('"' . $identifier . '" is a reserved variable name and can\'t be used as variable identifier.', 1256730379);
+		if (array_key_exists($identifier, $this->variables)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declarations!', 1224479063);
+		if (in_array(strtolower($identifier), self::$reservedVariableNames)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('"' . $identifier . '" is a reserved variable name and can\'t be used as variable identifier.', 1256730379);
 		$this->variables[$identifier] = $value;
 	}
 
@@ -82,7 +82,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function get($identifier) {
-		if (!array_key_exists($identifier, $this->variables)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
+		if (!array_key_exists($identifier, $this->variables)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		return $this->variables[$identifier];
 	}
 
@@ -95,7 +95,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->variables)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+		if (!array_key_exists($identifier, $this->variables)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
 		unset($this->variables[$identifier]);
 	}
 

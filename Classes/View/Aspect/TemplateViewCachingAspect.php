@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\View\Aspect;
+namespace TYPO3\Fluid\View\Aspect;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -30,12 +30,12 @@ namespace F3\Fluid\View\Aspect;
 class TemplateViewCachingAspect {
 
 	/**
-	 * @var \F3\FLOW3\Cache\Frontend\VariableFrontend
+	 * @var \TYPO3\FLOW3\Cache\Frontend\VariableFrontend
 	 */
 	protected $findMatchResultsCache;
 
 	/**
-	 * @var \F3\FLOW3\Cache\Frontend\StringFrontend
+	 * @var \TYPO3\FLOW3\Cache\Frontend\StringFrontend
 	 */
 	protected $resolveCache;
 
@@ -47,33 +47,33 @@ class TemplateViewCachingAspect {
 
 	/**
 	 * Syntax tree cache (persistent)
-	 * @var \F3\FLOW3\Cache\Frontend\VariableFrontend
+	 * @var \TYPO3\FLOW3\Cache\Frontend\VariableFrontend
 	 */
 	protected $syntaxTreeCache;
 
 	/**
 	 * Injects the syntaxTreeCache
 	 *
-	 * @param \F3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache Cache for the reflection service
+	 * @param \TYPO3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache Cache for the reflection service
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function injectSyntaxTreeCache(\F3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache) {
+	public function injectSyntaxTreeCache(\TYPO3\FLOW3\Cache\Frontend\VariableFrontend $syntaxTreeCache) {
 		$this->syntaxTreeCache = $syntaxTreeCache;
 	}
 
 	/**
-	 * Around advice. Caches calls of parseTemplate() in classes implementing F3\Fluid\View\TemplateViewInterface.
+	 * Around advice. Caches calls of parseTemplate() in classes implementing TYPO3\Fluid\View\TemplateViewInterface.
 	 * This advice is only active if Fluid.syntaxTreeCache.enable is TRUE.
 	 *
-	 * @around within(F3\Fluid\View\TemplateViewInterface) && method(.*->parseTemplate()) && setting(Fluid.syntaxTreeCache.enable)
-	 * @param F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
-	 * @return \F3\Fluid\Core\Parser\ParsedTemplateInterface template tree
+	 * @around within(TYPO3\Fluid\View\TemplateViewInterface) && method(.*->parseTemplate()) && setting(Fluid.syntaxTreeCache.enable)
+	 * @param \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
+	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface template tree
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function cacheParseTemplateCall(\F3\FLOW3\AOP\JoinPointInterface $joinPoint) {
+	public function cacheParseTemplateCall(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 		$templatePathAndFilename = $joinPoint->getMethodArgument('templatePathAndFilename');
 		if (array_key_exists($templatePathAndFilename, $this->localSyntaxTreeCache)) {
 			return $this->localSyntaxTreeCache[$templatePathAndFilename];

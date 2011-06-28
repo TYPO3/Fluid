@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,14 +23,14 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperFormatsDateCorrectly() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
 		$actualResult = $viewHelper->render(new \DateTime('1980-12-13'));
 		$this->assertEquals('1980-12-13', $actualResult);
 	}
@@ -40,7 +40,7 @@ class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperFormatsDateStringCorrectly() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
 		$actualResult = $viewHelper->render('1980-12-13');
 		$this->assertEquals('1980-12-13', $actualResult);
 	}
@@ -50,7 +50,7 @@ class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsCustomFormat() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
 		$actualResult = $viewHelper->render(new \DateTime('1980-02-01'), 'd.m.Y');
 		$this->assertEquals('01.02.1980', $actualResult);
 	}
@@ -60,7 +60,7 @@ class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperReturnsEmptyStringIfNULLIsGiven() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(NULL));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('', $actualResult);
@@ -68,11 +68,11 @@ class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperThrowsExceptionIfDateStringCantBeParsed() {
-		$viewHelper = new \F3\Fluid\ViewHelpers\Format\DateViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
 		$viewHelper->render('foo');
 	}
 
@@ -81,7 +81,7 @@ class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperUsesChildNodesIfDateAttributeIsNotSpecified() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(new \DateTime('1980-12-13')));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('1980-12-13', $actualResult);
@@ -92,7 +92,7 @@ class DateViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function dateArgumentHasPriorityOverChildNodes() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->never())->method('renderChildren');
 		$actualResult = $viewHelper->render('1980-12-12');
 		$this->assertEquals('1980-12-12', $actualResult);

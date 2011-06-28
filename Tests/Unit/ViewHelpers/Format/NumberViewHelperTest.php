@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,14 +23,14 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class NumberViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class NumberViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function formatNumberDefaultsToEnglishNotationWithTwoDecimals() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(10000.0 / 3.0));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('3,333.33', $actualResult);
@@ -41,7 +41,7 @@ class NumberViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function formatNumberWithDecimalsDecimalPointAndSeparator() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(10000.0 / 3.0));
 		$actualResult = $viewHelper->render(3, ',', '.');
 		$this->assertEquals('3.333,333', $actualResult);

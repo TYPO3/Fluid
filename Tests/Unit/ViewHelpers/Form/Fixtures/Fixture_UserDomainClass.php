@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Fixtures;
+namespace TYPO3\Fluid\ViewHelpers\Fixtures;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *

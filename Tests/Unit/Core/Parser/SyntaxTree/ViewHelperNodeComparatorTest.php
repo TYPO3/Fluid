@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,15 +26,15 @@ namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
+class ViewHelperNodeComparatorTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 	 */
 	protected $viewHelperNode;
 
 	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @var TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $renderingContext;
 
@@ -43,17 +43,17 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setUp() {
-		$this->viewHelperNode = $this->getAccessibleMock('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
+		$this->viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
+		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
 	}
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\Parser\Exception
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {
-		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('getChildNodes')->will($this->returnValue(array(1,2,3,4)));
 
 		$this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext);
@@ -64,10 +64,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function comparingEqualNumbersReturnsTrue() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -77,10 +77,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function comparingUnequalNumbersReturnsFalse() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -90,10 +90,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function notEqualReturnsFalseIfNumbersAreEqual() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -103,10 +103,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function notEqualReturnsTrueIfNumbersAreNotEqual() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('5'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('3'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -116,10 +116,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function oddNumberModulo2ReturnsTrue() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('43'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('43'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -129,10 +129,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evenNumberModulo2ReturnsFalse() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('42'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('42'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('%'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('2'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -142,10 +142,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterThanReturnsTrueIfNumberIsReallyGreater() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -155,10 +155,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterThanReturnsFalseIfNumberIsEqual() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('>'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -168,10 +168,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -181,10 +181,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnsTrueIfNumberIsEqual() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -194,10 +194,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnFalseIfNumberIsSmaller() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('>='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -207,10 +207,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessThanReturnsTrueIfNumberIsReallyless() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -220,10 +220,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessThanReturnsFalseIfNumberIsEqual() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('<'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -233,10 +233,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnsTrueIfNumberIsReallyLess() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('9'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -246,10 +246,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnsTrueIfNumberIsEqual() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -259,10 +259,10 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnFalseIfNumberIsBigger() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('11'));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('<='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('10'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -272,8 +272,8 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('11 <= -2.1'));
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('11 <= -2.1'));
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
 	}
@@ -287,16 +287,16 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$object1 = new \stdClass();
 		$object2 = new \stdClass();
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
 
-		$object1Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
 
-		$object2Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
 
 		$rootNode->addChildNode($object1Node);
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('=='));
 		$rootNode->addChildNode($object2Node);
 
 		$this->assertFalse($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));
@@ -310,16 +310,16 @@ class ViewHelperNodeComparatorTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$object1 = new \stdClass();
 		$object2 = new \stdClass();
 
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
 
-		$object1Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
 
-		$object2Node = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
 
 		$rootNode->addChildNode($object1Node);
-		$rootNode->addChildNode(new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('!='));
 		$rootNode->addChildNode($object2Node);
 
 		$this->assertTrue($this->viewHelperNode->_call('evaluateBooleanExpression', $rootNode, $this->renderingContext));

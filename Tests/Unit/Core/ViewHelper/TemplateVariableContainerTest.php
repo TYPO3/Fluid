@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,13 +26,13 @@ namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
+class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer();
+		$this->variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer();
 	}
 
 	/**
@@ -86,7 +86,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
@@ -96,7 +96,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function addingReservedIdentifiersThrowException() {
@@ -105,7 +105,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
@@ -114,7 +114,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
@@ -123,7 +123,7 @@ class TemplateVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function removeReallyRemovesVariables() {

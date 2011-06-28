@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Widget;
+namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,10 +26,10 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class WidgetContextTest extends \F3\FLOW3\Tests\UnitTestCase {
+class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var F3\Fluid\Core\Widget\WidgetContext
+	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	protected $widgetContext;
 
@@ -37,7 +37,7 @@ class WidgetContextTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->widgetContext = new \F3\Fluid\Core\Widget\WidgetContext();
+		$this->widgetContext = new \TYPO3\Fluid\Core\Widget\WidgetContext();
 	}
 
 	/**
@@ -85,8 +85,8 @@ class WidgetContextTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function controllerObjectNameCanBeReadAgain() {
-		$this->widgetContext->setControllerObjectName('F3\My\Object\Name');
-		$this->assertEquals('F3\My\Object\Name', $this->widgetContext->getControllerObjectName());
+		$this->widgetContext->setControllerObjectName('TYPO3\My\Object\Name');
+		$this->assertEquals('TYPO3\My\Object\Name', $this->widgetContext->getControllerObjectName());
 	}
 
 	/**
@@ -94,8 +94,8 @@ class WidgetContextTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperChildNodesCanBeReadAgain() {
-		$viewHelperChildNodes = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
+		$viewHelperChildNodes = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
 
 		$this->widgetContext->setViewHelperChildNodes($viewHelperChildNodes, $renderingContext);
 		$this->assertSame($viewHelperChildNodes, $this->widgetContext->getViewHelperChildNodes());

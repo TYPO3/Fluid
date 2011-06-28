@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,16 +22,16 @@ namespace F3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * Viewhelper that outputs its childnodes with \F3\var_dump()
+ * Viewhelper that outputs its childnodes with \TYPO3\var_dump()
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */
-class DebugViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Wrapper for \F3\var_dump()
+	 * Wrapper for \TYPO3\var_dump()
 	 *
 	 * @param string $title
 	 * @return string debug string
@@ -39,7 +39,7 @@ class DebugViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render($title = NULL) {
 		ob_start();
-		\F3\var_dump($this->renderChildren(), $title);
+		\TYPO3\var_dump($this->renderChildren(), $title);
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;

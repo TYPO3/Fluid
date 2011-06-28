@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,13 +23,13 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  * This view helper is deprecated. Use f:format.raw instead
- * @see \F3\Fluid\ViewHelpers\Format\RawViewHelper
+ * @see \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
- * @deprecated since 1.0.0 alpha 7; use \F3\Fluid\ViewHelpers\Format\RawViewHelper instead
+ * @deprecated since 1.0.0 alpha 7; use \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper instead
  */
-class RawViewHelper extends \F3\Fluid\ViewHelpers\Format\RawViewHelper {
+class RawViewHelper extends \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper {
 
 }
 

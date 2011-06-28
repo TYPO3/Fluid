@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,16 +28,16 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class CycleViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\CycleViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\CycleViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('F3\Fluid\ViewHelpers\CycleViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\CycleViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -92,7 +92,7 @@ class CycleViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToValuesThatAreNotTraversable() {

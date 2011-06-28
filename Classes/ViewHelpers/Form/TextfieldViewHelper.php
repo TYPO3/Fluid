@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -37,7 +37,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @api
  * @scope prototype
  */
-class TextfieldViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string
@@ -57,7 +57,7 @@ class TextfieldViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$this->registerTagAttribute('maxlength', 'int', 'The maxlength attribute of the input field (will not be validated)');
 		$this->registerTagAttribute('readonly', 'string', 'The readonly attribute of the input field');
 		$this->registerTagAttribute('size', 'int', 'The size of the input field');
-		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'typo3-form-error');
 		$this->registerUniversalTagAttributes();
 	}
 

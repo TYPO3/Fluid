@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Widget\Exception;
+namespace TYPO3\Fluid\Core\Widget\Exception;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,6 +26,6 @@ namespace F3\Fluid\Core\Widget\Exception;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class RenderingContextNotFoundException extends \F3\Fluid\Core\Widget\Exception {
+class RenderingContextNotFoundException extends \TYPO3\Fluid\Core\Widget\Exception {
 }
 ?>

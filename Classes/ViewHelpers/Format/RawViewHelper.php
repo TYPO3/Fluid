@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Format;
+namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -54,7 +54,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class RawViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class RawViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	var $escapingInterceptorEnabled = FALSE;
 

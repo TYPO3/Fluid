@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Link;
+namespace TYPO3\Fluid\ViewHelpers\Link;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,7 +26,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * @api
  * @scope prototype
  */
-class WidgetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
 	 * @var string
@@ -90,9 +90,9 @@ class WidgetViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHel
 		$arguments['action'] = $action;
 		$widgetContext = $this->controllerContext->getRequest()->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
-			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:link.widget>', 1307450686);
+			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:link.widget>', 1307450686);
 		}
-		$arguments['f3-fluid-widget-id'] = $widgetContext->getAjaxWidgetIdentifier();
+		$arguments['typo3-fluid-widget-id'] = $widgetContext->getAjaxWidgetIdentifier();
 		return '?' . http_build_query($arguments, NULL, '&');
 	}
 

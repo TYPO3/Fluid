@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Form;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,16 +28,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class CheckboxViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Form\CheckboxViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\Form\CheckboxViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\CheckboxViewHelper', array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\CheckboxViewHelper', array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -47,7 +47,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagNameAndDefaultAttributes() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
@@ -67,7 +67,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderSetsCheckedAttributeIfSpecified() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
@@ -86,7 +86,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIgnoresBoundPropertyIfCheckedIsSet() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
@@ -107,7 +107,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsCheckedAttributeIfCheckboxIsBoundToAPropertyOfTypeBoolean() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
@@ -128,7 +128,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAppendsSquareBracketsToNameAttributeIfBoundToAPropertyOfTypeArray() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo[]');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('foo[]');
@@ -149,7 +149,7 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsCheckedAttributeIfCheckboxIsBoundToAPropertyOfTypeArray() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('type', 'checkbox');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('name', 'foo[]');
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
@@ -167,11 +167,11 @@ class CheckboxViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function bindingObjectsToACheckboxThatAreNotOfTypeBooleanOrArrayThrowsException() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
 
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(new \stdClass()));

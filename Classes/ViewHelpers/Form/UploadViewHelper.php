@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -38,7 +38,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @api
  * @scope prototype
  */
-class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string
@@ -46,7 +46,7 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	protected $tagName = 'input';
 
 	/**
-	 * @var F3\FLOW3\Property\PropertyMapper
+	 * @var TYPO3\FLOW3\Property\PropertyMapper
 	 * @inject
 	 */
 	protected $propertyMapper;
@@ -61,7 +61,7 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 	public function initializeArguments() {
 		parent::initializeArguments();
 		$this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
-		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'typo3-form-error');
 		$this->registerUniversalTagAttributes();
 	}
 
@@ -88,7 +88,7 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 				// The form data which was submitted at the last request was in a format
 				// which the PropertyMapper understands; so we re-build the Resource object
 				// using the property mapper
-			$resourceObject = $this->propertyMapper->convert($value, 'F3\FLOW3\Resource\Resource');
+			$resourceObject = $this->propertyMapper->convert($value, 'TYPO3\FLOW3\Resource\Resource');
 		}
 		$fileNameIdAttribute = $resourcePointerIdAttribute = '';
 		if ($this->arguments->hasArgument('id')) {
@@ -96,7 +96,7 @@ class UploadViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 			$resourcePointerIdAttribute = ' id="' . $this->arguments['id'] . '-resourcePointer"';
 		}
 		$fileNameValue = $resourcePointerValue = '';
-		if ($resourceObject instanceof \F3\FLOW3\Resource\Resource) {
+		if ($resourceObject instanceof \TYPO3\FLOW3\Resource\Resource) {
 			$fileNameValue = $resourceObject->getFileName();
 			$resourcePointerValue = $resourceObject->getResourcePointer();
 		}

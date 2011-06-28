@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Format;
+namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -47,7 +47,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @api
  * @scope prototype
  */
-class CropViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CropViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Render the cropped text

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Security;
+namespace TYPO3\Fluid\ViewHelpers\Security;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -54,20 +54,20 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @api
  * @scope prototype
  */
-class IfAuthenticatedViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class IfAuthenticatedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 	/**
-	 * @var F3\FLOW3\Security\Context
+	 * @var TYPO3\FLOW3\Security\Context
 	 */
 	protected $securityContext;
 
 	/**
 	 * Injects the Security Context
 	 *
-	 * @param F3\FLOW3\Security\Context $securityContext
+	 * @param \TYPO3\FLOW3\Security\Context $securityContext
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectSecurityContext(\F3\FLOW3\Security\Context $securityContext) {
+	public function injectSecurityContext(\TYPO3\FLOW3\Security\Context $securityContext) {
 		$this->securityContext = $securityContext;
 	}
 

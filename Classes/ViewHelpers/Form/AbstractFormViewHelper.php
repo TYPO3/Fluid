@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -30,21 +30,21 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+abstract class AbstractFormViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
-	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
 	/**
 	 * Injects the FLOW3 Persistence Manager
 	 *
-	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
+	 * @param \TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(\TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
 	}
 
@@ -58,10 +58,10 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\Abstract
 		if ($fieldName === NULL || $fieldName === '') {
 			return '';
 		}
-		if (!$this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')) {
+		if (!$this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')) {
 			return $fieldName;
 		}
-		$fieldNamePrefix = (string)$this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
+		$fieldNamePrefix = (string)$this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
 		if ($fieldNamePrefix === '') {
 			return $fieldName;
 		}
@@ -82,7 +82,7 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\Abstract
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @see \F3\FLOW3\MVC\Controller\Argument::setValue()
+	 * @see \TYPO3\FLOW3\MVC\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object, $name) {
 		if (!is_object($object) || $this->persistenceManager->isNewObject($object)) {
@@ -107,13 +107,13 @@ abstract class AbstractFormViewHelper extends \F3\Fluid\Core\ViewHelper\Abstract
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function registerFieldNameForFormTokenGeneration($fieldName) {
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames')) {
-			$formFieldNames = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames')) {
+			$formFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
 		} else {
 			$formFieldNames = array();
 		}
 		$formFieldNames[] = $fieldName;
-		$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', $formFieldNames);
+		$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', $formFieldNames);
 	}
 }
 

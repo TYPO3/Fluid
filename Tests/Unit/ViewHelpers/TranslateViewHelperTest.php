@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,19 +26,19 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
  * Test case for the Translate ViewHelper
  */
-class TranslateViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class TranslateViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
 	 * @author Karol Gusak <firstname@lastname.eu>
 	 */
 	public function viewHelperTranslates() {
-		$dummyLocale = new \F3\FLOW3\I18n\Locale('de_DE');
+		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');
 
-		$mockTranslator = $this->getMock('F3\FLOW3\I18n\Translator');
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
 		$mockTranslator->expects($this->once())->method('translateByOriginalLabel', 'Untranslated Label', 'main', array(), NULL, $dummyLocale)->will($this->returnValue('Translated Label'));
 
-		$viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Untranslated Label'));
 		$viewHelper->injectTranslator($mockTranslator);
 

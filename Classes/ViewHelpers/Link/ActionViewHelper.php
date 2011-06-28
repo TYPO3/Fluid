@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Link;
+namespace TYPO3\Fluid\ViewHelpers\Link;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -35,7 +35,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * </output>
  *
  * <code title="Additional arguments">
- * <f:link.action action="myAction" controller="MyController" package="MyPackage" subpackage="MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:link.action>
+ * <f:link.action action="myAction" controller="MyController" package="YourCompanyName.MyPackage" subpackage="YourCompanyName.MySubpackage" arguments="{key1: 'value1', key2: 'value2'}">some link</f:link.action>
  * </code>
  * <output>
  * <a href="mypackage/mycontroller/mysubpackage/myaction?key1=value1&amp;key2=value2">some link</a>
@@ -46,7 +46,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * @api
  * @scope prototype
  */
-class ActionViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
 	 * @var string

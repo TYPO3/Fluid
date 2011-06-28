@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Form;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -30,16 +30,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class SelectViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Form\SelectViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\SelectViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -49,11 +49,11 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCorrectlySetsTagName() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('setTagName')->with('select');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array()
 		));
 		$this->viewHelper->setArguments($arguments);
@@ -68,14 +68,14 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCreatesExpectedOptions() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value1' => 'label1',
 				'value2' => 'label2'
@@ -94,14 +94,14 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function anEmptyOptionTagIsRenderedIfOptionsArrayIsEmptyToAssureXhtmlCompatibility() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value=""></option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(),
 			'value' => 'value2',
 			'name' => 'myName'
@@ -117,14 +117,14 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function OrderOfOptionsIsNotAlteredByDefault() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value3">label3</option>' . chr(10) . '<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value3' => 'label3',
 				'value1' => 'label1',
@@ -144,14 +144,14 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function optionsAreSortedByLabelIfSortByOptionLabelIsSet() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3">label3</option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value3' => 'label3',
 				'value1' => 'label1',
@@ -172,7 +172,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectCreatesExpectedOptions() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
 		$this->viewHelper->expects($this->exactly(3))->method('registerFieldNameForFormTokenGeneration')->with('myName[]');
@@ -180,7 +180,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value1' => 'label1',
 				'value2' => 'label2',
@@ -203,22 +203,22 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function selectOnDomainObjectsCreatesExpectedOptions() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="1">Ingmar</option>' . chr(10) . '<option value="2" selected="selected">Sebastian</option>' . chr(10) . '<option value="3">Robert</option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
-		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
-		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+		$user_is = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user_sk = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		$user_rl = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user_is,
 				$user_sk,
@@ -240,7 +240,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectOnDomainObjectsCreatesExpectedOptions() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('multiple', 'multiple');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'myName[]');
 		$this->viewHelper->expects($this->exactly(3))->method('registerFieldNameForFormTokenGeneration')->with('myName[]');
@@ -248,11 +248,11 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$user_is = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
-		$user_sk = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
-		$user_rl = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+		$user_is = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user_sk = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		$user_rl = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user_is,
 				$user_sk,
@@ -275,20 +275,20 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUuidForValueAndLabel() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="fakeUUID">fakeUUID</option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$user = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user
 			),
@@ -305,21 +305,21 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesToStringForLabelIfAvailable() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('fakeUUID'));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="fakeUUID">toStringResult</option>' . chr(10));
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$user = $this->getMock('F3\Fluid\ViewHelpers\Fixtures\UserDomainClass', array('__toString'), array(1, 'Ingmar', 'Schlecht'));
+		$user = $this->getMock('TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass', array('__toString'), array(1, 'Ingmar', 'Schlecht'));
 		$user->expects($this->atLeastOnce())->method('__toString')->will($this->returnValue('toStringResult'));
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user
 			),
@@ -334,19 +334,19 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	/**
 	 * @test
 	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function selectOnDomainObjectsThrowsExceptionIfNoValueCanBeFound() {
-		$mockPersistenceManager = $this->getMock('F3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue(NULL));
 		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
 
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$user = new \F3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				$user
 			),
@@ -363,7 +363,7 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCallsSetErrorClassAttribute() {
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array()
 		));
 		$this->viewHelper->setArguments($arguments);
@@ -377,11 +377,11 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function allOptionsAreSelectedIfSelectAllIsTrue() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value1' => 'label1',
 				'value2' => 'label2',
@@ -402,11 +402,11 @@ class SelectViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectAllHasNoEffectIfValueIsSet() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3">label3</option>' . chr(10));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'options' => array(
 				'value1' => 'label1',
 				'value2' => 'label2',

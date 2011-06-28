@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class TextNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * Contents of the text node
@@ -43,7 +43,7 @@ class TextNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 */
 	public function __construct($text) {
 		if (!is_string($text)) {
-			throw new \F3\Fluid\Core\Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+			throw new \TYPO3\Fluid\Core\Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		}
 		$this->text = $text;
 	}
@@ -52,12 +52,12 @@ class TextNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Return the text associated to the syntax tree. Text from child nodes is
 	 * appended to the text in the node's own text.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string the text stored in this node/subtree.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo TextNode shouldn't have child nodes
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->text . $this->evaluateChildNodes($renderingContext);
 	}
 

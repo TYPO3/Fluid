@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
@@ -48,15 +48,15 @@ class ArrayNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Evaluate the array and return an evaluated array
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return array An associative array with literal values
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
-			if ($value instanceof \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
+			if ($value instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode) {
 				$arrayToBuild[$key] = $value->evaluate($renderingContext);
 			} else {
 				// TODO - this case should not happen!

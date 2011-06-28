@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Widget;
+namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,35 +26,35 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var F3\Fluid\Core\Widget\AbstractWidgetViewHelper
+	 * @var TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper
 	 */
 	protected $viewHelper;
 
 	/**
-	 * @var F3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	protected $ajaxWidgetContextHolder;
 
 	/**
-	 * @var F3\Fluid\Core\Widget\WidgetContext
+	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	protected $widgetContext;
 
 	/**
-	 * @var F3\FLOW3\Object\ObjectManagerInterface
+	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var TYPO3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
-	 * @var F3\FLOW3\MVC\Web\Request
+	 * @var TYPO3\FLOW3\MVC\Web\Request
 	 */
 	protected $request;
 
@@ -62,21 +62,21 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\Core\Widget\AbstractWidgetViewHelper', array('validateArguments', 'initialize', 'callRenderMethod', 'getWidgetConfiguration', 'getRenderingContext'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper', array('validateArguments', 'initialize', 'callRenderMethod', 'getWidgetConfiguration', 'getRenderingContext'));
 
-		$this->ajaxWidgetContextHolder = $this->getMock('F3\Fluid\Core\Widget\AjaxWidgetContextHolder');
+		$this->ajaxWidgetContextHolder = $this->getMock('TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder');
 		$this->viewHelper->injectAjaxWidgetContextHolder($this->ajaxWidgetContextHolder);
 
-		$this->widgetContext = $this->getMock('F3\Fluid\Core\Widget\WidgetContext');
+		$this->widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext');
 		$this->viewHelper->injectWidgetContext($this->widgetContext);
 
-		$this->objectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
+		$this->objectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
 		$this->viewHelper->injectObjectManager($this->objectManager);
 
-		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->viewHelper->_set('controllerContext', $this->controllerContext);
 
-		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
+		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
 	}
 
 	/**
@@ -105,7 +105,7 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function callViewHelper() {
-		$viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->viewHelper->setViewHelperVariableContainer($viewHelperVariableContainer);
 
 		$this->viewHelper->expects($this->any())->method('getWidgetConfiguration')->will($this->returnValue('Some Widget Configuration'));
@@ -128,18 +128,18 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodesAddsChildNodesToWidgetContext() {
-		$node1 = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
-		$node2 = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\TextNode', array(), array(), '', FALSE);
-		$node3 = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
+		$node1 = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
+		$node2 = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', array(), array(), '', FALSE);
+		$node3 = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
 
-		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->at(0))->method('addChildNode')->with($node1);
 		$rootNode->expects($this->at(1))->method('addChildNode')->with($node2);
 		$rootNode->expects($this->at(2))->method('addChildNode')->with($node3);
 
-		$this->objectManager->expects($this->once())->method('create')->with('F3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($rootNode));
+		$this->objectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($rootNode));
 
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
+		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
 		$this->viewHelper->expects($this->once())->method('getRenderingContext')->will($this->returnValue($renderingContext));
 
 		$this->widgetContext->expects($this->once())->method('setViewHelperChildNodes')->with($rootNode, $renderingContext);
@@ -148,11 +148,11 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\Widget\Exception\MissingControllerException
+	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\MissingControllerException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initiateSubRequestThrowsExceptionIfControllerIsNoWidgetController() {
-		$controller = $this->getMock('F3\FLOW3\MVC\Controller\ControllerInterface');
+		$controller = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerInterface');
 		$this->viewHelper->_set('controller', $controller);
 
 		$this->viewHelper->_call('initiateSubRequest');
@@ -163,14 +163,14 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initiateSubRequestBuildsRequestProperly() {
-		$controller = $this->getMock('F3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);
+		$controller = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);
 		$this->viewHelper->_set('controller', $controller);
 
 		// Initial Setup
-		$widgetRequest = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('F3\FLOW3\MVC\Web\Request')));
-		$response = $this->getMock('F3\FLOW3\MVC\Web\Response');
-		$this->objectManager->expects($this->at(0))->method('create')->with('F3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
-		$this->objectManager->expects($this->at(1))->method('create')->with('F3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
+		$widgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('TYPO3\FLOW3\MVC\Web\Request')));
+		$response = $this->getMock('TYPO3\FLOW3\MVC\Web\Response');
+		$this->objectManager->expects($this->at(0))->method('create')->with('TYPO3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(1))->method('create')->with('TYPO3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
 
 		// Widget Context is set
 		$widgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->widgetContext);
@@ -206,14 +206,14 @@ class AbstractWidgetViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initiateSubRequestSetsIndexActionIfNoActionSet() {
-		$controller = $this->getMock('F3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);
+		$controller = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);
 		$this->viewHelper->_set('controller', $controller);
 
 		// Initial Setup
-		$widgetRequest = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('F3\FLOW3\MVC\Web\Request')));
-		$response = $this->getMock('F3\FLOW3\MVC\Web\Response');
-		$this->objectManager->expects($this->at(0))->method('create')->with('F3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
-		$this->objectManager->expects($this->at(1))->method('create')->with('F3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
+		$widgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('TYPO3\FLOW3\MVC\Web\Request')));
+		$response = $this->getMock('TYPO3\FLOW3\MVC\Web\Response');
+		$this->objectManager->expects($this->at(0))->method('create')->with('TYPO3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(1))->method('create')->with('TYPO3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
 
 		// Widget Context is set
 		$widgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->widgetContext);

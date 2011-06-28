@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Security;
+namespace TYPO3\Fluid\ViewHelpers\Security;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -54,21 +54,21 @@ namespace F3\Fluid\ViewHelpers\Security;
  * @api
  * @scope prototype
  */
-class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
-	 * @var F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
+	 * @var TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
 	 */
 	protected $accessDecisionManager;
 
 	/**
 	 * Injects the access decision manager
 	 *
-	 * @param F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
+	 * @param \TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
 	 * @return void
 	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
-	public function injectAccessDecisionManager(\F3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
+	public function injectAccessDecisionManager(\TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
 		$this->accessDecisionManager = $accessDecisionManager;
 	}
 
@@ -98,7 +98,7 @@ class IfAccessViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionView
 	protected function hasAccessToResource($resource) {
 		try {
 			$this->accessDecisionManager->decideOnResource($resource);
-		} catch (\F3\FLOW3\Security\Exception\AccessDeniedException $e) {
+		} catch (\TYPO3\FLOW3\Security\Exception\AccessDeniedException $e) {
 			return FALSE;
 		}
 

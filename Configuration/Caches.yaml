@@ -1,5 +1,5 @@
 Fluid_SyntaxTreeCache:
-  frontend: F3\FLOW3\Cache\Frontend\VariableFrontend
-  backend: F3\FLOW3\Cache\Backend\TransientMemoryBackend
+  frontend: TYPO3\FLOW3\Cache\Frontend\VariableFrontend
+  backend: TYPO3\FLOW3\Cache\Backend\TransientMemoryBackend
   backendOptions:
     defaultLifetime: 0

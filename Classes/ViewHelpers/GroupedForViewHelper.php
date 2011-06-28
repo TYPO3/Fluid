@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -79,7 +79,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class GroupedForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Iterates through elements of $each and renders child nodes
@@ -99,7 +99,7 @@ class GroupedForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper 
 		}
 		if (is_object($each)) {
 			if (!$each instanceof \Traversable) {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface' , 1253108907);
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface' , 1253108907);
 			}
 			$each = iterator_to_array($each);
 		}
@@ -130,9 +130,9 @@ class GroupedForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper 
 			if (is_array($value)) {
 				$currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : NULL;
 			} elseif (is_object($value)) {
-				$currentGroupIndex = \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $groupBy);
+				$currentGroupIndex = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $groupBy);
 			} else {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects' , 1253120365);
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects' , 1253120365);
 			}
 			$currentGroupKeyValue = $currentGroupIndex;
 			if (is_object($currentGroupIndex)) {

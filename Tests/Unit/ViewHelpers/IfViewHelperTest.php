@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,21 +28,21 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class IfViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\IfViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\IfViewHelper
 	 */
 	protected $viewHelper;
 
 	/**
-	 * var \F3\Fluid\Core\ViewHelper\Arguments
+	 * var \TYPO3\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $mockArguments;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\IfViewHelper', array('renderThenChild', 'renderElseChild'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\IfViewHelper', array('renderThenChild', 'renderElseChild'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

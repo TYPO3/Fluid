@@ -58,7 +58,7 @@
       <example>
         <title>Basic Fluid Example</title>
 
-        <programlisting>{namespace f=F3\Fluid\ViewHelpers}<co
+        <programlisting>{namespace f=TYPO3\Fluid\ViewHelpers}<co
             xml:id="intro.example.0"/>
 &lt;html&gt;
 &lt;head&gt;&lt;title&gt;Blog&lt;/title&gt;&lt;/head&gt;
@@ -77,7 +77,7 @@
         <calloutlist>
           <callout arearefs="intro.example.0">
             <para>The <emphasis>Namespace Import</emphasis> makes the
-            <classname>F3\Fluid\ViewHelper</classname> namespace available
+            <classname>TYPO3\Fluid\ViewHelper</classname> namespace available
             under the shorthand <code>f</code>. This is important for View
             Helpers, like the <code>&lt;f:link.action /&gt;</code> tag.</para>
           </callout>

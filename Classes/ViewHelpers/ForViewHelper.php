@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -70,7 +70,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Iterates through elements of $each and renders child nodes
@@ -92,7 +92,7 @@ class ForViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			return '';
 		}
 		if (is_object($each) && !$each instanceof \Traversable) {
-			throw new \F3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
 		}
 
 		if ($reverse === TRUE) {

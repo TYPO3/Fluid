@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Service;
+namespace TYPO3\Fluid\Service;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\Service;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class XsdGenerator extends \F3\Fluid\Service\AbstractGenerator {
+class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 
 	/**
 	 * Generate the XML Schema definition for a given namespace.
@@ -66,7 +66,7 @@ class XsdGenerator extends \F3\Fluid\Service\AbstractGenerator {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function generateXmlForClassName($className, $namespace, \SimpleXMLElement $xmlRootNode) {
-		$reflectionClass = new \F3\FLOW3\Reflection\ClassReflection($className);
+		$reflectionClass = new \TYPO3\FLOW3\Reflection\ClassReflection($className);
 		if (!$reflectionClass->isSubclassOf($this->abstractViewHelperReflectionClass)) {
 			return;
 		}

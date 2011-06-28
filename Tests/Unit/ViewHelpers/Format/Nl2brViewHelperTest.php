@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,14 +23,14 @@ namespace F3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class Nl2brViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
+class Nl2brViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDoesNotModifyTextWithoutLineBreaks() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('<p class="bodytext">Some Text without line breaks</p>'));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('<p class="bodytext">Some Text without line breaks</p>', $actualResult);
@@ -41,7 +41,7 @@ class Nl2brViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperConvertsLineBreaksToBRTags() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Line 1' . chr(10) . 'Line 2'));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('Line 1<br />' . chr(10) . 'Line 2', $actualResult);
@@ -52,7 +52,7 @@ class Nl2brViewHelperTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperConvertsWindowsLineBreaksToBRTags() {
-		$viewHelper = $this->getMock('F3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Line 1' . chr(13) . chr(10) . 'Line 2'));
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('Line 1<br />' . chr(13) . chr(10) . 'Line 2', $actualResult);

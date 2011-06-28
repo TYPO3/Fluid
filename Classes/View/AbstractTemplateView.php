@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\View;
+namespace TYPO3\Fluid\View;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,7 +28,7 @@ namespace F3\Fluid\View;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface {
+abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterface {
 
 	/**
 	 * Constants defining possible rendering types
@@ -38,17 +38,17 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	const RENDERING_LAYOUT = 3;
 
 	/**
-	 * @var \F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
-	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \F3\Fluid\Core\Parser\TemplateParser
+	 * @var \TYPO3\Fluid\Core\Parser\TemplateParser
 	 */
 	protected $templateParser;
 
@@ -57,7 +57,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * Due to the rendering stack, another rendering context might be active
 	 * at certain points while rendering the template.
 	 *
-	 * @var \F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $baseRenderingContext;
 
@@ -71,33 +71,33 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Injects the Object Manager
 	 *
-	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
 	/**
 	 * Inject the Template Parser
 	 *
-	 * @param \F3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
+	 * @param \TYPO3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function injectTemplateParser(\F3\Fluid\Core\Parser\TemplateParser $templateParser) {
+	public function injectTemplateParser(\TYPO3\Fluid\Core\Parser\TemplateParser $templateParser) {
 		$this->templateParser = $templateParser;
 	}
 
 	/**
 	 * Injects a fresh rendering context
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
-	public function setRenderingContext(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function setRenderingContext(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$this->baseRenderingContext = $renderingContext;
 		$this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
 		$this->controllerContext = $renderingContext->getControllerContext();
@@ -106,12 +106,12 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Sets the current controller context
 	 *
-	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
-	public function setControllerContext(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
@@ -123,7 +123,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 *
 	 * @param string $key The key of a view variable to set
 	 * @param mixed $value The value of the view variable
-	 * @return \F3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
+	 * @return \TYPO3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
@@ -141,7 +141,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * However, only the key "value" is accepted.
 	 *
 	 * @param array $values Keys and values - only a value with key "value" is considered
-	 * @return \F3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
+	 * @return \TYPO3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
 	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
@@ -191,7 +191,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * @param string $sectionName Name of section to render
 	 * @param array $variables the variables to use.
 	 * @return string rendered template for the section
-	 * @throws \F3\Fluid\View\Exception\InvalidSectionException
+	 * @throws \TYPO3\Fluid\View\Exception\InvalidSectionException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
@@ -201,7 +201,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 		$sections = $parsedTemplate->getVariableContainer()->get('sections');
 		if(!array_key_exists($sectionName, $sections)) {
 			$controllerObjectName = $this->controllerContext->getRequest()->getControllerObjectName();
-			throw new \F3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
+			throw new \TYPO3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
 		}
 		$section = $sections[$sectionName];
 
@@ -210,13 +210,13 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 			// in case we render a layout right now, we will render a section inside a TEMPLATE.
 			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
 		} else {
-			$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
+			$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 			$renderingContext = clone $renderingContext;
 			$renderingContext->injectTemplateVariableContainer($variableContainer);
 			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
 		}
 
-		$renderingContext->getViewHelperVariableContainer()->add('F3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection', 'TRUE');
+		$renderingContext->getViewHelperVariableContainer()->add('TYPO3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection', 'TRUE');
 
 		$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
 		$output = $section->evaluate($renderingContext);
@@ -231,7 +231,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * @param string $partialName
 	 * @param string $sectionName
 	 * @param array $variables
-	 * @param \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer the View Helper Variable container to use.
+	 * @param \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer the View Helper Variable container to use.
 	 * @return string
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
@@ -239,7 +239,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 */
 	public function renderPartial($partialName, $sectionName, array $variables) {
 		$partial = $this->templateParser->parse($this->getPartialSource($partialName));
-		$variableContainer = $this->objectManager->create('F3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
+		$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 		$renderingContext = clone $this->getCurrentRenderingContext();
 		$renderingContext->injectTemplateVariableContainer($variableContainer);
 
@@ -260,7 +260,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 *
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException in case the template was not found
+	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException in case the template was not found
 	 */
 	abstract protected function getTemplateSource($actionName = NULL);
 
@@ -274,7 +274,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 *
 	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string Path and filename of layout file
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	abstract protected function getLayoutSource($layoutName = 'Default');
 
@@ -283,21 +283,21 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 *
 	 * @param string $partialName The name of the partial
 	 * @return string the full path which should be used. The path definitely exists.
-	 * @throws \F3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	abstract protected function getPartialSource($partialName);
 
 	/**
 	 * Build parser configuration
 	 *
-	 * @return \F3\Fluid\Core\Parser\Configuration
+	 * @return \TYPO3\Fluid\Core\Parser\Configuration
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function buildParserConfiguration() {
-		$parserConfiguration = $this->objectManager->create('F3\Fluid\Core\Parser\Configuration');
+		$parserConfiguration = $this->objectManager->create('TYPO3\Fluid\Core\Parser\Configuration');
 		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
-			$parserConfiguration->addInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Escape'));
-			$parserConfiguration->addInterceptor($this->objectManager->get('F3\Fluid\Core\Parser\Interceptor\Resource'));
+			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape'));
+			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource'));
 		}
 		return $parserConfiguration;
 	}
@@ -305,11 +305,11 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Returns TRUE if there is a layout defined in the given template via a <f:layout name="..." /> tag.
 	 *
-	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
+	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
 	 * @return boolean TRUE if a layout has been defined, FALSE otherwise.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function isLayoutDefinedInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
+	protected function isLayoutDefinedInTemplate(\TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
 		$variableContainer = $parsedTemplate->getVariableContainer();
 		return ($variableContainer !== NULL && $variableContainer->exists('layoutName'));
 	}
@@ -317,19 +317,19 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Returns the name of the layout defined in the template, if one exists.
 	 *
-	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
+	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
 	 * @return string the Layout name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Rens Admiraal <r.admiraal@drecomm.nl>
 	 */
-	protected function getLayoutNameInTemplate(\F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
+	protected function getLayoutNameInTemplate(\TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
 		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
 			$layoutNameNode = $parsedTemplate->getVariableContainer()->get('layoutName');
 			$layoutName = $layoutNameNode->evaluate($this->baseRenderingContext);
 			if (!empty($layoutName)) {
 				return $layoutName;
 			}
-			throw new \F3\Fluid\View\Exception('The layoutName could not be evaluated to a string', 1296805368);
+			throw new \TYPO3\Fluid\View\Exception('The layoutName could not be evaluated to a string', 1296805368);
 		}
 		return NULL;
 	}
@@ -338,12 +338,12 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * Start a new nested rendering. Pushes the given information onto the $renderingStack.
 	 *
 	 * @param int $type one of the RENDERING_* constants
-	 * @param \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function startRendering($type, \F3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	protected function startRendering($type, \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		array_push($this->renderingStack, array('type' => $type, 'parsedTemplate' => $parsedTemplate, 'renderingContext' => $renderingContext));
 	}
 
@@ -372,7 +372,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Get the parsed template which is currently being rendered.
 	 *
-	 * @return F3\Fluid\Core\Parser\ParsedTemplateInterface
+	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getCurrentParsedTemplate() {
@@ -383,7 +383,7 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	/**
 	 * Get the rendering context which is currently used.
 	 *
-	 * @return F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getCurrentRenderingContext() {
@@ -397,11 +397,11 @@ abstract class AbstractTemplateView implements \F3\FLOW3\MVC\View\ViewInterface 
 	 * By default we assume that the view implementation can handle all kinds of
 	 * contexts. Override this method if that is not the case.
 	 *
-	 * @param \F3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean TRUE if the view has something useful to display, otherwise FALSE
 	 * @api
 	 */
-	public function canRender(\F3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function canRender(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		return TRUE;
 	}
 

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser;
+namespace TYPO3\Fluid\Core\Parser;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -22,7 +22,7 @@ namespace F3\Fluid\Core\Parser;
  *                                                                        */
 
 /**
- * This interface is returned by \F3\Fluid\Core\Parser\TemplateParser->parse()
+ * This interface is returned by \TYPO3\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -32,15 +32,15 @@ interface ParsedTemplateInterface {
 	/**
 	 * Render the parsed template with rendering context
 	 *
-	 * @param F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext The rendering context to use
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext The rendering context to use
 	 * @return Rendered string
 	 */
-	public function render(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
+	public function render(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
 
 	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
-	 * @return \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	// TODO
 	public function getVariableContainer(); // rename to getPostParseVariableContainer -- @internal definitely

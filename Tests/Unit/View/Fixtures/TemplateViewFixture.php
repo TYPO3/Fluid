@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\View\Fixture;
+namespace TYPO3\Fluid\View\Fixture;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,7 +26,7 @@ namespace F3\Fluid\View\Fixture;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TemplateViewFixture extends \F3\Fluid\View\TemplateView {
+class TemplateViewFixture extends \TYPO3\Fluid\View\TemplateView {
 
 	public $syntaxTree;
 

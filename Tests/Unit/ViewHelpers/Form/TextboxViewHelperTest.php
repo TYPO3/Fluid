@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Form;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -30,16 +30,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class TextfieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class TextfieldViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Form\TextfieldViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -49,7 +49,7 @@ class TextfieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagName() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
@@ -63,7 +63,7 @@ class TextfieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTypeNameAndValueAttributes() {
-		$mockTagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('type', 'text');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('name', 'NameOfTextfield');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('NameOfTextfield');
@@ -71,13 +71,13 @@ class TextfieldViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \F3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
 			'name' => 'NameOfTextfield',
 			'value' => 'Current value'
 		));
 		$this->viewHelper->setArguments($arguments);
 
-		$this->viewHelper->setViewHelperNode(new \F3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
+		$this->viewHelper->setViewHelperNode(new \TYPO3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}

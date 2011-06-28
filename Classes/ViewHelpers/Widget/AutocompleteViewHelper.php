@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Widget;
+namespace TYPO3\Fluid\ViewHelpers\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -36,7 +36,7 @@ namespace F3\Fluid\ViewHelpers\Widget;
  * @api
  * @scope prototype
  */
-class AutocompleteViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	/**
 	 * @var bool
@@ -45,18 +45,18 @@ class AutocompleteViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHel
 
 	/**
 	 * @inject
-	 * @var F3\Fluid\ViewHelpers\Widget\Controller\AutocompleteController
+	 * @var TYPO3\Fluid\ViewHelpers\Widget\Controller\AutocompleteController
 	 */
 	protected $controller;
 
 	/**
 	 *
-	 * @param \F3\FLOW3\Persistence\QueryResultInterface $objects
+	 * @param \TYPO3\FLOW3\Persistence\QueryResultInterface $objects
 	 * @param string $for
 	 * @param string $searchProperty
 	 * @return string
 	 */
-	public function render(\F3\FLOW3\Persistence\QueryResultInterface $objects, $for, $searchProperty) {
+	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $for, $searchProperty) {
 		return $this->initiateSubRequest();
 	}
 }

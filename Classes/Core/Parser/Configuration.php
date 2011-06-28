@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser;
+namespace TYPO3\Fluid\Core\Parser;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -39,11 +39,11 @@ class Configuration {
 	/**
 	 * Adds an interceptor to apply to values coming from object accessors.
 	 *
-	 * @param \F3\Fluid\Core\Parser\InterceptorInterface $interceptor
+	 * @param \TYPO3\Fluid\Core\Parser\InterceptorInterface $interceptor
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function addInterceptor(\F3\Fluid\Core\Parser\InterceptorInterface $interceptor) {
+	public function addInterceptor(\TYPO3\Fluid\Core\Parser\InterceptorInterface $interceptor) {
 		foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
 			if (!isset($this->interceptors[$interceptionPoint])) {
 				$this->interceptors[$interceptionPoint] = new \SplObjectStorage();
@@ -57,8 +57,8 @@ class Configuration {
 	/**
 	 * Returns all interceptors for a given Interception Point.
 	 *
-	 * @param integer $interceptionPoint one of the \F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
-	 * @return \SplObjectStorage<\F3\Fluid\Core\Parser\InterceptorInterface>
+	 * @param integer $interceptionPoint one of the \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
+	 * @return \SplObjectStorage<\TYPO3\Fluid\Core\Parser\InterceptorInterface>
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function getInterceptors($interceptionPoint) {

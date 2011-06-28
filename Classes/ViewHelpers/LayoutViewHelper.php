@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -38,7 +38,7 @@ namespace F3\Fluid\ViewHelpers;
  * @scope prototype
  * @todo refine documentation
  */
-class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper implements \F3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
+class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
 	/**
 	 * Initialize arguments
@@ -54,17 +54,17 @@ class LayoutViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	/**
 	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments
-	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		if (isset($viewHelperArguments['name'])) {
 			$layoutNameNode = $viewHelperArguments['name'];
 		} else {
-			$layoutNameNode = new \F3\Fluid\Core\Parser\SyntaxTree\TextNode('Default');
+			$layoutNameNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('Default');
 		}
 
 		$variableContainer->add('layoutName', $layoutNameNode);

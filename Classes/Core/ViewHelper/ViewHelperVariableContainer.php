@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -37,7 +37,7 @@ class ViewHelperVariableContainer {
 
 	/**
 	 *
-	 * @var F3\Fluid\View\AbstractTemplateView
+	 * @var TYPO3\Fluid\View\AbstractTemplateView
 	 */
 	protected $view;
 
@@ -47,16 +47,16 @@ class ViewHelperVariableContainer {
 	 *
 	 * In case the value is already inside, an exception is thrown.
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
 	 * @param object $value The value to store
 	 * @return void
-	 * @throws \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function add($viewHelperName, $key, $value) {
-		if ($this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('The key "' . $viewHelperName . '->' . $key . '" was already stored and you cannot override it.', 1243352010);
+		if ($this->exists($viewHelperName, $key)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('The key "' . $viewHelperName . '->' . $key . '" was already stored and you cannot override it.', 1243352010);
 		$this->addOrUpdate($viewHelperName, $key, $value);
 	}
 
@@ -65,7 +65,7 @@ class ViewHelperVariableContainer {
 	 * to your fully qualified ViewHelper Class Name.
 	 * In case the value is already inside, it is silently overridden.
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
 	 * @param object $value The value to store
 	 * @return void
@@ -81,22 +81,22 @@ class ViewHelperVariableContainer {
 	/**
 	 * Gets a variable which is stored
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
 	 * @return object The object stored
-	 * @throws \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function get($viewHelperName, $key) {
-		if (!$this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
+		if (!$this->exists($viewHelperName, $key)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
 		return $this->objects[$viewHelperName][$key];
 	}
 
 	/**
 	 * Determine whether there is a variable stored for the given key
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
 	 * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
@@ -109,26 +109,26 @@ class ViewHelperVariableContainer {
 	/**
 	 * Remove a value from the variable container
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like F3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data to remove
 	 * @return void
-	 * @throws \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function remove($viewHelperName, $key) {
-		if (!$this->exists($viewHelperName, $key)) throw new \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
+		if (!$this->exists($viewHelperName, $key)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
 		unset($this->objects[$viewHelperName][$key]);
 	}
 
 	/**
 	 * Set the view to pass it to ViewHelpers.
 	 *
-	 * @param F3\Fluid\View\AbstractTemplateView $view View to set
+	 * @param \TYPO3\Fluid\View\AbstractTemplateView $view View to set
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function setView(\F3\Fluid\View\AbstractTemplateView $view) {
+	public function setView(\TYPO3\Fluid\View\AbstractTemplateView $view) {
 		$this->view = $view;
 	}
 
@@ -137,7 +137,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * !!! This is NOT a public API and might still change!!!
 	 *
-	 * @return F3\Fluid\View\AbstractTemplateView The View
+	 * @return \TYPO3\Fluid\View\AbstractTemplateView The View
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getView() {

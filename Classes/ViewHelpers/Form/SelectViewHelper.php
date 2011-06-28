@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -65,7 +65,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @api
  * @scope prototype
  */
-class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string
@@ -95,7 +95,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		$this->registerArgument('optionLabelField', 'string', 'If specified, will call the appropriate getter on each object to determine the label.');
 		$this->registerArgument('sortByOptionLabel', 'boolean', 'If true, List will be sorted by label.', FALSE, FALSE);
 		$this->registerArgument('selectAllByDefault', 'boolean', 'If specified options are selected if none was set before.', FALSE, FALSE);
-		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'typo3-form-error');
 	}
 
 	/**
@@ -174,12 +174,12 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 			if (is_object($value)) {
 
 				if ($this->arguments->hasArgument('optionValueField')) {
-					$key = \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
+					$key = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
 					if (is_object($key)) {
 						if (method_exists($key, '__toString')) {
 							$key = (string)$key;
 						} else {
-							throw new \F3\Fluid\Core\ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
+							throw new \TYPO3\Fluid\Core\ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
 						}
 					}
 				} elseif ($this->persistenceManager->getIdentifierByObject($value) !== NULL) {
@@ -187,16 +187,16 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 				} elseif (method_exists($value, '__toString')) {
 					$key = (string)$value;
 				} else {
-					throw new \F3\Fluid\Core\ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
+					throw new \TYPO3\Fluid\Core\ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
 				}
 
 				if ($this->arguments->hasArgument('optionLabelField')) {
-					$value = \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionLabelField']);
+					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionLabelField']);
 					if (is_object($value)) {
 						if (method_exists($value, '__toString')) {
 							$value = (string)$value;
 						} else {
-							throw new \F3\Fluid\Core\ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.' , 1247827553);
+							throw new \TYPO3\Fluid\Core\ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.' , 1247827553);
 						}
 					}
 				} elseif (method_exists($value, '__toString')) {
@@ -249,7 +249,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		}
 		if (!is_array($value) && !($value instanceof Iterator)) {
 			if (is_object($value)) {
-				return \F3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
+				return \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
 			} else {
 				return $value;
 			}
@@ -257,7 +257,7 @@ class SelectViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewH
 		$selectedValues = array();
 		foreach($value as $selectedValueElement) {
 			if (is_object($selectedValueElement)) {
-				$selectedValues[] = \F3\FLOW3\Reflection\ObjectAccess::getProperty($selectedValueElement, $this->arguments['optionValueField']);
+				$selectedValues[] = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($selectedValueElement, $this->arguments['optionValueField']);
 			} else {
 				$selectedValues[] = $selectedValueElement;
 			}

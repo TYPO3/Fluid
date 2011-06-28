@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper\Exception;
+namespace TYPO3\Fluid\Core\ViewHelper\Exception;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\Core\ViewHelper\Exception;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class RenderingContextNotAccessibleException extends \F3\Fluid\Core\ViewHelper\Exception {
+class RenderingContextNotAccessibleException extends \TYPO3\Fluid\Core\ViewHelper\Exception {
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Identity;
+namespace TYPO3\Fluid\ViewHelpers\Identity;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -39,21 +39,21 @@ namespace F3\Fluid\ViewHelpers\Identity;
  * @api
  * @scope prototype
  */
-class JsonViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
 	/**
 	 * Injects the FLOW3 Persistence Manager
 	 *
-	 * @param \F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
+	 * @param \TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
-	public function injectPersistenceManager(\F3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(\TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
 	}
 
@@ -70,7 +70,7 @@ class JsonViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			$object = $this->renderChildren();
 		}
 		if (!is_object($object)) {
-			throw new \F3\Fluid\Exception('f:identity.json expects an object, ' . \gettype($object) . ' given.', 1277830439);
+			throw new \TYPO3\Fluid\Exception('f:identity.json expects an object, ' . \gettype($object) . ' given.', 1277830439);
 		}
 		$identifier = $this->persistenceManager->getIdentifierByObject($object);
 		if ($identifier === NULL) {

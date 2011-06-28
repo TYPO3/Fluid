@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Widget;
+namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,35 +26,35 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
+class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var F3\Fluid\Core\Widget\WidgetRequestBuilder
+	 * @var TYPO3\Fluid\Core\Widget\WidgetRequestBuilder
 	 */
 	protected $widgetRequestBuilder;
 
 	/**
-	 * @var F3\FLOW3\Object\ObjectManagerInterface
+	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $mockObjectManager;
 
 	/**
-	 * @var F3\Fluid\Core\Widget\WidgetRequest
+	 * @var TYPO3\Fluid\Core\Widget\WidgetRequest
 	 */
 	protected $mockWidgetRequest;
 
 	/**
-	 * @var F3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	protected $mockAjaxWidgetContextHolder;
 
 	/**
-	 * @var F3\Fluid\Core\Widget\WidgetContext
+	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	protected $mockWidgetContext;
 
 	/**
-	 * @var F3\FLOW3\Utility\Environment
+	 * @var TYPO3\FLOW3\Utility\Environment
 	 */
 	protected $mockEnvironment;
 
@@ -62,24 +62,24 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->widgetRequestBuilder = $this->getAccessibleMock('F3\Fluid\Core\Widget\WidgetRequestBuilder', array('setArgumentsFromRawRequestData'));
+		$this->widgetRequestBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder', array('setArgumentsFromRawRequestData'));
 
-		$this->mockWidgetRequest = $this->getMock('F3\FLOW3\MVC\Web\Request');
+		$this->mockWidgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
 
-		$this->mockObjectManager = $this->getMock('F3\FLOW3\Object\ObjectManagerInterface');
-		$this->mockObjectManager->expects($this->once())->method('create')->with('F3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
+		$this->mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
+		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
 
 		$this->widgetRequestBuilder->_set('objectManager', $this->mockObjectManager);
 
-		$this->mockWidgetContext = $this->getMock('F3\Fluid\Core\Widget\WidgetContext');
+		$this->mockWidgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext');
 
-		$this->mockAjaxWidgetContextHolder = $this->getMock('F3\Fluid\Core\Widget\AjaxWidgetContextHolder');
+		$this->mockAjaxWidgetContextHolder = $this->getMock('TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder');
 		$this->widgetRequestBuilder->injectAjaxWidgetContextHolder($this->mockAjaxWidgetContextHolder);
 		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->will($this->returnValue($this->mockWidgetContext));
 
-		$this->mockEnvironment = $this->getMock('F3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
-		$this->mockEnvironment->expects($this->any())->method('getRequestUri')->will($this->returnValue(new \F3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/some/widget/request')));
-		$this->mockEnvironment->expects($this->any())->method('getBaseUri')->will($this->returnValue(new \F3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/')));
+		$this->mockEnvironment = $this->getMock('TYPO3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
+		$this->mockEnvironment->expects($this->any())->method('getRequestUri')->will($this->returnValue(new \TYPO3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/some/widget/request')));
+		$this->mockEnvironment->expects($this->any())->method('getBaseUri')->will($this->returnValue(new \TYPO3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/')));
 		$this->widgetRequestBuilder->_set('environment', $this->mockEnvironment);
 	}
 
@@ -109,7 +109,7 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildSetsControllerActionNameFromGetArguments() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('action' => 'myaction', 'f3-fluid-widget-id' => '')));
+		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('action' => 'myaction', 'typo3-fluid-widget-id' => '')));
 		$this->mockWidgetRequest->expects($this->once())->method('setControllerActionName')->with('myaction');
 
 		$this->widgetRequestBuilder->build();
@@ -120,7 +120,7 @@ class WidgetRequestBuilderTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildSetsWidgetContext() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('f3-fluid-widget-id' => '123')));
+		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('typo3-fluid-widget-id' => '123')));
 		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->with('123')->will($this->returnValue($this->mockWidgetContext));
 		$this->mockWidgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->mockWidgetContext);
 

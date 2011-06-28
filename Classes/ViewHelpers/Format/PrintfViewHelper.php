@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Format;
+namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -60,7 +60,7 @@ namespace F3\Fluid\ViewHelpers\Format;
  * @api
  * @scope prototype
  */
-class PrintfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class PrintfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Format the arguments with the given printf format string.

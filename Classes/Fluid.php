@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid;
+namespace TYPO3\Fluid;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *

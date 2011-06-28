@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -32,7 +32,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class RenderChildrenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @param array $arguments
@@ -53,19 +53,19 @@ class RenderChildrenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHel
 	/**
 	 * Get the widget rendering context, or throw an exception if it cannot be found.
 	 *
-	 * @return F3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetRenderingContext() {
 		$renderingContext = $this->getWidgetContext()->getViewHelperChildNodeRenderingContext();
-		if (!($renderingContext instanceof \F3\Fluid\Core\Rendering\RenderingContextInterface)) {
-			throw new \F3\Fluid\Core\Widget\Exception\RenderingContextNotFoundException('Rendering Context not found inside Widget. <f:renderChildren> has been used in an AJAX Request, but is only usable in non-ajax mode.', 1284986604);
+		if (!($renderingContext instanceof \TYPO3\Fluid\Core\Rendering\RenderingContextInterface)) {
+			throw new \TYPO3\Fluid\Core\Widget\Exception\RenderingContextNotFoundException('Rendering Context not found inside Widget. <f:renderChildren> has been used in an AJAX Request, but is only usable in non-ajax mode.', 1284986604);
 		}
 		return $renderingContext;
 	}
 
 	/**
-	 * @return F3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetChildNodes() {
@@ -73,14 +73,14 @@ class RenderChildrenViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHel
 	}
 
 	/**
-	 * @return F3\Fluid\Core\Widget\WidgetContext
+	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetContext() {
 		$request = $this->controllerContext->getRequest();
 		$widgetContext = $request->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
-			throw new \F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The Request does not contain a widget context! <f:renderChildren> must be called inside a Widget Template.', 1284986120);
+			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The Request does not contain a widget context! <f:renderChildren> must be called inside a Widget Template.', 1284986120);
 		}
 
 		return $widgetContext;

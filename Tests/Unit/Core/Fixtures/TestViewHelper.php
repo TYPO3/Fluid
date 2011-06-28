@@ -1,7 +1,7 @@
 <?php
-namespace F3\Fluid\Core\Fixtures;
+namespace TYPO3\Fluid\Core\Fixtures;
 
-class TestViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class TestViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * My comments. Bla blubb.

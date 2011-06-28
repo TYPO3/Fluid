@@ -2,8 +2,7 @@
 # Settings Configuration for the Fluid Package                           #
 #                                                                        #
 
-# $Id:$
-
-Fluid:
-  syntaxTreeCache:
-    enable: y
+TYPO3:
+  Fluid:
+    syntaxTreeCache:
+      enable: y

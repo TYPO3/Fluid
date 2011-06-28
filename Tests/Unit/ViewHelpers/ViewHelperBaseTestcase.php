@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,45 +23,45 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  */
-abstract class ViewHelperBaseTestcase extends \F3\FLOW3\Tests\UnitTestCase {
+abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @var \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 
 	/**
-	 * @var \F3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
 
 	/**
-	 * @var \F3\FLOW3\MVC\Web\Routing\UriBuilder
+	 * @var \TYPO3\FLOW3\MVC\Web\Routing\UriBuilder
 	 */
 	protected $uriBuilder;
 
 	/**
-	 * @var \F3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
-	 * @var \F3\Fluid\Core\ViewHelper\TagBuilder
+	 * @var \TYPO3\Fluid\Core\ViewHelper\TagBuilder
 	 */
 	protected $tagBuilder;
 
 	/**
-	 * @var \F3\Fluid\Core\ViewHelper\Arguments
+	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $arguments;
 
 	/**
-	 * @var \F3\FLOW3\MVC\Web\Request
+	 * @var \TYPO3\FLOW3\MVC\Web\Request
 	 */
 	protected $request;
 
 	/**
-	 * @var F3\Fluid\Core\Rendering\RenderingContext
+	 * @var TYPO3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 
@@ -70,9 +70,9 @@ abstract class ViewHelperBaseTestcase extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->viewHelperVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$this->templateVariableContainer = $this->getMock('F3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->uriBuilder = $this->getMock('F3\FLOW3\MVC\Web\Routing\UriBuilder');
+		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
+		$this->uriBuilder = $this->getMock('TYPO3\FLOW3\MVC\Web\Routing\UriBuilder');
 		$this->uriBuilder->expects($this->any())->method('reset')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setArguments')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setSection')->will($this->returnValue($this->uriBuilder));
@@ -81,27 +81,27 @@ abstract class ViewHelperBaseTestcase extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->uriBuilder->expects($this->any())->method('setAddQueryString')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setArgumentsToBeExcludedFromQueryString')->will($this->returnValue($this->uriBuilder));
 		// BACKPORTER TOKEN #1
-		$this->request = $this->getMock('F3\FLOW3\MVC\Web\Request');
-		$this->controllerContext = $this->getMock('F3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
+		$this->controllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
-		$this->tagBuilder = $this->getMock('F3\Fluid\Core\ViewHelper\TagBuilder');
-		$this->arguments = $this->getMock('F3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext');
+		$this->tagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder');
+		$this->arguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
+		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext');
 	}
 
 	/**
-	 * @param \F3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper
+	 * @param \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper
 	 * @return void
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	protected function injectDependenciesIntoViewHelper(\F3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper) {
+	protected function injectDependenciesIntoViewHelper(\TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper) {
 		$viewHelper->setViewHelperVariableContainer($this->viewHelperVariableContainer);
 		$viewHelper->setTemplateVariableContainer($this->templateVariableContainer);
 		$viewHelper->setControllerContext($this->controllerContext);
 		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->setArguments($this->arguments);
-		if ($viewHelper instanceof \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper) {
+		if ($viewHelper instanceof \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper) {
 			$viewHelper->injectTagBuilder($this->tagBuilder);
 		}
 	}

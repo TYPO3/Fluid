@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Fixtures;
+namespace TYPO3\Fluid\ViewHelpers\Fixtures;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,14 +26,14 @@ namespace F3\Fluid\ViewHelpers\Fixtures;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
+class ConstraintSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	public $callProtocol = array();
 	
-	public function __construct(\F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+	public function __construct(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 	
-	public function evaluateChildNodes(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluateChildNodes(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$identifiers = $this->variableContainer->getAllIdentifiers();
 		$callElement = array();
 		foreach ($identifiers as $identifier) {
@@ -42,7 +42,7 @@ class ConstraintSyntaxTreeNode extends \F3\Fluid\Core\Parser\SyntaxTree\ViewHelp
 		$this->callProtocol[] = $callElement;
 	}
 	
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {}
+	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {}
 }
 
 

@@ -71,11 +71,11 @@
           <para>The SyntaxTree is implemented using a
           <emphasis>Composite</emphasis> design pattern, with all syntax tree
           nodes extending
-          <classname>\F3\Fluid\Core\SyntaxTree\AbstractNode</classname>.</para>
+          <classname>\TYPO3\Fluid\Core\SyntaxTree\AbstractNode</classname>.</para>
         </listitem>
 
         <listitem>
-          <para>Call the <methodname>render(\F3\Fluid\Core\VariableContainer
+          <para>Call the <methodname>render(\TYPO3\Fluid\Core\VariableContainer
           $variableContainer)</methodname> method. This method needs a
           <classname>VariableContainer</classname> as argument - this means
           all bound variables which should be rendered.</para>

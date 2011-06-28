@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Widget\Controller;
+namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -24,7 +24,7 @@ namespace F3\Fluid\ViewHelpers\Widget\Controller;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AutocompleteController extends \F3\Fluid\Core\Widget\AbstractWidgetController {
+class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 	/**
 	 * @return void
@@ -58,7 +58,7 @@ class AutocompleteController extends \F3\Fluid\Core\Widget\AbstractWidgetControl
 		$output = array();
 		$values = array();
 		foreach ($results as $singleResult) {
-			$val = \F3\FLOW3\Reflection\ObjectAccess::getProperty($singleResult, $searchProperty);
+			$val = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($singleResult, $searchProperty);
 			if (isset($values[$val])) continue;
 			$values[$val] = TRUE;
 			$output[] = array(

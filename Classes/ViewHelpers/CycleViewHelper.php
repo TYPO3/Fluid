@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -56,7 +56,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class CycleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * the values to be iterated through
@@ -108,7 +108,7 @@ class CycleViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	protected function initializeValues($values) {
 		if (is_object($values)) {
 			if (!$values instanceof \Traversable) {
-				throw new \F3\Fluid\Core\ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
 			}
 			$this->values = iterator_to_array($values, FALSE);
 		} else {

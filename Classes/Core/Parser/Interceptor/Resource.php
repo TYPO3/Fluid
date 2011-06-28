@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser\Interceptor;
+namespace TYPO3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -36,7 +36,7 @@ namespace F3\Fluid\Core\Parser\Interceptor;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
+class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
 	 * Split a text at what seems to be a package resource URI.
@@ -56,7 +56,7 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Is the text at hand a resource URI and what are path/package?
 	 * @var string
-	 * @see \F3\FLOW3\Pckage\Package::PATTERN_MATCH_PACKAGEKEY
+	 * @see \TYPO3\FLOW3\Pckage\Package::PATTERN_MATCH_PACKAGEKEY
 	 */
 	const PATTERN_MATCH_RESOURCE_URI = '!(?:../)*(?:(?P<Package>[A-Z][A-Za-z0-9_]+)/Resources/)?Public/(?P<Path>[^"]+)!';
 
@@ -70,11 +70,11 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Inject object factory
 	 *
-	 * @param \F3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function injectObjectManager(\F3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -85,7 +85,7 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setDefaultPackageKey($defaultPackageKey) {
-		if (!preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {
+		if (!preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {
 			throw new \InvalidArgumentException('The given argument was not a valid package key.', 1277287099);
 		}
 		$this->defaultPackageKey = $defaultPackageKey;
@@ -95,33 +95,33 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 * Looks for URIs pointing to package resources and in place of those adds
 	 * ViewHelperNode instances using the ResourceViewHelper.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @param \F3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface the modified node
+	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface the modified node
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState) {
+	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if (strpos($node->getText(), 'Public/') === FALSE) {
 			return $node;
 		}
 		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
-		$node = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
+		$node = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
 		foreach ($textParts as $part) {
 			$matches = array();
 			if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
 				$arguments = array(
-					'path' => $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
+					'path' => $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
 				);
-				if (isset($matches['Package']) && preg_match(\F3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
-					$arguments['package'] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
+				if (isset($matches['Package']) && preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
+					$arguments['package'] = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
 				} elseif ($this->defaultPackageKey !== NULL) {
-					$arguments['package'] = $this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $this->defaultPackageKey);
+					$arguments['package'] = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $this->defaultPackageKey);
 				}
-				$viewHelper = $this->objectManager->create('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
-				$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
+				$viewHelper = $this->objectManager->create('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
+				$node->addChildNode($this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
 			} else {
-				$node->addChildNode($this->objectManager->create('F3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
+				$node->addChildNode($this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 			}
 		}
 
@@ -135,7 +135,7 @@ class Resource implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 */
 	public function getInterceptionPoints() {
 		return array(
-			\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT
+			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_TEXT
 		);
 	}
 }

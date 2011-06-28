@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Uri;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -29,17 +29,17 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \F3\Fluid\ViewHelpers\Uri\ResourceViewHelper
+	 * var \TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->mockResourcePublisher = $this->getMock('F3\FLOW3\Resource\Publishing\ResourcePublisher');
-		$this->viewHelper = $this->getAccessibleMock('F3\Fluid\ViewHelpers\Uri\ResourceViewHelper', array('renderChildren'), array(), '', FALSE);
+		$this->mockResourcePublisher = $this->getMock('TYPO3\FLOW3\Resource\Publishing\ResourcePublisher');
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->viewHelper->injectResourcePublisher($this->mockResourcePublisher);
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
@@ -82,7 +82,7 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderUsesProvidedResourceObjectInsteadOfPackageAndPath() {
-		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
 
 		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2.jpg'));
 
@@ -95,7 +95,7 @@ class ResourceViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderCreatesASpecialBrokenResourceUriIfTheResourceCouldNotBePublished() {
-		$mockResource = $this->getMock('F3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
 
 		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue(FALSE));
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('http://foo/MyOwnResources/'));

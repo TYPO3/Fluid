@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -40,7 +40,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @scope prototype
  * @deprecated since 1.0.0 alpha 7
  */
-class TextboxViewHelper extends \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper {
+class TextboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper {
 	// BACKPORTER-TOKEN-1
 }
 

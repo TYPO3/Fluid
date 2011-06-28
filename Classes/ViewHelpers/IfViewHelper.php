@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -23,7 +23,7 @@ namespace F3\Fluid\ViewHelpers;
 
 /**
  * This view helper implements an if/else condition.
- * @see F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
+ * @see TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
  *
  * = Conditions =
  *
@@ -91,7 +91,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
 	 * renders <f:then> child if $condition is true, otherwise renders <f:else> child.

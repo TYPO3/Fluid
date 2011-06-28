@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser;
+namespace TYPO3\Fluid\Core\Parser;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -38,12 +38,12 @@ interface InterceptorInterface {
 	 * The interceptor can process the given node at will and must return a node
 	 * that will be used in place of the given node.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @param \F3\Fluid\Core\Parser\ParsingState $parsingState the parsing state
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $parsingState the parsing state
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState);
+	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState);
 
 	/**
 	 * The interceptor should define at which interception positions it wants to be called.

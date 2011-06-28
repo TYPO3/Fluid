@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,16 +28,16 @@ require_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ViewHelperVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
+class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 *
-	 * @var F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @var TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 
 	protected function setUp() {
-		$this->viewHelperVariableContainer = new \F3\Fluid\Core\ViewHelper\ViewHelperVariableContainer();
+		$this->viewHelperVariableContainer = new \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer();
 	}
 	/**
 	 * @test
@@ -45,30 +45,30 @@ class ViewHelperVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function storedDataCanBeReadOutAgain() {
 		$variable = 'Hello world';
-		$this->assertFalse($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\TestViewHelper', 'test'));
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelpers\TestViewHelper', 'test', $variable);
-		$this->assertTrue($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\TestViewHelper', 'test'));
+		$this->assertFalse($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\TestViewHelper', 'test'));
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\TestViewHelper', 'test', $variable);
+		$this->assertTrue($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\TestViewHelper', 'test'));
 
-		$this->assertEquals($variable, $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\TestViewHelper', 'test'));
+		$this->assertEquals($variable, $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\TestViewHelper', 'test'));
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function gettingNonNonExistentValueThrowsException() {
-		$this->viewHelperVariableContainer->get('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
+		$this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function settingKeyWhichIsAlreadyStoredThrowsException() {
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
 	}
 
 	/**
@@ -76,9 +76,9 @@ class ViewHelperVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addOrUpdateWorks() {
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
-		$this->viewHelperVariableContainer->addOrUpdate('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
-		$this->assertEquals($this->viewHelperVariableContainer->get('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'), 'value2');
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
+		$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
+		$this->assertEquals($this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'), 'value2');
 	}
 
 	/**
@@ -86,18 +86,18 @@ class ViewHelperVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function aSetValueCanBeRemovedAgain() {
-		$this->viewHelperVariableContainer->add('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
-		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
-		$this->assertFalse($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'));
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
+		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
+		$this->assertFalse($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'));
 	}
 
 	/**
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @expectedException \F3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function removingNonExistentKeyThrowsException() {
-		$this->viewHelperVariableContainer->remove('F3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
+		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
 	}
 
 	/**
@@ -105,7 +105,7 @@ class ViewHelperVariableContainerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewCanBeReadOutAgain() {
-		$view = $this->getMock('F3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'hasTemplate', 'canRender'));
+		$view = $this->getMock('TYPO3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'hasTemplate', 'canRender'));
 		$this->viewHelperVariableContainer->setView($view);
 		$this->assertSame($view, $this->viewHelperVariableContainer->getView());
 	}

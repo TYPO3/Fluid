@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Form;
+namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -38,7 +38,7 @@ namespace F3\Fluid\ViewHelpers\Form;
  * @api
  * @scope prototype
  */
-class TextareaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class TextareaViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string
@@ -57,7 +57,7 @@ class TextareaViewHelper extends \F3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 		$this->registerTagAttribute('rows', 'int', 'The number of rows of a text area', TRUE);
 		$this->registerTagAttribute('cols', 'int', 'The number of columns of a text area', TRUE);
 		$this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
-		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'typo3-form-error');
 		$this->registerUniversalTagAttributes();
 	}
 

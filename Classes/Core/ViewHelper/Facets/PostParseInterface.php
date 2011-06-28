@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\ViewHelper\Facets;
+namespace TYPO3\Fluid\Core\ViewHelper\Facets;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -28,7 +28,7 @@ namespace F3\Fluid\Core\ViewHelper\Facets;
  *
  * In the callback, it is possible to store some variables inside the
  * parseVariableContainer (which is different from the runtime variable container!).
- * This implicates that you usually have to adjust the \F3\Fluid\View\TemplateView
+ * This implicates that you usually have to adjust the \TYPO3\Fluid\View\TemplateView
  * in case you implement this facet.
  *
  * Normally, this facet is not needed, except in really really rare cases.
@@ -46,12 +46,12 @@ interface PostParseInterface {
 	 * You can store some data inside the variableContainer given here, which
 	 * can be used f.e. inside the TemplateView.
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
 	 * @param array $viewHelperArguments View helper arguments as an array of SyntaxTrees. If you really need an argument, make sure to call $viewHelperArguments[$argName]->render(...)!
-	 * @param \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
+	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
 	 * @return void
 	 */
-	static public function postParseEvent(\F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \F3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer);
+	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer);
 
 }
 

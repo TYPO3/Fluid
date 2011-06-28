@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers;
+namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -44,7 +44,7 @@ namespace F3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class CountViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * Counts the items of a given property.
@@ -60,7 +60,7 @@ class CountViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			$subject = $this->renderChildren();
 		}
 		if (is_object($subject) && !$subject instanceof \Countable) {
-			throw new \F3\Fluid\Core\ViewHelper\Exception('CountViewHelper only supports arrays and objects implementing \Countable interface. Given: "' . get_class($subject) . '"', 1279808078);
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('CountViewHelper only supports arrays and objects implementing \Countable interface. Given: "' . get_class($subject) . '"', 1279808078);
 		}
 		return count($subject);
 	}

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -27,7 +27,7 @@ namespace F3\Fluid\Core\Parser\SyntaxTree;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
-class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * Object path which will be called. Is a list like "post.name.email"
@@ -59,12 +59,12 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * The first part of the object path has to be a variable in the
 	 * TemplateVariableContainer.
 	 *
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return object The evaluated object, can be any object type.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function evaluate(\F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->getPropertyPath($renderingContext->getTemplateVariableContainer(), $this->objectPath, $renderingContext);
 	}
 
@@ -78,21 +78,21 @@ class ObjectAccessorNode extends \F3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param mixed $subject An object or array
 	 * @param string $propertyPath
-	 * @param \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Value of the property
 	 */
-	protected function getPropertyPath($subject, $propertyPath, \F3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	protected function getPropertyPath($subject, $propertyPath, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$propertyPathSegments = explode('.', $propertyPath);
 		foreach ($propertyPathSegments as $pathSegment) {
-			if (is_object($subject) && \F3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($subject, $pathSegment)) {
-				$subject = \F3\FLOW3\Reflection\ObjectAccess::getProperty($subject, $pathSegment);
+			if (is_object($subject) && \TYPO3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($subject, $pathSegment)) {
+				$subject = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($subject, $pathSegment);
 			} elseif ((is_array($subject) || $subject instanceof \ArrayAccess) && isset($subject[$pathSegment])) {
 				$subject = $subject[$pathSegment];
 			} else {
 				return NULL;
 			}
 
-			if ($subject instanceof \F3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
+			if ($subject instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
 				$subject->setRenderingContext($renderingContext);
 			}
 		}

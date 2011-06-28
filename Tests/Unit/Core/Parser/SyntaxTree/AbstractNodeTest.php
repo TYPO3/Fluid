@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -24,7 +24,7 @@ namespace F3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AbstractNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
+class AbstractNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	protected $renderingContext;
 
@@ -33,11 +33,11 @@ class AbstractNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	protected $childNode;
 
 	public function setUp() {
-		$this->renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
+		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
 
-		$this->abstractNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
+		$this->abstractNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
 
-		$this->childNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
+		$this->childNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
 		$this->abstractNode->addChildNode($this->childNode);
 	}
 

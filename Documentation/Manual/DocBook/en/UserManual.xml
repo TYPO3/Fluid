@@ -101,7 +101,7 @@
       <para><example>
           <title>Tags and Namespace declarations</title>
 
-          <programlisting>{namespace f=F3\Fluid\ViewHelpers}⁄<co
+          <programlisting>{namespace f=TYPO3\Fluid\ViewHelpers}⁄<co
               xml:id="co.tags-example.1" />
 &lt;f:link.action controller="Administration"&gt;Administration&lt;/f:link.action&gt;<co
               xml:id="co.tags-example.2" /></programlisting>
@@ -109,9 +109,9 @@
           <calloutlist>
             <callout arearefs="co.tags-example.1">
               <para><emphasis>Namespace Declaration:</emphasis> You import the
-              PHP Namespace <code>F3\Fluid\ViewHelpers</code> under the prefix
+              PHP Namespace <code>TYPO3\Fluid\ViewHelpers</code> under the prefix
               <code>f</code>. The above namespace import <code>{namespace
-              f=F3\Fluid\ViewHelpers}</code> is imported by default. All other
+              f=TYPO3\Fluid\ViewHelpers}</code> is imported by default. All other
               namespaces need to be imported explicitely.<footnote>
                   <para>This is like an XML namespace import, just with a
                   different syntax.</para>
@@ -132,7 +132,7 @@
 
           <para>The <code>&lt;f3:link.action /&gt;</code> tag is implemented
           in the class
-          <classname>F3\Fluid\ViewHelpers\Link\ActionViewHelper</classname>.</para>
+          <classname>TYPO3\Fluid\ViewHelpers\Link\ActionViewHelper</classname>.</para>
         </example></para>
 
       <para>The class name of such a view helper is constructed for a given
@@ -140,7 +140,7 @@
           <listitem>
             <para>The first part of the class name is the namespace which was
             imported (the namespace prefix f was expanded to its full
-            namespace <code>F3\Fluid\ViewHelpers</code>)</para>
+            namespace <code>TYPO3\Fluid\ViewHelpers</code>)</para>
           </listitem>
 
           <listitem>
@@ -480,7 +480,7 @@
 
     <para>If you want to create a view helper which you can call from your
     template (as a tag), you just write a plain PHP class which needs to
-    inherit from <classname>F3\Fluid\Core\AbstractViewHelper</classname> (or
+    inherit from <classname>TYPO3\Fluid\Core\AbstractViewHelper</classname> (or
     its subclasses). You need to implement only one method to write a view
     helper:</para>
 
@@ -492,9 +492,9 @@
       <para>We refresh what we have learned so far: When a user writes
       something like <code>&lt;blog:displayNews /&gt;</code> inside a template
       (and has imported the "blog" namespace to
-      <classname>F3\Blog\ViewHelpers</classname>), Fluid will automatically
+      <classname>TYPO3\Blog\ViewHelpers</classname>), Fluid will automatically
       instanciate the class
-      <classname>F3\Blog\ViewHelpers\DisplayNewsViewHelper</classname>, and
+      <classname>TYPO3\Blog\ViewHelpers\DisplayNewsViewHelper</classname>, and
       invoke the <methodname>render()</methodname> method on it.</para>
 
       <para>This <methodname>render()</methodname> method should return the
@@ -517,7 +517,7 @@
           <listitem>
             <para><code>$this-&gt;templateVariableContainer</code> is an
             instance of
-            <classname>F3\Fluid\Core\ViewHelper\TemplateVariableContainer</classname>,
+            <classname>TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer</classname>,
             with which you have access to all variables currently available in
             the template.</para>
 
@@ -651,7 +651,7 @@
       an <code>&lt;a href="..."&gt;</code> tag. This often leads to repetitive
       code like below. (Don't look at the code too thoroughly, it should just
       demonstrate the boring and repetitive task one would have without the
-      AbstractTagBasedViewHelper).<programlisting>class LinkViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+      AbstractTagBasedViewHelper).<programlisting>class LinkViewHelper extends \TYPO3\Fluid\Core\AbstractViewHelper {
   public function initializeArguments() {
     $this-&gt;registerArgument('class', 'string', 'CSS class to add to the link');
     $this-&gt;registerArgument('target', 'string', 'Target for the link');
@@ -691,7 +691,7 @@
       a tag a lot more straightforward</para>
 
       <para>With the above methods we get, the <code>LinkViewHelper</code>
-      from above can be condensed as follows:<programlisting>class LinkViewHelper extends \F3\Fluid\Core\AbstractViewHelper {
+      from above can be condensed as follows:<programlisting>class LinkViewHelper extends \TYPO3\Fluid\Core\AbstractViewHelper {
 	public function initializeArguments() {
 		$this-&gt;registerUniversalTagAttributes();
 	}
@@ -767,7 +767,7 @@
         that as follows:<programlisting>&lt;f:link.action ... additionalAttributes="{fadeDuration : 800}"&gt;Link with fadeDuration set&lt;/f:link.action&gt;</programlisting></para>
 
         <para>This attribute is available in all tags that inherit from
-        <classname>F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper</classname>.</para>
+        <classname>TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper</classname>.</para>
       </section>
     </section>
 
@@ -782,7 +782,7 @@
       be quite self-explanatory:</para>
 
       <programlisting>&lt;?php
-class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
 	 * renders &lt;f:then&gt; child if $condition is true, otherwise renders &lt;f:else&gt; child.
@@ -891,7 +891,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper
         <title>ViewHelper</title>
 
         <para>All widgets inherit from
-        <classname>F3\Fluid\Core\Widget\AbstractWidgetViewHelper</classname>.
+        <classname>TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper</classname>.
         The ViewHelper of the widget is the main entry point; it controls the
         widget and sets necessary configuration for the widget.</para>
 
@@ -928,7 +928,7 @@ class IfViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractConditionViewHelper
         <title>Controller</title>
 
         <para>A widget contains one controller, which must inherit from
-        <classname>F3\Fluid\Core\Widget\AbstractWidgetController</classname>,
+        <classname>TYPO3\Fluid\Core\Widget\AbstractWidgetController</classname>,
         which is an <classname>ActionController</classname>. There is only one
         difference between the normal ActionController which you are used to,
         and the <classname>AbstractWidgetController</classname>, which is the

@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Parser;
+namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,16 +26,16 @@ namespace F3\Fluid\Tests\Unit\Core\Parser;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ParsingStateTest extends \F3\FLOW3\Tests\UnitTestCase {
+class ParsingStateTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * Parsing state
-	 * @var \F3\Fluid\Core\Parser\ParsingState
+	 * @var \TYPO3\Fluid\Core\Parser\ParsingState
 	 */
 	protected $parsingState;
 
 	public function setUp() {
-		$this->parsingState = new \F3\Fluid\Core\Parser\ParsingState();
+		$this->parsingState = new \TYPO3\Fluid\Core\Parser\ParsingState();
 	}
 	public function tearDown() {
 		unset($this->parsingState);
@@ -46,7 +46,7 @@ class ParsingStateTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNodeCanBeReadOutAgain() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$this->parsingState->setRootNode($rootNode);
 		$this->assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
 	}
@@ -56,7 +56,7 @@ class ParsingStateTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pushAndGetFromStackWorks() {
-		$rootNode = new \F3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$this->parsingState->pushNodeToStack($rootNode);
 		$this->assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
 		$this->assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
@@ -67,9 +67,9 @@ class ParsingStateTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
-		$renderingContext = $this->getMock('F3\Fluid\Core\Rendering\RenderingContextInterface');
+		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
 
-		$rootNode = $this->getMock('F3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
 		$this->parsingState->setRootNode($rootNode);
 		$renderedValue = $this->parsingState->render($renderingContext);

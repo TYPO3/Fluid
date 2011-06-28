@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\Core\Widget;
+namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -26,18 +26,18 @@ namespace F3\Fluid\Tests\Unit\Core\Widget;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class AbstractWidgetControllerTest extends \F3\FLOW3\Tests\UnitTestCase {
+class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException F3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
+	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function processRequestShouldThrowExceptionIfWidgetContextNotFound() {
-		$request = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
-		$response = $this->getMock('F3\FLOW3\MVC\ResponseInterface');
+		$request = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
+		$response = $this->getMock('TYPO3\FLOW3\MVC\ResponseInterface');
 
-		$abstractWidgetController = $this->getMock('F3\Fluid\Core\Widget\AbstractWidgetController', array('dummy'), array(), '', FALSE);
+		$abstractWidgetController = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('dummy'), array(), '', FALSE);
 		$abstractWidgetController->processRequest($request, $response);
 	}
 
@@ -47,17 +47,17 @@ class AbstractWidgetControllerTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function processRequestShouldSetWidgetConfiguration() {
 
-		$widgetContext = $this->getMock('F3\Fluid\Core\Widget\WidgetContext', array('getWidgetConfiguration'));
+		$widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext', array('getWidgetConfiguration'));
 		$widgetContext->expects($this->once())->method('getWidgetConfiguration')->will($this->returnValue('myConfiguration'));
 
-		$request = $this->getMock('F3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
+		$request = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
 		$request->setArgument('__widgetContext', $widgetContext);
 
-		$response = $this->getMock('F3\FLOW3\MVC\ResponseInterface');
+		$response = $this->getMock('TYPO3\FLOW3\MVC\ResponseInterface');
 
-		$abstractWidgetController = $this->getAccessibleMock('F3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
-		$abstractWidgetController->_set('argumentsMappingResults', new \F3\FLOW3\Error\Result());
-		$abstractWidgetController->injectFlashMessageContainer(new \F3\FLOW3\MVC\Controller\FlashMessageContainer());
+		$abstractWidgetController = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
+		$abstractWidgetController->_set('argumentsMappingResults', new \TYPO3\FLOW3\Error\Result());
+		$abstractWidgetController->injectFlashMessageContainer(new \TYPO3\FLOW3\MVC\Controller\FlashMessageContainer());
 
 		$abstractWidgetController->processRequest($request, $response);
 

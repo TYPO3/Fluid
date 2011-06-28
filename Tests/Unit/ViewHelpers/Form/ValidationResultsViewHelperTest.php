@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\Tests\Unit\ViewHelpers\Form;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -29,7 +29,7 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ValidationResultsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
@@ -37,15 +37,15 @@ class ValidationResultsViewHelperTest extends \F3\Fluid\ViewHelpers\ViewHelperBa
 	 */
 	public function renderWithoutSpecifiedNameLoopsThroughRootErrors() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-		$mockError1 = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
-		$mockError2 = $this->getMock('F3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError1 = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError2 = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
 		$this->request->expects($this->atLeastOnce())->method('getErrors')->will($this->returnValue(array($mockError1, $mockError2)));
 
-		$viewHelper = new \F3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper();
+		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$variableContainer = new \F3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
-		$viewHelperNode = new \F3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
+		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
+		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
 		$viewHelper->setViewHelperNode($viewHelperNode);
 		$viewHelper->setTemplateVariableContainer($variableContainer);
 

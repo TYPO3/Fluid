@@ -1,5 +1,5 @@
 <?php
-namespace F3\Fluid\ViewHelpers\Link;
+namespace TYPO3\Fluid\ViewHelpers\Link;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -44,7 +44,7 @@ namespace F3\Fluid\ViewHelpers\Link;
  * @api
  * @scope prototype
  */
-class ExternalViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class ExternalViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
 	 * @var string
