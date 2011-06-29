@@ -56,6 +56,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  */
 class RawViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
+	/**
+	 * @var boolean
+	 */
 	var $escapingInterceptorEnabled = FALSE;
 
 	/**

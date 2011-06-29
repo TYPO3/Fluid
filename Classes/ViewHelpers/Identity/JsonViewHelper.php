@@ -42,7 +42,12 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
 class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var boolean
+	 */
+	var $escapingInterceptorEnabled = FALSE;
+
+	/**
+	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 

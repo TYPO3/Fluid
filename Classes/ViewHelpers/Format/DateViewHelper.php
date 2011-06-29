@@ -81,6 +81,11 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	var $escapingInterceptorEnabled = FALSE;
+
+	/**
 	 * Render the supplied DateTime object as a formatted date.
 	 *
 	 * @param mixed $date either a \DateTime object or a string that is accepted by \DateTime constructor
