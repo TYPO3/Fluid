@@ -50,7 +50,7 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * extractNamespaceDefinitions($templateString)
 	 * splitTemplateAtDynamicTags($templateString)
 	 * buildObjectTree($splitTemplate)
-	 * 
+	 *
 	 * @test
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
@@ -86,7 +86,7 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function extractNamespaceDefinitionsThrowsExceptionIfNamespaceIsRedeclared() {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
-		$templateParser->_call('extractNamespaceDefinitions', '{namespace f3=TYPO3\Fluid\Blablubb} {namespace f3= TYPO3\Rocks\Blu}');
+		$templateParser->_call('extractNamespaceDefinitions', '{namespace typo3=TYPO3\Fluid\Blablubb} {namespace typo3= TYPO3\Rocks\Blu}');
 	}
 
 
@@ -153,9 +153,9 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function splitTemplateAtDynamicTagsReturnsCorrectlySplitTemplate($templateName) {
 		$template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html', FILE_TEXT);
-		$result = require(__DIR__ . '/Fixtures/' . $templateName . '-split.php');
+		$expectedResult = require(__DIR__ . '/Fixtures/' . $templateName . '-split.php');
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
-		$this->assertSame($result, $templateParser->_call('splitTemplateAtDynamicTags', $template));
+		$this->assertSame($expectedResult, $templateParser->_call('splitTemplateAtDynamicTags', $template), 'Filed for ' . $templateName);
 	}
 
 	/**
@@ -216,13 +216,13 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('textHandler', 'openingViewHelperTagHandler', 'closingViewHelperTagHandler', 'textAndShorthandSyntaxHandler'));
 		$templateParser->injectObjectManager($mockObjectManager);
 		$templateParser->expects($this->at(0))->method('textAndShorthandSyntaxHandler')->with($mockState, 'The first part is simple');
-		$templateParser->expects($this->at(1))->method('textHandler')->with($mockState, '<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f3:for each="{array}" as="value">{value} </f3:for>');
+		$templateParser->expects($this->at(1))->method('textHandler')->with($mockState, '<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>');
 		$templateParser->expects($this->at(2))->method('openingViewHelperTagHandler')->with($mockState, 'f', 'format.printf', ' arguments="{number : 362525200}"', FALSE);
 		$templateParser->expects($this->at(3))->method('textAndShorthandSyntaxHandler')->with($mockState, '%.3e');
 		$templateParser->expects($this->at(4))->method('closingViewHelperTagHandler')->with($mockState, 'f', 'format.printf');
 		$templateParser->expects($this->at(5))->method('textAndShorthandSyntaxHandler')->with($mockState, 'and here goes some {text} that could have {shorthand}');
 
-		$splitTemplate = $templateParser->_call('splitTemplateAtDynamicTags', 'The first part is simple<![CDATA[<f3:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f3:for each="{array}" as="value">{value} </f3:for>]]><f:format.printf arguments="{number : 362525200}">%.3e</f:format.printf>and here goes some {text} that could have {shorthand}');
+		$splitTemplate = $templateParser->_call('splitTemplateAtDynamicTags', 'The first part is simple<![CDATA[<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>]]><f:format.printf arguments="{number : 362525200}">%.3e</f:format.printf>and here goes some {text} that could have {shorthand}');
 
 		$templateParser->_call('buildObjectTree', $splitTemplate);
 	}

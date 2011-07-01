@@ -130,7 +130,7 @@
           view helper, there exists a corresponding PHP class.</emphasis>
           Let's see how this works for the example above:</para>
 
-          <para>The <code>&lt;f3:link.action /&gt;</code> tag is implemented
+          <para>The <code>&lt;f:link.action /&gt;</code> tag is implemented
           in the class
           <classname>TYPO3\Fluid\ViewHelpers\Link\ActionViewHelper</classname>.</para>
         </example></para>
@@ -227,7 +227,7 @@
           <title>Using boolean expressions</title>
 
           <para><programlisting>&lt;f:for each="{blogPosts}" as="post"&gt;
-  &lt;f:if condition="<emphasis>{post} == {currentBlogPosting}</emphasis>"&gt;... some special output here ...&lt;/f:if&gt; 
+  &lt;f:if condition="<emphasis>{post} == {currentBlogPosting}</emphasis>"&gt;... some special output here ...&lt;/f:if&gt;
 &lt;/f:for&gt;</programlisting></para>
         </example>
 
@@ -451,7 +451,7 @@
             <para>Provide the content for all sections used by the layout
             using the <code>&lt;f:section&gt;...&lt;/f:section&gt;</code> tag:
             <code>&lt;f:section
-            name="content"&gt;...&lt;/f3:section&gt;</code></para>
+            name="content"&gt;...&lt;/f:section&gt;</code></para>
           </listitem>
         </itemizedlist></para>
 
@@ -643,7 +643,7 @@
       <title>AbstractTagBasedViewHelper</title>
 
       <para>Many view helpers output an HTML tag - for example
-      <code>&lt;f3:link.action ...&gt; outputs </code>a <code>&lt;a
+      <code>&lt;f:link.action ...&gt; outputs </code>a <code>&lt;a
       href="..."&gt;</code> tag. There are many ViewHelpers which work that
       way.</para>
 
