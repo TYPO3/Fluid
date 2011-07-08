@@ -31,7 +31,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Wrapper for \TYPO3\var_dump()
+	 * Wrapper for \TYPO3\FLOW3\var_dump()
 	 *
 	 * @param string $title
 	 * @return string debug string
@@ -39,7 +39,7 @@ class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	public function render($title = NULL) {
 		ob_start();
-		\TYPO3\var_dump($this->renderChildren(), $title);
+		\TYPO3\FLOW3\var_dump($this->renderChildren(), $title);
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;
