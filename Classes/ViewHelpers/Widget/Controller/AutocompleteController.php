@@ -27,6 +27,18 @@ namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 	/**
+	 * @var array
+	 */
+	protected $configuration = array('limit' => 10);
+
+	/**
+	 * @return void
+	 */
+	public function initializeAction() {
+		$this->configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
+	}
+
+	/**
 	 * @return void
 	 */
 	public function indexAction() {
@@ -39,7 +51,7 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 	 */
 	public function autocompleteAction($term) {
 		$searchProperty = $this->widgetConfiguration['searchProperty'];
-		$query = $this->widgetConfiguration['objects']->getQuery();
+		$query = clone $this->widgetConfiguration['objects']->getQuery();
 		$constraint = $query->getConstraint();
 
 		if ($constraint !== NULL) {
@@ -51,6 +63,9 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 			$query->matching(
 				$query->like($searchProperty, '%' . $term . '%', FALSE)
 			);
+		}
+		if (isset($this->configuration['limit'])) {
+			$query->setLimit((integer)$this->configuration['limit']);
 		}
 
 		$results = $query->execute();

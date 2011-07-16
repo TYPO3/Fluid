@@ -54,9 +54,10 @@ class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetView
 	 * @param \TYPO3\FLOW3\Persistence\QueryResultInterface $objects
 	 * @param string $for
 	 * @param string $searchProperty
+	 * @param array $configuration
 	 * @return string
 	 */
-	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $for, $searchProperty) {
+	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $for, $searchProperty, array $configuration = array('limit' => 10)) {
 		return $this->initiateSubRequest();
 	}
 }
