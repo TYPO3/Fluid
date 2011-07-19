@@ -84,7 +84,7 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 			$this->tag->addAttribute('placeholder', $placeholder);
 		}
 
-		if (!empty($value)) {
+		if ($value !== NULL) {
 			$this->tag->addAttribute('value', $value);
 		}
 
