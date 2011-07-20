@@ -81,7 +81,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderThrowsExceptionIfTheRequestIsNotAWidgetRequest() {
-		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Request');
+		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->viewHelper->setControllerContext($this->controllerContext);
 		$this->viewHelper->initializeArguments();
