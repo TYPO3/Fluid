@@ -107,7 +107,7 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 		if ($maximumNumberOfLinks > $this->numberOfPages) {
 			$maximumNumberOfLinks = $this->numberOfPages;
 		}
-		$delta = intval(floor($maximumNumberOfLinks / 2));
+		$delta = floor($maximumNumberOfLinks / 2);
 		$this->displayRangeStart = $this->currentPage - $delta;
 		$this->displayRangeEnd = $this->currentPage + $delta + ($maximumNumberOfLinks % 2 === 0 ? 1 : 0);
 		if ($this->displayRangeStart < 1) {
@@ -116,8 +116,8 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 		if ($this->displayRangeEnd > $this->numberOfPages) {
 			$this->displayRangeStart -= ($this->displayRangeEnd - $this->numberOfPages);
 		}
-		$this->displayRangeStart = max($this->displayRangeStart, 1);
-		$this->displayRangeEnd = min($this->displayRangeEnd, $this->numberOfPages);
+		$this->displayRangeStart = (integer)max($this->displayRangeStart, 1);
+		$this->displayRangeEnd = (integer)min($this->displayRangeEnd, $this->numberOfPages);
 	}
 
 	/**
