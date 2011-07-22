@@ -174,7 +174,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			if (is_object($value)) {
 
 				if ($this->arguments->hasArgument('optionValueField')) {
-					$key = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
+					$key = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
 					if (is_object($key)) {
 						if (method_exists($key, '__toString')) {
 							$key = (string)$key;
@@ -191,7 +191,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 				}
 
 				if ($this->arguments->hasArgument('optionLabelField')) {
-					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionLabelField']);
+					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionLabelField']);
 					if (is_object($value)) {
 						if (method_exists($value, '__toString')) {
 							$value = (string)$value;
@@ -249,7 +249,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		}
 		if (!is_array($value) && !($value instanceof Iterator)) {
 			if (is_object($value)) {
-				return \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $this->arguments['optionValueField']);
+				return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
 			} else {
 				return $value;
 			}
@@ -257,7 +257,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$selectedValues = array();
 		foreach($value as $selectedValueElement) {
 			if (is_object($selectedValueElement)) {
-				$selectedValues[] = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($selectedValueElement, $this->arguments['optionValueField']);
+				$selectedValues[] = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($selectedValueElement, $this->arguments['optionValueField']);
 			} else {
 				$selectedValues[] = $selectedValueElement;
 			}
