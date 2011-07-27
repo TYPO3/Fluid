@@ -47,6 +47,11 @@ namespace TYPO3\Fluid\ViewHelpers;
 class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	var $escapingInterceptorEnabled = FALSE;
+
+	/**
 	 * Counts the items of a given property.
 	 *
 	 * @param array $subject The array or ObjectStorage to iterated over
