@@ -62,7 +62,7 @@ class RawViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @var boolean
 	 */
-	var $escapingInterceptorEnabled = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * @param mixed $value The value to output

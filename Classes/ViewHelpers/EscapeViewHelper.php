@@ -74,7 +74,7 @@ class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @var boolean
 	 */
-	var $escapingInterceptorEnabled = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Escapes special characters with their escaped counterparts as needed.

@@ -44,7 +44,7 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * @var boolean
 	 */
-	var $escapingInterceptorEnabled = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
