@@ -31,6 +31,11 @@ namespace TYPO3\Fluid\ViewHelpers;
 class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapingInterceptorEnabled = FALSE;
+
+	/**
 	 * Wrapper for \TYPO3\FLOW3\var_dump()
 	 *
 	 * @param string $title
