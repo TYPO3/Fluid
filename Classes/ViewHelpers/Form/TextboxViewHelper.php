@@ -36,7 +36,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @api
  * @scope prototype
  * @deprecated since 1.0.0 alpha 7
  */
