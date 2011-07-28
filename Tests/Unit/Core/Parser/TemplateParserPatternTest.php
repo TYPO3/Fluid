@@ -307,26 +307,26 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 				'ArrayPart' => 'a: b',
 				1 => 'a: b',
 				'Key' => 'a',
-      			2 => 'a',
-      			'QuotedString' => '',
-      			3 => '',
-      			'VariableIdentifier' => 'b',
-      			4 => 'b'
+				2 => 'a',
+				'QuotedString' => '',
+				3 => '',
+				'VariableIdentifier' => 'b',
+				4 => 'b'
 			),
 			1 => array(
 				0 => 'e: {c:d, e:f}',
 				'ArrayPart' => 'e: {c:d, e:f}',
 				1 => 'e: {c:d, e:f}',
 				'Key' => 'e',
-      			2 => 'e',
+				2 => 'e',
 				'QuotedString' => '',
-      			3 => '',
-      			'VariableIdentifier' => '',
-      			4 => '',
-      			'Number' => '',
-      			5 => '',
-      			'Subarray' => 'c:d, e:f',
-      			6 => 'c:d, e:f'
+				3 => '',
+				'VariableIdentifier' => '',
+				4 => '',
+				'Number' => '',
+				5 => '',
+				'Subarray' => 'c:d, e:f',
+				6 => 'c:d, e:f'
 			)
 		);
 		$this->assertEquals($matches, $expected, 'The regular expression splitting the array apart does not work!');

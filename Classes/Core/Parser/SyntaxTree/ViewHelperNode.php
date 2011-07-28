@@ -147,8 +147,8 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$evaluatedArguments = array();
 		$renderMethodParameters = array();
- 		if (count($viewHelper->prepareArguments())) {
- 			foreach ($viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
+		if (count($viewHelper->prepareArguments())) {
+			foreach ($viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
 					$evaluatedArguments[$argumentName] = $this->convertArgumentValue($argumentValue, $argumentDefinition->getType(), $renderingContext);
