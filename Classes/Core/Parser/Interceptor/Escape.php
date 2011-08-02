@@ -59,7 +59,7 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	}
 
 	/**
-	 * Adds a ViewHelper node using the Format\HtmlentitiesViewHelper to the given node.
+	 * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
 	 * If "escapingInterceptorEnabled" in the ViewHelper is FALSE, will disable itself inside the ViewHelpers body.
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
@@ -84,7 +84,7 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 				}
 			}
 		} elseif ($this->interceptorEnabled && $node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
-			$escapeViewHelper = $this->objectManager->create('TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesViewHelper');
+			$escapeViewHelper = $this->objectManager->get('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
 			$node = $this->objectManager->create(
 				'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
 				$escapeViewHelper,

@@ -103,10 +103,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper', array('setChildNodes', 'initializeArguments', 'render', 'prepareArguments'));
 
-		$mockViewHelperArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-
-		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
-
 		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array());
 		$viewHelperNode->addChildNode($childNode);
 
@@ -123,10 +119,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	public function initializeArgumentsAndRenderIsCalledByViewHelperNode() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('initializeArgumentsAndRender', 'prepareArguments'));
 		$mockViewHelper->expects($this->once())->method('initializeArgumentsAndRender');
-
-		$mockViewHelperArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-
-		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
 
 		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array());
 
@@ -147,11 +139,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('initializeArgumentsAndRender', 'prepareArguments'));
 		$mockViewHelper->expects($this->any())->method('prepareArguments')->will($this->returnValue($arguments));
-		$mockViewHelper->expects($this->once())->method('initializeArgumentsAndRender')->with(array('param1' => 'a', 'param2' => 'b'));
-
-		$mockViewHelperArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-
-		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
+		$mockViewHelper->expects($this->once())->method('initializeArgumentsAndRender');
 
 		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array(
 			'param2' => new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('b'),
@@ -165,30 +153,11 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function evaluateMethodPassesControllerContextToViewHelper() {
-		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setControllerContext'));
-		$mockViewHelper->expects($this->once())->method('setControllerContext')->with($this->controllerContext);
+	public function evaluateMethodPassesRenderingContextToViewHelper() {
+		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setRenderingContext'));
+		$mockViewHelper->expects($this->once())->method('setRenderingContext')->with($this->renderingContext);
 
 		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array());
-		$mockViewHelperArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-
-		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
-
-		$viewHelperNode->evaluate($this->renderingContext);
-	}
-
-	/**
-	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	public function evaluateMethodPassesViewHelperVariableContainerToViewHelper() {
-		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setViewHelperVariableContainer'));
-		$mockViewHelper->expects($this->once())->method('setViewHelperVariableContainer')->with($this->viewHelperVariableContainer);
-
-		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array());
-		$mockViewHelperArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-
-		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
 
 		$viewHelperNode->evaluate($this->renderingContext);
 	}
@@ -202,95 +171,9 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$mockViewHelper->expects($this->any())->method('render')->will($this->returnValue('String'));
 
 		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array());
-		$mockViewHelperArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-
-		$this->mockObjectManager->expects($this->at(0))->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
-		$this->mockObjectManager->expects($this->at(1))->method('create')->with('TYPO3\Fluid\Core\ViewHelper\Arguments')->will($this->returnValue($mockViewHelperArguments));
 
 		$viewHelperNode->evaluate($this->renderingContext);
 		$viewHelperNode->evaluate($this->renderingContext);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function convertArgumentValueCallsConvertToBooleanForArgumentsOfTypeBoolean() {
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('convertToBoolean'), array(), '', FALSE);
-		$argumentViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'), array(), '', FALSE);
-		$argumentViewHelperNode->expects($this->any())->method('evaluate')->will($this->returnValue('foo'));
-
-		$viewHelperNode->expects($this->once())->method('convertToBoolean')->with('foo')->will($this->returnValue('bar'));
-
-		$actualResult = $viewHelperNode->_call('convertArgumentValue', $argumentViewHelperNode, 'boolean', $this->renderingContext);
-		$this->assertEquals('bar', $actualResult);
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function convertToBooleanProperlyConvertsValuesOfTypeBoolean() {
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', FALSE));
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', TRUE));
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function convertToBooleanProperlyConvertsValuesOfTypeString() {
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', ''));
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', 'false'));
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', 'FALSE'));
-
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', 'true'));
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', 'TRUE'));
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function convertToBooleanProperlyConvertsNumericValues() {
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', 0));
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', -1));
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', '-1'));
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', -.5));
-
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', 1));
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', .5));
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function convertToBooleanProperlyConvertsValuesOfTypeArray() {
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', array()));
-
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', array('foo')));
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', array('foo' => 'bar')));
-	}
-
-	/**
-	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 */
-	public function convertToBooleanProperlyConvertsObjects() {
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
-
-		$this->assertFalse($viewHelperNode->_call('convertToBoolean', NULL));
-
-		$this->assertTrue($viewHelperNode->_call('convertToBoolean', new \stdClass()));
 	}
 }
 

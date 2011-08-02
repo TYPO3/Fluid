@@ -21,14 +21,14 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Submit" Form view helper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class SubmitViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class SubmitViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
 	 * var \TYPO3\Fluid\ViewHelpers\Form\ubmitViewHelper
@@ -38,6 +38,7 @@ class SubmitViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	public function setUp() {
 		parent::setUp();
 		$this->viewHelper = new \TYPO3\Fluid\ViewHelpers\Form\SubmitViewHelper();
+		$this->arguments['name'] = '';
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

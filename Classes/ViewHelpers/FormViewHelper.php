@@ -138,7 +138,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @return void
 	 */
 	protected function setFormActionUri() {
-		if ($this->arguments->hasArgument('actionUri')) {
+		if ($this->hasArgument('actionUri')) {
 			$formActionUri = $this->arguments['actionUri'];
 		} else {
 			$uriBuilder = $this->controllerContext->getUriBuilder();
@@ -266,9 +266,9 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 */
 	protected function getFormObjectName() {
 		$formObjectName = NULL;
-		if ($this->arguments->hasArgument('objectName')) {
+		if ($this->hasArgument('objectName')) {
 			$formObjectName = $this->arguments['objectName'];
-		} elseif ($this->arguments->hasArgument('name')) {
+		} elseif ($this->hasArgument('name')) {
 			$formObjectName = $this->arguments['name'];
 		}
 		return $formObjectName;
@@ -281,7 +281,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function addFormObjectToViewHelperVariableContainer() {
-		if ($this->arguments->hasArgument('object')) {
+		if ($this->hasArgument('object')) {
 			$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject', $this->arguments['object']);
 			$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', array());
 		}
@@ -294,7 +294,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function removeFormObjectFromViewHelperVariableContainer() {
-		if ($this->arguments->hasArgument('object')) {
+		if ($this->hasArgument('object')) {
 			$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 			$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 		}
@@ -307,7 +307,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function addFieldNamePrefixToViewHelperVariableContainer() {
-		if ($this->arguments->hasArgument('fieldNamePrefix')) {
+		if ($this->hasArgument('fieldNamePrefix')) {
 			$fieldNamePrefix = $this->arguments['fieldNamePrefix'];
 		} else {
 			$fieldNamePrefix = $this->getDefaultFieldNamePrefix();

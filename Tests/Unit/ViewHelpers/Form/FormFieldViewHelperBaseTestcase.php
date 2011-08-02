@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers\Fixtures;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -21,29 +21,17 @@ namespace TYPO3\Fluid\ViewHelpers\Fixtures;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 /**
- * [Enter description here]
+ * Base test case for all form field ViewHelpers.
+ *
+ * This class is only needed in v4, but for ease-of-portability of test cases,
+ * we also introduce it here.
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ConstraintSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
-	public $callProtocol = array();
-
-	public function __construct(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
-		$this->variableContainer = $variableContainer;
-	}
-
-	public function evaluateChildNodes(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
-		$identifiers = $this->variableContainer->getAllIdentifiers();
-		$callElement = array();
-		foreach ($identifiers as $identifier) {
-			$callElement[$identifier] = $this->variableContainer->get($identifier);
-		}
-		$this->callProtocol[] = $callElement;
-	}
-
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {}
+class FormFieldViewHelperBaseTestcase extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 }
-
 
 ?>

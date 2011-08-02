@@ -48,6 +48,17 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 		$this->objectPath = $objectPath;
 	}
 
+
+	/**
+	 * Internally used for building up cached templates; do not use directly!
+	 *
+	 * @return string
+	 * @internal
+	 */
+	public function getObjectPath() {
+		return $this->objectPath;
+	}
+
 	/**
 	 * Evaluate this node and return the correct object.
 	 *
@@ -65,7 +76,7 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
-		return $this->getPropertyPath($renderingContext->getTemplateVariableContainer(), $this->objectPath, $renderingContext);
+		return self::getPropertyPath($renderingContext->getTemplateVariableContainer(), $this->objectPath, $renderingContext);
 	}
 
 	/**
@@ -81,15 +92,15 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Value of the property
 	 */
-	protected function getPropertyPath($subject, $propertyPath, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	static public function getPropertyPath($subject, $propertyPath, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$propertyPathSegments = explode('.', $propertyPath);
 		foreach ($propertyPathSegments as $pathSegment) {
-			if (is_object($subject) && \TYPO3\FLOW3\Reflection\ObjectAccess::isPropertyGettable($subject, $pathSegment)) {
-				$subject = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($subject, $pathSegment);
-			} elseif ((is_array($subject) || $subject instanceof \ArrayAccess) && isset($subject[$pathSegment])) {
+			$propertyExists = FALSE;
+			$propertyValue = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyInternal($subject, $pathSegment, FALSE, $propertyExists);
+			if ($propertyExists !== TRUE && (is_array($subject) || $subject instanceof \ArrayAccess) && isset($subject[$pathSegment])) {
 				$subject = $subject[$pathSegment];
 			} else {
-				return NULL;
+				$subject = $propertyValue;
 			}
 
 			if ($subject instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
@@ -98,7 +109,5 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 		}
 		return $subject;
 	}
-
-
 }
 ?>

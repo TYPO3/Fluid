@@ -21,14 +21,14 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Hidden" Form view helper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class HiddenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class HiddenViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
 	 * var \TYPO3\Fluid\ViewHelpers\Form\HiddenViewHelper

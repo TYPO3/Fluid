@@ -39,7 +39,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		parent::setUp();
 		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\RenderChildrenViewHelper', array('renderChildren'));
 	}
 
@@ -48,9 +48,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsEvaluateOnTheRootNodeAndRegistersTheArguments() {
-		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
-		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
-		$this->viewHelper->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 
 		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
@@ -81,9 +79,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderThrowsExceptionIfTheRequestIsNotAWidgetRequest() {
-		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
-		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
-		$this->viewHelper->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 
 		$output = $this->viewHelper->render();
@@ -95,9 +91,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderThrowsExceptionIfTheChildNodeRenderingContextIsNotThere() {
-		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
-		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
-		$this->viewHelper->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 
 		$widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext');

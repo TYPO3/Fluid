@@ -311,12 +311,16 @@ class TemplateParser {
 	}
 
 	/**
-	 * Parses a given template and returns a parsed template object.
+	 * Parses a given template string and returns a parsed template object.
+	 *
+	 * The resulting ParsedTemplate can then be rendered by calling evaluate() on it.
+	 *
+	 * Normally, you should use a subclass of AbstractTemplateView instead of calling the
+	 * TemplateParser directly.
 	 *
 	 * @param string $templateString The template to parse as a string
 	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface Parsed template
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo Refine doc comment
 	 */
 	public function parse($templateString) {
 		if (!is_string($templateString)) throw new \TYPO3\Fluid\Core\Parser\Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
@@ -326,6 +330,11 @@ class TemplateParser {
 		$templateString = $this->extractNamespaceDefinitions($templateString);
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate);
+
+		$variableContainer = $parsingState->getVariableContainer();
+		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
+			$parsingState->setLayoutNameNode($variableContainer->get('layoutName'));
+		}
 
 		return $parsingState;
 	}
@@ -461,26 +470,32 @@ class TemplateParser {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new \TYPO3\Fluid\Core\Parser\Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
+		$viewHelper = $this->objectManager->get($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
 
-		$viewHelper = $this->objectManager->create($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
+			// The following three checks are only done *in an uncached template*, and not needed anymore in the cached version
 		$expectedViewHelperArguments = $viewHelper->prepareArguments();
 		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $argumentsObjectTree);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $argumentsObjectTree);
+		$this->rewriteBooleanNodesInArgumentsObjectTree($expectedViewHelperArguments, $argumentsObjectTree);
 
-		$currentDynamicNode = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $argumentsObjectTree);
+		$currentViewHelperNode = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $argumentsObjectTree);
 
-		$state->getNodeFromStack()->addChildNode($currentDynamicNode);
+		$state->getNodeFromStack()->addChildNode($currentViewHelperNode);
+
+		if ($viewHelper instanceof \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface && !($viewHelper instanceof \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface)) {
+			$state->setCompilable(FALSE);
+		}
 
 			// PostParse Facet
 		if ($viewHelper instanceof \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface) {
 			// Don't just use $viewHelper::postParseEvent(...),
 			// as this will break with PHP < 5.3.
-			call_user_func(array($viewHelper, 'postParseEvent'), $currentDynamicNode, $argumentsObjectTree, $state->getVariableContainer());
+			call_user_func(array($viewHelper, 'postParseEvent'), $currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 
-		$this->callInterceptor($currentDynamicNode, \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
+		$this->callInterceptor($currentViewHelperNode, \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
 
-		$state->pushNodeToStack($currentDynamicNode);
+		$state->pushNodeToStack($currentViewHelperNode);
 	}
 
 	/**
@@ -518,6 +533,21 @@ class TemplateParser {
 		foreach ($expectedArguments as $expectedArgument) {
 			if ($expectedArgument->isRequired() && !in_array($expectedArgument->getName(), $actualArgumentNames)) {
 				throw new \TYPO3\Fluid\Core\Parser\Exception('Required argument "' . $expectedArgument->getName() . '" was not supplied.', 1237823699);
+			}
+		}
+	}
+
+	/**
+	 * Wraps the argument tree, if a node is boolean, into a Boolean syntax tree node
+	 *
+	 * @param array $argumentDefinitions the argument definitions, key is the argument name, value is the ArgumentDefinition object
+	 * @param array $argumentsObjectTree the arguments syntax tree, key is the argument name, value is an AbstractNode
+	 * @return void
+	 */
+	protected function rewriteBooleanNodesInArgumentsObjectTree($argumentDefinitions, &$argumentsObjectTree) {
+		foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
+			if ($argumentDefinition->getType() === 'boolean' && isset($argumentsObjectTree[$argumentName])) {
+				$argumentsObjectTree[$argumentName] = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($argumentsObjectTree[$argumentName]);
 			}
 		}
 	}

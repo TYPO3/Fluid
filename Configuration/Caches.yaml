@@ -1,5 +1,3 @@
-Fluid_SyntaxTreeCache:
-  frontend: TYPO3\FLOW3\Cache\Frontend\VariableFrontend
-  backend: TYPO3\FLOW3\Cache\Backend\TransientMemoryBackend
-  backendOptions:
-    defaultLifetime: 0
+Fluid_TemplateCache:
+  frontend: TYPO3\FLOW3\Cache\Frontend\PhpFrontend
+  backend: TYPO3\FLOW3\Cache\Backend\FileBackend

@@ -91,7 +91,7 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			$resourceObject = $this->propertyMapper->convert($value, 'TYPO3\FLOW3\Resource\Resource');
 		}
 		$fileNameIdAttribute = $resourcePointerIdAttribute = '';
-		if ($this->arguments->hasArgument('id')) {
+		if ($this->hasArgument('id')) {
 			$fileNameIdAttribute = ' id="' . $this->arguments['id'] . '-fileName"';
 			$resourcePointerIdAttribute = ' id="' . $this->arguments['id'] . '-resourcePointer"';
 		}

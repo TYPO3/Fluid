@@ -26,7 +26,7 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  * need access to the direct children in the Syntax Tree at rendering-time.
  * This might happen if you only want to selectively render a part of the syntax
  * tree depending on some conditions.
- * To render subnodes, you can fetch the RenderingContext via $this->getRenderingContext().
+ * To render subnodes, you can fetch the RenderingContext via $this->renderingContext.
  *
  * In most cases, you will not need this facet, and it is NO PUBLIC API!
  * Right now it is only used internally for conditions, so by subclassing TYPO3\Fluid\Core\ViewHelpers\AbstractConditionViewHelper, this should be all you need.

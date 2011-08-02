@@ -108,7 +108,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 */
 	public function render() {
 		$name = $this->getName();
-		if ($this->arguments->hasArgument('multiple')) {
+		if ($this->hasArgument('multiple')) {
 			$name .= '[]';
 		}
 
@@ -127,7 +127,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			// register field name for token generation.
 			// in case it is a multi-select, we need to register the field name
 			// as often as there are elements in the box
-		if ($this->arguments->hasArgument('multiple') && $this->arguments['multiple'] !== '') {
+		if ($this->hasArgument('multiple') && $this->arguments['multiple'] !== '') {
 			$content .= $this->renderHiddenFieldForEmptyValue();
 			for ($i=0; $i<count($options); $i++) {
 				$this->registerFieldNameForFormTokenGeneration($name);
@@ -173,7 +173,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		foreach ($optionsArgument as $key => $value) {
 			if (is_object($value)) {
 
-				if ($this->arguments->hasArgument('optionValueField')) {
+				if ($this->hasArgument('optionValueField')) {
 					$key = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
 					if (is_object($key)) {
 						if (method_exists($key, '__toString')) {
@@ -190,7 +190,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 					throw new \TYPO3\Fluid\Core\ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
 				}
 
-				if ($this->arguments->hasArgument('optionLabelField')) {
+				if ($this->hasArgument('optionLabelField')) {
 					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionLabelField']);
 					if (is_object($value)) {
 						if (method_exists($value, '__toString')) {
@@ -226,7 +226,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		if ($value === $selectedValue || (string)$value === $selectedValue) {
 			return TRUE;
 		}
-		if ($this->arguments->hasArgument('multiple')) {
+		if ($this->hasArgument('multiple')) {
 			if (is_null($selectedValue) && $this->arguments['selectAllByDefault'] === TRUE) {
 				return TRUE;
 			} elseif (is_array($selectedValue) && in_array($value, $selectedValue)) {
@@ -244,7 +244,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 */
 	protected function getSelectedValue() {
 		$value = $this->getValue();
-		if (!$this->arguments->hasArgument('optionValueField')) {
+		if (!$this->hasArgument('optionValueField')) {
 			return $value;
 		}
 		if (!is_array($value) && !($value instanceof Iterator)) {

@@ -35,14 +35,10 @@ class RenderViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	 */
 	protected $viewHelper;
 
-	/**
-	 * var \TYPO3\Fluid\Core\ViewHelper\Arguments
-	 */
-	protected $mockArguments;
-
 	public function setUp() {
 		parent::setUp();
 		$this->templateVariableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer();
+		$this->renderingContext->injectTemplateVariableContainer($this->templateVariableContainer);
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\RenderViewHelper', array('dummy'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}

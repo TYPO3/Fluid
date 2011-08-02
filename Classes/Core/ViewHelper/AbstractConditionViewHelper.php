@@ -43,7 +43,7 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * @api
  * @scope prototype
  */
-abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface, \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
 
 	/**
 	 * An array of \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
@@ -83,15 +83,21 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 * @api
 	 */
 	protected function renderThenChild() {
-		if ($this->arguments->hasArgument('then')) {
+		if ($this->hasArgument('then')) {
 			return $this->arguments['then'];
+		}
+		if ($this->hasArgument('__thenClosure')) {
+			$thenClosure = $this->arguments['__thenClosure'];
+			return $thenClosure();
+		} elseif ($this->hasArgument('__elseClosure') || $this->hasArgument('else')) {
+			return '';
 		}
 
 		$elseViewHelperEncountered = FALSE;
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ThenViewHelper') {
-				$data = $childNode->evaluate($this->getRenderingContext());
+				$data = $childNode->evaluate($this->renderingContext);
 				return $data;
 			}
 			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
@@ -118,17 +124,51 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 * @api
 	 */
 	protected function renderElseChild() {
-		if ($this->arguments->hasArgument('else')) {
+		if ($this->hasArgument('else')) {
 			return $this->arguments['else'];
 		}
-
+		if ($this->hasArgument('__elseClosure')) {
+			$elseClosure = $this->arguments['__elseClosure'];
+			return $elseClosure();
+		}
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
-				return $childNode->evaluate($this->getRenderingContext());
+				return $childNode->evaluate($this->renderingContext);
 			}
 		}
+
 		return '';
+	}
+
+	/**
+	 * The compiled ViewHelper adds two new ViewHelper arguments: __thenClosure and __elseClosure.
+	 * These contain closures which are be executed to render the then(), respectively else() case.
+	 *
+	 * @param string $argumentsVariableName
+	 * @param string $renderChildrenClosureVariableName
+	 * @param string $initializationPhpCode
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
+	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
+	 * @return string
+	 * @internal
+	 */
+	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
+		foreach ($syntaxTreeNode->getChildNodes() as $childNode) {
+			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ThenViewHelper') {
+
+				$childNodesAsClosure = $templateCompiler->wrapChildNodesInClosure($childNode);
+				$initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsVariableName, $childNodesAsClosure) . chr(10);
+			}
+			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
+
+				$childNodesAsClosure = $templateCompiler->wrapChildNodesInClosure($childNode);
+				$initializationPhpCode .= sprintf('%s[\'__elseClosure\'] = %s;', $argumentsVariableName, $childNodesAsClosure) . chr(10);
+			}
+		}
+		return \TYPO3\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION;
 	}
 }
 

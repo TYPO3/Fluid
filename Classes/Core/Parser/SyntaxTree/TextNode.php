@@ -55,7 +55,6 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string the text stored in this node/subtree.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @todo TextNode shouldn't have child nodes
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->text . $this->evaluateChildNodes($renderingContext);

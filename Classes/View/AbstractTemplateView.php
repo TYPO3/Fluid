@@ -53,6 +53,11 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	protected $templateParser;
 
 	/**
+	 * @var \TYPO3\Fluid\Core\Compiler\TemplateCompiler
+	 */
+	protected $templateCompiler;
+
+	/**
 	 * The initial rendering context for this template view.
 	 * Due to the rendering stack, another rendering context might be active
 	 * at certain points while rendering the template.
@@ -67,6 +72,15 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @var array
 	 */
 	protected $renderingStack = array();
+
+	/**
+	 * Partial Name -> Partial Identifier cache.
+	 * This is a performance optimization, effective when rendering a
+	 * single partial many times.
+	 *
+	 * @var array
+	 */
+	protected $partialIdentifierCache = array();
 
 	/**
 	 * Injects the Object Manager
@@ -88,6 +102,14 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 */
 	public function injectTemplateParser(\TYPO3\Fluid\Core\Parser\TemplateParser $templateParser) {
 		$this->templateParser = $templateParser;
+	}
+
+	/**
+	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
+	 * @return void
+	 */
+	public function injectTemplateCompiler(\TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
+		$this->templateCompiler = $templateCompiler;
 	}
 
 	/**
@@ -169,11 +191,29 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	public function render($actionName = NULL) {
 		$this->baseRenderingContext->setControllerContext($this->controllerContext);
 		$this->templateParser->setConfiguration($this->buildParserConfiguration());
-		$parsedTemplate = $this->templateParser->parse($this->getTemplateSource($actionName));
 
-		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
+		$templateIdentifier = $this->getTemplateIdentifier($actionName);
+		if ($this->templateCompiler->has($templateIdentifier)) {
+			$parsedTemplate = $this->templateCompiler->get($templateIdentifier);
+		} else {
+			$parsedTemplate = $this->templateParser->parse($this->getTemplateSource($actionName));
+			if ($parsedTemplate->isCompilable()) {
+				$this->templateCompiler->store($templateIdentifier, $parsedTemplate);
+			}
+		}
+
+		if ($parsedTemplate->hasLayout()) {
+			$layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
+			$layoutIdentifier = $this->getLayoutIdentifier($layoutName);
+			if ($this->templateCompiler->has($layoutIdentifier)) {
+				$parsedLayout = $this->templateCompiler->get($layoutIdentifier);
+			} else {
+				$parsedLayout = $this->templateParser->parse($this->getLayoutSource($layoutName));
+				if ($parsedLayout->isCompilable()) {
+					$this->templateCompiler->store($layoutIdentifier, $parsedLayout);
+				}
+			}
 			$this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
-			$parsedLayout = $this->templateParser->parse($this->getLayoutSource($this->getLayoutNameInTemplate($parsedTemplate)));
 			$output = $parsedLayout->render($this->baseRenderingContext);
 			$this->stopRendering();
 		} else {
@@ -196,15 +236,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderSection($sectionName, array $variables) {
-		$parsedTemplate = $this->getCurrentParsedTemplate();
-
-		$sections = $parsedTemplate->getVariableContainer()->get('sections');
-		if(!array_key_exists($sectionName, $sections)) {
-			$controllerObjectName = $this->controllerContext->getRequest()->getControllerObjectName();
-			throw new \TYPO3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
-		}
-		$section = $sections[$sectionName];
-
 		$renderingContext = $this->getCurrentRenderingContext();
 		if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
 			// in case we render a layout right now, we will render a section inside a TEMPLATE.
@@ -216,11 +247,27 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
 		}
 
-		$renderingContext->getViewHelperVariableContainer()->add('TYPO3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection', 'TRUE');
+		$parsedTemplate = $this->getCurrentParsedTemplate();
 
-		$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-		$output = $section->evaluate($renderingContext);
-		$this->stopRendering();
+		if ($parsedTemplate->isCompiled()) {
+			$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
+			$methodNameOfSection = 'section_' . sha1($sectionName);
+			$output = $parsedTemplate->$methodNameOfSection($renderingContext);
+			$this->stopRendering();
+		} else {
+			$sections = $parsedTemplate->getVariableContainer()->get('sections');
+			if(!array_key_exists($sectionName, $sections)) {
+				$controllerObjectName = $this->controllerContext->getRequest()->getControllerObjectName();
+				throw new \TYPO3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
+			}
+			$section = $sections[$sectionName];
+
+			$renderingContext->getViewHelperVariableContainer()->add('TYPO3\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection', 'TRUE');
+
+			$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
+			$output = $section->evaluate($renderingContext);
+			$this->stopRendering();
+		}
 
 		return $output;
 	}
@@ -238,21 +285,43 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderPartial($partialName, $sectionName, array $variables) {
-		$partial = $this->templateParser->parse($this->getPartialSource($partialName));
+		if (!isset($this->partialIdentifierCache[$partialName])) {
+			$this->partialIdentifierCache[$partialName] = $this->getPartialIdentifier($partialName);
+		}
+		$partialIdentifier = $this->partialIdentifierCache[$partialName];
+
+		if ($this->templateCompiler->has($partialIdentifier)) {
+			$parsedPartial = $this->templateCompiler->get($partialIdentifier);
+		} else {
+			$parsedPartial = $this->templateParser->parse($this->getPartialSource($partialName));
+			if ($parsedPartial->isCompilable()) {
+				$this->templateCompiler->store($partialIdentifier, $parsedPartial);
+			}
+		}
+
 		$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 		$renderingContext = clone $this->getCurrentRenderingContext();
 		$renderingContext->injectTemplateVariableContainer($variableContainer);
 
-		$this->startRendering(self::RENDERING_PARTIAL, $partial, $renderingContext);
+		$this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
 		if ($sectionName !== NULL) {
 			$output = $this->renderSection($sectionName, $variables);
 		} else {
-			$output = $partial->render($renderingContext);
+			$output = $parsedPartial->render($renderingContext);
 		}
 		$this->stopRendering();
 
 		return $output;
 	}
+
+	/**
+	 * Returns a unique identifier for the resolved template file.
+	 * This identifier is based on the template path and last modification date
+	 *
+	 * @param string $actionName Name of the action. If NULL, will be taken from request.
+	 * @return string template identifier
+	 */
+	abstract protected function getTemplateIdentifier($actionName = NULL);
 
 	/**
 	 * Resolve the template path and filename for the given action. If $actionName
@@ -263,6 +332,15 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException in case the template was not found
 	 */
 	abstract protected function getTemplateSource($actionName = NULL);
+
+	/**
+	 * Returns a unique identifier for the resolved layout file.
+	 * This identifier is based on the template path and last modification date
+	 *
+	 * @param string $layoutName The name of the layout
+	 * @return string layout identifier
+	 */
+	abstract protected function getLayoutIdentifier($layoutName = 'Default');
 
 	/**
 	 * Resolve the path and file name of the layout file, based on
@@ -277,6 +355,15 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	abstract protected function getLayoutSource($layoutName = 'Default');
+
+	/**
+	 * Returns a unique identifier for the resolved partial file.
+	 * This identifier is based on the template path and last modification date
+	 *
+	 * @param string $partialName The name of the partial
+	 * @return string partial identifier
+	 */
+	abstract protected function getPartialIdentifier($partialName);
 
 	/**
 	 * Figures out which partial to use.
@@ -300,38 +387,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource'));
 		}
 		return $parserConfiguration;
-	}
-
-	/**
-	 * Returns TRUE if there is a layout defined in the given template via a <f:layout name="..." /> tag.
-	 *
-	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @return boolean TRUE if a layout has been defined, FALSE otherwise.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 */
-	protected function isLayoutDefinedInTemplate(\TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
-		$variableContainer = $parsedTemplate->getVariableContainer();
-		return ($variableContainer !== NULL && $variableContainer->exists('layoutName'));
-	}
-
-	/**
-	 * Returns the name of the layout defined in the template, if one exists.
-	 *
-	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
-	 * @return string the Layout name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Rens Admiraal <r.admiraal@drecomm.nl>
-	 */
-	protected function getLayoutNameInTemplate(\TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate) {
-		if ($this->isLayoutDefinedInTemplate($parsedTemplate)) {
-			$layoutNameNode = $parsedTemplate->getVariableContainer()->get('layoutName');
-			$layoutName = $layoutNameNode->evaluate($this->baseRenderingContext);
-			if (!empty($layoutName)) {
-				return $layoutName;
-			}
-			throw new \TYPO3\Fluid\View\Exception('The layoutName could not be evaluated to a string', 1296805368);
-		}
-		return NULL;
 	}
 
 	/**

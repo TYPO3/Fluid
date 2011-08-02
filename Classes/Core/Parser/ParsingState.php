@@ -51,6 +51,18 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	protected $variableContainer;
 
 	/**
+	 * The layout name of the current template or NULL if the template does not contain a layout definition
+	 *
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 */
+	protected $layoutNameNode;
+
+	/**
+	 * @var boolean
+	 */
+	protected $compilable = TRUE;
+
+	/**
 	 * Injects a variable container. ViewHelpers implementing the PostParse
 	 * Facet can store information inside this variableContainer.
 	 *
@@ -144,6 +156,71 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 */
 	public function getVariableContainer() {
 		return $this->variableContainer;
+	}
+
+	/**
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $layoutNameNode name of the layout that is defined in this template via <f:layout name="..." />
+	 * @return void
+	 */
+	public function setLayoutNameNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $layoutNameNode) {
+		$this->layoutNameNode = $layoutNameNode;
+	}
+
+	/**
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 */
+	public function getLayoutNameNode() {
+		return $this->layoutNameNode;
+	}
+
+	/**
+	 * Returns TRUE if the current template has a template defined via <f:layout name="..." />
+	 * @see getLayoutName()
+	 *
+	 * @return boolean
+	 */
+	public function hasLayout() {
+		return $this->layoutNameNode !== NULL;
+	}
+
+	/**
+	 * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
+	 * If no layout is defined, this returns NULL
+	 * This requires the current rendering context in order to be able to evaluate the layout name
+	 *
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	public function getLayoutName(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+		if (!$this->hasLayout()) {
+			return NULL;
+		}
+		$layoutName = $this->layoutNameNode->evaluate($renderingContext);
+		if (!empty($layoutName)) {
+			return $layoutName;
+		}
+		throw new \TYPO3\Fluid\View\Exception('The layoutName could not be evaluated to a string', 1296805368);
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isCompilable() {
+		return $this->compilable;
+	}
+
+	/**
+	 * @param boolean $compilable
+	 */
+	public function setCompilable($compilable) {
+		$this->compilable = $compilable;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isCompiled() {
+		return FALSE;
 	}
 }
 ?>

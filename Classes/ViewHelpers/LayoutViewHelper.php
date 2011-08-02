@@ -36,7 +36,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
- * @todo refine documentation
  */
 class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 

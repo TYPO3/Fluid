@@ -89,7 +89,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 		} else {
 			$name = $this->arguments['name'];
 		}
-		if ($this->arguments->hasArgument('value') && is_object($this->arguments['value'])) {
+		if ($this->hasArgument('value') && is_object($this->arguments['value'])) {
 			if (NULL !== $this->persistenceManager->getIdentifierByObject($this->arguments['value'])
 				&& (!$this->persistenceManager->isNewObject($this->arguments['value']))) {
 				$name .= '[__identity]';
@@ -110,7 +110,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 */
 	protected function getValue() {
 		$value = NULL;
-		if ($this->arguments->hasArgument('value')) {
+		if ($this->hasArgument('value')) {
 			$value = $this->arguments['value'];
 		} elseif ($this->hasMappingErrorOccured()) {
 			$value = $this->getLastSubmittedFormData();
@@ -200,7 +200,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function isObjectAccessorMode() {
-		return $this->arguments->hasArgument('property')
+		return $this->hasArgument('property')
 			&& $this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 	}
 
@@ -212,14 +212,14 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function setErrorClassAttribute() {
-		if ($this->arguments->hasArgument('class')) {
+		if ($this->hasArgument('class')) {
 			$cssClass = $this->arguments['class'] . ' ';
 		} else {
 			$cssClass = '';
 		}
 		$mappingResultsForProperty = $this->getMappingResultsForProperty();
 		if ($mappingResultsForProperty->hasErrors()) {
-			if ($this->arguments->hasArgument('errorClass')) {
+			if ($this->hasArgument('errorClass')) {
 				$cssClass .= $this->arguments['errorClass'];
 			} else {
 				$cssClass .= 'error';

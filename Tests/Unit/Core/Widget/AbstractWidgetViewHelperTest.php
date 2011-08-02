@@ -106,7 +106,9 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function callViewHelper() {
 		$viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$this->viewHelper->setViewHelperVariableContainer($viewHelperVariableContainer);
+		$renderingContext = new \TYPO3\Fluid\Core\Rendering\RenderingContext();
+		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
+		$this->viewHelper->setRenderingContext($renderingContext);
 
 		$this->viewHelper->expects($this->any())->method('getWidgetConfiguration')->will($this->returnValue('Some Widget Configuration'));
 		$this->widgetContext->expects($this->once())->method('setNonAjaxWidgetConfiguration')->with('Some Widget Configuration');
@@ -118,7 +120,7 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 		$this->viewHelper->expects($this->once())->method('validateArguments');
 		$this->viewHelper->expects($this->once())->method('initialize');
-		$this->viewHelper->expects($this->once())->method('callRenderMethod')->with(array('arg1' => 'val1'))->will($this->returnValue('renderedResult'));
+		$this->viewHelper->expects($this->once())->method('callRenderMethod')->will($this->returnValue('renderedResult'));
 		$output = $this->viewHelper->initializeArgumentsAndRender(array('arg1' => 'val1'));
 		$this->assertEquals('renderedResult', $output);
 	}

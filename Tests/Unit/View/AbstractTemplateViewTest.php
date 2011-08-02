@@ -58,7 +58,7 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getTemplateVariableContainer'));
 		$this->renderingContext->expects($this->any())->method('getViewHelperVariableContainer')->will($this->returnValue($this->viewHelperVariableContainer));
 		$this->renderingContext->expects($this->any())->method('getTemplateVariableContainer')->will($this->returnValue($this->templateVariableContainer));
-		$this->view = $this->getMock('TYPO3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'canRender'));
+		$this->view = $this->getMock('TYPO3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'canRender', 'getTemplateIdentifier', 'getLayoutIdentifier', 'getPartialIdentifier'));
 		$this->view->setRenderingContext($this->renderingContext);
 	}
 

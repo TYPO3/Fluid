@@ -44,7 +44,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
-class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
 
 	/**
 	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
@@ -78,5 +78,9 @@ class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractVi
 		return htmlspecialchars($value, $flags, $encoding, $doubleEncode);
 	}
 
+	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
+		return sprintf('htmlspecialchars((%s[\'value\'] !== NULL ? %s[\'value\'] : %s()), (%s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %s[\'encoding\'], %s[\'doubleEncode\'])',
+				$argumentsVariableName, $argumentsVariableName, $renderChildrenClosureVariableName, $argumentsVariableName, $argumentsVariableName, $argumentsVariableName);
+	}
 }
 ?>

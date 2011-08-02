@@ -91,16 +91,15 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
 	 *
-	 * @param array $renderMethodParameters the parameters of the render() method.
 	 * @return string the rendered ViewHelper.
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
-	public function initializeArgumentsAndRender(array $renderMethodParameters) {
+	public function initializeArgumentsAndRender() {
 		$this->validateArguments();
 		$this->initialize();
 		$this->initializeWidgetContext();
 
-		return $this->callRenderMethod($renderMethodParameters);
+		return $this->callRenderMethod();
 	}
 
 	/**

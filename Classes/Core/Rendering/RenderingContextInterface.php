@@ -29,21 +29,6 @@ namespace TYPO3\Fluid\Core\Rendering;
 interface RenderingContextInterface {
 
 	/**
-	 * Returns the object manager. Only the ViewHelperNode should do this.
-	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
-	 */
-	public function getObjectManager();
-
-	/**
-	 * Injects the template variable container containing all variables available through ObjectAccessors
-	 * in the template
-	 *
-	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
-	 */
-	public function injectTemplateVariableContainer(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer);
-
-	/**
 	 * Get the template variable container
 	 *
 	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
@@ -51,26 +36,11 @@ interface RenderingContextInterface {
 	public function getTemplateVariableContainer();
 
 	/**
-	 * Set the controller context which will be passed to the ViewHelper
-	 *
-	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
-	 */
-	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext);
-
-	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
 	 * @return \TYPO3\FLOW3\MVC\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext();
-
-	/**
-	 * Set the ViewHelperVariableContainer
-	 *
-	 * @param \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
-	 * @return void
-	 */
-	public function injectViewHelperVariableContainer(\TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer);
 
 	/**
 	 * Get the ViewHelperVariableContainer

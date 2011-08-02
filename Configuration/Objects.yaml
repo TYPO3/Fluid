@@ -1,12 +1,12 @@
-TYPO3\Fluid\View\Aspect\TemplateViewCachingAspect:
+TYPO3\Fluid\Core\Compiler\TemplateCompiler:
   properties:
-    syntaxTreeCache:
+    templateCache:
       object:
         factoryObjectName: TYPO3\FLOW3\Cache\CacheManager
         factoryMethodName: getCache
         arguments:
           1:
-            value: Fluid_SyntaxTreeCache
+            value: Fluid_TemplateCache
 
 TYPO3\Fluid\View\TemplateView:
   properties:

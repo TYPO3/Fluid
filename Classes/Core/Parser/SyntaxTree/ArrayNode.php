@@ -65,6 +65,15 @@ class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		}
 		return $arrayToBuild;
 	}
+
+	/**
+	 * INTERNAL; DO NOT CALL DIRECTLY!
+	 *
+	 * @return array
+	 */
+	public function getInternalArray() {
+		return $this->internalArray;
+	}
 }
 
 ?>

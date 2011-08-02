@@ -23,14 +23,14 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 require_once(__DIR__ . '/Fixtures/EmptySyntaxTreeNode.php');
 require_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
-require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Upload" Form view helper
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class UploadViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
 	 * var \TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper
@@ -40,6 +40,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	public function setUp() {
 		parent::setUp();
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
+		$this->arguments['name'] = '';
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -49,10 +50,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagName() {
-		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
-		$mockTagBuilder->expects($this->once())->method('setTagName')->with('input');
-		$this->viewHelper->injectTagBuilder($mockTagBuilder);
-		$this->viewHelper->setArguments(new \TYPO3\Fluid\Core\ViewHelper\Arguments(array()));
+		$this->tagBuilder->expects($this->once())->method('setTagName')->with('input');
 
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
@@ -71,9 +69,9 @@ class UploadViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$mockTagBuilder->expects($this->once())->method('render');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
-		$arguments = new \TYPO3\Fluid\Core\ViewHelper\Arguments(array(
+		$arguments = array(
 			'name' => 'someName',
-		));
+		);
 
 		$this->viewHelper->setArguments($arguments);
 		$this->viewHelper->setViewHelperNode(new \TYPO3\Fluid\ViewHelpers\Fixtures\EmptySyntaxTreeNode());

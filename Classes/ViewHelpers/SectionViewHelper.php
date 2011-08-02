@@ -65,7 +65,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * @api
  * @scope prototype
  */
-class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
+class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface, \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
 
 	/**
 	 * Initialize the arguments.
@@ -112,6 +112,20 @@ class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 			return $this->renderChildren();
 		}
 		return '';
+	}
+
+	/**
+	 * The inner contents of a section should not be rendered.
+	 *
+	 * @param string $argumentsVariableName
+	 * @param string $renderChildrenClosureVariableName
+	 * @param string $initializationPhpCode
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
+	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
+	 * @return string
+	 */
+	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
+		return '\'\'';
 	}
 }
 

@@ -36,7 +36,7 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	 * Names of all registered tag attributes
 	 * @var array
 	 */
-	protected $tagAttributes = array();
+	static private $tagAttributes = array();
 
 	/**
 	 * Tag builder instance
@@ -90,12 +90,15 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 		parent::initialize();
 		$this->tag->reset();
 		$this->tag->setTagName($this->tagName);
-		if (is_array($this->arguments['additionalAttributes'])) {
+		if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
 			$this->tag->addAttributes($this->arguments['additionalAttributes']);
 		}
-		foreach ($this->tagAttributes as $attributeName) {
-			if ($this->arguments->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
-				$this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
+
+		if (isset(self::$tagAttributes[get_class($this)])) {
+			foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
+				if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
+					$this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
+				}
 			}
 		}
 	}
@@ -113,7 +116,7 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	 */
 	protected function registerTagAttribute($name, $type, $description, $required = FALSE) {
 		$this->registerArgument($name, $type, $description, $required, NULL);
-		$this->tagAttributes[] = $name;
+		self::$tagAttributes[get_class($this)][$name] = $name;
 	}
 
 	/**
