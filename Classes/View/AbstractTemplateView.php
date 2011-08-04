@@ -229,13 +229,14 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * Renders a given section.
 	 *
 	 * @param string $sectionName Name of section to render
-	 * @param array $variables the variables to use.
+	 * @param array $variables The variables to use
+	 * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
 	 * @return string rendered template for the section
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidSectionException
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
-	public function renderSection($sectionName, array $variables) {
+	public function renderSection($sectionName, array $variables, $ignoreUnknown = FALSE) {
 		$renderingContext = $this->getCurrentRenderingContext();
 		if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
 			// in case we render a layout right now, we will render a section inside a TEMPLATE.
@@ -250,15 +251,22 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 		$parsedTemplate = $this->getCurrentParsedTemplate();
 
 		if ($parsedTemplate->isCompiled()) {
-			$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
 			$methodNameOfSection = 'section_' . sha1($sectionName);
+			if ($ignoreUnknown && !method_exists($parsedTemplate, $methodNameOfSection)) {
+				return '';
+			}
+			$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
 			$output = $parsedTemplate->$methodNameOfSection($renderingContext);
 			$this->stopRendering();
 		} else {
 			$sections = $parsedTemplate->getVariableContainer()->get('sections');
 			if(!array_key_exists($sectionName, $sections)) {
 				$controllerObjectName = $this->controllerContext->getRequest()->getControllerObjectName();
-				throw new \TYPO3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
+				if ($ignoreUnknown) {
+					return '';
+				} else {
+					throw new \TYPO3\Fluid\View\Exception\InvalidSectionException(sprintf('Could not render unknown section "%s" in %s used by %s.', $sectionName, get_class($this), $controllerObjectName), 1227108982);
+				}
 			}
 			$section = $sections[$sectionName];
 
