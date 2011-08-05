@@ -79,8 +79,11 @@ class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractVi
 	}
 
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
-		return sprintf('htmlspecialchars((%s[\'value\'] !== NULL ? %s[\'value\'] : %s()), (%s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %s[\'encoding\'], %s[\'doubleEncode\'])',
-				$argumentsVariableName, $argumentsVariableName, $renderChildrenClosureVariableName, $argumentsVariableName, $argumentsVariableName, $argumentsVariableName);
+		$valueVariableName = $templateCompiler->variableName('value');
+		$initializationPhpCode .= sprintf('%s = (%s[\'value\'] !== NULL ? %s[\'value\'] : %s());', $valueVariableName, $argumentsVariableName, $argumentsVariableName, $renderChildrenClosureVariableName) . chr(10);
+
+		return sprintf('(!is_string(%s) ? %s : htmlspecialchars(%s, (%s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %s[\'encoding\'], %s[\'doubleEncode\']))',
+				$valueVariableName, $valueVariableName, $valueVariableName, $argumentsVariableName, $argumentsVariableName, $argumentsVariableName);
 	}
 }
 ?>
