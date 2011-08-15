@@ -50,7 +50,7 @@ class ResourceTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->assertEquals($originalText, $mockTextNode->evaluate($this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface')));
 
 		$mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
-		$mockObjectManager->expects($this->at(0))->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', '')->will($this->returnValue($mockDummyNode));
+		$mockObjectManager->expects($this->at(0))->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($mockDummyNode));
 		$mockObjectManager->expects($this->at(1))->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $originalText1)->will($this->returnValue($mockDummyNode));
 		$mockObjectManager->expects($this->at(2))->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $path)->will($this->returnValue($mockPathNode));
 		$mockObjectManager->expects($this->at(3))->method('create')->with('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper')->will($this->returnValue($mockViewHelper));

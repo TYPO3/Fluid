@@ -106,7 +106,7 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 			return $node;
 		}
 		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
-		$node = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', '');
+		$node = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		foreach ($textParts as $part) {
 			$matches = array();
 			if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
