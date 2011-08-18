@@ -25,13 +25,14 @@ class TranslateViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');
 
 		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
-		$mockTranslator->expects($this->once())->method('translateByOriginalLabel', 'Untranslated Label', 'main', array(), NULL, $dummyLocale)->will($this->returnValue('Translated Label'));
+		$mockTranslator->expects($this->once())->method('translateByOriginalLabel', 'Untranslated Label', 'Main', 'TYPO3.FLOW3', array(), NULL, $dummyLocale)->will($this->returnValue('Translated Label'));
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Untranslated Label'));
 		$viewHelper->injectTranslator($mockTranslator);
 
-		$result = $viewHelper->render(NULL, NULL, array(), 'main', NULL, 'de_DE');
+		$result = $viewHelper->render(NULL, NULL, array(), 'Main', NULL, 'de_DE');
 		$this->assertEquals('Translated Label', $result);
 	}
 }

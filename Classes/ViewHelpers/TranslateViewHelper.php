@@ -33,6 +33,13 @@ namespace TYPO3\Fluid\ViewHelpers;
  * translation of the label "Untranslated label" from custom source "SomeLabelsCatalog" and locale "de_DE"
  * </output>
  *
+ * <code title="Custom source from other package">
+ * <f:translate source="LabelsCatalog" package="OtherPackage">Untranslated label</f:translate>
+ * </code>
+ * <output>
+ * translation of the label "Untranslated label" from custom source "LabelsCatalog" in "OtherPackage"
+ * </output>
+ *
  * <code title="Arguments">
  * <f:translate arguments="{0: 'foo', 1: '99.9'}">Untranslated {0} and {1,number}</f:translate>
  * </code>
@@ -77,14 +84,16 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * translated label.
 	 *
 	 * @param string $key Id to use for finding translation
+	 * @param array $arguments Numerically indexed array of values to be inserted into placeholders
 	 * @param string $default if $key is not specified or could not be resolved, this value is used. If this argument is not set, child nodes will be used to render the default
 	 * @param array $arguments Numerically indexed array of values to be inserted into placeholders
 	 * @param string $source Name of file with translations
+	 * @param string $package Target package key. If not set, the current package key will be used
 	 * @param mixed $quantity A number to find plural form for (float or int), NULL to not use plural forms
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
 	 */
-	public function render($key = NULL, $default = NULL, array $arguments = array(), $source = 'Main', $quantity = NULL, $locale = NULL) {
+	public function render($key = NULL, $default = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;
 		if ($locale !== NULL) {
 			try {
@@ -93,14 +102,19 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
 			}
 		}
+		if ($package === NULL) $package = $this->controllerContext->getRequest()->getControllerPackageKey();
 		$originalLabel = $default !== NULL ? $default : $this->renderChildren();
+		$quantity = $quantity === NULL ? NULL : (integer)$quantity;
 
 		if ($key === NULL) {
-			return $this->translator->translateByOriginalLabel($originalLabel, $source, $arguments, $quantity, $localeObject);
+			return $this->translator->translateByOriginalLabel($originalLabel, $arguments, $quantity, $localeObject, $source, $package);
 		} else {
-			// @todo return $originalLabel if $key does not exist
-			// like this? if result === $key -> $originalLabel
-			return $this->translator->translateById($key, $source, $arguments, $quantity, $localeObject);
+			$translation = $this->translator->translateById($key, $arguments, $quantity, $localeObject, $source, $package);
+			if ($translation === $key) {
+				return $originalLabel;
+			} else {
+				return $translation;
+			}
 		}
 	}
 }
