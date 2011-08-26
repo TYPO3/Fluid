@@ -22,34 +22,42 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 /**
- * Error messages view helper
+ * Validation results view helper
  *
  * = Examples =
  *
  * <code title="Output error messages as a list">
- * <ul class="errors">
- *   <f:form.errors>
- *     <li>{error.code}: {error.message}</li>
- *   </f:form.errors>
- * </ul>
+ * <f:form.validationResults>
+ *   <f:if condition="{validationResults.flattenedErrors}">
+ *     <ul class="errors">
+ *       <f:for each="{errors}" as="error">
+ *         <li>{error.code}: {error}</li>
+ *       </f:for>
+ *     </ul>
+ *   </f:if>
+ * </f:form.validationResults>
  * </code>
  * <output>
- * <ul>
+ * <ul class="errors">
  *   <li>1234567890: Validation errors for argument "newBlog"</li>
  * </ul>
  * </output>
  *
  * <code title="Output error messages for a single property">
- * <f:form.errors for="someProperty">
- *   <div class="error">
- *     <strong>{error.propertyName}</strong>: <f:for each="{error.errors}" as="errorDetail">{errorDetail.message}</f:for>
- *   </div>
- * </f:form.errors>
+ * <f:form.validationResults for="someProperty">
+ *   <f:if condition="{validationResults.flattenedErrors}">
+ *     <ul class="errors">
+ *       <f:for each="{errors}" as="error">
+ *         <li>{error.code}: {error}</li>
+ *       </f:for>
+ *     </ul>
+ *   </f:if>
+ * </f:form.validationResults>
  * </code>
  * <output>
- * <div class="error>
- *   <strong>someProperty:</strong> errorMessage1 errorMessage2
- * </div>
+ * <ul class="errors">
+ *   <li>1234567890: Some error message</li>
+ * </ul>
  * </output>
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -77,7 +85,7 @@ class ValidationResultsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractV
 		$this->templateVariableContainer->add($as, $validationResults);
 		$output = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);
-		
+
 		return $output;
 	}
 }
