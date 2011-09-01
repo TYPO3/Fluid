@@ -129,8 +129,6 @@ class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function thenArgumentHasPriorityOverChildNodesIfConditionIsTrue() {
-		$mockRenderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
-
 		$mockThenViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockThenViewHelperNode->expects($this->never())->method('evaluate');
 
@@ -163,8 +161,6 @@ class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function elseArgumentHasPriorityOverChildNodesIfConditionIsFalse() {
-		$mockRenderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
-
 		$mockElseViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
 		$mockElseViewHelperNode->expects($this->any())->method('getViewHelperClassName')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\ElseViewHelper'));
 		$mockElseViewHelperNode->expects($this->never())->method('evaluate');

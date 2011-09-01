@@ -55,7 +55,7 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('getChildNodes')->will($this->returnValue(array(1,2,3,4)));
 
-		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
 	}
 
 	/**

@@ -562,7 +562,6 @@ class TemplateParser {
 	 */
 	protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier) {
 		$explodedViewHelperName = explode('.', $methodIdentifier);
-		$className = '';
 		if (count($explodedViewHelperName) > 1) {
 			$className = implode(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR, array_map('ucfirst', $explodedViewHelperName));
 		} else {

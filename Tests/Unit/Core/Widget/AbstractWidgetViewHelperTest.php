@@ -142,7 +142,7 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->objectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($rootNode));
 
 		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
-		$this->viewHelper->expects($this->once())->method('getRenderingContext')->will($this->returnValue($renderingContext));
+		$this->viewHelper->_set('renderingContext', $renderingContext);
 
 		$this->widgetContext->expects($this->once())->method('setViewHelperChildNodes')->with($rootNode, $renderingContext);
 		$this->viewHelper->setChildNodes(array($node1, $node2, $node3));
@@ -233,7 +233,7 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		)));
 		$widgetRequest->expects($this->once())->method('setControllerActionName')->with('index');
 
-		$output = $this->viewHelper->_call('initiateSubRequest');
+		$this->viewHelper->_call('initiateSubRequest');
 	}
 }
 ?>

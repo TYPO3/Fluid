@@ -134,7 +134,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 		foreach ($childNodes as $childNode) {
 			$rootNode->addChildNode($childNode);
 		}
-		$this->widgetContext->setViewHelperChildNodes($rootNode, $this->getRenderingContext());
+		$this->widgetContext->setViewHelperChildNodes($rootNode, $this->renderingContext);
 	}
 
 	/**
