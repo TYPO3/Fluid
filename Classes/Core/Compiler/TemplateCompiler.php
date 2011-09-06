@@ -57,6 +57,7 @@ class TemplateCompiler {
 	 * @return boolean
 	 */
 	public function has($identifier) {
+		$identifier = $this->sanitizeIdentifier($identifier);
 		return $this->templateCache->has($identifier);
 	}
 
@@ -65,6 +66,7 @@ class TemplateCompiler {
 	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface
 	 */
 	public function get($identifier) {
+		$identifier = $this->sanitizeIdentifier($identifier);
 		if (!isset($this->syntaxTreeInstanceCache[$identifier])) {
 			$this->templateCache->requireOnce($identifier);
 			$templateClassName = 'FluidCache_' . $identifier;
@@ -80,6 +82,7 @@ class TemplateCompiler {
 	 * @return void
 	 */
 	public function store($identifier, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
+		$identifier = $this->sanitizeIdentifier($identifier);
 		$this->variableCounter = 0;
 		$generatedRenderFunctions = '';
 
@@ -122,6 +125,17 @@ EOD;
 				($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
 				$generatedRenderFunctions);
 		$this->templateCache->set($identifier, $templateCode);
+	}
+
+	/**
+	 * Replaces special characters by underscores
+	 * @see http://www.php.net/manual/en/language.variables.basics.php
+	 *
+	 * @param string $identifier
+	 * @return string the sanitized identifier
+	 */
+	protected function sanitizeIdentifier($identifier) {
+		return preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
 	}
 
 	protected function generateCodeForSection($converted, $expectedFunctionName, $comment) {
