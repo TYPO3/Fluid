@@ -492,7 +492,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		$controllerName = $request->getControllerName();
 		$templateModifiedTimestamp = \filemtime($pathAndFilename);
 		$templateIdentifier = sprintf('%s_%s_%s_%s', $packageKey, $controllerName, $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
-		$templateIdentifier = str_replace(array('.', '/', '\\'), '_', $templateIdentifier);
 		return $templateIdentifier;
 	}
 }
