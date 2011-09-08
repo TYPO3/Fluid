@@ -22,7 +22,10 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * This ViewHelper prevents parsing and output of any content inside the tag
+ * This ViewHelper prevents rendering of any content inside the tag
+ * Note: Contents of the comment will still be *parsed* thus throwing an
+ * Exception if it contains syntax errors. You can put child nodes in
+ * CDATA tags to avoid this.
  *
  * = Examples =
  *
@@ -39,10 +42,23 @@ namespace TYPO3\Fluid\ViewHelpers;
  * After
  * </output>
  *
+ * <code title="Prevent parsing">
+ * <f:comment><![CDATA[
+ *  <f:some.invalid.syntax />
+ * ]]></f:comment>
+ * </code>
+ * <output>
+ * </output>
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class CommentViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+
+	/**
+	 * @var boolean
+	 */
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Comments out the tag content
