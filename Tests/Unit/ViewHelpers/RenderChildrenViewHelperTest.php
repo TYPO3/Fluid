@@ -82,7 +82,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 
-		$output = $this->viewHelper->render();
+		$this->viewHelper->render();
 	}
 
 	/**
@@ -99,7 +99,7 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 		$widgetContext->expects($this->any())->method('getViewHelperChildNodeRenderingContext')->will($this->returnValue(NULL));
 		$widgetContext->expects($this->any())->method('getViewHelperChildNodes')->will($this->returnValue(NULL));
 
-		$output = $this->viewHelper->render();
+		$this->viewHelper->render();
 	}
 }
 ?>

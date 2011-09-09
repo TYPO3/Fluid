@@ -117,9 +117,6 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
-		$objectManager = $renderingContext->getObjectManager();
-		$contextVariables = $renderingContext->getTemplateVariableContainer()->getAllIdentifiers();
-
 		if ($this->viewHelpersByContext->contains($renderingContext)) {
 			$viewHelper = $this->viewHelpersByContext[$renderingContext];
 		} else {
