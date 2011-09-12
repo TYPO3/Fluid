@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\ViewHelpers;
 /**
  * Viewhelper that outputs its childnodes with \TYPO3\var_dump()
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

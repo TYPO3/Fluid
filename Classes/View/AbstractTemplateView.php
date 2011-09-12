@@ -26,7 +26,6 @@ namespace TYPO3\Fluid\View;
  *
  * Contains the fundamental methods which any Fluid based template view needs.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterface {
 

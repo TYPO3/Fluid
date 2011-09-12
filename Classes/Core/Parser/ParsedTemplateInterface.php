@@ -25,7 +25,6 @@ namespace TYPO3\Fluid\Core\Parser;
  * This interface is returned by \TYPO3\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface ParsedTemplateInterface {
 

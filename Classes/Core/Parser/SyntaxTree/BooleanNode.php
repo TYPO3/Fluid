@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 /**
  * A node which is used inside boolean arguments
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {

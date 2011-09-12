@@ -77,7 +77,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * Using the reserved keyword "_all", all available variables will be passed along to the partial
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

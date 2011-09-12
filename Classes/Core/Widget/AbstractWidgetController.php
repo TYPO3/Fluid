@@ -26,7 +26,6 @@ namespace TYPO3\Fluid\Core\Widget;
  * Basically, it is an ActionController, and it additionally
  * has $this->widgetConfiguration set to the Configuration of the current Widget.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 abstract class AbstractWidgetController extends \TYPO3\FLOW3\MVC\Controller\ActionController {

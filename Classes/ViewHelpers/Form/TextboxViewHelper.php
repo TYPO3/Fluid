@@ -35,7 +35,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * <input type="text" name="myTextBox" value="default value" />
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  * @deprecated since 1.0.0 alpha 7
  */

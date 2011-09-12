@@ -33,7 +33,6 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  *
  * Normally, this facet is not needed, except in really really rare cases.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface PostParseInterface {
 

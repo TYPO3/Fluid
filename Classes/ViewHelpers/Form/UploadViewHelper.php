@@ -34,7 +34,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * <input type="file" name="file" />
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

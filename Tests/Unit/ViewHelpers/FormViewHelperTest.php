@@ -26,7 +26,6 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
  * Test for the Form view helper
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 

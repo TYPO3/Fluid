@@ -35,7 +35,6 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
  * 97e7e90a-413c-44ef-b2d0-ddfa4387b5ca
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

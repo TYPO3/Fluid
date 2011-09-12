@@ -41,7 +41,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * Text with & " ' < > * replaced by HTML entities (htmlentities applied).
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  * @api
  */

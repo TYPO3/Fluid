@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser;
 /**
  * Template parser building up an object syntax tree
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class TemplateParser {
 

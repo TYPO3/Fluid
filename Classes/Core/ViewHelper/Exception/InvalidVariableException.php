@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\ViewHelper\Exception;
 /**
  * A "Invalid Variable" exception.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class InvalidVariableException extends \TYPO3\Fluid\Core\ViewHelper\Exception {

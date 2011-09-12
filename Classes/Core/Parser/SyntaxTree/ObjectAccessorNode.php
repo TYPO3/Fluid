@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {

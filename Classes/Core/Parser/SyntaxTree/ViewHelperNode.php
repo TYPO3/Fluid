@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 /**
  * Node which will call a ViewHelper associated with this node.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {

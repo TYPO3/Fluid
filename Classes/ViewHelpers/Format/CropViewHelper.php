@@ -43,7 +43,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * WARNING: This tag does NOT handle tags currently.
  * WARNING: This tag doesn't care about multibyte charsets currently.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

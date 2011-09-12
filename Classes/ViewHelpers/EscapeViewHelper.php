@@ -62,7 +62,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * Strips all tags from the HTML or XML input and returns plain text.
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope singleton
  * @deprecated since 1.0.0 alpha 7; use corresponding f:format.* ViewHelpers instead

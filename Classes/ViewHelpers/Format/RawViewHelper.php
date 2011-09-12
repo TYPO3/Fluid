@@ -51,7 +51,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * (Content of {string} without any conversion/escaping)
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class RawViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

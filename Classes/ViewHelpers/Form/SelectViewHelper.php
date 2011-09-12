@@ -61,7 +61,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *
  * The "value" property now expects a domain object, and tests for object equivalence.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

@@ -41,7 +41,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {

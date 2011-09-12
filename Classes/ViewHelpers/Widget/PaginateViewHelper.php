@@ -48,7 +48,6 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * only the small subset of objects.
  * So, there is no negative performance overhead in using the Paginate Widget.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */
