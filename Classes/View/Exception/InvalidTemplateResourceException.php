@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\View\Exception;
 /**
  * An "Invalid Template Resource" exception
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class InvalidTemplateResourceException extends \TYPO3\Fluid\View\Exception {

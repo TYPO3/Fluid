@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\ViewHelpers\Fixtures;
 /**
  * Example domain class which can be used to test different view helpers, e.g. the "select" view helper.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class UserDomainClass {
 

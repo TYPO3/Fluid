@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 /**
  * Testcase for TagBuilder
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 

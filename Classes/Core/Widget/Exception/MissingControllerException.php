@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Widget\Exception;
 /**
  * An exception if the controller is missing.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class MissingControllerException extends \TYPO3\Fluid\Core\Widget\Exception {
 }

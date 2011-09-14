@@ -41,7 +41,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * Text with &amp; &quot; &lt; &gt; replaced by unescaped entities (html_entity_decode applied).
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class HtmlentitiesDecodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

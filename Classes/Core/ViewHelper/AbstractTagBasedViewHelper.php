@@ -26,7 +26,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * Sould be used as the base class for all view helpers which output simple tags, as it provides some
  * convenience methods to register default attributes, ...
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

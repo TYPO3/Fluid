@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Rendering;
 /**
  * Testcase for ParsingState
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class RenderingContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 

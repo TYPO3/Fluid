@@ -28,7 +28,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * 1) Holds the current variables in the template
  * 2) Holds variables being set during Parsing (set in view helpers implementing the PostParse facet)
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

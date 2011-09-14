@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
 /**
  * Testcase for Regular expressions in parser
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 

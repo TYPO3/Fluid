@@ -63,7 +63,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * translation of label with the id "someLabelId" and the default translation "default translation"
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser\Interceptor;
 /**
  * An interceptor adding the escape viewhelper to the suitable places.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 

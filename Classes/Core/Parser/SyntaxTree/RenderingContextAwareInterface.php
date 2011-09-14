@@ -26,7 +26,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * marked with this interface will get the current rendering context injected
  * by the ObjectAccessorNode on trying to evaluate them.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface RenderingContextAwareInterface {
 

@@ -27,7 +27,6 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 /**
  * Test for the Validation Results view helper
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 

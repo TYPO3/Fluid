@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\ViewHelpers\Fixtures;
 /**
  * [Enter description here]
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class ConstraintSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	public $callProtocol = array();

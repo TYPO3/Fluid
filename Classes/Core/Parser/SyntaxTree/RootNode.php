@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 /**
  * Root node of every syntax tree.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class RootNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {

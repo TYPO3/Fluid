@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {

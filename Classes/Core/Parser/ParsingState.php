@@ -26,7 +26,6 @@ namespace TYPO3\Fluid\Core\Parser;
  * and the current stack of open nodes (nodeStack) and a variable container used
  * for PostParseFacets.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {

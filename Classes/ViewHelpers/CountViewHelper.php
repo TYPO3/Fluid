@@ -40,7 +40,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * 10 (depending on the number of items in {objects})
  * </output>
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  * @scope prototype
  */

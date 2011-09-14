@@ -26,7 +26,6 @@ use \TYPO3\FLOW3\Package\Package as BasePackage;
 /**
  * The Fluid Package
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class Package extends BasePackage {
 

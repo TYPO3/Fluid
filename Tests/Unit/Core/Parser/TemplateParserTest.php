@@ -29,7 +29,6 @@ require_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
  * This is to at least half a system test, as it compares rendered results to
  * expectations, and does not strictly check the parsing...
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 

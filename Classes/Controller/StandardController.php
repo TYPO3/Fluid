@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\Controller;
 /**
  * Controller which provides a web UI for generating ViewHelper XSD Definitons
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 

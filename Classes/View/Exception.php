@@ -24,7 +24,6 @@ namespace TYPO3\Fluid\View;
 /**
  * A generic Fluid View exception.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @api
  */
 class Exception extends \TYPO3\Fluid\Exception {

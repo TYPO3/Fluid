@@ -26,7 +26,6 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
  * Testcase for IfViewHelper
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 

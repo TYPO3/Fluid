@@ -32,7 +32,6 @@ namespace TYPO3\Fluid\Core\Widget;
  *
  * It is a purely internal class which should not be used outside of Fluid.
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope prototype
  */
 class WidgetContext {
