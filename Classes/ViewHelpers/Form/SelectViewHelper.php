@@ -224,25 +224,34 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 */
 	protected function getSelectedValue() {
 		$value = $this->getValue();
-		if (!$this->hasArgument('optionValueField')) {
-			return $value;
-		}
-		if (!is_array($value) && !($value instanceof Iterator)) {
-			if (is_object($value)) {
-				return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
-			} else {
-				return $value;
-			}
+		if (!is_array($value) && !($value instanceof  \Traversable)) {
+			return $this->getOptionValueScalar($value);
 		}
 		$selectedValues = array();
 		foreach($value as $selectedValueElement) {
-			if (is_object($selectedValueElement)) {
-				$selectedValues[] = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($selectedValueElement, $this->arguments['optionValueField']);
-			} else {
-				$selectedValues[] = $selectedValueElement;
-			}
+			$selectedValues[] = $this->getOptionValueScalar($selectedValueElement);
 		}
 		return $selectedValues;
+	}
+
+	/**
+	 * Get the option value for an object
+	 *
+	 * @param mixed $valueElement
+	 * @return string
+	 */
+	protected function getOptionValueScalar($valueElement) {
+		if (is_object($valueElement)) {
+			if ($this->hasArgument('optionValueField')) {
+				return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
+			} else if ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL){
+				return $this->persistenceManager->getIdentifierByObject($valueElement);
+			} else {
+				return (string)$valueElement;
+			}
+		} else {
+			return $valueElement;
+		}
 	}
 
 	/**
