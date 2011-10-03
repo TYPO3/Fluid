@@ -13,7 +13,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /**
  * Formats a string using PHPs str_pad function.
- * @See http://www.php.net/manual/en/function.str_pad.php
+ * @see http://www.php.net/manual/en/function.str_pad.php
  *
  * = Examples =
  *
