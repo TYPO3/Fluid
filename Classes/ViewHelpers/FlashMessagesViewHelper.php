@@ -62,7 +62,7 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	 * @api
 	 */
 	public function render() {
-		$flashMessages = $this->controllerContext->getFlashMessageContainer()->getAllAndFlush();
+		$flashMessages = $this->controllerContext->getFlashMessageContainer()->getMessagesAndFlush();
 		if (count($flashMessages) > 0) {
 			$tagContent = '';
 			foreach ($flashMessages as $singleFlashMessage) {

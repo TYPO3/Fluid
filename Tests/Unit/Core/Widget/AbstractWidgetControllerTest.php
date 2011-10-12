@@ -46,7 +46,7 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 		$abstractWidgetController = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
 		$abstractWidgetController->_set('argumentsMappingResults', new \TYPO3\FLOW3\Error\Result());
-		$abstractWidgetController->injectFlashMessageContainer(new \TYPO3\FLOW3\MVC\Controller\FlashMessageContainer());
+		$abstractWidgetController->_set('flashMessageContainer', new \TYPO3\FLOW3\MVC\FlashMessageContainer());
 
 		$abstractWidgetController->processRequest($request, $response);
 
