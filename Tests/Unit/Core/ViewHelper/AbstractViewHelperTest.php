@@ -125,6 +125,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
 		$reflectionService->setDataCache($dataCacheMock);
+		$reflectionService->initializeObject();
 		$reflectionService->buildReflectionData($availableClassNames);
 
 		$viewHelper = new \TYPO3\Fluid\Core\Fixtures\TestViewHelper();
@@ -158,6 +159,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
 		$reflectionService->setDataCache($dataCacheMock);
+		$reflectionService->initializeObject();
 		$reflectionService->buildReflectionData($availableClassNames);
 
 		$viewHelper = new \TYPO3\Fluid\Core\Fixtures\TestViewHelper2();
