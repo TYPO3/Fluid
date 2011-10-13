@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * This object stores the WidgetContext for the currently active widgets
  * of the current user, to make sure the WidgetContext is available in
@@ -18,7 +20,7 @@ namespace TYPO3\Fluid\Core\Widget;
  *
  * This class is only used internally by the widget framework.
  *
- * @scope session
+ * @FLOW3\Scope("session")
  */
 class AjaxWidgetContextHolder {
 

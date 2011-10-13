@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * This view helper is an abstract ViewHelper which implements an if/else condition.
  * @see TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
@@ -30,7 +32,7 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * Make sure to NOT OVERRIDE the constructor.
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface, \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
 
@@ -140,7 +142,7 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
 	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
 	 * @return string
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
 		foreach ($syntaxTreeNode->getChildNodes() as $childNode) {

@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * The EscapeViewHelper is used to escape variable content in various ways. By
  * default HTML is the target.
@@ -53,7 +55,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </output>
  *
  * @api
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  * @deprecated since 1.0.0 alpha 7; use corresponding f:format.* ViewHelpers instead
  */
 class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

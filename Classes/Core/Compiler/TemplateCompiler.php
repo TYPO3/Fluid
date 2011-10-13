@@ -11,8 +11,10 @@ namespace TYPO3\Fluid\Core\Compiler;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class TemplateCompiler {
 

@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Grouped loop view helper.
  * Loops through the specified values
@@ -66,7 +68,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

@@ -11,16 +11,18 @@ namespace TYPO3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
 
 	/**
 	 * The Controller associated to this widget.
-	 * This needs to be filled by the individual subclass by an @inject
-	 * annotation.
+	 * This needs to be filled by the individual subclass using
+	 * property injection.
 	 *
 	 * @var TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @api
@@ -169,7 +171,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 */
 	protected function initiateSubRequest() {
 		if (!($this->controller instanceof \TYPO3\Fluid\Core\Widget\AbstractWidgetController)) {
-			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @inject annotation in your widget class.', 1284401632);
+			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\FLOW3\Annotations\Inject annotation in your widget class.', 1284401632);
 		}
 
 		$subRequest = $this->objectManager->create('TYPO3\FLOW3\MVC\Web\SubRequest', $this->controllerContext->getRequest());

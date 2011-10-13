@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Renders the identity of a persisted object (if it has an identity).
  * Useful for using the identity outside of the form view helpers
@@ -26,7 +28,7 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * A node which is used inside boolean arguments
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
@@ -133,7 +135,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * @return string
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getComparator() {
 		return $this->comparator;
@@ -141,7 +143,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * @return TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getSyntaxTreeNode() {
 		return $this->syntaxTreeNode;
@@ -149,7 +151,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * @return TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getLeftSide() {
 		return $this->leftSide;
@@ -157,7 +159,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * @return TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getRightSide() {
 		return $this->rightSide;

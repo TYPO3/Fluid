@@ -11,13 +11,15 @@ namespace TYPO3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Widget request handler, which handles the request if
  * typo3-fluid-widget-id is found.
  *
  * This Request Handler gets the WidgetRequestBuilder injected.
  *
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 

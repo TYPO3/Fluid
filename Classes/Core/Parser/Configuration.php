@@ -11,11 +11,13 @@ namespace TYPO3\Fluid\Core\Parser;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * The parser configuration. Contains all configuration needed to configure
  * the building of a SyntaxTree.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class Configuration {
 

@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * This ViewHelper counts elements of the specified array or countable object.
  *
@@ -31,7 +33,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Applies htmlentities() escaping to a value
  * @see http://www.php.net/manual/function.htmlentities.php
@@ -31,7 +33,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * Text with & " ' < > * replaced by HTML entities (htmlentities applied).
  * </output>
  *
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  * @api
  */
 class HtmlentitiesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

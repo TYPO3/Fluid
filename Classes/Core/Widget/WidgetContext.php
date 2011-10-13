@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * The WidgetContext stores all information a widget needs to know about the
  * environment.
@@ -22,7 +24,7 @@ namespace TYPO3\Fluid\Core\Widget;
  *
  * It is a purely internal class which should not be used outside of Fluid.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class WidgetContext {
 
@@ -69,7 +71,7 @@ class WidgetContext {
 	 * Only available inside non-AJAX requests.
 	 *
 	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
-	 * @transient
+	 * @FLOW3\Transient
 	 */
 	protected $viewHelperChildNodes; // TODO: rename to something more meaningful.
 
@@ -78,7 +80,7 @@ class WidgetContext {
 	 * Only available inside non-AJAX requests.
 	 *
 	 * @var TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @transient
+	 * @FLOW3\Transient
 	 */
 	protected $viewHelperChildNodeRenderingContext;
 

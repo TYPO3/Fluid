@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Text Syntax Tree Node - is a container for strings.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 

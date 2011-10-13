@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 

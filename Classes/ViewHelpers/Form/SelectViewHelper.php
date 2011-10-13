@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * This view helper generates a <select> dropdown list for the use with a form.
  *
@@ -52,7 +54,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The "value" property now expects a domain object, and tests for object equivalence.
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 

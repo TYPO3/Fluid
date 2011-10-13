@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Usage:
  * <f:input id="name" ... />
@@ -23,7 +25,7 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  *    <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all" />
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
@@ -33,7 +35,7 @@ class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetView
 	protected $ajaxWidget = TRUE;
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var TYPO3\Fluid\ViewHelpers\Widget\Controller\AutocompleteController
 	 */
 	protected $controller;

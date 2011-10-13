@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Controller for documentation rendering
  *
@@ -26,7 +28,7 @@ class DocumentationController extends \TYPO3\FLOW3\MVC\Controller\ActionControll
 
 	/**
 	 * @var TYPO3\Fluid\Service\DocbookGenerator
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $docbookGenerator;
 

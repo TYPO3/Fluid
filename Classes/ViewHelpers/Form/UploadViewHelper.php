@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * A view helper which generates an <input type="file"> HTML element.
  * Make sure to set enctype="multipart/form-data" on the form!
@@ -25,7 +27,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
@@ -36,7 +38,7 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 
 	/**
 	 * @var TYPO3\FLOW3\Property\PropertyMapper
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $propertyMapper;
 

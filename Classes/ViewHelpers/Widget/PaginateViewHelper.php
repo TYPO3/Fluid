@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * This ViewHelper renders a Pagination of objects.
  *
@@ -39,12 +41,12 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * So, there is no negative performance overhead in using the Paginate Widget.
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var TYPO3\Fluid\ViewHelpers\Widget\Controller\PaginateController
 	 */
 	protected $controller;

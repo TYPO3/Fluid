@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Render the inner parts of a Widget.
  * This ViewHelper can only be used in a template which belongs to a Widget Controller.
@@ -19,7 +21,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * arguments.
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

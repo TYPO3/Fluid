@@ -11,28 +11,30 @@ namespace TYPO3\Fluid\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * The main template view. Should be used as view if you want Fluid Templating
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
-	 * Pattern to be resolved for @templateRoot in the other patterns.
+	 * Pattern to be resolved for "@templateRoot" in the other patterns.
 	 * @var string
 	 */
 	protected $templateRootPathPattern = '@packageResourcesPath/Private/Templates';
 
 	/**
-	 * Pattern to be resolved for @partialRoot in the other patterns.
+	 * Pattern to be resolved for "@partialRoot" in the other patterns.
 	 * @var string
 	 */
 	protected $partialRootPathPattern = '@packageResourcesPath/Private/Partials';
 
 	/**
-	 * Pattern to be resolved for @layoutRoot in the other patterns.
+	 * Pattern to be resolved for "@layoutRoot" in the other patterns.
 	 * @var string
 	 */
 	protected $layoutRootPathPattern = '@packageResourcesPath/Private/Layouts';
@@ -401,31 +403,31 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	}
 
 	/**
-	 * Processes @templateRoot, @subpackage, @controller, and @format placeholders inside $pattern.
+	 * Processes "@templateRoot", "@subpackage", "@controller", and "@format" placeholders inside $pattern.
 	 * This method is used to generate "fallback chains" for file system locations where a certain Partial can reside.
 	 *
 	 * If $bubbleControllerAndSubpackage is FALSE and $formatIsOptional is FALSE, then the resulting array will only have one element
 	 * with all the above placeholders replaced.
 	 *
 	 * If you set $bubbleControllerAndSubpackage to TRUE, then you will get an array with potentially many elements:
-	 * The first element of the array is like above. The second element has the @controller part set to "" (the empty string)
-	 * The third element now has the @controller part again stripped off, and has the last subpackage part stripped off as well.
-	 * This continues until both @subpackage and @controller are empty.
+	 * The first element of the array is like above. The second element has the @ controller part set to "" (the empty string)
+	 * The third element now has the @ controller part again stripped off, and has the last subpackage part stripped off as well.
+	 * This continues until both "@subpackage" and "@controller" are empty.
 	 *
 	 * Example for $bubbleControllerAndSubpackage is TRUE, we have the MyCompany\MyPackage\MySubPackage\Controller\MyController
 	 * as Controller Object Name and the current format is "html"
 	 *
-	 * If pattern is @templateRoot/@subpackage/@controller/@action.@format, then the resulting array is:
-	 *  - Resources/Private/Templates/MySubPackage/My/@action.html
-	 *  - Resources/Private/Templates/MySubPackage/@action.html
-	 *  - Resources/Private/Templates/@action.html
+	 * If pattern is "@templateRoot/@subpackage/@controller/@action.@format", then the resulting array is:
+	 *  - "Resources/Private/Templates/MySubPackage/My/@action.html"
+	 *  - "Resources/Private/Templates/MySubPackage/@action.html"
+	 *  - "Resources/Private/Templates/@action.html"
 	 *
-	 * If you set $formatIsOptional to TRUE, then for any of the above arrays, every element will be duplicated  - once with @format
-	 * replaced by the current request format, and once with .@format stripped off.
+	 * If you set $formatIsOptional to TRUE, then for any of the above arrays, every element will be duplicated  - once with "@format"
+	 * replaced by the current request format, and once with ."@format" stripped off.
 	 *
 	 * @param string $pattern Pattern to be resolved
-	 * @param boolean $bubbleControllerAndSubpackage if TRUE, then we successively split off parts from @controller and @subpackage until both are empty.
-	 * @param boolean $formatIsOptional if TRUE, then half of the resulting strings will have .@format stripped off, and the other half will have it.
+	 * @param boolean $bubbleControllerAndSubpackage if TRUE, then we successively split off parts from "@controller" and "@subpackage" until both are empty.
+	 * @param boolean $formatIsOptional if TRUE, then half of the resulting strings will have ."@format" stripped off, and the other half will have it.
 	 * @return array unix style path
 	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @author Robert Lemke <robert@typo3.org>

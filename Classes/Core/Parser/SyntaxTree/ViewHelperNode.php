@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Node which will call a ViewHelper associated with this node.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
@@ -84,7 +86,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * INTERNAL - only needed for compiling templates
 	 *
 	 * @return array
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getArguments() {
 		return $this->arguments;

@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * This ViewHelper cycles through the specified values.
  * This can be often used to specify CSS classes for example.
@@ -43,7 +45,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

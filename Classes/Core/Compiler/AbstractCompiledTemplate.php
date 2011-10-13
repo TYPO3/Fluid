@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\Core\Compiler;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Abstract Fluid Compiled template.
  *
@@ -34,7 +36,7 @@ abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\Pars
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @param string $viewHelperName
 	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getViewHelper($uniqueCounter, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, $viewHelperName) {
 		if (\TYPO3\FLOW3\Core\Bootstrap::$staticObjectManager->getScope($viewHelperName) === \TYPO3\FLOW3\Object\Configuration\Configuration::SCOPE_SINGLETON) {

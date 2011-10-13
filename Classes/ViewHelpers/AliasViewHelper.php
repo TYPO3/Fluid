@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Declares new variables which are aliases of other variables.
  * Takes a "map"-Parameter which is an associative array which defines the shorthand mapping.
@@ -38,7 +40,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class AliasViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

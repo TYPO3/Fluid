@@ -11,13 +11,15 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Abstract Form View Helper. Bundles functionality related to direct property access of objects in other Form ViewHelpers.
  *
  * If you set the "property" attribute to the name of the property to resolve from the object, this class will
  * automatically set the name and value of a form element.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 abstract class AbstractFormViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 

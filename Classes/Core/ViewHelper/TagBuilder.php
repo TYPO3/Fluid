@@ -11,11 +11,13 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class TagBuilder {
 

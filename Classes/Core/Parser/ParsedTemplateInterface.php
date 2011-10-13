@@ -57,13 +57,11 @@ interface ParsedTemplateInterface {
 	 * correctly, isCompilable() will return FALSE.
 	 *
 	 * @return boolean TRUE if the template can be compiled
-	 * @internal
 	 */
 	public function isCompilable();
 
 	/**
 	 * @return boolean TRUE if the template is already compiled, FALSE otherwise
-	 * @internal
 	 */
 	public function isCompiled();
 }

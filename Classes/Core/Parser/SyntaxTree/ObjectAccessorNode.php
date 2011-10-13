@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
@@ -42,7 +44,7 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 * Internally used for building up cached templates; do not use directly!
 	 *
 	 * @return string
-	 * @internal
+	 * @FLOW3\Internal
 	 */
 	public function getObjectPath() {
 		return $this->objectPath;

@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * A view helper for creating URIs to external targets.
  * Currently the specified URI is simply passed through.
@@ -32,7 +34,7 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class ExternalViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

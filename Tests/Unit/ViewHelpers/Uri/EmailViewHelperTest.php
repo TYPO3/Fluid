@@ -13,10 +13,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
 
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Testcase for the email uri view helper
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class EmailViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 

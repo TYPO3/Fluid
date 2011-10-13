@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Link;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Email link view helper.
  * Generates an email link.
@@ -32,7 +34,7 @@ namespace TYPO3\Fluid\ViewHelpers\Link;
  * </output>
  *
  * @api
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class EmailViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 

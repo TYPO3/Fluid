@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Root node of every syntax tree.
  *
- * @scope prototype
+ * @FLOW3\Scope("prototype")
  */
 class RootNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
