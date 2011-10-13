@@ -14,7 +14,6 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 /**
  * Node in the syntax tree.
  *
- * @scope prototype
  */
 interface NodeInterface {
 
