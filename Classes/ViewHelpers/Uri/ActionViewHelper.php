@@ -58,16 +58,19 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 		public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',   array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
-		$uri = $uriBuilder
+		$uriBuilder
 			->reset()
 			->setSection($section)
 			->setCreateAbsoluteUri($absolute)
 			->setArguments($additionalParams)
 			->setAddQueryString($addQueryString)
 			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
-			->setFormat($format)
-			->uriFor($action, $arguments, $controller, $package, $subpackage);
-
+			->setFormat($format);
+		try {
+			$uri = $uriBuilder->uriFor($action, $arguments, $controller, $package, $subpackage);
+		} catch (\TYPO3\FLOW3\Exception $exception) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+		}
 		return $uri;
 	}
 }

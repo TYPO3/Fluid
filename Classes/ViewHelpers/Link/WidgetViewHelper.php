@@ -101,13 +101,18 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 			'@controller'
 		);
 
-		return $uriBuilder
+		$uriBuilder
 			->reset()
 			->setSection($this->arguments['section'])
 			->setCreateAbsoluteUri(TRUE)
 			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
-			->setFormat($this->arguments['format'])
-			->uriFor($this->arguments['action'], $this->arguments['arguments'], '', '', '');
+			->setFormat($this->arguments['format']);
+		try {
+			$uri = $uriBuilder->uriFor($this->arguments['action'], $this->arguments['arguments'], '', '', '');
+		} catch (\TYPO3\FLOW3\Exception $exception) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+		}
+		return $uri;
 	}
 }
 

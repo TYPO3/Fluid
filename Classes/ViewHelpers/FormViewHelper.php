@@ -143,8 +143,12 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			if (is_array($this->arguments['argumentsToBeExcludedFromQueryString'])) {
 				$uriBuilder->setArgumentsToBeExcludedFromQueryString($this->arguments['argumentsToBeExcludedFromQueryString']);
 			}
-			$formActionUri = $uriBuilder
-				->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
+			try {
+				$formActionUri = $uriBuilder
+					->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
+			} catch (\TYPO3\FLOW3\Exception $exception) {
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+			}
 		}
 		$this->tag->addAttribute('action', $formActionUri);
 	}

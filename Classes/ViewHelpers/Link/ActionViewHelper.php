@@ -77,17 +77,21 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 	 */
 	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
-		$uri = $uriBuilder
-			->reset()
-			->setSection($section)
-			->setCreateAbsoluteUri(TRUE)
-			->setArguments($additionalParams)
-			->setAddQueryString($addQueryString)
-			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
-			->setFormat($format)
-			->uriFor($action, $arguments, $controller, $package, $subpackage);
+		try {
+			$uri = $uriBuilder
+				->reset()
+				->setSection($section)
+				->setCreateAbsoluteUri(TRUE)
+				->setArguments($additionalParams)
+				->setAddQueryString($addQueryString)
+				->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
+				->setFormat($format)
+				->uriFor($action, $arguments, $controller, $package, $subpackage);
+			$this->tag->addAttribute('href', $uri);
+		} catch (\TYPO3\FLOW3\Exception $exception) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+		}
 
-		$this->tag->addAttribute('href', $uri);
 		$this->tag->setContent($this->renderChildren());
 		$this->tag->forceClosingTag(TRUE);
 
