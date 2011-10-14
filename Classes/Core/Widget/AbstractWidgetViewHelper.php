@@ -41,11 +41,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	private $ajaxWidgetContextHolder;
 
 	/**
-	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
-	 */
-	private $objectManager;
-
-	/**
 	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	private $widgetContext;
@@ -56,14 +51,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 */
 	public function injectAjaxWidgetContextHolder(\TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
 		$this->ajaxWidgetContextHolder = $ajaxWidgetContextHolder;
-	}
-
-	/**
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
-	 * @return void
-	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
-		$this->objectManager = $objectManager;
 	}
 
 	/**

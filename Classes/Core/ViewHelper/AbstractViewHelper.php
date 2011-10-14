@@ -94,12 +94,38 @@ abstract class AbstractViewHelper {
 	private $reflectionService;
 
 	/**
+	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
+	 */
+	protected $objectManager;
+
+	/**
+	 * @var \TYPO3\FLOW3\Log\SystemLoggerInterface
+	 */
+	protected $systemLogger;
+
+	/**
 	 * With this flag, you can disable the escaping interceptor inside this ViewHelper.
 	 * THIS MIGHT CHANGE WITHOUT NOTICE, NO PUBLIC API!
 	 * @var boolean
 	 * @FLOW3\Internal
 	 */
 	protected $escapingInterceptorEnabled = TRUE;
+
+	/**
+	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @return void
+	 */
+	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+		$this->objectManager = $objectManager;
+	}
+
+	/**
+	 * @param \TYPO3\FLOW3\Log\SystemLoggerInterface $systemLogger
+	 * @return void
+	 */
+	public function injectSystemLogger(\TYPO3\FLOW3\Log\SystemLoggerInterface $systemLogger) {
+		$this->systemLogger = $systemLogger;
+	}
 
 	/**
 	 * @param array $arguments
@@ -234,8 +260,12 @@ abstract class AbstractViewHelper {
 		try {
 			return call_user_func_array(array($this, 'render'), $renderMethodParameters);
 		} catch (\TYPO3\Fluid\Core\ViewHelper\Exception $exception) {
-				// @todo [BW] rethrow exception, log, ignore.. depending on the current context
-			return $exception->getMessage();
+			if ($this->objectManager->getContext() === 'Development') {
+				throw $exception;
+			} else {
+				$this->systemLogger->log('An Exception was captured: '. $exception->getMessage() . '(' . $exception->getCode() . ')', LOG_ERR, 'TYPO3.Fluid', get_class($this));
+				return '';
+			}
 		}
 	}
 
