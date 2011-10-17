@@ -11,27 +11,49 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * View helper which renders the flash messages (if there are any) as an unsorted list.
- *
- * In case you need custom Flash Message HTML output, please write your own ViewHelper for the moment.
- *
  *
  * = Examples =
  *
  * <code title="Simple">
  * <f:flashMessages />
  * </code>
- * Renders an ul-list of flash messages.
+ * <output>
+ * <ul>
+ *   <li class="flashmessages-ok">Some Default Message</li>
+ *   <li class="flashmessages-warning">Some Warning Message</li>
+ * </ul>
+ * </output>
+ * Depending on the FlashMessages
  *
  * <code title="Output with css class">
  * <f:flashMessages class="specialClass" />
  * </code>
  * <output>
  * <ul class="specialClass">
- *  ...
+ *   <li class="specialClass-ok">Default Message</li>
+ *   <li class="specialClass-notice"><h3>Some notice message</h3>With message title</li>
  * </ul>
+ * </output>
+ *
+ * <code title="Output flash messages as a list, with arguments and filtered by a severity">
+ * <f:flashMessages severity="Warning" as="flashMessages">
+ * 	<dl class="messages">
+ * 	<f:for each="{flashMessages}" as="flashMessage">
+ * 		<dt>{flashMessage.code}</dt>
+ * 		<dd>{flashMessage}</dd>
+ * 	</f:for>
+ * 	</dl>
+ * </f:flashMessages>
+ * </code>
+ * <output>
+ * <dl class="messages">
+ * 	<dt>1013</dt>
+ * 	<dd>Some Warning Message.</dd>
+ * </dl>
  * </output>
  *
  * @api
@@ -54,23 +76,66 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	}
 
 	/**
-	 * Render method.
+	 * Renders flash messages that have been added to the FlashMessageContainer in previous request(s).
 	 *
+	 * @param string $as The name of the current flashMessage variable for rendering inside
+	 * @param string $severity severity of the messages (One of the \TYPO3\FLOW3\Error\Message::SEVERITY_* constants)
 	 * @return string rendered Flash Messages, if there are any.
 	 * @api
 	 */
-	public function render() {
-		$flashMessages = $this->controllerContext->getFlashMessageContainer()->getMessagesAndFlush();
-		if (count($flashMessages) > 0) {
-			$tagContent = '';
-			foreach ($flashMessages as $singleFlashMessage) {
-				$tagContent .=  '<li>' . htmlspecialchars($singleFlashMessage) . '</li>';
-			}
-			$this->tag->setContent($tagContent);
-			return $this->tag->render();
+	public function render($as = NULL, $severity = NULL) {
+		$flashMessages = $this->controllerContext->getFlashMessageContainer()->getMessagesAndFlush($severity);
+		if (count($flashMessages) < 1) {
+			return '';
 		}
-		return '';
+		if ($as === NULL) {
+			$content = $this->renderAsList($flashMessages);
+		} else {
+			$content = $this->renderFromTemplate($flashMessages, $as);
+		}
+		return $content;
+	}
+
+	/**
+	 * Render the flash messages as unsorted list. This is triggered if no "as" argument is given
+	 * to the ViewHelper.
+	 *
+	 * @param array $flashMessages
+	 * @return string
+	 */
+	protected function renderAsList(array $flashMessages) {
+		$flashMessagesClass = $this->arguments['class'] !== NULL ? $this->arguments['class'] : 'flashmessages';
+		$tagContent = '';
+		foreach ($flashMessages as $singleFlashMessage) {
+			$severityClass = sprintf('%s-%s', $flashMessagesClass, strtolower($singleFlashMessage->getSeverity()));
+			$messageContent = htmlspecialchars($singleFlashMessage->render());
+			if ($singleFlashMessage->getTitle() !== '') {
+				$messageContent = sprintf('<h3>%s</h3>', htmlspecialchars($singleFlashMessage->getTitle())) . $messageContent;
+			}
+			$tagContent .= sprintf('<li class="%s">%s</li>', htmlspecialchars($severityClass), $messageContent);
+		}
+		$this->tag->setContent($tagContent);
+		$content = $this->tag->render();
+
+		return $content;
+	}
+
+	/**
+	 * Defer the rendering of Flash Messages to the template. In this case,
+	 * the flash messages are stored in the template inside the variable specified
+	 * in "as".
+	 *
+	 * @param array $flashMessages
+	 * @param string $as
+	 * @return string
+	 */
+	protected function renderFromTemplate(array $flashMessages, $as) {
+		$templateVariableContainer = $this->renderingContext->getTemplateVariableContainer();
+		$templateVariableContainer->add($as, $flashMessages);
+		$content = $this->renderChildren();
+		$templateVariableContainer->remove($as);
+
+		return $content;
 	}
 }
-
 ?>
