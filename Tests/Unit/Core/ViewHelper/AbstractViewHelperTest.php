@@ -119,11 +119,13 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$availableClassNames = array(
 			array('TYPO3\Fluid\Core\Fixtures\TestViewHelper'),
 		);
-		$reflectionService = new \TYPO3\FLOW3\Reflection\ReflectionService();
-		$reflectionService->setStatusCache($this->getMock('TYPO3\FLOW3\Cache\Frontend\StringFrontend', array(), array(), '', FALSE));
 		$dataCacheMock = $this->getMock('TYPO3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE);
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
+
+		$reflectionService = new \TYPO3\FLOW3\Reflection\ReflectionService();
+		$reflectionService->injectClassLoader(new \TYPO3\FLOW3\Core\ClassLoader());
+		$reflectionService->setStatusCache($this->getMock('TYPO3\FLOW3\Cache\Frontend\StringFrontend', array(), array(), '', FALSE));
 		$reflectionService->setDataCache($dataCacheMock);
 		$reflectionService->initializeObject();
 		$reflectionService->buildReflectionData($availableClassNames);
@@ -153,11 +155,13 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$availableClassNames = array(
 			array('TYPO3\Fluid\Core\Fixtures\TestViewHelper2'),
 		);
-		$reflectionService = new \TYPO3\FLOW3\Reflection\ReflectionService();
-		$reflectionService->setStatusCache($this->getMock('TYPO3\FLOW3\Cache\Frontend\StringFrontend', array(), array(), '', FALSE));
 		$dataCacheMock = $this->getMock('TYPO3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE);
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
+
+		$reflectionService = new \TYPO3\FLOW3\Reflection\ReflectionService();
+		$reflectionService->injectClassLoader(new \TYPO3\FLOW3\Core\ClassLoader());
+		$reflectionService->setStatusCache($this->getMock('TYPO3\FLOW3\Cache\Frontend\StringFrontend', array(), array(), '', FALSE));
 		$reflectionService->setDataCache($dataCacheMock);
 		$reflectionService->initializeObject();
 		$reflectionService->buildReflectionData($availableClassNames);
