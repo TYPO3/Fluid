@@ -11,11 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Link;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * @api
- * @FLOW3\Scope("prototype")
  */
 class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 

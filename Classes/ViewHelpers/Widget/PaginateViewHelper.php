@@ -41,7 +41,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * So, there is no negative performance overhead in using the Paginate Widget.
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 

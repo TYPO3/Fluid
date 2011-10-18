@@ -11,14 +11,11 @@ namespace TYPO3\Fluid\Core\Parser;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
-
 /**
  * Stores all information relevant for one parsing pass - that is, the root node,
  * and the current stack of open nodes (nodeStack) and a variable container used
  * for PostParseFacets.
  *
- * @FLOW3\Scope("prototype")
  */
 class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 

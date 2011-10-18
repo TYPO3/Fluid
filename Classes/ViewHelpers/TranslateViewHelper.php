@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Returns translated message using source message or key ID.
@@ -55,7 +54,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * translation of label with the id "someLabelId" and the default translation "default translation"
  * </output>
  *
- * @FLOW3\Scope("prototype")
  */
 class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

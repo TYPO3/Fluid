@@ -16,7 +16,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
  *
- * @FLOW3\Scope("prototype")
  */
 class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 

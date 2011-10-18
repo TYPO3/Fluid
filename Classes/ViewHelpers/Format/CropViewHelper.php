@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Use this view helper to crop the text between its opening and closing tags.
@@ -36,7 +35,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * WARNING: This tag doesn't care about multibyte charsets currently.
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class CropViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

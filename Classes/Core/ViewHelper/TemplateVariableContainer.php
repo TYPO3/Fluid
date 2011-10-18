@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * VariableContainer which stores template variables.
@@ -21,7 +20,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * 2) Holds variables being set during Parsing (set in view helpers implementing the PostParse facet)
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class TemplateVariableContainer implements \ArrayAccess {
 

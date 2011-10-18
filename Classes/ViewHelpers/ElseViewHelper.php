@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
@@ -19,7 +18,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @see TYPO3\Fluid\ViewHelpers\IfViewHelper
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class ElseViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

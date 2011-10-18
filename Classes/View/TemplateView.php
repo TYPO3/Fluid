@@ -11,13 +11,11 @@ namespace TYPO3\Fluid\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * The main template view. Should be used as view if you want Fluid Templating
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 

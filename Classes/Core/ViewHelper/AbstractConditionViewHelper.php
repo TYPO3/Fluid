@@ -32,7 +32,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * Make sure to NOT OVERRIDE the constructor.
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface, \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
 

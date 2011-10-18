@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Renders the identity of a persisted object (if it has an identity).
@@ -28,7 +27,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * </output>
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

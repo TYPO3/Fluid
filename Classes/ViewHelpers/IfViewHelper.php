@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * This view helper implements an if/else condition.
@@ -80,7 +79,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  *
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 

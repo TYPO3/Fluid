@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Wrapper for PHPs nl2br function.
@@ -34,7 +33,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * </output>
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class Nl2brViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

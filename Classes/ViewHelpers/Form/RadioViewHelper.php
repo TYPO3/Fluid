@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * View Helper which creates a simple radio button (<input type="radio">).
@@ -44,7 +43,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * </output>
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class RadioViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 

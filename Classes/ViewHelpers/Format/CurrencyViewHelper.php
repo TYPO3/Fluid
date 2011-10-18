@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Formats a given float to a currency representation.
@@ -41,7 +40,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * </output>
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class CurrencyViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

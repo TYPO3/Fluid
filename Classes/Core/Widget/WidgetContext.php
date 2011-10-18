@@ -24,7 +24,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  *
  * It is a purely internal class which should not be used outside of Fluid.
  *
- * @FLOW3\Scope("prototype")
  */
 class WidgetContext {
 

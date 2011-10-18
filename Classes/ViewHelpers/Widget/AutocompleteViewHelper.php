@@ -25,7 +25,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  *    <link rel="stylesheet" href="http://static.jquery.com/ui/css/demo-docs-theme/ui.theme.css" type="text/css" media="all" />
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 

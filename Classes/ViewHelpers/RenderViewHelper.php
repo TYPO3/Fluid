@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * ViewHelper that renders a section or a specified partial
@@ -70,7 +69,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * </output>
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 

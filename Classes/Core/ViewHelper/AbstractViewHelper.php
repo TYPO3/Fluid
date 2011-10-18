@@ -17,7 +17,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * The abstract base class for all view helpers.
  *
  * @api
- * @FLOW3\Scope("prototype")
  */
 abstract class AbstractViewHelper {
 

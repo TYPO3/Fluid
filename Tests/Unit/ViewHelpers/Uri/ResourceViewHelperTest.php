@@ -13,12 +13,9 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
 
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
-use TYPO3\FLOW3\Annotations as FLOW3;
-
 /**
  * Testcase for the resource uri view helper
  *
- * @FLOW3\Scope("prototype")
  */
 class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 

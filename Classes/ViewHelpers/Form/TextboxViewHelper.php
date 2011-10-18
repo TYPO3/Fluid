@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * DEPRECATED: Use <f:form.textfield> instead!
@@ -27,7 +26,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * <input type="text" name="myTextBox" value="default value" />
  * </output>
  *
- * @FLOW3\Scope("prototype")
  * @deprecated since 1.0.0 alpha 7
  */
 class TextboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper {

@@ -16,7 +16,6 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 /**
  * Node which will call a ViewHelper associated with this node.
  *
- * @FLOW3\Scope("prototype")
  */
 class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
