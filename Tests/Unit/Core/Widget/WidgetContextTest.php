@@ -18,7 +18,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @var \TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	protected $widgetContext;
 

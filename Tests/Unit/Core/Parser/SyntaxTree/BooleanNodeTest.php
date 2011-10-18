@@ -18,12 +18,12 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 	 */
 	protected $viewHelperNode;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 */
 	protected $renderingContext;
 

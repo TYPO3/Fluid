@@ -22,7 +22,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * This needs to be filled by the individual subclass using
 	 * property injection.
 	 *
-	 * @var TYPO3\Fluid\Core\Widget\AbstractWidgetController
+	 * @var \TYPO3\Fluid\Core\Widget\AbstractWidgetController
 	 * @api
 	 */
 	protected $controller;
@@ -47,12 +47,12 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	protected $storeConfigurationInSession = TRUE;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	private $ajaxWidgetContextHolder;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @var \TYPO3\Fluid\Core\Widget\WidgetContext
 	 */
 	private $widgetContext;
 
@@ -113,7 +113,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * @return void
 	 */
 	public function setChildNodes(array $childNodes) {
-		$rootNode = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$rootNode = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		foreach ($childNodes as $childNode) {
 			$rootNode->addChildNode($childNode);
 		}
@@ -164,13 +164,13 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\FLOW3\Annotations\Inject annotation in your widget class.', 1284401632);
 		}
 
-		$subRequest = $this->objectManager->create('TYPO3\FLOW3\MVC\Web\SubRequest', $this->controllerContext->getRequest());
+		$subRequest = $this->objectManager->get('TYPO3\FLOW3\MVC\Web\SubRequest', $this->controllerContext->getRequest());
 		$this->passArgumentsToSubRequest($subRequest);
 		$subRequest->setArgument('__widgetContext', $this->widgetContext);
 		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
 		$subRequest->setArgumentNamespace($this->widgetContext->getWidgetIdentifier());
 
-		$subResponse = $this->objectManager->create('TYPO3\FLOW3\MVC\Web\Response');
+		$subResponse = $this->objectManager->get('TYPO3\FLOW3\MVC\Web\Response');
 		$this->controller->processRequest($subRequest, $subResponse);
 		return $subResponse;
 	}
@@ -223,7 +223,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 */
 	public function resetState() {
 		if ($this->ajaxWidget) {
-			$this->widgetContext = $this->objectManager->create('TYPO3\Fluid\Core\Widget\WidgetContext');
+			$this->widgetContext = $this->objectManager->get('TYPO3\Fluid\Core\Widget\WidgetContext');
 		}
 	}
 

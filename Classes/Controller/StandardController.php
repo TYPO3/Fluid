@@ -19,7 +19,7 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * XSD Generator
-	 * @var TYPO3\Fluid\Service\XsdGenerator
+	 * @var \TYPO3\Fluid\Service\XsdGenerator
 	 */
 	protected $xsdGenerator;
 

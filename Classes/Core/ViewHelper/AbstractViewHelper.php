@@ -44,7 +44,7 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * Current view helper node
-	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 	 */
 	private $viewHelperNode;
 
@@ -432,16 +432,6 @@ abstract class AbstractViewHelper {
 	 * @api
 	 */
 	//abstract public function render();
-
-	/**
-	 * Get the rendering context interface.
-	 *
-	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @deprecated since 1.0.0 beta 1; use $this->renderingContext instead
-	 */
-	public function getRenderingContext() {
-		return $this->renderingContext;
-	}
 
 	/**
 	 * Tests if the given $argumentName is set, and not NULL.

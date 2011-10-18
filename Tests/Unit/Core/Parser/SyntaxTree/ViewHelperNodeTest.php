@@ -22,7 +22,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * Rendering Context
-	 * @var TYPO3\Fluid\Core\Rendering\RenderingContext
+	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 
@@ -34,7 +34,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * Template Variable Container
-	 * @var TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
 
@@ -45,7 +45,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $controllerContext;
 
 	/**
-	 * @var TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @var \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 

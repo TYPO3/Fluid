@@ -92,22 +92,22 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 			return $node;
 		}
 		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
-		$node = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$node = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		foreach ($textParts as $part) {
 			$matches = array();
 			if (preg_match(self::PATTERN_MATCH_RESOURCE_URI, $part, $matches)) {
 				$arguments = array(
-					'path' => $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
+					'path' => $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
 				);
 				if (isset($matches['Package']) && preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
-					$arguments['package'] = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
+					$arguments['package'] = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
 				} elseif ($this->defaultPackageKey !== NULL) {
-					$arguments['package'] = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $this->defaultPackageKey);
+					$arguments['package'] = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $this->defaultPackageKey);
 				}
-				$viewHelper = $this->objectManager->create('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
-				$node->addChildNode($this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
+				$viewHelper = $this->objectManager->get('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper');
+				$node->addChildNode($this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $arguments));
 			} else {
-				$node->addChildNode($this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
+				$node->addChildNode($this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $part));
 			}
 		}
 

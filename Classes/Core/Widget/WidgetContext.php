@@ -69,7 +69,7 @@ class WidgetContext {
 	 * The child nodes of the Widget ViewHelper.
 	 * Only available inside non-AJAX requests.
 	 *
-	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
 	 * @FLOW3\Transient
 	 */
 	protected $viewHelperChildNodes; // TODO: rename to something more meaningful.
@@ -78,7 +78,7 @@ class WidgetContext {
 	 * The rendering context of the ViewHelperChildNodes.
 	 * Only available inside non-AJAX requests.
 	 *
-	 * @var TYPO3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
 	 * @FLOW3\Transient
 	 */
 	protected $viewHelperChildNodeRenderingContext;

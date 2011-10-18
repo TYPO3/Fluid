@@ -134,7 +134,7 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$rootNode->expects($this->at(1))->method('addChildNode')->with($node2);
 		$rootNode->expects($this->at(2))->method('addChildNode')->with($node3);
 
-		$this->objectManager->expects($this->once())->method('create')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($rootNode));
+		$this->objectManager->expects($this->once())->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($rootNode));
 
 		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
 		$this->viewHelper->_set('renderingContext', $renderingContext);
@@ -164,8 +164,8 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		// Initial Setup
 		$widgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('TYPO3\FLOW3\MVC\Web\Request')));
 		$response = $this->getMock('TYPO3\FLOW3\MVC\Web\Response');
-		$this->objectManager->expects($this->at(0))->method('create')->with('TYPO3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
-		$this->objectManager->expects($this->at(1))->method('create')->with('TYPO3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
+		$this->objectManager->expects($this->at(0))->method('get')->with('TYPO3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(1))->method('get')->with('TYPO3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
 
 		// Widget Context is set
 		$widgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->widgetContext);
@@ -206,8 +206,8 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		// Initial Setup
 		$widgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('setControllerObjectName', 'setArguments', 'setArgument', 'setControllerActionName'), array($this->getMock('TYPO3\FLOW3\MVC\Web\Request')));
 		$response = $this->getMock('TYPO3\FLOW3\MVC\Web\Response');
-		$this->objectManager->expects($this->at(0))->method('create')->with('TYPO3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
-		$this->objectManager->expects($this->at(1))->method('create')->with('TYPO3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
+		$this->objectManager->expects($this->at(0))->method('get')->with('TYPO3\FLOW3\MVC\Web\SubRequest')->will($this->returnValue($widgetRequest));
+		$this->objectManager->expects($this->at(1))->method('get')->with('TYPO3\FLOW3\MVC\Web\Response')->will($this->returnValue($response));
 
 		// Widget Context is set
 		$widgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->widgetContext);

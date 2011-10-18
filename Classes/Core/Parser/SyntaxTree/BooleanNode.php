@@ -51,14 +51,14 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Left side of the comparison
 	 *
-	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 */
 	protected $leftSide;
 
 	/**
 	 * Right side of the comparison
 	 *
-	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 */
 	protected $rightSide;
 
@@ -75,7 +75,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * If no comparator was found, the syntax tree node should be
 	 * converted to boolean.
 	 *
-	 * @var TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 */
 	protected $syntaxTreeNode;
 

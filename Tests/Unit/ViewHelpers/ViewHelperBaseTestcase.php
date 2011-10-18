@@ -51,7 +51,7 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $request;
 
 	/**
-	 * @var TYPO3\Fluid\Core\Rendering\RenderingContext
+	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 

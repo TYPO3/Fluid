@@ -75,7 +75,7 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->mockWidgetRequest->expects($this->any())->method('getInternalArgument')->will($this->returnCallback(array($this, 'getMockGetArguments')));
 
 		$this->mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
-		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
+		$this->mockObjectManager->expects($this->once())->method('get')->with('TYPO3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
 
 		$this->widgetRequestBuilder->_set('objectManager', $this->mockObjectManager);
 

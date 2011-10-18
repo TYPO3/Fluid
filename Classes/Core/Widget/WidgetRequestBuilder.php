@@ -45,7 +45,7 @@ class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 	 * @return \TYPO3\FLOW3\MVC\Web\Request The widget request as an object
 	 */
 	public function build() {
-		$request = $this->objectManager->create('TYPO3\FLOW3\MVC\Web\Request');
+		$request = $this->objectManager->get('TYPO3\FLOW3\MVC\Web\Request');
 		$request->setRequestUri($this->environment->getRequestUri());
 		$request->setBaseUri($this->environment->getBaseUri());
 		$request->setMethod($this->environment->getRequestMethod());

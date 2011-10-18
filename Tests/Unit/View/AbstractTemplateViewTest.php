@@ -33,7 +33,7 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $viewHelperVariableContainer;
 
 	/**
-	 * @var TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
 

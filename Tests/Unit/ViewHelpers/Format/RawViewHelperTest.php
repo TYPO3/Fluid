@@ -16,7 +16,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @var TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
 	 */
 	protected $viewHelper;
 

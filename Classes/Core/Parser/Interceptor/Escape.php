@@ -70,7 +70,7 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 			}
 		} elseif ($this->interceptorEnabled && $node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
 			$escapeViewHelper = $this->objectManager->get('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
-			$node = $this->objectManager->create(
+			$node = $this->objectManager->get(
 				'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
 				$escapeViewHelper,
 				array('value' => $node)

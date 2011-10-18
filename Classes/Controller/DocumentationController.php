@@ -27,7 +27,7 @@ class DocumentationController extends \TYPO3\FLOW3\MVC\Controller\ActionControll
 	protected $supportedRequestTypes = array('TYPO3\FLOW3\MVC\CLI\Request');
 
 	/**
-	 * @var TYPO3\Fluid\Service\DocbookGenerator
+	 * @var \TYPO3\Fluid\Service\DocbookGenerator
 	 * @FLOW3\Inject
 	 */
 	protected $docbookGenerator;

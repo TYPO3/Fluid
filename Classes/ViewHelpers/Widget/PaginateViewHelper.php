@@ -46,7 +46,7 @@ class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelp
 
 	/**
 	 * @FLOW3\Inject
-	 * @var TYPO3\Fluid\ViewHelpers\Widget\Controller\PaginateController
+	 * @var \TYPO3\Fluid\ViewHelpers\Widget\Controller\PaginateController
 	 */
 	protected $controller;
 

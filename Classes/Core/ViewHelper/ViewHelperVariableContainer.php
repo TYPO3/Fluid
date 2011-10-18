@@ -26,7 +26,7 @@ class ViewHelperVariableContainer {
 
 	/**
 	 *
-	 * @var TYPO3\Fluid\View\AbstractTemplateView
+	 * @var \TYPO3\Fluid\View\AbstractTemplateView
 	 */
 	protected $view;
 

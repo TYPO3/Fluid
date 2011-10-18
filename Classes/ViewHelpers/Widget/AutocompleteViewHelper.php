@@ -35,7 +35,7 @@ class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetView
 
 	/**
 	 * @FLOW3\Inject
-	 * @var TYPO3\Fluid\ViewHelpers\Widget\Controller\AutocompleteController
+	 * @var \TYPO3\Fluid\ViewHelpers\Widget\Controller\AutocompleteController
 	 */
 	protected $controller;
 

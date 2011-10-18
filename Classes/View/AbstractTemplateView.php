@@ -221,7 +221,7 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 			// in case we render a layout right now, we will render a section inside a TEMPLATE.
 			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
 		} else {
-			$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
+			$variableContainer = $this->objectManager->get('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 			$renderingContext = clone $renderingContext;
 			$renderingContext->injectTemplateVariableContainer($variableContainer);
 			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
@@ -283,7 +283,7 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 			}
 		}
 
-		$variableContainer = $this->objectManager->create('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
+		$variableContainer = $this->objectManager->get('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', $variables);
 		$renderingContext = clone $this->getCurrentRenderingContext();
 		$renderingContext->injectTemplateVariableContainer($variableContainer);
 
@@ -364,7 +364,7 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @return \TYPO3\Fluid\Core\Parser\Configuration
 	 */
 	protected function buildParserConfiguration() {
-		$parserConfiguration = $this->objectManager->create('TYPO3\Fluid\Core\Parser\Configuration');
+		$parserConfiguration = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Configuration');
 		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
 			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape'));
 			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource'));
