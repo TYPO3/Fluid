@@ -20,7 +20,6 @@ class TranslateViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 	/**
 	 * @test
-	 * @author Karol Gusak <firstname@lastname.eu>
 	 */
 	public function viewHelperTranslates() {
 		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');

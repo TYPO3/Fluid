@@ -36,7 +36,6 @@ class PasswordViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagName() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName'), array(), '', FALSE);
@@ -49,8 +48,6 @@ class PasswordViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTypeNameAndValueAttributes() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
@@ -74,7 +71,6 @@ class PasswordViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCallsSetErrorClassAttribute() {
 		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');

@@ -38,7 +38,6 @@ class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 
 	/**
 	 * @return boolean TRUE if it is an AJAX widget request
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function canHandleRequest() {
 		$rawGetArguments = $this->environment->getRawGetArguments();
@@ -49,7 +48,6 @@ class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 	 * This request handler has a higher priority than the default request handler.
 	 *
 	 * @return integer
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getPriority() {
 		return 200;

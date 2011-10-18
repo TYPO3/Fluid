@@ -28,7 +28,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 *
 	 * @param \TYPO3\Fluid\Service\XsdGenerator $xsdGenerator XSD Generator
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectXsdGenerator(\TYPO3\Fluid\Service\XsdGenerator $xsdGenerator) {
 		$this->xsdGenerator = $xsdGenerator;
@@ -39,7 +38,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 *
 	 * @param \TYPO3\Fluid\View\TemplateView $view The Fluid View Instance
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectView(\TYPO3\Fluid\View\TemplateView $view) {
 		$this->view = $view;
@@ -49,7 +47,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * Index action
 	 *
 	 * @return string HTML string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function indexAction() {
 		return $this->view->render();
@@ -61,7 +58,6 @@ class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	 * @param string $baseNamespace
 	 * @param string $namespacePrefix
 	 * @return string HTML string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Still has to be finished
 	 */
 	public function generateXsdAction($baseNamespace, $namespacePrefix) {

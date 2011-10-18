@@ -72,9 +72,6 @@ class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	 * @param boolean $reverse If enabled, the iterator will start with the last element and proceed reversely
 	 * @param string $iteration The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)
 	 * @return string Rendered string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function render($each, $as, $key = '', $reverse = FALSE, $iteration = NULL) {

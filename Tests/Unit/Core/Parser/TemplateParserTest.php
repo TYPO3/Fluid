@@ -24,7 +24,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.or>
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function parseThrowsExceptionWhenStringArgumentMissing() {
@@ -34,8 +33,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function extractNamespaceDefinitionsExtractsNamespacesCorrectly() {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
@@ -49,8 +46,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function extractNamespaceDefinitionsThrowsExceptionIfNamespaceIsRedeclared() {
@@ -61,7 +56,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Jochen Rau <jochen.rau@typoplanet.de>
 	 */
 	public function viewHelperNameWithMultipleLevelsCanBeResolvedByResolveViewHelperName() {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
@@ -72,7 +66,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function viewHelperNameWithOneLevelCanBeResolvedByResolveViewHelperName() {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
@@ -82,7 +75,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 
 	/**
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function quotedStrings() {
 		return array(
@@ -97,7 +89,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @dataProvider quotedStrings
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function unquoteStringReturnsUnquotedStrings($quoted, $unquoted) {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
@@ -105,7 +96,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 
 	/**
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function templatesToSplit() {
 		return array(
@@ -118,7 +108,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @dataProvider templatesToSplit
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function splitTemplateAtDynamicTagsReturnsCorrectlySplitTemplate($templateName) {
 		$template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html', FILE_TEXT);
@@ -129,7 +118,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function buildObjectTreeCreatesRootNodeAndSetsUpParsingState() {
 		$mockRootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
@@ -152,7 +140,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function buildObjectTreeThrowsExceptionIfOpenTagsRemain() {
 		$mockRootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
@@ -172,7 +159,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function buildObjectTreeDelegatesHandlingOfTemplateElements() {
 		$mockRootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
@@ -198,7 +184,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function openingViewHelperTagHandlerDelegatesViewHelperInitialization() {
 		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
@@ -213,7 +198,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function openingViewHelperTagHandlerPopsNodeFromStackForSelfClosingTags() {
 		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
@@ -226,7 +210,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function initializeViewHelperAndAddItToStackCreatesRequestedViewHelperAndViewHelperNode() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
@@ -251,7 +234,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function initializeViewHelperAndAddItToStackChecksViewHelperArguments() {
 		$expectedArguments = array('expectedArguments');
@@ -280,7 +262,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function initializeViewHelperAndAddItToStackHandlesPostParseFacets() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\Parser\Fixtures\PostParseFacetViewHelper', array('prepareArguments'));
@@ -307,7 +288,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function abortIfUnregisteredArgumentsExistThrowsExceptionOnUnregisteredArguments() {
 		$expected = array(new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('firstArgument', 'string', '', FALSE));
@@ -320,7 +300,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfUnregisteredArgumentsExistDoesNotThrowExceptionIfEverythingIsOk() {
 		$expectedArguments = array(
@@ -339,7 +318,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function abortIfRequiredArgumentsAreMissingThrowsException() {
 		$expected = array(
@@ -353,7 +331,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists() {
 		$expectedArguments = array(
@@ -372,7 +349,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function closingViewHelperTagHandlerThrowsExceptionBecauseOfClosingTagWhichWasNeverOpened() {
 		$mockNodeOnStack = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface', array(), array(), '', FALSE);
@@ -387,7 +363,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function closingViewHelperTagHandlerThrowsExceptionBecauseOfWrongTagNesting() {
 		$mockNodeOnStack = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
@@ -401,7 +376,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function objectAccessorHandlerCallsInitializeViewHelperAndAddItToStackIfViewHelperSyntaxIsPresent() {
 		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
@@ -418,7 +392,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function objectAccessorHandlerCreatesObjectAccessorNodeWithExpectedValueAndAddsItToStack() {
 		$objectAccessorNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
@@ -439,7 +412,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function valuesFromObjectAccessorsAreRunThroughValueInterceptorsByDefault() {
 		$objectAccessorNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
@@ -464,7 +436,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 
 	/**
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function argumentsStrings() {
 		return array(
@@ -477,7 +448,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @dataProvider argumentsStrings
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function parseArgumentsWorksAsExpected($argumentsString, $expected) {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('buildArgumentObjectTree'));
@@ -488,7 +458,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function buildArgumentObjectTreeReturnsTextNodeForSimplyString() {
 		$mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
@@ -502,7 +471,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function buildArgumentObjectTreeBuildsObjectTreeForComlexString() {
 		$objectTree = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
@@ -517,7 +485,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function textAndShorthandSyntaxHandlerDelegatesAppropriately() {
 		$mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
@@ -536,7 +503,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function arrayHandlerAddsArrayNodeWithProperContentToStack() {
 		$arrayNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ArrayNode', array(), array(array()));
@@ -556,7 +522,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 
 	/**
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function arrayTexts() {
 		return array(
@@ -570,7 +535,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @dataProvider arrayTexts
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function recursiveArrayHandlerReturnsExpectedArray($arrayText, $expectedArray) {
 		$mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
@@ -585,7 +549,6 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function textNodesAreRunThroughTextInterceptors() {
 		$textNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', array(), array(), '', FALSE);

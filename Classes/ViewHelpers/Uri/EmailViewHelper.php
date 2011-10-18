@@ -34,7 +34,6 @@ class EmailViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * @param string $email The email address to be turned into a mailto uri.
 	 * @return string Rendered email uri
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($email) {

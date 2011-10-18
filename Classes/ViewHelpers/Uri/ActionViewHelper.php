@@ -54,8 +54,6 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param boolean $addQueryString If set, the current query parameters will be kept in the URI
 	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
 	 * @return string The rendered link
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 		public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',   array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {

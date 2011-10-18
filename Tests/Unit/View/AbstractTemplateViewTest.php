@@ -53,8 +53,6 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewIsPlacedInViewHelperVariableContainer() {
 		$this->viewHelperVariableContainer->expects($this->once())->method('setView')->with($this->view);
@@ -63,7 +61,6 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function assignAddsValueToTemplateVariableContainer() {
 		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
@@ -78,7 +75,6 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function assignCanOverridePreviouslyAssignedValues() {
 		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
@@ -93,7 +89,6 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function assignMultipleAddsValuesToTemplateVariableContainer() {
 		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
@@ -110,7 +105,6 @@ class AbstractTemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function assignMultipleCanOverridePreviouslyAssignedValues() {
 		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));

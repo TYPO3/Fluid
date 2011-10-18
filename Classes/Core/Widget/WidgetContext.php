@@ -86,7 +86,6 @@ class WidgetContext {
 
 	/**
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getWidgetIdentifier() {
 		return $this->widgetIdentifier;
@@ -95,7 +94,6 @@ class WidgetContext {
 	/**
 	 * @param string $widgetIdentifier
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setWidgetIdentifier($widgetIdentifier) {
 		$this->widgetIdentifier = $widgetIdentifier;
@@ -103,7 +101,6 @@ class WidgetContext {
 
 	/**
 	 * @return integer
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getAjaxWidgetIdentifier() {
 		return $this->ajaxWidgetIdentifier;
@@ -112,7 +109,6 @@ class WidgetContext {
 	/**
 	 * @param integer $ajaxWidgetIdentifier
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setAjaxWidgetIdentifier($ajaxWidgetIdentifier) {
 		$this->ajaxWidgetIdentifier = $ajaxWidgetIdentifier;
@@ -120,7 +116,6 @@ class WidgetContext {
 
 	/**
 	 * @return array
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getWidgetConfiguration() {
 		if ($this->nonAjaxWidgetConfiguration !== NULL) {
@@ -133,7 +128,6 @@ class WidgetContext {
 	/**
 	 * @param array $ajaxWidgetConfiguration
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setAjaxWidgetConfiguration($ajaxWidgetConfiguration) {
 		$this->ajaxWidgetConfiguration = $ajaxWidgetConfiguration;
@@ -149,7 +143,6 @@ class WidgetContext {
 
 	/**
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getControllerObjectName() {
 		return $this->controllerObjectName;
@@ -158,7 +151,6 @@ class WidgetContext {
 	/**
 	 * @param string $controllerObjectName
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setControllerObjectName($controllerObjectName) {
 		$this->controllerObjectName = $controllerObjectName;
@@ -168,7 +160,6 @@ class WidgetContext {
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setViewHelperChildNodes(\TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext) {
 		$this->viewHelperChildNodes = $viewHelperChildNodes;
@@ -177,7 +168,6 @@ class WidgetContext {
 
 	/**
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperChildNodes() {
 		return $this->viewHelperChildNodes;
@@ -185,7 +175,6 @@ class WidgetContext {
 
 	/**
 	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperChildNodeRenderingContext() {
 		return $this->viewHelperChildNodeRenderingContext;

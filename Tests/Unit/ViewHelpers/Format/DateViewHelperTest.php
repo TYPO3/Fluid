@@ -17,7 +17,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperFormatsDateCorrectly() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
@@ -27,7 +26,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperFormatsDateStringCorrectly() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
@@ -37,7 +35,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperRespectsCustomFormat() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
@@ -47,7 +44,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperReturnsEmptyStringIfNULLIsGiven() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
@@ -59,7 +55,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperThrowsExceptionIfDateStringCantBeParsed() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper();
@@ -68,7 +63,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperUsesChildNodesIfDateAttributeIsNotSpecified() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
@@ -79,7 +73,6 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function dateArgumentHasPriorityOverChildNodes() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));

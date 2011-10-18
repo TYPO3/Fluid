@@ -40,7 +40,6 @@ class BaseViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * the page...
 	 *
 	 * @return string "base"-Tag.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

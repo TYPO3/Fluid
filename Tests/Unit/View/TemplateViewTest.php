@@ -22,7 +22,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithBubblingDisabledAndFormatNotOptional() {
 		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', NULL, 'My', 'html');
@@ -39,7 +38,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithSubpackageAndBubblingDisabledAndFormatNotOptional() {
 		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', 'MySubPackage', 'My', 'html');
@@ -57,7 +55,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithSubpackageAndBubblingDisabledAndFormatOptional() {
 		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', 'MySubPackage', 'My', 'html');
@@ -76,7 +73,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function expandGenericPathPatternWorksWithSubpackageAndBubblingEnabledAndFormatOptional() {
 		$mockControllerContext = $this->setupMockControllerContextForPathResolving('MyPackage', 'MySubPackage', 'My', 'html');
@@ -105,8 +101,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @param $controllerClassName
 	 * @param $format
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
 		$controllerObjectName = "TYPO3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
@@ -126,7 +120,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getTemplateRootPathReturnsUserSpecifiedTemplatePath() {
 		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
@@ -138,7 +131,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getPartialRootPathReturnsUserSpecifiedPartialPath() {
 		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
@@ -150,7 +142,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getLayoutRootPathReturnsUserSpecifiedPartialPath() {
 		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('dummy'), array(), '', FALSE);
@@ -162,7 +153,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pathToPartialIsResolvedCorrectly() {
 		$this->markTestSkipped('Needs to be finished');
@@ -178,7 +168,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function resolveTemplatePathAndFilenameChecksDifferentPathPatternsAndReturnsTheFirstPathWhichExists() {
 		\vfsStreamWrapper::register();
@@ -203,7 +192,6 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function resolveTemplatePathAndFilenameReturnsTheExplicitlyConfiguredTemplatePathAndFilename() {
 		\vfsStreamWrapper::register();

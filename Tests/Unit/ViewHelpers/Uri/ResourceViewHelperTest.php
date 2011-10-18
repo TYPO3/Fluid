@@ -38,7 +38,6 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceUri() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
@@ -50,7 +49,6 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesCustomPackageKeyIfSpecified() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
@@ -60,7 +58,6 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function renderUsesStaticResourcesBaseUri() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
@@ -70,7 +67,6 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderUsesProvidedResourceObjectInsteadOfPackageAndPath() {
 		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
@@ -83,7 +79,6 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderCreatesASpecialBrokenResourceUriIfTheResourceCouldNotBePublished() {
 		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource', array(), array(), '', FALSE);

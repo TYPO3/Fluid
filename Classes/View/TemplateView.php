@@ -96,7 +96,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $templatePathAndFilename Template file path
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function setTemplatePathAndFilename($templatePathAndFilename) {
@@ -108,7 +107,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $layoutPathAndFilename Path and filename of the layout file
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function setLayoutPathAndFilename($layoutPathAndFilename) {
@@ -120,8 +118,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function canRender(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
@@ -140,7 +136,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $templateRootPath Root path to the templates. If set, overrides the one determined from $this->templateRootPathPattern
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function setTemplateRootPath($templateRootPath) {
@@ -153,7 +148,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string template identifier
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getTemplateIdentifier($actionName = NULL) {
 		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
@@ -171,8 +165,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getTemplateSource($actionName = NULL) {
 		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
@@ -190,8 +182,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getTemplatePathAndFilename($actionName = NULL) {
 		if ($this->templatePathAndFilename !== NULL) {
@@ -240,8 +230,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string contents of the layout template
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getLayoutSource($layoutName = 'Default') {
 		$layoutPathAndFilename = $this->getLayoutPathAndFilename($layoutName);
@@ -263,8 +251,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string Path and filename of layout files
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getLayoutPathAndFilename($layoutName = 'Default') {
 		if ($this->layoutPathAndFilename !== NULL) {
@@ -302,8 +288,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $partialName The name of the partial
 	 * @return string contents of the partial template
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getPartialSource($partialName) {
 		$partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
@@ -320,8 +304,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $partialName The name of the partial
 	 * @return string the full path which should be used. The path definitely exists.
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getPartialPathAndFilename($partialName) {
 		$paths = $this->expandGenericPathPattern($this->partialPathAndFilenamePattern, TRUE, TRUE);
@@ -338,7 +320,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * Resolves the template root to be used inside other paths.
 	 *
 	 * @return string Path to template root directory
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getTemplateRootPath() {
 		if ($this->templateRootPath !== NULL) {
@@ -354,7 +335,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $partialRootPath Root path to the partials. If set, overrides the one determined from $this->partialRootPathPattern
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function setPartialRootPath($partialRootPath) {
@@ -365,7 +345,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * Resolves the partial root to be used inside other paths.
 	 *
 	 * @return string Path to partial root directory
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getPartialRootPath() {
 		if ($this->partialRootPath !== NULL) {
@@ -381,7 +360,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $layoutRootPath Root path to the layouts. If set, overrides the one determined from $this->layoutRootPathPattern
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function setLayoutRootPath($layoutRootPath) {
@@ -392,7 +370,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * Resolves the layout root to be used inside other paths.
 	 *
 	 * @return string Path to layout root directory
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getLayoutRootPath() {
 		if ($this->layoutRootPath !== NULL) {
@@ -429,8 +406,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param boolean $bubbleControllerAndSubpackage if TRUE, then we successively split off parts from "@controller" and "@subpackage" until both are empty.
 	 * @param boolean $formatIsOptional if TRUE, then half of the resulting strings will have ."@format" stripped off, and the other half will have it.
 	 * @return array unix style path
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
 		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);

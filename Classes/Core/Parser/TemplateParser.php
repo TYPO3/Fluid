@@ -23,7 +23,6 @@ class TemplateParser {
 	 * This regular expression splits the input string at all dynamic tags, AND
 	 * on all <![CDATA[...]]> sections.
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
 		(
@@ -48,7 +47,6 @@ class TemplateParser {
 	/**
 	 * This regular expression scans if the input string is a ViewHelper tag
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/
 		^<                                                # A Tag begins with <
@@ -76,14 +74,12 @@ class TemplateParser {
 	 * This regular expression scans if the input string is a closing ViewHelper
 	 * tag.
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 
 	/**
 	 * This regular expression splits the tag arguments into its parts
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SPLIT_PATTERN_TAGARGUMENTS = '/
 		(?:                                              #
@@ -105,7 +101,6 @@ class TemplateParser {
 	 * This pattern detects CDATA sections and outputs the text between opening
 	 * and closing CDATA.
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
 
@@ -113,7 +108,6 @@ class TemplateParser {
 	 * Pattern which splits the shorthand syntax into different tokens. The
 	 * "shorthand syntax" is everything like {...}
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
 		(
@@ -136,7 +130,6 @@ class TemplateParser {
 	 *
 	 * THIS IS ALMOST THE SAME AS IN $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
 		^{                                                      # Start of shorthand syntax
@@ -175,7 +168,6 @@ class TemplateParser {
 	/**
 	 * THIS IS ALMOST THE SAME AS $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
 
@@ -206,7 +198,6 @@ class TemplateParser {
 	 *
 	 * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
 		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
@@ -231,7 +222,6 @@ class TemplateParser {
 	 * This pattern splits an array into its parts. It is quite similar to the
 	 * pattern above.
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public static $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
 		(?P<ArrayPart>                                             # Start submatch
@@ -271,7 +261,6 @@ class TemplateParser {
 	 * Constructor. Preprocesses the $SCAN_PATTERN_NAMESPACEDECLARATION by
 	 * inserting the correct namespace separator.
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
 		self::$SCAN_PATTERN_NAMESPACEDECLARATION = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR), self::$SCAN_PATTERN_NAMESPACEDECLARATION);
@@ -282,7 +271,6 @@ class TemplateParser {
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -293,7 +281,6 @@ class TemplateParser {
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\Configuration $configuration
 	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setConfiguration(\TYPO3\Fluid\Core\Parser\Configuration $configuration = NULL) {
 		$this->configuration = $configuration;
@@ -309,7 +296,6 @@ class TemplateParser {
 	 *
 	 * @param string $templateString The template to parse as a string
 	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface Parsed template
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function parse($templateString) {
 		if (!is_string($templateString)) throw new \TYPO3\Fluid\Core\Parser\Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
@@ -332,7 +318,6 @@ class TemplateParser {
 	 * Gets the namespace definitions found.
 	 *
 	 * @return array Namespace identifiers and their component name prefix
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getNamespaces() {
 		return $this->namespaces;
@@ -342,7 +327,6 @@ class TemplateParser {
 	 * Resets the parser to its default values.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function reset() {
 		$this->namespaces = array(
@@ -356,7 +340,6 @@ class TemplateParser {
 	 *
 	 * @param string $templateString Template string to extract the namespaces from
 	 * @return string The updated template string without namespace declarations inside
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function extractNamespaceDefinitions($templateString) {
 		$matchedVariables = array();
@@ -380,7 +363,6 @@ class TemplateParser {
 	 *
 	 * @param string $templateString Template string to split.
 	 * @return array Splitted template
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function splitTemplateAtDynamicTags($templateString) {
 		$regularExpression = $this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
@@ -392,7 +374,6 @@ class TemplateParser {
 	 *
 	 * @param array $splitTemplate The split template, so that every tag with a namespace declaration is already a seperate array element.
 	 * @return \TYPO3\Fluid\Core\Parser\ParsingState
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildObjectTree($splitTemplate) {
 		$regularExpression_openingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
@@ -431,7 +412,6 @@ class TemplateParser {
 	 * @param string $arguments Arguments string, not yet parsed
 	 * @param boolean $selfclosing true, if the tag is a self-closing tag.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function openingViewHelperTagHandler(\TYPO3\Fluid\Core\Parser\ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
 		$argumentsObjectTree = $this->parseArguments($arguments);
@@ -452,8 +432,6 @@ class TemplateParser {
 	 * @param string $methodIdentifier Method identifier
 	 * @param array $argumentsObjectTree Arguments object tree
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function initializeViewHelperAndAddItToStack(\TYPO3\Fluid\Core\Parser\ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
@@ -494,7 +472,6 @@ class TemplateParser {
 	 * @param array $expectedArguments Array of TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function abortIfUnregisteredArgumentsExist($expectedArguments, $actualArguments) {
 		$expectedArgumentNames = array();
@@ -515,7 +492,6 @@ class TemplateParser {
 	 * @param array $expectedArguments Array of TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments) {
 		$actualArgumentNames = array_keys($actualArguments);
@@ -547,7 +523,6 @@ class TemplateParser {
 	 * @param string $namespaceIdentifier Namespace identifier for the view helper.
 	 * @param string $methodIdentifier Method identifier, might be hierarchical like "link.url"
 	 * @return string The fully qualified class name of the viewhelper
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier) {
 		$explodedViewHelperName = explode('.', $methodIdentifier);
@@ -571,7 +546,6 @@ class TemplateParser {
 	 * @param string $methodIdentifier Method identifier.
 	 * @return void
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function closingViewHelperTagHandler(\TYPO3\Fluid\Core\Parser\ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
@@ -599,7 +573,6 @@ class TemplateParser {
 	 * @param string $viewHelperString
 	 * @param string $additionalViewHelpersString
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function objectAccessorHandler(\TYPO3\Fluid\Core\Parser\ParsingState $state, $objectAccessorString, $delimiter, $viewHelperString, $additionalViewHelpersString) {
 		$viewHelperString .= $additionalViewHelpersString;
@@ -652,7 +625,6 @@ class TemplateParser {
 	 * @param integer $interceptionPoint the interception point. One of the \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
 	 * @param \TYPO3\Fluid\Core\Parser\ParsingState the parsing state
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function callInterceptor(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint, \TYPO3\Fluid\Core\Parser\ParsingState $state) {
 		if ($this->configuration !== NULL) {
@@ -675,7 +647,6 @@ class TemplateParser {
 	 *
 	 * @param array $arguments The arguments to be processed
 	 * @return array the processed array
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo This method should become superflous once the rest has been refactored, so that this code is not needed.
 	 */
 	protected function postProcessArgumentsForObjectAccessor(array $arguments) {
@@ -695,7 +666,6 @@ class TemplateParser {
 	 *
 	 * @param string $argumentsString All arguments as string
 	 * @return array An associative array of objects, where the key is the argument name.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function parseArguments($argumentsString) {
 		$argumentsObjectTree = array();
@@ -722,7 +692,6 @@ class TemplateParser {
 	 *
 	 * @param string $argumentString
 	 * @return ArgumentObject the corresponding argument object tree.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function buildArgumentObjectTree($argumentString) {
 		if (strpos($argumentString, '{') === FALSE && strpos($argumentString, '<') === FALSE) {
@@ -741,8 +710,6 @@ class TemplateParser {
 	 *
 	 * @param string $quotedValue Value to unquote
 	 * @return string Unquoted value
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function unquoteString($quotedValue) {
 		switch ($quotedValue[0]) {
@@ -763,7 +730,6 @@ class TemplateParser {
 	 *
 	 * @param string $regularExpression Regular expression template
 	 * @return string Regular expression ready to be used
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function prepareTemplateRegularExpression($regularExpression) {
 		return str_replace('NAMESPACE', implode('|', array_keys($this->namespaces)), $regularExpression);
@@ -777,7 +743,6 @@ class TemplateParser {
 	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $state Current parsing state
 	 * @param string $text Text to process
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function textAndShorthandSyntaxHandler(\TYPO3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$sections = preg_split($this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_SHORTHANDSYNTAX), $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
@@ -801,7 +766,6 @@ class TemplateParser {
 	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $state The current parsing state
 	 * @param string $arrayText The array as string.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function arrayHandler(\TYPO3\Fluid\Core\Parser\ParsingState $state, $arrayText) {
 		$state->getNodeFromStack()->addChildNode(
@@ -821,7 +785,6 @@ class TemplateParser {
 	 *
 	 * @param string $arrayText Array text
 	 * @return \TYPO3\Fluid\ArrayNode the array node built up
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function recursiveArrayHandler($arrayText) {
 		$matches = array();
@@ -854,8 +817,6 @@ class TemplateParser {
 	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $state
 	 * @param string $text
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function textHandler(\TYPO3\Fluid\Core\Parser\ParsingState $state, $text) {
 		$node = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $text);

@@ -31,8 +31,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	}
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderExecutesTheLoopCorrectly() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -56,7 +54,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPreservesKeys() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -86,7 +83,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfObjectIsNull() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -101,7 +97,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfObjectIsEmptyArray() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -116,7 +111,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIteratesElementsInReverseOrderIfReverseIsTrue() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -142,7 +136,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPreservesKeysIfReverseIsTrue() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -173,7 +166,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function keyContainsNumericalIndexIfTheGivenArrayDoesNotHaveAKey() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -207,7 +199,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function keyContainsNumericalIndexInAscendingOrderEvenIfReverseIsTrueIfTheGivenArrayDoesNotHaveAKey() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -243,7 +234,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -261,7 +251,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIteratesThroughElementsOfTraversableObjects() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -284,7 +273,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPreservesKeyWhenIteratingThroughElementsOfObjectsThatImplementIteratorInterface() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -314,7 +302,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function keyContainsTheNumericalIndexWhenIteratingThroughElementsOfObjectsOfTyeSplObjectStorage() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();
@@ -356,7 +343,6 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function iterationDataIsAddedToTemplateVariableContainerIfIterationArgumentIsSet() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\ForViewHelper();

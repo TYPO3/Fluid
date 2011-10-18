@@ -51,7 +51,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * Setup fixture
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->renderingContext = new \TYPO3\Fluid\Core\Rendering\RenderingContext();
@@ -71,7 +70,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function constructorSetsViewHelperAndArguments() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
@@ -84,8 +82,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function childNodeAccessFacetWorksAsExpected() {
 		$childNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', array(), array('foo'));
@@ -102,8 +98,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function initializeArgumentsAndRenderIsCalledByViewHelperNode() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('initializeArgumentsAndRender', 'prepareArguments'));
@@ -116,8 +110,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function initializeArgumentsAndRenderIsCalledWithCorrectArguments() {
 		$arguments = array(
@@ -140,7 +132,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateMethodPassesRenderingContextToViewHelper() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setRenderingContext'));
@@ -153,7 +144,6 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function multipleEvaluateCallsShareTheSameViewHelperInstance() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'validateArguments', 'prepareArguments', 'setViewHelperVariableContainer'));

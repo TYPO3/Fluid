@@ -61,7 +61,6 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -71,7 +70,6 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 *
 	 * @param string $defaultPackageKey
 	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setDefaultPackageKey($defaultPackageKey) {
 		if (!preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {
@@ -88,7 +86,6 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
 	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface the modified node
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if (strpos($node->getText(), 'Public/') === FALSE) {

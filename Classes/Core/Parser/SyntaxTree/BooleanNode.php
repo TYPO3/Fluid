@@ -85,7 +85,6 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * $this->comparator and $this->syntaxTreeNode.
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode) {
 		$childNodes = $syntaxTreeNode->getChildNodes();
@@ -168,8 +167,6 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return boolean the boolean value
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		if ($this->comparator !== NULL) {
@@ -197,7 +194,6 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return boolean TRUE if comparison of left and right side using the comparator emit TRUE, false otherwise
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	static public function evaluateComparator($comparator, $evaluatedLeftSide, $evaluatedRightSide) {
 		switch ($comparator) {
@@ -261,8 +257,6 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param string $string string to check for a comparator inside
 	 * @return string The comparator or NULL if none found.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getComparatorFromString($string) {
 		foreach (self::$comparators as $comparator) {
@@ -281,7 +275,6 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param mixed $value Value to be converted to boolean
 	 * @return boolean
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	static public function convertToBoolean($value) {
 		if (is_bool($value)) {

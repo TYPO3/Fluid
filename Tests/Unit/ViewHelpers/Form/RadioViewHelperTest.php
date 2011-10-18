@@ -33,7 +33,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagNameAndDefaultAttributes() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
@@ -53,7 +52,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderSetsCheckedAttributeIfSpecified() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
@@ -73,7 +71,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIgnoresBoundPropertyIfCheckedIsSet() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
@@ -94,7 +91,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsCheckedAttributeIfCheckboxIsBoundToAPropertyOfTypeBoolean() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
@@ -116,7 +112,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderDoesNotAppendSquareBracketsToNameAttributeIfBoundToAPropertyOfTypeArray() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
@@ -137,7 +132,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsCheckedAttributeIfCheckboxIsBoundToAPropertyOfTypeString() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute'));
@@ -159,7 +153,6 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCallsSetErrorClassAttribute() {
 		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');

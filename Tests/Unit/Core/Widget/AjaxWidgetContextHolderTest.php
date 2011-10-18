@@ -19,7 +19,6 @@ class AjaxWidgetContextHolderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function storeSetsTheAjaxWidgetIdentifierInContextAndIncreasesIt() {
 		$ajaxWidgetContextHolder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder', array('dummy'));
@@ -34,7 +33,6 @@ class AjaxWidgetContextHolderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function storedWidgetContextCanBeRetrievedAgain() {
 		$ajaxWidgetContextHolder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder', array('dummy'));
@@ -48,7 +46,6 @@ class AjaxWidgetContextHolderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 */
 	public function getThrowsExceptionIfWidgetContextIsNotFound() {

@@ -17,7 +17,6 @@ class Nl2brViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDoesNotModifyTextWithoutLineBreaks() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
@@ -28,7 +27,6 @@ class Nl2brViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperConvertsLineBreaksToBRTags() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));
@@ -39,7 +37,6 @@ class Nl2brViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperConvertsWindowsLineBreaksToBRTags() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper', array('renderChildren'));

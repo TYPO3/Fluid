@@ -47,7 +47,6 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 *
 	 * @param array $childNodes Child nodes of this syntax tree node
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodes(array $childNodes) {
 		$this->childNodes = $childNodes;
@@ -56,7 +55,6 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	/**
 	 * Initializes the "then" and "else" arguments
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
 		$this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.', FALSE);
@@ -69,8 +67,6 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 * If then attribute is not set and no ThenViewHelper and no ElseViewHelper is found, all child nodes are rendered
 	 *
 	 * @return string rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	protected function renderThenChild() {
@@ -110,8 +106,6 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 * If else attribute is not set and no ElseViewHelper is found, an empty string will be returned.
 	 *
 	 * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	protected function renderElseChild() {

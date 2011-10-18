@@ -72,7 +72,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Initialize arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -93,8 +92,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Render the tag.
 	 *
 	 * @return string rendered tag.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render() {
@@ -136,7 +133,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 *
 	 * @param array $options the options for the form.
 	 * @return string rendered tags.
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function renderOptionTags($options) {
 		$output = '';
@@ -152,8 +148,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Render the option tags.
 	 *
 	 * @return array an associative array of options, key will be the value of the option tag
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function getOptions() {
 		if (!is_array($this->arguments['options']) && !($this->arguments['options'] instanceof \Traversable)) {
@@ -209,8 +203,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 *
 	 * @param mixed $value Value to check for
 	 * @return boolean TRUE if the value should be marked a s selected; FALSE otherwise
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Jochen Rau <jochen.rau@typoplanet.de>
 	 */
 	protected function isSelected($value) {
 		$selectedValue = $this->getSelectedValue();
@@ -231,7 +223,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Retrieves the selected value(s)
 	 *
 	 * @return mixed value string or an array of strings
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getSelectedValue() {
 		$value = $this->getValue();
@@ -263,7 +254,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * @param string $label content of the option tag (will be escaped)
 	 * @param boolean $isSelected specifies wheter or not to add selected attribute
 	 * @return string the rendered option tag
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function renderOptionTag($value, $label, $isSelected) {
 		$output = '<option value="' . htmlspecialchars($value) . '"';

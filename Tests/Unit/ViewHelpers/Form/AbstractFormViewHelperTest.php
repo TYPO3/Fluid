@@ -21,7 +21,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldContainingTheObjectsUUID() {
 		$className = 'Object' . uniqid();
@@ -46,7 +45,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderHiddenIdentityFieldReturnsAHiddenInputFieldIfObjectIsNewButAClone() {
 		$className = 'Object' . uniqid();
@@ -71,7 +69,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenIdentityFieldReturnsACommentIfTheObjectIsWithoutIdentity() {
 		$className = 'Object' . uniqid();
@@ -95,7 +92,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function prefixFieldNameReturnsEmptyStringIfGivenFieldNameIsNULL() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
@@ -106,7 +102,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function prefixFieldNameReturnsEmptyStringIfGivenFieldNameIsEmpty() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
@@ -117,7 +112,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function prefixFieldNameReturnsGivenFieldNameIfFieldNamePrefixIsEmpty() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
@@ -130,7 +124,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function prefixFieldNamePrefixesGivenFieldNameWithFieldNamePrefix() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
@@ -143,7 +136,6 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function prefixFieldNamePreservesSquareBracketsOfFieldName() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);

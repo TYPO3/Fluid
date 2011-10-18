@@ -32,7 +32,6 @@ class AbstractNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluateChildNodesPassesRenderingContextToChildNodes() {
 		$this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext);
@@ -41,7 +40,6 @@ class AbstractNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function childNodeCanBeReadOutAgain() {
 		$this->assertSame($this->abstractNode->getChildNodes(), array($this->childNode));

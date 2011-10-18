@@ -46,8 +46,6 @@ class NumberViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $decimalSeparator The decimal point character
 	 * @param string $thousandsSeparator The character for grouping the thousand digits
 	 * @return string The formatted number
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($decimals = 2, $decimalSeparator = '.', $thousandsSeparator = ',') {

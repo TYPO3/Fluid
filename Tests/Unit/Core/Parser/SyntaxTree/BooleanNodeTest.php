@@ -29,7 +29,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * Setup fixture
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function setUp() {
 		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
@@ -38,7 +37,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {
 		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
@@ -49,7 +47,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function comparingEqualNumbersReturnsTrue() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -63,7 +60,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function comparingUnequalNumbersReturnsFalse() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -77,7 +73,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function notEqualReturnsFalseIfNumbersAreEqual() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -91,7 +86,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function notEqualReturnsTrueIfNumbersAreNotEqual() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -105,7 +99,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function oddNumberModulo2ReturnsTrue() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -119,7 +112,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evenNumberModulo2ReturnsFalse() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -133,7 +125,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterThanReturnsTrueIfNumberIsReallyGreater() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -147,7 +138,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterThanReturnsFalseIfNumberIsEqual() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -161,7 +151,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -175,7 +164,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnsTrueIfNumberIsEqual() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -189,7 +177,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function greaterOrEqualsReturnFalseIfNumberIsSmaller() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -203,7 +190,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessThanReturnsTrueIfNumberIsReallyless() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -217,7 +203,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessThanReturnsFalseIfNumberIsEqual() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -231,7 +216,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnsTrueIfNumberIsReallyLess() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -245,7 +229,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnsTrueIfNumberIsEqual() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -259,7 +242,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnFalseIfNumberIsBigger() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -273,7 +255,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -286,7 +267,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectsAreComparedStrictly() {
 		$object1 = new \stdClass();
@@ -310,7 +290,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function objectsAreComparedStrictlyInUnequalComparison() {
 		$object1 = new \stdClass();
@@ -334,7 +313,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function convertToBooleanProperlyConvertsValuesOfTypeBoolean() {
 		$this->assertFalse(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(FALSE));
@@ -343,7 +321,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function convertToBooleanProperlyConvertsValuesOfTypeString() {
 		$this->assertFalse(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(''));
@@ -356,7 +333,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function convertToBooleanProperlyConvertsNumericValues() {
 		$this->assertFalse(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(0));
@@ -370,7 +346,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function convertToBooleanProperlyConvertsValuesOfTypeArray() {
 		$this->assertFalse(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(array()));
@@ -381,7 +356,6 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function convertToBooleanProperlyConvertsObjects() {
 		$this->assertFalse(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(NULL));

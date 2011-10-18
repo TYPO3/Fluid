@@ -31,8 +31,6 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluateChildNodes(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$output = NULL;
@@ -68,7 +66,6 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	 * This is especially needed to implement the boolean expression language.
 	 *
 	 * @return array<\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getChildNodes() {
 		return $this->childNodes;
@@ -79,7 +76,6 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addChildNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode) {
 		$this->childNodes[] = $childNode;

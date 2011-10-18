@@ -32,7 +32,6 @@ class ParsingStateTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNodeCanBeReadOutAgain() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -42,7 +41,6 @@ class ParsingStateTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pushAndGetFromStackWorks() {
 		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
@@ -53,7 +51,6 @@ class ParsingStateTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
 		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');

@@ -43,7 +43,6 @@ class ViewHelperVariableContainer {
 	 * @param object $value The value to store
 	 * @return void
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function add($viewHelperName, $key, $value) {
@@ -60,7 +59,6 @@ class ViewHelperVariableContainer {
 	 * @param string $key Key of the data
 	 * @param object $value The value to store
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addOrUpdate($viewHelperName, $key, $value) {
 		if (!isset($this->objects[$viewHelperName])) {
@@ -76,7 +74,6 @@ class ViewHelperVariableContainer {
 	 * @param string $key Key of the data
 	 * @return object The object stored
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function get($viewHelperName, $key) {
@@ -90,7 +87,6 @@ class ViewHelperVariableContainer {
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
 	 * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function exists($viewHelperName, $key) {
@@ -104,7 +100,6 @@ class ViewHelperVariableContainer {
 	 * @param string $key Key of the data to remove
 	 * @return void
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function remove($viewHelperName, $key) {
@@ -117,7 +112,6 @@ class ViewHelperVariableContainer {
 	 *
 	 * @param \TYPO3\Fluid\View\AbstractTemplateView $view View to set
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setView(\TYPO3\Fluid\View\AbstractTemplateView $view) {
 		$this->view = $view;
@@ -129,7 +123,6 @@ class ViewHelperVariableContainer {
 	 * !!! This is NOT a public API and might still change!!!
 	 *
 	 * @return \TYPO3\Fluid\View\AbstractTemplateView The View
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getView() {
 		return $this->view;
@@ -139,7 +132,6 @@ class ViewHelperVariableContainer {
 	 * Clean up for serializing.
 	 *
 	 * @return array
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __sleep() {
 		return array('objects');

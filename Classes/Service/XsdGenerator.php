@@ -24,7 +24,6 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 *
 	 * @param string $namespace Namespace identifier to generate the XSD for, without leading Backslash.
 	 * @return string XML Schema definition
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function generateXsd($namespace) {
 		$tmp = str_replace('\\', '/', $namespace);
@@ -52,7 +51,6 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $namespace Namespace prefix. Used to split off the first parts of the class name.
 	 * @param \SimpleXMLElement $xmlRootNode XML root node where the xsd:element is appended.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function generateXmlForClassName($className, $namespace, \SimpleXMLElement $xmlRootNode) {
 		$reflectionClass = new \TYPO3\FLOW3\Reflection\ClassReflection($className);
@@ -84,7 +82,6 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $className Class name where to add the attribute descriptions
 	 * @param \SimpleXMLElement $xsdElement XML element to add the attributes to.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addAttributes($className, \SimpleXMLElement $xsdElement) {
 		$viewHelper = $this->objectManager->get($className);
@@ -112,7 +109,6 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $documentation Documentation string to add.
 	 * @param \SimpleXMLElement $xsdParentNode Node to add the documentation to
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addDocumentation($documentation, \SimpleXMLElement $xsdParentNode) {
 		$xsdAnnotation = $xsdParentNode->addChild('xsd:annotation');

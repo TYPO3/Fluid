@@ -26,7 +26,6 @@ class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDeactivatesEscapingInterceptor() {
 		$this->assertFalse($this->viewHelper->isEscapingInterceptorEnabled());
@@ -34,7 +33,6 @@ class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsUnmodifiedValueIfSpecified() {
 		$value = 'input value " & äöüß@';
@@ -45,7 +43,6 @@ class RawViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsUnmodifiedChildNodesIfNoValueIsSpecified() {
 		$childNodes = 'input value " & äöüß@';

@@ -56,7 +56,6 @@ class IfHasRoleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractCondition
 	 *
 	 * @param \TYPO3\FLOW3\Security\Context $securityContext The security context
 	 * @return void
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function injectSecurityContext(\TYPO3\FLOW3\Security\Context $securityContext) {
 		$this->securityContext = $securityContext;
@@ -68,7 +67,6 @@ class IfHasRoleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractCondition
 	 *
 	 * @param string $role The role
 	 * @return string the rendered string
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 * @api
 	 */
 	public function render($role) {

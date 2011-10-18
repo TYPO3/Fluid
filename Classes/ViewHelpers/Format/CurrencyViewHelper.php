@@ -50,7 +50,6 @@ class CurrencyViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 * @param string $decimalSeparator (optional) The separator for the decimal point.
 	 * @param string $thousandsSeparator (optional) The thousands separator.
 	 * @return string the formatted amount.
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($currencySign = '', $decimalSeparator = ',', $thousandsSeparator = '.') {

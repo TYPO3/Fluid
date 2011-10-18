@@ -89,8 +89,6 @@ class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHel
 	 *
 	 * @param boolean $condition View helper condition
 	 * @return string the rendered string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($condition) {

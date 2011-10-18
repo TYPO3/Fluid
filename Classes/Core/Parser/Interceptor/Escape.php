@@ -41,7 +41,6 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -55,9 +54,6 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
 	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if ($interceptorPosition === \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {

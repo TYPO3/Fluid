@@ -46,8 +46,6 @@ class CropViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param integer $maxCharacters Place where to truncate the string
 	 * @param string $append What to append, if truncation happened
 	 * @return string cropped text
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($maxCharacters, $append = '...') {

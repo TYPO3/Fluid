@@ -42,7 +42,6 @@ class HiddenViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -54,7 +53,6 @@ class HiddenViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Renders the hidden field.
 	 *
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

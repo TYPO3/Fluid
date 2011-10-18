@@ -33,7 +33,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsSpecifiedUri() {
 		$this->viewHelper->initialize();
@@ -44,7 +43,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsHttpPrefixIfSpecifiedUriDoesNotContainScheme() {
 		$this->viewHelper->initialize();
@@ -55,7 +53,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsSpecifiedSchemeIfUriDoesNotContainScheme() {
 		$this->viewHelper->initialize();
@@ -66,7 +63,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderDoesNotAddEmptyScheme() {
 		$this->viewHelper->initialize();

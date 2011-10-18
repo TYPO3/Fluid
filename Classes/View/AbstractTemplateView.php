@@ -76,7 +76,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -87,7 +86,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\TemplateParser $templateParser The template parser
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectTemplateParser(\TYPO3\Fluid\Core\Parser\TemplateParser $templateParser) {
 		$this->templateParser = $templateParser;
@@ -106,7 +104,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function setRenderingContext(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$this->baseRenderingContext = $renderingContext;
@@ -119,7 +116,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 *
 	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
@@ -135,7 +131,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @param string $key The key of a view variable to set
 	 * @param mixed $value The value of the view variable
 	 * @return \TYPO3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function assign($key, $value) {
@@ -153,7 +148,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 *
 	 * @param array $values Keys and values - only a value with key "value" is considered
 	 * @return \TYPO3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function assignMultiple(array $values) {
@@ -173,8 +167,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 *
 	 * @param string $actionName If set, the view of the specified action will be rendered instead. Default is the action specified in the Request object
 	 * @return string Rendered Template
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function render($actionName = NULL) {
@@ -222,8 +214,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
 	 * @return string rendered template for the section
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidSectionException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderSection($sectionName, array $variables, $ignoreUnknown = FALSE) {
 		$renderingContext = $this->getCurrentRenderingContext();
@@ -277,9 +267,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @param array $variables
 	 * @param \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer the View Helper Variable container to use.
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function renderPartial($partialName, $sectionName, array $variables) {
 		if (!isset($this->partialIdentifierCache[$partialName])) {
@@ -375,7 +362,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * Build parser configuration
 	 *
 	 * @return \TYPO3\Fluid\Core\Parser\Configuration
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	protected function buildParserConfiguration() {
 		$parserConfiguration = $this->objectManager->create('TYPO3\Fluid\Core\Parser\Configuration');
@@ -393,7 +379,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function startRendering($type, \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		array_push($this->renderingStack, array('type' => $type, 'parsedTemplate' => $parsedTemplate, 'renderingContext' => $renderingContext));
@@ -404,7 +389,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * method pair-wise with startRendering().
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function stopRendering() {
 		array_pop($this->renderingStack);
@@ -414,7 +398,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * Get the current rendering type.
 	 *
 	 * @return one of RENDERING_* constants
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getCurrentRenderingType() {
 		$currentRendering = end($this->renderingStack);
@@ -425,7 +408,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * Get the parsed template which is currently being rendered.
 	 *
 	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getCurrentParsedTemplate() {
 		$currentRendering = end($this->renderingStack);
@@ -436,7 +418,6 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * Get the rendering context which is currently used.
 	 *
 	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getCurrentRenderingContext() {
 		$currentRendering = end($this->renderingStack);

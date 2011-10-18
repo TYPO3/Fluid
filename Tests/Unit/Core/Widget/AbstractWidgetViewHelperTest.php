@@ -48,7 +48,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $request;
 
 	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper', array('validateArguments', 'initialize', 'callRenderMethod', 'getWidgetConfiguration', 'getRenderingContext'));
@@ -70,7 +69,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArgumentsAndRenderCallsTheRightSequenceOfMethods() {
 		$this->callViewHelper();
@@ -78,7 +76,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArgumentsAndRenderStoresTheWidgetContextIfInAjaxMode() {
 		$this->viewHelper->_set('ajaxWidget', TRUE);
@@ -91,7 +88,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * Calls the ViewHelper, and emulates a rendering.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function callViewHelper() {
 		$viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
@@ -116,7 +112,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodesAddsChildNodesToWidgetContext() {
 		$node1 = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
@@ -140,7 +135,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\MissingControllerException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initiateSubRequestThrowsExceptionIfControllerIsNoWidgetController() {
 		$controller = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerInterface');
@@ -151,7 +145,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initiateSubRequestBuildsRequestProperly() {
 		$controller = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);
@@ -194,7 +187,6 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initiateSubRequestSetsIndexActionIfNoActionSet() {
 		$controller = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array(), array(), '', FALSE);

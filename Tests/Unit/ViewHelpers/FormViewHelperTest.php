@@ -38,7 +38,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderAddsObjectToViewHelperVariableContainer() {
 		$formObject = new \stdClass();
@@ -56,8 +55,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsObjectNameToTemplateVariableContainer() {
 		$objectName = 'someObjectName';
@@ -73,7 +70,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function formObjectNameArgumentOverrulesNameArgument() {
 		$objectName = 'someObjectName';
@@ -90,7 +86,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderCallsRenderHiddenReferrerFields() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenReferrerFields'), array(), '', FALSE);
@@ -102,8 +97,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCallsRenderHiddenIdentityField() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -124,7 +117,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderCallsRenderAdditionalIdentityFields() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -140,7 +132,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderWrapsHiddenFieldsWithDivForXhtmlCompatibility() {
 		$viewHelper = $this->getMock($this->buildAccessibleProxy('TYPO3\Fluid\ViewHelpers\FormViewHelper'), array('renderChildren', 'renderHiddenIdentityField', 'renderAdditionalIdentityFields', 'renderHiddenReferrerFields'), array(), '', FALSE);
@@ -159,7 +150,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderAdditionalIdentityFieldsFetchesTheFieldsFromViewHelperVariableContainerAndBuildsHiddenFieldsForThem() {
 		$identityProperties = array(
@@ -179,7 +169,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderHiddenReferrerFieldsAddCurrentControllerAndActionAsHiddenFields() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -204,7 +193,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenReferrerFieldsAddCurrentControllerAndActionOfParentAndSubRequestAsHiddenFields() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -247,7 +235,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsSpecifiedPrefixToTemplateVariableContainer() {
 		$prefix = 'somePrefix';
@@ -263,7 +250,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsNoFieldNamePrefixToTemplateVariableContainerIfNoPrefixIsSpecified() {
 		$expectedPrefix = '';
@@ -278,7 +264,6 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsDefaultFieldNamePrefixToTemplateVariableContainerIfNoPrefixIsSpecifiedAndRequestIsASubRequest() {
 		$expectedPrefix = 'someArgumentPrefix';

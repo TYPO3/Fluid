@@ -23,7 +23,6 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 *
 	 * @param string $namespace Namespace identifier to generate the XSD for, without leading Backslash.
 	 * @return string XML Schema definition
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function generateDocbook($namespace) {
 		if (substr($namespace, -1) !== \TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR) {
@@ -60,7 +59,6 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $namespace Namespace prefix. Used to split off the first parts of the class name.
 	 * @param \SimpleXMLElement $xmlRootNode XML root node where the xsd:element is appended.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function generateXmlForClassName($className, $namespace, \SimpleXMLElement $xmlRootNode) {
 		$reflectionClass = new \TYPO3\FLOW3\Reflection\ClassReflection($className);
@@ -90,7 +88,6 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $className Class name where to add the attribute descriptions
 	 * @param \SimpleXMLElement $docbookSection DocBook section to add the attributes to.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addArguments($className, \SimpleXMLElement $docbookSection) {
 		$viewHelper = $this->instanciateViewHelper($className);
@@ -153,7 +150,6 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $documentation Documentation string to add.
 	 * @param \SimpleXMLElement $docbookSection Node to add the documentation to
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addDocumentation($documentation, \SimpleXMLElement $docbookSection) {
 		$splitRegex = '/^\s*(=[^=]+=)$/m';

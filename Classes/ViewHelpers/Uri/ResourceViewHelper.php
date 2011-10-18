@@ -70,7 +70,6 @@ class ResourceViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 * @param \TYPO3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
 	 * @param string $uri A resource URI, a relative / absolute path or URL
 	 * @return string The absolute URI to the resource
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function render($path = NULL, $package = NULL, $resource = NULL, $uri = NULL) {

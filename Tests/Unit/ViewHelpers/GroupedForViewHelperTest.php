@@ -34,7 +34,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfObjectIsNull() {
 		$this->assertEquals('', $this->viewHelper->render(NULL, 'foo', 'bar'));
@@ -42,7 +41,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringIfObjectIsEmptyArray() {
 		$this->assertEquals('', $this->viewHelper->render(array(), 'foo', 'bar'));
@@ -51,7 +49,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable() {
 		$object = new \stdClass();
@@ -61,7 +58,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderGroupsMultidimensionalArrayAndPreservesKeys() {
 		$photoshop = array('name' => 'Adobe Photoshop', 'license' => 'commercial');
@@ -86,7 +82,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderGroupsMultidimensionalArrayObjectAndPreservesKeys() {
 		$photoshop = new \ArrayObject(array('name' => 'Adobe Photoshop', 'license' => 'commercial'));
@@ -111,7 +106,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderGroupsArrayOfObjectsAndPreservesKeys() {
 		$photoshop = new \stdClass();
@@ -146,7 +140,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderGroupsMultidimensionalArrayByObjectKey() {
 		$customer1 = new \stdClass();
@@ -175,7 +168,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderGroupsMultidimensionalObjectByObjectKey() {
 		$customer1 = new \stdClass();
@@ -212,7 +204,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function groupingByAKeyThatDoesNotExistCreatesASingleGroup() {
 		$photoshop = array('name' => 'Adobe Photoshop', 'license' => 'commercial');
@@ -232,7 +223,6 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionWhenPassingOneDimensionalArraysToEach() {
 		$values = array('some', 'simple', 'array');

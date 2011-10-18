@@ -57,7 +57,6 @@ class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionV
 	 *
 	 * @param \TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
 	 * @return void
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function injectAccessDecisionManager(\TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
 		$this->accessDecisionManager = $accessDecisionManager;
@@ -68,7 +67,6 @@ class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionV
 	 *
 	 * @param string $resource Policy resource
 	 * @return string the rendered string
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 * @api
 	 */
 	public function render($resource) {
@@ -84,7 +82,6 @@ class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionV
 	 *
 	 * @param string $resource The resource to check
 	 * @return boolean TRUE if we currently have access to the given resource
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	protected function hasAccessToResource($resource) {
 		try {

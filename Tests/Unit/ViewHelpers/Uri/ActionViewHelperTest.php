@@ -36,7 +36,6 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsUriReturnedFromUriBuilder() {
 		$this->uriBuilder->expects($this->any())->method('uriFor')->will($this->returnValue('some/uri'));
@@ -49,7 +48,6 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyPassesDefaultArgumentsToUriBuilder() {
 		$this->uriBuilder->expects($this->once())->method('setSection')->with('');
@@ -66,7 +64,6 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyPassesAllArgumentsToUriBuilder() {
 		$this->uriBuilder->expects($this->once())->method('setSection')->with('someSection');

@@ -30,7 +30,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function storedDataCanBeReadOutAgain() {
 		$variable = 'Hello world';
@@ -43,7 +42,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function gettingNonNonExistentValueThrowsException() {
@@ -52,7 +50,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function settingKeyWhichIsAlreadyStoredThrowsException() {
@@ -62,7 +59,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addOrUpdateWorks() {
 		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
@@ -72,7 +68,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function aSetValueCanBeRemovedAgain() {
 		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
@@ -82,7 +77,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function removingNonExistentKeyThrowsException() {
@@ -91,7 +85,6 @@ class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewCanBeReadOutAgain() {
 		$view = $this->getMock('TYPO3\Fluid\View\AbstractTemplateView', array('getTemplateSource', 'getLayoutSource', 'getPartialSource', 'hasTemplate', 'canRender', 'getTemplateIdentifier', 'getLayoutIdentifier', 'getPartialIdentifier'));

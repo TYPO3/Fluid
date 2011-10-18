@@ -21,7 +21,6 @@ class JsonIdentityViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderGetsIdentityForObjectFromPersistenceManager() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
@@ -41,7 +40,6 @@ class JsonIdentityViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderOutputsEmptyJsonObjectForNullIdentity() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');

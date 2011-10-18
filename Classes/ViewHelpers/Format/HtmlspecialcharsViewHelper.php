@@ -51,8 +51,6 @@ class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractVi
 	 * @param string $encoding
 	 * @param boolean $doubleEncode If FALSE existing html entities won't be encoded, the default is to convert everything.
 	 * @return string the altered string
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @see http://www.php.net/manual/function.htmlspecialchars.php
 	 * @api
 	 */

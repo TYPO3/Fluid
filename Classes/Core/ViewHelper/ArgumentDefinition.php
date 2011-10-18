@@ -62,7 +62,6 @@ class ArgumentDefinition {
 	 * @param boolean $required TRUE if argument is required
 	 * @param mixed $defaultValue Default value
 	 * @param boolean $isMethodParameter TRUE if this argument is a method parameter
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($name, $type, $description, $required, $defaultValue = NULL, $isMethodParameter = FALSE) {
 		$this->name = $name;
@@ -77,7 +76,6 @@ class ArgumentDefinition {
 	 * Get the name of the argument
 	 *
 	 * @return string Name of argument
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getName() {
 		return $this->name;
@@ -87,7 +85,6 @@ class ArgumentDefinition {
 	 * Get the type of the argument
 	 *
 	 * @return string Type of argument
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getType() {
 		return $this->type;
@@ -97,7 +94,6 @@ class ArgumentDefinition {
 	 * Get the description of the argument
 	 *
 	 * @return string Description of argument
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getDescription() {
 		return $this->description;
@@ -107,7 +103,6 @@ class ArgumentDefinition {
 	 * Get the optionality of the argument
 	 *
 	 * @return boolean TRUE if argument is optional
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function isRequired() {
 		return $this->required;
@@ -117,7 +112,6 @@ class ArgumentDefinition {
 	 * Get the default value, if set
 	 *
 	 * @return mixed Default value
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getDefaultValue() {
 		return $this->defaultValue;
@@ -127,7 +121,6 @@ class ArgumentDefinition {
 	 * TRUE if it is a method parameter
 	 *
 	 * @return boolean TRUE if it's a method parameter
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function isMethodParameter() {
 		return $this->isMethodParameter;

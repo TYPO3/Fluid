@@ -26,7 +26,6 @@ class ThenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * Just render everything.
 	 *
 	 * @return string the rendered string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

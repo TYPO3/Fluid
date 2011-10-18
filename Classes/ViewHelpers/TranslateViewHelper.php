@@ -67,7 +67,6 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	/**
 	 * @param \TYPO3\FLOW3\I18n\Translator $translator
 	 * @return void
-	 * @author Karol Gusak <firstname@lastname.eu>
 	 */
 	public function injectTranslator(\TYPO3\FLOW3\I18n\Translator $translator) {
 		$this->translator = $translator;
@@ -86,8 +85,6 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * @param mixed $quantity A number to find plural form for (float or int), NULL to not use plural forms
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
-	 * @author Karol Gusak <firstname@lastname.eu>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function render($key = NULL, $default = NULL, array $arguments = array(), $source = 'Main', $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;

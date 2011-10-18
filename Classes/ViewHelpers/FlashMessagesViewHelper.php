@@ -49,7 +49,6 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	 * Initialize arguments
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -60,7 +59,6 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	 * Render method.
 	 *
 	 * @return string rendered Flash Messages, if there are any.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

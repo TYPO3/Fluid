@@ -20,7 +20,6 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function processRequestShouldThrowExceptionIfWidgetContextNotFound() {
 		$request = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
@@ -32,7 +31,6 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function processRequestShouldSetWidgetConfiguration() {
 

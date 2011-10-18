@@ -57,7 +57,6 @@ class RadioViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -74,7 +73,6 @@ class RadioViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVie
 	 * @param boolean $checked Specifies that the input element should be preselected
 	 *
 	 * @return string
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($checked = NULL) {

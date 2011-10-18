@@ -28,7 +28,6 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $mockEnvironment;
 
 	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->mockEnvironment = $this->getMock('TYPO3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
@@ -39,7 +38,6 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function canHandleRequestReturnsTrueIfCorrectGetParameterIsSet() {
 		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('typo3-fluid-widget-id' => '123')));
@@ -48,7 +46,6 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function canHandleRequestReturnsFalsefGetParameterIsNotSet() {
 		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('some-other-id' => '123')));
@@ -57,7 +54,6 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function priorityIsHigherThanDefaultRequestHandler() {
 		$defaultWebRequestHandler = $this->getMock('TYPO3\FLOW3\MVC\Web\RequestHandler', array('dummy'), array(), '', FALSE);

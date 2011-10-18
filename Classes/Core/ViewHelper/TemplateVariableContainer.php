@@ -41,7 +41,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * Constructor. Can take an array, and initializes the variables with it.
 	 *
 	 * @param array $variableArray
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function __construct(array $variableArray = array()) {
@@ -54,8 +53,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @param string $identifier Identifier of the variable to add
 	 * @param mixed $value The variable's value
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function add($identifier, $value) {
@@ -69,7 +66,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier
 	 * @return variable The variable identified by $identifier
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function get($identifier) {
@@ -85,7 +81,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier The identifier to remove
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function remove($identifier) {
@@ -97,7 +92,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * Returns an array of all identifiers available in the context.
 	 *
 	 * @return array Array of identifier strings
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getAllIdentifiers() {
 		return array_keys($this->variables);
@@ -107,7 +101,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * Returns the variables array.
 	 *
 	 * @return array Identifiers and values of all variables
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function getAll() {
 		return $this->variables;
@@ -118,7 +111,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier
 	 * @return boolean TRUE if $identifier exists, FALSE otherwise
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function exists($identifier) {
@@ -133,7 +125,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * Clean up for serializing.
 	 *
 	 * @return array
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __sleep() {
 		return array('variables');
@@ -145,7 +136,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @param string $identifier Identifier of the variable to add
 	 * @param mixed $value The variable's value
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetSet($identifier, $value) {
 		return $this->add($identifier, $value);
@@ -156,7 +146,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier The identifier to remove
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetUnset($identifier) {
 		return $this->remove($identifier);
@@ -167,7 +156,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier
 	 * @return boolean TRUE if $identifier exists, FALSE otherwise
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetExists($identifier) {
 		return $this->exists($identifier);
@@ -178,7 +166,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier
 	 * @return variable The variable identified by $identifier
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function offsetGet($identifier) {
 		return $this->get($identifier);

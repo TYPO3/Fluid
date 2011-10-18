@@ -38,7 +38,6 @@ class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperRendersThenChildIfConditionIsTrue() {
 		$this->viewHelper->expects($this->at(0))->method('renderThenChild')->will($this->returnValue('foo'));
@@ -50,7 +49,6 @@ class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperRendersElseChildIfConditionIsFalse() {
 		$this->viewHelper->expects($this->at(0))->method('renderElseChild')->will($this->returnValue('foo'));

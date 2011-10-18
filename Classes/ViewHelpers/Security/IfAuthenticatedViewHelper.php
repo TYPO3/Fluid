@@ -56,7 +56,6 @@ class IfAuthenticatedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractCon
 	 *
 	 * @param \TYPO3\FLOW3\Security\Context $securityContext
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function injectSecurityContext(\TYPO3\FLOW3\Security\Context $securityContext) {
 		$this->securityContext = $securityContext;
@@ -66,7 +65,6 @@ class IfAuthenticatedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractCon
 	 * Renders <f:then> child if any account is currently authenticated, otherwise renders <f:else> child.
 	 *
 	 * @return string the rendered string
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function render() {

@@ -31,7 +31,6 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagNameAndAttributesAndContent() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute', 'setContent'));
@@ -50,7 +49,6 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyPassesDefaultArgumentsToUriBuilder() {
 		$this->uriBuilder->expects($this->once())->method('setSection')->with('');
@@ -66,7 +64,6 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyPassesAllArgumentsToUriBuilder() {
 		$this->uriBuilder->expects($this->once())->method('setSection')->with('someSection');

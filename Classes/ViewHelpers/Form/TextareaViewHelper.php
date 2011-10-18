@@ -40,7 +40,6 @@ class TextareaViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -56,8 +55,6 @@ class TextareaViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	 * Renders the textarea.
 	 *
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

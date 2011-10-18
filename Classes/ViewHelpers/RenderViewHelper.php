@@ -82,7 +82,6 @@ class RenderViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $arguments Arguments to pass to the partial.
 	 * @param boolean $optional Set to TRUE, to ignore unknown sections, so the definition of a section inside a template can be optional for a layout
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render($section = NULL, $partial = NULL, $arguments = array(), $optional = FALSE) {

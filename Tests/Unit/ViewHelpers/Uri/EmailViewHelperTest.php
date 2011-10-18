@@ -36,7 +36,6 @@ class EmailViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderPrependsEmailWithMailto() {
 		$this->viewHelper->initialize();

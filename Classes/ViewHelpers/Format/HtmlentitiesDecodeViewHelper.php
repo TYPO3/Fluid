@@ -50,7 +50,6 @@ class HtmlentitiesDecodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstract
 	 * @param boolean $keepQuotes if TRUE, single and double quotes won't be replaced (sets ENT_NOQUOTES flag)
 	 * @param string $encoding
 	 * @return string the altered string
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @see http://www.php.net/html_entity_decode
 	 * @api
 	 */

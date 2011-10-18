@@ -55,7 +55,6 @@ class TagBuilder {
 	 *
 	 * @param string $tagName name of the tag to be rendered
 	 * @param string $tagContent content of the tag to be rendered
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function __construct($tagName = '', $tagContent = '') {
@@ -68,7 +67,6 @@ class TagBuilder {
 	 *
 	 * @param string $tagName name of the tag to be rendered
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function setTagName($tagName) {
@@ -79,7 +77,6 @@ class TagBuilder {
 	 * Gets the tag name
 	 *
 	 * @return string tag name of the tag to be rendered
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function getTagName() {
@@ -91,7 +88,6 @@ class TagBuilder {
 	 *
 	 * @param string $tagContent content of the tag to be rendered
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function setContent($tagContent) {
@@ -102,7 +98,6 @@ class TagBuilder {
 	 * Gets the content of the tag
 	 *
 	 * @return string content of the tag to be rendered
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function getContent() {
@@ -113,7 +108,6 @@ class TagBuilder {
 	 * Returns TRUE if tag contains content, otherwise FALSE
 	 *
 	 * @return boolean TRUE if tag contains text, otherwise FALSE
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function hasContent() {
@@ -128,7 +122,6 @@ class TagBuilder {
 	 * E.g. <textarea> cant be self-closing even if its empty
 	 *
 	 * @param boolean $forceClosingTag
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function forceClosingTag($forceClosingTag) {
@@ -142,7 +135,6 @@ class TagBuilder {
 	 * @param string $attributeValue attribute value
 	 * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute value
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = TRUE) {
@@ -158,7 +150,6 @@ class TagBuilder {
 	 * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
 	 * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute values#
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function addAttributes(array $attributes, $escapeSpecialCharacters = TRUE) {
@@ -172,7 +163,6 @@ class TagBuilder {
 	 *
 	 * @param string $attributeName name of the attribute to be removed from the tag
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function removeAttribute($attributeName) {
@@ -183,7 +173,6 @@ class TagBuilder {
 	 * Resets the TagBuilder by setting all members to their default value
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function reset() {
@@ -197,7 +186,6 @@ class TagBuilder {
 	 * Renders and returns the tag
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

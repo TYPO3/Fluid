@@ -17,7 +17,6 @@ class CropViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDoesNotCropTextIfMaxCharactersIsLargerThanNumberOfCharacters() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
@@ -28,7 +27,6 @@ class CropViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperAppendsEllipsisToTruncatedText() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
@@ -39,7 +37,6 @@ class CropViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperAppendsCustomSuffix() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
@@ -50,7 +47,6 @@ class CropViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperAppendsSuffixEvenIfResultingTextIsLongerThanMaxCharacters() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));

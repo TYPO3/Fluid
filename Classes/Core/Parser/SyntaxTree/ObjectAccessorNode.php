@@ -33,7 +33,6 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 * TemplateVariableContainer.
 	 *
 	 * @param string $objectPath An Object Path, like object1.object2.object3
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($objectPath) {
 		$this->objectPath = $objectPath;
@@ -63,8 +62,6 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return object The evaluated object, can be any object type.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return self::getPropertyPath($renderingContext->getTemplateVariableContainer(), $this->objectPath, $renderingContext);

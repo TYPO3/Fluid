@@ -65,7 +65,6 @@ class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $values The array or \SplObjectStorage to iterated over
 	 * @param string $as The name of the iteration variable
 	 * @return string Rendered result
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($values, $as) {
@@ -94,7 +93,6 @@ class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array $values The array or \SplObjectStorage to be stored in $this->values
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function initializeValues($values) {
 		if (is_object($values)) {

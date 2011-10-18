@@ -48,7 +48,6 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $mockEnvironment;
 
 	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->widgetRequestBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder', array('setArgumentsFromRawRequestData'));
@@ -74,7 +73,6 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildSetsRequestMethodFromEnvironment() {
 		$this->mockEnvironment->expects($this->once())->method('getRequestMethod')->will($this->returnValue('POST'));
@@ -85,7 +83,6 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildCallsSetArgumentsFromRawRequestData() {
 		$this->widgetRequestBuilder->expects($this->once())->method('setArgumentsFromRawRequestData')->with($this->mockWidgetRequest);
@@ -95,7 +92,6 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildSetsControllerActionNameFromGetArguments() {
 		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('action' => 'myaction', 'typo3-fluid-widget-id' => '')));
@@ -106,7 +102,6 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildSetsWidgetContext() {
 		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('typo3-fluid-widget-id' => '123')));
@@ -118,7 +113,6 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function buildReturnsRequest() {
 		$expected = $this->mockWidgetRequest;

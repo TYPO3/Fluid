@@ -28,7 +28,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Initialize arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -45,10 +44,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * In case property is something like bla.blubb (hierarchical), then [bla][blubb] is generated.
 	 *
 	 * @return string Name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getName() {
 		$name = $this->getNameWithoutPrefix();
@@ -59,10 +54,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Get the name of this form element, without prefix.
 	 *
 	 * @return string name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getNameWithoutPrefix() {
 		if ($this->isObjectAccessorMode()) {
@@ -95,9 +86,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Either returns arguments['value'], or the correct value for Object Access.
 	 *
 	 * @return mixed Value
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getValue() {
 		$value = NULL;
@@ -143,7 +131,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Add additional identity properties in case the current property is hierarchical (of the form "bla.blubb").
 	 * Then, [bla][__identity] has to be generated as well.
 	 *
-	 * @author Sebastian Kurfuerst <sebastian@typo3.org>
 	 * @return void
 	 */
 	protected function addAdditionalIdentityPropertiesIfNeeded() {
@@ -171,7 +158,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Get the current property of the object bound to this form.
 	 *
 	 * @return mixed Value
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getPropertyValue() {
 
@@ -188,7 +174,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Internal method which checks if we should evaluate a domain object or just output arguments['name'] and arguments['value']
 	 *
 	 * @return boolean TRUE if we should evaluate the domain object, FALSE otherwise.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function isObjectAccessorMode() {
 		return $this->hasArgument('property')
@@ -199,8 +184,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Add an CSS class if this view helper has errors
 	 *
 	 * @return void
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function setErrorClassAttribute() {
 		if ($this->hasArgument('class')) {
@@ -223,9 +206,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Get errors for the property and form name of this view helper
 	 *
 	 * @return array<\TYPO3\FLOW3\Error\Error> Array of errors
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getMappingResultsForProperty() {
 		if (!$this->isObjectAccessorMode()) {
@@ -242,8 +222,6 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * in case nothing is selected. This is needed for checkbox and multiple select fields
 	 *
 	 * @return string the hidden field.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function renderHiddenFieldForEmptyValue() {
 		$hiddenFieldNames = array();

@@ -19,7 +19,6 @@ class TextNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderReturnsSameStringAsGivenInConstructor() {
 		$string = 'I can work quite effectively in a train!';
@@ -30,7 +29,6 @@ class TextNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function constructorThrowsExceptionIfNoStringGiven() {
 		new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode(123);

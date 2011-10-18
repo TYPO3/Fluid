@@ -34,7 +34,6 @@ class RenderViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function loadSettingsIntoArgumentsSetsSettingsIfNoSettingsAreSpecified() {
 		$arguments = array(
@@ -52,7 +51,6 @@ class RenderViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function loadSettingsIntoArgumentsDoesNotOverrideGivenSettings() {
 		$arguments = array(
@@ -71,7 +69,6 @@ class RenderViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function loadSettingsIntoArgumentsDoesNotThrowExceptionIfSettingsAreNotInTemplateVariableContainer() {
 		$arguments = array(

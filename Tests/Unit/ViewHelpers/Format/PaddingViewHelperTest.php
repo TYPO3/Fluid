@@ -17,7 +17,6 @@ class PaddingViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function stringsArePaddedWithBlanksByDefault() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
@@ -28,7 +27,6 @@ class PaddingViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function paddingStringCanBeSpecified() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
@@ -39,7 +37,6 @@ class PaddingViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function stringIsNotTruncatedIfPadLengthIsBelowStringLength() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
@@ -50,7 +47,6 @@ class PaddingViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function integersArePaddedCorrectly() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));

@@ -36,7 +36,6 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagName() {
 		$this->tagBuilder->expects($this->once())->method('setTagName')->with('input');
@@ -47,8 +46,6 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTypeNameAndValueAttributes() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute', 'setContent', 'render'), array(), '', FALSE);
@@ -70,7 +67,6 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCallsSetErrorClassAttribute() {
 		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');

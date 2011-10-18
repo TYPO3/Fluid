@@ -53,7 +53,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Inject the object manager
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -63,7 +62,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getObjectManager() {
 		return $this->objectManager;
@@ -74,7 +72,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * in the template
 	 *
 	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer The template variable container to set
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectTemplateVariableContainer(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $templateVariableContainer) {
 		$this->templateVariableContainer = $templateVariableContainer;
@@ -84,7 +81,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Get the template variable container
 	 *
 	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer The Template Variable Container
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getTemplateVariableContainer() {
 		return $this->templateVariableContainer;
@@ -94,7 +90,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
 	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
@@ -104,7 +99,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
 	 * @return \TYPO3\FLOW3\MVC\Controller\ControllerContext The controller context to set
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getControllerContext() {
 		return $this->controllerContext;
@@ -115,7 +109,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 *
 	 * @param \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectViewHelperVariableContainer(\TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer) {
 		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
@@ -125,7 +118,6 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Get the ViewHelperVariableContainer
 	 *
 	 * @return \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperVariableContainer() {
 		return $this->viewHelperVariableContainer;

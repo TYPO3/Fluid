@@ -58,8 +58,6 @@ class PrintfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array $arguments The arguments for vsprintf
 	 * @return string The formatted value
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render(array $arguments) {

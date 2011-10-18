@@ -80,7 +80,6 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 	 * @param string $groupBy Group by this property
 	 * @param string $groupKey The name of the variable to store the current group
 	 * @return string Rendered string
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($each, $as, $groupBy, $groupKey = 'groupKey') {
@@ -113,7 +112,6 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 	 * @param array $elements The array / traversable object to be grouped
 	 * @param string $groupBy Group by this property
 	 * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function groupElements(array $elements, $groupBy) {
 		$groups = array('keys' => array(), 'values' => array());

@@ -28,7 +28,6 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 	 * Initialize arguments
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -48,8 +47,6 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 	 * @param string $format The requested format, e.g. ".html"
 	 * @param boolean $ajax TRUE if the URI should be to an AJAX widget, FALSE otherwise.
 	 * @return string The rendered link
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($action = NULL, $arguments = array(), $section = '', $format = '', $ajax = FALSE) {
@@ -69,7 +66,6 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 	 * Get the URI for an AJAX Request.
 	 *
 	 * @return string the AJAX URI
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getAjaxUri() {
 		$action = $this->arguments['action'];
@@ -91,7 +87,6 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 	 * Get the URI for a non-AJAX Request.
 	 *
 	 * @return string the Widget URI
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo argumentsToBeExcludedFromQueryString does not work yet, needs to be fixed.
 	 */
 	protected function getWidgetUri() {

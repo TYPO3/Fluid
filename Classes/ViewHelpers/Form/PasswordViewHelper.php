@@ -39,8 +39,6 @@ class PasswordViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -57,7 +55,6 @@ class PasswordViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	 * Renders the textbox.
 	 *
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

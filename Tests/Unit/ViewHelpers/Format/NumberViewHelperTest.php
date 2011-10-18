@@ -17,7 +17,6 @@ class NumberViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function formatNumberDefaultsToEnglishNotationWithTwoDecimals() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));
@@ -28,7 +27,6 @@ class NumberViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function formatNumberWithDecimalsDecimalPointAndSeparator() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\NumberViewHelper', array('renderChildren'));

@@ -28,7 +28,6 @@ class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 	/**
 	 * @param \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectAjaxWidgetContextHolder(\TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
 		$this->ajaxWidgetContextHolder = $ajaxWidgetContextHolder;
@@ -38,7 +37,6 @@ class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 	 * Builds a widget request object from the raw HTTP information
 	 *
 	 * @return \TYPO3\FLOW3\MVC\Web\Request The widget request as an object
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function build() {
 		$request = $this->objectManager->create('TYPO3\FLOW3\MVC\Web\Request');

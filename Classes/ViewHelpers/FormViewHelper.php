@@ -54,7 +54,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Initialize arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArguments() {
 		$this->registerTagAttribute('enctype', 'string', 'MIME type with which the form is submitted');
@@ -85,8 +84,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @param string $actionUri can be used to overwrite the "action" attribute of the form tag
 	 * @param string $objectName name of the object that is bound to this form. If this argument is not specified, the name attribute of this form is used to determine the FormObjectName
 	 * @return string rendered form
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL) {
@@ -160,7 +157,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * This happens if a form field is defined like property="bla.blubb" - then we might need an identity property for the sub-object "bla".
 	 *
 	 * @return string HTML-string for the additional identity properties
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function renderAdditionalIdentityFields() {
 		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')) {
@@ -179,8 +175,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * the current controller and action.
 	 *
 	 * @return string Hidden fields with referrer information
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @todo filter out referrer information that is equal to the target (e.g. same packageKey)
 	 */
 	protected function renderHiddenReferrerFields() {
@@ -229,7 +223,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Adds the form object name to the ViewHelperVariableContainer if "objectName" argument or "name" attribute is specified.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function addFormObjectNameToViewHelperVariableContainer() {
 		$formObjectName = $this->getFormObjectName();
@@ -242,7 +235,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Removes the form object name from the ViewHelperVariableContainer.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function removeFormObjectNameFromViewHelperVariableContainer() {
 		$formObjectName = $this->getFormObjectName();
@@ -257,7 +249,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * If neither objectName nor name arguments have been set, NULL is returned.
 	 *
 	 * @return string specified Form name or NULL if neither $objectName nor $name arguments have been specified
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function getFormObjectName() {
 		$formObjectName = NULL;
@@ -273,7 +264,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Adds the object that is bound to this form to the ViewHelperVariableContainer if the formObject attribute is specified.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function addFormObjectToViewHelperVariableContainer() {
 		if ($this->hasArgument('object')) {
@@ -286,7 +276,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Removes the form object from the ViewHelperVariableContainer.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function removeFormObjectFromViewHelperVariableContainer() {
 		if ($this->hasArgument('object')) {
@@ -299,7 +288,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Adds the field name prefix to the ViewHelperVariableContainer
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function addFieldNamePrefixToViewHelperVariableContainer() {
 		if ($this->hasArgument('fieldNamePrefix')) {
@@ -327,7 +315,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Removes field name prefix from the ViewHelperVariableContainer
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	protected function removeFieldNamePrefixFromViewHelperVariableContainer() {
 		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
@@ -337,7 +324,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Adds a container for form field names to the ViewHelperVariableContainer
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addFormFieldNamesToViewHelperVariableContainer() {
 		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', array());
@@ -347,7 +333,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Removes the container for form field names from the ViewHelperVariableContainer
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function removeFormFieldNamesFromViewHelperVariableContainer() {
 		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');

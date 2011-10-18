@@ -21,7 +21,6 @@ class AliasViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsSingleValueToTemplateVariableContainerAndRemovesItAfterRendering() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\AliasViewHelper();
@@ -39,7 +38,6 @@ class AliasViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsMultipleValuesToTemplateVariableContainerAndRemovesThemAfterRendering() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\AliasViewHelper();
@@ -59,7 +57,6 @@ class AliasViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderDoesNotTouchTemplateVariableContainerAndReturnsChildNodesIfMapIsEmpty() {
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\AliasViewHelper();

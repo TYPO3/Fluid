@@ -47,7 +47,6 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param \TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function injectPersistenceManager(\TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
@@ -58,7 +57,6 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param object $object The persisted object
 	 * @return string Identity
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 * @api
 	 */
 	public function render($object = NULL) {

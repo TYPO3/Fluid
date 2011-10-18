@@ -53,7 +53,6 @@ class CommentViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * Comments out the tag content
 	 *
 	 * @return string
-	 * @author Claus Due <claus@wildside.dk>
 	 * @api
 	 */
 	public function render() {

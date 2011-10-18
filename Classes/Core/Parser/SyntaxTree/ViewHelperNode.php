@@ -52,8 +52,6 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper The view helper
 	 * @param array $arguments Arguments of view helper - each value is a RootNode.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function __construct(\TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper, array $arguments) {
 		$this->uninitializedViewHelper = $viewHelper;
@@ -76,7 +74,6 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Get class name of view helper
 	 *
 	 * @return string Class Name of associated view helper
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getViewHelperClassName() {
 		return $this->viewHelperClassName;
@@ -104,8 +101,6 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return object evaluated node after the view helper has been called.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		if ($this->viewHelpersByContext->contains($renderingContext)) {
@@ -144,7 +139,6 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Clean up for serializing.
 	 *
 	 * @return array
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __sleep() {
 		return array('viewHelperClassName', 'arguments', 'childNodes');

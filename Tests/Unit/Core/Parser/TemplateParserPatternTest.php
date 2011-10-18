@@ -19,7 +19,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_NAMESPACEDECLARATION() {
 		$pattern = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR), \TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION);
@@ -32,7 +31,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_DYNAMICTAGS() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('typo3', 't3', 'f'));
@@ -70,7 +68,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_DYNAMICTAG() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
@@ -137,7 +134,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_CLOSINGDYNAMICTAG() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f'));
@@ -148,7 +144,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_TAGARGUMENTS() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_TAGARGUMENTS;
@@ -158,7 +153,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f'));
@@ -195,7 +189,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER;
@@ -242,7 +235,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
@@ -261,7 +253,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
@@ -282,7 +273,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
@@ -325,7 +315,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * Test the SCAN_PATTERN_CDATA which should detect <![CDATA[...]]> (with no leading or trailing spaces!)
 	 *
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function testSCAN_PATTERN_CDATA() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_CDATA;
@@ -340,7 +329,6 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @param string $regularExpression The regular expression in which to replace NAMESPACE
 	 * @param array $namespace List of namespace identifiers.
 	 * @return string working regular expression with NAMESPACE replaced.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function insertNamespaceIntoRegularExpression($regularExpression, $namespace) {
 		return str_replace('NAMESPACE', implode('|', $namespace), $regularExpression);

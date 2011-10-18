@@ -22,7 +22,6 @@ class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function renderWithoutSpecifiedNameLoopsThroughRootErrors() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');

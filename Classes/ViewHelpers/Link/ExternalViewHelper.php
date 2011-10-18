@@ -46,7 +46,6 @@ class ExternalViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedVi
 	 * Initialize arguments
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -61,7 +60,6 @@ class ExternalViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedVi
 	 * @param string $uri the URI that will be put in the href attribute of the rendered link tag
 	 * @param string $defaultScheme scheme the href attribute will be prefixed with if specified $uri does not contain a scheme already
 	 * @return string Rendered link
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($uri, $defaultScheme = 'http') {

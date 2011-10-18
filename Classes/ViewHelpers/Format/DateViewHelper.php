@@ -82,8 +82,6 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param mixed $date either a \DateTime object or a string that is accepted by \DateTime constructor
 	 * @param string $format Format String which is taken to format the Date/Time
 	 * @return string Formatted date
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($date = NULL, $format = 'Y-m-d') {

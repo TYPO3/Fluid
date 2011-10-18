@@ -30,7 +30,6 @@ class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Constructor.
 	 *
 	 * @param array $internalArray Array to store
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($internalArray) {
 		$this->internalArray = $internalArray;
@@ -41,8 +40,6 @@ class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return array An associative array with literal values
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$arrayToBuild = array();

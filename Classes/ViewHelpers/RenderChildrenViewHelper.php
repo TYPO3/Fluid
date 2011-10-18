@@ -28,7 +28,6 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 	/**
 	 * @param array $arguments
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function render(array $arguments = array()) {
 		$renderingContext = $this->getWidgetRenderingContext();
@@ -45,7 +44,6 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 	 * Get the widget rendering context, or throw an exception if it cannot be found.
 	 *
 	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetRenderingContext() {
 		$renderingContext = $this->getWidgetContext()->getViewHelperChildNodeRenderingContext();
@@ -57,7 +55,6 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 
 	/**
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetChildNodes() {
 		return $this->getWidgetContext()->getViewHelperChildNodes();
@@ -65,7 +62,6 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 
 	/**
 	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetContext() {
 		$request = $this->controllerContext->getRequest();
@@ -82,7 +78,6 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 	 *
 	 * @param array $arguments
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addArgumentsToTemplateVariableContainer(array $arguments) {
 		$templateVariableContainer = $this->getWidgetRenderingContext()->getTemplateVariableContainer();
@@ -96,7 +91,6 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 	 *
 	 * @param array $arguments
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function removeArgumentsFromTemplateVariableContainer(array $arguments) {
 		$templateVariableContainer = $this->getWidgetRenderingContext()->getTemplateVariableContainer();

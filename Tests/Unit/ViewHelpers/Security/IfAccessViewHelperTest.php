@@ -21,8 +21,6 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperRendersThenIfHasAccessToResourceReturnsTrue() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('renderThenChild', 'hasAccessToResource'));
@@ -35,8 +33,6 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperRendersElseIfHasAccessToResourceReturnsFalse() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('hasAccessToResource', 'renderElseChild'));
@@ -49,7 +45,6 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function hasAccessToResourceReturnsTrueIfNoAccessDenyExceptionsHasBeenThrownByTheAccessDecisionManager() {
 		$mockAccessDecisionManager = $this->getMock('TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
@@ -63,7 +58,6 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
 	 */
 	public function hasAccessToResourceReturnsFalseIfAnAccessDenyExceptionsHasBeenThrownByTheAccessDecisionManager() {
 		$mockAccessDecisionManager = $this->getMock('TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);

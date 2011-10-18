@@ -62,7 +62,6 @@ class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -77,7 +76,6 @@ class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * @param array $viewHelperArguments
 	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$sectionName = $viewHelperArguments['name']->getText();
@@ -94,7 +92,6 @@ class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * Rendering directly returns all child nodes.
 	 *
 	 * @return string HTML String of all child nodes.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

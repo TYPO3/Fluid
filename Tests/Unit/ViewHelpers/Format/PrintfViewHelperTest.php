@@ -17,7 +17,6 @@ class PrintfViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function viewHelperCanUseArrayAsArgument() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PrintfViewHelper', array('renderChildren'));
@@ -28,7 +27,6 @@ class PrintfViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperCanSwapMultipleArguments() {
 		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PrintfViewHelper', array('renderChildren'));

@@ -52,7 +52,6 @@ class PaddingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * @param string $padString The padding string
 	 * @param string $padType Append the padding at this site (Possible values: right,left,both. Default: right)
 	 * @return string The formatted value
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($padLength, $padString = ' ', $padType = 'right') {

@@ -34,7 +34,6 @@ class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper i
 	 * Initialize arguments
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -48,7 +47,6 @@ class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper i
 	 * @param array $viewHelperArguments
 	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		if (isset($viewHelperArguments['name'])) {
@@ -64,7 +62,6 @@ class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper i
 	 * This tag will not be rendered at all.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

@@ -46,7 +46,6 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -60,7 +59,6 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Renders the upload field.
 	 *
 	 * @return string
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

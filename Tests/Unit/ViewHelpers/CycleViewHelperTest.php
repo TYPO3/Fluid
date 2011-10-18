@@ -33,7 +33,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsCurrentValueToTemplateVariableContainerAndRemovesItAfterRendering() {
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'bar');
@@ -45,7 +44,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsFirstValueToTemplateVariableContainerAfterLastValue() {
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'bar');
@@ -63,7 +61,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperSupportsAssociativeArrays() {
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'FLOW3');
@@ -82,7 +79,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToValuesThatAreNotTraversable() {
 		$object = new \stdClass();
@@ -92,7 +88,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsChildNodesIfValuesIsNull() {
 		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Child nodes'));
@@ -102,7 +97,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsChildNodesIfValuesIsAnEmptyArray() {
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', NULL);
@@ -115,7 +109,6 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderIteratesThroughElementsOfTraversableObjects() {
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'value1');

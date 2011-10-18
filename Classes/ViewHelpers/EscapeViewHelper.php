@@ -75,7 +75,6 @@ class EscapeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $type The type, one of html, entities, url
 	 * @param string $encoding
 	 * @return string the altered string.
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @api
 	 */
 	public function render($value = NULL, $type = 'html', $encoding = 'UTF-8') {

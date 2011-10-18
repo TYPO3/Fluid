@@ -18,14 +18,12 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer();
 	}
 
 	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function tearDown() {
 		unset($this->variableContainer);
@@ -33,7 +31,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addedObjectsCanBeRetrievedAgain() {
 		$object = "StringObject";
@@ -43,7 +40,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addedObjectsCanBeRetrievedAgainUsingArrayAccess() {
 		$object = "StringObject";
@@ -54,7 +50,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addedObjectsExistInArray() {
 		$object = "StringObject";
@@ -65,7 +60,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addedObjectsExistInAllIdentifiers() {
 		$object = "StringObject";
@@ -76,7 +70,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function duplicateIdentifiersThrowException() {
 		$this->variableContainer->add('variable', 'string1');
@@ -86,7 +79,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function addingReservedIdentifiersThrowException() {
 		$this->variableContainer->add('TrUe', 'someValue');
@@ -95,7 +87,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function gettingNonexistentValueThrowsException() {
 		$this->variableContainer->get('nonexistent');
@@ -104,7 +95,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function deletingNonexistentValueThrowsException() {
 		$this->variableContainer->remove('nonexistent');
@@ -113,7 +103,6 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function removeReallyRemovesVariables() {
 		$this->variableContainer->add('variable', 'string1');

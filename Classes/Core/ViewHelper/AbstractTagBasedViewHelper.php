@@ -50,7 +50,6 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	 *
 	 * @param \TYPO3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder Tag builder
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function injectTagBuilder(\TYPO3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder) {
 		$this->tag = $tagBuilder;
@@ -59,7 +58,6 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	/**
 	 * Constructor
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function __construct() {
@@ -74,7 +72,6 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	 * Will be invoked just before the render method.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function initialize() {
@@ -102,7 +99,6 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	 * @param string $description Description of tag attribute
 	 * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	protected function registerTagAttribute($name, $type, $description, $required = FALSE) {
@@ -115,7 +111,6 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	 * Should be used inside registerArguments();
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	protected function registerUniversalTagAttributes() {

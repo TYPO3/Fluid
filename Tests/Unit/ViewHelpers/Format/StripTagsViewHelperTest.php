@@ -26,7 +26,6 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDeactivatesEscapingInterceptor() {
 		$this->assertFalse($this->viewHelper->isEscapingInterceptorEnabled());
@@ -34,7 +33,6 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesValueAsSourceIfSpecified() {
 		$this->viewHelper->expects($this->never())->method('renderChildren');
@@ -44,7 +42,6 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesChildnodesAsSourceIfSpecified() {
 		$this->viewHelper->expects($this->atLeastOnce())->method('renderChildren')->will($this->returnValue('Some string'));
@@ -68,7 +65,6 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 * @dataProvider testStrings
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlyConvertsIntoPlaintext($source, $expectedResult) {
 		$actualResult = $this->viewHelper->render($source);
@@ -77,7 +73,6 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsUnmodifiedSourceIfItIsNoString() {
 		$source = new \stdClass();

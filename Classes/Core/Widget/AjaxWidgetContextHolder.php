@@ -45,7 +45,6 @@ class AjaxWidgetContextHolder {
 	 *
 	 * @param integer $ajaxWidgetId
 	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function get($ajaxWidgetId) {
 		$ajaxWidgetId = (int) $ajaxWidgetId;
@@ -61,7 +60,6 @@ class AjaxWidgetContextHolder {
 	 *
 	 * @param \TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function store(\TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext) {
 		$ajaxWidgetId = $this->nextFreeAjaxWidgetId++;

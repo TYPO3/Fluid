@@ -21,8 +21,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Robert Lemke <robert@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function ifAnAttributeValueIsAnObjectMaintainedByThePersistenceManagerItIsConvertedToAUUID() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
@@ -50,8 +48,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getNameBuildsNameFromFieldNamePrefixFormObjectNameAndPropertyIfInObjectAccessorMode() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -71,8 +67,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getNameBuildsNameFromFieldNamePrefixFormObjectNameAndHierarchicalPropertyIfInObjectAccessorMode() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -92,7 +86,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getNameBuildsNameFromFieldNamePrefixAndPropertyIfInObjectAccessorModeAndNoFormObjectNameIsSpecified() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -112,7 +105,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getNameBuildsNameFromFieldNamePrefixAndFieldNameIfNotInObjectAccessorMode() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -131,8 +123,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getValueBuildsValueFromPropertyAndFormObjectIfInObjectAccessorMode() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode', 'addAdditionalIdentityPropertiesIfNeeded'), array(), '', FALSE);
@@ -165,7 +155,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getValueReturnsNullIfNotInObjectAccessorModeAndValueArgumentIsNoSet() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -180,7 +169,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getValueReturnsValueArgumentIfSpecified() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -195,7 +183,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function isObjectAccessorModeReturnsTrueIfPropertyIsSetAndFormObjectIsGiven() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('dummy'), array(), '', FALSE);
@@ -212,7 +199,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
 	 */
 	public function getErrorsForPropertyReturnsErrorsFromRequestIfPropertyIsSet() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -240,7 +226,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function getErrorsForPropertyReturnsEmptyArrayIfPropertyIsNotSet() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -257,7 +242,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setErrorClassAttributeDoesNotSetClassAttributeIfNoErrorOccured() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -274,7 +258,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setErrorClassAttributeSetsErrorClassIfAnErrorOccured() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -295,7 +278,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setErrorClassAttributeAppendsErrorClassToExistingClassesIfAnErrorOccured() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -317,7 +299,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setErrorClassAttributeSetsCustomErrorClassIfAnErrorOccured() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -339,7 +320,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setErrorClassAttributeAppendsCustomErrorClassIfAnErrorOccured() {
 		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
@@ -362,7 +342,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addAdditionalIdentityPropertiesIfNeededDoesNotCreateAnythingIfPropertyIsWithoutDot() {
 		$formFieldViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('renderHiddenIdentityField'), array(), '', FALSE);
@@ -375,7 +354,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addAdditionalIdentityPropertiesIfNeededCallsRenderIdentityFieldWithTheRightParameters() {
 		$className = 'test_' . uniqid();
@@ -408,7 +386,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function addAdditionalIdentityPropertiesIfNeededCallsRenderIdentityFieldWithTheRightParametersWithMoreHierarchyLevels() {
 		$className = 'test_' . uniqid();
@@ -443,7 +420,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenFieldForEmptyValueRendersHiddenFieldIfItHasNotBeenRenderedBefore() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('getName'), array(), '', FALSE);
@@ -460,7 +436,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenFieldForEmptyValueAddsHiddenFieldNameToVariableContainerIfItHasBeenRendered() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('getName'), array(), '', FALSE);
@@ -476,7 +451,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenFieldForEmptyValueDoesNotRenderHiddenFieldIfItHasBeenRenderedBefore() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('getName'), array(), '', FALSE);
@@ -494,7 +468,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenFieldForEmptyValueRemovesEmptySquareBracketsFromHiddenFieldName() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('getName'), array(), '', FALSE);
@@ -512,7 +485,6 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderHiddenFieldForEmptyValueDoesNotRemoveNonEmptySquareBracketsFromHiddenFieldName() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('getName'), array(), '', FALSE);

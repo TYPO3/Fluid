@@ -39,7 +39,6 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -59,7 +58,6 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 	 * @param string $type The field type, e.g. "text", "email", "url" etc.
 	 * @param string $placeholder A string used as a placeholder for the value to enter
 	 * @return string
-	 * @author Robert Lemke <robert@typo3.org>
 	 * @api
 	 */
 	public function render($required = NULL, $type = 'text', $placeholder = NULL) {

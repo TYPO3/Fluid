@@ -23,7 +23,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $widgetContext;
 
 	/**
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->widgetContext = new \TYPO3\Fluid\Core\Widget\WidgetContext();
@@ -31,7 +30,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function widgetIdentifierCanBeReadAgain() {
 		$this->widgetContext->setWidgetIdentifier('myWidgetIdentifier');
@@ -40,7 +38,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function ajaxWidgetIdentifierCanBeReadAgain() {
 		$this->widgetContext->setAjaxWidgetIdentifier(42);
@@ -49,7 +46,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function nonAjaxWidgetConfigurationIsReturnedWhenContextIsNotSerialized() {
 		$this->widgetContext->setNonAjaxWidgetConfiguration(array('key' => 'value'));
@@ -59,7 +55,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function aWidgetConfigurationIsReturnedWhenContextIsSerialized() {
 		$this->widgetContext->setNonAjaxWidgetConfiguration(array('key' => 'value'));
@@ -71,7 +66,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function controllerObjectNameCanBeReadAgain() {
 		$this->widgetContext->setControllerObjectName('TYPO3\My\Object\Name');
@@ -80,7 +74,6 @@ class WidgetContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperChildNodesCanBeReadAgain() {
 		$viewHelperChildNodes = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');

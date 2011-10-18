@@ -35,7 +35,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCorrectlySetsTagName() {
 		$this->tagBuilder->expects($this->once())->method('setTagName')->with('select');
@@ -49,8 +48,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectCreatesExpectedOptions() {
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
@@ -72,7 +69,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function anEmptyOptionTagIsRenderedIfOptionsArrayIsEmptyToAssureXhtmlCompatibility() {
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
@@ -91,7 +87,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function OrderOfOptionsIsNotAlteredByDefault() {
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
@@ -116,7 +111,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function optionsAreSortedByLabelIfSortByOptionLabelIsSet() {
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
@@ -142,7 +136,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectCreatesExpectedOptions() {
 		$this->tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
@@ -171,9 +164,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function selectOnDomainObjectsCreatesExpectedOptions() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
@@ -207,7 +197,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function multipleSelectOnDomainObjectsCreatesExpectedOptions() {
 		$this->tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
@@ -243,7 +232,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUuidForValueAndLabel() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
@@ -269,7 +257,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesToStringForLabelIfAvailable() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
@@ -296,7 +283,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function selectOnDomainObjectsThrowsExceptionIfNoValueCanBeFound() {
@@ -318,7 +304,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCallsSetErrorClassAttribute() {
 		$this->arguments['options'] = array();
@@ -331,7 +316,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function allOptionsAreSelectedIfSelectAllIsTrue() {
 		$this->tagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3" selected="selected">label3</option>' . chr(10));
@@ -353,7 +337,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function selectAllHasNoEffectIfValueIsSet() {
 		$this->tagBuilder->expects($this->once())->method('setContent')->with('<option value="value1" selected="selected">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10) . '<option value="value3">label3</option>' . chr(10));

@@ -31,7 +31,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderCorrectlySetsTagNameAndAttributesAndContent() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute', 'setContent'));
@@ -48,7 +47,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsHttpPrefixIfSpecifiedUriDoesNotContainScheme() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute', 'setContent'));
@@ -65,7 +63,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderAddsSpecifiedSchemeIfUriDoesNotContainScheme() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute', 'setContent'));
@@ -82,7 +79,6 @@ class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderDoesNotAddEmptyScheme() {
 		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('setTagName', 'addAttribute', 'setContent'));

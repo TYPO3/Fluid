@@ -63,8 +63,6 @@ class ValidationResultsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractV
 	 * @param string $for The name of the error name (e.g. argument name or property name). This can also be a property path (like blog.title), and will then only display the validation errors of that property.
 	 * @param string $as The name of the variable to store the current error
 	 * @return string Rendered string
-	 * @author Christopher Hlubek <hlubek@networkteam.com>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function render($for = '', $as = 'validationResults') {

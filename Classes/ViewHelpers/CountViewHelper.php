@@ -47,8 +47,6 @@ class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array $subject The array or ObjectStorage to iterated over
 	 * @return integer The number of elements
-	 * @author Jochen Rau <jochen.rau@typoplanet.de>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($subject = NULL) {

@@ -21,8 +21,6 @@ class IfHasRoleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 	/**
 	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperRendersThenPartIfHasRoleReturnsTrue() {
 		$mockSecurityContext = $this->getMock('TYPO3\FLOW3\Security\Context', array(), array(), '', FALSE);
@@ -38,8 +36,6 @@ class IfHasRoleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 	/**
 	 * @test
-	 * @author Andreas Förthner <andreas.foerthner@netlogix.de>
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function viewHelperRendersElsePartIfConditionIsFalse() {
 		$mockSecurityContext = $this->getMock('TYPO3\FLOW3\Security\Context', array(), array(), '', FALSE);

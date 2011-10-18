@@ -42,7 +42,6 @@ class Nl2brViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * Replaces newline characters by HTML line breaks.
 	 *
 	 * @return string the altered string.
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render() {

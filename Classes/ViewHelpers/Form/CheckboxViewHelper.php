@@ -55,7 +55,6 @@ class CheckboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	 * Initialize the arguments.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -72,7 +71,6 @@ class CheckboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	 * @param boolean $checked Specifies that the input element should be preselected
 	 *
 	 * @return string
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($checked = NULL) {

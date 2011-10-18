@@ -26,7 +26,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function viewHelperDeactivatesEscapingInterceptor() {
 		$this->assertFalse($this->viewHelper->isEscapingInterceptorEnabled());
@@ -34,7 +33,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesValueAsSourceIfSpecified() {
 		$this->viewHelper->expects($this->never())->method('renderChildren');
@@ -44,7 +42,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesChildnodesAsSourceIfSpecified() {
 		$this->viewHelper->expects($this->atLeastOnce())->method('renderChildren')->will($this->returnValue('Some string'));
@@ -54,7 +51,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderDoesNotModifyValueIfItDoesNotContainSpecialCharacters() {
 		$source = 'This is a sample text without special characters. <> &©"\'';
@@ -64,7 +60,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderDecodesSimpleString() {
 		$source = 'Some special characters: &amp; &quot; \' &lt; &gt; *';
@@ -75,7 +70,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderRespectsKeepQuoteArgument() {
 		$source = 'Some special characters: &amp; &quot; \' &lt; &gt; *';
@@ -86,7 +80,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderRespectsEncodingArgument() {
 		$source = utf8_decode('Some special characters: &amp; &quot; \' &lt; &gt; *');
@@ -97,7 +90,6 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsUnmodifiedSourceIfItIsNoString() {
 		$source = new \stdClass();

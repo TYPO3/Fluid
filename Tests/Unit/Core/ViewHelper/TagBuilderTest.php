@@ -19,7 +19,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function constructorSetsTagName() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('someTagName');
@@ -28,7 +27,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function constructorSetsTagContent() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('', '<some text>');
@@ -37,7 +35,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setContentDoesNotEscapeValue() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
@@ -47,7 +44,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContentReturnsTrueIfTagContainsText() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('', 'foo');
@@ -56,7 +52,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContentReturnsFalseIfContentIsNull() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
@@ -66,7 +61,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function hasContentReturnsFalseIfContentIsAnEmptyString() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
@@ -76,7 +70,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsEmptyStringByDefault() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
@@ -85,7 +78,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsSelfClosingTagIfNoContentIsSpecified() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
@@ -94,7 +86,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function contentCanBeRemoved() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag', 'some content');
@@ -104,7 +95,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsOpeningAndClosingTagIfNoContentIsSpecifiedButForceClosingTagIsTrue() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
@@ -114,7 +104,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributesAreProperlyRendered() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
@@ -126,7 +115,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributeValuesAreEscapedByDefault() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
@@ -136,7 +124,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributeValuesAreNotEscapedIfDisabled() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
@@ -146,7 +133,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function attributesCanBeRemoved() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
@@ -159,7 +145,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function resetResetsTagBuilder() {
 		$tagBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('dummy'));
@@ -178,7 +163,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function tagNameCanBeOverridden() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('foo');
@@ -188,7 +172,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function tagContentCanBeOverridden() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('foo', 'some content');
@@ -198,7 +181,6 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function tagIsNotRenderedIfTagNameIsEmpty() {
 		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('foo');

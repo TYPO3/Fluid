@@ -29,7 +29,6 @@ class UserDomainClass {
 	 * @param int $id
 	 * @param string $firstName
 	 * @param string $lastName
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($id, $firstName, $lastName) {
 		$this->id = $id;
@@ -41,7 +40,6 @@ class UserDomainClass {
 	 * Return the ID
 	 *
 	 * @return int ID
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getId() {
 		return $this->id;
@@ -51,7 +49,6 @@ class UserDomainClass {
 	 * Return the first name
 	 *
 	 * @return string first name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getFirstName() {
 		return $this->firstName;
@@ -61,7 +58,6 @@ class UserDomainClass {
 	 * Return the last name
 	 *
 	 * @return string lastname
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getLastName() {
 		return $this->lastName;

@@ -41,7 +41,6 @@ abstract class AbstractGenerator {
 	/**
 	 * Constructor. Sets $this->abstractViewHelperReflectionClass
 	 *
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct() {
 		\TYPO3\Fluid\Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
@@ -54,7 +53,6 @@ abstract class AbstractGenerator {
 	 *
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager the object manager to inject
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -65,7 +63,6 @@ abstract class AbstractGenerator {
 	 *
 	 * @param string $namespace
 	 * @return array Array of all class names inside a given namespace.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getClassNamesInNamespace($namespace) {
 		$viewHelperClassNames = array();
@@ -88,7 +85,6 @@ abstract class AbstractGenerator {
 	 * @param string $className Class name
 	 * @param string $namespace Base namespace to use
 	 * @return string Tag name
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getTagNameForClass($className, $namespace) {
 		$strippedClassName = substr($className, strlen($namespace));
@@ -109,7 +105,6 @@ abstract class AbstractGenerator {
 	 * @param string $childNodeName Name of the child node
 	 * @param string $childNodeValue Value of the child node. Will be placed inside CDATA.
 	 * @return \SimpleXMLElement the new element
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function addChildWithCData(\SimpleXMLElement $parentXmlNode, $childNodeName, $childNodeValue) {
 		$parentDomNode = dom_import_simplexml($parentXmlNode);

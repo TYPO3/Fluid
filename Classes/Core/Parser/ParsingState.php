@@ -59,7 +59,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectVariableContainer(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
@@ -70,7 +69,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $rootNode
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setRootNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $rootNode) {
 		$this->rootNode = $rootNode;
@@ -80,7 +78,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Get root node of this parsing state.
 	 *
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode The root node
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getRootNode() {
 		return $this->rootNode;
@@ -102,7 +99,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node Node to push to node stack
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function pushNodeToStack(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node) {
 		array_push($this->nodeStack, $node);
@@ -112,7 +108,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Get the top stack element, without removing it.
 	 *
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function getNodeFromStack() {
 		return $this->nodeStack[count($this->nodeStack)-1];
@@ -122,7 +117,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Pop the top stack element (=remove it) and return it back.
 	 *
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element, which was removed.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function popNodeFromStack() {
 		return array_pop($this->nodeStack);
@@ -132,7 +126,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Count the size of the node stack
 	 *
 	 * @return integer Number of elements on the node stack (i.e. number of currently open Fluid tags)
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function countNodeStack() {
 		return count($this->nodeStack);
@@ -142,7 +135,6 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *
 	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer The variable container or NULL if none has been set yet
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @todo Rename to getPostParseVariableContainer
 	 */
 	public function getVariableContainer() {

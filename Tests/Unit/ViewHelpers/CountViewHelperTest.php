@@ -33,7 +33,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsNumberOfElementsInAnArray() {
 		$expectedResult = 3;
@@ -43,7 +42,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsNumberOfElementsInAnArrayObject() {
 		$expectedResult = 2;
@@ -53,7 +51,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsZeroIfGivenArrayIsEmpty() {
 		$expectedResult = 0;
@@ -63,7 +60,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull() {
 		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(array('foo', 'bar', 'baz')));
@@ -75,7 +71,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 
 	/**
 	 * @test
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull() {
 		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(NULL));
@@ -87,7 +82,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function renderThrowsExceptionIfGivenSubjectIsNotCountable() {
 		$object = new \stdClass();

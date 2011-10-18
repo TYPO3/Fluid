@@ -47,7 +47,6 @@ class EmailViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewH
 	 * Arguments initialization
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function initializeArguments() {
 		$this->registerUniversalTagAttributes();
@@ -60,7 +59,6 @@ class EmailViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewH
 	/**
 	 * @param string $email The email address to be turned into a link.
 	 * @return string Rendered email link
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function render($email) {

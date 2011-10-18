@@ -30,7 +30,6 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Constructor.
 	 *
 	 * @param string $text text to store in this textNode
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function __construct($text) {
 		if (!is_string($text)) {
@@ -45,7 +44,6 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string the text stored in this node/subtree.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return $this->text . $this->evaluateChildNodes($renderingContext);
@@ -55,7 +53,6 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Getter for text
 	 *
 	 * @return string The text of this node
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function getText() {
 		return $this->text;

@@ -57,7 +57,6 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setUp() {
 		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
@@ -86,7 +85,6 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @param \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function injectDependenciesIntoViewHelper(\TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper) {
 		$viewHelper->setRenderingContext($this->renderingContext);

@@ -105,7 +105,6 @@ abstract class AbstractViewHelper {
 	/**
 	 * @param array $arguments
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function setArguments(array $arguments) {
 		$this->arguments = $arguments;
@@ -114,7 +113,6 @@ abstract class AbstractViewHelper {
 	/**
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
-	 * @author Robert Lemke <robert@typo3.org>
 	 */
 	public function setRenderingContext(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$this->renderingContext = $renderingContext;
@@ -128,7 +126,6 @@ abstract class AbstractViewHelper {
 	/**
 	 * Inject a Reflection service
 	 * @param \TYPO3\FLOW3\Reflection\ReflectionService $reflectionService Reflection service
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectReflectionService(\TYPO3\FLOW3\Reflection\ReflectionService $reflectionService) {
 		$this->reflectionService = $reflectionService;
@@ -156,7 +153,6 @@ abstract class AbstractViewHelper {
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @param mixed $defaultValue Default value of argument
 	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
@@ -178,7 +174,6 @@ abstract class AbstractViewHelper {
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @param mixed $defaultValue Default value of argument
 	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	protected function overrideArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
@@ -196,7 +191,6 @@ abstract class AbstractViewHelper {
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node View Helper node to be set.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setViewHelperNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $node) {
 		$this->viewHelperNode = $node;
@@ -217,7 +211,6 @@ abstract class AbstractViewHelper {
 	 * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
 	 *
 	 * @return string the rendered ViewHelper.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArgumentsAndRender() {
 		$this->validateArguments();
@@ -230,7 +223,6 @@ abstract class AbstractViewHelper {
 	 * Call the render() method and handle errors.
 	 *
 	 * @return string the rendered ViewHelper
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function callRenderMethod() {
 		$renderMethodParameters = array();
@@ -254,7 +246,6 @@ abstract class AbstractViewHelper {
 	 * Override this method to solve tasks before the view helper content is rendered.
 	 *
 	 * @return void
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function initialize() {
@@ -265,8 +256,6 @@ abstract class AbstractViewHelper {
 	 * opening and the closing tag.
 	 *
 	 * @return mixed The finally rendered child nodes.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @api
 	 */
 	public function renderChildren() {
@@ -295,7 +284,6 @@ abstract class AbstractViewHelper {
 	 * Initialize all arguments and return them
 	 *
 	 * @return array Array of TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition instances.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function prepareArguments() {
 		if (!$this->argumentsInitialized) {
@@ -316,8 +304,6 @@ abstract class AbstractViewHelper {
 	 * Register method arguments for "render" by analysing the doc comment above.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	private function registerRenderMethodArguments() {
 		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
@@ -366,8 +352,6 @@ abstract class AbstractViewHelper {
 	 * Validate arguments, and throw exception if arguments do not validate.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function validateArguments() {
 		$argumentDefinitions = $this->prepareArguments();
@@ -404,7 +388,6 @@ abstract class AbstractViewHelper {
 	 * $this->registerArgument(...) inside this method, to register all your arguments.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	public function initializeArguments() {
@@ -417,7 +400,6 @@ abstract class AbstractViewHelper {
 	 * Besides, you often need $this->renderChildren().
 	 *
 	 * @return string rendered string, view helper specific
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @api
 	 */
 	//abstract public function render();
@@ -426,8 +408,6 @@ abstract class AbstractViewHelper {
 	 * Get the rendering context interface.
 	 *
 	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 * @deprecated since 1.0.0 beta 1; use $this->renderingContext instead
 	 */
 	public function getRenderingContext() {

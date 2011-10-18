@@ -17,7 +17,6 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function renderTakesBaseUriFromControllerContext() {
 		$baseUri = 'http://typo3.org/';

@@ -55,7 +55,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * @param \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectAjaxWidgetContextHolder(\TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
 		$this->ajaxWidgetContextHolder = $ajaxWidgetContextHolder;
@@ -64,7 +63,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
@@ -73,7 +71,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * @param \TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function injectWidgetContext(\TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext) {
 		$this->widgetContext = $widgetContext;
@@ -83,7 +80,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
 	 *
 	 * @return string the rendered ViewHelper.
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function initializeArgumentsAndRender() {
 		$this->validateArguments();
@@ -97,7 +93,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * Initialize the Widget Context, before the Render method is called.
 	 *
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	private function initializeWidgetContext() {
 		if ($this->ajaxWidget === TRUE) {
@@ -118,7 +113,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 *
 	 * @param array $childNodes The SyntaxTree Child nodes of this ViewHelper.
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function setChildNodes(array $childNodes) {
 		$rootNode = $this->objectManager->create('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
@@ -133,7 +127,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 *
 	 * @return array
 	 * @api
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function getWidgetConfiguration() {
 		return $this->arguments;
@@ -167,7 +160,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 *
 	 * @return \TYPO3\FLOW3\MVC\ResponseInterface the response of this request.
 	 * @api
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	protected function initiateSubRequest() {
 		if (!($this->controller instanceof \TYPO3\Fluid\Core\Widget\AbstractWidgetController)) {
@@ -190,7 +182,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 *
 	 * @param \TYPO3\FLOW3\MVC\Web\Request $subRequest
 	 * @return void
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	private function passArgumentsToSubRequest(\TYPO3\FLOW3\MVC\Web\Request $subRequest) {
 		$arguments = $this->controllerContext->getRequest()->getArguments();
@@ -212,7 +203,6 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * in the URI as a namespace for the widget's arguments.
 	 *
 	 * @return string the widget identifier for this widget
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 * @return void
 	 * @todo clean up, and make it somehow more routing compatible.
 	 */

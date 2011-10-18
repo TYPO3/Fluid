@@ -32,7 +32,6 @@ class Configuration {
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\InterceptorInterface $interceptor
 	 * @return void
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function addInterceptor(\TYPO3\Fluid\Core\Parser\InterceptorInterface $interceptor) {
 		foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
@@ -50,7 +49,6 @@ class Configuration {
 	 *
 	 * @param integer $interceptionPoint one of the \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants,
 	 * @return \SplObjectStorage<\TYPO3\Fluid\Core\Parser\InterceptorInterface>
-	 * @author Karsten Dambekalns <karsten@typo3.org>
 	 */
 	public function getInterceptors($interceptionPoint) {
 		if (isset($this->interceptors[$interceptionPoint]) && $this->interceptors[$interceptionPoint] instanceof \SplObjectStorage) {

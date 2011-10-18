@@ -19,7 +19,6 @@ class SectionViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
 	 */
 	public function sectionIsAddedToParseVariableContainer() {
 		$section = new \TYPO3\Fluid\ViewHelpers\SectionViewHelper();

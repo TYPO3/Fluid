@@ -31,7 +31,6 @@ class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param string $title
 	 * @return string debug string
-	 * @author Bastian Waidelich <bastian@typo3.org>
 	 */
 	public function render($title = NULL) {
 		ob_start();
