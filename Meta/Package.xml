@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <package xmlns="http://typo3.org/ns/2008/flow3/package">
-    <key>Fluid</key>
+    <key>TYPO3.Fluid</key>
     <title>Fluid Templating Framework</title>
     <description>Next-Generation Templating Framework for FLOW3 and TYPO3 5.0, also backported to TYPO3 4.x</description>
-    <version>1.0.0-beta2</version>
+    <version>1.0.0</version>
     <categories/>
     <parties>
         <person role="LeadDeveloper">
