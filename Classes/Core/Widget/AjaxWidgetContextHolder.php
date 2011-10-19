@@ -60,6 +60,7 @@ class AjaxWidgetContextHolder {
 	 *
 	 * @param \TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext
 	 * @return void
+	 * @FLOW3\Session(autoStart=true)
 	 */
 	public function store(\TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext) {
 		$ajaxWidgetId = $this->nextFreeAjaxWidgetId++;
