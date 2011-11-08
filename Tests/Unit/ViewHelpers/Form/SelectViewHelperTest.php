@@ -232,6 +232,48 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 	/**
 	 * @test
+	 * @author Johannes Künsebeck <jk@hdnet.de>
+	 */
+	public function multipleSelectOnDomainObjectsCreatesExpectedOptionsWithoutOptionValueField() {
+		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnCallback(
+			function ($object) {
+				return $object->getId();
+			}
+		));
+		$this->viewHelper->injectPersistenceManager($mockPersistenceManager);
+
+		$this->tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder();
+		$this->viewHelper->expects($this->exactly(3))->method('registerFieldNameForFormTokenGeneration')->with('myName[]');
+
+		$user_is = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(1, 'Ingmar', 'Schlecht');
+		$user_sk = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(2, 'Sebastian', 'Kurfuerst');
+		$user_rl = new \TYPO3\Fluid\ViewHelpers\Fixtures\UserDomainClass(3, 'Robert', 'Lemke');
+
+		$this->arguments['options'] = array($user_is,$user_sk,$user_rl);
+		$this->arguments['value'] = array($user_rl, $user_is);
+		$this->arguments['optionLabelField'] = 'lastName';
+		$this->arguments['name'] = 'myName';
+		$this->arguments['multiple'] = 'multiple';
+
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+
+		$this->viewHelper->initializeArguments();
+		$this->viewHelper->initialize();
+		$actual = $this->viewHelper->render();
+
+		$expected = '<input type="hidden" name="myName" value="" />'.
+			'<select multiple="multiple" name="myName[]">' .
+			'<option value="1" selected="selected">Schlecht</option>' . chr(10) .
+			'<option value="2">Kurfuerst</option>' . chr(10) .
+			'<option value="3" selected="selected">Lemke</option>' . chr(10) .
+			'</select>';
+		$this->assertSame($expected, $actual);
+	}
+
+
+	/**
+	 * @test
 	 */
 	public function selectWithoutFurtherConfigurationOnDomainObjectsUsesUuidForValueAndLabel() {
 		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
