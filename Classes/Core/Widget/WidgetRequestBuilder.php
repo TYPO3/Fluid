@@ -21,7 +21,13 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 
 	/**
-	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 */
+	protected $hashService;
+
+	/**
+	 * @var \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	private $ajaxWidgetContextHolder;
 
@@ -45,15 +51,15 @@ class WidgetRequestBuilder extends \TYPO3\FLOW3\MVC\Web\RequestBuilder {
 		$request->setMethod($this->environment->getRequestMethod());
 		$this->setArgumentsFromRawRequestData($request);
 
-		$rawGetArguments = $this->environment->getRawGetArguments();
-		if (isset($rawGetArguments['@action'])) {
-			$request->setControllerActionName($rawGetArguments['@action']);
-		}
-		if (isset($rawGetArguments['@format'])) {
-			$request->setFormat($rawGetArguments['@format']);
+		$widgetId = $request->getInternalArgument('__widgetId');
+		if ($widgetId !== NULL) {
+			$widgetContext = $this->ajaxWidgetContextHolder->get($widgetId);
+		} else {
+			$serializedWidgetContextWithHmac = $request->getInternalArgument('__widgetContext');
+			$serializedWidgetContext = $this->hashService->validateAndStripHmac($serializedWidgetContextWithHmac);
+			$widgetContext = unserialize($serializedWidgetContext);
 		}
 
-		$widgetContext = $this->ajaxWidgetContextHolder->get($rawGetArguments['typo3-fluid-widget-id']);
 		$request->setArgument('__widgetContext', $widgetContext);
 		$request->setControllerObjectName($widgetContext->getControllerObjectName());
 		return $request;

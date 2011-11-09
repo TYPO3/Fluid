@@ -36,6 +36,17 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	protected $ajaxWidget = FALSE;
 
 	/**
+	 * If set to FALSE, this widget won't create a session (only relevant for AJAX widgets).
+	 *
+	 * You then need to manually add the serialized configuration data to your links, by
+	 * setting "includeWidgetContext" to TRUE in the widget link and URI ViewHelpers.
+	 *
+	 * @var boolean
+	 * @api
+	 */
+	protected $storeConfigurationInSession = TRUE;
+
+	/**
 	 * @var TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	private $ajaxWidgetContextHolder;
@@ -81,7 +92,9 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 */
 	private function initializeWidgetContext() {
 		if ($this->ajaxWidget === TRUE) {
-			$this->ajaxWidgetContextHolder->store($this->widgetContext);
+			if ($this->storeConfigurationInSession === TRUE) {
+				$this->ajaxWidgetContextHolder->store($this->widgetContext);
+			}
 			$this->widgetContext->setAjaxWidgetConfiguration($this->getAjaxWidgetConfiguration());
 		}
 
