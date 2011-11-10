@@ -48,11 +48,31 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $mockEnvironment;
 
 	/**
+	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 */
+	protected $mockHashService;
+
+	/**
+	 * @var array
+	 */
+	protected $rawGetArguments = array('__widgetId' => 1);
+
+	/**
+	 * @var array
+	 */
+	protected $rawPostArguments = array();
+
+	/**
 	 */
 	public function setUp() {
-		$this->widgetRequestBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder', array('setArgumentsFromRawRequestData'));
+		$this->widgetRequestBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder', array('dummy'));
+
+		$mockRequestUri = $this->getMock('TYPO3\FLOW3\Property\DataType\Uri', array(), array('http://request.uri.invalid/some/widget/request'));
+		$mockRequestUri->expects($this->any())->method('getArguments')->will($this->returnCallback(array($this, 'getMockGetArguments')));
 
 		$this->mockWidgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
+		$this->mockWidgetRequest->expects($this->any())->method('getRequestUri')->will($this->returnValue($mockRequestUri));
+		$this->mockWidgetRequest->expects($this->any())->method('getInternalArgument')->will($this->returnCallback(array($this, 'getMockGetArguments')));
 
 		$this->mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
 		$this->mockObjectManager->expects($this->once())->method('create')->with('TYPO3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
@@ -62,13 +82,36 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->mockWidgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext');
 
 		$this->mockAjaxWidgetContextHolder = $this->getMock('TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder');
+		$this->mockAjaxWidgetContextHolder->expects($this->any())->method('get')->will($this->returnValue($this->mockWidgetContext));
 		$this->widgetRequestBuilder->injectAjaxWidgetContextHolder($this->mockAjaxWidgetContextHolder);
-		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->will($this->returnValue($this->mockWidgetContext));
+
+		$this->mockHashService = $this->getMock('TYPO3\FLOW3\Security\Cryptography\HashService');
+		$this->widgetRequestBuilder->_set('hashService', $this->mockHashService);
 
 		$this->mockEnvironment = $this->getMock('TYPO3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
-		$this->mockEnvironment->expects($this->any())->method('getRequestUri')->will($this->returnValue(new \TYPO3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/some/widget/request')));
-		$this->mockEnvironment->expects($this->any())->method('getBaseUri')->will($this->returnValue(new \TYPO3\FLOW3\Property\DataType\Uri('http://request.uri.invalid/')));
+
+		$this->mockEnvironment->expects($this->any())->method('getRequestUri')->will($this->returnValue($mockRequestUri));
+		$this->mockEnvironment->expects($this->any())->method('getBaseUri')->will($this->returnValue($mockRequestUri));
+		$this->mockEnvironment->expects($this->any())->method('getRawPostArguments')->will($this->returnCallback(array($this, 'getMockPostArguments')));
+		$this->mockEnvironment->expects($this->any())->method('getUploadedFiles')->will($this->returnValue(array()));
 		$this->widgetRequestBuilder->_set('environment', $this->mockEnvironment);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMockGetArguments($argumentName = NULL) {
+		if ($argumentName !== NULL) {
+			return isset($this->rawGetArguments[$argumentName]) ? $this->rawGetArguments[$argumentName] : NULL;
+		}
+		return $this->rawGetArguments;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMockPostArguments() {
+		return $this->rawPostArguments;
 	}
 
 	/**
@@ -85,7 +128,24 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function buildCallsSetArgumentsFromRawRequestData() {
-		$this->widgetRequestBuilder->expects($this->once())->method('setArgumentsFromRawRequestData')->with($this->mockWidgetRequest);
+		$this->rawGetArguments = array('@action' => 'foo', '__widgetId' => '123', 'foo' => 'bar');
+		$this->rawPostArguments = array('foo' => 'overridden');
+
+		$this->mockWidgetRequest->expects($this->once())->method('getMethod')->will($this->returnValue('POST'));
+
+		$expectedArguments = array('@action' => 'foo', '__widgetId' => '123', 'foo' => 'overridden');
+		$this->mockWidgetRequest->expects($this->once())->method('setArguments')->with($expectedArguments);
+		$this->widgetRequestBuilder->build();
+	}
+
+	/**
+	 * @test
+	 */
+	public function buildGetsWidgetContextFromAjaxWidgetContextHolderIfWidgetIdIsSpecified() {
+		$this->rawGetArguments = array('__widgetId' => 'SomeWidgetId');
+		$mockAjaxWidgetContextHolder = $this->getMock('TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder');
+		$mockAjaxWidgetContextHolder->expects($this->once())->method('get')->with('SomeWidgetId')->will($this->returnValue($this->mockWidgetContext));
+		$this->widgetRequestBuilder->injectAjaxWidgetContextHolder($mockAjaxWidgetContextHolder);
 
 		$this->widgetRequestBuilder->build();
 	}
@@ -93,20 +153,12 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function buildSetsControllerActionNameFromGetArguments() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('@action' => 'myaction', 'typo3-fluid-widget-id' => '')));
-		$this->mockWidgetRequest->expects($this->once())->method('setControllerActionName')->with('myaction');
-
-		$this->widgetRequestBuilder->build();
-	}
-
-	/**
-	 * @test
-	 */
-	public function buildSetsWidgetContext() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('typo3-fluid-widget-id' => '123')));
-		$this->mockAjaxWidgetContextHolder->expects($this->once())->method('get')->with('123')->will($this->returnValue($this->mockWidgetContext));
-		$this->mockWidgetRequest->expects($this->once())->method('setArgument')->with('__widgetContext', $this->mockWidgetContext);
+	public function buildGetsWidgetContextFromRequestArgumentsIfWidgetIdIsNotSpecified() {
+		$serializedWidgetContext = 'O:37:"TYPO3\Fluid\Core\Widget\WidgetContext":0:{}';
+		$serializedWidgetContextWithHmac = $serializedWidgetContext . 'TheHmac';
+		$this->rawGetArguments = array('__widgetContext' => $serializedWidgetContextWithHmac);
+		$this->mockAjaxWidgetContextHolder->expects($this->never())->method('get');
+		$this->mockHashService->expects($this->once())->method('validateAndStripHmac')->with($serializedWidgetContextWithHmac)->will($this->returnValue($serializedWidgetContext));
 
 		$this->widgetRequestBuilder->build();
 	}

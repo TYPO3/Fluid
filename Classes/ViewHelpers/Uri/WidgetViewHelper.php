@@ -1,6 +1,4 @@
 <?php
-
-
 namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*
@@ -13,11 +11,18 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * @api
  */
 class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 */
+	protected $hashService;
 
 	/**
 	 * Render the Uri.
@@ -27,10 +32,11 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $section The anchor to be added to the URI
 	 * @param string $format The requested format, e.g. ".html"
 	 * @param boolean $ajax TRUE if the URI should be to an AJAX widget, FALSE otherwise.
+	 * @param boolean $includeWidgetContext TRUE if the URI should contain the serialized widget context (only useful for stateless AJAX widgets)
 	 * @return string The rendered link
 	 * @api
 	 */
-	public function render($action = NULL, $arguments = array(), $section = '', $format = '', $ajax = FALSE) {
+	public function render($action = NULL, $arguments = array(), $section = '', $format = '', $ajax = FALSE, $includeWidgetContext = FALSE) {
 		if ($ajax === TRUE) {
 			return $this->getAjaxUri();
 		} else {
@@ -45,21 +51,25 @@ class WidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 */
 	protected function getAjaxUri() {
 		$action = $this->arguments['action'];
-		$format = $this->arguments['format'];
 		$arguments = $this->arguments['arguments'];
 
 		if ($action === NULL) {
 			$action = $this->controllerContext->getRequest()->getControllerActionName();
 		}
 		$arguments['@action'] = $action;
-		if ($format) {
-			$arguments['@format'] = $format;
+		if (strlen($this->arguments['format']) > 0) {
+			$arguments['@format'] = $this->arguments['format'];
 		}
 		$widgetContext = $this->controllerContext->getRequest()->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
 			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:uri.widget>', 1307450639);
 		}
-		$arguments['typo3-fluid-widget-id'] = $widgetContext->getAjaxWidgetIdentifier();
+		if ($this->arguments['includeWidgetContext'] === TRUE) {
+			$serializedWidgetContext = serialize($widgetContext);
+			$arguments['__widgetContext'] = $this->hashService->appendHmac($serializedWidgetContext);
+		} else {
+			$arguments['__widgetId'] = $widgetContext->getAjaxWidgetIdentifier();
+		}
 		return '?' . http_build_query($arguments, NULL, '&');
 	}
 

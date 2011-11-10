@@ -77,6 +77,17 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function initializeArgumentsAndRenderDoesNotStoreTheWidgetContextForStatelessWidgets() {
+		$this->viewHelper->_set('ajaxWidget', TRUE);
+		$this->viewHelper->_set('storeConfigurationInSession', FALSE);
+		$this->ajaxWidgetContextHolder->expects($this->never())->method('store');
+
+		$this->callViewHelper();
+	}
+
+	/**
+	 * @test
+	 */
 	public function initializeArgumentsAndRenderStoresTheWidgetContextIfInAjaxMode() {
 		$this->viewHelper->_set('ajaxWidget', TRUE);
 		$this->ajaxWidgetContextHolder->expects($this->once())->method('store')->with($this->widgetContext);

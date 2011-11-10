@@ -15,7 +15,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Widget request handler, which handles the request if
- * typo3-fluid-widget-id is found.
+ * the argument "__widgetId" or "__widgetContext" is available in the GET/POST parameters of the current request.
  *
  * This Request Handler gets the WidgetRequestBuilder injected.
  *
@@ -41,7 +41,11 @@ class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 	 */
 	public function canHandleRequest() {
 		$rawGetArguments = $this->environment->getRawGetArguments();
-		return isset($rawGetArguments['typo3-fluid-widget-id']);
+		$rawPostArguments = $this->environment->getRawPostArguments();
+		return isset($rawPostArguments['__widgetId'])
+			|| isset($rawGetArguments['__widgetId'])
+			|| isset($rawPostArguments['__widgetContext'])
+			|| isset($rawGetArguments['__widgetContext']);
 	}
 
 	/**
