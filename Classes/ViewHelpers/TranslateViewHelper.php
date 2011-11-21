@@ -84,8 +84,7 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * translated label.
 	 *
 	 * @param string $key Id to use for finding translation
-	 * @param array $arguments Numerically indexed array of values to be inserted into placeholders
-	 * @param string $default if $key is not specified or could not be resolved, this value is used. If this argument is not set, child nodes will be used to render the default
+	 * @param string $value if $key is not specified or could not be resolved, this value is used. If this argument is not set, child nodes will be used to render the default
 	 * @param array $arguments Numerically indexed array of values to be inserted into placeholders
 	 * @param string $source Name of file with translations
 	 * @param string $package Target package key. If not set, the current package key will be used
@@ -93,7 +92,7 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
 	 */
-	public function render($key = NULL, $default = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
+	public function render($key = NULL, $value = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;
 		if ($locale !== NULL) {
 			try {
@@ -103,7 +102,7 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 			}
 		}
 		if ($package === NULL) $package = $this->controllerContext->getRequest()->getControllerPackageKey();
-		$originalLabel = $default !== NULL ? $default : $this->renderChildren();
+		$originalLabel = $value === NULL ? $this->renderChildren() : $value;
 		$quantity = $quantity === NULL ? NULL : (integer)$quantity;
 
 		if ($key === NULL) {
