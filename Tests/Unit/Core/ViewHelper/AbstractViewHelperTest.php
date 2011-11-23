@@ -19,6 +19,7 @@ require_once(__DIR__ . '/../Fixtures/TestViewHelper2.php');
  *
  */
 class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+
 	/**
 	 * @test
 	 */
@@ -34,8 +35,8 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$isRequired = TRUE;
 		$expected = new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $isRequired);
 
-		$viewHelper->_call('registerArgument', $name, $type, $isRequired, $description);
-		$this->assertEquals($viewHelper->prepareArguments(), array($name => $expected), 'Argument definitions not returned correctly.');
+		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+		$this->assertEquals(array($name => $expected), $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
 	}
 
 	/**
@@ -50,8 +51,8 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$type = "string";
 		$isRequired = TRUE;
 
-		$viewHelper->_call('registerArgument', $name, $type, $isRequired, $description);
-		$viewHelper->_call('registerArgument', $name, "integer", $isRequired, $description);
+		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+		$viewHelper->_call('registerArgument', $name, "integer", $description, $isRequired);
 	}
 
 	/**
@@ -71,8 +72,8 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$isRequired = TRUE;
 		$expected = new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $overriddenType, $overriddenDescription, $isRequired);
 
-		$viewHelper->_call('registerArgument', $name, $type, $isRequired, $description);
-		$viewHelper->_call('overrideArgument', $name, $overriddenType, $isRequired, $overriddenDescription);
+		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+		$viewHelper->_call('overrideArgument', $name, $overriddenType, $overriddenDescription, $isRequired);
 		$this->assertEquals($viewHelper->prepareArguments(), array($name => $expected), 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
 	}
 
@@ -86,7 +87,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
 		$viewHelper->injectReflectionService($mockReflectionService);
 
-		$viewHelper->_call('overrideArgument', 'argumentName', 'string', TRUE, 'description');
+		$viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', TRUE);
 	}
 
 	/**
