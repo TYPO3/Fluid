@@ -24,28 +24,15 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 
 	/**
-	 * @var \TYPO3\FLOW3\Utility\Environment
-	 */
-	protected $environment;
-
-	/**
-	 * @param \TYPO3\FLOW3\Utility\Environment $environment
-	 * @return void
-	 */
-	public function injectEnvironment(\TYPO3\FLOW3\Utility\Environment $environment) {
-		$this->environment = $environment;
-	}
-
-	/**
 	 * @return boolean TRUE if it is an AJAX widget request
 	 */
 	public function canHandleRequest() {
-		$rawGetArguments = $this->environment->getRawGetArguments();
-		$rawPostArguments = $this->environment->getRawPostArguments();
-		return isset($rawPostArguments['__widgetId'])
-			|| isset($rawGetArguments['__widgetId'])
-			|| isset($rawPostArguments['__widgetContext'])
-			|| isset($rawGetArguments['__widgetContext']);
+		// We have to use $_GET and $_POST directly here, as the environment
+		// is not yet initialized in canHandleRequest.
+		return isset($_POST['__widgetId'])
+			|| isset($_GET['__widgetId'])
+			|| isset($_POST['__widgetContext'])
+			|| isset($_GET['__widgetContext']);
 	}
 
 	/**
@@ -55,6 +42,28 @@ class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 	 */
 	public function getPriority() {
 		return 200;
+	}
+
+	/**
+	 * Handles a HTTP request
+	 *
+	 * @return void
+	 */
+	public function handleRequest() {
+		$sequence = $this->bootstrap->buildRuntimeSequence();
+		$sequence->invoke($this->bootstrap);
+
+		$objectManager = $this->bootstrap->getObjectManager();
+
+		$this->request = $objectManager->get('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder')->build();
+		$response = new \TYPO3\FLOW3\MVC\Web\Response();
+
+		$dispatcher = $objectManager->get('TYPO3\FLOW3\MVC\Dispatcher');
+		$dispatcher->dispatch($this->request, $response);
+
+		$response->send();
+		$this->bootstrap->shutdown('Runtime');
+		$this->exit->__invoke();
 	}
 }
 

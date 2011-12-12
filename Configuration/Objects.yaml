@@ -12,8 +12,3 @@ TYPO3\Fluid\View\TemplateView:
   properties:
     renderingContext:
       object: TYPO3\Fluid\Core\Rendering\RenderingContext
-
-TYPO3\Fluid\Core\Widget\WidgetRequestHandler:
-  arguments:
-    2:
-      object: TYPO3\Fluid\Core\Widget\WidgetRequestBuilder
