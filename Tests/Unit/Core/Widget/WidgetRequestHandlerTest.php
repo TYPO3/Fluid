@@ -28,8 +28,24 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $mockEnvironment;
 
 	/**
+	 * Backup for $_GET
+	 *
+	 * @var array
+	 */
+	protected $getBackup;
+
+	/**
+	 * Backup for $_POST
+	 *
+	 * @var array
+	 */
+	protected $postBackup;
+
+	/**
 	 */
 	public function setUp() {
+		$this->getBackup = $_GET;
+		$this->postBackup = $_POST;
 		$this->mockEnvironment = $this->getMock('TYPO3\FLOW3\Utility\Environment', array(), array(), '', FALSE);
 
 		$this->widgetRequestHandler = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestHandler', array('dummy'), array(), '', FALSE);
@@ -37,10 +53,26 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 
 	/**
+	 */
+	public function tearDown() {
+		$_GET = $this->getBackup;
+		$_POST = $this->postBackup;
+	}
+
+	/**
 	 * @test
 	 */
 	public function canHandleRequestReturnsTrueIfCorrectGetParameterIsSet() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('__widgetId' => '123')));
+		$_GET = array('__widgetId' => '123');
+		$this->assertTrue($this->widgetRequestHandler->canHandleRequest());
+	}
+
+	/**
+	 * @test
+	 */
+	public function canHandleRequestReturnsTrueIfCorrectPostParameterIsSet() {
+		$_GET = array('some-other-id' => '123');
+		$_POST = array('__widgetId' => '123');
 		$this->assertTrue($this->widgetRequestHandler->canHandleRequest());
 	}
 
@@ -48,7 +80,15 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function canHandleRequestReturnsFalsefGetParameterIsNotSet() {
-		$this->mockEnvironment->expects($this->once())->method('getRawGetArguments')->will($this->returnValue(array('some-other-id' => '123')));
+		$_GET = array('some-other-id' => '123');
+		$this->assertFalse($this->widgetRequestHandler->canHandleRequest());
+	}
+
+	/**
+	 * @test
+	 */
+	public function canHandleRequestReturnsFalsefPostParameterIsNotSet() {
+		$_POST = array('some-other-id' => '123');
 		$this->assertFalse($this->widgetRequestHandler->canHandleRequest());
 	}
 
