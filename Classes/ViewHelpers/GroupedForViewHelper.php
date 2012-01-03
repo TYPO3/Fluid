@@ -14,7 +14,9 @@ namespace TYPO3\Fluid\ViewHelpers;
 
 /**
  * Grouped loop view helper.
- * Loops through the specified values
+ * Loops through the specified values.
+ *
+ * The groupBy argument also supports property paths.
  *
  * = Examples =
  *
@@ -117,7 +119,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 			if (is_array($value)) {
 				$currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : NULL;
 			} elseif (is_object($value)) {
-				$currentGroupIndex = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($value, $groupBy);
+				$currentGroupIndex = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $groupBy);
 			} else {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects' , 1253120365);
 			}

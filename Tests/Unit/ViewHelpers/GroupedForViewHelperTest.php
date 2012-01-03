@@ -169,6 +169,39 @@ class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 	/**
 	 * @test
 	 */
+	public function renderGroupsMultidimensionalArrayByPropertyPath() {
+		$customer1 = new \stdClass();
+		$customer1->name = 'Anton Abel';
+
+		$customer2 = new \stdClass();
+		$customer2->name = 'Balthasar Bux';
+
+		$invoice1 = new \stdClass();
+		$invoice1->customer = $customer1;
+
+		$invoice2 = new \stdClass();
+		$invoice2->customer = $customer1;
+
+		$invoice3 = new \stdClass();
+		$invoice3->customer = $customer2;
+
+		$invoices = array('invoice1' => $invoice1, 'invoice2' => $invoice2, 'invoice3' => $invoice3);
+
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('myGroupKey', $customer1->name);
+		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('invoices', array('invoice1' => $invoice1, 'invoice2' => $invoice2));
+		$this->templateVariableContainer->expects($this->at(2))->method('remove')->with('myGroupKey');
+		$this->templateVariableContainer->expects($this->at(3))->method('remove')->with('invoices');
+		$this->templateVariableContainer->expects($this->at(4))->method('add')->with('myGroupKey', $customer2->name);
+		$this->templateVariableContainer->expects($this->at(5))->method('add')->with('invoices', array('invoice3' => $invoice3));
+		$this->templateVariableContainer->expects($this->at(6))->method('remove')->with('myGroupKey');
+		$this->templateVariableContainer->expects($this->at(7))->method('remove')->with('invoices');
+
+		$this->viewHelper->render($invoices, 'invoices', 'customer.name', 'myGroupKey');
+	}
+
+	/**
+	 * @test
+	 */
 	public function renderGroupsMultidimensionalObjectByObjectKey() {
 		$customer1 = new \stdClass();
 		$customer1->name = 'Anton Abel';
