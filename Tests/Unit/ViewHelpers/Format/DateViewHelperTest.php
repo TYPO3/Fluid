@@ -80,5 +80,52 @@ class DateViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$actualResult = $viewHelper->render('1980-12-12');
 		$this->assertEquals('1980-12-12', $actualResult);
 	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 */
+	public function viewHelperThrowsExceptionIfInvalidLocaleIdentifierIsGiven() {
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->render(new \DateTime(), NULL, '123-not-existing-locale');
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperCallsDateTimeFormatterWithCorrectlyBuiltConfigurationArguments() {
+		$dateTime = new \DateTime();
+		$locale = new \TYPO3\FLOW3\I18n\Locale('de');
+		$formatType = 'date';
+
+		$formatterMock = $this->getMock('TYPO3\FLOW3\I18n\Formatter\DatetimeFormatter', array('format'));
+		$formatterMock
+			->expects($this->once())
+			->method('format')
+			->with($dateTime, $locale, array(0 => $formatType, 1 => NULL));
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->_set('formatter', $formatterMock);
+		$viewHelper->render($dateTime, NULL, $locale, $formatType);
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperFetchesCurrentLocaleViaI18nService() {
+		$localizationConfiguration = new \TYPO3\FLOW3\I18n\Configuration('de_DE');
+
+		$localizationServiceMock = $this->getMock('TYPO3\FLOW3\I18n\Service', array('getConfiguration'));
+		$localizationServiceMock->expects($this->once())->method('getConfiguration')->will($this->returnValue($localizationConfiguration));
+
+		$formatterMock = $this->getMock('TYPO3\FLOW3\I18n\Formatter\DatetimeFormatter', array('format'));
+		$formatterMock->expects($this->once())->method('format');
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\DateViewHelper', array('renderChildren'));
+		$viewHelper->_set('formatter', $formatterMock);
+		$viewHelper->_set('localizationService', $localizationServiceMock);
+		$viewHelper->render(new \DateTime(), NULL, TRUE);
+	}
+
 }
 ?>

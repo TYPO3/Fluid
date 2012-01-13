@@ -74,5 +74,46 @@ class CurrencyViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$actualResult = $viewHelper->render();
 		$this->assertEquals('-123,46', $actualResult);
 	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperUsesNumberFormatterOnGivenLocale() {
+		$numberFormatterMock = $this->getMock('TYPO3\FLOW3\I18n\Formatter\NumberFormatter', array('formatCurrencyNumber'));
+		$numberFormatterMock->expects($this->once())->method('formatCurrencyNumber');
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->_set('numberFormatter', $numberFormatterMock);
+		$viewHelper->render('EUR', '#', '*', 'de_DE');
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperFetchesCurrentLocaleViaI18nService() {
+		$localizationConfiguration = new \TYPO3\FLOW3\I18n\Configuration('de_DE');
+
+		$localizationServiceMock = $this->getMock('TYPO3\FLOW3\I18n\Service', array('getConfiguration'));
+		$localizationServiceMock->expects($this->once())->method('getConfiguration')->will($this->returnValue($localizationConfiguration));
+
+		$numberFormatterMock = $this->getMock('TYPO3\FLOW3\I18n\Formatter\NumberFormatter', array('formatCurrencyNumber'));
+		$numberFormatterMock->expects($this->once())->method('formatCurrencyNumber');
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123.456));
+		$viewHelper->_set('localizationService', $localizationServiceMock);
+		$viewHelper->_set('numberFormatter', $numberFormatterMock);
+		$viewHelper->render('EUR', ',', '.', TRUE);
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 */
+	public function viewHelperThrowsExceptionIfLocaleIsUsedWithoutExplicitCurrencySign() {
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123.456));
+		$viewHelper->render('', ',', '.', TRUE);
+	}
 }
 ?>
