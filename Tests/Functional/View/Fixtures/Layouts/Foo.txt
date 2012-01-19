@@ -1,0 +1,1 @@
+Hey <f:render section="inner" />
