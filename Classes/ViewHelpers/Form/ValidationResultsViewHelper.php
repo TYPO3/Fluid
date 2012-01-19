@@ -21,7 +21,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * <f:form.validationResults>
  *   <f:if condition="{validationResults.flattenedErrors}">
  *     <ul class="errors">
- *       <f:for each="{errors}" as="error">
+ *       <f:for each="{validationResults.errors}" as="error">
  *         <li>{error.code}: {error}</li>
  *       </f:for>
  *     </ul>
@@ -38,7 +38,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * <f:form.validationResults for="someProperty">
  *   <f:if condition="{validationResults.flattenedErrors}">
  *     <ul class="errors">
- *       <f:for each="{errors}" as="error">
+ *       <f:for each="{validationResults.errors}" as="error">
  *         <li>{error.code}: {error}</li>
  *       </f:for>
  *     </ul>
