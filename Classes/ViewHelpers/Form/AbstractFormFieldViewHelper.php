@@ -55,16 +55,14 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 */
 	protected function getNameWithoutPrefix() {
 		if ($this->isObjectAccessorMode()) {
+			$propertySegments = explode('.', $this->arguments['property']);
 			$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 			if (!empty($formObjectName)) {
-				$propertySegments = explode('.', $this->arguments['property']);
-				$propertyPath = '';
-				foreach ($propertySegments as $segment) {
-					$propertyPath .= '[' . $segment . ']';
-				}
-				$name = $formObjectName . $propertyPath;
-			} else {
-				$name = $this->arguments['property'];
+				array_unshift($propertySegments, $formObjectName);
+			}
+			$name = array_shift($propertySegments);
+			foreach ($propertySegments as $segment) {
+				$name .= '[' . $segment . ']';
 			}
 		} else {
 			$name = $this->arguments['name'];

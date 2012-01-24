@@ -106,6 +106,25 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
+	public function getNameResolvesPropertyPathIfInObjectAccessorModeAndNoFormObjectNameIsSpecified() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
+		$this->viewHelperVariableContainer->expects($this->at(0))->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue(NULL));
+		$this->viewHelperVariableContainer->expects($this->at(1))->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue(TRUE));
+		$this->viewHelperVariableContainer->expects($this->at(2))->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue('formPrefix'));
+
+		$arguments = array('name' => 'fieldName', 'value' => 'fieldValue', 'property' => 'some.property.path');
+		$formViewHelper->_set('arguments', $arguments);
+		$expected = 'formPrefix[some][property][path]';
+		$actual = $formViewHelper->_call('getName');
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	 * @test
+	 */
 	public function getNameBuildsNameFromFieldNamePrefixAndFieldNameIfNotInObjectAccessorMode() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
