@@ -26,9 +26,23 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	 */
 	protected $viewHelper;
 
+	/**
+	 * @var \TYPO3\FLOW3\Property\PropertyMapper
+	 */
+	protected $mockPropertyMapper;
+
+	/**
+	 * @var \TYPO3\FLOW3\Error\Result
+	 */
+	protected $mockMappingResult;
+
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration', 'getValue', 'getMappingResultsForProperty'));
+		$this->mockMappingResult = $this->getMock('TYPO3\FLOW3\Error\Result');
+		$this->viewHelper->expects($this->any())->method('getMappingResultsForProperty')->will($this->returnValue($this->mockMappingResult));
+		$this->mockPropertyMapper = $this->getMock('TYPO3\FLOW3\Property\PropertyMapper');
+		$this->viewHelper->_set('propertyMapper', $this->mockPropertyMapper);
 		$this->arguments['name'] = '';
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
@@ -71,6 +85,72 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	public function renderCallsSetErrorClassAttribute() {
 		$this->viewHelper->expects($this->once())->method('setErrorClassAttribute');
 		$this->viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 */
+	public function hiddenFieldsAreEmptyByDefault() {
+		$expectedResult = '<input type="hidden" name="[submittedFile][fileName]" value="" /><input type="hidden" name="[submittedFile][resourcePointer]" value="" />';
+		$this->viewHelper->initialize();
+		$actualResult = $this->viewHelper->render();
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function hiddenFieldsContainDataOfTheSpecifiedResource() {
+		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
+		$mockResource->expects($this->any())->method('getFileName')->will($this->returnValue('theResourceFilename'));
+		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
+
+		$this->viewHelper->expects($this->atLeastOnce())->method('getValue')->will($this->returnValue($mockResource));
+
+		$expectedResult = '<input type="hidden" name="[submittedFile][fileName]" value="theResourceFilename" /><input type="hidden" name="[submittedFile][resourcePointer]" value="theResourcePointer" />';
+		$this->viewHelper->initialize();
+		$actualResult = $this->viewHelper->render();
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function hiddenFieldsDoNotContainDataOfTheSpecifiedResourceIfPropertyMappingErrorsOccurred() {
+		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
+		$mockResource->expects($this->any())->method('getFileName')->will($this->returnValue('theResourceFilename'));
+		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
+
+		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue($mockResource));
+
+		$this->mockMappingResult->expects($this->atLeastOnce())->method('hasErrors')->will($this->returnValue(TRUE));
+
+		$expectedResult = '<input type="hidden" name="[submittedFile][fileName]" value="" /><input type="hidden" name="[submittedFile][resourcePointer]" value="" />';
+		$this->viewHelper->initialize();
+		$actualResult = $this->viewHelper->render();
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function hiddenFieldsContainDataOfAPreviouslyUploadedResource() {
+		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
+		$mockResource->expects($this->any())->method('getFileName')->will($this->returnValue('theResourceFilename'));
+		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
+
+		$resourceData = array(
+			'error' => \UPLOAD_ERR_NO_FILE,
+			'submittedFile' => array('fileName' => 'theResourceFilename', 'resourcePointer' => 'theResourcePointer')
+		);
+		$this->mockPropertyMapper->expects($this->atLeastOnce())->method('convert')->with($resourceData, 'TYPO3\FLOW3\Resource\Resource')->will($this->returnValue($mockResource));
+
+		$this->viewHelper->expects($this->atLeastOnce())->method('getValue')->will($this->returnValue($resourceData));
+
+		$expectedResult = '<input type="hidden" name="[submittedFile][fileName]" value="theResourceFilename" /><input type="hidden" name="[submittedFile][resourcePointer]" value="theResourcePointer" />';
+		$this->viewHelper->initialize();
+		$actualResult = $this->viewHelper->render();
+		$this->assertSame($expectedResult, $actualResult);
 	}
 }
 

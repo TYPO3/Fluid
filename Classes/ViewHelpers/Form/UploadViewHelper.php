@@ -36,7 +36,7 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	protected $tagName = 'input';
 
 	/**
-	 * @var TYPO3\FLOW3\Property\PropertyMapper
+	 * @var \TYPO3\FLOW3\Property\PropertyMapper
 	 * @FLOW3\Inject
 	 */
 	protected $propertyMapper;
@@ -65,26 +65,15 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$this->registerFieldNameForFormTokenGeneration($name);
 
 		$output = '';
-		$resourceObject = NULL;
-		if ($this->hasMappingErrorOccured()) {
-			$value = $this->getLastSubmittedFormData();
-		} else {
-			$value = $this->getValue();
-		}
-		if ($value) {
+		$resourceObject = $this->getUploadedResource();
 
-				// The form data which was submitted at the last request was in a format
-				// which the PropertyMapper understands; so we re-build the Resource object
-				// using the property mapper
-			$resourceObject = $this->propertyMapper->convert($value, 'TYPO3\FLOW3\Resource\Resource');
-		}
 		$fileNameIdAttribute = $resourcePointerIdAttribute = '';
 		if ($this->hasArgument('id')) {
 			$fileNameIdAttribute = ' id="' . $this->arguments['id'] . '-fileName"';
 			$resourcePointerIdAttribute = ' id="' . $this->arguments['id'] . '-resourcePointer"';
 		}
 		$fileNameValue = $resourcePointerValue = '';
-		if ($resourceObject instanceof \TYPO3\FLOW3\Resource\Resource) {
+		if ($resourceObject !== NULL) {
 			$fileNameValue = $resourceObject->getFileName();
 			$resourcePointerValue = $resourceObject->getResourcePointer();
 		}
@@ -98,6 +87,23 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 
 		$output .= $this->tag->render();
 		return $output;
+	}
+
+	/**
+	 * Returns a previously uploaded resource.
+	 * If errors occurred during property mapping for this property, NULL is returned
+	 *
+	 * @return \TYPO3\FLOW3\Resource\Resource
+	 */
+	protected function getUploadedResource() {
+		if ($this->getMappingResultsForProperty()->hasErrors()) {
+			return NULL;
+		}
+		$resourceObject = $this->getValue(FALSE);
+		if ($resourceObject instanceof \TYPO3\FLOW3\Resource\Resource) {
+			return $resourceObject;
+		}
+		return $this->propertyMapper->convert($resourceObject, 'TYPO3\FLOW3\Resource\Resource');
 	}
 }
 
