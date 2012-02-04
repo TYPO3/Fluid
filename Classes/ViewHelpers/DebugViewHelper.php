@@ -15,6 +15,22 @@ namespace TYPO3\Fluid\ViewHelpers;
 /**
  * Viewhelper that outputs its childnodes with \TYPO3\var_dump()
  *
+ * = Examples =
+ *
+ * <code>
+ * <f:debug>{object}</f:debug>
+ * </code>
+ * <output>
+ * all properties of {object} nicely highlighted
+ * </output>
+ *
+ * <code title="inline notation and custom title">
+ * {object -> f:debug(title: 'Custom title')}
+ * </code>
+ * <output>
+ * all properties of {object} nicely highlighted (with custom title)
+ * </output>
+ *
  * @api
  */
 class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

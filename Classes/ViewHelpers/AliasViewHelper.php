@@ -44,7 +44,7 @@ class AliasViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 *
-	 * @param array $map 
+	 * @param array $map array that specifies which variables should be mapped to which alias
 	 * @return string Rendered string
 	 * @api
 	 */

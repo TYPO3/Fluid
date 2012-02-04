@@ -13,7 +13,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 
 /**
  * This ViewHelper prevents rendering of any content inside the tag
- * Note: Contents of the comment will still be *parsed* thus throwing an
+ * Note: Contents of the comment will still be **parsed** thus throwing an
  * Exception if it contains syntax errors. You can put child nodes in
  * CDATA tags to avoid this.
  *

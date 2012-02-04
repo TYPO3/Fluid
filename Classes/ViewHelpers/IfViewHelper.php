@@ -14,9 +14,9 @@ namespace TYPO3\Fluid\ViewHelpers;
 
 /**
  * This view helper implements an if/else condition.
- * @see TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
+ * Check TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to see how boolean arguments are evaluated
  *
- * = Conditions =
+ * **Conditions:**
  *
  * As a condition is a boolean value, you can just use a boolean argument.
  * Alternatively, you can write a boolean expression there.
@@ -31,18 +31,17 @@ namespace TYPO3\Fluid\ViewHelpers;
  * - Array
  * - a ViewHelper
  * Note: Strings at XX/YY are NOT allowed.
+ * ::
  *
- * <code title="condition example">
- * <f:if condition="{rank} > 100">
- *   Will be shown if rank is > 100
- * </f:if>
- * <f:if condition="{rank} % 2">
- *   Will be shown if rank % 2 != 0.
- * </f:if>
- * <f:if condition="{rank} == {k:bar()}">
- *   Checks if rank is equal to the result of the ViewHelper "k:bar"
- * </f:if>
- * </code>
+ *   <f:if condition="{rank} > 100">
+ *     Will be shown if rank is > 100
+ *   </f:if>
+ *   <f:if condition="{rank} % 2">
+ *     Will be shown if rank % 2 != 0.
+ *   </f:if>
+ *   <f:if condition="{rank} == {k:bar()}">
+ *     Checks if rank is equal to the result of the ViewHelper "k:bar"
+ *   </f:if>
  *
  * = Examples =
  *
@@ -51,8 +50,9 @@ namespace TYPO3\Fluid\ViewHelpers;
  *   This is being shown in case the condition matches
  * </f:if>
  * </code>
- *
+ * <output>
  * Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
+ * </output>
  *
  * <code title="If / then / else">
  * <f:if condition="somecondition">
@@ -77,7 +77,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * Otherwise, everything the value of the "else"-attribute is displayed.
  * </output>
  *
- *
+ * @see TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
  * @api
  */
 class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {

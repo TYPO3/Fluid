@@ -15,6 +15,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 /**
  * This ViewHelper cycles through the specified values.
  * This can be often used to specify CSS classes for example.
+ * **Note:** To achieve the "zebra class" effect in a loop you can also use the "iteration" argument of the **for** ViewHelper.
  *
  * = Examples =
  *
@@ -60,7 +61,7 @@ class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	protected $currentCycleIndex = NULL;
 
 	/**
-	 * @param array $values The array or \SplObjectStorage to iterated over
+	 * @param array $values The array or object implementing \ArrayAccess (for example \SplObjectStorage) to iterated over
 	 * @param string $as The name of the iteration variable
 	 * @return string Rendered result
 	 * @api
