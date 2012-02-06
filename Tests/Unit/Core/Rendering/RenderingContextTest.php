@@ -40,7 +40,7 @@ class RenderingContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function controllerContextCanBeReadCorrectly() {
-		$controllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->renderingContext->setControllerContext($controllerContext);
 		$this->assertSame($this->renderingContext->getControllerContext(), $controllerContext);
 	}

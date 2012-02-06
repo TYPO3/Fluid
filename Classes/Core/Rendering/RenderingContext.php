@@ -36,7 +36,7 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	/**
 	 * Controller context being passed to the ViewHelper
 	 *
-	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -87,16 +87,16 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext The controller context to set
+	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext The controller context to set
 	 */
-	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return \TYPO3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @return \TYPO3\FLOW3\Mvc\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext() {
 		return $this->controllerContext;

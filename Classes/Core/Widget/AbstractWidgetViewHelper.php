@@ -156,7 +156,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * Initiate a sub request to $this->controller. Make sure to fill $this->controller
 	 * via Dependency Injection.
 	 *
-	 * @return \TYPO3\FLOW3\MVC\ResponseInterface the response of this request.
+	 * @return \TYPO3\FLOW3\Mvc\ResponseInterface the response of this request.
 	 * @api
 	 */
 	protected function initiateSubRequest() {
@@ -164,13 +164,13 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\FLOW3\Annotations\Inject annotation in your widget class.', 1284401632);
 		}
 
-		$subRequest = $this->objectManager->get('TYPO3\FLOW3\MVC\Web\SubRequest', $this->controllerContext->getRequest());
+		$subRequest = $this->objectManager->get('TYPO3\FLOW3\Mvc\ActionRequest', $this->controllerContext->getRequest());
 		$this->passArgumentsToSubRequest($subRequest);
 		$subRequest->setArgument('__widgetContext', $this->widgetContext);
 		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
 		$subRequest->setArgumentNamespace($this->widgetContext->getWidgetIdentifier());
 
-		$subResponse = $this->objectManager->get('TYPO3\FLOW3\MVC\Web\Response');
+		$subResponse = $this->objectManager->get('TYPO3\FLOW3\Http\Response');
 		$this->controller->processRequest($subRequest, $subResponse);
 		return $subResponse;
 	}
@@ -178,10 +178,10 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * Pass the arguments of the widget to the subrequest.
 	 *
-	 * @param \TYPO3\FLOW3\MVC\Web\Request $subRequest
+	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $subRequest
 	 * @return void
 	 */
-	private function passArgumentsToSubRequest(\TYPO3\FLOW3\MVC\Web\Request $subRequest) {
+	private function passArgumentsToSubRequest(\TYPO3\FLOW3\Mvc\ActionRequest $subRequest) {
 		$arguments = $this->controllerContext->getRequest()->getArguments();
 		$widgetIdentifier = $this->widgetContext->getWidgetIdentifier();
 

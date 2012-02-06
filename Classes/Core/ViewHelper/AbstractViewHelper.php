@@ -64,7 +64,7 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * Controller Context to use
-	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
 	 * @api
 	 */
 	protected $controllerContext;

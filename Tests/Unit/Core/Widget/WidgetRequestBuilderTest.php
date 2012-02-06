@@ -67,15 +67,15 @@ class WidgetRequestBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	public function setUp() {
 		$this->widgetRequestBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder', array('dummy'));
 
-		$mockRequestUri = $this->getMock('TYPO3\FLOW3\Property\DataType\Uri', array(), array('http://request.uri.invalid/some/widget/request'));
+		$mockRequestUri = $this->getMock('TYPO3\FLOW3\Http\Uri', array(), array('http://request.uri.invalid/some/widget/request'));
 		$mockRequestUri->expects($this->any())->method('getArguments')->will($this->returnCallback(array($this, 'getMockGetArguments')));
 
-		$this->mockWidgetRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
+		$this->mockWidgetRequest = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest');
 		$this->mockWidgetRequest->expects($this->any())->method('getRequestUri')->will($this->returnValue($mockRequestUri));
 		$this->mockWidgetRequest->expects($this->any())->method('getInternalArgument')->will($this->returnCallback(array($this, 'getMockGetArguments')));
 
 		$this->mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
-		$this->mockObjectManager->expects($this->once())->method('get')->with('TYPO3\FLOW3\MVC\Web\Request')->will($this->returnValue($this->mockWidgetRequest));
+		$this->mockObjectManager->expects($this->once())->method('get')->with('TYPO3\FLOW3\Mvc\ActionRequest')->will($this->returnValue($this->mockWidgetRequest));
 
 		$this->widgetRequestBuilder->_set('objectManager', $this->mockObjectManager);
 

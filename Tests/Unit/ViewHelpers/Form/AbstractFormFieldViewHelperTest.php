@@ -270,7 +270,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$formViewHelper->_set('arguments', $mockArguments);
 		$this->viewHelperVariableContainer->expects($this->any())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue('foo'));
 
-		$mockArgumentError = $this->getMock('TYPO3\FLOW3\MVC\Controller\ArgumentError', array(), array('foo'));
+		$mockArgumentError = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ArgumentError', array(), array('foo'));
 		$mockArgumentError->expects($this->once())->method('getPropertyName')->will($this->returnValue('foo'));
 		$mockPropertyError = $this->getMock('TYPO3\FLOW3\Validation\PropertyError', array(), array('bar'));
 		$mockPropertyError->expects($this->once())->method('getPropertyName')->will($this->returnValue('bar'));

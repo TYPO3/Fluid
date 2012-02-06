@@ -26,12 +26,12 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $templateVariableContainer;
 
 	/**
-	 * @var \TYPO3\FLOW3\MVC\Web\Routing\UriBuilder
+	 * @var \TYPO3\FLOW3\Mvc\Routing\UriBuilder
 	 */
 	protected $uriBuilder;
 
 	/**
-	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -46,7 +46,7 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $arguments;
 
 	/**
-	 * @var \TYPO3\FLOW3\MVC\Web\Request
+	 * @var \TYPO3\FLOW3\Mvc\ActionRequest
 	 */
 	protected $request;
 
@@ -61,7 +61,7 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	public function setUp() {
 		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->uriBuilder = $this->getMock('TYPO3\FLOW3\MVC\Web\Routing\UriBuilder');
+		$this->uriBuilder = $this->getMock('TYPO3\FLOW3\Mvc\Routing\UriBuilder');
 		$this->uriBuilder->expects($this->any())->method('reset')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setArguments')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setSection')->will($this->returnValue($this->uriBuilder));
@@ -70,8 +70,8 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->uriBuilder->expects($this->any())->method('setAddQueryString')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setArgumentsToBeExcludedFromQueryString')->will($this->returnValue($this->uriBuilder));
 		// BACKPORTER TOKEN #1
-		$this->request = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->request = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest');
+		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
 		$this->tagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder');

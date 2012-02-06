@@ -105,14 +105,14 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
 		$controllerObjectName = "TYPO3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
 
-		$mockRequest = $this->getMock('TYPO3\FLOW3\MVC\Web\Request');
+		$mockRequest = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest');
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue($packageKey));
 		$mockRequest->expects($this->any())->method('getControllerSubPackageKey')->will($this->returnValue($subPackageKey));
 		$mockRequest->expects($this->any())->method('getControllerName')->will($this->returnValue($controllerName));
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue($controllerObjectName));
 		$mockRequest->expects($this->any())->method('getFormat')->will($this->returnValue($format));
 
-		$mockControllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
+		$mockControllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
 		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
 
 		return $mockControllerContext;

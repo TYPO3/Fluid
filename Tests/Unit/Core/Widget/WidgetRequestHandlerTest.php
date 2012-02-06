@@ -96,7 +96,7 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function priorityIsHigherThanDefaultRequestHandler() {
-		$defaultWebRequestHandler = $this->getMock('TYPO3\FLOW3\MVC\Web\RequestHandler', array('dummy'), array(), '', FALSE);
+		$defaultWebRequestHandler = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequestHandler', array('dummy'), array(), '', FALSE);
 		$this->assertTrue($this->widgetRequestHandler->getPriority() > $defaultWebRequestHandler->getPriority());
 	}
 }

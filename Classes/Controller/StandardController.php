@@ -15,7 +15,7 @@ namespace TYPO3\Fluid\Controller;
  * Controller which provides a web UI for generating ViewHelper XSD Definitons
  *
  */
-class StandardController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class StandardController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 
 	/**
 	 * XSD Generator

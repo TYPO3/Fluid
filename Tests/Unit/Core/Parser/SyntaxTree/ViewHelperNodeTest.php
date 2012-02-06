@@ -40,7 +40,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 *
-	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
+	 * @var TYPO3\FLOW3\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -61,7 +61,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->renderingContext->injectTemplateVariableContainer($this->templateVariableContainer);
 
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\MVC\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->renderingContext->setControllerContext($this->controllerContext);
 
 		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');

@@ -18,7 +18,7 @@ namespace TYPO3\Fluid\Core\Widget;
  *
  * @api
  */
-abstract class AbstractWidgetController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+abstract class AbstractWidgetController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 
 	/**
 	 * Configuration for this widget.
@@ -31,12 +31,12 @@ abstract class AbstractWidgetController extends \TYPO3\FLOW3\MVC\Controller\Acti
 	/**
 	 * Handles a request. The result output is returned by altering the given response.
 	 *
-	 * @param \TYPO3\FLOW3\MVC\RequestInterface $request The request object
-	 * @param \TYPO3\FLOW3\MVC\ResponseInterface $response The response, modified by this handler
+	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request The request object
+	 * @param \TYPO3\FLOW3\Http\Response $response The response, modified by this handler
 	 * @return void
 	 * @api
 	 */
-	public function processRequest(\TYPO3\FLOW3\MVC\RequestInterface $request, \TYPO3\FLOW3\MVC\ResponseInterface $response) {
+	public function processRequest(\TYPO3\FLOW3\Mvc\RequestInterface $request, \TYPO3\FLOW3\Mvc\ResponseInterface $response) {
 		$widgetContext = $request->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
 			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('The widget context could not be found in the request.', 1307450180);

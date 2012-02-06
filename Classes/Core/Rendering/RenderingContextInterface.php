@@ -27,7 +27,7 @@ interface RenderingContextInterface {
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return \TYPO3\FLOW3\MVC\Controller\ControllerContext The controller context to set
+	 * @return \TYPO3\FLOW3\Mvc\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext();
 

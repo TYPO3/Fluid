@@ -17,14 +17,14 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * Controller for documentation rendering
  *
  */
-class DocumentationController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class DocumentationController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 
 	/**
 	 * Defines the supported request types of this controller
 	 *
 	 * @var array
 	 */
-	protected $supportedRequestTypes = array('TYPO3\FLOW3\MVC\CLI\Request');
+	protected $supportedRequestTypes = array('TYPO3\FLOW3\Cli\Request');
 
 	/**
 	 * @var \TYPO3\Fluid\Service\DocbookGenerator

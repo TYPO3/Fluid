@@ -67,7 +67,7 @@ abstract class AbstractFormViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstr
 	 * @param object $object Object to create the identity field for
 	 * @param string $name Name
 	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
-	 * @see \TYPO3\FLOW3\MVC\Controller\Argument::setValue()
+	 * @see \TYPO3\FLOW3\Mvc\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object, $name) {
 		if (!is_object($object) || $this->persistenceManager->isNewObject($object)) {

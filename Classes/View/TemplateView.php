@@ -114,11 +114,11 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	/**
 	 * Checks whether a template can be resolved for the current request context.
 	 *
-	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean
 	 * @api
 	 */
-	public function canRender(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function canRender(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
 		$this->setControllerContext($controllerContext);
 		try {
 			$this->getTemplateSource();

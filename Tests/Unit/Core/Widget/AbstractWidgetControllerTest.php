@@ -22,8 +22,8 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 */
 	public function processRequestShouldThrowExceptionIfWidgetContextNotFound() {
-		$request = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
 		$response = $this->getMock('TYPO3\FLOW3\MVC\ResponseInterface');
+		$request = $this->getMock('TYPO3\FLOW3\Mvc\Web\SubRequest', array('dummy'), array(), '', FALSE);
 
 		$abstractWidgetController = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('dummy'), array(), '', FALSE);
 		$abstractWidgetController->processRequest($request, $response);
@@ -37,14 +37,14 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext', array('getWidgetConfiguration'));
 		$widgetContext->expects($this->once())->method('getWidgetConfiguration')->will($this->returnValue('myConfiguration'));
 
-		$request = $this->getMock('TYPO3\FLOW3\MVC\Web\SubRequest', array('dummy'), array(), '', FALSE);
+		$request = $this->getMock('TYPO3\FLOW3\Mvc\Web\SubRequest', array('dummy'), array(), '', FALSE);
 		$request->setArgument('__widgetContext', $widgetContext);
 
 		$response = $this->getMock('TYPO3\FLOW3\MVC\ResponseInterface');
 
 		$abstractWidgetController = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
 		$abstractWidgetController->_set('argumentsMappingResults', new \TYPO3\FLOW3\Error\Result());
-		$abstractWidgetController->_set('flashMessageContainer', new \TYPO3\FLOW3\MVC\FlashMessageContainer());
+		$abstractWidgetController->_set('flashMessageContainer', new \TYPO3\FLOW3\Mvc\FlashMessageContainer());
 
 		$abstractWidgetController->processRequest($request, $response);
 

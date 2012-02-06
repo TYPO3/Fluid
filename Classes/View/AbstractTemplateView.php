@@ -17,7 +17,7 @@ namespace TYPO3\Fluid\View;
  * Contains the fundamental methods which any Fluid based template view needs.
  *
  */
-abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterface {
+abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterface {
 
 	/**
 	 * Constants defining possible rendering types
@@ -27,7 +27,7 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	const RENDERING_LAYOUT = 3;
 
 	/**
-	 * @var \TYPO3\FLOW3\MVC\Controller\ControllerContext
+	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -114,11 +114,11 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	/**
 	 * Sets the current controller context
 	 *
-	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @api
 	 */
-	public function setControllerContext(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
@@ -465,11 +465,11 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * By default we assume that the view implementation can handle all kinds of
 	 * contexts. Override this method if that is not the case.
 	 *
-	 * @param \TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean TRUE if the view has something useful to display, otherwise FALSE
 	 * @api
 	 */
-	public function canRender(\TYPO3\FLOW3\MVC\Controller\ControllerContext $controllerContext) {
+	public function canRender(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
 		return TRUE;
 	}
 

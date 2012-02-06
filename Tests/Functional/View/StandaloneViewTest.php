@@ -39,7 +39,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function inlineTemplateIsEvaluatedCorrectly() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->assign('foo', 'bar');
 		$standaloneView->setTemplateSource('This is my cool {foo} template!');
@@ -68,7 +68,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	public function renderThrowsExceptionIfNeitherTemplateSourceNorTemplatePathAndFileNameAreSpecified() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->render();
 	}
@@ -78,7 +78,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	public function renderThrowsExceptionSpecifiedTemplatePathAndFileNameDoesNotExist() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/NonExistingTemplate.txt');
 		$standaloneView->render();
@@ -88,7 +88,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function templatePathAndFilenameIsLoaded() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->assign('name', 'Karsten');
 		$standaloneView->assign('name', 'Robert');
@@ -116,7 +116,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function variablesAreEscapedIfRequestFormatIsHtml() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$request->setFormat('html');
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
@@ -131,7 +131,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function variablesAreNotEscapedIfRequestFormatIsNotHtml() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$request->setFormat('txt');
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
@@ -146,7 +146,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function partialWithDefaultLocationIsUsedIfNoPartialPathIsSetExplicitely() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$request->setFormat('txt');
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithPartial.txt');
@@ -160,7 +160,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function explicitPartialPathIsUsed() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$request->setFormat('txt');
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithPartial.txt');
@@ -175,7 +175,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function layoutWithDefaultLocationIsUsedIfNoLayoutPathIsSetExplicitely() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$request->setFormat('txt');
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithLayout.txt');
@@ -189,7 +189,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function explicitLayoutPathIsUsed() {
-		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest();
 		$request->setFormat('txt');
 		$standaloneView = $this->createStandaloneView($request);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithLayout.txt');
@@ -204,10 +204,10 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * Create a StandaloneView which has a custom prefix (taking $this->standaloneViewNonce
 	 * into account).
 	 *
-	 * @param \TYPO3\FLOW3\MVC\Web\Request $request
+	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request
 	 * @return \TYPO3\Fluid\View\StandaloneView
 	 */
-	protected function createStandaloneView(\TYPO3\FLOW3\MVC\Web\Request $request = NULL) {
+	protected function createStandaloneView(\TYPO3\FLOW3\Mvc\ActionRequest $request = NULL) {
 		$standaloneViewClassName = uniqid('StandaloneView', FALSE);
 		eval("class $standaloneViewClassName extends \TYPO3\Fluid\View\StandaloneView {" . '
 				protected function createIdentifierForFile($pathAndFilename, $prefix) {

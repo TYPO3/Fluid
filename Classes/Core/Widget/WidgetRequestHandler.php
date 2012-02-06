@@ -21,7 +21,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  *
  * @FLOW3\Scope("singleton")
  */
-class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
+class WidgetRequestHandler extends \TYPO3\FLOW3\Mvc\Web\RequestHandler {
 
 	/**
 	 * @return boolean TRUE if it is an AJAX widget request
@@ -56,9 +56,9 @@ class WidgetRequestHandler extends \TYPO3\FLOW3\MVC\Web\RequestHandler {
 		$objectManager = $this->bootstrap->getObjectManager();
 
 		$this->request = $objectManager->get('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder')->build();
-		$response = new \TYPO3\FLOW3\MVC\Web\Response();
+		$response = new \TYPO3\FLOW3\Mvc\Web\Response();
 
-		$dispatcher = $objectManager->get('TYPO3\FLOW3\MVC\Dispatcher');
+		$dispatcher = $objectManager->get('TYPO3\FLOW3\Mvc\Dispatcher');
 		$dispatcher->dispatch($this->request, $response);
 
 		$response->send();
