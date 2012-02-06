@@ -61,7 +61,6 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 	 * @return void
 	 */
 	public function indexAction($currentPage = 1) {
-			// set current page
 		$this->currentPage = (integer)$currentPage;
 		if ($this->currentPage < 1) {
 			$this->currentPage = 1;
@@ -69,7 +68,6 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 			$this->currentPage = $this->numberOfPages;
 		}
 
-			// modify query
 		$itemsPerPage = (integer)$this->configuration['itemsPerPage'];
 		$query = $this->objects->getQuery();
 		$query->setLimit($itemsPerPage);

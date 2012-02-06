@@ -109,7 +109,8 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * @return boolean TRUE if a mapping error occured, FALSE otherwise
 	 */
 	protected function hasMappingErrorOccured() {
-		return ($this->controllerContext->getRequest()->getOriginalRequest() !== NULL);
+		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
+		return ($validationResults !== NULL && $validationResults->hasErrors());
 	}
 
 	/**
@@ -119,8 +120,12 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * @return mixed
 	 */
 	protected function getLastSubmittedFormData() {
-		$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
-		$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->controllerContext->getRequest()->getOriginalRequest()->getArguments(), $propertyPath);
+		$value = NULL;
+		$submittedArguments = $this->controllerContext->getRequest()->getInternalArgument('__submittedArguments');
+		if ($submittedArguments !== NULL) {
+			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
+			$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
+		}
 		return $value;
 	}
 
@@ -202,16 +207,18 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	/**
 	 * Get errors for the property and form name of this view helper
 	 *
-	 * @return array<\TYPO3\FLOW3\Error\Error> Array of errors
+	 * @return \TYPO3\FLOW3\Error\Result
 	 */
 	protected function getMappingResultsForProperty() {
 		if (!$this->isObjectAccessorMode()) {
 			return new \TYPO3\FLOW3\Error\Result();
 		}
-		$originalRequestMappingResults = $this->controllerContext->getRequest()->getOriginalRequestMappingResults();
+		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
+		if ($validationResults === NULL) {
+			return new \TYPO3\FLOW3\Error\Result();
+		}
 		$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-
-		return $originalRequestMappingResults->forProperty($formObjectName)->forProperty($this->arguments['property']);
+		return $validationResults->forProperty($formObjectName)->forProperty($this->arguments['property']);
 	}
 
 	/**

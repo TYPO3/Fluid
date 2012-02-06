@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\View;
  *                                                                        */
 
 use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\FLOW3\Http\Request;
 
 /**
  * A standalone template view.
@@ -72,7 +73,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	/**
 	 * Constructor
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request The current web request. If none is specified it will be created from the environment.
+	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request The current action request. If none is specified it will be created from the environment.
 	 */
 	public function __construct(\TYPO3\FLOW3\Mvc\ActionRequest $request = NULL) {
 		$this->request = $request;
@@ -85,24 +86,16 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 */
 	public function initializeObject() {
 		if ($this->request === NULL) {
-			$this->request = new \TYPO3\FLOW3\Mvc\ActionRequest();
-			$requestUri = $this->environment->getRequestUri();
-			if ($requestUri !== FALSE) {
-				$this->request->setRequestUri($requestUri);
-			}
-			$baseUri = $this->environment->getBaseUri();
-			if ($baseUri !== NULL) {
-				$this->request->setBaseUri($baseUri);
-			}
-			$this->request->setFormat('html');
+			$request = Request::createFromEnvironment();
+			$this->request = $request->createActionRequest();
 		}
 
-		$uriBuilder = new \TYPO3\FLOW3\Mvc\Web\Routing\UriBuilder();
+		$uriBuilder = new \TYPO3\FLOW3\Mvc\Routing\UriBuilder();
 		$uriBuilder->setRequest($this->request);
 
 		$this->setControllerContext(new \TYPO3\FLOW3\Mvc\Controller\ControllerContext(
 			$this->request,
-			new \TYPO3\FLOW3\Mvc\Web\Response(),
+			new \TYPO3\FLOW3\Http\Response(),
 			new \TYPO3\FLOW3\Mvc\Controller\Arguments(array()),
 			$uriBuilder,
 			$this->flashMessageContainer

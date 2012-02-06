@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /**
  * Testcase for WidgetRequestHandler
- *
  */
 class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
@@ -96,8 +95,8 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function priorityIsHigherThanDefaultRequestHandler() {
-		$defaultWebRequestHandler = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequestHandler', array('dummy'), array(), '', FALSE);
-		$this->assertTrue($this->widgetRequestHandler->getPriority() > $defaultWebRequestHandler->getPriority());
+		$defaultHttpRequestHandler = $this->getMock('TYPO3\FLOW3\Http\RequestHandler', array('dummy'), array(), '', FALSE);
+		$this->assertTrue($this->widgetRequestHandler->getPriority() > $defaultHttpRequestHandler->getPriority());
 	}
 }
 ?>

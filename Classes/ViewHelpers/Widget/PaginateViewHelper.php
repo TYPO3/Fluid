@@ -51,6 +51,7 @@ class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelp
 	protected $controller;
 
 	/**
+	 * Render this view helper
 	 *
 	 * @param \TYPO3\FLOW3\Persistence\QueryResultInterface $objects
 	 * @param string $as
@@ -58,7 +59,8 @@ class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelp
 	 * @return string
 	 */
 	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE, 'maximumNumberOfLinks' => 99)) {
-		return $this->initiateSubRequest();
+		$response = $this->initiateSubRequest();
+		return $response->getContent();
 	}
 }
 

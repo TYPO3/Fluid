@@ -34,14 +34,11 @@ class BaseViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Render the "Base" tag by outputting $request->getBaseUri()
 	 *
-	 * Note: renders as <base></base>, because IE6 will else refuse to display
-	 * the page...
-	 *
 	 * @return string "base"-Tag.
 	 * @api
 	 */
 	public function render() {
-		return '<base href="' . $this->controllerContext->getRequest()->getBaseUri() . '" />';
+		return '<base href="' . $this->controllerContext->getRequest()->getHttpRequest()->getBaseUri() . '" />';
 	}
 }
 

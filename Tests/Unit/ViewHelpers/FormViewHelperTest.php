@@ -267,7 +267,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 */
 	public function renderAddsDefaultFieldNamePrefixToTemplateVariableContainerIfNoPrefixIsSpecifiedAndRequestIsASubRequest() {
 		$expectedPrefix = 'someArgumentPrefix';
-		$mockSubRequest = $this->getMock('TYPO3\FLOW3\Mvc\Web\SubRequest', array(), array(), '', FALSE);
+		$mockSubRequest = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest', array(), array(), '', FALSE);
 		$mockSubRequest->expects($this->once())->method('getArgumentNamespace')->will($this->returnValue($expectedPrefix));
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer'), array(), '', FALSE);

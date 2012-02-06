@@ -179,7 +179,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$result = chr(10);
 		$request = $this->controllerContext->getRequest();
 		$argumentNamespace = NULL;
-		if ($request instanceof \TYPO3\FLOW3\Mvc\Web\SubRequest) {
+		if (!$request->isMainRequest()) {
 			$argumentNamespace = $request->getArgumentNamespace();
 
 			$referrer = array(
@@ -303,7 +303,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 */
 	protected function getDefaultFieldNamePrefix() {
 		$request = $this->controllerContext->getRequest();
-		if ($request instanceof \TYPO3\FLOW3\Mvc\Web\SubRequest) {
+		if (!$request->isMainRequest()) {
 			return $request->getArgumentNamespace();
 		}
 		return '';

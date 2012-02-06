@@ -11,9 +11,9 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+
 /**
  * Testcase for AbstractWidgetController
- *
  */
 class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
@@ -22,8 +22,8 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 */
 	public function processRequestShouldThrowExceptionIfWidgetContextNotFound() {
-		$response = $this->getMock('TYPO3\FLOW3\MVC\ResponseInterface');
-		$request = $this->getMock('TYPO3\FLOW3\Mvc\Web\SubRequest', array('dummy'), array(), '', FALSE);
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest(new \TYPO3\FLOW3\Mvc\ActionRequest(\TYPO3\FLOW3\Http\Request::create(new \TYPO3\FLOW3\Http\Uri('http://localhost/foo'))));
+		$response = new \TYPO3\FLOW3\Http\Response();
 
 		$abstractWidgetController = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('dummy'), array(), '', FALSE);
 		$abstractWidgetController->processRequest($request, $response);
@@ -33,14 +33,13 @@ class AbstractWidgetControllerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function processRequestShouldSetWidgetConfiguration() {
+		$request = new \TYPO3\FLOW3\Mvc\ActionRequest(new \TYPO3\FLOW3\Mvc\ActionRequest(\TYPO3\FLOW3\Http\Request::create(new \TYPO3\FLOW3\Http\Uri('http://localhost/foo'))));
+		$response = new \TYPO3\FLOW3\Http\Response();
 
 		$widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext', array('getWidgetConfiguration'));
 		$widgetContext->expects($this->once())->method('getWidgetConfiguration')->will($this->returnValue('myConfiguration'));
 
-		$request = $this->getMock('TYPO3\FLOW3\Mvc\Web\SubRequest', array('dummy'), array(), '', FALSE);
 		$request->setArgument('__widgetContext', $widgetContext);
-
-		$response = $this->getMock('TYPO3\FLOW3\MVC\ResponseInterface');
 
 		$abstractWidgetController = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
 		$abstractWidgetController->_set('argumentsMappingResults', new \TYPO3\FLOW3\Error\Result());

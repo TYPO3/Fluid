@@ -15,13 +15,17 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Widget request handler, which handles the request if
- * the argument "__widgetId" or "__widgetContext" is available in the GET/POST parameters of the current request.
+ * the argument "__widgetId" or "__widgetContext" is available in the GET/POST
+ * parameters of the current request.
  *
- * This Request Handler gets the WidgetRequestBuilder injected.
+ * This request handler does not override the standard handleRequest() method
+ * but injects a specialized router which resolves the correct widget controller
+ * by the given HTTP request.
  *
  * @FLOW3\Scope("singleton")
+ * @FLOW3\Proxy("disable")
  */
-class WidgetRequestHandler extends \TYPO3\FLOW3\Mvc\Web\RequestHandler {
+class WidgetRequestHandler extends \TYPO3\FLOW3\Http\RequestHandler {
 
 	/**
 	 * @return boolean TRUE if it is an AJAX widget request
@@ -45,25 +49,17 @@ class WidgetRequestHandler extends \TYPO3\FLOW3\Mvc\Web\RequestHandler {
 	}
 
 	/**
-	 * Handles a HTTP request
+	 * Resolves a few dependencies of this request handler which can't be resolved
+	 * automatically due to the early stage of the boot process this request handler
+	 * is invoked at.
 	 *
 	 * @return void
 	 */
-	public function handleRequest() {
-		$sequence = $this->bootstrap->buildRuntimeSequence();
-		$sequence->invoke($this->bootstrap);
-
+	protected function resolveDependencies() {
 		$objectManager = $this->bootstrap->getObjectManager();
-
-		$this->request = $objectManager->get('TYPO3\Fluid\Core\Widget\WidgetRequestBuilder')->build();
-		$response = new \TYPO3\FLOW3\Mvc\Web\Response();
-
-		$dispatcher = $objectManager->get('TYPO3\FLOW3\Mvc\Dispatcher');
-		$dispatcher->dispatch($this->request, $response);
-
-		$response->send();
-		$this->bootstrap->shutdown('Runtime');
-		$this->exit->__invoke();
+		$this->securityContext = $objectManager->get('TYPO3\FLOW3\Security\Context');
+		$this->dispatcher = $objectManager->get('TYPO3\FLOW3\Mvc\Dispatcher');
+		$this->router = $objectManager->get('TYPO3\Fluid\Core\Widget\WidgetRouter');
 	}
 }
 

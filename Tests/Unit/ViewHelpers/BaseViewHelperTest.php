@@ -15,13 +15,14 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 /**
  */
 class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+
 	/**
 	 * @test
 	 */
 	public function renderTakesBaseUriFromControllerContext() {
-		$baseUri = 'http://typo3.org/';
+		$baseUri = new \TYPO3\FLOW3\Http\Uri('http://typo3.org/');
 
-		$this->request->expects($this->any())->method('getBaseUri')->will($this->returnValue($baseUri));
+		$this->request->expects($this->any())->method('getHttpRequest')->will($this->returnValue(\TYPO3\FLOW3\Http\Request::create($baseUri)));
 
 		$viewHelper = new \TYPO3\Fluid\ViewHelpers\BaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);

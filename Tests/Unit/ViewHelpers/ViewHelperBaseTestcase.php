@@ -41,7 +41,7 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $tagBuilder;
 
 	/**
-	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
+	 * @var array
 	 */
 	protected $arguments;
 
@@ -70,7 +70,8 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->uriBuilder->expects($this->any())->method('setAddQueryString')->will($this->returnValue($this->uriBuilder));
 		$this->uriBuilder->expects($this->any())->method('setArgumentsToBeExcludedFromQueryString')->will($this->returnValue($this->uriBuilder));
 		// BACKPORTER TOKEN #1
-		$this->request = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest');
+		$httpRequest = \TYPO3\FLOW3\Http\Request::create(new \TYPO3\FLOW3\Http\Uri('http://localhost/foo'));
+		$this->request = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest', array(), array($httpRequest));
 		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));

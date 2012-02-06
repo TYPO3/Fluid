@@ -73,6 +73,15 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	}
 
 	/**
+	 * Registers the widgetId viewhelper
+	 *
+	 * @return void
+	 */
+	public function initializeArguments() {
+		$this->registerArgument('widgetId', 'string', 'Unique identifier of the widget instance');
+	}
+
+	/**
 	 * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
 	 *
 	 * @return string the rendered ViewHelper.
@@ -156,7 +165,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * Initiate a sub request to $this->controller. Make sure to fill $this->controller
 	 * via Dependency Injection.
 	 *
-	 * @return \TYPO3\FLOW3\Mvc\ResponseInterface the response of this request.
+	 * @return \TYPO3\FLOW3\Http\Response the response of this request.
 	 * @api
 	 */
 	protected function initiateSubRequest() {
@@ -168,7 +177,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 		$this->passArgumentsToSubRequest($subRequest);
 		$subRequest->setArgument('__widgetContext', $this->widgetContext);
 		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
-		$subRequest->setArgumentNamespace($this->widgetContext->getWidgetIdentifier());
+		$subRequest->setArgumentNamespace('--' . $this->widgetContext->getWidgetIdentifier());
 
 		$subResponse = $this->objectManager->get('TYPO3\FLOW3\Http\Response');
 		$this->controller->processRequest($subRequest, $subResponse);
@@ -182,7 +191,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * @return void
 	 */
 	private function passArgumentsToSubRequest(\TYPO3\FLOW3\Mvc\ActionRequest $subRequest) {
-		$arguments = $this->controllerContext->getRequest()->getArguments();
+		$arguments = $this->controllerContext->getRequest()->getPluginArguments();
 		$widgetIdentifier = $this->widgetContext->getWidgetIdentifier();
 
 		$controllerActionName = 'index';
@@ -202,17 +211,9 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 *
 	 * @return string the widget identifier for this widget
 	 * @return void
-	 * @todo clean up, and make it somehow more routing compatible.
 	 */
 	private function initializeWidgetIdentifier() {
-		if (!$this->viewHelperVariableContainer->exists('TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper', 'nextWidgetNumber')) {
-			$widgetCounter = 0;
-		} else {
-			$widgetCounter = $this->viewHelperVariableContainer->get('TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper', 'nextWidgetNumber');
-		}
-		$widgetIdentifier = '@widget_' . $widgetCounter;
-		$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper', 'nextWidgetNumber', $widgetCounter + 1);
-
+		$widgetIdentifier = ($this->hasArgument('widgetId') ? $this->arguments['widgetId'] : strtolower(str_replace('\\', '-', get_class($this))));
 		$this->widgetContext->setWidgetIdentifier($widgetIdentifier);
 	}
 

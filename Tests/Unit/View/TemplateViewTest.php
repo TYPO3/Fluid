@@ -105,7 +105,8 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
 		$controllerObjectName = "TYPO3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
 
-		$mockRequest = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest');
+		$httpRequest = \TYPO3\FLOW3\Http\Request::create(new \TYPO3\FLOW3\Http\Uri('http://robertlemke.com/blog'));
+		$mockRequest = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest', array(), array($httpRequest));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue($packageKey));
 		$mockRequest->expects($this->any())->method('getControllerSubPackageKey')->will($this->returnValue($subPackageKey));
 		$mockRequest->expects($this->any())->method('getControllerName')->will($this->returnValue($controllerName));
