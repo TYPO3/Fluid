@@ -21,7 +21,7 @@ class TranslateViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 	/**
 	 * @test
 	 */
-	public function viewHelperTranslates() {
+	public function viewHelperTranslatesByOriginalLabel() {
 		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');
 
 		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
@@ -30,10 +30,63 @@ class TranslateViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Untranslated Label'));
-		$viewHelper->injectTranslator($mockTranslator);
+		$viewHelper->_set('translator', $mockTranslator);
 
 		$result = $viewHelper->render(NULL, NULL, array(), 'Main', NULL, 'de_DE');
 		$this->assertEquals('Translated Label', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperTranslatesById() {
+		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateById', 'some.label', 'Main', 'TYPO3.FLOW3', array(), NULL, $dummyLocale)->will($this->returnValue('Translated Label'));
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->_set('translator', $mockTranslator);
+
+		$result = $viewHelper->render('some.label', NULL, array(), 'Main', NULL, 'de_DE');
+		$this->assertEquals('Translated Label', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperUsesValueIfIdIsNotFound() {
+		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateById', 'some.label', 'Main', 'TYPO3.FLOW3', array(), NULL, $dummyLocale)->will($this->returnValue('some.label'));
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->expects($this->never())->method('renderChildren');
+		$viewHelper->_set('translator', $mockTranslator);
+
+		$result = $viewHelper->render('some.label', 'Default from value', array(), 'Main', NULL, 'de_DE');
+		$this->assertEquals('Default from value', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperUsesRenderChildrenIfIdIsNotFound() {
+		$dummyLocale = new \TYPO3\FLOW3\I18n\Locale('de_DE');
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateById', 'some.label', 'Main', 'TYPO3.FLOW3', array(), NULL, $dummyLocale)->will($this->returnValue('some.label'));
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\TranslateViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Default from renderChildren'));
+		$viewHelper->_set('translator', $mockTranslator);
+
+		$result = $viewHelper->render('some.label', NULL, array(), 'Main', NULL, 'de_DE');
+		$this->assertEquals('Default from renderChildren', $result);
 	}
 }
 

@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Returns translated message using source message or key ID.
@@ -19,25 +20,32 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * = Examples =
  *
- * <code title="Default parameters">
- * <f:translate>Untranslated label</f:translate>
+ * <code title="Translation by id">
+ * <f:translate id="user.unregistered">Unregistered User</f:translate>
  * </code>
  * <output>
- * translation of the label "Untranslated label"
+ * translation of label with the id "user.unregistered" and a fallback to "Unregistered User"
+ * </output>
+ *
+ * <code title="Inline notation">
+ * {f:translate(id: 'some.label.id', default: 'fallback result')}
+ * </code>
+ * <output>
+ * translation of label with the id "some.label.id" and a fallback to "fallback result"
  * </output>
  *
  * <code title="Custom source and locale">
- * <f:translate source="SomeLabelsCatalog" locale="de_DE">Untranslated label</f:translate>
+ * <f:translate id="some.label.id" somesource="SomeLabelsCatalog" locale="de_DE"/>
  * </code>
  * <output>
- * translation of the label "Untranslated label" from custom source "SomeLabelsCatalog" and locale "de_DE"
+ * translation from custom source "SomeLabelsCatalog" for locale "de_DE"
  * </output>
  *
  * <code title="Custom source from other package">
- * <f:translate source="LabelsCatalog" package="OtherPackage">Untranslated label</f:translate>
+ * <f:translate id="some.label.id" source="LabelsCatalog" package="OtherPackage"/>
  * </code>
  * <output>
- * translation of the label "Untranslated label" from custom source "LabelsCatalog" in "OtherPackage"
+ * translation from custom source "LabelsCatalog" in "OtherPackage"
  * </output>
  *
  * <code title="Arguments">
@@ -47,18 +55,11 @@ namespace TYPO3\Fluid\ViewHelpers;
  * translation of the label "Untranslated foo and 99.9"
  * </output>
  *
- * <code title="Translation by id">
- * <f:translate key="user.unregistered">Unregistered User</f:translate>
+ * <code title="Translation by label">
+ * <f:translate>Untranslated label</f:translate>
  * </code>
  * <output>
- * translation of label with the id "user.unregistered" and the default translation "Unregistered User"
- * </output>
- *
- * <code title="Inline notation">
- * {f:translate(key: 'someLabelId', default: 'default translation')}
- * </code>
- * <output>
- * translation of label with the id "someLabelId" and the default translation "default translation"
+ * translation of the label "Untranslated label"
  * </output>
  *
  */
@@ -66,16 +67,9 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 
 	/**
 	 * @var \TYPO3\FLOW3\I18n\Translator
+	 * @FLOW3\Inject
 	 */
 	protected $translator;
-
-	/**
-	 * @param \TYPO3\FLOW3\I18n\Translator $translator
-	 * @return void
-	 */
-	public function injectTranslator(\TYPO3\FLOW3\I18n\Translator $translator) {
-		$this->translator = $translator;
-	}
 
 	/**
 	 * Renders the translated label.
@@ -83,8 +77,8 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * Replaces all placeholders with corresponding values if they exist in the
 	 * translated label.
 	 *
-	 * @param string $key Id to use for finding translation
-	 * @param string $value if $key is not specified or could not be resolved, this value is used. If this argument is not set, child nodes will be used to render the default
+	 * @param string $id Id to use for finding translation (trans-unit id in XLIFF)
+	 * @param string $value If $key is not specified or could not be resolved, this value is used. If this argument is not set, child nodes will be used to render the default
 	 * @param array $arguments Numerically indexed array of values to be inserted into placeholders
 	 * @param string $source Name of file with translations
 	 * @param string $package Target package key. If not set, the current package key will be used
@@ -92,7 +86,7 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
 	 */
-	public function render($key = NULL, $value = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
+	public function render($id = NULL, $value = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;
 		if ($locale !== NULL) {
 			try {
@@ -103,13 +97,13 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 		}
 		if ($package === NULL) $package = $this->controllerContext->getRequest()->getControllerPackageKey();
 		$originalLabel = $value === NULL ? $this->renderChildren() : $value;
-		$quantity = $quantity === NULL ? NULL : (integer)$quantity;
+		$quantity = $quantity === NULL ? NULL : $quantity;
 
-		if ($key === NULL) {
+		if ($id === NULL) {
 			return $this->translator->translateByOriginalLabel($originalLabel, $arguments, $quantity, $localeObject, $source, $package);
 		} else {
-			$translation = $this->translator->translateById($key, $arguments, $quantity, $localeObject, $source, $package);
-			if ($translation === $key) {
+			$translation = $this->translator->translateById($id, $arguments, $quantity, $localeObject, $source, $package);
+			if ($translation === $id) {
 				return $originalLabel;
 			} else {
 				return $translation;
