@@ -140,7 +140,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @return TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 * @FLOW3\Internal
 	 */
 	public function getSyntaxTreeNode() {
@@ -148,7 +148,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @return TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 * @FLOW3\Internal
 	 */
 	public function getLeftSide() {
@@ -156,7 +156,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @return TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 * @FLOW3\Internal
 	 */
 	public function getRightSide() {
@@ -190,7 +190,9 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * This function must be static public, as it is also directly called from cached templates.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param string $comparator
+	 * @param mixed $evaluatedLeftSide
+	 * @param mixed $evaluatedRightSide
 	 * @return boolean TRUE if comparison of left and right side using the comparator emit TRUE, false otherwise
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
@@ -236,6 +238,8 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * only leaving out "array" with "anything" and "object" with anything; as we specify
 	 * that arrays and objects are incomparable with anything else than their type.
 	 *
+	 * @param mixed $evaluatedLeftSide
+	 * @param mixed $evaluatedRightSide
 	 * @return boolean TRUE if the operands can be compared using arithmetic operators, FALSE otherwise.
 	 */
 	static protected function isComparable($evaluatedLeftSide, $evaluatedRightSide) {

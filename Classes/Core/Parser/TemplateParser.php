@@ -623,7 +623,7 @@ class TemplateParser {
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node The syntax tree node which can be modified by the interceptors.
 	 * @param integer $interceptionPoint the interception point. One of the \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
-	 * @param \TYPO3\Fluid\Core\Parser\ParsingState the parsing state
+	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $state the parsing state
 	 * @return void
 	 */
 	protected function callInterceptor(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint, \TYPO3\Fluid\Core\Parser\ParsingState $state) {

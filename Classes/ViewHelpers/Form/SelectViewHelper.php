@@ -115,7 +115,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			// as often as there are elements in the box
 		if ($this->hasArgument('multiple') && $this->arguments['multiple'] !== '') {
 			$content .= $this->renderHiddenFieldForEmptyValue();
-			for ($i=0; $i<count($options); $i++) {
+			for ($i = 0; $i < count($options); $i++) {
 				$this->registerFieldNameForFormTokenGeneration($name);
 			}
 		} else {
@@ -137,7 +137,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 
 		foreach ($options as $value => $label) {
 			$isSelected = $this->isSelected($value);
-			$output.= $this->renderOptionTag($value, $label, $isSelected) . chr(10);
+			$output .= $this->renderOptionTag($value, $label, $isSelected) . chr(10);
 		}
 		return $output;
 	}
@@ -265,9 +265,9 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	protected function renderOptionTag($value, $label, $isSelected) {
 		$output = '<option value="' . htmlspecialchars($value) . '"';
 		if ($isSelected) {
-			$output.= ' selected="selected"';
+			$output .= ' selected="selected"';
 		}
-		$output.= '>' . htmlspecialchars($label) . '</option>';
+		$output .= '>' . htmlspecialchars($label) . '</option>';
 
 		return $output;
 	}

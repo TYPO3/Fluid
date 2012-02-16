@@ -129,7 +129,13 @@ EOD;
 		return preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
 	}
 
-	protected function generateCodeForSection($converted, $expectedFunctionName, $comment) {
+	/**
+	 * @param array $converted
+	 * @param string $expectedFunctionName
+	 * @param string $comment
+	 * @return string
+	 */
+	protected function generateCodeForSection(array $converted, $expectedFunctionName, $comment) {
 		$templateCode = <<<EOD
 /**
  * %s
