@@ -215,8 +215,13 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 	 * @return string rendered template for the section
 	 * @throws \TYPO3\Fluid\View\Exception\InvalidSectionException
 	 */
-	public function renderSection($sectionName, array $variables, $ignoreUnknown = FALSE) {
+	public function renderSection($sectionName, array $variables = NULL, $ignoreUnknown = FALSE) {
 		$renderingContext = $this->getCurrentRenderingContext();
+
+		if ($renderingContext === NULL) {
+			return $this->renderStandaloneSection($sectionName, $variables, $ignoreUnknown);
+		}
+
 		if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
 			// in case we render a layout right now, we will render a section inside a TEMPLATE.
 			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
@@ -256,6 +261,36 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\MVC\View\ViewInterfa
 			$this->stopRendering();
 		}
 
+		return $output;
+	}
+
+	/**
+	 * Renders a section on its own, i.e. without the a surrounding template.
+	 *
+	 * In this case, we just emulate that a surrounding (empty) layout exists,
+	 * and trigger the normal rendering flow then.
+	 *
+	 * @param string $sectionName Name of section to render
+	 * @param array $variables The variables to use
+	 * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+	 * @return string rendered template for the section
+	 */
+	protected function renderStandaloneSection($sectionName, array $variables = NULL, $ignoreUnknown = FALSE) {
+		$templateIdentifier = $this->getTemplateIdentifier();
+		if ($this->templateCompiler->has($templateIdentifier)) {
+			$parsedTemplate = $this->templateCompiler->get($templateIdentifier);
+		} else {
+			$this->templateParser->setConfiguration($this->buildParserConfiguration());
+			$parsedTemplate = $this->templateParser->parse($this->getTemplateSource());
+			if ($parsedTemplate->isCompilable()) {
+				$this->templateCompiler->store($templateIdentifier, $parsedTemplate);
+			}
+		}
+
+		$this->baseRenderingContext->setControllerContext($this->controllerContext);
+		$this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
+		$output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
+		$this->stopRendering();
 		return $output;
 	}
 

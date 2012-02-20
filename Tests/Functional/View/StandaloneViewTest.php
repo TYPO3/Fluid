@@ -51,6 +51,20 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 
 	/**
 	 * @test
+	 */
+	public function renderSectionIsEvaluatedCorrectly() {
+		$request = new \TYPO3\FLOW3\MVC\Web\Request();
+		$standaloneView = $this->createStandaloneView($request);
+		$standaloneView->assign('foo', 'bar');
+		$standaloneView->setTemplateSource('Around stuff... <f:section name="innerSection">test {foo}</f:section> after it');
+
+		$expected = 'test bar';
+		$actual = $standaloneView->renderSection('innerSection');
+		$this->assertSame($expected, $actual);
+	}
+
+	/**
+	 * @test
 	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	public function renderThrowsExceptionIfNeitherTemplateSourceNorTemplatePathAndFileNameAreSpecified() {
