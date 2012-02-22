@@ -97,7 +97,6 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 		}
 		if ($package === NULL) $package = $this->controllerContext->getRequest()->getControllerPackageKey();
 		$originalLabel = $value === NULL ? $this->renderChildren() : $value;
-		$quantity = $quantity === NULL ? NULL : $quantity;
 
 		if ($id === NULL) {
 			return $this->translator->translateByOriginalLabel($originalLabel, $arguments, $quantity, $localeObject, $source, $package);
