@@ -11,18 +11,12 @@ namespace TYPO3\Fluid\Service;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * Common base class for XML generators.
- *
  */
 abstract class AbstractGenerator {
-
-	/**
-	 * Object manager.
-	 *
-	 * @var \TYPO3\FLOW3\Object\ObjectManager
-	 */
-	protected $objectManager;
 
 	/**
 	 * The reflection class for AbstractViewHelper. Is needed quite often, that's why we use a pre-initialized one.
@@ -35,8 +29,15 @@ abstract class AbstractGenerator {
 	 * The doc comment parser.
 	 *
 	 * @var \TYPO3\FLOW3\Reflection\DocCommentParser
+	 * @FLOW3\Inject
 	 */
 	protected $docCommentParser;
+
+	/**
+	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 * @FLOW3\Inject
+	 */
+	protected $reflectionService;
 
 	/**
 	 * Constructor. Sets $this->abstractViewHelperReflectionClass
@@ -45,17 +46,6 @@ abstract class AbstractGenerator {
 	public function __construct() {
 		\TYPO3\Fluid\Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
 		$this->abstractViewHelperReflectionClass = new \TYPO3\FLOW3\Reflection\ClassReflection('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
-		$this->docCommentParser = new \TYPO3\FLOW3\Reflection\DocCommentParser();
-	}
-
-	/**
-	 * Inject the object manager.
-	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager the object manager to inject
-	 * @return void
-	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
-		$this->objectManager = $objectManager;
 	}
 
 	/**
@@ -65,16 +55,19 @@ abstract class AbstractGenerator {
 	 * @return array Array of all class names inside a given namespace.
 	 */
 	protected function getClassNamesInNamespace($namespace) {
-		$viewHelperClassNames = array();
+		$affectedViewHelperClassNames = array();
 
-		$registeredObjectNames = array_keys($this->objectManager->getRegisteredObjects());
-		foreach ($registeredObjectNames as $registeredObjectName) {
-			if (strncmp($namespace, $registeredObjectName, strlen($namespace)) === 0) {
-				$viewHelperClassNames[] = $registeredObjectName;
+		$allViewHelperClassNames = $this->reflectionService->getAllSubClassNamesForClass('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
+		foreach ($allViewHelperClassNames as $viewHelperClassName) {
+			if ($this->reflectionService->isClassAbstract($viewHelperClassName)) {
+				continue;
+			}
+			if (strncmp($namespace, $viewHelperClassName, strlen($namespace)) === 0) {
+				$affectedViewHelperClassNames[] = $viewHelperClassName;
 			}
 		}
-		sort($viewHelperClassNames);
-		return $viewHelperClassNames;
+		sort($affectedViewHelperClassNames);
+		return $affectedViewHelperClassNames;
 	}
 
 	/**
