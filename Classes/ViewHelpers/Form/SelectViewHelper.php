@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * This view helper generates a <select> dropdown list for the use with a form.
@@ -52,9 +53,38 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *
  * The "value" property now expects a domain object, and tests for object equivalence.
  *
+ * = Translation of select content =
+ *
+ * The view helper can be given a "translate" argument with configuration on how to translate option labels.
+ * The array can have the following keys:
+ * - "by" defines if translation by message id or original label is to be used ("id" or "label")
+ * - "using" defines if the option tag's "value" or "label" should be used as translation input, defaults to "value"
+ * - "locale" defines the locale identifier to use, optional, defaults to current locale
+ * - "source" defines the translation source name, optional, defaults to "Main"
+ * - "package" defines the package key of the translation source, optional, defaults to current package
+ * - "prefix" defines a prefix to use for the message id – only works in combination with "by id"
+ *
+ * <code title="Label translation">
+ * <f:form.select name="paymentOption" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" translate="{by: 'id'}" />
+ * </code>
+ *
+ * The above example would use the values "payPal" and "visa" to look up translations for those ids in the current package's "Main" XLIFF file.
+ *
+ * <code title="Label translation">
+ * <f:form.select name="paymentOption" options="{payPal: 'PayPal International Services', visa: 'VISA Card'}" translate="{by: 'id', prefix: 'shop.paymentOptions.'}" />
+ * </code>
+ *
+ * The above example would use the translation ids "shop.paymentOptions.payPal" and "shop.paymentOptions.visa" for translating the labels.
+ *
  * @api
  */
 class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\I18n\Translator
+	 */
+	protected $translator;
 
 	/**
 	 * @var string
@@ -84,6 +114,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$this->registerArgument('sortByOptionLabel', 'boolean', 'If true, List will be sorted by label.', FALSE, FALSE);
 		$this->registerArgument('selectAllByDefault', 'boolean', 'If specified options are selected if none was set before.', FALSE, FALSE);
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('translate', 'array', 'Configures translation of view helper output.');
 	}
 
 	/**
@@ -136,8 +167,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$output = '';
 
 		foreach ($options as $value => $label) {
-			$isSelected = $this->isSelected($value);
-			$output .= $this->renderOptionTag($value, $label, $isSelected) . chr(10);
+			$output .= $this->renderOptionTag($value, $label) . chr(10);
 		}
 		return $output;
 	}
@@ -152,10 +182,8 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			return array();
 		}
 		$options = array();
-		$optionsArgument = $this->arguments['options'];
-		foreach ($optionsArgument as $key => $value) {
+		foreach ($this->arguments['options'] as $key => $value) {
 			if (is_object($value)) {
-
 				if ($this->hasArgument('optionValueField')) {
 					$key = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
 					if (is_object($key)) {
@@ -208,7 +236,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			return TRUE;
 		}
 		if ($this->hasArgument('multiple')) {
-			if (is_null($selectedValue) && $this->arguments['selectAllByDefault'] === TRUE) {
+			if ($selectedValue === NULL && $this->arguments['selectAllByDefault'] === TRUE) {
 				return TRUE;
 			} elseif (is_array($selectedValue) && in_array($value, $selectedValue)) {
 				return TRUE;
@@ -244,7 +272,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		if (is_object($valueElement)) {
 			if ($this->hasArgument('optionValueField')) {
 				return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
-			} else if ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL){
+			} elseif ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL){
 				return $this->persistenceManager->getIdentifierByObject($valueElement);
 			} else {
 				return (string)$valueElement;
@@ -259,17 +287,55 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 *
 	 * @param string $value value attribute of the option tag (will be escaped)
 	 * @param string $label content of the option tag (will be escaped)
-	 * @param boolean $isSelected specifies wheter or not to add selected attribute
 	 * @return string the rendered option tag
 	 */
-	protected function renderOptionTag($value, $label, $isSelected) {
+	protected function renderOptionTag($value, $label) {
 		$output = '<option value="' . htmlspecialchars($value) . '"';
-		if ($isSelected) {
+		if ($this->isSelected($value)) {
 			$output .= ' selected="selected"';
+		}
+
+		if ($this->hasArgument('translate')) {
+			$label = $this->getTranslatedLabel($value, $label);
 		}
 		$output .= '>' . htmlspecialchars($label) . '</option>';
 
 		return $output;
+	}
+
+	/**
+	 * Returns a translated version of the given label
+	 *
+	 * @param string $value option tag value
+	 * @param string $label option tag label
+	 * @return string
+	 */
+	protected function getTranslatedLabel($value, $label) {
+		$translationConfiguration = $this->arguments['translate'];
+
+		$translateBy = isset($translationConfiguration['by']) ? $translationConfiguration['by'] : 'id';
+		$sourceName = isset($translationConfiguration['source']) ? $translationConfiguration['source'] : 'Main';
+		$packageKey = isset($translationConfiguration['package']) ? $translationConfiguration['package'] : $this->controllerContext->getRequest()->getControllerPackageKey();
+		$prefix = isset($translationConfiguration['prefix']) ? $translationConfiguration['prefix'] : '';
+
+		if (isset($translationConfiguration['locale'])) {
+			try {
+				$localeObject = new \TYPO3\FLOW3\I18n\Locale($translationConfiguration['locale']);
+			} catch (\TYPO3\FLOW3\I18n\Exception\InvalidLocaleIdentifierException $e) {
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $translationConfiguration['locale'] . '" is not a valid locale identifier.' , 1330013193);
+			}
+		} else {
+			$localeObject = NULL;
+		}
+
+		switch ($translateBy) {
+			case 'label':
+				$label =  isset($translationConfiguration['using']) && $translationConfiguration['using'] === 'value' ? $value : $label;
+				return $this->translator->translateByOriginalLabel($label, array(), NULL, $localeObject, $sourceName, $packageKey);
+			case 'id':
+				$id =  $prefix . (isset($translationConfiguration['using']) && $translationConfiguration['using'] === 'label' ? $label : $value);
+				return $this->translator->translateById($id, array(), NULL, $localeObject, $sourceName, $packageKey);
+		}
 	}
 }
 

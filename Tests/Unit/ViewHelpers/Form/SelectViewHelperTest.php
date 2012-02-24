@@ -17,7 +17,6 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Select" Form view helper
- *
  */
 class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
@@ -397,5 +396,85 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->initialize();
 		$this->viewHelper->render();
 	}
+
+	/**
+	 * @test
+	 */
+	public function translateLabelIsCalledIfTranslateArgumentIsGiven() {
+		$this->arguments['options'] = array();
+		$this->arguments['translate'] = array('by' => 'id');
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper', array('getTranslatedLabel', 'setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$viewHelper->expects($this->once())->method('getTranslatedLabel');
+		$viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 */
+	public function translateByIdAskForTranslationOfValueById() {
+		$this->arguments['translate'] = array('by' => 'id');
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateById')->with('value1', array(), NULL, NULL, 'Main', '');
+		$this->viewHelper->_set('translator', $mockTranslator);
+		$this->viewHelper->_call('getTranslatedLabel', 'value1', 'label1');
+	}
+
+	/**
+	 * @test
+	 */
+	public function translateByLabelAskForTranslationOfLabelByLabel() {
+		$this->arguments['translate'] = array('by' => 'label');
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateByOriginalLabel')->with('label1', array(), NULL, NULL, 'Main', '');
+		$this->viewHelper->_set('translator', $mockTranslator);
+		$this->viewHelper->_call('getTranslatedLabel', 'value1', 'label1');
+	}
+
+
+	/**
+	 * @test
+	 */
+	public function translateByLabelUsingValueUsesValue() {
+		$this->arguments['translate'] = array('by' => 'label', 'using' => 'value');
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateByOriginalLabel')->with('value1', array(), NULL, NULL, 'Main', '');
+		$this->viewHelper->_set('translator', $mockTranslator);
+		$this->viewHelper->_call('getTranslatedLabel', 'value1', 'label1');
+	}
+
+	/**
+	 * @test
+	 */
+	public function translateByIdUsingLabelUsesLabel() {
+		$this->arguments['translate'] = array('by' => 'id', 'using' => 'label');
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateById')->with('label1', array(), NULL, NULL, 'Main', '');
+		$this->viewHelper->_set('translator', $mockTranslator);
+		$this->viewHelper->_call('getTranslatedLabel', 'value1', 'label1');
+	}
+
+	/**
+	 * @test
+	 */
+	public function translateOptionsAreObserved() {
+		$this->arguments['translate'] = array('by' => 'id', 'using' => 'label', 'locale' => 'dk', 'source' => 'WeirdMessageCatalog', 'package' => 'Foo.Bar', 'prefix' => 'somePrefix.');
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+
+		$mockTranslator = $this->getMock('TYPO3\FLOW3\I18n\Translator');
+		$mockTranslator->expects($this->once())->method('translateById')->with('somePrefix.label1', array(), NULL, new \TYPO3\FLOW3\I18n\Locale('dk'), 'WeirdMessageCatalog', 'Foo.Bar');
+		$this->viewHelper->_set('translator', $mockTranslator);
+		$this->viewHelper->_call('getTranslatedLabel', 'value1', 'label1');
+	}
+
 }
 ?>
