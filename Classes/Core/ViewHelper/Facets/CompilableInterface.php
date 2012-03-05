@@ -61,9 +61,9 @@ interface CompilableInterface {
 	 * $renderingContext contains references to the TemplateVariableContainer, the
 	 * ViewHelperVariableContainer and the ControllerContext.
 	 *
-	 * @var array $arguments
-	 * @var \Closure $renderChildrenClosure
-	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string the resulting string which is directly shown
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
