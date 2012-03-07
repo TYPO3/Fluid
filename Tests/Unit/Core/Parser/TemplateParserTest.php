@@ -46,6 +46,73 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 */
+	public function extractNamespaceDefinitionsExtractsXmlNamespacesCorrectly() {
+		$mockSettings = array(
+			'namespaces' => array(
+				'http://domain.tld/ns/my/viewhelpers' => 'My\Namespace',
+				'http://otherdomain.tld/ns/other/viewhelpers' => 'My\Other\Namespace'
+			),
+		);
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->injectSettings($mockSettings);
+		$templateParser->_call('extractNamespaceDefinitions', 'Some content <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f5="http://domain.tld/ns/my/viewhelpers"
+		xmlns:xyz="http://otherdomain.tld/ns/other/viewhelpers" />');
+		$expected = array(
+			'f' => 'TYPO3\Fluid\ViewHelpers',
+			'f5' => 'My\Namespace',
+			'xyz' => 'My\Other\Namespace'
+		);
+		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractNamespaceDefinitionsResolveNamespacesWithDefaultPattern() {
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->_call('extractNamespaceDefinitions', '<xml xmlns="http://www.w3.org/1999/xhtml" xmlns:xyz="http://typo3.org/ns/Some/Package/ViewHelpers" />');
+		$expected = array(
+			'f' => 'TYPO3\Fluid\ViewHelpers',
+			'xyz' => 'Some\Package\ViewHelpers'
+		);
+		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractNamespaceDefinitionsSilentlySkipsXmlNamespaceDeclarationsThatCantBeResolved() {
+		$mockSettings = array(
+			'namespaces' => array(
+				'http://domain.tld/ns/my/viewhelpers' => 'My\Namespace',
+			),
+		);
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->injectSettings($mockSettings);
+		$templateParser->_call('extractNamespaceDefinitions', '<xml xmlns="http://www.w3.org/1999/xhtml" xmlns:f5="http://domain.tld/ns/my/viewhelpers"
+		xmlns:xyz="http://otherdomain.tld/ns/other/viewhelpers" />');
+		$expected = array(
+			'f' => 'TYPO3\Fluid\ViewHelpers',
+			'f5' => 'My\Namespace'
+		);
+		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+	}
+
+	/**
+	 * @test
+	 */
+	public function extractNamespaceDefinitionsSilentlySkipsXmlNamespaceDeclarationForTheDefaultFluidNamespace() {
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->_call('extractNamespaceDefinitions', '<foo xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://domain.tld/this/will/be/ignored" />');
+		$expected = array(
+			'f' => 'TYPO3\Fluid\ViewHelpers'
+		);
+		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+	}
+
+	/**
+	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function extractNamespaceDefinitionsThrowsExceptionIfNamespaceIsRedeclared() {
@@ -53,6 +120,35 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$templateParser->_call('extractNamespaceDefinitions', '{namespace typo3=TYPO3\Fluid\Blablubb} {namespace typo3= TYPO3\Rocks\Blu}');
 	}
 
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 */
+	public function extractNamespaceDefinitionsThrowsExceptionIfXmlNamespaceIsRedeclaredAsFluidNamespace() {
+		$mockSettings = array(
+			'namespaces' => array(
+				'http://domain.tld/ns/my/viewhelpers' => 'My\Namespace',
+			),
+		);
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->injectSettings($mockSettings);
+		$templateParser->_call('extractNamespaceDefinitions', '<foo xmlns="http://www.w3.org/1999/xhtml" xmlns:typo3="http://domain.tld/ns/my/viewhelpers" />{namespace typo3=TYPO3\Fluid\Blablubb}');
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 */
+	public function extractNamespaceDefinitionsThrowsExceptionIfFluidNamespaceIsRedeclaredAsXmlNamespace() {
+		$mockSettings = array(
+			'namespaces' => array(
+				'http://domain.tld/ns/my/viewhelpers' => 'My\Namespace',
+			),
+		);
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
+		$templateParser->injectSettings($mockSettings);
+		$templateParser->_call('extractNamespaceDefinitions', '{namespace typo3=TYPO3\Fluid\Blablubb} <foo xmlns="http://www.w3.org/1999/xhtml" xmlns:typo3="http://domain.tld/ns/my/viewhelpers" />');
+	}
 
 	/**
 	 * @test
@@ -313,6 +409,8 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 
 		$mockTemplateParser->_call('abortIfUnregisteredArgumentsExist', $expectedArguments, $actualArguments);
+			// dummy assertion to avoid "did not perform any assertions" error
+		$this->assertTrue(TRUE);
 	}
 
 	/**
@@ -344,6 +442,8 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 
 		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
+			// dummy assertion to avoid "did not perform any assertions" error
+		$this->assertTrue(TRUE);
 	}
 
 	/**

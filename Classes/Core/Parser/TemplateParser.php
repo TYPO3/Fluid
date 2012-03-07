@@ -17,7 +17,8 @@ namespace TYPO3\Fluid\Core\Parser;
  */
 class TemplateParser {
 
-	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*([a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*((?:[A-Za-z0-9\.]+|Tx)(?:FLUID_NAMESPACE_SEPARATOR\w+)+)\s*}/m';
+	public static $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:FLUID_NAMESPACE_SEPARATOR\w+)+)\s*}/m';
+	public static $SCAN_PATTERN_XMLNSDECLARATION = '/\sxmlns:(?P<identifier>.*?)="(?P<xmlNamespace>.*?)"/m';
 
 	/**
 	 * This regular expression splits the input string at all dynamic tags, AND
@@ -240,6 +241,12 @@ class TemplateParser {
 	/x';
 
 	/**
+	 * This pattern detects the default xml namespace
+	 *
+	 */
+	public static $SCAN_PATTERN_DEFAULT_XML_NAMESPACE = '/^http\:\/\/typo3\.org\/ns\/(?P<PhpNamespace>.+)$/s';
+
+	/**
 	 * Namespace identifiers and their component name prefix (Associative array).
 	 * @var array
 	 */
@@ -258,12 +265,26 @@ class TemplateParser {
 	protected $configuration;
 
 	/**
+	 * @var array
+	 */
+	protected $settings;
+
+	/**
 	 * Constructor. Preprocesses the $SCAN_PATTERN_NAMESPACEDECLARATION by
 	 * inserting the correct namespace separator.
 	 *
 	 */
 	public function __construct() {
 		self::$SCAN_PATTERN_NAMESPACEDECLARATION = str_replace('FLUID_NAMESPACE_SEPARATOR', preg_quote(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR), self::$SCAN_PATTERN_NAMESPACEDECLARATION);
+	}
+
+	/**
+	 * Injects Fluid settings
+	 *
+	 * @param array $settings
+	 */
+	public function injectSettings(array $settings) {
+		$this->settings = $settings;
 	}
 
 	/**
@@ -340,21 +361,42 @@ class TemplateParser {
 	 *
 	 * @param string $templateString Template string to extract the namespaces from
 	 * @return string The updated template string without namespace declarations inside
+	 * @throws \TYPO3\Fluid\Core\Parser\Exception if a namespace can't be resolved or has been declared already
 	 */
 	protected function extractNamespaceDefinitions($templateString) {
-		$matchedVariables = array();
-		if (preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matchedVariables) > 0) {
-			foreach (array_keys($matchedVariables[0]) as $index) {
-				$namespaceIdentifier = $matchedVariables[1][$index];
-				$fullyQualifiedNamespace = $matchedVariables[2][$index];
-				if (key_exists($namespaceIdentifier, $this->namespaces)) {
-					throw new \TYPO3\Fluid\Core\Parser\Exception('Namespace identifier "' . $namespaceIdentifier . '" is already registered. Do not redeclare namespaces!', 1224241246);
-				}
-				$this->namespaces[$namespaceIdentifier] = $fullyQualifiedNamespace;
+		$matches = array();
+		preg_match_all(self::$SCAN_PATTERN_XMLNSDECLARATION, $templateString, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+				// skip reserved "f" namespace identifier
+			if ($match['identifier'] === 'f') {
+				continue;
 			}
-
+			if (array_key_exists($match['identifier'], $this->namespaces)) {
+				throw new \TYPO3\Fluid\Core\Parser\Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $match['identifier']), 1331135889);
+			}
+			if (isset($this->settings['namespaces'][$match['xmlNamespace']])) {
+				$phpNamespace = $this->settings['namespaces'][$match['xmlNamespace']];
+			} else {
+				$matchedPhpNamespace = array();
+				if (preg_match(self::$SCAN_PATTERN_DEFAULT_XML_NAMESPACE, $match['xmlNamespace'], $matchedPhpNamespace) === 0) {
+					continue;
+				}
+				$phpNamespace = str_replace('/', '\\', $matchedPhpNamespace['PhpNamespace']);
+			}
+			$this->namespaces[$match['identifier']] = $phpNamespace;
+		}
+		$matches = array();
+		preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matches, PREG_SET_ORDER);
+		foreach ($matches as $match) {
+			if (array_key_exists($match['identifier'], $this->namespaces)) {
+				throw new \TYPO3\Fluid\Core\Parser\Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $match['identifier']), 1224241246);
+			}
+			$this->namespaces[$match['identifier']] = $match['phpNamespace'];
+		}
+		if ($matches !== array()) {
 			$templateString = preg_replace(self::$SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
 		}
+
 		return $templateString;
 	}
 

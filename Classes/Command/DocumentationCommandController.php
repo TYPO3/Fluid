@@ -33,7 +33,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 * file to be placed online and used by any XSD-aware editor.
 	 * After creating the XSD file, reference it in your IDE and import the namespace
 	 * in your Fluid template by adding the xmlns:* attribute(s):
-	 * <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://typo3.org/ns/fluid/viewhelpers" ...>
+	 * <html xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers" ...>
 	 *
 	 * @param string $phpNamespace Namespace of the Fluid ViewHelpers without leading backslash (for example 'TYPO3\Fluid\ViewHelpers'). NOTE: Quote and/or escape this argument as needed to avoid backslashes from being interpreted!
 	 * @param string $xsdNamespace Unique target namespace used in the XSD schema (for example "http://yourdomain.org/ns/viewhelpers"). Defaults to "http://typo3.org/ns/<php namespace>".
@@ -42,7 +42,7 @@ class DocumentationCommandController extends \TYPO3\FLOW3\Cli\CommandController 
 	 */
 	public function generateXsdCommand($phpNamespace, $xsdNamespace = NULL, $targetFile = NULL) {
 		if ($xsdNamespace === NULL) {
-			$xsdNamespace = sprintf('http://typo3.org/ns/%s', str_replace('\\', '/', strtolower($phpNamespace)));
+			$xsdNamespace = sprintf('http://typo3.org/ns/%s', str_replace('\\', '/', $phpNamespace));
 		}
 		try {
 			$xsdSchema = $this->xsdGenerator->generateXsd($phpNamespace, $xsdNamespace);
