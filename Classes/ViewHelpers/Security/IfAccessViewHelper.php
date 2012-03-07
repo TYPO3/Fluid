@@ -46,7 +46,7 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
 class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
-	 * @var TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
+	 * @var \TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
 	 */
 	protected $accessDecisionManager;
 

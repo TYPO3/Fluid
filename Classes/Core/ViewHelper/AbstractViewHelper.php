@@ -94,7 +94,7 @@ abstract class AbstractViewHelper {
 	private $reflectionService;
 
 	/**
-	 * @var TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 

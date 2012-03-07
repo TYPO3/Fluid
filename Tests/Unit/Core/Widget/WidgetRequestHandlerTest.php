@@ -23,7 +23,7 @@ class WidgetRequestHandlerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $widgetRequestHandler;
 
 	/**
-	 * @var TYPO3\FLOW3\Utility\Environment
+	 * @var \TYPO3\FLOW3\Utility\Environment
 	 */
 	protected $mockEnvironment;
 
