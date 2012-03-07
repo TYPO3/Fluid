@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 
 /**
  * Form view helper. Generates a <form> Tag.
@@ -47,6 +48,12 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @var string
 	 */
 	protected $tagName = 'form';
+
+	/**
+	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 * @FLOW3\Inject
+	 */
+	protected $hashService;
 
 	/**
 	 * Initialize arguments.
@@ -187,7 +194,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 				'@subpackage' => $request->getControllerSubpackageKey(),
 				'@controller' => $request->getControllerName(),
 				'@action' => $request->getControllerActionName(),
-				'arguments' => serialize($request->getArguments())
+				'arguments' => $this->hashService->appendHmac(base64_encode(serialize($request->getArguments())))
 			);
 			foreach($referrer as $referrerKey => $referrerValue) {
 				$referrerValue = \htmlspecialchars($referrerValue);
@@ -208,7 +215,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			'@subpackage' => $request->getControllerSubpackageKey(),
 			'@controller' => $request->getControllerName(),
 			'@action' => $request->getControllerActionName(),
-			'arguments' => serialize($arguments)
+			'arguments' => $this->hashService->appendHmac(base64_encode(serialize($arguments)))
 		);
 
 		foreach($referrer as $referrerKey => $referrerValue) {
