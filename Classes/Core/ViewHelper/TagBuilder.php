@@ -183,7 +183,7 @@ class TagBuilder {
 	/**
 	 * Renders and returns the tag
 	 *
-	 * @return void
+	 * @return string
 	 * @api
 	 */
 	public function render() {
