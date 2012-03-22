@@ -50,7 +50,7 @@ class PasswordViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 	}
 
 	/**
-	 * Renders the textbox.
+	 * Renders the password input field.
 	 *
 	 * @return string
 	 * @api

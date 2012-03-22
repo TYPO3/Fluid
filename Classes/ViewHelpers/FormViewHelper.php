@@ -34,7 +34,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * <code title="Binding a domain object to a form">
  * <f:form action="..." name="customer" object="{customer}">
  *   <f:form.hidden property="id" />
- *   <f:form.textbox property="name" />
+ *   <f:form.textfield property="name" />
  * </f:form>
  * </code>
  * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name of the textbox accordingly.

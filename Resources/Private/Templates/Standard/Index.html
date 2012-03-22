@@ -7,7 +7,7 @@
 body {
 	font-family:Arial, Helvetica, sans-serif;
 	background-color:#F1F1F1;
-	
+
 }
 h2 {
 	text-align:center;
@@ -40,9 +40,9 @@ h2 {
 	<h2>Step 1<span style="color:#919191">/2</span></h2>
 	<f:form class="content" action="generateXsd">
 		<label for="baseNamespace">Base namespace of view helpers</label>
-		<f:form.textbox name="baseNamespace" /> <br />
+		<f:form.textfield name="baseNamespace" /> <br />
 		<label for="namespacePrefix">Namespace prefix</label>
-		<f:form.textbox name="namespacePrefix" /> <br />
+		<f:form.textfield name="namespacePrefix" /> <br />
 		<f:form.submit value="Proceed with step 2" />
 	</f:form>
 </div>

@@ -16,7 +16,7 @@ require_once(__DIR__ . '/Fixtures/Fixture_UserDomainClass.php');
 require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
- * Test for the "Textbox" Form view helper
+ * Test for the "Password" Form view helper
  *
  */
 class PasswordViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
