@@ -80,7 +80,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
-	public function renderThrowsExceptionIfNeitherTemplateSourceNorTemplatePathAndFileNameAreSpecified() {
+	public function renderThrowsExceptionIfNeitherTemplateSourceNorTemplatePathAndFilenameAreSpecified() {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
@@ -92,7 +92,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
-	public function renderThrowsExceptionSpecifiedTemplatePathAndFileNameDoesNotExist() {
+	public function renderThrowsExceptionSpecifiedTemplatePathAndFilenameDoesNotExist() {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 

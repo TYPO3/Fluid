@@ -67,17 +67,17 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$output = '';
 		$resourceObject = $this->getUploadedResource();
 
-		$fileNameIdAttribute = $resourcePointerIdAttribute = '';
+		$filenameIdAttribute = $resourcePointerIdAttribute = '';
 		if ($this->hasArgument('id')) {
-			$fileNameIdAttribute = ' id="' . $this->arguments['id'] . '-fileName"';
+			$filenameIdAttribute = ' id="' . $this->arguments['id'] . '-filename"';
 			$resourcePointerIdAttribute = ' id="' . $this->arguments['id'] . '-resourcePointer"';
 		}
-		$fileNameValue = $resourcePointerValue = '';
+		$filenameValue = $resourcePointerValue = '';
 		if ($resourceObject !== NULL) {
-			$fileNameValue = $resourceObject->getFileName();
+			$filenameValue = $resourceObject->getFilename();
 			$resourcePointerValue = $resourceObject->getResourcePointer();
 		}
-		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][fileName]" value="' . $fileNameValue . '"' . $fileNameIdAttribute . ' />';
+		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][filename]" value="' . $filenameValue . '"' . $filenameIdAttribute . ' />';
 		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][resourcePointer]" value="' . $resourcePointerValue . '"' . $resourcePointerIdAttribute . ' />';
 
 		$this->tag->addAttribute('type', 'file');
