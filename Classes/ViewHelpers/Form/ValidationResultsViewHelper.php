@@ -65,10 +65,7 @@ class ValidationResultsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractV
 	 */
 	public function render($for = '', $as = 'validationResults') {
 		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
-		if ($validationResults === NULL) {
-			return '';
-		}
-		if ($for !== '') {
+		if ($validationResults !== NULL && $for !== '') {
 			$validationResults = $validationResults->forProperty($for);
 		}
 		$this->templateVariableContainer->add($as, $validationResults);

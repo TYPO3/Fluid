@@ -21,29 +21,67 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper
+	 */
+	protected $viewHelper;
+
+	public function setUp() {
+		parent::setUp();
+		$this->viewHelper = $this->getMockBuilder('TYPO3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper')
+			->setMethods(array('renderChildren'))
+			->getMock();
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+	}
+
+	/**
 	 * @test
 	 */
-	public function renderWithoutSpecifiedNameLoopsThroughRootErrors() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-		$mockError1 = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
-		$mockError2 = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
-		$this->request->expects($this->atLeastOnce())->method('getErrors')->will($this->returnValue(array($mockError1, $mockError2)));
+	public function renderOutputsChildNodesByDefault() {
+		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue(NULL));
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('child nodes'));
 
-		$viewHelper = new \TYPO3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper();
-		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$this->assertSame('child nodes', $this->viewHelper->render());
+	}
 
-		$variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer(array());
-		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($variableContainer);
-		$viewHelper->setViewHelperNode($viewHelperNode);
-		$viewHelper->setTemplateVariableContainer($variableContainer);
+	/**
+	 * @test
+	 */
+	public function renderAddsValidationResultsToTemplateVariableContainer() {
+		$mockValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockValidationResults));
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('validationResults', $mockValidationResults);
+		$this->viewHelper->expects($this->once())->method('renderChildren');
+		$this->templateVariableContainer->expects($this->at(1))->method('remove')->with('validationResults');
 
-		$viewHelper->render();
+		$this->viewHelper->render();
+	}
 
-		$expectedCallProtocol = array(
-			array('error' => $mockError1),
-			array('error' => $mockError2)
-		);
-		$this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs');
+	/**
+	 * @test
+	 */
+	public function renderAddsValidationResultsToTemplateVariableContainerWithCustomVariableNameIfSpecified() {
+		$mockValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockValidationResults));
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('customName', $mockValidationResults);
+		$this->viewHelper->expects($this->once())->method('renderChildren');
+		$this->templateVariableContainer->expects($this->at(1))->method('remove')->with('customName');
+
+		$this->viewHelper->render('', 'customName');
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderAddsValidationResultsForOnePropertyIfForArgumentIsNotEmpty() {
+		$mockPropertyValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$mockValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$mockValidationResults->expects($this->once())->method('forProperty')->with('somePropertyName')->will($this->returnValue($mockPropertyValidationResults));
+		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockValidationResults));
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('validationResults', $mockPropertyValidationResults);
+		$this->viewHelper->expects($this->once())->method('renderChildren');
+		$this->templateVariableContainer->expects($this->at(1))->method('remove')->with('validationResults');
+
+		$this->viewHelper->render('somePropertyName');
 	}
 
 }
