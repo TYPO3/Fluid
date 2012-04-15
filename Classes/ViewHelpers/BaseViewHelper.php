@@ -32,7 +32,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 class BaseViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * Render the "Base" tag by outputting $request->getBaseUri()
+	 * Render the "Base" tag by outputting $httpRequest->getBaseUri()
 	 *
 	 * @return string "base"-Tag.
 	 * @api
