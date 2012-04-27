@@ -260,7 +260,7 @@ abstract class AbstractViewHelper {
 		try {
 			return call_user_func_array(array($this, 'render'), $renderMethodParameters);
 		} catch (\TYPO3\Fluid\Core\ViewHelper\Exception $exception) {
-			if ($this->objectManager->getContext() === 'Development') {
+			if ($this->objectManager->getContext()->isDevelopment()) {
 				throw $exception;
 			} else {
 				$this->systemLogger->log('An Exception was captured: '. $exception->getMessage() . '(' . $exception->getCode() . ')', LOG_ERR, 'TYPO3.Fluid', get_class($this));
