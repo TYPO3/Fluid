@@ -50,10 +50,24 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	protected $tagName = 'form';
 
 	/**
-	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
 	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
 	 */
 	protected $hashService;
+
+	/**
+	 * @FLOW3\Inject
+	 * @var \TYPO3\FLOW3\Mvc\Controller\MvcPropertyMappingConfigurationService
+	 */
+	protected $mvcPropertyMappingConfigurationService;
+
+	/**
+	 * We need the arguments of the formActionUri on requesthash calculation
+	 * therefore we will store them in here right after calling uriBuilder
+	 *
+	 * @var array
+	 */
+	protected $formActionUriArguments;
 
 	/**
 	 * Initialize arguments.
@@ -112,6 +126,8 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$content .= $this->renderHiddenIdentityField($this->arguments['object'], $this->getFormObjectName());
 		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
+			// Render the trusted list of all properties after everything else has been rendered
+		$content .= $this->renderTrustedPropertiesField();
 		$content .= chr(10) . '</div>' . chr(10);
 		$content .= $formContent;
 
@@ -150,6 +166,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			try {
 				$formActionUri = $uriBuilder
 					->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
+				$this->formActionUriArguments = $uriBuilder->getArguments();
 			} catch (\TYPO3\FLOW3\Exception $exception) {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 			}
@@ -295,12 +312,21 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @return void
 	 */
 	protected function addFieldNamePrefixToViewHelperVariableContainer() {
-		if ($this->hasArgument('fieldNamePrefix')) {
-			$fieldNamePrefix = $this->arguments['fieldNamePrefix'];
-		} else {
-			$fieldNamePrefix = $this->getDefaultFieldNamePrefix();
-		}
+		$fieldNamePrefix = $this->getFieldNamePrefix();
 		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $fieldNamePrefix);
+	}
+
+	/**
+	 * Get the field name prefix
+	 *
+	 * @return string
+	 */
+	protected function getFieldNamePrefix() {
+		if ($this->hasArgument('fieldNamePrefix')) {
+			return $this->arguments['fieldNamePrefix'];
+		} else {
+			return $this->getDefaultFieldNamePrefix();
+		}
 	}
 
 	/**
@@ -343,6 +369,15 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
 	}
 
+	/**
+	 * Render the request hash field
+	 *
+	 * @return string the hmac field
+	 */
+	protected function renderTrustedPropertiesField() {
+		$formFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
+		$requestHash = $this->mvcPropertyMappingConfigurationService->generateTrustedPropertiesToken($formFieldNames, $this->getFieldNamePrefix());
+		return '<input type="hidden" name="' . $this->prefixFieldName('__trustedProperties') . '" value="' . htmlspecialchars($requestHash) . '" />';
+	}
 }
-
 ?>
