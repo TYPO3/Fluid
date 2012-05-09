@@ -24,16 +24,6 @@ class Package extends BasePackage {
 	 */
 	protected $protected = TRUE;
 
-	/**
-	 * Invokes custom PHP code directly after the package manager has been initialized.
-	 *
-	 * @param \TYPO3\FLOW3\Core\Bootstrap $bootstrap The current bootstrap
-	 * @return void
-	 */
-	public function boot(\TYPO3\FLOW3\Core\Bootstrap $bootstrap) {
-		$bootstrap->registerRequestHandler(new \TYPO3\Fluid\Core\Widget\WidgetRequestHandler($bootstrap));
-	}
-
 }
 
 ?>
