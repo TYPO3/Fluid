@@ -331,7 +331,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		$possibleLayoutPaths = array();
 		$possibleLayoutPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($layoutRootPath . '/' . $layoutName . '.' . $this->getRequest()->getFormat());
 		$possibleLayoutPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($layoutRootPath . '/' . $layoutName);
-		foreach($possibleLayoutPaths as $layoutPathAndFilename) {
+		foreach ($possibleLayoutPaths as $layoutPathAndFilename) {
 			if (file_exists($layoutPathAndFilename)) {
 				return $layoutPathAndFilename;
 			}
@@ -384,7 +384,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		$possiblePartialPaths = array();
 		$possiblePartialPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($partialRootPath . '/' . $partialName . '.' . $this->getRequest()->getFormat());
 		$possiblePartialPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($partialRootPath . '/' . $partialName);
-		foreach($possiblePartialPaths as $partialPathAndFilename) {
+		foreach ($possiblePartialPaths as $partialPathAndFilename) {
 			if (file_exists($partialPathAndFilename)) {
 				return $partialPathAndFilename;
 			}

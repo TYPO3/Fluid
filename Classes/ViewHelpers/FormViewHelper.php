@@ -213,7 +213,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 				'@action' => $request->getControllerActionName(),
 				'arguments' => $this->hashService->appendHmac(base64_encode(serialize($request->getArguments())))
 			);
-			foreach($referrer as $referrerKey => $referrerValue) {
+			foreach ($referrer as $referrerKey => $referrerValue) {
 				$referrerValue = \htmlspecialchars($referrerValue);
 				$result .= '<input type="hidden" name="' . $argumentNamespace . '[__referrer][' . $referrerKey . ']" value="' . $referrerValue . '" />' . chr(10);
 			}
@@ -235,7 +235,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			'arguments' => $this->hashService->appendHmac(base64_encode(serialize($arguments)))
 		);
 
-		foreach($referrer as $referrerKey => $referrerValue) {
+		foreach ($referrer as $referrerKey => $referrerValue) {
 			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']' . '" value="' . htmlspecialchars($referrerValue) . '" />' . chr(10);
 		}
 		return $result;

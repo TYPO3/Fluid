@@ -670,13 +670,13 @@ class TemplateParser {
 	 */
 	protected function callInterceptor(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface &$node, $interceptionPoint, \TYPO3\Fluid\Core\Parser\ParsingState $state) {
 		if ($this->configuration !== NULL) {
-			// $this->configuration is UNSET inside the arguments of a ViewHelper.
-			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
-			// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
-			// TODO: Clean up this.
+				// $this->configuration is UNSET inside the arguments of a ViewHelper.
+				// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
+				// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
+				// TODO: Clean up this.
 			$interceptors = $this->configuration->getInterceptors($interceptionPoint);
 			if (count($interceptors) > 0) {
-				foreach($interceptors as $interceptor) {
+				foreach ($interceptors as $interceptor) {
 					$node = $interceptor->process($node, $interceptionPoint, $state);
 				}
 			}
@@ -733,7 +733,7 @@ class TemplateParser {
 	 * no { or < is found, then we just return a TextNode.
 	 *
 	 * @param string $argumentString
-	 * @return ArgumentObject the corresponding argument object tree.
+	 * @return SyntaxTree\AbstractNode the corresponding argument object tree.
 	 */
 	protected function buildArgumentObjectTree($argumentString) {
 		if (strpos($argumentString, '{') === FALSE && strpos($argumentString, '<') === FALSE) {
@@ -761,6 +761,8 @@ class TemplateParser {
 			case "'":
 				$value = str_replace("\'", "'", trim($quotedValue, "'"));
 			break;
+			default:
+				$value = $quotedValue;
 		}
 		return str_replace('\\\\', '\\', $value);
 	}
@@ -826,7 +828,7 @@ class TemplateParser {
 	 * - sub-arrays
 	 *
 	 * @param string $arrayText Array text
-	 * @return \TYPO3\Fluid\ArrayNode the array node built up
+	 * @return SyntaxTree\ArrayNode the array node built up
 	 */
 	protected function recursiveArrayHandler($arrayText) {
 		$matches = array();

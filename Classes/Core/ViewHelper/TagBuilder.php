@@ -151,7 +151,7 @@ class TagBuilder {
 	 * @api
 	 */
 	public function addAttributes(array $attributes, $escapeSpecialCharacters = TRUE) {
-		foreach($attributes as $attributeName => $attributeValue) {
+		foreach ($attributes as $attributeName => $attributeValue) {
 			$this->addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters);
 		}
 	}
@@ -191,7 +191,7 @@ class TagBuilder {
 			return '';
 		}
 		$output = '<' . $this->tagName;
-		foreach($this->attributes as $attributeName => $attributeValue) {
+		foreach ($this->attributes as $attributeName => $attributeValue) {
 			$output .= ' ' . $attributeName . '="' . $attributeValue . '"';
 		}
 		if ($this->hasContent() || $this->forceClosingTag) {

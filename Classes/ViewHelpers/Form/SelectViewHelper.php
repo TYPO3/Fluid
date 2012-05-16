@@ -256,7 +256,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			return $this->getOptionValueScalar($value);
 		}
 		$selectedValues = array();
-		foreach($value as $selectedValueElement) {
+		foreach ($value as $selectedValueElement) {
 			$selectedValues[] = $this->getOptionValueScalar($selectedValueElement);
 		}
 		return $selectedValues;
@@ -272,7 +272,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		if (is_object($valueElement)) {
 			if ($this->hasArgument('optionValueField')) {
 				return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
-			} elseif ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL){
+			} elseif ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL) {
 				return $this->persistenceManager->getIdentifierByObject($valueElement);
 			} else {
 				return (string)$valueElement;
