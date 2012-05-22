@@ -11,11 +11,13 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Renders the identity of a persisted object (if it has an identity).
  * Useful for using the identity outside of the form view helpers
  * (e.g. JavaScript and AJAX).
+ *
+ * Deprecated since 1.1.0. Use f:format.identifier and f:format.json
+ * ViewHelpers instead.
  *
  * = Examples =
  *
@@ -26,7 +28,8 @@ namespace TYPO3\Fluid\ViewHelpers\Identity;
  * 97e7e90a-413c-44ef-b2d0-ddfa4387b5ca
  * </output>
  *
- * @api
+ * @deprecated since 1.1.0
+ * @see \TYPO3\Fluid\ViewHelpers\Format\IdentifierViewHelper
  */
 class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
