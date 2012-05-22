@@ -44,6 +44,11 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapingInterceptorEnabled = FALSE;
+
+	/**
 	 * Outputs content with its JSON representation
 	 *
 	 * If $forceObject is TRUE a JSON object is outputted even if the value is a non-associative array
