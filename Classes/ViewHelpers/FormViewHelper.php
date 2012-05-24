@@ -62,6 +62,11 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	protected $mvcPropertyMappingConfigurationService;
 
 	/**
+	 * @var string
+	 */
+	protected $formActionUri;
+
+	/**
 	 * We need the arguments of the formActionUri on requesthash calculation
 	 * therefore we will store them in here right after calling uriBuilder
 	 *
@@ -124,6 +129,9 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 
 			// wrap hidden field in div container in order to create XHTML valid output
 		$content = chr(10) . '<div style="display: none">';
+		if (strtolower($this->arguments['method']) === 'get') {
+			$content .= $this->renderHiddenActionUriQueryParameters();
+		}
 		$content .= $this->renderHiddenIdentityField($this->arguments['object'], $this->getFormObjectName());
 		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
@@ -148,10 +156,27 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Sets the "action" attribute of the form tag
 	 *
 	 * @return void
+	 * @deprecated since 1.1.0
 	 */
 	protected function setFormActionUri() {
+		$formActionUri = $this->getFormActionUri();
+		$this->tag->addAttribute('action', $formActionUri);
+	}
+
+	/**
+	 * Returns the action URI of the form tag.
+	 * If the argument "actionUri" is specified, this will be returned
+	 * Otherwise this creates the action URI using the UriBuilder
+	 *
+	 * @return string
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception if the action URI could not be created
+	 */
+	protected function getFormActionUri() {
+		if ($this->formActionUri !== NULL) {
+			return $this->formActionUri;
+		}
 		if ($this->hasArgument('actionUri')) {
-			$formActionUri = $this->arguments['actionUri'];
+			$this->formActionUri = $this->arguments['actionUri'];
 		} else {
 			$uriBuilder = $this->controllerContext->getUriBuilder();
 			$uriBuilder
@@ -167,14 +192,37 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 				$uriBuilder->setArgumentsToBeExcludedFromQueryString($this->arguments['argumentsToBeExcludedFromQueryString']);
 			}
 			try {
-				$formActionUri = $uriBuilder
+				$this->formActionUri = $uriBuilder
 					->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
 				$this->formActionUriArguments = $uriBuilder->getArguments();
 			} catch (\TYPO3\FLOW3\Exception $exception) {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 			}
 		}
-		$this->tag->addAttribute('action', $formActionUri);
+		return $this->formActionUri;
+	}
+
+	/**
+	 * Render hidden form fields for query parameters from action URI.
+	 * This is only needed if the form method is GET.
+	 *
+	 * @return string Hidden fields for query parameters from action URI
+	 */
+	protected function renderHiddenActionUriQueryParameters() {
+		$result = '';
+		$actionUri = $this->getFormActionUri();
+		$query = parse_url($actionUri, PHP_URL_QUERY);
+
+		if (is_string($query)) {
+			$queryParts = explode('&', $query);
+			foreach ($queryParts as $queryPart) {
+				if (strpos($queryPart, '=') !== FALSE) {
+					list($parameterName, $parameterValue) = explode('=', $queryPart, 2);
+					$result .= chr(10) . '<input type="hidden" name="' . htmlentities(urldecode($parameterName)) . '" value="' . htmlentities(urldecode($parameterValue)) . '" />';
+				}
+			}
+		}
+		return $result;
 	}
 
 	/**
@@ -400,9 +448,11 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 */
 	protected function renderEmptyHiddenFields() {
 		$result = '';
-		$emptyHiddenFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames');
-		foreach ($emptyHiddenFieldNames as $hiddenFieldName) {
-			$result .= '<input type="hidden" name="' . htmlspecialchars($hiddenFieldName) . '" value="" />' . chr(10);
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames')) {
+			$emptyHiddenFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames');
+			foreach ($emptyHiddenFieldNames as $hiddenFieldName) {
+				$result .= '<input type="hidden" name="' . htmlspecialchars($hiddenFieldName) . '" value="" />' . chr(10);
+			}
 		}
 		return $result;
 	}
