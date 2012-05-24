@@ -146,6 +146,25 @@ class TagBuilderTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function attributesCanBeAccessed() {
+		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
+		$tagBuilder->addAttribute('attribute1', 'attribute1value');
+		$attributeValue = $tagBuilder->getAttribute('attribute1');
+		$this->assertSame('attribute1value', $attributeValue);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getAttributeWithMissingAttributeReturnsNull() {
+		$tagBuilder = new \TYPO3\Fluid\Core\ViewHelper\TagBuilder('tag');
+		$attributeValue = $tagBuilder->getAttribute('missingattribute');
+		$this->assertNull($attributeValue);
+	}
+
+	/**
+	 * @test
+	 */
 	public function resetResetsTagBuilder() {
 		$tagBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('dummy'));
 		$tagBuilder->setTagName('tagName');
