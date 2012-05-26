@@ -154,7 +154,7 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->initializeArguments();
 		$this->viewHelper->initialize();
 		$result = $this->viewHelper->render();
-		$expected = '<input type="hidden" name="myName" value="" /><select multiple="multiple" name="myName[]"><option value="value1" selected="selected">label1</option>' . chr(10) .
+		$expected = '<select multiple="multiple" name="myName[]"><option value="value1" selected="selected">label1</option>' . chr(10) .
 			'<option value="value2">label2</option>' . chr(10) .
 			'<option value="value3" selected="selected">label3</option>' . chr(10) .
 			'</select>';
@@ -222,7 +222,7 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->initialize();
 		$actual = $this->viewHelper->render();
 
-		$expected = '<input type="hidden" name="myName" value="" /><select multiple="multiple" name="myName[]"><option value="1" selected="selected">Schlecht</option>' . chr(10) .
+		$expected = '<select multiple="multiple" name="myName[]"><option value="1" selected="selected">Schlecht</option>' . chr(10) .
 			'<option value="2">Kurfuerst</option>' . chr(10) .
 			'<option value="3" selected="selected">Lemke</option>' . chr(10) .
 			'</select>';
@@ -260,8 +260,7 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->initialize();
 		$actual = $this->viewHelper->render();
 
-		$expected = '<input type="hidden" name="myName" value="" />'.
-			'<select multiple="multiple" name="myName[]">' .
+		$expected = '<select multiple="multiple" name="myName[]">' .
 			'<option value="1" selected="selected">Schlecht</option>' . chr(10) .
 			'<option value="2">Kurfuerst</option>' . chr(10) .
 			'<option value="3" selected="selected">Lemke</option>' . chr(10) .

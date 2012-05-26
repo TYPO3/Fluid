@@ -225,25 +225,22 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * Renders a hidden field with the same name as the element, to make sure the empty value is submitted
 	 * in case nothing is selected. This is needed for checkbox and multiple select fields
 	 *
-	 * @return string the hidden field.
+	 * @return void
 	 */
 	protected function renderHiddenFieldForEmptyValue() {
-		$hiddenFieldNames = array();
-		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'renderedHiddenFields')) {
-			$hiddenFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'renderedHiddenFields');
+		$emptyHiddenFieldNames = array();
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames')) {
+			$emptyHiddenFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames');
 		}
 
 		$fieldName = $this->getName();
 		if (substr($fieldName, -2) === '[]') {
 			$fieldName = substr($fieldName, 0, -2);
 		}
-		if (!in_array($fieldName, $hiddenFieldNames)) {
-			$hiddenFieldNames[] = $fieldName;
-			$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'renderedHiddenFields', $hiddenFieldNames);
-
-			return '<input type="hidden" name="' . htmlspecialchars($fieldName) . '" value="" />';
+		if (!in_array($fieldName, $emptyHiddenFieldNames)) {
+			$emptyHiddenFieldNames[] = $fieldName;
+			$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames', $emptyHiddenFieldNames);
 		}
-		return '';
 	}
 }
 

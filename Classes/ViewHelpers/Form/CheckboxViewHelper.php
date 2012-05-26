@@ -103,8 +103,8 @@ class CheckboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 
 		$this->setErrorClassAttribute();
 
-		$hiddenField = $this->renderHiddenFieldForEmptyValue();
-		return $hiddenField . $this->tag->render();
+		$this->renderHiddenFieldForEmptyValue();
+		return $this->tag->render();
 	}
 }
 

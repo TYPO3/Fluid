@@ -118,6 +118,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$this->addFormObjectToViewHelperVariableContainer();
 		$this->addFieldNamePrefixToViewHelperVariableContainer();
 		$this->addFormFieldNamesToViewHelperVariableContainer();
+		$this->addEmptyHiddenFieldNamesToViewHelperVariableContainer();
 
 		$formContent = $this->renderChildren();
 
@@ -126,6 +127,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$content .= $this->renderHiddenIdentityField($this->arguments['object'], $this->getFormObjectName());
 		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
+		$content .= $this->renderEmptyHiddenFields();
 			// Render the trusted list of all properties after everything else has been rendered
 		$content .= $this->renderTrustedPropertiesField();
 		$content .= chr(10) . '</div>' . chr(10);
@@ -137,6 +139,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$this->removeFormObjectFromViewHelperVariableContainer();
 		$this->removeFormObjectNameFromViewHelperVariableContainer();
 		$this->removeFormFieldNamesFromViewHelperVariableContainer();
+		$this->removeEmptyHiddenFieldNamesFromViewHelperVariableContainer();
 
 		return $this->tag->render();
 	}
@@ -370,6 +373,41 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	}
 
 	/**
+	 * Adds a container for rendered hidden field names for empty values to the ViewHelperVariableContainer
+	 * @see \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper::renderHiddenFieldForEmptyValue()
+	 *
+	 * @return void
+	 */
+	protected function addEmptyHiddenFieldNamesToViewHelperVariableContainer() {
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames', array());
+	}
+
+	/**
+	 * Removes container for rendered hidden field names for empty values from ViewHelperVariableContainer
+	 * @see \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper::renderHiddenFieldForEmptyValue()
+	 *
+	 * @return void
+	 */
+	protected function removeEmptyHiddenFieldNamesFromViewHelperVariableContainer() {
+		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames');
+	}
+
+	/**
+	 * Renders all empty hidden fields that have been added to ViewHelperVariableContainer
+	 * @see \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper::renderHiddenFieldForEmptyValue()
+	 *
+	 * @return string
+	 */
+	protected function renderEmptyHiddenFields() {
+		$result = '';
+		$emptyHiddenFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames');
+		foreach ($emptyHiddenFieldNames as $hiddenFieldName) {
+			$result .= '<input type="hidden" name="' . htmlspecialchars($hiddenFieldName) . '" value="" />' . chr(10);
+		}
+		return $result;
+	}
+
+	/**
 	 * Render the request hash field
 	 *
 	 * @return string the hmac field
@@ -377,7 +415,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	protected function renderTrustedPropertiesField() {
 		$formFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
 		$requestHash = $this->mvcPropertyMappingConfigurationService->generateTrustedPropertiesToken($formFieldNames, $this->getFieldNamePrefix());
-		return '<input type="hidden" name="' . $this->prefixFieldName('__trustedProperties') . '" value="' . htmlspecialchars($requestHash) . '" />';
+		return '<input type="hidden" name="' . $this->prefixFieldName('__trustedProperties') . '" value="' . htmlspecialchars($requestHash) . '" />' . chr(10);
 	}
 }
 ?>
