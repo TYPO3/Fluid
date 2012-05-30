@@ -86,8 +86,8 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 */
 	public function initializeObject() {
 		if ($this->request === NULL) {
-			$request = Request::createFromEnvironment();
-			$this->request = $request->createActionRequest();
+			$httpRequest = Request::createFromEnvironment();
+			$this->request = $httpRequest->createActionRequest();
 		}
 
 		$uriBuilder = new \TYPO3\FLOW3\Mvc\Routing\UriBuilder();

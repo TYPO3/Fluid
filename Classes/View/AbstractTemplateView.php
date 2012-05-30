@@ -400,7 +400,7 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterfa
 	 */
 	protected function buildParserConfiguration() {
 		$parserConfiguration = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Configuration');
-		if ($this->controllerContext->getRequest()->getFormat() === 'html') {
+		if (in_array($this->controllerContext->getRequest()->getFormat(), array('html', NULL))) {
 			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape'));
 			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource'));
 		}
