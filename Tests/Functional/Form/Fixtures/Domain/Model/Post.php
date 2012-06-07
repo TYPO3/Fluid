@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model;
  *                                                                        */
 
 use TYPO3\FLOW3\Annotations as FLOW3;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * A test entity which is used to test Fluid forms in combination with
@@ -31,6 +32,24 @@ class Post {
 	 * @FLOW3\Validate(type="EmailAddress")
 	 */
 	protected $email;
+
+	/**
+	 * @var boolean
+	 * @ORM\Column(nullable=true)
+	 */
+	protected $private;
+
+	/**
+	 * @var string
+	 * @ORM\Column(nullable=true)
+	 */
+	protected $category;
+
+	/**
+	 * @var string
+	 * @ORM\Column(nullable=true)
+	 */
+	protected $subCategory;
 
 	/**
 	 * @return string
@@ -58,5 +77,47 @@ class Post {
 	 */
 	public function setEmail($email) {
 		$this->email = $email;
+	}
+
+	/**
+	 * @param boolean $private
+	 */
+	public function setPrivate($private) {
+		$this->private = $private;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function getPrivate() {
+		return $this->private;
+	}
+
+	/**
+	 * @param string $category
+	 */
+	public function setCategory($category) {
+		$this->category = $category;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getCategory() {
+		return $this->category;
+	}
+
+	/**
+	 * @param string $subCategory
+	 */
+	public function setSubCategory($subCategory) {
+		$this->subCategory = $subCategory;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getSubCategory() {
+		return $this->subCategory;
 	}
 }

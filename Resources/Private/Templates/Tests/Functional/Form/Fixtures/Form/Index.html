@@ -3,5 +3,12 @@
 <f:form action="create" name="post" object="{fooPost}">
 	<f:form.textfield id="name" property="name" />
 	<f:form.textfield id="email" property="email" />
+	<f:form.checkbox id="private" property="private" value="true" />
+
+	<f:form.radio id="category_foo" property="category" value="foo" />
+	<f:form.radio id="category_bar" property="category" value="bar" />
+	<f:form.radio id="subCategory_foo" property="subCategory" value="foo" />
+	<f:form.radio id="subCategory_bar" property="subCategory" value="bar" />
+
 	<f:form.submit>Abschicken</f:form.submit>
 </f:form>

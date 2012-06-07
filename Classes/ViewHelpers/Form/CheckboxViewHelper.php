@@ -78,7 +78,12 @@ class CheckboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 		$nameAttribute = $this->getName();
 		$valueAttribute = $this->getValue();
 		if ($this->isObjectAccessorMode()) {
-			$propertyValue = $this->getPropertyValue();
+			if ($this->hasMappingErrorOccured()) {
+				$propertyValue = $this->getLastSubmittedFormData();
+			} else {
+				$propertyValue = $this->getPropertyValue();
+			}
+
 			if ($propertyValue instanceof \Traversable) {
 				$propertyValue = iterator_to_array($propertyValue);
 			}
@@ -89,7 +94,7 @@ class CheckboxViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 				$nameAttribute .= '[]';
 			} elseif ($multiple === TRUE) {
 				$nameAttribute .= '[]';
-			}elseif ($checked === NULL && $propertyValue !== NULL) {
+			} elseif ($checked === NULL && $propertyValue !== NULL) {
 				$checked = (boolean)$propertyValue === (boolean)$valueAttribute;
 			}
 		}

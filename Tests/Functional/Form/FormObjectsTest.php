@@ -240,5 +240,53 @@ class FormObjectsTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 
 		return $postIdentifier;
 	}
+
+	/**
+	 * @test
+	 */
+	public function checkboxIsCheckedCorrectlyOnValidationErrorsEvenIfDefaultTrueValue() {
+		$this->browser->request('http://localhost/test/fluid/formobjects');
+		$form = $this->browser->getForm();
+
+		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['private']->setValue(FALSE);
+
+		$this->browser->submit($form);
+		$this->assertSame('', $this->browser->getCrawler()->filterXPath('//input[@id="private"]')->attr('checked'));
+
+		$form['post']['private']->setValue(TRUE);
+		$this->browser->submit($form);
+		$this->assertSame('checked', $this->browser->getCrawler()->filterXPath('//input[@id="private"]')->attr('checked'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function radioButtonsAreCheckedCorrectlyOnValidationErrors() {
+		$this->browser->request('http://localhost/test/fluid/formobjects');
+		$form = $this->browser->getForm();
+
+		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['category']->setValue('bar');
+		$form['post']['subCategory']->setValue('bar');
+
+		$this->browser->submit($form);
+
+		$this->assertEquals('', $this->browser->getCrawler()->filterXPath('//input[@id="category_foo"]')->attr('checked'));
+		$this->assertEquals('checked', $this->browser->getCrawler()->filterXPath('//input[@id="category_bar"]')->attr('checked'));
+		$this->assertEquals('', $this->browser->getCrawler()->filterXPath('//input[@id="subCategory_foo"]')->attr('checked'));
+		$this->assertEquals('checked', $this->browser->getCrawler()->filterXPath('//input[@id="subCategory_bar"]')->attr('checked'));
+
+		$form['post']['category']->setValue('foo');
+		$form['post']['subCategory']->setValue('foo');
+
+		$this->browser->submit($form);
+
+		$this->assertEquals('checked', $this->browser->getCrawler()->filterXPath('//input[@id="category_foo"]')->attr('checked'));
+		$this->assertEquals('', $this->browser->getCrawler()->filterXPath('//input[@id="category_bar"]')->attr('checked'));
+		$this->assertEquals('checked', $this->browser->getCrawler()->filterXPath('//input[@id="subCategory_foo"]')->attr('checked'));
+		$this->assertEquals('', $this->browser->getCrawler()->filterXPath('//input[@id="subCategory_bar"]')->attr('checked'));
+	}
 }
+
 ?>

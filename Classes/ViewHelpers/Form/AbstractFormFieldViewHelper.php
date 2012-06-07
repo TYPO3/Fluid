@@ -86,6 +86,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 */
 	protected function getValue($convertObjects = TRUE) {
 		$value = NULL;
+
 		if ($this->hasArgument('value')) {
 			$value = $this->arguments['value'];
 		} elseif ($this->hasMappingErrorOccured()) {
@@ -162,7 +163,9 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	 * @return mixed Value
 	 */
 	protected function getPropertyValue() {
-
+		if (!$this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			return NULL;
+		}
 		$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		$propertyName = $this->arguments['property'];
 

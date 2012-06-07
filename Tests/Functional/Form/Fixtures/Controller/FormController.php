@@ -27,7 +27,7 @@ class FormController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 
 	/**
 	 * @param \TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $post
-	 * @return void
+	 * @return string
 	 */
 	public function createAction(\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $post) {
 		return $post->getName() . '|' . $post->getEmail();
