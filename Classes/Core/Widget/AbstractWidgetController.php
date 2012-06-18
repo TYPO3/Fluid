@@ -34,6 +34,7 @@ abstract class AbstractWidgetController extends \TYPO3\FLOW3\Mvc\Controller\Acti
 	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request The request object
 	 * @param \TYPO3\FLOW3\Http\Response $response The response, modified by this handler
 	 * @return void
+	 * @throws \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 * @api
 	 */
 	public function processRequest(\TYPO3\FLOW3\Mvc\RequestInterface $request, \TYPO3\FLOW3\Mvc\ResponseInterface $response) {

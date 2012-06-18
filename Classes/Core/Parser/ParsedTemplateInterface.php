@@ -22,7 +22,7 @@ interface ParsedTemplateInterface {
 	 * Render the parsed template with rendering context
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext The rendering context to use
-	 * @return Rendered string
+	 * @return string Rendered string
 	 */
 	public function render(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
 

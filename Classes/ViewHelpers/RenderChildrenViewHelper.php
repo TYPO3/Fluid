@@ -42,6 +42,7 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 	 * Get the widget rendering context, or throw an exception if it cannot be found.
 	 *
 	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @throws \TYPO3\Fluid\Core\Widget\Exception\RenderingContextNotFoundException
 	 */
 	protected function getWidgetRenderingContext() {
 		$renderingContext = $this->getWidgetContext()->getViewHelperChildNodeRenderingContext();
@@ -60,6 +61,7 @@ class RenderChildrenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractView
 
 	/**
 	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @throws \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 */
 	protected function getWidgetContext() {
 		$request = $this->controllerContext->getRequest();

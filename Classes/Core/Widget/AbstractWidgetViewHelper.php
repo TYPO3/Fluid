@@ -166,6 +166,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * via Dependency Injection.
 	 *
 	 * @return \TYPO3\FLOW3\Http\Response the response of this request.
+	 * @throws Exception\MissingControllerException
 	 * @api
 	 */
 	protected function initiateSubRequest() {

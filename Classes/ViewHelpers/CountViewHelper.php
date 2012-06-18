@@ -45,6 +45,7 @@ class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array $subject The array or \Countable to be counted
 	 * @return integer The number of elements
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @api
 	 */
 	public function render($subject = NULL) {

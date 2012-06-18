@@ -100,7 +100,7 @@ class TemplateViewTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @param $subPackageKey
 	 * @param $controllerClassName
 	 * @param $format
-	 *
+	 * @return \PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
 		$controllerObjectName = "TYPO3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';

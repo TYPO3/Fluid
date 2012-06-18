@@ -180,6 +180,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * Returns the absolute path to the folder that contains Fluid layout files
 	 *
 	 * @return string Fluid layout root path
+	 * @throws Exception\InvalidTemplateResourceException
 	 * @api
 	 */
 	public function getLayoutRootPath() {
@@ -207,6 +208,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * Returns the absolute path to the folder that contains Fluid partial files
 	 *
 	 * @return string Fluid partial root path
+	 * @throws Exception\InvalidTemplateResourceException
 	 * @api
 	 */
 	public function getPartialRootPath() {
@@ -240,6 +242,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $actionName Name of the action. This argument is not used in this view!
 	 * @return string template identifier
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getTemplateIdentifier($actionName = NULL) {
 		if ($this->templateSource === NULL) {

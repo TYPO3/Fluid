@@ -178,6 +178,7 @@ abstract class AbstractViewHelper {
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @param mixed $defaultValue Default value of argument
 	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+	 * @throws Exception
 	 * @api
 	 */
 	protected function registerArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
@@ -199,6 +200,7 @@ abstract class AbstractViewHelper {
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @param mixed $defaultValue Default value of argument
 	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+	 * @throws Exception
 	 * @api
 	 */
 	protected function overrideArgument($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
@@ -248,6 +250,7 @@ abstract class AbstractViewHelper {
 	 * Call the render() method and handle errors.
 	 *
 	 * @return string the rendered ViewHelper
+	 * @throws Exception
 	 */
 	protected function callRenderMethod() {
 		$renderMethodParameters = array();
@@ -333,6 +336,7 @@ abstract class AbstractViewHelper {
 	 * Register method arguments for "render" by analysing the doc comment above.
 	 *
 	 * @return void
+	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	private function registerRenderMethodArguments() {
 		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
@@ -381,6 +385,7 @@ abstract class AbstractViewHelper {
 	 * Validate arguments, and throw exception if arguments do not validate.
 	 *
 	 * @return void
+	 * @throws \InvalidArgumentException
 	 */
 	public function validateArguments() {
 		$argumentDefinitions = $this->prepareArguments();

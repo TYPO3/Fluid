@@ -28,6 +28,7 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	 *
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function evaluateChildNodes(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$output = NULL;

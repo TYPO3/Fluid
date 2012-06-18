@@ -58,6 +58,7 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param object $object The persisted object
 	 * @return string Identity
+	 * @throws \TYPO3\Fluid\Exception
 	 * @api
 	 */
 	public function render($object = NULL) {

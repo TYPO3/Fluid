@@ -432,7 +432,7 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterfa
 	/**
 	 * Get the current rendering type.
 	 *
-	 * @return one of RENDERING_* constants
+	 * @return integer one of RENDERING_* constants
 	 */
 	protected function getCurrentRenderingType() {
 		$currentRendering = end($this->renderingStack);

@@ -32,6 +32,7 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @param string $viewHelperNamespace Namespace identifier to generate the XSD for, without leading Backslash.
 	 * @param string $xsdNamespace $xsdNamespace unique target namespace used in the XSD schema (for example "http://yourdomain.org/ns/viewhelpers")
 	 * @return string XML Schema definition
+	 * @throws Exception
 	 */
 	public function generateXsd($viewHelperNamespace, $xsdNamespace) {
 		if (substr($viewHelperNamespace, -1) !== '\\') {

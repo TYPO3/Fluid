@@ -74,7 +74,7 @@ class FormObjectsTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function formIsRedisplayedIfValidationErrorsOccur() {
-		$page = $this->browser->request('http://localhost/test/fluid/formobjects');
+		$this->browser->request('http://localhost/test/fluid/formobjects');
 		$form = $this->browser->getForm();
 
 		$form['post']['name']->setValue('Egon Olsen');

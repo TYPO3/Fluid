@@ -84,6 +84,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * $this->comparator and $this->syntaxTreeNode.
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
+	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function __construct(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode) {
 		$childNodes = $syntaxTreeNode->getChildNodes();

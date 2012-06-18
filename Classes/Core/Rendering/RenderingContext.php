@@ -59,7 +59,7 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	/**
 	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @return \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 */
 	public function getObjectManager() {
 		return $this->objectManager;

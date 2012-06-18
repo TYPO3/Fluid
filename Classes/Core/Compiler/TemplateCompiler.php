@@ -154,8 +154,10 @@ EOD;
 	 * Returns an array with two elements:
 	 * - initialization: contains PHP code which is inserted *before* the actual rendering call. Must be valid, i.e. end with semi-colon.
 	 * - execution: contains *a single PHP instruction* which needs to return the rendered output of the given element. Should NOT end with semi-colon.
+	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node
 	 * @return array two-element array, see above
+	 * @throws \TYPO3\Fluid\Exception
 	 */
 	protected function convert(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node) {
 		if ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode) {
@@ -170,8 +172,8 @@ EOD;
 			return $this->convertListOfSubNodes($node);
 		} elseif ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode) {
 			return $this->convertBooleanNode($node);
-		}else {
-			throw new \Exception('TODO: TYPE XY NOT FOUND');
+		} else {
+			throw new \TYPO3\Fluid\Exception('Syntax tree node type "' . get_class($node) . '" is not supported.');
 		}
 	}
 

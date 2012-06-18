@@ -45,6 +45,7 @@ class AjaxWidgetContextHolder {
 	 *
 	 * @param integer $ajaxWidgetId
 	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @throws Exception\WidgetContextNotFoundException
 	 */
 	public function get($ajaxWidgetId) {
 		$ajaxWidgetId = (int) $ajaxWidgetId;

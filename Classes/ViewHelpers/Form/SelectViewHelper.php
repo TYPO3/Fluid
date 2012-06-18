@@ -173,6 +173,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Render the option tags.
 	 *
 	 * @return array an associative array of options, key will be the value of the option tag
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	protected function getOptions() {
 		if (!is_array($this->arguments['options']) && !($this->arguments['options'] instanceof \Traversable)) {
@@ -306,6 +307,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * @param string $value option tag value
 	 * @param string $label option tag label
 	 * @return string
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	protected function getTranslatedLabel($value, $label) {
 		$translationConfiguration = $this->arguments['translate'];
@@ -332,6 +334,8 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 			case 'id':
 				$id =  $prefix . (isset($translationConfiguration['using']) && $translationConfiguration['using'] === 'label' ? $label : $value);
 				return $this->translator->translateById($id, array(), NULL, $localeObject, $sourceName, $packageKey);
+			default:
+				throw new \TYPO3\Fluid\Exception('You can only request to translate by "label" or by "id", but asked for "' . $translateBy . '" in your SelectViewHelper tag.', 1340050647);
 		}
 	}
 }

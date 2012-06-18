@@ -67,9 +67,11 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	}
 
 	/**
+	 * Set the default package key to use for resource URIs.
 	 *
 	 * @param string $defaultPackageKey
 	 * @return void
+	 * @throws \InvalidArgumentException
 	 */
 	public function setDefaultPackageKey($defaultPackageKey) {
 		if (!preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {

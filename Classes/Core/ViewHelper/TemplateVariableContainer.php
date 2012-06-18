@@ -51,26 +51,36 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @param string $identifier Identifier of the variable to add
 	 * @param mixed $value The variable's value
 	 * @return void
+	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function add($identifier, $value) {
-		if (array_key_exists($identifier, $this->variables)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declarations!', 1224479063);
-		if (in_array(strtolower($identifier), self::$reservedVariableNames)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('"' . $identifier . '" is a reserved variable name and can\'t be used as variable identifier.', 1256730379);
+		if (array_key_exists($identifier, $this->variables)) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declarations!', 1224479063);
+		}
+		if (in_array(strtolower($identifier), self::$reservedVariableNames)) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('"' . $identifier . '" is a reserved variable name and cannot be used as variable identifier.', 1256730379);
+		}
 		$this->variables[$identifier] = $value;
 	}
 
 	/**
 	 * Get a variable from the context. Throws exception if variable is not found in context.
 	 *
+	 * If "_all" is given as identifier, all variables are returned in an array.
+	 *
 	 * @param string $identifier
-	 * @return variable The variable identified by $identifier
+	 * @return mixed The variable value identified by $identifier
+	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function get($identifier) {
 		if ($identifier === '_all') {
 			return $this->variables;
 		}
-		if (!array_key_exists($identifier, $this->variables)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
+		if (!array_key_exists($identifier, $this->variables)) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
+		}
 		return $this->variables[$identifier];
 	}
 
@@ -79,10 +89,13 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 *
 	 * @param string $identifier The identifier to remove
 	 * @return void
+	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->variables)) throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+		if (!array_key_exists($identifier, $this->variables)) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+		}
 		unset($this->variables[$identifier]);
 	}
 
@@ -136,7 +149,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @return void
 	 */
 	public function offsetSet($identifier, $value) {
-		return $this->add($identifier, $value);
+		$this->add($identifier, $value);
 	}
 
 	/**
@@ -146,7 +159,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @return void
 	 */
 	public function offsetUnset($identifier) {
-		return $this->remove($identifier);
+		$this->remove($identifier);
 	}
 
 	/**
@@ -163,7 +176,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * Get a variable from the context. Throws exception if variable is not found in context.
 	 *
 	 * @param string $identifier
-	 * @return variable The variable identified by $identifier
+	 * @return mixed The variable identified by $identifier
 	 */
 	public function offsetGet($identifier) {
 		return $this->get($identifier);

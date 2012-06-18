@@ -55,7 +55,7 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * Example: array('foo', 'bar') as input will not be ["foo","bar"] but {"0":"foo","1":"bar"}
 	 *
 	 * @param mixed $value The incoming data to convert, or NULL if VH children should be used
-	 * @param bool $forceObject Outputs an JSON object rather than an array
+	 * @param boolean $forceObject Outputs an JSON object rather than an array
 	 * @return string the JSON-encoded string.
 	 * @see http://www.php.net/manual/en/function.json-encode.php
 	 * @api

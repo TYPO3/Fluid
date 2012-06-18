@@ -81,6 +81,7 @@ class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	 * @param \Closure $renderChildrenClosure
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$templateVariableContainer = $renderingContext->getTemplateVariableContainer();

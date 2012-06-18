@@ -47,6 +47,7 @@ class UrlencodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * Escapes special characters with their escaped counterparts as needed using PHPs rawurlencode() function.
 	 *
 	 * @param string $value string to format
+	 * @return mixed
 	 * @see http://www.php.net/manual/function.rawurlencode.php
 	 * @api
 	 */

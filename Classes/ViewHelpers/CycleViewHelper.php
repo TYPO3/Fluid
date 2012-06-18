@@ -92,6 +92,7 @@ class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array $values The array or \SplObjectStorage to be stored in $this->values
 	 * @return void
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	protected function initializeValues($values) {
 		if (is_object($values)) {

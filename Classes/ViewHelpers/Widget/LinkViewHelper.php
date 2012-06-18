@@ -85,6 +85,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * Get the URI for an AJAX Request.
 	 *
 	 * @return string the AJAX URI
+	 * @throws \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 */
 	protected function getAjaxUri() {
 		$action = $this->arguments['action'];
@@ -114,6 +115,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * Get the URI for a non-AJAX Request.
 	 *
 	 * @return string the Widget URI
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @todo argumentsToBeExcludedFromQueryString does not work yet, needs to be fixed.
 	 */
 	protected function getWidgetUri() {

@@ -317,6 +317,7 @@ class TemplateParser {
 	 *
 	 * @param string $templateString The template to parse as a string
 	 * @return \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface Parsed template
+	 * @throws Exception
 	 */
 	public function parse($templateString) {
 		if (!is_string($templateString)) throw new \TYPO3\Fluid\Core\Parser\Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
@@ -416,6 +417,7 @@ class TemplateParser {
 	 *
 	 * @param array $splitTemplate The split template, so that every tag with a namespace declaration is already a seperate array element.
 	 * @return \TYPO3\Fluid\Core\Parser\ParsingState
+	 * @throws Exception
 	 */
 	protected function buildObjectTree($splitTemplate) {
 		$regularExpression_openingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
@@ -474,6 +476,7 @@ class TemplateParser {
 	 * @param string $methodIdentifier Method identifier
 	 * @param array $argumentsObjectTree Arguments object tree
 	 * @return void
+	 * @throws Exception
 	 */
 	protected function initializeViewHelperAndAddItToStack(\TYPO3\Fluid\Core\Parser\ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
@@ -829,6 +832,7 @@ class TemplateParser {
 	 *
 	 * @param string $arrayText Array text
 	 * @return SyntaxTree\ArrayNode the array node built up
+	 * @throws Exception
 	 */
 	protected function recursiveArrayHandler($arrayText) {
 		$matches = array();

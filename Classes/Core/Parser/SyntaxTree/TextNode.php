@@ -28,6 +28,7 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Constructor.
 	 *
 	 * @param string $text text to store in this textNode
+	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function __construct($text) {
 		if (!is_string($text)) {

@@ -85,6 +85,7 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * @param mixed $quantity A number to find plural form for (float or int), NULL to not use plural forms
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function render($id = NULL, $value = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;
