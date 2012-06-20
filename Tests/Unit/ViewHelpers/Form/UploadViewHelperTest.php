@@ -22,7 +22,7 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper
 	 */
 	protected $viewHelper;
 
@@ -90,8 +90,8 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	/**
 	 * @test
 	 */
-	public function hiddenFieldsAreEmptyByDefault() {
-		$expectedResult = '<input type="hidden" name="[submittedFile][filename]" value="" /><input type="hidden" name="[submittedFile][resourcePointer]" value="" />';
+	public function hiddenFieldsAreNotRenderedByDefault() {
+		$expectedResult = '';
 		$this->viewHelper->initialize();
 		$actualResult = $this->viewHelper->render();
 		$this->assertSame($expectedResult, $actualResult);
@@ -116,7 +116,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	/**
 	 * @test
 	 */
-	public function hiddenFieldsDoNotContainDataOfTheSpecifiedResourceIfPropertyMappingErrorsOccurred() {
+	public function hiddenFieldsAreNotRenderedIfPropertyMappingErrorsOccurred() {
 		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
 		$mockResource->expects($this->any())->method('getFilename')->will($this->returnValue('theResourceFilename'));
 		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
@@ -125,7 +125,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 
 		$this->mockMappingResult->expects($this->atLeastOnce())->method('hasErrors')->will($this->returnValue(TRUE));
 
-		$expectedResult = '<input type="hidden" name="[submittedFile][filename]" value="" /><input type="hidden" name="[submittedFile][resourcePointer]" value="" />';
+		$expectedResult = '';
 		$this->viewHelper->initialize();
 		$actualResult = $this->viewHelper->render();
 		$this->assertSame($expectedResult, $actualResult);

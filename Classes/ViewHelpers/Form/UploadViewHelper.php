@@ -17,6 +17,12 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * A view helper which generates an <input type="file"> HTML element.
  * Make sure to set enctype="multipart/form-data" on the form!
  *
+ * If a file has been uploaded successfully and the form is re-displayed due to validation errors,
+ * this ViewHelper will render hidden fields that contain the previously generated resource so you
+ * won't have to upload the file again.
+ *
+ * You can use a separate ViewHelper to display previously uploaded resources in order to remove/replace them.
+ *
  * = Examples =
  *
  * <code title="Example">
@@ -24,6 +30,15 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * </code>
  * <output>
  * <input type="file" name="file" />
+ * </output>
+ *
+ * <code title="Multiple Uploads">
+ * <f:form.upload property="attachments.0.originalResource" />
+ * <f:form.upload property="attachments.1.originalResource" />
+ * </code>
+ * <output>
+ * <input type="file" name="formObject[attachments][0][originalResource]">
+ * <input type="file" name="formObject[attachments][0][originalResource]">
  * </output>
  *
  * @api
@@ -66,19 +81,17 @@ class UploadViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 
 		$output = '';
 		$resourceObject = $this->getUploadedResource();
-
-		$filenameIdAttribute = $resourcePointerIdAttribute = '';
-		if ($this->hasArgument('id')) {
-			$filenameIdAttribute = ' id="' . $this->arguments['id'] . '-filename"';
-			$resourcePointerIdAttribute = ' id="' . $this->arguments['id'] . '-resourcePointer"';
-		}
-		$filenameValue = $resourcePointerValue = '';
 		if ($resourceObject !== NULL) {
+			$filenameIdAttribute = $resourcePointerIdAttribute = '';
+			if ($this->hasArgument('id')) {
+				$filenameIdAttribute = ' id="' . htmlspecialchars($this->arguments['id']) . '-filename"';
+				$resourcePointerIdAttribute = ' id="' . htmlspecialchars($this->arguments['id']) . '-resourcePointer"';
+			}
 			$filenameValue = $resourceObject->getFilename();
 			$resourcePointerValue = $resourceObject->getResourcePointer();
+			$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][filename]" value="' . htmlspecialchars($filenameValue) . '"' . $filenameIdAttribute . ' />';
+			$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][resourcePointer]" value="' . htmlspecialchars($resourcePointerValue) . '"' . $resourcePointerIdAttribute . ' />';
 		}
-		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][filename]" value="' . $filenameValue . '"' . $filenameIdAttribute . ' />';
-		$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][resourcePointer]" value="' . $resourcePointerValue . '"' . $resourcePointerIdAttribute . ' />';
 
 		$this->tag->addAttribute('type', 'file');
 		$this->tag->addAttribute('name', $name);
