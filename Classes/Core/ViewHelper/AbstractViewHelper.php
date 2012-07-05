@@ -76,7 +76,6 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * @var \Closure
-	 * @FLOW3\Internal
 	 */
 	protected $renderChildrenClosure = NULL;
 
@@ -107,7 +106,6 @@ abstract class AbstractViewHelper {
 	 * With this flag, you can disable the escaping interceptor inside this ViewHelper.
 	 * THIS MIGHT CHANGE WITHOUT NOTICE, NO PUBLIC API!
 	 * @var boolean
-	 * @FLOW3\Internal
 	 */
 	protected $escapingInterceptorEnabled = TRUE;
 
@@ -161,7 +159,6 @@ abstract class AbstractViewHelper {
 	 *
 	 * THIS METHOD MIGHT CHANGE WITHOUT NOTICE; NO PUBLIC API!
 	 *
-	 * @FLOW3\Internal
 	 * @return boolean
 	 */
 	public function isEscapingInterceptorEnabled() {
@@ -228,7 +225,6 @@ abstract class AbstractViewHelper {
 	 *
 	 * @param \Closure $renderChildrenClosure
 	 * @return void
-	 * @FLOW3\Internal
 	 */
 	public function setRenderChildrenClosure(\Closure $renderChildrenClosure) {
 		$this->renderChildrenClosure = $renderChildrenClosure;
@@ -305,7 +301,6 @@ abstract class AbstractViewHelper {
 	 * No public API yet.
 	 *
 	 * @return \Closure
-	 * @FLOW3\Internal
 	 */
 	protected function buildRenderChildrenClosure() {
 		$self = $this;
@@ -463,7 +458,6 @@ abstract class AbstractViewHelper {
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
 	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
 	 * @return string
-	 * @FLOW3\Internal
 	 * @see TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface
 	 */
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
@@ -479,7 +473,6 @@ abstract class AbstractViewHelper {
 	 * @param \Closure $renderChildrenClosure
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed
-	 * @FLOW3\Internal
 	 * @see TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
