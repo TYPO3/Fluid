@@ -51,7 +51,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->assign('foo', 'bar');
 		$standaloneView->setTemplateSource('This is my cool {foo} template!');
 
@@ -67,7 +67,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->assign('foo', 'bar');
 		$standaloneView->setTemplateSource('Around stuff... <f:section name="innerSection">test {foo}</f:section> after it');
 
@@ -84,7 +84,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->render();
 	}
 
@@ -96,7 +96,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/NonExistingTemplate.txt');
 		$standaloneView->render();
 	}
@@ -108,7 +108,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->assign('name', 'Karsten');
 		$standaloneView->assign('name', 'Robert');
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
@@ -122,7 +122,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function variablesAreEscapedByDefault() {
-		$standaloneView = $this->createStandaloneView();
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView(NULL, $this->standaloneViewNonce);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
 
@@ -139,7 +139,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$actionRequest = $request->createActionRequest();
 		$actionRequest->setFormat('html');
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
 
@@ -156,7 +156,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$actionRequest = $request->createActionRequest();
 		$actionRequest->setFormat('txt');
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
 
@@ -173,7 +173,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$actionRequest = $request->createActionRequest();
 		$actionRequest->setFormat('txt');
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithPartial.txt');
 
 		$expected = 'This is a test template. Hello Robert.';
@@ -189,7 +189,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$actionRequest = $request->createActionRequest();
 		$actionRequest->setFormat('txt');
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithPartial.txt');
 		$standaloneView->setPartialRootPath(__DIR__ . '/Fixtures/SpecialPartialsDirectory');
 
@@ -206,7 +206,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$actionRequest = $request->createActionRequest();
 		$actionRequest->setFormat('txt');
 
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithLayout.txt');
 
 		$expected = 'Hey HEY HO';
@@ -221,8 +221,7 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 		$actionRequest->setFormat('txt');
-
-		$standaloneView = $this->createStandaloneView($actionRequest);
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithLayout.txt');
 		$standaloneView->setLayoutRootPath(__DIR__ . '/Fixtures/SpecialLayouts');
 
@@ -231,23 +230,5 @@ class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 		$this->assertSame($expected, $actual);
 	}
 
-	/**
-	 * Create a StandaloneView which has a custom prefix (taking $this->standaloneViewNonce
-	 * into account).
-	 *
-	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request
-	 * @return \TYPO3\Fluid\View\StandaloneView
-	 */
-	protected function createStandaloneView(\TYPO3\FLOW3\Mvc\ActionRequest $request = NULL) {
-		$standaloneViewClassName = uniqid('StandaloneView', FALSE);
-		eval("class $standaloneViewClassName extends \TYPO3\Fluid\View\StandaloneView {" . '
-				protected function createIdentifierForFile($pathAndFilename, $prefix) {
-					$prefix = \'' . $this->standaloneViewNonce . '\' . $prefix;
-					return parent::createIdentifierForFile($pathAndFilename, $prefix);
-				}
-		}');
-
-		return new $standaloneViewClassName($request);
-	}
 }
 ?>
