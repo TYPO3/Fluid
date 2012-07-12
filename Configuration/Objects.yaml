@@ -17,8 +17,3 @@ TYPO3\Fluid\View\StandaloneView:
   properties:
     renderingContext:
       object: TYPO3\Fluid\Core\Rendering\RenderingContext
-
-TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView:
-  properties:
-    renderingContext:
-      object: TYPO3\Fluid\Core\Rendering\RenderingContext
