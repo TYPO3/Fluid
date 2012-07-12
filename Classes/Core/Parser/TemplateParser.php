@@ -30,7 +30,7 @@ class TemplateParser {
 			(?: <\/?                                      # Start dynamic tags
 					(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)     # A tag consists of the namespace prefix and word characters
 					(?:                                   # Begin tag arguments
-						\s*[a-zA-Z0-9:]+                  # Argument Keys
+						\s*[a-zA-Z0-9:-]+                  # Argument Keys
 						=                                 # =
 						(?>                               # either... If we have found an argument, we will not back-track (That does the Atomic Bracket)
 							"(?:\\\"|[^"])*"              # a double-quoted string
@@ -58,7 +58,7 @@ class TemplateParser {
 		(?P<Attributes>                                   # Begin Tag Attributes
 			(?:                                           # A tag might have multiple attributes
 				\s*
-				[a-zA-Z0-9:]+                             # The attribute name
+				[a-zA-Z0-9:-]+                             # The attribute name
 				=                                         # =
 				(?>                                       # either... # If we have found an argument, we will not back-track (That does the Atomic Bracket)
 					"(?:\\\"|[^"])*"                      # a double-quoted string
@@ -86,7 +86,7 @@ class TemplateParser {
 		(?:                                              #
 			\s*                                          #
 			(?P<Argument>                                # The attribute name
-				[a-zA-Z0-9:]+                            #
+				[a-zA-Z0-9:-]+                            #
 			)                                            #
 			=                                            # =
 			(?>                                          # If we have found an argument, we will not back-track (That does the Atomic Bracket)
