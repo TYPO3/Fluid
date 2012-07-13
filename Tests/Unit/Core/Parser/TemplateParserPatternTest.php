@@ -64,6 +64,9 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$expected = array($veryLongViewHelper, 'Begin', $veryLongViewHelper, 'End');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly if the VH has lots of arguments.');
 
+		$source = '<f:a.testing data-bar="foo"> <f:a.testing>';
+		$expected = array('<f:a.testing data-bar="foo">', ' ', '<f:a.testing>');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with data- attribute.');
 	}
 
 	/**
@@ -85,6 +88,22 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		);
 		preg_match($pattern, $source, $matches);
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly.');
+
+		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
+		$source = '<f:crop data-attribute="Hallo">';
+		$expected = array (
+			0 => '<f:crop data-attribute="Hallo">',
+			'NamespaceIdentifier' => 'f',
+			1 => 'f',
+			'MethodIdentifier' => 'crop',
+			2 => 'crop',
+			'Attributes' => ' data-attribute="Hallo"',
+			3 => ' data-attribute="Hallo"',
+			'Selfclosing' => '',
+			4 => ''
+		);
+		preg_match($pattern, $source, $matches);
+		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with data- attributes.');
 
 		$source = '<f:base />';
 		$expected = array (
@@ -147,8 +166,9 @@ class TemplateParserPatternTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function testSPLIT_PATTERN_TAGARGUMENTS() {
 		$pattern = \TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_TAGARGUMENTS;
-		$source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\'';
-		$this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 3, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
+		$source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\' data-foo="bar"';
+		$this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 4, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
+		$this->assertEquals('data-foo', $matches[3]['Argument']);
 	}
 
 	/**
