@@ -54,7 +54,7 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 *
 	 * @return array
 	 */
-	public function testStrings() {
+	public function stringsTestDataProvider() {
 		return array(
 			array('This is a sample text without special characters.', 'This is a sample text without special characters.'),
 			array('This is a sample text <b>with <i>some</i> tags</b>.', 'This is a sample text with some tags.'),
@@ -64,7 +64,7 @@ class StripTagsViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @dataProvider testStrings
+	 * @dataProvider stringsTestDataProvider
 	 */
 	public function renderCorrectlyConvertsIntoPlaintext($source, $expectedResult) {
 		$actualResult = $this->viewHelper->render($source);
