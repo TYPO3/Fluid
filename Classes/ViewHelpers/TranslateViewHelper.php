@@ -104,7 +104,11 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 		} else {
 			$translation = $this->translator->translateById($id, $arguments, $quantity, $localeObject, $source, $package);
 			if ($translation === $id) {
-				return $originalLabel ?: $id;
+				if ($originalLabel) {
+					return $this->translator->translateByOriginalLabel($originalLabel, $arguments, $quantity, $localeObject, $source, $package);
+				} else {
+					return $id;
+				}
 			} else {
 				return $translation;
 			}
