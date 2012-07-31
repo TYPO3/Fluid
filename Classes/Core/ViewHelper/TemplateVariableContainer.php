@@ -67,7 +67,9 @@ class TemplateVariableContainer implements \ArrayAccess {
 	/**
 	 * Get a variable from the context. Throws exception if variable is not found in context.
 	 *
-	 * If "_all" is given as identifier, all variables are returned in an array.
+	 * If "_all" is given as identifier, all variables are returned in an array,
+	 * if one of the other reserved variables are given, their appropriate value
+	 * they're representing is returned.
 	 *
 	 * @param string $identifier
 	 * @return mixed The variable value identified by $identifier
@@ -75,9 +77,23 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function get($identifier) {
-		if ($identifier === '_all') {
-			return $this->variables;
+		switch ($identifier) {
+			case '_all':
+				return $this->variables;
+			break;
+
+			case 'true':
+			case 'on':
+			case 'yes':
+				return TRUE;
+			break;
+
+			case 'false':
+			case 'off':
+			case 'no':
+				return FALSE;
 		}
+
 		if (!array_key_exists($identifier, $this->variables)) {
 			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		}
@@ -125,7 +141,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function exists($identifier) {
-		if ($identifier === '_all') {
+		if (in_array($identifier, self::$reservedVariableNames, TRUE)) {
 			return TRUE;
 		}
 

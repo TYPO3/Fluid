@@ -18,6 +18,11 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
+	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 */
+	protected $variableContainer;
+
+	/**
 	 */
 	public function setUp() {
 		$this->variableContainer = new \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer();
@@ -113,24 +118,71 @@ class TemplateVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function whenVariablesAreEmpty_getAll_shouldReturnEmptyArray() {
-		$this->assertSame(array(), $this->variableContainer->get('_all'));
-	}
-
-	/**
-	 * @test
-	 */
 	public function getAllShouldReturnAllVariables() {
 		$this->variableContainer->add('name', 'Simon');
 		$this->assertSame(array('name' => 'Simon'), $this->variableContainer->get('_all'));
 	}
 
 	/**
+	 * Data provider for reserved variable names and what they're representing
+	 * @return array Signature: $identifier, $expectedValue
+	 */
+	public function reservedVariableNameDataProvider() {
+		return array(
+			array('true', TRUE), array('false', FALSE),
+			array('on', TRUE), array('off', FALSE),
+			array('yes', TRUE), array('no', FALSE),
+			array('_all', array())
+		);
+	}
+
+	/**
 	 * @test
+	 * @param string $identifier
+	 * @param mixed $expected
+	 * @dataProvider reservedVariableNameDataProvider
+	 */
+	public function gettingAReservedVariableMatchesItsExpectation($identifier, $expected) {
+		$this->assertSame($this->variableContainer->get($identifier), $expected);
+	}
+
+	/**
+	 * @test
+	 * @param string $identifier
+	 * @dataProvider reservedVariableNameDataProvider
 	 * @expectedException TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
-	public function addingVariableNamedAllShouldThrowException() {
-		$this->variableContainer->add('_all', 'foo');
+	public function addingVariableWhichIsReservedThrowsException($identifier) {
+		$this->variableContainer->add($identifier, 'foo');
+	}
+
+	/**
+	 * @test
+	 * @param string $identifier
+	 * @dataProvider reservedVariableNameDataProvider
+	 */
+	public function reservedVariableNameIsAlwaysConsideredExisting($identifier) {
+		$this->assertTrue($this->variableContainer->exists($identifier), sprintf('The reserved variable "%s" should be considered existing, but is not.', $identifier));
+	}
+
+	/**
+	 * @test
+	 * @param string $identifier
+	 * @dataProvider reservedVariableNameDataProvider
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 **/
+	public function attemptToGetReservedVariableInUncoveredLetterCaseThrowsException($identifier) {
+		$this->variableContainer->get(strtoupper($identifier));
+	}
+
+	/**
+	 * @test
+	 * @param string $identifier
+	 * @dataProvider reservedVariableNameDataProvider
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 **/
+	public function attemptToSetReservedVariableInUncoveredLetterCaseThrowsException($identifier) {
+		$this->variableContainer->add(strtoupper($identifier), 'foo');
 	}
 }
 
