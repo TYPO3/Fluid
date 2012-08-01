@@ -67,14 +67,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	protected $formActionUri;
 
 	/**
-	 * We need the arguments of the formActionUri on requesthash calculation
-	 * therefore we will store them in here right after calling uriBuilder
-	 *
-	 * @var array
-	 */
-	protected $formActionUriArguments;
-
-	/**
 	 * Initialize arguments.
 	 *
 	 * @return void
@@ -111,6 +103,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @api
 	 */
 	public function render($action = '', array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL) {
+		$this->formActionUri = NULL;
 		$this->setFormActionUri();
 
 		if (strtolower($this->arguments['method']) === 'get') {
@@ -195,7 +188,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			try {
 				$this->formActionUri = $uriBuilder
 					->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
-				$this->formActionUriArguments = $uriBuilder->getArguments();
 			} catch (\TYPO3\FLOW3\Exception $exception) {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 			}
