@@ -268,6 +268,84 @@ class BooleanNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function notEqualReturnsFalseIfComparingMatchingStrings() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'stringA\' != "stringA"'));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertFalse($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function notEqualReturnsTrueIfComparingNonMatchingStrings() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'stringA\' != \'stringB\''));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertTrue($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function equalsReturnsFalseIfComparingNonMatchingStrings() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'stringA\' == \'stringB\''));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertFalse($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function equalsReturnsTrueIfComparingMatchingStrings() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'stringA\' == "stringA"'));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertTrue($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * 	 * @test
+	 */
+	public function equalsReturnsTrueIfComparingMatchingStringsWithEscapedQuotes() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'\\\'stringA\\\'\' == \'\\\'stringA\\\'\''));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertTrue($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function equalsReturnsFalseIfComparingStringWithNonZero() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'stringA\' == 42'));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertFalse($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function equalsReturnsTrueIfComparingStringWithZero() {
+		$rootNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$rootNode->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('\'stringA\' == 0'));
+
+		$booleanNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
+		$this->assertTrue($booleanNode->evaluate($this->renderingContext));
+	}
+
+
+	/**
+	 * @test
+	 */
 	public function objectsAreComparedStrictly() {
 		$object1 = new \stdClass();
 		$object2 = new \stdClass();
