@@ -179,6 +179,7 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 			array("'this \"string\" had \\'quotes\\' in it'", 'this "string" had \'quotes\' in it'),
 			array('"this \\"string\\" had \'quotes\' in it"', 'this "string" had \'quotes\' in it'),
 			array('"a weird \"string\" \'with\' *freaky* \\\\stuff', 'a weird "string" \'with\' *freaky* \\stuff'),
+			array('\'\\\'escaped quoted string in string\\\'\'', '\'escaped quoted string in string\''),
 		);
 	}
 
@@ -631,6 +632,10 @@ class TemplateParserTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 				'key1: "foo", key2: \'bar\', key3: someVar, key4: 123, key5: { key6: "baz" }',
 				array('key1' => 'foo', 'key2' => 'bar', 'key3' => 'someVar', 'key4' => 123.0, 'key5' => array('key6' => 'baz'),
 			)),
+			array(
+				'key1: "\'foo\'", key2: \'\\\'bar\\\'\'',
+				array('key1' => '\'foo\'', 'key2' => '\'bar\'',
+				)),
 		);
 	}
 

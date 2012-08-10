@@ -759,10 +759,10 @@ class TemplateParser {
 	protected function unquoteString($quotedValue) {
 		switch ($quotedValue[0]) {
 			case '"':
-				$value = str_replace('\"', '"', trim($quotedValue, '"'));
+				$value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
 			break;
 			case "'":
-				$value = str_replace("\'", "'", trim($quotedValue, "'"));
+				$value = str_replace("\\'", "'", preg_replace('/(^\'|\'$)/', '', $quotedValue));
 			break;
 			default:
 				$value = $quotedValue;
