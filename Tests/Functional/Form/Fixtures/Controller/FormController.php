@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\Tests\Functional\Form\Fixtures\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Annotations as Flow;
+
 /**
  * Controller for simple CRUD actions, to test Fluid forms in
  * combination with Property Mapping
@@ -38,6 +40,7 @@ class FormController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 *
 	 * @param \TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $fooPost
 	 * @return void
+	 * @Flow\IgnoreValidation("$fooPost")
 	 */
 	public function editAction(\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $fooPost = NULL) {
 		$this->view->assign('fooPost', $fooPost);

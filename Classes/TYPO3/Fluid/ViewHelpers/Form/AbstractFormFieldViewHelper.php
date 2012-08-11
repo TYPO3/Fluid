@@ -51,6 +51,15 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	}
 
 	/**
+	 * Shortcut for retrieving the request from the controller context
+	 *
+	 * @return \TYPO3\Flow\Mvc\ActionRequest
+	 */
+	protected function getRequest() {
+		return $this->controllerContext->getRequest();
+	}
+
+	/**
 	 * Get the name of this form element, without prefix.
 	 *
 	 * @return string name
@@ -91,12 +100,15 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 
 		if ($this->hasArgument('value')) {
 			$value = $this->arguments['value'];
-		} elseif ($this->hasMappingErrorOccurred()) {
-			$value = $this->getLastSubmittedFormData();
-		} elseif ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+		} elseif ($this->isObjectAccessorMode()) {
+			if ($this->hasMappingErrorOccurred()) {
+				$value = $this->getLastSubmittedFormData();
+			} else {
+				$value = $this->getPropertyValue();
+			}
 			$this->addAdditionalIdentityPropertiesIfNeeded();
-			$value = $this->getPropertyValue();
 		}
+
 		if ($convertObjects && is_object($value)) {
 			$identifier = $this->persistenceManager->getIdentifierByObject($value);
 			if ($identifier !== NULL) {
@@ -108,7 +120,7 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 
 	/**
 	 * @return boolean TRUE if a mapping error occurred, FALSE otherwise
-	 * @deprecated since 2.1.0 Use hasMappingErrorOccurred() instead
+	 * @deprecated since 2.1 Use hasMappingErrorOccurred() instead
 	 */
 	protected function hasMappingErrorOccured() {
 		return $this->hasMappingErrorOccurred();
@@ -120,9 +132,8 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 * @return boolean TRUE if a mapping error occurred, FALSE otherwise
 	 */
 	protected function hasMappingErrorOccurred() {
-		$request = $this->controllerContext->getRequest();
 		/** @var $validationResults Result */
-		$validationResults = $request->getInternalArgument('__submittedArgumentValidationResults');
+		$validationResults = $this->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
 		return ($validationResults !== NULL && $validationResults->hasErrors());
 	}
 
@@ -134,8 +145,7 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 */
 	protected function getLastSubmittedFormData() {
 		$value = NULL;
-		$request = $this->controllerContext->getRequest();
-		$submittedArguments = $request->getInternalArgument('__submittedArguments');
+		$submittedArguments = $this->getRequest()->getInternalArgument('__submittedArguments');
 		if ($submittedArguments !== NULL) {
 			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
 			$value = ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
@@ -151,22 +161,23 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 */
 	protected function addAdditionalIdentityPropertiesIfNeeded() {
 		$propertySegments = explode('.', $this->arguments['property']);
-		if (count($propertySegments) >= 2) {
-				// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
-			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
+		if (count($propertySegments) < 2) {
+			return;
+		}
+		$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		$objectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 
-			$objectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-				// If Count == 2 -> we need to go through the for-loop exactly once
-			for ($i=1; $i < count($propertySegments); $i++) {
-				$object = ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
-				$objectName .= '[' . $propertySegments[$i-1] . ']';
-				$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
+			// If count == 2 -> we need to go through the for-loop exactly once
+		for ($i = 1; $i < count($propertySegments); $i++) {
+			$object = ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
+			$objectName .= '[' . $propertySegments[$i - 1] . ']';
+			$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
 
-					// Add the hidden identity field to the ViewHelperVariableContainer
-				$additionalIdentityProperties = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
-				$additionalIdentityProperties[$objectName] = $hiddenIdentityField;
-				$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', $additionalIdentityProperties);
-			}
+				// Add the hidden identity field to the ViewHelperVariableContainer
+			$additionalIdentityProperties = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
+			$additionalIdentityProperties[$objectName] = $hiddenIdentityField;
+			$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties', $additionalIdentityProperties);
 		}
 	}
 
@@ -229,9 +240,8 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 		if (!$this->isObjectAccessorMode()) {
 			return new Result();
 		}
-		$request = $this->controllerContext->getRequest();
 		/** @var $validationResults Result */
-		$validationResults = $request->getInternalArgument('__submittedArgumentValidationResults');
+		$validationResults = $this->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
 		if ($validationResults === NULL) {
 			return new Result();
 		}

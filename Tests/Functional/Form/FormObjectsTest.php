@@ -90,6 +90,30 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	/**
 	 * @test
 	 */
+	public function formForPersistedObjectIsRedisplayedIfValidationErrorsOccur() {
+		$postIdentifier = $this->setupDummyPost();
+
+		$this->browser->request('http://localhost/test/fluid/formobjects/edit?fooPost=' . $postIdentifier);
+		$form = $this->browser->getForm();
+
+		$form['post']['name']->setValue('Egon Olsen');
+		$form['post']['email']->setValue('test_noValidEmail');
+
+		$this->browser->submit($form);
+		$form = $this->browser->getForm();
+		$this->assertSame('Egon Olsen', $form['post']['name']->getValue());
+		$this->assertSame('test_noValidEmail', $form['post']['email']->getValue());
+		$this->assertSame('f3-form-error', $this->browser->getCrawler()->filterXPath('//*[@id="email"]')->attr('class'));
+
+		$form['post']['email']->setValue('another@email.org');
+
+		$response = $this->browser->submit($form);
+		$this->assertSame('Egon Olsen|another@email.org', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
 	public function objectIsNotCreatedAnymoreIfHmacHasBeenTampered() {
 		$this->browser->request('http://localhost/test/fluid/formobjects');
 		$form = $this->browser->getForm();
@@ -141,6 +165,49 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->browser->submit($form);
 
 		$this->assertSame('500 Internal Server Error', $this->browser->getLastResponse()->getStatus());
+	}
+
+	/**
+	 * @test
+	 */
+	public function objectIsNotModifiedOnFormError() {
+		$postIdentifier = $this->setupDummyPost();
+
+		$this->browser->request('http://localhost/test/fluid/formobjects/edit?fooPost=' . $postIdentifier);
+		$form = $this->browser->getForm();
+		$form['post']['name']->setValue('Hello World');
+		$form['post']['email']->setValue('test_noValidEmail');
+
+		$response = $this->browser->submit($form);
+		$this->assertNotSame('Hello World|test_noValidEmail', $response->getContent());
+
+		$this->persistenceManager->clearState();
+		$post = $this->persistenceManager->getObjectByIdentifier($postIdentifier, '\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post');
+		$this->assertNotSame('test_noValidEmail', $post->getEmail(), 'The invalid email address "' . $post->getEmail() . '" was persisted!');
+	}
+
+	/**
+	 * @test
+	 */
+	public function objectCanBeModifiedAfterFormError() {
+		$postIdentifier = $this->setupDummyPost();
+
+		$this->browser->request('http://localhost/test/fluid/formobjects/edit?fooPost=' . $postIdentifier);
+		$form = $this->browser->getForm();
+		$form['post']['name']->setValue('Hello World');
+		$form['post']['email']->setValue('test_noValidEmail');
+
+		$this->browser->submit($form);
+
+		$this->assertSame($postIdentifier, $this->browser->getCrawler()->filterXPath('//input[@name="post[__identity]"]')->attr('value'));
+
+		$form['post']['email']->setValue('foo@bar.org');
+		$form['post']['name']->setValue('Hello World');
+		$response = $this->browser->submit($form);
+		$this->assertSame('Hello World|foo@bar.org', $response->getContent());
+
+		$post = $this->persistenceManager->getObjectByIdentifier($postIdentifier, 'TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post');
+		$this->assertSame('foo@bar.org', $post->getEmail());
 	}
 
 	/**
@@ -198,8 +265,8 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->browser->request('http://localhost/test/fluid/formobjects/edit?fooPost=' . $postIdentifier);
 		$form = $this->browser->getForm();
 
-		$emailFieldDom = dom_import_simplexml(simplexml_load_string('<input type="text" name="post[email]" value="some@email.address" />'));
-		$form->set(new \Symfony\Component\DomCrawler\Field\InputFormField($emailFieldDom));
+		$privateFieldDom = dom_import_simplexml(simplexml_load_string('<input type="text" name="post[pivate]" value="0" />'));
+		$form->set(new \Symfony\Component\DomCrawler\Field\InputFormField($privateFieldDom));
 
 		$this->browser->submit($form);
 
