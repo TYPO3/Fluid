@@ -29,7 +29,7 @@ class AutocompleteController extends AbstractWidgetController {
 	/**
 	 * @return void
 	 */
-	public function initializeAction() {
+	protected function initializeAction() {
 		$this->configuration = Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
 	}
 
