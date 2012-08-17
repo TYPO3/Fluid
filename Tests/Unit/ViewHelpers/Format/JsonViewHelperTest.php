@@ -65,5 +65,13 @@ class JsonViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->assertEquals('{"0":"foo","1":"bar","2":42}', $this->mockViewHelper->render(NULL, TRUE));
 	}
 
+	/**
+	 * @test
+	 */
+	public function viewHelperEscapesGreaterThanLowerThanCharacters() {
+		$this->assertEquals('["\u003Cfoo\u003E","bar","elephant \u003E mouse"]', $this->mockViewHelper->render(array('<foo>', 'bar', 'elephant > mouse')));
+		$this->assertEquals('{"0":"\u003Cfoo\u003E","1":"bar","2":"elephant \u003E mouse"}', $this->mockViewHelper->render(array('<foo>', 'bar', 'elephant > mouse'), TRUE));
+	}
+
 }
 ?>

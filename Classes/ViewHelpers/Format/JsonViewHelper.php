@@ -49,7 +49,8 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
-	 * Outputs content with its JSON representation
+	 * Outputs content with its JSON representation. To prevent issues in HTML context, occurrences
+	 * of greater-than or less-than characters are converted to their hexadecimal representations.
 	 *
 	 * If $forceObject is TRUE a JSON object is outputted even if the value is a non-associative array
 	 * Example: array('foo', 'bar') as input will not be ["foo","bar"] but {"0":"foo","1":"bar"}
@@ -64,7 +65,11 @@ class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-		return json_encode($value, $forceObject ? JSON_FORCE_OBJECT : NULL);
+		$options = JSON_HEX_TAG;
+		if ($forceObject !== FALSE) {
+			$options = $options | JSON_FORCE_OBJECT;
+		}
+		return json_encode($value, $options);
 	}
 }
 ?>
