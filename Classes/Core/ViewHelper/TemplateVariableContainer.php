@@ -56,7 +56,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 */
 	public function add($identifier, $value) {
 		if (array_key_exists($identifier, $this->variables)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declarations!', 1224479063);
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declaration, "' . $identifier . '" already set!', 1224479063);
 		}
 		if (in_array(strtolower($identifier), self::$reservedVariableNames)) {
 			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('"' . $identifier . '" is a reserved variable name and cannot be used as variable identifier.', 1256730379);
