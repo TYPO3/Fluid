@@ -38,7 +38,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
-	 * @param object $value The value to store
+	 * @param mixed $value The value to store
 	 * @return void
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
 	 * @api
@@ -55,7 +55,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
-	 * @param object $value The value to store
+	 * @param mixed $value The value to store
 	 * @return void
 	 */
 	public function addOrUpdate($viewHelperName, $key, $value) {
@@ -70,7 +70,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
-	 * @return object The object stored
+	 * @return mixed The object stored
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
