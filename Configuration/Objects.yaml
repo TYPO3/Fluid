@@ -2,7 +2,7 @@ TYPO3\Fluid\Core\Compiler\TemplateCompiler:
   properties:
     templateCache:
       object:
-        factoryObjectName: TYPO3\FLOW3\Cache\CacheManager
+        factoryObjectName: TYPO3\Flow\Cache\CacheManager
         factoryMethodName: getCache
         arguments:
           1:

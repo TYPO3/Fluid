@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * This view helper generates a <select> dropdown list for the use with a form.
@@ -81,8 +81,8 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\I18n\Translator
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\I18n\Translator
 	 */
 	protected $translator;
 
@@ -183,7 +183,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		foreach ($this->arguments['options'] as $key => $value) {
 			if (is_object($value)) {
 				if ($this->hasArgument('optionValueField')) {
-					$key = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
+					$key = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
 					if (is_object($key)) {
 						if (method_exists($key, '__toString')) {
 							$key = (string)$key;
@@ -200,7 +200,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 				}
 
 				if ($this->hasArgument('optionLabelField')) {
-					$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionLabelField']);
+					$value = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionLabelField']);
 					if (is_object($value)) {
 						if (method_exists($value, '__toString')) {
 							$value = (string)$value;
@@ -269,7 +269,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	protected function getOptionValueScalar($valueElement) {
 		if (is_object($valueElement)) {
 			if ($this->hasArgument('optionValueField')) {
-				return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
+				return \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
 			} elseif ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL) {
 				return $this->persistenceManager->getIdentifierByObject($valueElement);
 			} else {
@@ -319,8 +319,8 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 
 		if (isset($translationConfiguration['locale'])) {
 			try {
-				$localeObject = new \TYPO3\FLOW3\I18n\Locale($translationConfiguration['locale']);
-			} catch (\TYPO3\FLOW3\I18n\Exception\InvalidLocaleIdentifierException $e) {
+				$localeObject = new \TYPO3\Flow\I18n\Locale($translationConfiguration['locale']);
+			} catch (\TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException $e) {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $translationConfiguration['locale'] . '" is not a valid locale identifier.' , 1330013193);
 			}
 		} else {

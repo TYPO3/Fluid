@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -15,7 +15,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 /**
  * View helper which creates a <base href="..."></base> tag. The Base URI
  * is taken from the current request.
- * In FLOW3, you should always include this ViewHelper to make the links work.
+ * In Flow, you should always include this ViewHelper to make the links work.
  *
  * = Examples =
  *

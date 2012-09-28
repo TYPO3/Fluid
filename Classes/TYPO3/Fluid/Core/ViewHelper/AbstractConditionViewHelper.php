@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * This view helper is an abstract ViewHelper which implements an if/else condition.
@@ -135,7 +135,7 @@ abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
 	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
 	 * @return string
-	 * @FLOW3\Internal
+	 * @Flow\Internal
 	 */
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
 		foreach ($syntaxTreeNode->getChildNodes() as $childNode) {

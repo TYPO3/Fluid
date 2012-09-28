@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -18,7 +18,7 @@ namespace TYPO3\Fluid\Core\Parser\Interceptor;
  *
  * That means you can build your template so that it can be previewed as is and
  * pointers to CSS, JS, images, ... will still work when the resources are
- * mirrored by FLOW3.
+ * mirrored by Flow.
  *
  * Currently the supported URIs are of the form
  *  [../]Public/Some/<Path/To/Resource> (will use current package)
@@ -45,7 +45,7 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Is the text at hand a resource URI and what are path/package?
 	 * @var string
-	 * @see \TYPO3\FLOW3\Pckage\Package::PATTERN_MATCH_PACKAGEKEY
+	 * @see \TYPO3\Flow\Pckage\Package::PATTERN_MATCH_PACKAGEKEY
 	 */
 	const PATTERN_MATCH_RESOURCE_URI = '!(?:../)*(?:(?P<Package>[A-Z][A-Za-z0-9_]+)/Resources/)?Public/(?P<Path>[^"]+)!';
 
@@ -59,10 +59,10 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	/**
 	 * Inject object factory
 	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\Flow\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -74,7 +74,7 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 * @throws \InvalidArgumentException
 	 */
 	public function setDefaultPackageKey($defaultPackageKey) {
-		if (!preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {
+		if (!preg_match(\TYPO3\Flow\Package\Package::PATTERN_MATCH_PACKAGEKEY, $defaultPackageKey)) {
 			throw new \InvalidArgumentException('The given argument was not a valid package key.', 1277287099);
 		}
 		$this->defaultPackageKey = $defaultPackageKey;
@@ -101,7 +101,7 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 				$arguments = array(
 					'path' => $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Path'])
 				);
-				if (isset($matches['Package']) && preg_match(\TYPO3\FLOW3\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
+				if (isset($matches['Package']) && preg_match(\TYPO3\Flow\Package\Package::PATTERN_MATCH_PACKAGEKEY, $matches['Package'])) {
 					$arguments['package'] = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $matches['Package']);
 				} elseif ($this->defaultPackageKey !== NULL) {
 					$arguments['package'] = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $this->defaultPackageKey);

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Security;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -47,7 +47,7 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 * @test
 	 */
 	public function hasAccessToResourceReturnsTrueIfNoAccessDenyExceptionsHasBeenThrownByTheAccessDecisionManager() {
-		$mockAccessDecisionManager = $this->getMock('TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
+		$mockAccessDecisionManager = $this->getMock('TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
 		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource');
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('dummy'));
@@ -60,8 +60,8 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 * @test
 	 */
 	public function hasAccessToResourceReturnsFalseIfAnAccessDenyExceptionsHasBeenThrownByTheAccessDecisionManager() {
-		$mockAccessDecisionManager = $this->getMock('TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
-		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource')->will($this->throwException(new \TYPO3\FLOW3\Security\Exception\AccessDeniedException()));
+		$mockAccessDecisionManager = $this->getMock('TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
+		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource')->will($this->throwException(new \TYPO3\Flow\Security\Exception\AccessDeniedException()));
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('dummy'));
 		$viewHelper->injectAccessDecisionManager($mockAccessDecisionManager);

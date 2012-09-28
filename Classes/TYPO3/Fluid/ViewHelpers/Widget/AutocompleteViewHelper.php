@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Usage:
@@ -34,20 +34,20 @@ class AutocompleteViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetView
 	protected $ajaxWidget = TRUE;
 
 	/**
-	 * @FLOW3\Inject
+	 * @Flow\Inject
 	 * @var \TYPO3\Fluid\ViewHelpers\Widget\Controller\AutocompleteController
 	 */
 	protected $controller;
 
 	/**
 	 *
-	 * @param \TYPO3\FLOW3\Persistence\QueryResultInterface $objects
+	 * @param \TYPO3\Flow\Persistence\QueryResultInterface $objects
 	 * @param string $for
 	 * @param string $searchProperty
 	 * @param array $configuration
 	 * @return string
 	 */
-	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $for, $searchProperty, array $configuration = array('limit' => 10)) {
+	public function render(\TYPO3\Flow\Persistence\QueryResultInterface $objects, $for, $searchProperty, array $configuration = array('limit' => 10)) {
 		return $this->initiateSubRequest();
 	}
 }

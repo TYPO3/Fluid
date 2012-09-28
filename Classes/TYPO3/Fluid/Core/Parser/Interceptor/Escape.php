@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -32,17 +32,17 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	protected $viewHelperNodesWhichDisableTheInterceptor = array();
 
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
 	 * Inject object manager
 	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\Flow\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 

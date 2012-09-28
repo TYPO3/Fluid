@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,9 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
-use TYPO3\FLOW3\I18n;
+use TYPO3\Flow\I18n;
 
 /**
  * Formats a given float to a currency representation.
@@ -63,14 +63,14 @@ use TYPO3\FLOW3\I18n;
 class CurrencyViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\I18n\Formatter\NumberFormatter
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\I18n\Formatter\NumberFormatter
 	 */
 	protected $numberFormatter;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\I18n\Service
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\I18n\Service
 	 */
 	protected $localizationService;
 
@@ -78,7 +78,7 @@ class CurrencyViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 * @param string $currencySign (optional) The currency sign, eg $ or €.
 	 * @param string $decimalSeparator (optional) The separator for the decimal point.
 	 * @param string $thousandsSeparator (optional) The thousands separator.
-	 * @param mixed $forceLocale Whether if, and what, Locale should be used; overriding $decimal- and $thousandsSeparator. May be boolean, string or \TYPO3\FLOW3\I18n\Locale
+	 * @param mixed $forceLocale Whether if, and what, Locale should be used; overriding $decimal- and $thousandsSeparator. May be boolean, string or \TYPO3\Flow\I18n\Locale
 	 *
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 * @return string the formatted amount.
@@ -103,7 +103,7 @@ class CurrencyViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 
 	/**
 	 * @param mixed $stringToFormat
-	 * @param mixed $locale string or boolean or \TYPO3\FLOW3\I18n\Locale
+	 * @param mixed $locale string or boolean or \TYPO3\Flow\I18n\Locale
 	 * @param string $currencySign
 	 *
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException

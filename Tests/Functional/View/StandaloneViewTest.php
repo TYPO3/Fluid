@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Functional\View;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,14 +11,14 @@ namespace TYPO3\Fluid\Tests\Functional\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Http\Request;
-use TYPO3\FLOW3\Http\Uri;
-use TYPO3\FLOW3\Mvc\ActionRequest;
+use TYPO3\Flow\Http\Request;
+use TYPO3\Flow\Http\Uri;
+use TYPO3\Flow\Mvc\ActionRequest;
 
 /**
  * Testcase for Standalone View
  */
-class StandaloneViewTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
+class StandaloneViewTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 	/**
 	 * @var boolean

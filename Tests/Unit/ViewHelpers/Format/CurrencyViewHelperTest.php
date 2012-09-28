@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License, either version 3 of the   *
@@ -13,7 +13,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /**
  */
-class CurrencyViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class CurrencyViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
@@ -79,7 +79,7 @@ class CurrencyViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function viewHelperUsesNumberFormatterOnGivenLocale() {
-		$numberFormatterMock = $this->getMock('TYPO3\FLOW3\I18n\Formatter\NumberFormatter', array('formatCurrencyNumber'));
+		$numberFormatterMock = $this->getMock('TYPO3\Flow\I18n\Formatter\NumberFormatter', array('formatCurrencyNumber'));
 		$numberFormatterMock->expects($this->once())->method('formatCurrencyNumber');
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));
@@ -91,12 +91,12 @@ class CurrencyViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function viewHelperFetchesCurrentLocaleViaI18nService() {
-		$localizationConfiguration = new \TYPO3\FLOW3\I18n\Configuration('de_DE');
+		$localizationConfiguration = new \TYPO3\Flow\I18n\Configuration('de_DE');
 
-		$localizationServiceMock = $this->getMock('TYPO3\FLOW3\I18n\Service', array('getConfiguration'));
+		$localizationServiceMock = $this->getMock('TYPO3\Flow\I18n\Service', array('getConfiguration'));
 		$localizationServiceMock->expects($this->once())->method('getConfiguration')->will($this->returnValue($localizationConfiguration));
 
-		$numberFormatterMock = $this->getMock('TYPO3\FLOW3\I18n\Formatter\NumberFormatter', array('formatCurrencyNumber'));
+		$numberFormatterMock = $this->getMock('TYPO3\Flow\I18n\Formatter\NumberFormatter', array('formatCurrencyNumber'));
 		$numberFormatterMock->expects($this->once())->method('formatCurrencyNumber');
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper', array('renderChildren'));

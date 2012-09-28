@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * This ViewHelper renders a Pagination of objects.
@@ -45,7 +45,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	/**
-	 * @FLOW3\Inject
+	 * @Flow\Inject
 	 * @var \TYPO3\Fluid\ViewHelpers\Widget\Controller\PaginateController
 	 */
 	protected $controller;
@@ -53,12 +53,12 @@ class PaginateViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelp
 	/**
 	 * Render this view helper
 	 *
-	 * @param \TYPO3\FLOW3\Persistence\QueryResultInterface $objects
+	 * @param \TYPO3\Flow\Persistence\QueryResultInterface $objects
 	 * @param string $as
 	 * @param array $configuration
 	 * @return string
 	 */
-	public function render(\TYPO3\FLOW3\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE, 'maximumNumberOfLinks' => 99)) {
+	public function render(\TYPO3\Flow\Persistence\QueryResultInterface $objects, $as, array $configuration = array('itemsPerPage' => 10, 'insertAbove' => FALSE, 'insertBelow' => TRUE, 'maximumNumberOfLinks' => 99)) {
 		$response = $this->initiateSubRequest();
 		return $response->getContent();
 	}

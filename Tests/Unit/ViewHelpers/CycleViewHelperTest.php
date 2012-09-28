@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -63,14 +63,14 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 	 * @test
 	 */
 	public function viewHelperSupportsAssociativeArrays() {
-		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'FLOW3');
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('innerVariable', 'Flow');
 		$this->templateVariableContainer->expects($this->at(1))->method('remove')->with('innerVariable');
 		$this->templateVariableContainer->expects($this->at(2))->method('add')->with('innerVariable', 'Fluid');
 		$this->templateVariableContainer->expects($this->at(3))->method('remove')->with('innerVariable');
-		$this->templateVariableContainer->expects($this->at(4))->method('add')->with('innerVariable', 'FLOW3');
+		$this->templateVariableContainer->expects($this->at(4))->method('add')->with('innerVariable', 'Flow');
 		$this->templateVariableContainer->expects($this->at(5))->method('remove')->with('innerVariable');
 
-		$values = array('foo' => 'FLOW3', 'bar' => 'Fluid');
+		$values = array('foo' => 'Flow', 'bar' => 'Fluid');
 		$this->viewHelper->render($values, 'innerVariable');
 		$this->viewHelper->render($values, 'innerVariable');
 		$this->viewHelper->render($values, 'innerVariable');

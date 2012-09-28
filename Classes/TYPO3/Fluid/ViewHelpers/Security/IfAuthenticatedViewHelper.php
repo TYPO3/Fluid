@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Security;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -45,17 +45,17 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
  */
 class IfAuthenticatedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 	/**
-	 * @var \TYPO3\FLOW3\Security\Context
+	 * @var \TYPO3\Flow\Security\Context
 	 */
 	protected $securityContext;
 
 	/**
 	 * Injects the Security Context
 	 *
-	 * @param \TYPO3\FLOW3\Security\Context $securityContext
+	 * @param \TYPO3\Flow\Security\Context $securityContext
 	 * @return void
 	 */
-	public function injectSecurityContext(\TYPO3\FLOW3\Security\Context $securityContext) {
+	public function injectSecurityContext(\TYPO3\Flow\Security\Context $securityContext) {
 		$this->securityContext = $securityContext;
 	}
 

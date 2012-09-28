@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -24,7 +24,7 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 	 * @return void
 	 */
 	public function initializeAction() {
-		$this->configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
+		$this->configuration = \TYPO3\Flow\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
 	}
 
 	/**
@@ -62,7 +62,7 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 		$output = array();
 		$values = array();
 		foreach ($results as $singleResult) {
-			$val = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($singleResult, $searchProperty);
+			$val = \TYPO3\Flow\Reflection\ObjectAccess::getProperty($singleResult, $searchProperty);
 			if (isset($values[$val])) continue;
 			$values[$val] = TRUE;
 			$output[] = array(

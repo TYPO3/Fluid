@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -51,7 +51,7 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 	 */
 	public function initializeAction() {
 		$this->objects = $this->widgetConfiguration['objects'];
-		$this->configuration = \TYPO3\FLOW3\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
+		$this->configuration = \TYPO3\Flow\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
 		$this->numberOfPages = ceil(count($this->objects) / (integer)$this->configuration['itemsPerPage']);
 		$this->maximumNumberOfLinks = (integer)$this->configuration['maximumNumberOfLinks'];
 	}

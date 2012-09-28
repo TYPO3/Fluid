@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Service;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -61,7 +61,7 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @return void
 	 */
 	protected function generateXmlForClassName($className, $namespace, \SimpleXMLElement $xmlRootNode) {
-		$reflectionClass = new \TYPO3\FLOW3\Reflection\ClassReflection($className);
+		$reflectionClass = new \TYPO3\Flow\Reflection\ClassReflection($className);
 		if (!$reflectionClass->isSubclassOf($this->abstractViewHelperReflectionClass)) {
 			return;
 		}

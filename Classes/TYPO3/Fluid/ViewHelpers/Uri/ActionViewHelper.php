@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -67,7 +67,7 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			->setFormat($format);
 		try {
 			$uri = $uriBuilder->uriFor($action, $arguments, $controller, $package, $subpackage);
-		} catch (\TYPO3\FLOW3\Exception $exception) {
+		} catch (\TYPO3\Flow\Exception $exception) {
 			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 		}
 		return $uri;

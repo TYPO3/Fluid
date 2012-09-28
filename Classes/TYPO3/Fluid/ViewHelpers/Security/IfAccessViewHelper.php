@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Security;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -46,17 +46,17 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
 class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
 
 	/**
-	 * @var \TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface
+	 * @var \TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface
 	 */
 	protected $accessDecisionManager;
 
 	/**
 	 * Injects the access decision manager
 	 *
-	 * @param \TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
+	 * @param \TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager The access decision manager
 	 * @return void
 	 */
-	public function injectAccessDecisionManager(\TYPO3\FLOW3\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
+	public function injectAccessDecisionManager(\TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface $accessDecisionManager) {
 		$this->accessDecisionManager = $accessDecisionManager;
 	}
 
@@ -84,7 +84,7 @@ class IfAccessViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionV
 	protected function hasAccessToResource($resource) {
 		try {
 			$this->accessDecisionManager->decideOnResource($resource);
-		} catch (\TYPO3\FLOW3\Security\Exception\AccessDeniedException $e) {
+		} catch (\TYPO3\Flow\Security\Exception\AccessDeniedException $e) {
 			return FALSE;
 		}
 

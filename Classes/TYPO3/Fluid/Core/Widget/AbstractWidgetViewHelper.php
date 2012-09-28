@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -165,22 +165,22 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * Initiate a sub request to $this->controller. Make sure to fill $this->controller
 	 * via Dependency Injection.
 	 *
-	 * @return \TYPO3\FLOW3\Http\Response the response of this request.
+	 * @return \TYPO3\Flow\Http\Response the response of this request.
 	 * @throws Exception\MissingControllerException
 	 * @api
 	 */
 	protected function initiateSubRequest() {
 		if (!($this->controller instanceof \TYPO3\Fluid\Core\Widget\AbstractWidgetController)) {
-			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\FLOW3\Annotations\Inject annotation in your widget class.', 1284401632);
+			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\Flow\Annotations\Inject annotation in your widget class.', 1284401632);
 		}
 
-		$subRequest = $this->objectManager->get('TYPO3\FLOW3\Mvc\ActionRequest', $this->controllerContext->getRequest());
+		$subRequest = $this->objectManager->get('TYPO3\Flow\Mvc\ActionRequest', $this->controllerContext->getRequest());
 		$this->passArgumentsToSubRequest($subRequest);
 		$subRequest->setArgument('__widgetContext', $this->widgetContext);
 		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
 		$subRequest->setArgumentNamespace('--' . $this->widgetContext->getWidgetIdentifier());
 
-		$subResponse = $this->objectManager->get('TYPO3\FLOW3\Http\Response');
+		$subResponse = $this->objectManager->get('TYPO3\Flow\Http\Response');
 		$this->controller->processRequest($subRequest, $subResponse);
 		return $subResponse;
 	}
@@ -188,10 +188,10 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * Pass the arguments of the widget to the subrequest.
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $subRequest
+	 * @param \TYPO3\Flow\Mvc\ActionRequest $subRequest
 	 * @return void
 	 */
-	private function passArgumentsToSubRequest(\TYPO3\FLOW3\Mvc\ActionRequest $subRequest) {
+	private function passArgumentsToSubRequest(\TYPO3\Flow\Mvc\ActionRequest $subRequest) {
 		$arguments = $this->controllerContext->getRequest()->getPluginArguments();
 		$widgetIdentifier = $this->widgetContext->getWidgetIdentifier();
 

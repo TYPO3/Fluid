@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget;
 
 /*
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * widget.uri ViewHelper
@@ -32,8 +32,8 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class UriViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Cryptography\HashService
 	 */
 	protected $hashService;
 
@@ -111,7 +111,7 @@ class UriViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			->setFormat($this->arguments['format']);
 		try {
 			$uri = $uriBuilder->uriFor($this->arguments['action'], $this->arguments['arguments'], '', '', '');
-		} catch (\TYPO3\FLOW3\Exception $exception) {
+		} catch (\TYPO3\Flow\Exception $exception) {
 			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 		}
 		return $uri;

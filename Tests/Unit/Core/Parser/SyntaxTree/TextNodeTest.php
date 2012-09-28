@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -15,7 +15,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * Testcase for TextNode
  *
  */
-class TextNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class TextNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test

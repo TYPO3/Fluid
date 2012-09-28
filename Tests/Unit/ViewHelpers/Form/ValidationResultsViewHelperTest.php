@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License, either version 3 of the   *
@@ -47,7 +47,7 @@ class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	 * @test
 	 */
 	public function renderAddsValidationResultsToTemplateVariableContainer() {
-		$mockValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$mockValidationResults = $this->getMockBuilder('TYPO3\Flow\Error\Result')->getMock();
 		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockValidationResults));
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('validationResults', $mockValidationResults);
 		$this->viewHelper->expects($this->once())->method('renderChildren');
@@ -60,7 +60,7 @@ class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	 * @test
 	 */
 	public function renderAddsValidationResultsToTemplateVariableContainerWithCustomVariableNameIfSpecified() {
-		$mockValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$mockValidationResults = $this->getMockBuilder('TYPO3\Flow\Error\Result')->getMock();
 		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockValidationResults));
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('customName', $mockValidationResults);
 		$this->viewHelper->expects($this->once())->method('renderChildren');
@@ -73,8 +73,8 @@ class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	 * @test
 	 */
 	public function renderAddsValidationResultsForOnePropertyIfForArgumentIsNotEmpty() {
-		$mockPropertyValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
-		$mockValidationResults = $this->getMockBuilder('TYPO3\FLOW3\Error\Result')->getMock();
+		$mockPropertyValidationResults = $this->getMockBuilder('TYPO3\Flow\Error\Result')->getMock();
+		$mockValidationResults = $this->getMockBuilder('TYPO3\Flow\Error\Result')->getMock();
 		$mockValidationResults->expects($this->once())->method('forProperty')->with('somePropertyName')->will($this->returnValue($mockPropertyValidationResults));
 		$this->request->expects($this->atLeastOnce())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockValidationResults));
 		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('validationResults', $mockPropertyValidationResults);

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Functional\Form\Fixtures\Controller;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -15,7 +15,7 @@ namespace TYPO3\Fluid\Tests\Functional\Form\Fixtures\Controller;
  * Controller for simple CRUD actions, to test Fluid forms in
  * combination with Property Mapping
  */
-class FormController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
+class FormController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 
 	/**
 	 * Display a start page

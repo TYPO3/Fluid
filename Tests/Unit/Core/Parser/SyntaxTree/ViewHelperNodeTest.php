@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -18,7 +18,7 @@ require_once(__DIR__ . '/../../Fixtures/TestViewHelper.php');
  * Testcase for [insert classname here]
  *
  */
-class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class ViewHelperNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * Rendering Context
@@ -28,7 +28,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * Object factory mock
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $mockObjectManager;
 
@@ -40,7 +40,7 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 *
-	 * @var TYPO3\FLOW3\Mvc\Controller\ControllerContext
+	 * @var TYPO3\Flow\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -55,13 +55,13 @@ class ViewHelperNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	public function setUp() {
 		$this->renderingContext = new \TYPO3\Fluid\Core\Rendering\RenderingContext();
 
-		$this->mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
+		$this->mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
 		$this->renderingContext->injectObjectManager($this->mockObjectManager);
 
 		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->renderingContext->injectTemplateVariableContainer($this->templateVariableContainer);
 
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->renderingContext->setControllerContext($this->controllerContext);
 
 		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');

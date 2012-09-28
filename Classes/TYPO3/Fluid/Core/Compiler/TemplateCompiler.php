@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Compiler;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,17 +11,17 @@ namespace TYPO3\Fluid\Core\Compiler;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  */
 class TemplateCompiler {
 
 	const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
 
 	/**
-	 * @var \TYPO3\FLOW3\Cache\Frontend\PhpFrontend
+	 * @var \TYPO3\Flow\Cache\Frontend\PhpFrontend
 	 */
 	protected $templateCache;
 
@@ -36,10 +36,10 @@ class TemplateCompiler {
 	protected $syntaxTreeInstanceCache = array();
 
 	/**
-	 * @param \TYPO3\FLOW3\Cache\Frontend\PhpFrontend $templateCache
+	 * @param \TYPO3\Flow\Cache\Frontend\PhpFrontend $templateCache
 	 * @return void
 	 */
-	public function injectTemplateCache(\TYPO3\FLOW3\Cache\Frontend\PhpFrontend $templateCache) {
+	public function injectTemplateCache(\TYPO3\Flow\Cache\Frontend\PhpFrontend $templateCache) {
 		$this->templateCache = $templateCache;
 	}
 

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\View;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,8 +11,8 @@ namespace TYPO3\Fluid\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
-use TYPO3\FLOW3\Http\Request;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Http\Request;
 
 /**
  * A standalone template view.
@@ -49,33 +49,33 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * @var \TYPO3\Fluid\Core\Compiler\TemplateCompiler
-	 * @FLOW3\Inject
+	 * @Flow\Inject
 	 */
 	protected $templateCompiler;
 
 	/**
-	 * @var \TYPO3\FLOW3\Utility\Environment
-	 * @FLOW3\Inject
+	 * @var \TYPO3\Flow\Utility\Environment
+	 * @Flow\Inject
 	 */
 	protected $environment;
 
 	/**
-	 * @var \TYPO3\FLOW3\Mvc\FlashMessageContainer
-	 * @FLOW3\Inject
+	 * @var \TYPO3\Flow\Mvc\FlashMessageContainer
+	 * @Flow\Inject
 	 */
 	protected $flashMessageContainer;
 
 	/**
-	 * @var \TYPO3\FLOW3\Mvc\ActionRequest
+	 * @var \TYPO3\Flow\Mvc\ActionRequest
 	 */
 	protected $request;
 
 	/**
 	 * Constructor
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request The current action request. If none is specified it will be created from the environment.
+	 * @param \TYPO3\Flow\Mvc\ActionRequest $request The current action request. If none is specified it will be created from the environment.
 	 */
-	public function __construct(\TYPO3\FLOW3\Mvc\ActionRequest $request = NULL) {
+	public function __construct(\TYPO3\Flow\Mvc\ActionRequest $request = NULL) {
 		$this->request = $request;
 	}
 
@@ -90,13 +90,13 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 			$this->request = $httpRequest->createActionRequest();
 		}
 
-		$uriBuilder = new \TYPO3\FLOW3\Mvc\Routing\UriBuilder();
+		$uriBuilder = new \TYPO3\Flow\Mvc\Routing\UriBuilder();
 		$uriBuilder->setRequest($this->request);
 
-		$this->setControllerContext(new \TYPO3\FLOW3\Mvc\Controller\ControllerContext(
+		$this->setControllerContext(new \TYPO3\Flow\Mvc\Controller\ControllerContext(
 			$this->request,
-			new \TYPO3\FLOW3\Http\Response(),
-			new \TYPO3\FLOW3\Mvc\Controller\Arguments(array()),
+			new \TYPO3\Flow\Http\Response(),
+			new \TYPO3\Flow\Mvc\Controller\Arguments(array()),
 			$uriBuilder,
 			$this->flashMessageContainer
 		));
@@ -126,7 +126,7 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	/**
 	 * Returns the current request object
 	 *
-	 * @return \TYPO3\FLOW3\Mvc\ActionRequest
+	 * @return \TYPO3\Flow\Mvc\ActionRequest
 	 */
 	public function getRequest() {
 		return $this->controllerContext->getRequest();
@@ -332,8 +332,8 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 			throw new Exception\InvalidTemplateResourceException('Layout root path "' . $layoutRootPath . '" does not exist.', 1288092521);
 		}
 		$possibleLayoutPaths = array();
-		$possibleLayoutPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($layoutRootPath . '/' . $layoutName . '.' . $this->getRequest()->getFormat());
-		$possibleLayoutPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($layoutRootPath . '/' . $layoutName);
+		$possibleLayoutPaths[] = \TYPO3\Flow\Utility\Files::getUnixStylePath($layoutRootPath . '/' . $layoutName . '.' . $this->getRequest()->getFormat());
+		$possibleLayoutPaths[] = \TYPO3\Flow\Utility\Files::getUnixStylePath($layoutRootPath . '/' . $layoutName);
 		foreach ($possibleLayoutPaths as $layoutPathAndFilename) {
 			if (file_exists($layoutPathAndFilename)) {
 				return $layoutPathAndFilename;
@@ -385,8 +385,8 @@ class StandaloneView extends \TYPO3\Fluid\View\AbstractTemplateView {
 			throw new Exception\InvalidTemplateResourceException('Partial root path "' . $partialRootPath . '" does not exist.', 1288094648);
 		}
 		$possiblePartialPaths = array();
-		$possiblePartialPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($partialRootPath . '/' . $partialName . '.' . $this->getRequest()->getFormat());
-		$possiblePartialPaths[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath($partialRootPath . '/' . $partialName);
+		$possiblePartialPaths[] = \TYPO3\Flow\Utility\Files::getUnixStylePath($partialRootPath . '/' . $partialName . '.' . $this->getRequest()->getFormat());
+		$possiblePartialPaths[] = \TYPO3\Flow\Utility\Files::getUnixStylePath($partialRootPath . '/' . $partialName);
 		foreach ($possiblePartialPaths as $partialPathAndFilename) {
 			if (file_exists($partialPathAndFilename)) {
 				return $partialPathAndFilename;

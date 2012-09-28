@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -46,17 +46,17 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
 class ResourceViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \TYPO3\FLOW3\Resource\Publishing\ResourcePublisher
+	 * @var \TYPO3\Flow\Resource\Publishing\ResourcePublisher
 	 */
 	protected $resourcePublisher;
 
 	/**
-	 * Inject the FLOW3 resource publisher.
+	 * Inject the Flow resource publisher.
 	 *
-	 * @param \TYPO3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher
+	 * @param \TYPO3\Flow\Resource\Publishing\ResourcePublisher $resourcePublisher
 	 * @return void
 	 */
-	public function injectResourcePublisher(\TYPO3\FLOW3\Resource\Publishing\ResourcePublisher $resourcePublisher) {
+	public function injectResourcePublisher(\TYPO3\Flow\Resource\Publishing\ResourcePublisher $resourcePublisher) {
 		$this->resourcePublisher = $resourcePublisher;
 	}
 
@@ -65,7 +65,7 @@ class ResourceViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 *
 	 * @param string $path The path and filename of the resource (relative to Public resource directory of the package)
 	 * @param string $package Target package key. If not set, the current package key will be used
-	 * @param \TYPO3\FLOW3\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
+	 * @param \TYPO3\Flow\Resource\Resource $resource If specified, this resource object is used instead of the path and package information
 	 * @param string $uri A resource URI, a relative / absolute path or URL
 	 * @return string The absolute URI to the resource
 	 * @api

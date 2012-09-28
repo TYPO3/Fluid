@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * The WidgetContext stores all information a widget needs to know about the
@@ -70,7 +70,7 @@ class WidgetContext {
 	 * Only available inside non-AJAX requests.
 	 *
 	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
-	 * @FLOW3\Transient
+	 * @Flow\Transient
 	 */
 	protected $viewHelperChildNodes; // TODO: rename to something more meaningful.
 
@@ -79,7 +79,7 @@ class WidgetContext {
 	 * Only available inside non-AJAX requests.
 	 *
 	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
-	 * @FLOW3\Transient
+	 * @Flow\Transient
 	 */
 	protected $viewHelperChildNodeRenderingContext;
 

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\View;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -114,11 +114,11 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	/**
 	 * Checks whether a template can be resolved for the current request context.
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean
 	 * @api
 	 */
-	public function canRender(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
+	public function canRender(\TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext) {
 		$this->setControllerContext($controllerContext);
 		try {
 			$this->getTemplateSource();
@@ -166,7 +166,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 */
 	protected function getTemplateSource($actionName = NULL) {
 		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
-		$templateSource = \TYPO3\FLOW3\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+		$templateSource = \TYPO3\Flow\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
 		if ($templateSource === FALSE) {
 			throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
@@ -231,7 +231,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 */
 	protected function getLayoutSource($layoutName = 'Default') {
 		$layoutPathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-		$layoutSource = \TYPO3\FLOW3\Utility\Files::getFileContents($layoutPathAndFilename, FILE_TEXT);
+		$layoutSource = \TYPO3\Flow\Utility\Files::getFileContents($layoutPathAndFilename, FILE_TEXT);
 		if ($layoutSource === FALSE) {
 			throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $layoutPathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
@@ -289,7 +289,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 */
 	protected function getPartialSource($partialName) {
 		$partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
-		$partialSource = \TYPO3\FLOW3\Utility\Files::getFileContents($partialPathAndFilename, FILE_TEXT);
+		$partialSource = \TYPO3\Flow\Utility\Files::getFileContents($partialPathAndFilename, FILE_TEXT);
 		if ($partialSource === FALSE) {
 			throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $partialPathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
@@ -427,9 +427,9 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 			}
 			$temporaryPattern = str_replace('@subpackage', implode('/', ($i<0 ? $subpackageParts : array_slice($subpackageParts, $i))), $temporaryPattern);
 
-			$results[] = \TYPO3\FLOW3\Utility\Files::getUnixStylePath(str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $temporaryPattern));
+			$results[] = \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $temporaryPattern));
 			if ($formatIsOptional) {
-				$results[] =  \TYPO3\FLOW3\Utility\Files::getUnixStylePath(str_replace('.@format', '', $temporaryPattern));
+				$results[] =  \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('.@format', '', $temporaryPattern));
 			}
 
 		} while($i++ < count($subpackageParts) && $bubbleControllerAndSubpackage);

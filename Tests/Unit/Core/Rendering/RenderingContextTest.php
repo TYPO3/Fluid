@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\Rendering;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -15,7 +15,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Rendering;
  * Testcase for ParsingState
  *
  */
-class RenderingContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class RenderingContextTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * Parsing state
@@ -40,7 +40,7 @@ class RenderingContextTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function controllerContextCanBeReadCorrectly() {
-		$controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->renderingContext->setControllerContext($controllerContext);
 		$this->assertSame($this->renderingContext->getControllerContext(), $controllerContext);
 	}

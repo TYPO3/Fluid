@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,27 +11,27 @@ namespace TYPO3\Fluid\Core\Widget;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
-use TYPO3\FLOW3\Aop\JoinPointInterface;
-use TYPO3\FLOW3\Mvc\ActionRequest;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Aop\JoinPointInterface;
+use TYPO3\Flow\Mvc\ActionRequest;
 
 /**
  * Aspect which intercepts the regular routing mechanism and creates a matching
  * ActoinRequest if an AJAX widget request was detected.
  *
- * @FLOW3\Scope("singleton")
- * @FLOW3\Aspect
+ * @Flow\Scope("singleton")
+ * @Flow\Aspect
  */
 class AjaxWidgetRoutingAspect {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Cryptography\HashService
 	 */
 	protected $hashService;
 
 	/**
-	 * @FLOW3\Inject
+	 * @Flow\Inject
 	 * @var \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
 	 */
 	protected $ajaxWidgetContextHolder;
@@ -44,9 +44,9 @@ class AjaxWidgetRoutingAspect {
 	 * to a widget, this method will create a matching ActionRequest rather than
 	 * invoking the whole routing mechanism.
 	 *
-	 * @FLOW3\Around("method(TYPO3\FLOW3\Mvc\Routing\Router->route())")
-	 * @param \TYPO3\FLOW3\Aop\JoinPointInterface $joinPoint
-	 * @return \TYPO3\FLOW3\Mvc\ActionRequest
+	 * @Flow\Around("method(TYPO3\Flow\Mvc\Routing\Router->route())")
+	 * @param \TYPO3\Flow\Aop\JoinPointInterface $joinPoint
+	 * @return \TYPO3\Flow\Mvc\ActionRequest
 	 */
 	public function routeAjaxWidgetRequestAdvice(JoinPointInterface $joinPoint) {
 		$httpRequest = $joinPoint->getMethodArgument('httpRequest');

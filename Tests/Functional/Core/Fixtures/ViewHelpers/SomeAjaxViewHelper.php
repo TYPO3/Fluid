@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Functional\Core\Fixtures\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\Tests\Functional\Core\Fixtures\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper;
 
 /**
@@ -25,7 +25,7 @@ class SomeAjaxViewHelper extends AbstractWidgetViewHelper {
 	protected $ajaxWidget = TRUE;
 
 	/**
-	 * @FLOW3\Inject
+	 * @Flow\Inject
 	 * @var TYPO3\Fluid\Tests\Functional\Core\Fixtures\ViewHelpers\Controller\SomeAjaxController
 	 */
 	protected $controller;

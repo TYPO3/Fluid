@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Rendering;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -27,7 +27,7 @@ interface RenderingContextInterface {
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return \TYPO3\FLOW3\Mvc\Controller\ControllerContext The controller context to set
+	 * @return \TYPO3\Flow\Mvc\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext();
 

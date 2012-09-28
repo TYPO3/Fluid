@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -30,7 +30,7 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
@@ -54,7 +54,7 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue('123'));
 
 		$expectedResult = chr(10) . '<input type="hidden" name="prefix[theName][__identity]" value="123" />' . chr(10);
@@ -78,7 +78,7 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 		}');
 		$object = $this->getMock($fullClassName);
 
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->once())->method('getIdentifierByObject')->with($object)->will($this->returnValue(NULL));
 
 		$expectedResult = chr(10) . '<!-- Object of type ' . get_class($object) . ' is without identity -->' . chr(10);

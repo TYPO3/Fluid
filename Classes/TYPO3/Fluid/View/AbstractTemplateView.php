@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\View;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -17,7 +17,7 @@ namespace TYPO3\Fluid\View;
  * Contains the fundamental methods which any Fluid based template view needs.
  *
  */
-abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterface {
+abstract class AbstractTemplateView implements \TYPO3\Flow\Mvc\View\ViewInterface {
 
 	/**
 	 * Constants defining possible rendering types
@@ -27,12 +27,12 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterfa
 	const RENDERING_LAYOUT = 3;
 
 	/**
-	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
+	 * @var \TYPO3\Flow\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
@@ -74,10 +74,10 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterfa
 	/**
 	 * Injects the Object Manager
 	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\Flow\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -114,11 +114,11 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterfa
 	/**
 	 * Sets the current controller context
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return void
 	 * @api
 	 */
-	public function setControllerContext(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
@@ -465,11 +465,11 @@ abstract class AbstractTemplateView implements \TYPO3\FLOW3\Mvc\View\ViewInterfa
 	 * By default we assume that the view implementation can handle all kinds of
 	 * contexts. Override this method if that is not the case.
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
+	 * @param \TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
 	 * @return boolean TRUE if the view has something useful to display, otherwise FALSE
 	 * @api
 	 */
-	public function canRender(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
+	public function canRender(\TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext) {
 		return TRUE;
 	}
 

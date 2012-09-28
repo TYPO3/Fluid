@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,13 +11,13 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * This ViewHelper renders the identifier of a persisted object (if it has an identity).
  * Usually the identifier is the UUID of the object, but it could be an array of the
  * identity properties, too.
- * @see \TYPO3\FLOW3\Persistence\PersistenceManagerInterface::getIdentifierByObject()
+ * @see \TYPO3\Flow\Persistence\PersistenceManagerInterface::getIdentifierByObject()
  *
  * Useful for using the identifier outside of the form view helpers
  * (e.g. JavaScript and AJAX).
@@ -45,8 +45,8 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class IdentifierViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 

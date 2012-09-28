@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Functional\Core;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,12 +11,12 @@ namespace TYPO3\Fluid\Tests\Functional\Core;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Mvc\Routing\Route;
+use TYPO3\Flow\Mvc\Routing\Route;
 
 /**
  * Testcase for the widget mechanism
  */
-class WidgetTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
+class WidgetTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 	/**
 	 * Additional setup: Routes

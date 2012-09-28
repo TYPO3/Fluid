@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -349,7 +349,7 @@ class ForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase 
 
 		$viewHelperNode = new \TYPO3\Fluid\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode($this->templateVariableContainer);
 
-		$this->arguments['each'] = array('foo' => 'bar', 'FLOW3' => 'Fluid', 'TYPO3' => 'rocks');
+		$this->arguments['each'] = array('foo' => 'bar', 'Flow' => 'Fluid', 'TYPO3' => 'rocks');
 		$this->arguments['as'] = 'innerVariable';
 		$this->arguments['iteration'] = 'iteration';
 

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -27,21 +27,21 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	protected $viewHelper;
 
 	/**
-	 * @var \TYPO3\FLOW3\Property\PropertyMapper
+	 * @var \TYPO3\Flow\Property\PropertyMapper
 	 */
 	protected $mockPropertyMapper;
 
 	/**
-	 * @var \TYPO3\FLOW3\Error\Result
+	 * @var \TYPO3\Flow\Error\Result
 	 */
 	protected $mockMappingResult;
 
 	public function setUp() {
 		parent::setUp();
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\UploadViewHelper', array('setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration', 'getValue', 'getMappingResultsForProperty'));
-		$this->mockMappingResult = $this->getMock('TYPO3\FLOW3\Error\Result');
+		$this->mockMappingResult = $this->getMock('TYPO3\Flow\Error\Result');
 		$this->viewHelper->expects($this->any())->method('getMappingResultsForProperty')->will($this->returnValue($this->mockMappingResult));
-		$this->mockPropertyMapper = $this->getMock('TYPO3\FLOW3\Property\PropertyMapper');
+		$this->mockPropertyMapper = $this->getMock('TYPO3\Flow\Property\PropertyMapper');
 		$this->viewHelper->_set('propertyMapper', $this->mockPropertyMapper);
 		$this->arguments['name'] = '';
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -101,7 +101,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	 * @test
 	 */
 	public function hiddenFieldsContainDataOfTheSpecifiedResource() {
-		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
+		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource');
 		$mockResource->expects($this->any())->method('getFilename')->will($this->returnValue('theResourceFilename'));
 		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
 
@@ -117,7 +117,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	 * @test
 	 */
 	public function hiddenFieldsAreNotRenderedIfPropertyMappingErrorsOccurred() {
-		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
+		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource');
 		$mockResource->expects($this->any())->method('getFilename')->will($this->returnValue('theResourceFilename'));
 		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
 
@@ -135,7 +135,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	 * @test
 	 */
 	public function hiddenFieldsContainDataOfAPreviouslyUploadedResource() {
-		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource');
+		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource');
 		$mockResource->expects($this->any())->method('getFilename')->will($this->returnValue('theResourceFilename'));
 		$mockResource->expects($this->any())->method('getResourcePointer')->will($this->returnValue('theResourcePointer'));
 
@@ -143,7 +143,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 			'error' => \UPLOAD_ERR_NO_FILE,
 			'submittedFile' => array('filename' => 'theResourceFilename', 'resourcePointer' => 'theResourcePointer')
 		);
-		$this->mockPropertyMapper->expects($this->atLeastOnce())->method('convert')->with($resourceData, 'TYPO3\FLOW3\Resource\Resource')->will($this->returnValue($mockResource));
+		$this->mockPropertyMapper->expects($this->atLeastOnce())->method('convert')->with($resourceData, 'TYPO3\Flow\Resource\Resource')->will($this->returnValue($mockResource));
 
 		$this->viewHelper->expects($this->atLeastOnce())->method('getValue')->will($this->returnValue($resourceData));
 

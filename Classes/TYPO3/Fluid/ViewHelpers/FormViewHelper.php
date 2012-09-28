@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Form view helper. Generates a <form> Tag.
@@ -50,14 +50,14 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	protected $tagName = 'form';
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Cryptography\HashService
 	 */
 	protected $hashService;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\Mvc\Controller\MvcPropertyMappingConfigurationService
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService
 	 */
 	protected $mvcPropertyMappingConfigurationService;
 
@@ -188,7 +188,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			try {
 				$this->formActionUri = $uriBuilder
 					->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
-			} catch (\TYPO3\FLOW3\Exception $exception) {
+			} catch (\TYPO3\Flow\Exception $exception) {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 			}
 		}

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\Parser\Interceptor;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -15,7 +15,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\Interceptor;
  * Testcase for Interceptor\Resource
  *
  */
-class ResourceTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class ResourceTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
@@ -38,7 +38,7 @@ class ResourceTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$mockTextNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', array('evaluateChildNodes'), array($originalText));
 		$this->assertEquals($originalText, $mockTextNode->evaluate($this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface')));
 
-		$mockObjectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
+		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
 		$mockObjectManager->expects($this->at(0))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode')->will($this->returnValue($mockDummyNode));
 		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $originalText1)->will($this->returnValue($mockDummyNode));
 		$mockObjectManager->expects($this->at(2))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode', $path)->will($this->returnValue($mockPathNode));

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -125,7 +125,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 		$submittedArguments = $this->controllerContext->getRequest()->getInternalArgument('__submittedArguments');
 		if ($submittedArguments !== NULL) {
 			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
-			$value = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
+			$value = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
 		}
 		return $value;
 	}
@@ -145,7 +145,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 			$objectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 				// If Count == 2 -> we need to go through the for-loop exactly once
 			for ($i=1; $i < count($propertySegments); $i++) {
-				$object = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
+				$object = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
 				$objectName .= '[' . $propertySegments[$i-1] . ']';
 				$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
 
@@ -172,7 +172,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 		if (is_array($formObject)) {
 			return isset($formObject[$propertyName]) ? $formObject[$propertyName] : NULL;
 		}
-		return \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($formObject, $propertyName);
+		return \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($formObject, $propertyName);
 	}
 
 	/**
@@ -210,15 +210,15 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	/**
 	 * Get errors for the property and form name of this view helper
 	 *
-	 * @return \TYPO3\FLOW3\Error\Result
+	 * @return \TYPO3\Flow\Error\Result
 	 */
 	protected function getMappingResultsForProperty() {
 		if (!$this->isObjectAccessorMode()) {
-			return new \TYPO3\FLOW3\Error\Result();
+			return new \TYPO3\Flow\Error\Result();
 		}
 		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
 		if ($validationResults === NULL) {
-			return new \TYPO3\FLOW3\Error\Result();
+			return new \TYPO3\Flow\Error\Result();
 		}
 		$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 		return $validationResults->forProperty($formObjectName)->forProperty($this->arguments['property']);

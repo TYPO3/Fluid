@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -23,7 +23,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	 * @test
 	 */
 	public function ifAnAttributeValueIsAnObjectMaintainedByThePersistenceManagerItIsConvertedToAUUID() {
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('6f487e40-4483-11de-8a39-0800200c9a66'));
 
 		$className = 'Object' . uniqid();
@@ -32,7 +32,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 			public function __clone() {}
 		}');
 		$object = $this->getMock($fullClassName);
-		$object->expects($this->any())->method('FLOW3_Persistence_isNew')->will($this->returnValue(FALSE));
+		$object->expects($this->any())->method('Flow_Persistence_isNew')->will($this->returnValue(FALSE));
 
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
@@ -206,7 +206,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	public function getValueConvertsObjectsToIdentifiersByDefault() {
 		$mockObject = $this->getMock('stdClass');
 
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->atLeastOnce())->method('getIdentifierByObject')->with($mockObject)->will($this->returnValue('6f487e40-4483-11de-8a39-0800200c9a66'));
 
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -226,7 +226,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	public function getValueDoesNotConvertObjectsIfConvertObjectsIsFalse() {
 		$mockObject = $this->getMock('stdClass');
 
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 		$mockPersistenceManager->expects($this->any())->method('getIdentifierByObject')->will($this->returnValue('6f487e40-4483-11de-8a39-0800200c9a66'));
 
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
@@ -270,11 +270,11 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$formViewHelper->_set('arguments', $mockArguments);
 		$this->viewHelperVariableContainer->expects($this->any())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue('foo'));
 
-		$mockArgumentError = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ArgumentError', array(), array('foo'));
+		$mockArgumentError = $this->getMock('TYPO3\Flow\Mvc\Controller\ArgumentError', array(), array('foo'));
 		$mockArgumentError->expects($this->once())->method('getPropertyName')->will($this->returnValue('foo'));
-		$mockPropertyError = $this->getMock('TYPO3\FLOW3\Validation\PropertyError', array(), array('bar'));
+		$mockPropertyError = $this->getMock('TYPO3\Flow\Validation\PropertyError', array(), array('bar'));
 		$mockPropertyError->expects($this->once())->method('getPropertyName')->will($this->returnValue('bar'));
-		$mockError = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
 		$mockPropertyError->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockError)));
 		$mockArgumentError->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockPropertyError)));
 		$this->request->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockArgumentError)));
@@ -327,7 +327,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$mockArguments->expects($this->at(1))->method('hasArgument')->with('errorClass')->will($this->returnValue(FALSE));
 		$formViewHelper->_set('arguments', $mockArguments);
 
-		$mockError = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
 		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'error');
@@ -348,7 +348,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$mockArguments->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(FALSE));
 		$formViewHelper->_set('arguments', $mockArguments);
 
-		$mockError = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
 		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'default classes error');
@@ -369,7 +369,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$mockArguments->expects($this->at(2))->method('offsetGet')->with('errorClass')->will($this->returnValue('custom-error-class'));
 		$formViewHelper->_set('arguments', $mockArguments);
 
-		$mockError = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
 		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'custom-error-class');
@@ -391,7 +391,7 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$mockArguments->expects($this->at(3))->method('offsetGet')->with('errorClass')->will($this->returnValue('custom-error-class'));
 		$formViewHelper->_set('arguments', $mockArguments);
 
-		$mockError = $this->getMock('TYPO3\FLOW3\Error\Error', array(), array(), '', FALSE);
+		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
 		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'default classes custom-error-class');

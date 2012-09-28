@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Rendering;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -29,14 +29,14 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	 * Object manager which is bubbled through. The ViewHelperNode cannot get an ObjectManager injected because
 	 * the whole syntax tree should be cacheable
 	 *
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
 	 * Controller context being passed to the ViewHelper
 	 *
-	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
+	 * @var \TYPO3\Flow\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
@@ -50,16 +50,16 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	/**
 	 * Inject the object manager
 	 *
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
 	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\Flow\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
 	/**
 	 * Returns the object manager. Only the ViewHelperNode should do this.
 	 *
-	 * @return \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @return \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	public function getObjectManager() {
 		return $this->objectManager;
@@ -87,16 +87,16 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 	/**
 	 * Set the controller context which will be passed to the ViewHelper
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext The controller context to set
+	 * @param \TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext The controller context to set
 	 */
-	public function setControllerContext(\TYPO3\FLOW3\Mvc\Controller\ControllerContext $controllerContext) {
+	public function setControllerContext(\TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext) {
 		$this->controllerContext = $controllerContext;
 	}
 
 	/**
 	 * Get the controller context which will be passed to the ViewHelper
 	 *
-	 * @return \TYPO3\FLOW3\Mvc\Controller\ControllerContext The controller context to set
+	 * @return \TYPO3\Flow\Mvc\Controller\ControllerContext The controller context to set
 	 */
 	public function getControllerContext() {
 		return $this->controllerContext;

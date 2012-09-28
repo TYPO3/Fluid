@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,8 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
-use TYPO3\FLOW3\I18n;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\I18n;
 use TYPO3\Fluid\Core\ViewHelper;
 
 /**
@@ -94,14 +94,14 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\I18n\Formatter\DatetimeFormatter
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\I18n\Formatter\DatetimeFormatter
 	 */
 	protected $formatter;
 
 	/**
-	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\I18n\Service
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\I18n\Service
 	 */
 	protected $localizationService;
 
@@ -110,9 +110,9 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param mixed $date either a \DateTime object or a string that is accepted by \DateTime constructor
 	 * @param string $format Format String which is taken to format the Date/Time
-	 * @param mixed $forceLocale Whether if, and what, Locale should be used. May be boolean, string or \TYPO3\FLOW3\I18n\Locale
-	 * @param string $localeFormatType Whether to format (according to locale set in $forceLocale) date, time or datetime. Must be one of TYPO3\FLOW3\I18n\Cldr\Reader\DatesReader::FORMAT_TYPE_*'s constants.
-	 * @param string $localeFormatLength Format length if locale set in $forceLocale. Must be one of TYPO3\FLOW3\I18n\Cldr\Reader\DatesReader::FORMAT_LENGTH_*'s constants.
+	 * @param mixed $forceLocale Whether if, and what, Locale should be used. May be boolean, string or \TYPO3\Flow\I18n\Locale
+	 * @param string $localeFormatType Whether to format (according to locale set in $forceLocale) date, time or datetime. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_TYPE_*'s constants.
+	 * @param string $localeFormatLength Format length if locale set in $forceLocale. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_LENGTH_*'s constants.
 	 *
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @return string Formatted date
@@ -145,7 +145,7 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @param \DateTime $dateTime
-	 * @param mixed $locale string or boolean or \TYPO3\FLOW3\I18n\Locale
+	 * @param mixed $locale string or boolean or \TYPO3\Flow\I18n\Locale
 	 * @param array $formatConfiguration The format configuration to use, index 0 is the type, index 1 is the format length
 	 *
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException

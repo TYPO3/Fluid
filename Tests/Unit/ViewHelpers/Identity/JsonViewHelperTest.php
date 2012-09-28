@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Identity;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -23,7 +23,7 @@ class JsonIdentityViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 	 * @test
 	 */
 	public function renderGetsIdentityForObjectFromPersistenceManager() {
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
@@ -42,7 +42,7 @@ class JsonIdentityViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 	 * @test
 	 */
 	public function renderOutputsEmptyJsonObjectForNullIdentity() {
-		$mockPersistenceManager = $this->getMock('TYPO3\FLOW3\Persistence\PersistenceManagerInterface');
+		$mockPersistenceManager = $this->getMock('TYPO3\Flow\Persistence\PersistenceManagerInterface');
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Identity\JsonViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);

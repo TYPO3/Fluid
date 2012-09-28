@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * The abstract base class for all view helpers.
@@ -64,7 +64,7 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * Controller Context to use
-	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
+	 * @var \TYPO3\Flow\Mvc\Controller\ControllerContext
 	 * @api
 	 */
 	protected $controllerContext;
@@ -88,17 +88,17 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * Reflection service
-	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 * @var \TYPO3\Flow\Reflection\ReflectionService
 	 */
 	protected $reflectionService;
 
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \TYPO3\FLOW3\Log\SystemLoggerInterface
+	 * @var \TYPO3\Flow\Log\SystemLoggerInterface
 	 */
 	protected $systemLogger;
 
@@ -110,18 +110,18 @@ abstract class AbstractViewHelper {
 	protected $escapingInterceptorEnabled = TRUE;
 
 	/**
-	 * @param \TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(\TYPO3\FLOW3\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(\TYPO3\Flow\Object\ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
 	/**
-	 * @param \TYPO3\FLOW3\Log\SystemLoggerInterface $systemLogger
+	 * @param \TYPO3\Flow\Log\SystemLoggerInterface $systemLogger
 	 * @return void
 	 */
-	public function injectSystemLogger(\TYPO3\FLOW3\Log\SystemLoggerInterface $systemLogger) {
+	public function injectSystemLogger(\TYPO3\Flow\Log\SystemLoggerInterface $systemLogger) {
 		$this->systemLogger = $systemLogger;
 	}
 
@@ -148,9 +148,9 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * Inject a Reflection service
-	 * @param \TYPO3\FLOW3\Reflection\ReflectionService $reflectionService Reflection service
+	 * @param \TYPO3\Flow\Reflection\ReflectionService $reflectionService Reflection service
 	 */
-	public function injectReflectionService(\TYPO3\FLOW3\Reflection\ReflectionService $reflectionService) {
+	public function injectReflectionService(\TYPO3\Flow\Reflection\ReflectionService $reflectionService) {
 		$this->reflectionService = $reflectionService;
 	}
 

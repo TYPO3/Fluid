@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * View helper which renders the flash messages (if there are any) as an unsorted list.
@@ -79,7 +79,7 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	 * Renders flash messages that have been added to the FlashMessageContainer in previous request(s).
 	 *
 	 * @param string $as The name of the current flashMessage variable for rendering inside
-	 * @param string $severity severity of the messages (One of the \TYPO3\FLOW3\Error\Message::SEVERITY_* constants)
+	 * @param string $severity severity of the messages (One of the \TYPO3\Flow\Error\Message::SEVERITY_* constants)
 	 * @return string rendered Flash Messages, if there are any.
 	 * @api
 	 */

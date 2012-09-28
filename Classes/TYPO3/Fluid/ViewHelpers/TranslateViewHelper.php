@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Returns translated message using source message or key ID.
@@ -66,8 +66,8 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 
 	/**
-	 * @var \TYPO3\FLOW3\I18n\Translator
-	 * @FLOW3\Inject
+	 * @var \TYPO3\Flow\I18n\Translator
+	 * @Flow\Inject
 	 */
 	protected $translator;
 
@@ -91,8 +91,8 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 		$localeObject = NULL;
 		if ($locale !== NULL) {
 			try {
-				$localeObject = new \TYPO3\FLOW3\I18n\Locale($locale);
-			} catch (\TYPO3\FLOW3\I18n\Exception\InvalidLocaleIdentifierException $e) {
+				$localeObject = new \TYPO3\Flow\I18n\Locale($locale);
+			} catch (\TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException $e) {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
 			}
 		}

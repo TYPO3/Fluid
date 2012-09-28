@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -14,7 +14,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
 /**
  * Testcase for AbstractWidgetViewHelper
  */
-class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class AbstractWidgetViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @var \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper
@@ -32,17 +32,17 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $widgetContext;
 
 	/**
-	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \TYPO3\FLOW3\Mvc\Controller\ControllerContext
+	 * @var \TYPO3\Flow\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
 
 	/**
-	 * @var \TYPO3\FLOW3\Mvc\ActionRequest
+	 * @var \TYPO3\Flow\Mvc\ActionRequest
 	 */
 	protected $request;
 
@@ -57,13 +57,13 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext');
 		$this->viewHelper->injectWidgetContext($this->widgetContext);
 
-		$this->objectManager = $this->getMock('TYPO3\FLOW3\Object\ObjectManagerInterface');
+		$this->objectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
 		$this->viewHelper->injectObjectManager($this->objectManager);
 
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->viewHelper->_set('controllerContext', $this->controllerContext);
 
-		$this->request = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest', array(), array(), '', FALSE);
+		$this->request = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
 	}
 
 	/**
@@ -151,7 +151,7 @@ class AbstractWidgetViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\MissingControllerException
 	 */
 	public function initiateSubRequestThrowsExceptionIfControllerIsNoWidgetController() {
-		$controller = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerInterface');
+		$controller = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerInterface');
 		$this->viewHelper->_set('controller', $controller);
 
 		$this->viewHelper->_call('initiateSubRequest');

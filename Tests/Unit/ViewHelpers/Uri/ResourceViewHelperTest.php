@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -26,7 +26,7 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 
 	public function setUp() {
 		parent::setUp();
-		$this->mockResourcePublisher = $this->getMock('TYPO3\FLOW3\Resource\Publishing\ResourcePublisher');
+		$this->mockResourcePublisher = $this->getMock('TYPO3\Flow\Resource\Publishing\ResourcePublisher');
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->viewHelper->injectResourcePublisher($this->mockResourcePublisher);
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -66,7 +66,7 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 * @test
 	 */
 	public function renderUsesProvidedResourceObjectInsteadOfPackageAndPath() {
-		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource', array(), array(), '', FALSE);
 
 		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2.jpg'));
 
@@ -78,7 +78,7 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 * @test
 	 */
 	public function renderCreatesASpecialBrokenResourceUriIfTheResourceCouldNotBePublished() {
-		$mockResource = $this->getMock('TYPO3\FLOW3\Resource\Resource', array(), array(), '', FALSE);
+		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource', array(), array(), '', FALSE);
 
 		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue(FALSE));
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('http://foo/MyOwnResources/'));

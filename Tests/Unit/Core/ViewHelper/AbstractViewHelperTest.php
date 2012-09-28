@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -18,10 +18,10 @@ require_once(__DIR__ . '/../Fixtures/TestViewHelper2.php');
  * Testcase for AbstractViewHelper
  *
  */
-class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
-	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
+	 * @var \TYPO3\Flow\Reflection\ReflectionService
 	 */
 	protected $mockReflectionService;
 
@@ -63,7 +63,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	);
 
 	public function setUp() {
-		$this->mockReflectionService = $this->getMock('TYPO3\FLOW3\Reflection\ReflectionService', array(), array(), '', FALSE);
+		$this->mockReflectionService = $this->getMock('TYPO3\Flow\Reflection\ReflectionService', array(), array(), '', FALSE);
 	}
 
 	/**
@@ -149,7 +149,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 		\TYPO3\Fluid\Fluid::$debugMode = TRUE;
 
-		$dataCacheMock = $this->getMock('TYPO3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE);
+		$dataCacheMock = $this->getMock('TYPO3\Flow\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE);
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
 
@@ -177,7 +177,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 		\TYPO3\Fluid\Fluid::$debugMode = FALSE;
 
-		$dataCacheMock = $this->getMock('TYPO3\FLOW3\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE);
+		$dataCacheMock = $this->getMock('TYPO3\Flow\Cache\Frontend\VariableFrontend', array(), array(), '', FALSE);
 		$dataCacheMock->expects($this->any())->method('has')->will($this->returnValue(TRUE));
 		$dataCacheMock->expects($this->any())->method('get')->will($this->returnValue(array()));
 
@@ -272,7 +272,7 @@ class AbstractViewHelperTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	public function setRenderingContextShouldSetInnerVariables() {
 		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
-		$controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 
 		$renderingContext = new \TYPO3\Fluid\Core\Rendering\RenderingContext();
 		$renderingContext->injectTemplateVariableContainer($templateVariableContainer);

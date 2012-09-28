@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -22,17 +22,17 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
 abstract class AbstractFormViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
-	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var \TYPO3\Flow\Persistence\PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
 
 	/**
-	 * Injects the FLOW3 Persistence Manager
+	 * Injects the Flow Persistence Manager
 	 *
-	 * @param \TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager
+	 * @param \TYPO3\Flow\Persistence\PersistenceManagerInterface $persistenceManager
 	 * @return void
 	 */
-	public function injectPersistenceManager(\TYPO3\FLOW3\Persistence\PersistenceManagerInterface $persistenceManager) {
+	public function injectPersistenceManager(\TYPO3\Flow\Persistence\PersistenceManagerInterface $persistenceManager) {
 		$this->persistenceManager = $persistenceManager;
 	}
 
@@ -66,8 +66,8 @@ abstract class AbstractFormViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstr
 	 *
 	 * @param object $object Object to create the identity field for
 	 * @param string $name Name
-	 * @return string A hidden field containing the Identity (UUID in FLOW3, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
-	 * @see \TYPO3\FLOW3\Mvc\Controller\Argument::setValue()
+	 * @return string A hidden field containing the Identity (UUID in Flow, uid in Extbase) of the given object or NULL if the object is unknown to the persistence framework
+	 * @see \TYPO3\Flow\Mvc\Controller\Argument::setValue()
 	 */
 	protected function renderHiddenIdentityField($object, $name) {
 		if (!is_object($object) || $this->persistenceManager->isNewObject($object)) {

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Compiler;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\Core\Compiler;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Abstract Fluid Compiled template.
@@ -36,12 +36,12 @@ abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\Pars
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @param string $viewHelperName
 	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
-	 * @FLOW3\Internal
+	 * @Flow\Internal
 	 */
 	public function getViewHelper($uniqueCounter, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, $viewHelperName) {
-		if (\TYPO3\FLOW3\Core\Bootstrap::$staticObjectManager->getScope($viewHelperName) === \TYPO3\FLOW3\Object\Configuration\Configuration::SCOPE_SINGLETON) {
+		if (\TYPO3\Flow\Core\Bootstrap::$staticObjectManager->getScope($viewHelperName) === \TYPO3\Flow\Object\Configuration\Configuration::SCOPE_SINGLETON) {
 			// if ViewHelper is Singleton, do NOT instanciate with NEW, but re-use it.
-			$viewHelper = \TYPO3\FLOW3\Core\Bootstrap::$staticObjectManager->get($viewHelperName);
+			$viewHelper = \TYPO3\Flow\Core\Bootstrap::$staticObjectManager->get($viewHelperName);
 			$viewHelper->resetState();
 			return $viewHelper;
 		}

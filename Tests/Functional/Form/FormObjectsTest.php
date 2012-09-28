@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Functional\Form;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,16 +11,16 @@ namespace TYPO3\Fluid\Tests\Functional\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Http\Request;
-use TYPO3\FLOW3\Http\Uri;
-use TYPO3\FLOW3\Mvc\ActionRequest;
+use TYPO3\Flow\Http\Request;
+use TYPO3\Flow\Http\Uri;
+use TYPO3\Flow\Mvc\ActionRequest;
 
 /**
  * Testcase for Standalone View
  *
  * @group large
  */
-class FormObjectsTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
+class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 	/**
 	 * @var boolean
@@ -33,7 +33,7 @@ class FormObjectsTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	static protected $testablePersistenceEnabled = TRUE;
 
 	/**
-	 * @var \TYPO3\FLOW3\Http\Client\Browser
+	 * @var \TYPO3\Flow\Http\Client\Browser
 	 */
 	protected $browser;
 
@@ -43,7 +43,7 @@ class FormObjectsTest extends \TYPO3\FLOW3\Tests\FunctionalTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$route = new \TYPO3\FLOW3\Mvc\Routing\Route();
+		$route = new \TYPO3\Flow\Mvc\Routing\Route();
 		$route->setUriPattern('test/fluid/formobjects(/{@action})');
 		$route->setDefaults(array(
 			'@package' => 'TYPO3.Fluid',

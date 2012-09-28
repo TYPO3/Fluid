@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\FLOW3\Annotations as FLOW3;
+use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Applies htmlentities() escaping to a value
@@ -33,7 +33,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * Text with & " ' < > * replaced by HTML entities (htmlentities applied).
  * </output>
  *
- * @FLOW3\Scope("singleton")
+ * @Flow\Scope("singleton")
  * @api
  */
 class HtmlentitiesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

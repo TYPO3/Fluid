@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Functional\View\Fixtures\View;
 
 	/*                                                                        *
-	 * This script belongs to the FLOW3 package "Fluid".                      *
+	 * This script belongs to the TYPO3 Flow package "Fluid".                 *
 	 *                                                                        *
 	 * It is free software; you can redistribute it and/or modify it under    *
 	 * the terms of the GNU Lesser General Public License, either version 3   *
@@ -21,10 +21,10 @@ class StandaloneView extends \TYPO3\Fluid\View\StandaloneView {
 	/**
 	 * Constructor
 	 *
-	 * @param \TYPO3\FLOW3\Mvc\ActionRequest $request The current action request. If none is specified it will be created from the environment.
+	 * @param \TYPO3\Flow\Mvc\ActionRequest $request The current action request. If none is specified it will be created from the environment.
 	 * @param string $fileIdentifierPrefix
 	 */
-	public function __construct(\TYPO3\FLOW3\Mvc\ActionRequest $request = NULL, $fileIdentifierPrefix = '') {
+	public function __construct(\TYPO3\Flow\Mvc\ActionRequest $request = NULL, $fileIdentifierPrefix = '') {
 		$this->request = $request;
 		$this->fileIdentifierPrefix = $fileIdentifierPrefix;
 	}

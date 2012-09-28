@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -17,7 +17,7 @@ require_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
  * Testcase for AbstractViewHelper
  *
  */
-class ViewHelperVariableContainerTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 *

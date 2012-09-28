@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License, either version 3 of the   *
@@ -20,7 +20,7 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\FLOW3\Security\Cryptography\HashService
+	 * @var \TYPO3\Flow\Security\Cryptography\HashService
 	 */
 	protected $hashService;
 
@@ -48,9 +48,9 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @param \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper
 	 */
 	protected function injectDependenciesIntoViewHelper(\TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper) {
-		$this->hashService = $this->getMock('TYPO3\FLOW3\Security\Cryptography\HashService');
+		$this->hashService = $this->getMock('TYPO3\Flow\Security\Cryptography\HashService');
 		$this->inject($viewHelper, 'hashService', $this->hashService);
-		$this->mvcPropertyMappingConfigurationService = $this->getMock('TYPO3\FLOW3\Mvc\Controller\MvcPropertyMappingConfigurationService');
+		$this->mvcPropertyMappingConfigurationService = $this->getMock('TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService');
 		$this->inject($viewHelper, 'mvcPropertyMappingConfigurationService', $this->mvcPropertyMappingConfigurationService);
 		parent::injectDependenciesIntoViewHelper($viewHelper);
 	}
@@ -127,7 +127,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->arguments['object'] = $object;
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$mockObjectSerializer = $this->getMock('TYPO3\FLOW3\Object\ObjectSerializer');
+		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
 		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
 		$viewHelper->expects($this->atLeastOnce())->method('getFormObjectName')->will($this->returnValue('MyName'));
@@ -198,7 +198,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper->expects($this->once())->method('renderAdditionalIdentityFields');
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$mockObjectSerializer = $this->getMock('TYPO3\FLOW3\Object\ObjectSerializer');
+		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
 		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
 		$viewHelper->render();
@@ -251,7 +251,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$mockObjectSerializer = $this->getMock('TYPO3\FLOW3\Object\ObjectSerializer');
+		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
 		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
 		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('packageKey'));
@@ -275,10 +275,10 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$mockObjectSerializer = $this->getMock('TYPO3\FLOW3\Object\ObjectSerializer');
+		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
 		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
-		$mockSubRequest = $this->getMock('TYPO3\FLOW3\Mvc\Web\SubRequest', array(), array(), '', FALSE);
+		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\Web\SubRequest', array(), array(), '', FALSE);
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('subRequestPackageKey'));
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subRequestSubpackageKey'));
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerName')->will($this->returnValue('subRequestControllerName'));
@@ -291,7 +291,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->request->expects($this->atLeastOnce())->method('getControllerName')->will($this->returnValue('controllerName'));
 		$this->request->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('controllerActionName'));
 
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockSubRequest));
 		$this->injectDependenciesIntoViewHelper($viewHelper);
@@ -343,11 +343,11 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 */
 	public function renderAddsDefaultFieldNamePrefixToTemplateVariableContainerIfNoPrefixIsSpecifiedAndRequestIsASubRequest() {
 		$expectedPrefix = 'someArgumentPrefix';
-		$mockSubRequest = $this->getMock('TYPO3\FLOW3\Mvc\ActionRequest', array(), array(), '', FALSE);
+		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
 		$mockSubRequest->expects($this->once())->method('getArgumentNamespace')->will($this->returnValue($expectedPrefix));
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer', 'addEmptyHiddenFieldNamesToViewHelperVariableContainer', 'removeEmptyHiddenFieldNamesFromViewHelperVariableContainer', 'renderEmptyHiddenFields', 'renderTrustedPropertiesField'), array(), '', FALSE);
-		$this->controllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockSubRequest));
 		$this->renderingContext->setControllerContext($this->controllerContext);

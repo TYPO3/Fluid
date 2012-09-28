@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -25,7 +25,7 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 	protected $viewHelper;
 
 	/**
-	 * @var \TYPO3\FLOW3\Mvc\FlashMessageContainer
+	 * @var \TYPO3\Flow\Mvc\FlashMessageContainer
 	 */
 	protected $mockFlashMessageContainer;
 
@@ -40,8 +40,8 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 	 * @return void
 	 */
 	public function setUp() {
-		$this->mockFlashMessageContainer = $this->getMock('TYPO3\FLOW3\Mvc\FlashMessageContainer');
-		$mockControllerContext = $this->getMock('TYPO3\FLOW3\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->mockFlashMessageContainer = $this->getMock('TYPO3\Flow\Mvc\FlashMessageContainer');
+		$mockControllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$mockControllerContext->expects($this->any())->method('getFlashMessageContainer')->will($this->returnValue($this->mockFlashMessageContainer));
 
 		$this->mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder');
@@ -65,23 +65,23 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 		return array(
 			array(
 				'<li class="flashmessages-ok">Some Flash Message</li>',
-				array(new \TYPO3\FLOW3\Error\Message('Some Flash Message'))
+				array(new \TYPO3\Flow\Error\Message('Some Flash Message'))
 			),
 			array(
 				'<li class="flashmessages-error">Error &quot;dynamic&quot; Flash Message</li>',
-				array(new \TYPO3\FLOW3\Error\Error('Error %s Flash Message', NULL, array('"dynamic"')))
+				array(new \TYPO3\Flow\Error\Error('Error %s Flash Message', NULL, array('"dynamic"')))
 			),
 			array(
 				'<li class="flashmessages-error">Error Flash &quot;Message&quot;</li><li class="flashmessages-notice">Notice Flash Message</li>',
-				array(new \TYPO3\FLOW3\Error\Error('Error Flash "Message"'), new \TYPO3\FLOW3\Error\Notice('Notice Flash Message'))
+				array(new \TYPO3\Flow\Error\Error('Error Flash "Message"'), new \TYPO3\Flow\Error\Notice('Notice Flash Message'))
 			),
 			array(
 				'<li class="flashmessages-warning"><h3>Some &quot;Warning&quot;</h3>Warning message body</li><li class="flashmessages-notice">Notice Flash Message</li>',
-				array(new \TYPO3\FLOW3\Error\Warning('Warning message body', NULL, array(), 'Some "Warning"'), new \TYPO3\FLOW3\Error\Notice('Notice Flash Message'))
+				array(new \TYPO3\Flow\Error\Warning('Warning message body', NULL, array(), 'Some "Warning"'), new \TYPO3\Flow\Error\Notice('Notice Flash Message'))
 			),
 			array(
 				'<li class="customClass-ok">Message 01</li><li class="customClass-notice">Message 02</li>',
-				array(new \TYPO3\FLOW3\Error\Message('Message 01'), new \TYPO3\FLOW3\Error\Notice('Message 02')),
+				array(new \TYPO3\Flow\Error\Message('Message 01'), new \TYPO3\Flow\Error\Notice('Message 02')),
 				'customClass'
 			),
 		);

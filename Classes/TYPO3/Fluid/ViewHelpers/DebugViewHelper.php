@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -47,7 +47,7 @@ class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
-	 * Wrapper for \TYPO3\FLOW3\var_dump()
+	 * Wrapper for \TYPO3\Flow\var_dump()
 	 *
 	 * @param string $title
 	 * @param boolean $typeOnly Whether only the type should be returned instead of the whole chain.
@@ -60,7 +60,7 @@ class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		}
 
 		ob_start();
-		\TYPO3\FLOW3\var_dump($expressionToExamine, $title);
+		\TYPO3\Flow\var_dump($expressionToExamine, $title);
 		$output = ob_get_contents();
 		ob_end_clean();
 		return $output;

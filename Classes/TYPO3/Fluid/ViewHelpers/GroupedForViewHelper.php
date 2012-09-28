@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Fluid".                      *
+ * This script belongs to the TYPO3 Flow package "Fluid".                 *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -121,7 +121,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 			if (is_array($value)) {
 				$currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : NULL;
 			} elseif (is_object($value)) {
-				$currentGroupIndex = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($value, $groupBy);
+				$currentGroupIndex = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $groupBy);
 			} else {
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects' , 1253120365);
 			}
