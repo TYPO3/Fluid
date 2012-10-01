@@ -1,12 +1,11 @@
 {
     "name": "typo3/fluid",
-    "type": "flow3-framework",
+    "type": "typo3-flow-framework",
     "description": "Next-Generation Templating Framework for FLOW3 and TYPO3 5.0, also backported to TYPO3 4.x",
     "license": ["LGPL-3.0+"],
     "version": "1.2.0-dev",
     "require": {
-        "typo3/flow3": "*",
-        "flow3/composer-installers": "*"
+        "typo3/flow3": "*"
     },
     "autoload": {
         "psr-0": {
