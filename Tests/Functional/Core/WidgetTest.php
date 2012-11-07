@@ -70,7 +70,7 @@ class WidgetTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$response = $this->browser->request('http://localhost/test/widget/ajaxtest');
 		list(,$ajaxWidgetUri) = explode(chr(10), $response->getContent());
 
-		$response = $this->browser->request($ajaxWidgetUri);
+		$response = $this->browser->request('http://localhost/' . $ajaxWidgetUri);
 		$this->assertSame('SomeAjaxController::ajaxAction("value1", "value2")', $response->getContent());
 	}
 
