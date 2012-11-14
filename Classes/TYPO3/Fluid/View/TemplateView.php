@@ -127,7 +127,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		}
 	}
 
-		/**
+	/**
 	 * Set the root path to the templates.
 	 * If set, overrides the one determined from $this->templateRootPathPattern
 	 *
@@ -318,7 +318,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @return string Path to template root directory
 	 */
-	protected function getTemplateRootPath() {
+	public function getTemplateRootPath() {
 		if ($this->templateRootPath !== NULL) {
 			return $this->templateRootPath;
 		} else {
