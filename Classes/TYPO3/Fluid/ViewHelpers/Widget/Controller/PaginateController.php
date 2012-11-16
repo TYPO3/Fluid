@@ -15,6 +15,10 @@ namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
  */
 class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
+	/**
+	 * @var \TYPO3\Flow\Persistence\QueryResultInterface
+	 */
+	protected $objects;
 
 	/**
 	 * @var array
