@@ -27,8 +27,10 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	public function setUp() {
 		parent::setUp();
 		$this->mockResourcePublisher = $this->getMock('TYPO3\Flow\Resource\Publishing\ResourcePublisher');
+		$this->mockI18nService = $this->getMock('TYPO3\Flow\I18n\Service');
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper', array('renderChildren'), array(), '', FALSE);
-		$this->viewHelper->injectResourcePublisher($this->mockResourcePublisher);
+		$this->inject($this->viewHelper, 'resourcePublisher', $this->mockResourcePublisher);
+		$this->inject($this->viewHelper, 'i18nService', $this->mockI18nService);
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -38,6 +40,7 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceUri() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
+		$this->mockI18nService->expects($this->atLeastOnce())->method('getLocalizedFilename')->will($this->returnValue(array('foo')));
 		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
 
 		$resourceUri = $this->viewHelper->render('foo');
@@ -49,6 +52,7 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 */
 	public function renderUsesCustomPackageKeyIfSpecified() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
+		$this->mockI18nService->expects($this->atLeastOnce())->method('getLocalizedFilename')->will($this->returnValue(array('foo')));
 		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
 		$this->assertEquals('Resources/Packages/SomePackage/foo', $resourceUri);
 	}
@@ -58,6 +62,7 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 */
 	public function renderUsesStaticResourcesBaseUri() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
+		$this->mockI18nService->expects($this->atLeastOnce())->method('getLocalizedFilename')->will($this->returnValue(array('foo')));
 		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
 		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo', $resourceUri);
 	}
@@ -86,6 +91,27 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource);
 		$this->assertEquals('http://foo/MyOwnResources/BrokenResource', $resourceUri);
 	}
+
+	/**
+	 * @test
+	 */
+	public function renderLocalizesResource() {
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
+		$this->mockI18nService->expects($this->once())->method('getLocalizedFilename')->with('resource://SomePackage/Public/foo')->will($this->returnValue(array('resource://SomePackage/Public/foo.de', new \TYPO3\Flow\I18n\Locale('de'))));
+		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
+		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo.de', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderSkipsLocalizationIfRequested() {
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
+		$this->mockI18nService->expects($this->never())->method('getLocalizedFilename');
+		$resourceUri = $this->viewHelper->render('foo', 'SomePackage', NULL, FALSE);
+		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo', $resourceUri);
+	}
+
 }
 
 ?>
