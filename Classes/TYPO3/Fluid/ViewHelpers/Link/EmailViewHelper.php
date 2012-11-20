@@ -26,7 +26,7 @@ namespace TYPO3\Fluid\ViewHelpers\Link;
  * </output>
  *
  * <code title="Email link with custom linktext">
- * <f:link.email email="foo@bar.tld">some custom content</f:emaillink>
+ * <f:link.email email="foo@bar.tld">some custom content</f:link.email>
  * </code>
  * <output>
  * <a href="mailto:foo@bar.tld">some custom content</a>
@@ -37,7 +37,7 @@ namespace TYPO3\Fluid\ViewHelpers\Link;
 class EmailViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	/**
-	 * @var	string
+	 * @var string
 	 */
 	protected $tagName = 'a';
 
