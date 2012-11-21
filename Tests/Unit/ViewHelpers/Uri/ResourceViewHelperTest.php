@@ -20,7 +20,7 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper
 	 */
 	protected $viewHelper;
 
@@ -105,11 +105,53 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	/**
 	 * @test
 	 */
+	public function renderLocalizesResourceGivenAsResourceUri() {
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
+		$this->mockI18nService
+			->expects($this->once())
+			->method('getLocalizedFilename')
+			->with('resource://SomePackage/Public/Images/foo.jpg')
+			->will($this->returnValue(array('resource://SomePackage/Public/Images/foo.de.jpg', new \TYPO3\Flow\I18n\Locale('de'))));
+
+		$resourceUri = $this->viewHelper->render('resource://SomePackage/Public/Images/foo.jpg');
+		$this->assertEquals('CustomDirectory/Packages/SomePackage/Images/foo.de.jpg', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 */
 	public function renderSkipsLocalizationIfRequested() {
 		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
 		$this->mockI18nService->expects($this->never())->method('getLocalizedFilename');
 		$resourceUri = $this->viewHelper->render('foo', 'SomePackage', NULL, FALSE);
 		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderSkipsLocalizationForResourcesGivenAsResourceUriIfRequested() {
+		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
+		$this->mockI18nService->expects($this->never())->method('getLocalizedFilename');
+
+		$resourceUri = $this->viewHelper->render('resource://SomePackage/Public/Images/foo.jpg', NULL, NULL, FALSE);
+		$this->assertEquals('CustomDirectory/Packages/SomePackage/Images/foo.jpg', $resourceUri);
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 */
+	public function renderThrowsExceptionIfNeitherResourceNorPathWereGiven() {
+		$this->viewHelper->render(NULL, 'SomePackage', NULL);
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 */
+	public function renderThrowsExceptionIfResourceUriNotPointingToPublicWasGivenAsPath() {
+		$this->viewHelper->render('resource://Some.Package/Private/foobar.txt', 'SomePackage');
 	}
 
 }
