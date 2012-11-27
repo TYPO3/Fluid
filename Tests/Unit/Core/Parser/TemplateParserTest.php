@@ -231,7 +231,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 		$templateParser->injectObjectManager($mockObjectManager);
 
-		$templateParser->_call('buildObjectTree', array());
+		$templateParser->_call('buildObjectTree', array(), \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
@@ -251,7 +251,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 		$templateParser->injectObjectManager($mockObjectManager);
 
-		$templateParser->_call('buildObjectTree', array());
+		$templateParser->_call('buildObjectTree', array(), \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
@@ -276,7 +276,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$splitTemplate = $templateParser->_call('splitTemplateAtDynamicTags', 'The first part is simple<![CDATA[<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>]]><f:format.printf arguments="{number : 362525200}">%.3e</f:format.printf>and here goes some {text} that could have {shorthand}');
 
-		$templateParser->_call('buildObjectTree', $splitTemplate);
+		$templateParser->_call('buildObjectTree', $splitTemplate, \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
@@ -601,7 +601,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser->expects($this->at(2))->method('arrayHandler')->with($mockState, 'on: "here"');
 
 		$text = '{someThing.absolutely} "fishy" is \'going\' {on: "here"}';
-		$templateParser->_call('textAndShorthandSyntaxHandler', $mockState, $text);
+		$templateParser->_call('textAndShorthandSyntaxHandler', $mockState, $text, \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
