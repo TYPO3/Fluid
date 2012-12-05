@@ -82,12 +82,14 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	static public function getPropertyPath($subject, $propertyPath, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		$propertyPathSegments = explode('.', $propertyPath);
 		foreach ($propertyPathSegments as $pathSegment) {
-			$propertyExists = FALSE;
-			$propertyValue = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyInternal($subject, $pathSegment, FALSE, $propertyExists);
-			if ($propertyExists !== TRUE && (is_array($subject) || $subject instanceof \ArrayAccess) && isset($subject[$pathSegment])) {
-				$subject = $subject[$pathSegment];
-			} else {
-				$subject = $propertyValue;
+			try {
+				$subject = \TYPO3\Flow\Reflection\ObjectAccess::getProperty($subject, $pathSegment);
+			} catch (\TYPO3\Flow\Reflection\Exception\PropertyNotAccessibleException $exception) {
+				$subject = NULL;
+			}
+
+			if ($subject === NULL) {
+				break;
 			}
 
 			if ($subject instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
