@@ -38,11 +38,6 @@ class WidgetTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	}
 
 	/**
-	 * @var boolean
-	 */
-	protected $testableHttpEnabled = TRUE;
-
-	/**
 	 * This sends a request to the helper controller (AjaxTestController) which includes
 	 * the AJAX widget in its template. The indexAction renders that template which
 	 * in turn lets the "someAjax" widget call the indexAction of its own controller

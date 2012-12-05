@@ -21,11 +21,6 @@ use TYPO3\Flow\Mvc\ActionRequest;
 class StandaloneViewTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 
 	/**
-	 * @var boolean
-	 */
-	protected $testableHttpEnabled = TRUE;
-
-	/**
 	 * @var string
 	 */
 	protected $standaloneViewNonce = '42';
