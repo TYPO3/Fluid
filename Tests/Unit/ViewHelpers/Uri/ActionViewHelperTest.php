@@ -38,7 +38,7 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$this->uriBuilder->expects($this->any())->method('uriFor')->will($this->returnValue('some/uri'));
 
 		$this->viewHelper->initialize();
-		$actualResult = $this->viewHelper->render();
+		$actualResult = $this->viewHelper->render('index');
 
 		$this->assertEquals('some/uri', $actualResult);
 	}
@@ -53,10 +53,10 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$this->uriBuilder->expects($this->once())->method('setAddQueryString')->with(FALSE);
 		$this->uriBuilder->expects($this->once())->method('setArgumentsToBeExcludedFromQueryString')->with(array());
 		$this->uriBuilder->expects($this->once())->method('setFormat')->with('');
-		$this->uriBuilder->expects($this->once())->method('uriFor')->with(NULL, array(), NULL, NULL, NULL);
+		$this->uriBuilder->expects($this->once())->method('uriFor')->with('theActionName', array(), NULL, NULL, NULL);
 
 		$this->viewHelper->initialize();
-		$this->viewHelper->render();
+		$this->viewHelper->render('theActionName');
 	}
 
 	/**

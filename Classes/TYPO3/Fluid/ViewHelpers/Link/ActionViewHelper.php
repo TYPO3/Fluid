@@ -73,7 +73,7 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedView
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @api
 	 */
-	public function render($action = NULL, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
+	public function render($action, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
 		try {
 			$uri = $uriBuilder
