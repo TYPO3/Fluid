@@ -396,6 +396,15 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->assertNull($viewHelper->_get('formActionUri'));
 	}
 
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
+	 */
+	public function renderThrowsExceptionIfNeitherActionNorActionUriArgumentIsSpecified() {
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->render();
+	}
 
 }
 ?>

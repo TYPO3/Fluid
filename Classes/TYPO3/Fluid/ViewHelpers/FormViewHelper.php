@@ -101,10 +101,14 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @param string $objectName name of the object that is bound to this form. If this argument is not specified, the name attribute of this form is used to determine the FormObjectName
 	 * @return string rendered form
 	 * @api
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
-	public function render($action, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL) {
+	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL) {
 		$this->formActionUri = NULL;
-		$this->setFormActionUri();
+		if ($action === NULL && $actionUri === NULL) {
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('FormViewHelper requires "actionUri" or "action" argument to be specified', 1355243748);
+		}
+		$this->tag->addAttribute('action', $this->getFormActionUri());
 
 		if (strtolower($this->arguments['method']) === 'get') {
 			$this->tag->addAttribute('method', 'get');
@@ -143,18 +147,6 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$this->removeEmptyHiddenFieldNamesFromViewHelperVariableContainer();
 
 		return $this->tag->render();
-	}
-
-	/**
-	 * Sets the "action" attribute of the form tag
-	 *
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @return void
-	 * @deprecated since 1.1.0
-	 */
-	protected function setFormActionUri() {
-		$formActionUri = $this->getFormActionUri();
-		$this->tag->addAttribute('action', $formActionUri);
 	}
 
 	/**
