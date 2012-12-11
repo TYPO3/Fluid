@@ -71,7 +71,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->viewHelperVariableContainer->expects($this->at(3))->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		$this->viewHelperVariableContainer->expects($this->at(4))->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties');
 		$this->viewHelperVariableContainer->expects($this->at(5))->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames');
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -86,7 +86,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName', $objectName);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -102,7 +102,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName', $objectName);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -113,7 +113,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper->expects($this->once())->method('renderHiddenReferrerFields');
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -133,7 +133,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper->expects($this->atLeastOnce())->method('getFormObjectName')->will($this->returnValue('MyName'));
 		$viewHelper->expects($this->once())->method('renderHiddenIdentityField')->with($object, 'MyName');
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -160,7 +160,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 			'formContent';
 		$this->tagBuilder->expects($this->once())->method('setContent')->with($expectedResult);
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -186,7 +186,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 			'formContent';
 		$this->tagBuilder->expects($this->once())->method('setContent')->with($expectedResult);
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -201,7 +201,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
 		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -220,7 +220,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$expectedResult = chr(10) . '<div style="display: none">' . 'hiddenIdentityFieldadditionalIdentityFieldshiddenReferrerFieldsemptyHiddenFieldstrustedPropertiesField' . chr(10) . '</div>' . chr(10) . 'formContent';
 		$this->tagBuilder->expects($this->once())->method('setContent')->with($expectedResult);
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 
@@ -321,7 +321,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $prefix);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -335,7 +335,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $expectedPrefix);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -355,7 +355,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $expectedPrefix);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
-		$viewHelper->render();
+		$viewHelper->render('index');
 	}
 
 	/**
@@ -392,7 +392,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->_set('formActionUri', 'someUri');
 
-		$viewHelper->render();
+		$viewHelper->render('index');
 		$this->assertNull($viewHelper->_get('formActionUri'));
 	}
 

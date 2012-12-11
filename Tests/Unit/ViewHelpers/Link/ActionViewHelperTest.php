@@ -44,7 +44,7 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$this->viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue('some content'));
 
 		$this->viewHelper->initialize();
-		$this->viewHelper->render();
+		$this->viewHelper->render('index');
 	}
 
 	/**
@@ -56,10 +56,10 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$this->uriBuilder->expects($this->once())->method('setAddQueryString')->with(FALSE);
 		$this->uriBuilder->expects($this->once())->method('setArgumentsToBeExcludedFromQueryString')->with(array());
 		$this->uriBuilder->expects($this->once())->method('setFormat')->with('');
-		$this->uriBuilder->expects($this->once())->method('uriFor')->with(NULL, array(), NULL, NULL, NULL);
+		$this->uriBuilder->expects($this->once())->method('uriFor')->with('theActionName', array(), NULL, NULL, NULL);
 
 		$this->viewHelper->initialize();
-		$this->viewHelper->render();
+		$this->viewHelper->render('theActionName');
 	}
 
 	/**
