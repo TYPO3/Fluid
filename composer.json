@@ -1,9 +1,8 @@
 {
     "name": "typo3/fluid",
     "type": "typo3-flow-framework",
-    "description": "Next-Generation Templating Framework for TYPO3 Flow and TYPO3 5.0, also backported to TYPO3 4.x",
+    "description": "Next-Generation Templating Framework for TYPO3 Flow and TYPO3 Neos, also backported to TYPO3 CMS",
     "license": ["LGPL-3.0+"],
-    "version": "1.2.0-dev",
     "require": {
         "typo3/flow-composer-installers": "*",
         "typo3/flow": "*"
