@@ -35,7 +35,7 @@ class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper i
 	 * @api
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.', TRUE);
+		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
 	}
 
 	/**
