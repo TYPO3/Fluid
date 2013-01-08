@@ -51,6 +51,16 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 	protected $numberOfPages = 1;
 
 	/**
+	 * @var integer
+	 */
+	protected $displayRangeStart;
+
+	/**
+	 * @var integer
+	 */
+	protected $displayRangeEnd;
+
+	/**
 	 * @return void
 	 */
 	public function initializeAction() {

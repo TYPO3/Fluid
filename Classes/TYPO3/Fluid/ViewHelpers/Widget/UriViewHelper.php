@@ -47,12 +47,16 @@ class UriViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param boolean $ajax TRUE if the URI should be to an AJAX widget, FALSE otherwise.
 	 * @param boolean $includeWidgetContext TRUE if the URI should contain the serialized widget context (only useful for stateless AJAX widgets)
 	 * @return string The rendered link
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception if $action argument is not specified and $ajax is FALSE
 	 * @api
 	 */
 	public function render($action = NULL, $arguments = array(), $section = '', $format = '', $ajax = FALSE, $includeWidgetContext = FALSE) {
 		if ($ajax === TRUE) {
 			return $this->getAjaxUri();
 		} else {
+			if ($action === NULL) {
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('You have to specify the target action when creating a widget URI with the widget.uri ViewHelper', 1357648232);
+			}
 			return $this->getWidgetUri();
 		}
 	}
