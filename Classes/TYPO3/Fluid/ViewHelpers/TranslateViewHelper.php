@@ -49,7 +49,7 @@ use TYPO3\Flow\Annotations as Flow;
  * </output>
  *
  * <code title="Arguments">
- * <f:translate arguments="{0: 'foo', 1: '99.9'}">Untranslated {0} and {1,number}</f:translate>
+ * <f:translate arguments="{0: 'foo', 1: '99.9'}"><![CDATA[Untranslated {0} and {1,number}]]></f:translate>
  * </code>
  * <output>
  * translation of the label "Untranslated foo and 99.9"
