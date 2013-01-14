@@ -54,5 +54,25 @@ class CropViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$actualResult = $viewHelper->render(8);
 		$this->assertEquals('some tex...', $actualResult);
 	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperUsesProvidedValueInsteadOfRenderingChildren() {
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->never())->method('renderChildren');
+		$actualResult = $viewHelper->render(8, '...', 'some text');
+		$this->assertEquals('some tex...', $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperDoesNotFallbackToRenderChildNodesIfEmptyValueArgumentIsProvided() {
+		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CropViewHelper', array('renderChildren'));
+		$viewHelper->expects($this->never())->method('renderChildren');
+		$actualResult = $viewHelper->render(8, '...', '');
+		$this->assertEquals('', $actualResult);
+	}
 }
 ?>

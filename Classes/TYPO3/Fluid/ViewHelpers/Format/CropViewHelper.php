@@ -31,6 +31,13 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * This is some very [more]
  * </output>
  *
+ * <code title="Inline notation">
+ * <span title="Location: {user.city -> f:format.crop(maxCharacters: '12')}">John Doe</span>
+ * </code>
+ * <output>
+ * <span title="Location: Newtownmount...">John Doe</span>
+ * </output>
+ *
  * WARNING: This tag does NOT handle tags currently.
  * WARNING: This tag doesn't care about multibyte charsets currently.
  *
@@ -43,16 +50,19 @@ class CropViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param integer $maxCharacters Place where to truncate the string
 	 * @param string $append What to append, if truncation happened
+	 * @param string $value The input value which should be cropped. If not set, the evaluated contents of the child nodes will be used
 	 * @return string cropped text
 	 * @api
 	 */
-	public function render($maxCharacters, $append = '...') {
-		$stringToTruncate = $this->renderChildren();
+	public function render($maxCharacters, $append = '...', $value = NULL) {
+		if ($value === NULL) {
+			$value = $this->renderChildren();
+		}
 
-		if (strlen($stringToTruncate) > $maxCharacters) {
-			return substr($stringToTruncate, 0, $maxCharacters) . $append;
+		if (strlen($value) > $maxCharacters) {
+			return substr($value, 0, $maxCharacters) . $append;
 		} else {
-			return $stringToTruncate;
+			return $value;
 		}
 	}
 }
