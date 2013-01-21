@@ -14,7 +14,6 @@ namespace TYPO3\Fluid\Core\Parser;
 /**
  * This interface is returned by \TYPO3\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
- *
  */
 interface ParsedTemplateInterface {
 
@@ -30,8 +29,8 @@ interface ParsedTemplateInterface {
 	 * Returns a variable container used in the PostParse Facet.
 	 *
 	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @todo remove
 	 */
-	// TODO remove
 	public function getVariableContainer();
 
 	/**
@@ -46,8 +45,8 @@ interface ParsedTemplateInterface {
 
 	/**
 	 * Returns TRUE if the current template has a template defined via <f:layout name="..." />
-	 * @see getLayoutName()
 	 *
+	 * @see getLayoutName()
 	 * @return boolean
 	 */
 	public function hasLayout();

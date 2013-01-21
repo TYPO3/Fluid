@@ -11,11 +11,6 @@ namespace TYPO3\Fluid\Core\Rendering;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
-/**
- *
- *
- */
 class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextInterface {
 
 	/**
@@ -121,4 +116,5 @@ class RenderingContext implements \TYPO3\Fluid\Core\Rendering\RenderingContextIn
 		return $this->viewHelperVariableContainer;
 	}
 }
+
 ?>

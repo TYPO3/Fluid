@@ -13,42 +13,47 @@ namespace TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * Argument definition of each view helper argument
- *
  */
 class ArgumentDefinition {
 
 	/**
 	 * Name of argument
+	 *
 	 * @var string
 	 */
 	protected $name;
 
 	/**
 	 * Type of argument
+	 *
 	 * @var string
 	 */
 	protected $type;
 
 	/**
 	 * Description of argument
+	 *
 	 * @var string
 	 */
 	protected $description;
 
 	/**
 	 * Is argument required?
+	 *
 	 * @var boolean
 	 */
 	protected $required = FALSE;
 
 	/**
 	 * Default value for argument
+	 *
 	 * @var mixed
 	 */
 	protected $defaultValue = NULL;
 
 	/**
 	 * TRUE if it is a method parameter
+	 *
 	 * @var boolean
 	 */
 	protected $isMethodParameter = FALSE;

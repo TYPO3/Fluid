@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Wrapper for PHPs nl2br function.
  * @see http://www.php.net/manual/en/function.nl2br.php
@@ -47,4 +46,5 @@ class Nl2brViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		return nl2br($content);
 	}
 }
+
 ?>

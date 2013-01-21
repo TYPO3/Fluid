@@ -15,7 +15,6 @@ use TYPO3\Flow\Annotations as Flow;
 
 /**
  * Node which will call a ViewHelper associated with this node.
- *
  */
 class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
@@ -43,8 +42,6 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @var \SplObjectStorage
 	 */
 	protected $viewHelpersByContext = NULL;
-
-
 
 	/**
 	 * Constructor.

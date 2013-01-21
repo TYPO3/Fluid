@@ -15,18 +15,19 @@ namespace TYPO3\Fluid\Core\Parser;
  * Stores all information relevant for one parsing pass - that is, the root node,
  * and the current stack of open nodes (nodeStack) and a variable container used
  * for PostParseFacets.
- *
  */
 class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 
 	/**
 	 * Root node reference
+	 *
 	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
 	 */
 	protected $rootNode;
 
 	/**
 	 * Array of node references currently open.
+	 *
 	 * @var array
 	 */
 	protected $nodeStack = array();
@@ -34,6 +35,7 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	/**
 	 * Variable container where ViewHelpers implementing the PostParseFacet can
 	 * store things in.
+	 *
 	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $variableContainer;
@@ -107,7 +109,7 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element.
 	 */
 	public function getNodeFromStack() {
-		return $this->nodeStack[count($this->nodeStack)-1];
+		return $this->nodeStack[count($this->nodeStack) - 1];
 	}
 
 	/**
@@ -204,4 +206,5 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 		return FALSE;
 	}
 }
+
 ?>

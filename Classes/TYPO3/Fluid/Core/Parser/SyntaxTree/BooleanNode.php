@@ -15,7 +15,6 @@ use TYPO3\Flow\Annotations as Flow;
 
 /**
  * A node which is used inside boolean arguments
- *
  */
 class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
@@ -25,6 +24,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Make sure that if one string is contained in one another, the longer
 	 * string is listed BEFORE the shorter one.
 	 * Example: put ">=" before ">"
+	 *
 	 * @var array
 	 */
 	static protected $comparators = array('==', '!=', '%', '>=', '>', '<=', '<');
@@ -32,6 +32,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * A regular expression which checks the text nodes of a boolean expression.
 	 * Used to define how the regular expression language should look like.
+	 *
 	 * @var string
 	 */
 	static protected $booleanExpressionTextNodeCheckerRegularExpression = '/
@@ -101,8 +102,8 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		if (count($childNodes) > 3) {
 			throw new \TYPO3\Fluid\Core\Parser\Exception('A boolean expression has more than tree parts.', 1244201848);
 		} elseif (count($childNodes) === 0) {
-				// In this case, we do not have child nodes; i.e. the current SyntaxTreeNode
-				// is a text node with a literal comparison like "1 == 1"
+			// In this case, we do not have child nodes; i.e. the current SyntaxTreeNode
+			// is a text node with a literal comparison like "1 == 1"
 			$childNodes = array($syntaxTreeNode);
 		}
 
@@ -110,19 +111,20 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$this->rightSide = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
 		$this->comparator = NULL;
 		foreach ($childNodes as $childNode) {
-			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode && !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->getText())) {
+			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode 
+				&& !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->getText())) {
 				// $childNode is text node, and no comparator found.
 				$this->comparator = NULL;
-					// skip loop and fall back to classical to boolean conversion.
+				// skip loop and fall back to classical to boolean conversion.
 				break;
 			}
 
 			if ($this->comparator !== NULL) {
-					// comparator already set, we are evaluating the right side of the comparator
+				// comparator already set, we are evaluating the right side of the comparator
 				$this->rightSide->addChildNode($childNode);
 			} elseif ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode
 				&& ($this->comparator = $this->getComparatorFromString($childNode->getText()))) {
-					// comparator in current string segment
+				// comparator in current string segment
 				$explodedString = explode($this->comparator, $childNode->getText());
 				if (isset($explodedString[0]) && trim($explodedString[0]) !== '') {
 					$value = trim($explodedString[0]);
@@ -141,7 +143,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 					}
 				}
 			} else {
-					// comparator not found yet, on the left side of the comparator
+				// comparator not found yet, on the left side of the comparator
 				$this->leftSide->addChildNode($childNode);
 			}
 		}
@@ -234,19 +236,29 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 				}
 				break;
 			case '%':
-				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) return FALSE;
+				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) {
+					return FALSE;
+				}
 				return (boolean)((int)$evaluatedLeftSide % (int)$evaluatedRightSide);
 			case '>':
-				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) return FALSE;
+				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) {
+					return FALSE;
+				}
 				return ($evaluatedLeftSide > $evaluatedRightSide);
 			case '>=':
-				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) return FALSE;
+				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) {
+					return FALSE;
+				}
 				return ($evaluatedLeftSide >= $evaluatedRightSide);
 			case '<':
-				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) return FALSE;
+				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) {
+					return FALSE;
+				}
 				return ($evaluatedLeftSide < $evaluatedRightSide);
 			case '<=':
-				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) return FALSE;
+				if (!self::isComparable($evaluatedLeftSide, $evaluatedRightSide)) {
+					return FALSE;
+				}
 				return ($evaluatedLeftSide <= $evaluatedRightSide);
 			default:
 				throw new \TYPO3\Fluid\Core\Parser\Exception('Comparator "' . $comparator . '" is not implemented.', 1244234398);
@@ -265,13 +277,22 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 */
 	static protected function isComparable($evaluatedLeftSide, $evaluatedRightSide) {
 		if ((is_null($evaluatedLeftSide) || is_string($evaluatedLeftSide))
-			&& is_string($evaluatedRightSide)) return TRUE;
-		if (is_bool($evaluatedLeftSide) || is_null($evaluatedLeftSide)) return TRUE;
-		if (is_object($evaluatedLeftSide)
-			&& is_object($evaluatedRightSide)) return TRUE;
+			&& is_string($evaluatedRightSide)) {
+			return TRUE;
+		}
+		if (is_bool($evaluatedLeftSide) || is_null($evaluatedLeftSide)) {
+			return TRUE;
+		}
+		if (is_object($evaluatedLeftSide) && is_object($evaluatedRightSide)) {
+			return TRUE;
+		}
 		if ((is_string($evaluatedLeftSide) || is_resource($evaluatedLeftSide) || is_numeric($evaluatedLeftSide))
-			&& (is_string($evaluatedRightSide) || is_resource($evaluatedRightSide) || is_numeric($evaluatedRightSide))) return TRUE;
-		if (is_array($evaluatedLeftSide) && is_array($evaluatedRightSide)) return TRUE;
+			&& (is_string($evaluatedRightSide) || is_resource($evaluatedRightSide) || is_numeric($evaluatedRightSide))) {
+			return TRUE;
+		}
+		if (is_array($evaluatedLeftSide) && is_array($evaluatedRightSide)) {
+			return TRUE;
+		}
 
 		return FALSE;
 	}
@@ -319,4 +340,5 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		return FALSE;
 	}
 }
+
 ?>

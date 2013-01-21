@@ -14,12 +14,12 @@ namespace TYPO3\Fluid\Core\Parser;
 /**
  * The parser configuration. Contains all configuration needed to configure
  * the building of a SyntaxTree.
- *
  */
 class Configuration {
 
 	/**
 	 * Generic interceptors registered with the configuration.
+	 *
 	 * @var array<\SplObjectStorage>
 	 */
 	protected $interceptors = array();

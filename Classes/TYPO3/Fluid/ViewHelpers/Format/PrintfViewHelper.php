@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * A view helper for formatting values with printf. Either supply an array for
  * the arguments or a single value.
@@ -63,4 +62,5 @@ class PrintfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		return vsprintf($format, $arguments);
 	}
 }
+
 ?>

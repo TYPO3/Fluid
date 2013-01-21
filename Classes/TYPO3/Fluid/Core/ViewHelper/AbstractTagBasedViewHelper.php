@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Tag based view helper.
  * Sould be used as the base class for all view helpers which output simple tags, as it provides some
@@ -23,6 +22,7 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 
 	/**
 	 * Names of all registered tag attributes
+	 *
 	 * @var array
 	 */
 	static private $tagAttributes = array();
@@ -36,7 +36,7 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	protected $tag = NULL;
 
 	/**
-	 * name of the tag to be created by this view helper
+	 * Name of the tag to be created by this view helper
 	 *
 	 * @var string
 	 * @api
@@ -123,4 +123,5 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 		$this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
 	}
 }
+
 ?>

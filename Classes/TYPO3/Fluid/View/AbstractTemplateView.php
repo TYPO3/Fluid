@@ -15,7 +15,6 @@ namespace TYPO3\Fluid\View;
  * Abstract Fluid Template View.
  *
  * Contains the fundamental methods which any Fluid based template view needs.
- *
  */
 abstract class AbstractTemplateView implements \TYPO3\Flow\Mvc\View\ViewInterface {
 
@@ -58,6 +57,7 @@ abstract class AbstractTemplateView implements \TYPO3\Flow\Mvc\View\ViewInterfac
 	/**
 	 * Stack containing the current rendering type, the current rendering context, and the current parsed template
 	 * Do not manipulate directly, instead use the methods"getCurrent*()", "startRendering(...)" and "stopRendering()"
+	 *
 	 * @var array
 	 */
 	protected $renderingStack = array();
@@ -410,7 +410,7 @@ abstract class AbstractTemplateView implements \TYPO3\Flow\Mvc\View\ViewInterfac
 	/**
 	 * Start a new nested rendering. Pushes the given information onto the $renderingStack.
 	 *
-	 * @param int $type one of the RENDERING_* constants
+	 * @param integer $type one of the RENDERING_* constants
 	 * @param \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface $parsedTemplate
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return void
@@ -471,7 +471,6 @@ abstract class AbstractTemplateView implements \TYPO3\Flow\Mvc\View\ViewInterfac
 	public function canRender(\TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext) {
 		return TRUE;
 	}
-
 }
 
 ?>

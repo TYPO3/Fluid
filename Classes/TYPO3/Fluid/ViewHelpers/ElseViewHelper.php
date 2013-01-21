@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
  *

@@ -61,6 +61,6 @@ class StripTagsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 		}
 		return strip_tags($value);
 	}
-
 }
+
 ?>

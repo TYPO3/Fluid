@@ -17,7 +17,6 @@ use TYPO3\Flow\Annotations as Flow;
  * Abstract Fluid Compiled template.
  *
  * INTERNAL!!
- *
  */
 abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 
@@ -78,6 +77,5 @@ abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\Pars
 	}
 
 	// TOKEN-2
-
 }
 ?>

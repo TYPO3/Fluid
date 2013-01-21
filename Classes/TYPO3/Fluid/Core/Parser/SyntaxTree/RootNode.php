@@ -11,10 +11,8 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Root node of every syntax tree.
- *
  */
 class RootNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 

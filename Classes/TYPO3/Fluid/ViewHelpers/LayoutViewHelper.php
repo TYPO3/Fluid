@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * With this tag, you can select a layout to be used for the current template.
  *

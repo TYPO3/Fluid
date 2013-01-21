@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
  *
@@ -237,4 +236,5 @@ class TagBuilder {
 		return $output;
 	}
 }
+
 ?>

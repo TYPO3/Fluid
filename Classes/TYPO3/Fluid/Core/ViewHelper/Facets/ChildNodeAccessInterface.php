@@ -22,7 +22,6 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  * Right now it is only used internally for conditions, so by subclassing TYPO3\Fluid\Core\ViewHelpers\AbstractConditionViewHelper, this should be all you need.
  *
  * See \TYPO3\Fluid\ViewHelpers\IfViewHelper for an example how it is used.
- *
  */
 interface ChildNodeAccessInterface {
 	/**
