@@ -45,6 +45,7 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 		$this->registerTagAttribute('maxlength', 'int', 'The maxlength attribute of the input field (will not be validated)');
 		$this->registerTagAttribute('readonly', 'string', 'The readonly attribute of the input field');
 		$this->registerTagAttribute('size', 'int', 'The size of the input field');
+		$this->registerTagAttribute('placeholder', 'string', 'The placeholder of the input field');
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
 		$this->registerUniversalTagAttributes();
 	}
@@ -54,11 +55,10 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 	 *
 	 * @param boolean $required If the field is required or not
 	 * @param string $type The field type, e.g. "text", "email", "url" etc.
-	 * @param string $placeholder A string used as a placeholder for the value to enter
 	 * @return string
 	 * @api
 	 */
-	public function render($required = NULL, $type = 'text', $placeholder = NULL) {
+	public function render($required = NULL, $type = 'text') {
 		$name = $this->getName();
 		$this->registerFieldNameForFormTokenGeneration($name);
 
@@ -66,10 +66,6 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 		$this->tag->addAttribute('name', $name);
 
 		$value = $this->getValue();
-
-		if ($placeholder !== NULL) {
-			$this->tag->addAttribute('placeholder', $placeholder);
-		}
 
 		if ($value !== NULL) {
 			$this->tag->addAttribute('value', $value);
