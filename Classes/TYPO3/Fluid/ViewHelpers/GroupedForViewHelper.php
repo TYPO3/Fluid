@@ -125,7 +125,9 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
 			$currentGroupKeyValue = $currentGroupIndex;
-			if (is_object($currentGroupIndex)) {
+			if ($currentGroupIndex instanceof \DateTime) {
+				$currentGroupIndex = $currentGroupIndex->format(\DateTime::RFC850);
+			} elseif (is_object($currentGroupIndex)) {
 				$currentGroupIndex = spl_object_hash($currentGroupIndex);
 			}
 			$groups['keys'][$currentGroupIndex] = $currentGroupKeyValue;
