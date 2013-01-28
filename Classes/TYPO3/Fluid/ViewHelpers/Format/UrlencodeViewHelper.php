@@ -13,12 +13,12 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /**
  * Encodes the given string according to http://www.faqs.org/rfcs/rfc3986.html (applying PHPs rawurlencode() function)
- * @see http://www.php.net/manual/function.rawurlencode.php
+ * @see http://www.php.net/manual/function.urlencode.php
  *
  * = Examples =
  *
  * <code title="default notation">
- * <f:format.rawurlencode>foo @+%/</f:format.rawurlencode>
+ * <f:format.urlencode>foo @+%/</f:format.urlencode>
  * </code>
  * <output>
  * foo%20%40%2B%25%2F (rawurlencode() applied)
@@ -44,21 +44,23 @@ class UrlencodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
-	 * Escapes special characters with their escaped counterparts as needed using PHPs rawurlencode() function.
+	 * Escapes special characters with their escaped counterparts as needed using PHPs urlencode() function.
 	 *
 	 * @param string $value string to format
 	 * @return mixed
-	 * @see http://www.php.net/manual/function.rawurlencode.php
+	 * @see http://www.php.net/manual/function.urlencode.php
 	 * @api
+	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function render($value = NULL) {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-		if (!is_string($value)) {
-			return $value;
+		if (is_string($value) || (is_object($value) && method_exists($value, '__toString')) ) {
+			return rawurlencode($value);
 		}
-		return rawurlencode($value);
+
+		throw new \TYPO3\Fluid\Core\ViewHelper\Exception('This ViewHelper works with values that are of type string or objects that implement a __toString method. You provided "' . is_object($value) ? get_class($value) : gettype($value) . '"', 1359389241);
 	}
 
 }
