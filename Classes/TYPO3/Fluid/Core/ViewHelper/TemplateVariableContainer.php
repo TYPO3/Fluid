@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * VariableContainer which stores template variables.
  * Is used in two contexts:
@@ -25,12 +24,14 @@ class TemplateVariableContainer implements \ArrayAccess {
 
 	/**
 	 * List of reserved words that can't be used as variable identifiers in Fluid templates
+	 *
 	 * @var array
 	 */
 	static protected $reservedVariableNames = array('true', 'false', 'on', 'off', 'yes', 'no', '_all');
 
 	/**
 	 * Variables stored in context
+	 *
 	 * @var array
 	 */
 	protected $variables = array();
@@ -198,4 +199,5 @@ class TemplateVariableContainer implements \ArrayAccess {
 		return $this->get($identifier);
 	}
 }
+
 ?>

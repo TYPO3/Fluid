@@ -13,12 +13,12 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /**
  * Abstract node in the syntax tree which has been built.
- *
  */
 abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface {
 
 	/**
 	 * List of Child Nodes.
+	 *
 	 * @var array<\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface>
 	 */
 	protected $childNodes = array();
@@ -42,7 +42,7 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 					}
 					$output = $output->__toString();
 				} else {
-					$output = (string)$output;
+					$output = (string) $output;
 				}
 				$subNodeOutput = $subNode->evaluate($renderingContext);
 
@@ -52,7 +52,7 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 					}
 					$output .= $subNodeOutput->__toString();
 				} else {
-					$output .= (string)$subNodeOutput;
+					$output .= (string) $subNodeOutput;
 				}
 			}
 		}
@@ -78,7 +78,6 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	public function addChildNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode) {
 		$this->childNodes[] = $childNode;
 	}
-
 }
 
 ?>

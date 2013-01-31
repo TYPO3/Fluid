@@ -22,7 +22,6 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  * in case you implement this facet.
  *
  * Normally, this facet is not needed, except in really really rare cases.
- *
  */
 interface PostParseInterface {
 

@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Formats a string using PHPs str_pad function.
  * @see http://www.php.net/manual/en/function.str_pad.php
@@ -57,7 +56,7 @@ class PaddingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 		$padTypes = array(
 			'left' => STR_PAD_LEFT,
 			'right' => STR_PAD_RIGHT,
-			'both' => STR_PAD_BOTH,
+			'both' => STR_PAD_BOTH
 		);
 		if (!isset($padTypes[$padType])) {
 			$padType = 'right';
@@ -65,4 +64,5 @@ class PaddingViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 		return str_pad($string, $padLength, $padString, $padTypes[$padType]);
 	}
 }
+
 ?>

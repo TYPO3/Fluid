@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * A view helper for creating URIs to external targets.
  * Currently the specified URI is simply passed through.
@@ -50,6 +49,5 @@ class ExternalViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 		return $uri;
 	}
 }
-
 
 ?>

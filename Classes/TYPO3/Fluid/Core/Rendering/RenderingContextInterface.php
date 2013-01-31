@@ -11,10 +11,6 @@ namespace TYPO3\Fluid\Core\Rendering;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-/**
- *
- *
- */
 interface RenderingContextInterface {
 
 	/**
@@ -38,4 +34,5 @@ interface RenderingContextInterface {
 	 */
 	public function getViewHelperVariableContainer();
 }
+
 ?>

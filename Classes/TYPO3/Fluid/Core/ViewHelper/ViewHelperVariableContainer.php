@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * @api
  */
@@ -20,6 +19,7 @@ class ViewHelperVariableContainer {
 	/**
 	 * Two-dimensional object array storing the values. The first dimension is the fully qualified ViewHelper name,
 	 * and the second dimension is the identifier for the data the ViewHelper wants to store.
+	 *
 	 * @var array
 	 */
 	protected $objects = array();
@@ -135,4 +135,5 @@ class ViewHelperVariableContainer {
 		return array('objects');
 	}
 }
+
 ?>

@@ -66,5 +66,4 @@ class RawViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	}
 }
 
-
 ?>

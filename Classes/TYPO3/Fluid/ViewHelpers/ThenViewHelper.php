@@ -11,11 +11,10 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * "THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
- * @see TYPO3\Fluid\ViewHelpers\IfViewHelper
  *
+ * @see TYPO3\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
 class ThenViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

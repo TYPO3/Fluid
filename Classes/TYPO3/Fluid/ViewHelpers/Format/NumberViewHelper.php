@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Formats a number with custom precision, decimal point and grouped thousands.
  * @see http://www.php.net/manual/en/function.number-format.php
@@ -51,4 +50,5 @@ class NumberViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		return number_format($stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
 	}
 }
+
 ?>

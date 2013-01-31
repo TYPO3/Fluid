@@ -11,15 +11,14 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Text Syntax Tree Node - is a container for strings.
- *
  */
 class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * Contents of the text node
+	 *
 	 * @var string
 	 */
 	protected $text;

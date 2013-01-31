@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * The main template view. Should be used as view if you want Fluid Templating
  *
@@ -21,66 +20,77 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * Pattern to be resolved for "@templateRoot" in the other patterns.
+	 *
 	 * @var string
 	 */
 	protected $templateRootPathPattern = '@packageResourcesPath/Private/Templates';
 
 	/**
 	 * Pattern to be resolved for "@partialRoot" in the other patterns.
+	 *
 	 * @var string
 	 */
 	protected $partialRootPathPattern = '@packageResourcesPath/Private/Partials';
 
 	/**
 	 * Pattern to be resolved for "@layoutRoot" in the other patterns.
+	 *
 	 * @var string
 	 */
 	protected $layoutRootPathPattern = '@packageResourcesPath/Private/Layouts';
 
 	/**
 	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
+	 *
 	 * @var string
 	 */
 	protected $templateRootPath = NULL;
 
 	/**
 	 * Path to the partial root. If NULL, then $this->partialRootPathPattern will be used.
+	 *
 	 * @var string
 	 */
 	protected $partialRootPath = NULL;
 
 	/**
 	 * Path to the layout root. If NULL, then $this->layoutRootPathPattern will be used.
+	 *
 	 * @var string
 	 */
 	protected $layoutRootPath = NULL;
 
 	/**
 	 * File pattern for resolving the template file
+	 *
 	 * @var string
 	 */
 	protected $templatePathAndFilenamePattern = '@templateRoot/@subpackage/@controller/@action.@format';
 
 	/**
 	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
+	 *
 	 * @var string
 	 */
 	private $partialPathAndFilenamePattern = '@partialRoot/@subpackage/@partial.@format';
 
 	/**
 	 * File pattern for resolving the layout
+	 *
 	 * @var string
 	 */
 	protected $layoutPathAndFilenamePattern = '@layoutRoot/@layout.@format';
 
 	/**
 	 * Path and filename of the template file. If set,  overrides the templatePathAndFilenamePattern
+	 *
 	 * @var string
 	 */
 	protected $templatePathAndFilename = NULL;
 
 	/**
 	 * Path and filename of the layout file. If set, overrides the layoutPathAndFilenamePattern
+	 *
 	 * @var string
 	 */
 	protected $layoutPathAndFilename = NULL;
@@ -150,7 +160,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
 		if ($actionName === NULL) {
 			$actionName = $this->controllerContext->getRequest()->getControllerActionName();
-		};
+		}
 		$prefix = 'action_' . $actionName;
 		return $this->createIdentifierForFile($templatePathAndFilename, $prefix);
 	}
@@ -186,7 +196,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		}
 		if ($actionName === NULL) {
 			$actionName = $this->controllerContext->getRequest()->getControllerActionName();
-		};
+		}
 		$actionName = ucfirst($actionName);
 
 		$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
@@ -214,7 +224,6 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		$prefix = 'layout_' . $layoutName;
 		return $this->createIdentifierForFile($layoutPathAndFilename, $prefix);
 	}
-
 
 	/**
 	 * Resolve the path and file name of the layout file, based on
