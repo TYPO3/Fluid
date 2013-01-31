@@ -11,7 +11,10 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Http\Uri;
+
 /**
+ *
  */
 class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -70,11 +73,20 @@ class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
-	public function renderReturnsUnmodifiedSourceIfItIsNoString() {
+	public function renderThrowsExceptionIfItIsNoStringAndHasNoToStringMethod() {
 		$source = new \stdClass();
+		$this->viewHelper->render($source);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderRendersObjectWithToStringMethod() {
+		$source = new Uri('http://typo3.com/foo&bar=1');
 		$actualResult = $this->viewHelper->render($source);
-		$this->assertSame($source, $actualResult);
+		$this->assertEquals(urlencode('http://typo3.com/foo&bar=1'), $actualResult);
 	}
 }
 ?>
