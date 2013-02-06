@@ -76,6 +76,52 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$this->viewHelper->initialize();
 		$this->viewHelper->render('someAction', array('some' => 'argument'), 'someController', 'somePackage', 'someSubpackage', 'someSection', 'someFormat', array('additional' => 'Parameters'), TRUE, array('arguments' => 'toBeExcluded'));
 	}
+
+	/**
+	 * @test
+	 */
+	public function renderThrowsViewHelperExceptionIfUriBuilderThrowsFlowException() {
+		$this->uriBuilder->expects($this->any())->method('uriFor')->will($this->throwException(new \TYPO3\Flow\Exception('Mock Exception', 12345)));
+		$this->viewHelper->initialize();
+		try {
+			$this->viewHelper->render('someAction');
+		} catch (\TYPO3\Fluid\Core\ViewHelper\Exception $exception) {
+		}
+		$this->assertEquals(12345, $exception->getPrevious()->getCode());
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
+	 */
+	public function renderThrowsExceptionIfUseParentRequestIsSetAndTheCurrentRequestHasNoParentRequest() {
+		$this->viewHelper->initialize();
+		$this->viewHelper->render('someAction', array(), NULL, NULL, NULL, '', '', array(), FALSE, array(), TRUE);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderUsesParentRequestIfUseParentRequestIsSet() {
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Link\ActionViewHelper', array('renderChildren'));
+
+		$parentRequest = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
+
+		$this->request = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
+		$this->request->expects($this->atLeastOnce())->method('isMainRequest')->will($this->returnValue(FALSE));
+		$this->request->expects($this->atLeastOnce())->method('getParentRequest')->will($this->returnValue($parentRequest));
+
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
+
+		$this->uriBuilder->expects($this->atLeastOnce())->method('setRequest')->with($parentRequest);
+
+		$this->renderingContext->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$viewHelper->render('someAction', array(), NULL, NULL, NULL, '', '', array(), FALSE, array(), TRUE);
+	}
 }
 
 ?>

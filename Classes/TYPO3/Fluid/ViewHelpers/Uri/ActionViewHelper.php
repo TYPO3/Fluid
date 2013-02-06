@@ -51,12 +51,21 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param boolean $absolute If set, an absolute URI is rendered
 	 * @param boolean $addQueryString If set, the current query parameters will be kept in the URI
 	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
+	 * @param boolean $useParentRequest If set, the parent Request will be used instead of the current one
 	 * @return string The rendered link
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 * @api
 	 */
-	public function render($action, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',   array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array()) {
+	public function render($action, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $useParentRequest = FALSE) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
+		if ($useParentRequest === TRUE) {
+			$request = $this->controllerContext->getRequest();
+			if ($request->isMainRequest()) {
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('You can\'t use the parent Request, you are already in the MainRequest.', 1360590758);
+			}
+			$uriBuilder = clone $uriBuilder;
+			$uriBuilder->setRequest($request->getParentRequest());
+		}
 		$uriBuilder
 			->reset()
 			->setSection($section)
