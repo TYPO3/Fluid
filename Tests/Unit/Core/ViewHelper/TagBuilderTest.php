@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /**
  * Testcase for TagBuilder
- *
  */
 class TagBuilderTest extends \TYPO3\Flow\Tests\UnitTestCase {
 

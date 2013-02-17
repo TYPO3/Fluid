@@ -15,17 +15,16 @@ require_once(__DIR__ . '/../../ViewHelpers/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for Condition ViewHelper
- *
  */
 class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+	 * @var \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper
 	 */
 	protected $viewHelper;
 
 	/**
-	 * var \TYPO3\Fluid\Core\ViewHelper\Arguments
+	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $mockArguments;
 
@@ -153,4 +152,5 @@ class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 		$this->assertEquals('ElseArgument', $actualResult);
 	}
 }
+
 ?>

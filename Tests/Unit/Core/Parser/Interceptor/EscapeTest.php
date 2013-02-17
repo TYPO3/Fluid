@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\Interceptor;
 
 /**
  * Testcase for Interceptor\Escape
- *
  */
 class EscapeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -98,7 +97,6 @@ class EscapeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
 		$this->assertSame($this->mockNode, $actualResult);
 	}
-
 }
 
 ?>

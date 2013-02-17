@@ -64,5 +64,4 @@ class HiddenViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	}
 }
 
-
 ?>

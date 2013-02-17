@@ -15,12 +15,11 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for CycleViewHelper
- *
  */
 class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\CycleViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\CycleViewHelper
 	 */
 	protected $viewHelper;
 

@@ -20,18 +20,21 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * Class name of view helper
+	 *
 	 * @var string
 	 */
 	protected $viewHelperClassName;
 
 	/**
 	 * Arguments of view helper - References to RootNodes.
+	 *
 	 * @var array
 	 */
 	protected $arguments = array();
 
 	/**
 	 * The ViewHelper associated with this node
+	 *
 	 * @var \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 */
 	protected $uninitializedViewHelper = NULL;
@@ -39,6 +42,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * A mapping RenderingContext -> ViewHelper to only re-initialize ViewHelpers
 	 * when a context change occurs.
+	 *
 	 * @var \SplObjectStorage
 	 */
 	protected $viewHelpersByContext = NULL;
@@ -109,7 +113,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$evaluatedArguments = array();
 		if (count($viewHelper->prepareArguments())) {
- 			foreach ($viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
+			foreach ($viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
 					$argumentValue = $this->arguments[$argumentName];
 					$evaluatedArguments[$argumentName] = $argumentValue->evaluate($renderingContext);

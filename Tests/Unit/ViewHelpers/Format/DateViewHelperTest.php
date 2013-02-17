@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for date view helper \TYPO3\Fluid\ViewHelpers\Format\DateViewHelper
  */
 class DateViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -126,6 +127,6 @@ class DateViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->_set('localizationService', $localizationServiceMock);
 		$viewHelper->render(new \DateTime(), NULL, TRUE);
 	}
-
 }
+
 ?>

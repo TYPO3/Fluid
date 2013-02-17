@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
  */
 class RawViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -51,4 +52,5 @@ class RawViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($childNodes, $actualResult);
 	}
 }
+
 ?>

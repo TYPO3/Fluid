@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Textarea view helper.
  * The value of the text area needs to be set via the "value" attribute, as with all other form ViewHelpers.

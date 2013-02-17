@@ -201,13 +201,10 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 		$paths = $this->expandGenericPathPattern($this->templatePathAndFilenamePattern, FALSE, FALSE);
 		foreach ($paths as &$templatePathAndFilename) {
-			// These tokens are replaced by the Backporter for the graceful fallback in version 4.
-			// TOKEN-1
 			$templatePathAndFilename = str_replace('@action', $actionName, $templatePathAndFilename);
 			if (file_exists($templatePathAndFilename)) {
-				// TOKEN-2
 				return $templatePathAndFilename;
-			} // TOKEN-3
+			}
 		}
 		throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
 	}
@@ -265,12 +262,10 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 		$paths = $this->expandGenericPathPattern($this->layoutPathAndFilenamePattern, TRUE, TRUE);
 		$layoutName = ucfirst($layoutName);
 		foreach ($paths as &$layoutPathAndFilename) {
-			// These tokens are replaced by the Backporter for the graceful fallback in version 4.
-			// TOKEN-LAYOUT-1
 			$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
 			if (file_exists($layoutPathAndFilename)) {
 				return $layoutPathAndFilename;
-			} // TOKEN-LAYOUT-3
+			}
 		}
 		throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
@@ -433,14 +428,13 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 			} else {
 				$temporaryPattern = str_replace('//', '/', str_replace('@controller', '', $temporaryPattern));
 			}
-			$temporaryPattern = str_replace('@subpackage', implode('/', ($i<0 ? $subpackageParts : array_slice($subpackageParts, $i))), $temporaryPattern);
+			$temporaryPattern = str_replace('@subpackage', implode('/', ($i < 0 ? $subpackageParts : array_slice($subpackageParts, $i))), $temporaryPattern);
 
 			$results[] = \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $temporaryPattern));
 			if ($formatIsOptional) {
-				$results[] =  \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('.@format', '', $temporaryPattern));
+				$results[] = \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('.@format', '', $temporaryPattern));
 			}
-
-		} while($i++ < count($subpackageParts) && $bubbleControllerAndSubpackage);
+		} while ($i++ < count($subpackageParts) && $bubbleControllerAndSubpackage);
 
 		return $results;
 	}

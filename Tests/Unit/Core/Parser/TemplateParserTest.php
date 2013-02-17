@@ -18,7 +18,6 @@ require_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
  *
  * This is to at least half a system test, as it compares rendered results to
  * expectations, and does not strictly check the parsing...
- *
  */
 class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -41,7 +40,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'f' => 'TYPO3\Fluid\ViewHelpers',
 			'f4' => 'TYPO3\Rocks\Really'
 		);
-		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+		$this->assertEquals($expected, $templateParser->getNamespaces(), 'Namespaces do not match.');
 	}
 
 	/**
@@ -63,7 +62,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'f5' => 'My\Namespace',
 			'xyz' => 'My\Other\Namespace'
 		);
-		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+		$this->assertEquals($expected, $templateParser->getNamespaces(), 'Namespaces do not match.');
 	}
 
 	/**
@@ -76,7 +75,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'f' => 'TYPO3\Fluid\ViewHelpers',
 			'xyz' => 'Some\Package\ViewHelpers'
 		);
-		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+		$this->assertEquals($expected, $templateParser->getNamespaces(), 'Namespaces do not match.');
 	}
 
 	/**
@@ -96,7 +95,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			'f' => 'TYPO3\Fluid\ViewHelpers',
 			'f5' => 'My\Namespace'
 		);
-		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+		$this->assertEquals($expected, $templateParser->getNamespaces(), 'Namespaces do not match.');
 	}
 
 	/**
@@ -108,7 +107,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$expected = array(
 			'f' => 'TYPO3\Fluid\ViewHelpers'
 		);
-		$this->assertEquals($templateParser->getNamespaces(), $expected, 'Namespaces do not match.');
+		$this->assertEquals($expected, $templateParser->getNamespaces(), 'Namespaces do not match.');
 	}
 
 	/**
@@ -157,7 +156,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
 		$result = $mockTemplateParser->_call('resolveViewHelperName', 'f', 'foo.bar.baz');
 		$expected = 'TYPO3\Fluid\ViewHelpers\Foo\Bar\BazViewHelper';
-		$this->assertEquals($result, $expected, 'The name of the View Helper Name could not be resolved.');
+		$this->assertEquals($expected, $result, 'The name of the View Helper Name could not be resolved.');
 	}
 
 	/**
@@ -179,7 +178,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 			array("'this \"string\" had \\'quotes\\' in it'", 'this "string" had \'quotes\' in it'),
 			array('"this \\"string\\" had \'quotes\' in it"', 'this "string" had \'quotes\' in it'),
 			array('"a weird \"string\" \'with\' *freaky* \\\\stuff', 'a weird "string" \'with\' *freaky* \\stuff'),
-			array('\'\\\'escaped quoted string in string\\\'\'', '\'escaped quoted string in string\''),
+			array('\'\\\'escaped quoted string in string\\\'\'', '\'escaped quoted string in string\'')
 		);
 	}
 
@@ -198,7 +197,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		return array(
 			array('TemplateParserTestFixture01-shorthand'),
 			array('TemplateParserTestFixture06'),
-			array('TemplateParserTestFixture14'),
+			array('TemplateParserTestFixture14')
 		);
 	}
 
@@ -421,7 +420,8 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	public function abortIfRequiredArgumentsAreMissingThrowsException() {
 		$expected = array(
 			new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('firstArgument', 'string', '', FALSE),
-			new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('secondArgument', 'string', '', TRUE));
+			new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('secondArgument', 'string', '', TRUE)
+		);
 
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 
@@ -542,7 +542,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		return array(
 			array('a="2"', array('a' => '2')),
 			array('a="2" b="foobar \' with \\" quotes"', array('a' => '2', 'b' => 'foobar \' with " quotes')),
-			array(' arguments="{number : 362525200}"', array('arguments' => '{number : 362525200}')),
+			array(' arguments="{number : 362525200}"', array('arguments' => '{number : 362525200}'))
 		);
 	}
 
@@ -630,12 +630,12 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		return array(
 			array(
 				'key1: "foo", key2: \'bar\', key3: someVar, key4: 123, key5: { key6: "baz" }',
-				array('key1' => 'foo', 'key2' => 'bar', 'key3' => 'someVar', 'key4' => 123.0, 'key5' => array('key6' => 'baz'),
-			)),
+				array('key1' => 'foo', 'key2' => 'bar', 'key3' => 'someVar', 'key4' => 123.0, 'key5' => array('key6' => 'baz'))
+			),
 			array(
 				'key1: "\'foo\'", key2: \'\\\'bar\\\'\'',
-				array('key1' => '\'foo\'', 'key2' => '\'bar\'',
-				)),
+				array('key1' => '\'foo\'', 'key2' => '\'bar\'')
+			)
 		);
 	}
 
@@ -680,4 +680,5 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser->_call('textHandler', $mockState, 'string');
 	}
 }
+
 ?>

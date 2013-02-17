@@ -15,12 +15,11 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for RenderViewHelper
- *
  */
 class RenderViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\RenderViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\RenderViewHelper
 	 */
 	protected $viewHelper;
 
@@ -81,8 +80,6 @@ class RenderViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$actual = $this->viewHelper->_call('loadSettingsIntoArguments', $arguments);
 		$this->assertEquals($expected, $actual);
 	}
-
-
 }
 
 ?>

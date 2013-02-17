@@ -89,7 +89,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 		}
 		if (is_object($each)) {
 			if (!$each instanceof \Traversable) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface' , 1253108907);
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface', 1253108907);
 			}
 			$each = iterator_to_array($each);
 		}
@@ -122,7 +122,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 			} elseif (is_object($value)) {
 				$currentGroupIndex = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $groupBy);
 			} else {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects' , 1253120365);
+				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
 			$currentGroupKeyValue = $currentGroupIndex;
 			if (is_object($currentGroupIndex)) {

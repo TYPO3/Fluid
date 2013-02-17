@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
 
 /**
  * Testcase for Regular expressions in parser
- *
  */
 class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -75,7 +74,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	public function testSCAN_PATTERN_DYNAMICTAG() {
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
 		$source = '<f:crop attribute="Hallo">';
-		$expected = array (
+		$expected = array(
 			0 => '<f:crop attribute="Hallo">',
 			'NamespaceIdentifier' => 'f',
 			1 => 'f',
@@ -91,7 +90,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
 		$source = '<f:crop data-attribute="Hallo">';
-		$expected = array (
+		$expected = array(
 			0 => '<f:crop data-attribute="Hallo">',
 			'NamespaceIdentifier' => 'f',
 			1 => 'f',
@@ -106,7 +105,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with data- attributes.');
 
 		$source = '<f:base />';
-		$expected = array (
+		$expected = array(
 			0 => '<f:base />',
 			'NamespaceIdentifier' => 'f',
 			1 => 'f',
@@ -121,7 +120,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly when there is a space before the self-closing tag.');
 
 		$source = '<f:crop attribute="Ha\"llo"/>';
-		$expected = array (
+		$expected = array(
 			0 => '<f:crop attribute="Ha\"llo"/>',
 			'NamespaceIdentifier' => 'f',
 			1 => 'f',
@@ -136,7 +135,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly with self-closing tags.');
 
 		$source = '<f:link.uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>';
-		$expected = array (
+		$expected = array(
 			0 => '<f:link.uriTo complex:attribute="Ha>llo" a="b" c=\'d\'/>',
 			'NamespaceIdentifier' => 'f',
 			1 => 'f',
@@ -178,15 +177,15 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$pattern = $this->insertNamespaceIntoRegularExpression(\TYPO3\Fluid\Core\Parser\TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f'));
 
 		$source = 'some string{Object.bla}here as well';
-		$expected = array('some string', '{Object.bla}','here as well');
+		$expected = array('some string', '{Object.bla}', 'here as well');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a simple example.');
 
 		$source = 'some {}string\{Object.bla}here as well';
-		$expected = array('some {}string\\', '{Object.bla}','here as well');
+		$expected = array('some {}string\\', '{Object.bla}', 'here as well');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example. (1)');
 
 		$source = 'some {f:viewHelper()} as well';
-		$expected = array('some ', '{f:viewHelper()}',' as well');
+		$expected = array('some ', '{f:viewHelper()}', ' as well');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example. (2)');
 
 		$source = 'abc {f:for(arg1: post)} def';
@@ -354,4 +353,5 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		return str_replace('NAMESPACE', implode('|', $namespace), $regularExpression);
 	}
 }
+
 ?>

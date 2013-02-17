@@ -93,7 +93,7 @@ class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * Sets this->values to the current values argument and resets $this->currentCycleIndex.
 	 *
-	 * @param array $values The array or \SplObjectStorage to be stored in $this->values
+	 * @param array|\Traversable $values The array or \SplObjectStorage to be stored in $this->values
 	 * @return void
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */

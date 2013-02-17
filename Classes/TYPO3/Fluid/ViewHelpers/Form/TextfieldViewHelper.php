@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * View Helper which creates a text field (<input type="text">).
  *
@@ -79,7 +78,6 @@ class TextfieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFiel
 
 		return $this->tag->render();
 	}
-
 }
 
 ?>

@@ -17,7 +17,6 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Upload" Form view helper
- *
  */
 class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
@@ -70,7 +69,7 @@ class UploadViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$arguments = array(
-			'name' => 'someName',
+			'name' => 'someName'
 		);
 
 		$this->viewHelper->setArguments($arguments);

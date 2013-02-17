@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  *                                                                        */
 
 /**
+ * An AbstractNode Test
  */
 class AbstractNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 

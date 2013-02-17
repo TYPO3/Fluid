@@ -27,7 +27,7 @@ abstract class AbstractViewHelper {
 	private $argumentsInitialized = FALSE;
 
 	/**
-	 * Stores all TYPO3\Fluid\ArgumentDefinition instances
+	 * Stores all \TYPO3\Fluid\ArgumentDefinition instances
 	 * @var array
 	 */
 	private $argumentDefinitions = array();
@@ -312,7 +312,7 @@ abstract class AbstractViewHelper {
 	/**
 	 * Initialize all arguments and return them
 	 *
-	 * @return array Array of TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition instances.
+	 * @return array Array of \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition instances.
 	 */
 	public function prepareArguments() {
 		if (!$this->argumentsInitialized) {
@@ -359,7 +359,7 @@ abstract class AbstractViewHelper {
 				$dataType = 'array';
 			}
 			if ($dataType === NULL) {
-				throw new \TYPO3\Fluid\Core\Parser\Exception('could not determine type of argument "' . $parameterName .'" of the render-method in ViewHelper "' . get_class($this) . '". Either the methods docComment is invalid or some PHP optimizer strips off comments.', 1242292003);
+				throw new \TYPO3\Fluid\Core\Parser\Exception('could not determine type of argument "' . $parameterName . '" of the render-method in ViewHelper "' . get_class($this) . '". Either the methods docComment is invalid or some PHP optimizer strips off comments.', 1242292003);
 			}
 
 			$description = '';
@@ -405,7 +405,7 @@ abstract class AbstractViewHelper {
 						throw new \InvalidArgumentException('The argument "' . $argumentName . '" was registered with type "boolean", but is of type "' . gettype($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1240227732);
 					}
 				} elseif (class_exists($type, FALSE)) {
-					if (! ($this->arguments[$argumentName] instanceof $type)) {
+					if (!($this->arguments[$argumentName] instanceof $type)) {
 						if (is_object($this->arguments[$argumentName])) {
 							throw new \InvalidArgumentException('The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' . get_class($this->arguments[$argumentName]) . '" in view helper "' . get_class($this) . '".', 1256475114);
 						} else {
@@ -463,7 +463,7 @@ abstract class AbstractViewHelper {
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
 	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
 	 * @return string
-	 * @see TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface
+	 * @see \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface
 	 */
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
 		return sprintf('%s::renderStatic(%s, %s, $renderingContext)',
@@ -478,7 +478,7 @@ abstract class AbstractViewHelper {
 	 * @param \Closure $renderChildrenClosure
 	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return mixed
-	 * @see TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface
+	 * @see \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 		return NULL;

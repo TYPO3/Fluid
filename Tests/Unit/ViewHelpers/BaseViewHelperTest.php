@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
  *                                                                        */
 
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
+
 /**
  */
 class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
@@ -32,4 +33,5 @@ class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->assertSame($expectedResult, $actualResult);
 	}
 }
+
 ?>

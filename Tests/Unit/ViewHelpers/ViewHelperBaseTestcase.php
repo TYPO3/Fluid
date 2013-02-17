@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
+ * Base test class for testing view helpers
  */
 abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -41,7 +42,7 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 	protected $tagBuilder;
 
 	/**
-	 * @var array
+	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $arguments;
 
@@ -96,4 +97,5 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 		}
 	}
 }
+
 ?>

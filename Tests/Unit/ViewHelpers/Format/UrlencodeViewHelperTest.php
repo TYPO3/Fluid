@@ -14,12 +14,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 use TYPO3\Flow\Http\Uri;
 
 /**
- *
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\UrlencodeViewHelper
  */
 class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
-	 * @var \TYPO3\Fluid\ViewHelpers\Format\UrlEncodeViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Format\UrlencodeViewHelper
 	 */
 	protected $viewHelper;
 
@@ -89,4 +89,5 @@ class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals(urlencode('http://typo3.com/foo&bar=1'), $actualResult);
 	}
 }
+
 ?>

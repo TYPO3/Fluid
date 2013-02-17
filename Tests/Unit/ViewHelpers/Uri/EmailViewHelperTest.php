@@ -15,12 +15,11 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for the email uri view helper
- *
  */
 class EmailViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Uri\EmailViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Uri\EmailViewHelper
 	 */
 	protected $viewHelper;
 
@@ -41,6 +40,5 @@ class EmailViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$this->assertEquals('mailto:some@email.tld', $actualResult);
 	}
 }
-
 
 ?>

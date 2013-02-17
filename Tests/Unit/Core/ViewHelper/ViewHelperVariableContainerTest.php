@@ -15,12 +15,10 @@ require_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
 
 /**
  * Testcase for AbstractViewHelper
- *
  */
 class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
-	 *
 	 * @var \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
@@ -28,6 +26,7 @@ class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	protected function setUp() {
 		$this->viewHelperVariableContainer = new \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer();
 	}
+
 	/**
 	 * @test
 	 */
@@ -92,4 +91,5 @@ class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($view, $this->viewHelperVariableContainer->getView());
 	}
 }
+
 ?>

@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /**
  * Testcase for TextNode
- *
  */
 class TextNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -34,7 +33,5 @@ class TextNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode(123);
 	}
 }
-
-
 
 ?>

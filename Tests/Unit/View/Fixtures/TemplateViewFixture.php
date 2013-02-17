@@ -12,8 +12,7 @@ namespace TYPO3\Fluid\View\Fixture;
  *                                                                        */
 
 /**
- * [Enter description here]
- *
+ * Template view fixture
  */
 class TemplateViewFixture extends \TYPO3\Fluid\View\TemplateView {
 
@@ -24,8 +23,6 @@ class TemplateViewFixture extends \TYPO3\Fluid\View\TemplateView {
 
 	protected function loadTemplateFile($templateFilePath) {
 	}
-
 }
-
 
 ?>

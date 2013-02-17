@@ -73,9 +73,9 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
 		$viewHelper->injectReflectionService($this->mockReflectionService);
 
-		$name = "This is a name";
-		$description = "Example desc";
-		$type = "string";
+		$name = 'This is a name';
+		$description = 'Example desc';
+		$type = 'string';
 		$isRequired = TRUE;
 		$expected = new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $isRequired);
 
@@ -85,18 +85,18 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function registeringTheSameArgumentNameAgainThrowsException() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
 
-		$name = "shortName";
-		$description = "Example desc";
-		$type = "string";
+		$name = 'shortName';
+		$description = 'Example desc';
+		$type = 'string';
 		$isRequired = TRUE;
 
 		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-		$viewHelper->_call('registerArgument', $name, "integer", $description, $isRequired);
+		$viewHelper->_call('registerArgument', $name, 'integer', $description, $isRequired);
 	}
 
 	/**
@@ -121,7 +121,7 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render'), array(), '', FALSE);
@@ -160,9 +160,9 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->injectReflectionService($this->mockReflectionService);
 
 		$expected = array(
-			'param1' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'integer', 'P1 Stuff', TRUE, null, TRUE),
-			'param2' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'array', 'P2 Stuff', TRUE, null, TRUE),
-			'param3' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE, 'default', TRUE),
+			'param1' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'integer', 'P1 Stuff', TRUE, NULL, TRUE),
+			'param2' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'array', 'P2 Stuff', TRUE, NULL, TRUE),
+			'param3' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param3', 'string', 'P3 Stuff', FALSE, 'default', TRUE)
 		);
 
 		$this->assertEquals($expected, $viewHelper->prepareArguments(), 'Annotation based arguments were not registered.');
@@ -229,7 +229,7 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->setArguments(array('test' => 'Value of argument'));
 
 		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array(
-			'test' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition("test", "string", FALSE, "documentation")
+			'test' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('test', 'string', FALSE, 'documentation')
 		)));
 
 		$viewHelper->validateArguments();
@@ -246,7 +246,7 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->setArguments(array('test' => 'test'));
 
 		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array(
-			'test' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition("test", "stdClass", FALSE, "documentation")
+			'test' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('test', 'stdClass', FALSE, 'documentation')
 		)));
 
 		$viewHelper->validateArguments();
@@ -288,4 +288,5 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($viewHelper->_get('controllerContext'), $controllerContext);
 	}
 }
+
 ?>

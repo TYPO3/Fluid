@@ -15,12 +15,11 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Button" Form view helper
- *
  */
 class ButtonViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Form\ButtonViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\ButtonViewHelper
 	 */
 	protected $viewHelper;
 

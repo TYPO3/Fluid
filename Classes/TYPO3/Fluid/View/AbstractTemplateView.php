@@ -244,7 +244,7 @@ abstract class AbstractTemplateView implements \TYPO3\Flow\Mvc\View\ViewInterfac
 			$this->stopRendering();
 		} else {
 			$sections = $parsedTemplate->getVariableContainer()->get('sections');
-			if(!array_key_exists($sectionName, $sections)) {
+			if (!array_key_exists($sectionName, $sections)) {
 				$controllerObjectName = $this->controllerContext->getRequest()->getControllerObjectName();
 				if ($ignoreUnknown) {
 					return '';

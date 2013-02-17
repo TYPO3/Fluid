@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /**
  * Testcase for TemplateVariableContainer
- *
  */
 class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -38,8 +37,8 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function addedObjectsCanBeRetrievedAgain() {
-		$object = "StringObject";
-		$this->variableContainer->add("variable", $object);
+		$object = 'StringObject';
+		$this->variableContainer->add('variable', $object);
 		$this->assertSame($this->variableContainer->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
 	}
 
@@ -47,7 +46,7 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function addedObjectsCanBeRetrievedAgainUsingArrayAccess() {
-		$object = "StringObject";
+		$object = 'StringObject';
 		$this->variableContainer['variable'] = $object;
 		$this->assertSame($this->variableContainer->get('variable'), $object);
 		$this->assertSame($this->variableContainer['variable'], $object);
@@ -57,8 +56,8 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function addedObjectsExistInArray() {
-		$object = "StringObject";
-		$this->variableContainer->add("variable", $object);
+		$object = 'StringObject';
+		$this->variableContainer->add('variable', $object);
 		$this->assertTrue($this->variableContainer->exists('variable'));
 		$this->assertTrue(isset($this->variableContainer['variable']));
 	}
@@ -67,8 +66,8 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function addedObjectsExistInAllIdentifiers() {
-		$object = "StringObject";
-		$this->variableContainer->add("variable", $object);
+		$object = 'StringObject';
+		$this->variableContainer->add('variable', $object);
 		$this->assertEquals($this->variableContainer->getAllIdentifiers(), array('variable'), 'Added key is not visible in getAllIdentifiers');
 	}
 
@@ -150,7 +149,7 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 * @param string $identifier
 	 * @dataProvider reservedVariableNameDataProvider
-	 * @expectedException TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function addingVariableWhichIsReservedThrowsException($identifier) {
 		$this->variableContainer->add($identifier, 'foo');

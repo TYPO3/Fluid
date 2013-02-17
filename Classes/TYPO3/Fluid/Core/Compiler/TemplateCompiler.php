@@ -367,13 +367,12 @@ EOD;
 		}
 	}
 
-
 	/**
 	 * @param string $text
 	 * @return string
 	 */
 	protected function escapeTextForUseInSingleQuotes($text) {
-		 return str_replace(array('\\', '\''), array('\\\\', '\\\''), $text);
+		return str_replace(array('\\', '\''), array('\\\\', '\\\''), $text);
 	}
 
 	/**

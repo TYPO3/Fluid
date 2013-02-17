@@ -21,7 +21,7 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper
 	 */
 	protected $viewHelper;
 
@@ -268,7 +268,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->assertSame($expected, $actual);
 	}
 
-
 	/**
 	 * @test
 	 */
@@ -474,6 +473,6 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->_set('translator', $mockTranslator);
 		$this->viewHelper->_call('getTranslatedLabel', 'value1', 'label1');
 	}
-
 }
+
 ?>

@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\StripTagsViewHelper
  */
 class StripTagsViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -80,4 +81,5 @@ class StripTagsViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($source, $actualResult);
 	}
 }
+
 ?>

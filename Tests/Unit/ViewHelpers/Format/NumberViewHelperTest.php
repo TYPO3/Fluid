@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\NumberViewHelper
  */
 class NumberViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -35,4 +36,5 @@ class NumberViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('3.333,333', $actualResult);
 	}
 }
+
 ?>

@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\ViewHelpers\Fixtures;
 
 /**
  * Example domain class which can be used to test different view helpers, e.g. the "select" view helper.
- *
  */
 class UserDomainClass {
 
@@ -63,6 +62,5 @@ class UserDomainClass {
 		return $this->lastName;
 	}
 }
-
 
 ?>

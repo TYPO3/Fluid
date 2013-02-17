@@ -12,8 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers\Fixtures;
  *                                                                        */
 
 /**
- * [Enter description here]
- *
+ * Constraint syntax tree node fixture
  */
 class ConstraintSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode {
 	public $callProtocol = array();
@@ -31,8 +30,8 @@ class ConstraintSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewH
 		$this->callProtocol[] = $callElement;
 	}
 
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {}
+	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	}
 }
-
 
 ?>

@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesViewHelper
  */
 class HtmlentitiesViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -117,4 +118,5 @@ class HtmlentitiesViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($source, $actualResult);
 	}
 }
+
 ?>

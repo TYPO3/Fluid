@@ -17,12 +17,11 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Textarea" Form view helper
- *
  */
 class TextareaViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Form\TextareaViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\TextareaViewHelper
 	 */
 	protected $viewHelper;
 

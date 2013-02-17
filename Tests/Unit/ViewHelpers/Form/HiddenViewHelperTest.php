@@ -15,12 +15,11 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Hidden" Form view helper
- *
  */
 class HiddenViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Form\HiddenViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\HiddenViewHelper
 	 */
 	protected $viewHelper;
 

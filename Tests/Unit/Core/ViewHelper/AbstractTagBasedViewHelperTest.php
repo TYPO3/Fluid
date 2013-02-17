@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /**
  * Testcase for TagBasedViewHelper
- *
  */
 class AbstractTagBasedViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -91,4 +90,5 @@ class AbstractTagBasedViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->viewHelper->initialize();
 	}
 }
+
 ?>

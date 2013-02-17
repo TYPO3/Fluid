@@ -68,4 +68,5 @@ class HtmlentitiesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHe
 		return htmlentities($value, $flags, $encoding, $doubleEncode);
 	}
 }
+
 ?>

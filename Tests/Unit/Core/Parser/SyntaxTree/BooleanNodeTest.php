@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /**
  * Testcase for ViewHelperNode's evaluateBooleanExpression()
- *
  */
 class BooleanNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -40,7 +39,7 @@ class BooleanNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function havingMoreThanThreeElementsInTheSyntaxTreeThrowsException() {
 		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
-		$rootNode->expects($this->once())->method('getChildNodes')->will($this->returnValue(array(1,2,3,4)));
+		$rootNode->expects($this->once())->method('getChildNodes')->will($this->returnValue(array(1, 2, 3, 4)));
 
 		new \TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode($rootNode);
 	}
@@ -441,4 +440,5 @@ class BooleanNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertTrue(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(new \stdClass()));
 	}
 }
+
 ?>

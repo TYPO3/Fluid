@@ -15,12 +15,11 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for CountViewHelper
- *
  */
 class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\CountViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\CountViewHelper
 	 */
 	protected $viewHelper;
 
@@ -68,7 +67,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$this->assertSame($expectedResult, $actualResult);
 	}
 
-
 	/**
 	 * @test
 	 */
@@ -87,7 +85,6 @@ class CountViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$object = new \stdClass();
 		$this->viewHelper->render($object);
 	}
-
 }
 
 ?>

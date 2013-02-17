@@ -14,11 +14,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Link;
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Link\EmailViewHelper
  */
 class ExternalViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Link\EmailViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Link\EmailViewHelper
 	 */
 	protected $viewHelper;
 

@@ -36,9 +36,9 @@ use TYPO3\Flow\Annotations as Flow;
 abstract class AbstractConditionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface, \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
 
 	/**
-	 * An array of \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * An array containing child nodes
 	 *
-	 * @var array
+	 * @var array<\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode>
 	 */
 	private $childNodes = array();
 

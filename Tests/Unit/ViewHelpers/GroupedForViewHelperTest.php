@@ -15,13 +15,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
- * Testcase for CycleViewHelper
- *
+ * Testcase for GroupedForViewHelperTest
  */
 class GroupedForViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\GroupedForViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\GroupedForViewHelper
 	 */
 	protected $viewHelper;
 

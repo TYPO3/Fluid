@@ -16,7 +16,7 @@ namespace TYPO3\Fluid\Core\Parser\Fixtures;
  */
 class PostParseFacetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
 
-	public static $wasCalled = FALSE;
+	static public $wasCalled = FALSE;
 
 	public function __construct() {
 	}

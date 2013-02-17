@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\View;
 
 /**
  * Testcase for the TemplateView
- *
  */
 class AbstractTemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -39,6 +38,7 @@ class AbstractTemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * Sets up this test case
+	 *
 	 * @return void
 	 */
 	public function setUp() {

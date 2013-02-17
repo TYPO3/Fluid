@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * View Helper which creates a simple Password Text Box (<input type="password">).
  *
@@ -67,7 +66,6 @@ class PasswordViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormField
 
 		return $this->tag->render();
 	}
-
 }
 
 ?>

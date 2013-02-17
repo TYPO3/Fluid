@@ -88,7 +88,7 @@ class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 			return '';
 		}
 		if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
+			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
 		}
 
 		if ($arguments['reverse'] === TRUE) {
@@ -116,8 +116,8 @@ class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 				$iterationData['isEven'] = $iterationData['cycle'] % 2 === 0;
 				$iterationData['isOdd'] = !$iterationData['isEven'];
 				$templateVariableContainer->add($arguments['iteration'], $iterationData);
-				$iterationData['index'] ++;
-				$iterationData['cycle'] ++;
+				$iterationData['index']++;
+				$iterationData['cycle']++;
 			}
 			$output .= $renderChildrenClosure();
 			$templateVariableContainer->remove($arguments['as']);

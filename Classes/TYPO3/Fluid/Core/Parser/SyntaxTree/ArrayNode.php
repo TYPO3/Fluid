@@ -11,15 +11,14 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
- *
  */
 class ArrayNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 	/**
 	 * An associative array. Each key is a string. Each value is either a literal, or an AbstractNode.
+	 *
 	 * @var array
 	 */
 	protected $internalArray = array();

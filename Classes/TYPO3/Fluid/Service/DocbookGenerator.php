@@ -135,7 +135,7 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 		$row->addChild('entry', $type);
 		$row->addChild('entry', $required);
 		$row->addChild('entry', $description);
-		$row->addChild('entry', (string)$default);
+		$row->addChild('entry', (string) $default);
 	}
 
 	/**
@@ -154,7 +154,7 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 		$splitRegex = '/^\s*(=[^=]+=)$/m';
 		$regex = '/^\s*(=([^=]+)=)$/m';
 
-		$matches = preg_split($splitRegex, $documentation, -1,  PREG_SPLIT_NO_EMPTY  |  PREG_SPLIT_DELIM_CAPTURE );
+		$matches = preg_split($splitRegex, $documentation, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
 		$currentSection = $docbookSection;
 		foreach ($matches as $singleMatch) {
@@ -181,7 +181,7 @@ class DocbookGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 		<code(.*?)>
 			(.*?)
 		<\/code>/xs';
-		$matches = preg_split($splitRegex, $text, -1,  PREG_SPLIT_NO_EMPTY  |  PREG_SPLIT_DELIM_CAPTURE );
+		$matches = preg_split($splitRegex, $text, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 		foreach ($matches as $singleMatch) {
 
 			if (preg_match($regex, $singleMatch, $tmp)) {

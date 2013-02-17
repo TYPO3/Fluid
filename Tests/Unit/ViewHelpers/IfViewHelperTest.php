@@ -15,17 +15,16 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for IfViewHelper
- *
  */
 class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\IfViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\IfViewHelper
 	 */
 	protected $viewHelper;
 
 	/**
-	 * var \TYPO3\Fluid\Core\ViewHelper\Arguments
+	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $mockArguments;
 
@@ -45,7 +44,6 @@ class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$actualResult = $this->viewHelper->render(TRUE);
 		$this->assertEquals('foo', $actualResult);
 	}
-
 
 	/**
 	 * @test

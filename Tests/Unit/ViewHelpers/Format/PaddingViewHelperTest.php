@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper
  */
 class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -55,4 +56,5 @@ class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('12300', $actualResult);
 	}
 }
+
 ?>

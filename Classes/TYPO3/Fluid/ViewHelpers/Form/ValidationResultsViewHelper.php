@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 /**
  * Validation results view helper
  *

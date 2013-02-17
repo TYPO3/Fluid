@@ -15,12 +15,11 @@ require_once(__DIR__ . '/FormFieldViewHelperBaseTestcase.php');
 
 /**
  * Test for the "Checkbox" Form view helper
- *
  */
 class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormFieldViewHelperBaseTestcase {
 
 	/**
-	 * var \TYPO3\Fluid\ViewHelpers\Form\CheckboxViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Form\CheckboxViewHelper
 	 */
 	protected $viewHelper;
 

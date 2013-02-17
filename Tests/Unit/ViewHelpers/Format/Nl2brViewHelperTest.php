@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\Nl2brViewHelper
  */
 class Nl2brViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -45,4 +46,5 @@ class Nl2brViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('Line 1<br />' . chr(13) . chr(10) . 'Line 2', $actualResult);
 	}
 }
+
 ?>

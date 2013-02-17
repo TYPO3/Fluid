@@ -525,7 +525,7 @@ class TemplateParser {
 	 * Throw an exception if there are arguments which were not registered
 	 * before.
 	 *
-	 * @param array $expectedArguments Array of TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
+	 * @param array $expectedArguments Array of \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
@@ -545,7 +545,7 @@ class TemplateParser {
 	/**
 	 * Throw an exception if required arguments are missing
 	 *
-	 * @param array $expectedArguments Array of TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
+	 * @param array $expectedArguments Array of \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
 	 * @throws \TYPO3\Fluid\Core\Parser\Exception
 	 */
@@ -809,7 +809,7 @@ class TemplateParser {
 		foreach ($sections as $section) {
 			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
-				$this->objectAccessorHandler($state, $matchedVariables['Object'], $matchedVariables['Delimiter'], (isset($matchedVariables['ViewHelper'])?$matchedVariables['ViewHelper']:''), (isset($matchedVariables['AdditionalViewHelpers'])?$matchedVariables['AdditionalViewHelpers']:''));
+				$this->objectAccessorHandler($state, $matchedVariables['Object'], $matchedVariables['Delimiter'], (isset($matchedVariables['ViewHelper']) ? $matchedVariables['ViewHelper'] : ''), (isset($matchedVariables['AdditionalViewHelpers']) ? $matchedVariables['AdditionalViewHelpers'] : ''));
 			} elseif ($context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS && preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
 					// We only match arrays if we are INSIDE viewhelper arguments
 				$this->arrayHandler($state, $matchedVariables['Array']);
@@ -885,6 +885,6 @@ class TemplateParser {
 
 		$state->getNodeFromStack()->addChildNode($node);
 	}
-
 }
+
 ?>

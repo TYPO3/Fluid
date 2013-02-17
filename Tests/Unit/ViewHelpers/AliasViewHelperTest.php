@@ -15,7 +15,6 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for AliasViewHelper
- *
  */
 class AliasViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
@@ -73,7 +72,5 @@ class AliasViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$this->assertEquals('foo', $viewHelper->render(array()));
 	}
 }
-
-
 
 ?>

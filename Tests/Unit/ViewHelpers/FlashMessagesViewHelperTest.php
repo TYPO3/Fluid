@@ -15,7 +15,6 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for FlashMessagesViewHelper
- *
  */
 class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
@@ -87,7 +86,6 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 		);
 	}
 
-
 	/**
 	 * @test
 	 * @dataProvider renderDataProvider()
@@ -105,7 +103,5 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 		$this->viewHelper->render();
 	}
 }
-
-
 
 ?>

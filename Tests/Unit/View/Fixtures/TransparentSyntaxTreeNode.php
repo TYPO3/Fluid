@@ -22,5 +22,4 @@ class TransparentSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\Abst
 	}
 }
 
-
 ?>

@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\PrintfViewHelper
  */
 class PrintfViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -35,4 +36,5 @@ class PrintfViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('foo 123 bar foo', $actualResult);
 	}
 }
+
 ?>

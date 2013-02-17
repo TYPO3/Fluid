@@ -81,4 +81,5 @@ class HtmlspecialcharsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractVi
 				$valueVariableName, $valueVariableName, $valueVariableName, $argumentsVariableName, $argumentsVariableName, $argumentsVariableName);
 	}
 }
+
 ?>

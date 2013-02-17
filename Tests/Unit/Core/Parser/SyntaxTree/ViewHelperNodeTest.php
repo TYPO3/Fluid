@@ -15,31 +15,32 @@ require_once(__DIR__ . '/../Fixtures/ChildNodeAccessFacetViewHelper.php');
 require_once(__DIR__ . '/../../Fixtures/TestViewHelper.php');
 
 /**
- * Testcase for [insert classname here]
- *
+ * Testcase for \TYPO3\CMS\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
  */
 class ViewHelperNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * Rendering Context
+	 *
 	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContext
 	 */
 	protected $renderingContext;
 
 	/**
 	 * Object factory mock
+	 *
 	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 */
 	protected $mockObjectManager;
 
 	/**
 	 * Template Variable Container
+	 *
 	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
 	 */
 	protected $templateVariableContainer;
 
 	/**
-	 *
 	 * @var TYPO3\Flow\Mvc\Controller\ControllerContext
 	 */
 	protected $controllerContext;
@@ -113,9 +114,9 @@ class ViewHelperNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function initializeArgumentsAndRenderIsCalledWithCorrectArguments() {
 		$arguments = array(
-			'param0' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, null, FALSE),
-			'param1' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, null, TRUE),
-			'param2' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'string', 'Hallo', TRUE, null, TRUE)
+			'param0' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, NULL, FALSE),
+			'param1' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'string', 'Hallo', TRUE, NULL, TRUE),
+			'param2' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'string', 'Hallo', TRUE, NULL, TRUE)
 		);
 
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('initializeArgumentsAndRender', 'prepareArguments'));
@@ -124,7 +125,7 @@ class ViewHelperNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$viewHelperNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode($mockViewHelper, array(
 			'param2' => new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('b'),
-			'param1' => new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('a'),
+			'param1' => new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('a')
 		));
 
 		$viewHelperNode->evaluate($this->renderingContext);

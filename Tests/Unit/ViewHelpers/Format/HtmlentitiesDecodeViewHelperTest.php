@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  *                                                                        */
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesDecodeViewHelper
  */
 class HtmlentitiesDecodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -97,4 +98,5 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($source, $actualResult);
 	}
 }
+
 ?>

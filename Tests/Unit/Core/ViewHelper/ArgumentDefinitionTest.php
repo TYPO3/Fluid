@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
 
 /**
  * Testcase for \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition
- *
  */
 class ArgumentDefinitionTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
@@ -21,12 +20,12 @@ class ArgumentDefinitionTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function objectStoresDataCorrectly() {
-		$name = "This is a name";
-		$description = "Example desc";
-		$type = "string";
+		$name = 'This is a name';
+		$description = 'Example desc';
+		$type = 'string';
 		$isRequired = TRUE;
 		$isMethodParameter = TRUE;
-		$argumentDefinition = new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $isRequired, null, $isMethodParameter);
+		$argumentDefinition = new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition($name, $type, $description, $isRequired, NULL, $isMethodParameter);
 
 		$this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
 		$this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
@@ -35,7 +34,5 @@ class ArgumentDefinitionTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($argumentDefinition->isMethodParameter(), $isMethodParameter, 'isMethodParameter flag could not be retrieved correctly.');
 	}
 }
-
-
 
 ?>
