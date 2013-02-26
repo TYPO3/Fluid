@@ -159,12 +159,12 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function pathToPartialIsResolvedCorrectly() {
 		$this->markTestSkipped('Needs to be finished');
-		\vfsStreamWrapper::register();
+		vfsStreamWrapper::register();
 		mkdir('vfs://MyTemplates');
 		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
-		$mockRootDirectory = \vfsStreamDirectory::create('ExamplePackagePath/Resources/Private/Partials');
+		$mockRootDirectory = vfsStreamDirectory::create('ExamplePackagePath/Resources/Private/Partials');
 		$mockRootDirectory->getChild('Resources/Private/Partials')->addChild('Partials');
-		\vfsStreamWrapper::setRoot($mockRootDirectory);
+		vfsStreamWrapper::setRoot($mockRootDirectory);
 
 		$this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array(''), array(), '', FALSE);
 	}
@@ -173,7 +173,7 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function resolveTemplatePathAndFilenameChecksDifferentPathPatternsAndReturnsTheFirstPathWhichExists() {
-		\vfsStreamWrapper::register();
+		vfsStreamWrapper::register();
 		mkdir('vfs://MyTemplates');
 		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
 
@@ -197,7 +197,7 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function resolveTemplatePathAndFilenameReturnsTheExplicitlyConfiguredTemplatePathAndFilename() {
-		\vfsStreamWrapper::register();
+		vfsStreamWrapper::register();
 		mkdir('vfs://MyTemplates');
 		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
 
