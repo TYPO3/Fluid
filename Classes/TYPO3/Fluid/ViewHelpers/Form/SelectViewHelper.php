@@ -44,6 +44,9 @@ use TYPO3\Flow\Annotations as Flow;
  * If the optionValueField variable is set, the getter named after that value is used to retrieve the option key.
  * If the optionLabelField variable is set, the getter named after that value is used to retrieve the option value.
  *
+ * If the prependOptionLabel variable is set, an option item is added in first position, bearing an empty string
+ * or - if specified - the value of the prependOptionValue variable as value.
+ *
  * <code title="Domain objects">
  * <f:form.select name="users" options="{userArray}" optionValueField="id" optionLabelField="firstName" />
  * </code>
@@ -52,6 +55,20 @@ use TYPO3\Flow\Annotations as Flow;
  * So, in the above example, the method $user->getId() is called to retrieve the key, and $user->getFirstName() to retrieve the displayed value of each entry.
  *
  * The "value" property now expects a domain object, and tests for object equivalence.
+ *
+ * <code title="Prepend option">
+ * <f:form.select property="salutation" options="{salutations}" prependOptionLabel="- select one -" />
+ * </code>
+ * <output>
+ * <select name="salutation">
+ *   <option value="">- select one -</option>
+ *   <option value="Mr">Mr</option>
+ *   <option value="Mrs">Mrs</option>
+ *   <option value="Ms">Ms</option>
+ *   <option value="Dr">Dr</option>
+ * </select>
+ * (depending on variable "salutations")
+ * </output>
  *
  * = Translation of select content =
  *
@@ -115,6 +132,8 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$this->registerArgument('selectAllByDefault', 'boolean', 'If specified options are selected if none was set before.', FALSE, FALSE);
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
 		$this->registerArgument('translate', 'array', 'Configures translation of view helper output.');
+		$this->registerArgument('prependOptionLabel', 'string', 'If specified, will provide an option at first position with the specified label.');
+		$this->registerArgument('prependOptionValue', 'string', 'If specified, will provide an option at first position with the specified value. This argument is only respected if prependOptionLabel is set.');
 	}
 
 	/**
@@ -132,9 +151,6 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		$this->tag->addAttribute('name', $name);
 
 		$options = $this->getOptions();
-		if (empty($options)) {
-			$options = array('' => '');
-		}
 		$this->tag->setContent($this->renderOptionTags($options));
 
 		$this->setErrorClassAttribute();
@@ -162,7 +178,13 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 */
 	protected function renderOptionTags($options) {
 		$output = '';
-
+		if ($this->hasArgument('prependOptionLabel')) {
+			$value = $this->hasArgument('prependOptionValue') ? $this->arguments['prependOptionValue'] : '';
+			$label = $this->arguments['prependOptionLabel'];
+			$output .= $this->renderOptionTag($value, $label, FALSE) . chr(10);
+		} elseif (empty($options)) {
+			$options = array('' => '');
+		}
 		foreach ($options as $value => $label) {
 			$output .= $this->renderOptionTag($value, $label) . chr(10);
 		}
@@ -308,6 +330,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * @param string $label option tag label
 	 * @return string
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws \TYPO3\Fluid\Exception
 	 */
 	protected function getTranslatedLabel($value, $label) {
 		$translationConfiguration = $this->arguments['translate'];
