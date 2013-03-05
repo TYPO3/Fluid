@@ -42,6 +42,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->arguments['format'] = '';
 		$this->arguments['additionalParams'] = array();
 		$this->arguments['argumentsToBeExcludedFromQueryString'] = array();
+		$this->arguments['useParentRequest'] = FALSE;
 	}
 
 	/**
@@ -346,15 +347,35 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
 		$mockSubRequest->expects($this->once())->method('getArgumentNamespace')->will($this->returnValue($expectedPrefix));
 
-		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer', 'addEmptyHiddenFieldNamesToViewHelperVariableContainer', 'removeEmptyHiddenFieldNamesFromViewHelperVariableContainer', 'renderEmptyHiddenFields', 'renderTrustedPropertiesField'), array(), '', FALSE);
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('getFormActionUri', 'renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer', 'addEmptyHiddenFieldNamesToViewHelperVariableContainer', 'removeEmptyHiddenFieldNamesFromViewHelperVariableContainer', 'renderEmptyHiddenFields', 'renderTrustedPropertiesField'), array(), '', FALSE);
 		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
-		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
 		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockSubRequest));
 		$this->renderingContext->setControllerContext($this->controllerContext);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $expectedPrefix);
 		$this->viewHelperVariableContainer->expects($this->once())->method('remove')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix');
+		$viewHelper->render('index');
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderAddsDefaultFieldNamePrefixToTemplateVariableContainerIfNoPrefixIsSpecifiedAndUseParentRequestArgumentIsSet() {
+		$expectedPrefix = 'parentRequestsPrefix';
+		$mockParentRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
+		$mockParentRequest->expects($this->once())->method('getArgumentNamespace')->will($this->returnValue($expectedPrefix));
+		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
+		$mockSubRequest->expects($this->once())->method('getParentRequest')->will($this->returnValue($mockParentRequest));
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('getFormActionUri', 'renderChildren', 'renderHiddenIdentityField', 'renderHiddenReferrerFields', 'addFormFieldNamesToViewHelperVariableContainer', 'removeFormFieldNamesFromViewHelperVariableContainer', 'addEmptyHiddenFieldNamesToViewHelperVariableContainer', 'removeEmptyHiddenFieldNamesFromViewHelperVariableContainer', 'renderEmptyHiddenFields', 'renderTrustedPropertiesField'), array(), '', FALSE);
+		$this->arguments['useParentRequest'] = TRUE;
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->once())->method('getRequest')->will($this->returnValue($mockSubRequest));
+		$this->renderingContext->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$this->viewHelperVariableContainer->expects($this->once())->method('add')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix', $expectedPrefix);
 		$viewHelper->render('index');
 	}
 
@@ -404,6 +425,42 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->render();
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderThrowsExceptionIfUseParentRequestIsSetAndTheCurrentRequestHasNoParentRequest() {
+		$this->setExpectedException('TYPO3\Fluid\Core\ViewHelper\Exception', '', 1361354942);
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
+		$this->arguments['useParentRequest'] = TRUE;
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->render('index');
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderUsesParentRequestIfUseParentRequestIsSet() {
+		$mockParentRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
+
+		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), '', FALSE);
+		$mockSubRequest->expects($this->once())->method('isMainRequest')->will($this->returnValue(FALSE));
+		$mockSubRequest->expects($this->once())->method('getParentRequest')->will($this->returnValue($mockParentRequest));
+
+		$this->uriBuilder->expects($this->once())->method('setRequest')->with($mockParentRequest);
+
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('dummy'), array(), '', FALSE);
+		$this->arguments['useParentRequest'] = TRUE;
+
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->once())->method('getRequest')->will($this->returnValue($mockSubRequest));
+		$this->controllerContext->expects($this->once())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->renderingContext->setControllerContext($this->controllerContext);
+
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$viewHelper->_call('getFormActionUri');
 	}
 
 }

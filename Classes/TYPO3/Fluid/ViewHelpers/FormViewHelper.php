@@ -99,11 +99,12 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @param string $fieldNamePrefix Prefix that will be added to all field names within this form
 	 * @param string $actionUri can be used to overwrite the "action" attribute of the form tag
 	 * @param string $objectName name of the object that is bound to this form. If this argument is not specified, the name attribute of this form is used to determine the FormObjectName
+	 * @param boolean $useParentRequest If set, the parent Request will be used instead ob the current one
 	 * @return string rendered form
 	 * @api
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
-	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL) {
+	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL, $useParentRequest = FALSE) {
 		$this->formActionUri = NULL;
 		if ($action === NULL && $actionUri === NULL) {
 			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('FormViewHelper requires "actionUri" or "action" argument to be specified', 1355243748);
@@ -165,6 +166,14 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			$this->formActionUri = $this->arguments['actionUri'];
 		} else {
 			$uriBuilder = $this->controllerContext->getUriBuilder();
+			if ($this->arguments['useParentRequest'] === TRUE) {
+				$request = $this->controllerContext->getRequest();
+				if ($request->isMainRequest()) {
+					throw new \TYPO3\Fluid\Core\ViewHelper\Exception('You can\'t use the parent Request, you are already in the MainRequest.', 1361354942);
+				}
+				$uriBuilder = clone $uriBuilder;
+				$uriBuilder->setRequest($request->getParentRequest());
+			}
 			$uriBuilder
 				->reset()
 				->setSection($this->arguments['section'])
@@ -373,7 +382,11 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	protected function getDefaultFieldNamePrefix() {
 		$request = $this->controllerContext->getRequest();
 		if (!$request->isMainRequest()) {
-			return $request->getArgumentNamespace();
+			if ($this->arguments['useParentRequest'] === TRUE) {
+				return $request->getParentRequest()->getArgumentNamespace();
+			} else {
+				return $request->getArgumentNamespace();
+			}
 		}
 		return '';
 	}
