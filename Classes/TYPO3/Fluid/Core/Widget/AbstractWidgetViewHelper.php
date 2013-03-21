@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\Core\Widget;
  *                                                                        */
 
 
+use TYPO3\Flow\Object\DependencyInjection\DependencyProxy;
+
 /**
  * @api
  */
@@ -110,7 +112,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 		$this->widgetContext->setNonAjaxWidgetConfiguration($this->getNonAjaxWidgetConfiguration());
 		$this->initializeWidgetIdentifier();
 
-		$controllerObjectName = get_class($this->controller);
+		$controllerObjectName = ($this->controller instanceof DependencyProxy) ? $this->controller->_getClassName() : get_class($this->controller);
 		$this->widgetContext->setControllerObjectName($controllerObjectName);
 	}
 
@@ -170,6 +172,9 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * @api
 	 */
 	protected function initiateSubRequest() {
+		if ($this->controller instanceof DependencyProxy) {
+			$this->controller->_activateDependency();
+		}
 		if (!($this->controller instanceof \TYPO3\Fluid\Core\Widget\AbstractWidgetController)) {
 			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\Flow\Annotations\Inject annotation in your widget class.', 1284401632);
 		}

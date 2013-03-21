@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Object\DependencyInjection\DependencyProxy;
 
 /**
  * Node which will call a ViewHelper associated with this node.
@@ -57,7 +58,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$this->uninitializedViewHelper = $viewHelper;
 		$this->viewHelpersByContext = new \SplObjectStorage();
 		$this->arguments = $arguments;
-		$this->viewHelperClassName = get_class($this->uninitializedViewHelper);
+		$this->viewHelperClassName = ($this->uninitializedViewHelper instanceof DependencyProxy) ? $this->uninitializedViewHelper->_getClassName() : get_class($this->uninitializedViewHelper);
 	}
 
 	/**
