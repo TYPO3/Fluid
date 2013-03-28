@@ -19,20 +19,7 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
  *
  * <code title="Basic usage">
  * <f:security.ifHasRole role="Administrator">
- *   This is being shown in case you have the Administrator role (aka role) defined in the
- *   current package according to the controllerContext
- * </f:security.ifHasRole>
- * </code>
- *
- * <code title="Usage with packageKey attribute">
- * <f:security.ifHasRole role="Administrator" packageKey="Acme.MyPackage">
- *   This is being shown in case you have the Acme.MyPackage.Administrator role (aka role).
- * </f:security.ifHasRole>
- * </code>
- *
- * <code title="Usage with full role identifier in role attribute">
- * <f:security.ifHasRole role="Acme.MyPackage.Administrator">
- *   This is being shown in case you have the Acme.MyPackage.Administrator role (aka role).
+ *   This is being shown in case you have the Administrator role (aka role).
  * </f:security.ifHasRole>
  * </code>
  *
@@ -77,19 +64,10 @@ class IfHasRoleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractCondition
 	 * otherwise renders <f:else> child.
 	 *
 	 * @param string $role The role
-	 * @param string $packageKey PackageKey of the package defining the role
 	 * @return string the rendered string
 	 * @api
 	 */
-	public function render($role, $packageKey = NULL) {
-		if ($role !== 'Everybody' && $role !== 'Anonymous' && !strpos($role, '.')) {
-			if ($packageKey === NULL) {
-				$role = $this->controllerContext->getRequest()->getControllerPackageKey() . '.' . $role;
-			} else {
-				$role = $packageKey . '.' . $role;
-			}
-		}
-
+	public function render($role) {
 		if ($this->securityContext->hasRole($role)) {
 			return $this->renderThenChild();
 		} else {

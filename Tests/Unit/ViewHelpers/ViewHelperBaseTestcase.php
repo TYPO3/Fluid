@@ -73,7 +73,6 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 		// BACKPORTER TOKEN #1
 		$httpRequest = \TYPO3\Flow\Http\Request::create(new \TYPO3\Flow\Http\Uri('http://localhost/foo'));
 		$this->request = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array($httpRequest));
-		$this->request->setControllerPackageKey('TYPO3.Fluid');
 		$this->request->expects($this->any())->method('isMainRequest')->will($this->returnValue(TRUE));
 		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
 		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
