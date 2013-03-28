@@ -11,7 +11,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper;
+use TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper;
 
 /**
  */
