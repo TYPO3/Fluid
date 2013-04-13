@@ -219,13 +219,14 @@ class TemplateView extends AbstractTemplateView {
 	 * @return string template identifier
 	 */
 	protected function getTemplateIdentifier($actionName = NULL) {
-		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
 		if ($actionName === NULL) {
 			/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
 			$actionRequest = $this->controllerContext->getRequest();
 			$actionName = $actionRequest->getControllerActionName();
 		}
-		$prefix = 'action_' . $actionName;
+		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
+		$controllerName = $this->controllerContext->getRequest()->getControllerName();
+		$prefix = $controllerName . '_action_' . $actionName;
 		return $this->createIdentifierForFile($templatePathAndFilename, $prefix);
 	}
 
@@ -510,9 +511,9 @@ class TemplateView extends AbstractTemplateView {
 		if ($subPackageKey !== NULL) {
 			$packageKey .= '_' . $subPackageKey;
 		}
-		$controllerName = $actionRequest->getControllerName();
+
 		$templateModifiedTimestamp = filemtime($pathAndFilename);
-		$templateIdentifier = sprintf('%s_%s_%s_%s', $packageKey, $controllerName, $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
+		$templateIdentifier = sprintf('%s_%s_%s', $packageKey, $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
 		return $templateIdentifier;
 	}
 }
