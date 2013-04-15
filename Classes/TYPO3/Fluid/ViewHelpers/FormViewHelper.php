@@ -57,6 +57,12 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 
 	/**
 	 * @Flow\Inject
+	 * @var \TYPO3\Flow\Security\Context
+	 */
+	protected $securityContext;
+
+	/**
+	 * @Flow\Inject
 	 * @var \TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService
 	 */
 	protected $mvcPropertyMappingConfigurationService;
@@ -136,6 +142,9 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$content .= $this->renderEmptyHiddenFields();
 			// Render the trusted list of all properties after everything else has been rendered
 		$content .= $this->renderTrustedPropertiesField();
+		if (strtolower($this->arguments['method']) !== 'get') {
+			$content .= $this->renderCsrfTokenField();
+		}
 		$content .= chr(10) . '</div>' . chr(10);
 		$content .= $formContent;
 
@@ -464,6 +473,19 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 		$formFieldNames = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames');
 		$requestHash = $this->mvcPropertyMappingConfigurationService->generateTrustedPropertiesToken($formFieldNames, $this->getFieldNamePrefix());
 		return '<input type="hidden" name="' . $this->prefixFieldName('__trustedProperties') . '" value="' . htmlspecialchars($requestHash) . '" />' . chr(10);
+	}
+
+	/**
+	 * Render the a hidden field with a CSRF token
+	 *
+	 * @return string the CSRF token field
+	 */
+	protected function renderCsrfTokenField() {
+		if (!$this->securityContext->isInitialized()) {
+			return '';
+		}
+		$csrfToken = $this->securityContext->getCsrfProtectionToken();
+		return '<input type="hidden" name="__csrfToken" value="' . htmlspecialchars($csrfToken) . '" />' . chr(10);
 	}
 }
 ?>
