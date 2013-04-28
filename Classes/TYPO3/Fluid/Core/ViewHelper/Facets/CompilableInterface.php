@@ -25,6 +25,7 @@ use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * Implementing renderStatic()
  * ===========================
+ *
  * A ViewHelper which implements CompilableInterface and the renderStatic method
  * is called *statically* through the renderStatic method; and no instance of the
  * ViewHelper is created.

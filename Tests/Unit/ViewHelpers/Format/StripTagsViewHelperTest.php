@@ -11,16 +11,18 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 require_once(__DIR__ . '/../Fixtures/UserWithoutToString.php');
 require_once(__DIR__ . '/../Fixtures/UserWithToString.php');
 
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithToString;
 
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\StripTagsViewHelper
  */
-class StripTagsViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class StripTagsViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Format\StripTagsViewHelper
@@ -28,7 +30,10 @@ class StripTagsViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
+		parent::setUp();
 		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\StripTagsViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
 	}
 
 	/**

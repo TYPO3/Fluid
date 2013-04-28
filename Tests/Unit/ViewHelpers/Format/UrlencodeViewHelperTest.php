@@ -11,12 +11,15 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 use TYPO3\Flow\Http\Uri;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\UrlencodeViewHelper
  */
-class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class UrlencodeViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Format\UrlencodeViewHelper
@@ -24,7 +27,10 @@ class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
+		parent::setUp();
 		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\UrlencodeViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
 	}
 
 	/**

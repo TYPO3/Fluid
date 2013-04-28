@@ -11,22 +11,29 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 use TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper
  */
-class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class CaseViewHelperTest extends ViewHelperBaseTestcase {
 
+	/**
+	 * @var \TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper
+	 */
+	protected $viewHelper;
 	/**
 	 * Holds the initial mb_internal_encoding value found on this system in order to restore it after the tests
 	 * @var string
 	 */
 	protected $originalMbEncodingValue;
 
-	/**
-	 */
-	protected function setUp() {
+	public function setUp() {
 		parent::setUp();
+		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper', array('renderChildren'));
 		$this->originalMbEncodingValue = mb_internal_encoding();
 	}
 
@@ -41,20 +48,18 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function viewHelperRendersChildrenIfGivenValueIsNull() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper', array('renderChildren'));
-		$viewHelper->expects($this->once())->method('renderChildren');
-		$viewHelper->render();
+		$this->viewHelper->expects($this->once())->method('renderChildren');
+		$this->viewHelper->render();
 	}
 
 	/**
 	 * @test
 	 */
 	public function viewHelperDoesNotRenderChildrenIfGivenValueIsNotNull() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\CaseViewHelper', array('renderChildren'));
-		$viewHelper->expects($this->never())->method('renderChildren');
-		$viewHelper->render('');
-		$viewHelper->render(0);
-		$viewHelper->render('foo');
+		$this->viewHelper->expects($this->never())->method('renderChildren');
+		$this->viewHelper->render('');
+		$this->viewHelper->render(0);
+		$this->viewHelper->render('foo');
 	}
 
 	/**
@@ -62,8 +67,7 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
 	 */
 	public function viewHelperThrowsExceptionIfIncorrectModeIsGiven() {
-		$viewHelper = new CaseViewHelper();
-		$viewHelper->render('Foo', 'incorrectMode');
+		$this->viewHelper->render('Foo', 'incorrectMode');
 	}
 
 	/**
@@ -71,8 +75,7 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function viewHelperRestoresMbInternalEncodingValueAfterInvocation() {
 		mb_internal_encoding('ASCII');
-		$viewHelper = new CaseViewHelper();
-		$viewHelper->render('dummy');
+		$this->viewHelper->render('dummy');
 		$this->assertEquals('ASCII', mb_internal_encoding());
 	}
 
@@ -82,8 +85,7 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function viewHelperRestoresMbInternalEncodingAfterExceptionOccurred() {
 		mb_internal_encoding('ASCII');
-		$viewHelper = new CaseViewHelper();
-		$viewHelper->render('dummy', 'incorrectModeResultingInException');
+		$this->viewHelper->render('dummy', 'incorrectModeResultingInException');
 		$this->assertEquals('ASCII', mb_internal_encoding());
 	}
 
@@ -91,8 +93,7 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function viewHelperConvertsUppercasePerDefault() {
-		$viewHelper = new CaseViewHelper();
-		$this->assertSame('FOOB4R', $viewHelper->render('FooB4r'));
+		$this->assertSame('FOOB4R', $this->viewHelper->render('FooB4r'));
 	}
 
 	/**
@@ -118,7 +119,6 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @dataProvider conversionTestingDataProvider
 	 */
 	public function viewHelperConvertsCorrectly($input, $mode, $expected) {
-		$viewHelper = new CaseViewHelper();
-		$this->assertSame($expected, $viewHelper->render($input, $mode), sprintf('The conversion with mode "%s" did not perform as expected.', $mode));
+		$this->assertSame($expected, $this->viewHelper->render($input, $mode), sprintf('The conversion with mode "%s" did not perform as expected.', $mode));
 	}
 }

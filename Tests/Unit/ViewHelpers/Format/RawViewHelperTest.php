@@ -11,10 +11,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Tests\UnitTestCase;
+
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper
  */
-class RawViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class RawViewHelperTest extends UnitTestCase {
 
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Format\RawViewHelper

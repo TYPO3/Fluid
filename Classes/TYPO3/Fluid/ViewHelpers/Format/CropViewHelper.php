@@ -11,7 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Use this view helper to crop the text between its opening and closing tags.
@@ -44,7 +46,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class CropViewHelper extends AbstractViewHelper {
+class CropViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * Render the cropped text
@@ -56,12 +58,23 @@ class CropViewHelper extends AbstractViewHelper {
 	 * @api
 	 */
 	public function render($maxCharacters, $append = '...', $value = NULL) {
+		return self::renderStatic(array('maxCharacters' => $maxCharacters, 'append' => $append, 'value' => $value), $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * @param array $arguments
+	 * @param callable $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
 		if ($value === NULL) {
-			$value = $this->renderChildren();
+			$value = $renderChildrenClosure();
 		}
 
-		if (strlen($value) > $maxCharacters) {
-			return substr($value, 0, $maxCharacters) . $append;
+		if (strlen($value) > $arguments['maxCharacters']) {
+			return substr($value, 0, $arguments['maxCharacters']) . $arguments['append'];
 		} else {
 			return $value;
 		}

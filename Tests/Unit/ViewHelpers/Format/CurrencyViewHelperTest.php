@@ -11,9 +11,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Tests\UnitTestCase;
+
 /**
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\CurrencyViewHelper
  */
-class CurrencyViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class CurrencyViewHelperTest extends UnitTestCase {
 
 	/**
 	 * @test

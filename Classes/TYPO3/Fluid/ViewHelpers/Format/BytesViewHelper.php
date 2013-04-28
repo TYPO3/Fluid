@@ -11,7 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Formats an integer with a byte count into human-readable form.
@@ -36,12 +38,12 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class BytesViewHelper extends AbstractViewHelper {
+class BytesViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * @var array
 	 */
-	protected $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+	static protected $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 
 	/**
 	 * Render the supplied byte count as a human readable string.
@@ -54,8 +56,21 @@ class BytesViewHelper extends AbstractViewHelper {
 	 * @api
 	 */
 	public function render($value = NULL, $decimals = 0, $decimalSeparator = '.', $thousandsSeparator = ',') {
+		return self::renderStatic(array('value' => $value, 'decimals' => $decimals, 'decimalSeparator' => $decimalSeparator, 'thousandsSeparator' => $thousandsSeparator), $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * Applies htmlspecialchars() on the specified value.
+	 *
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
 		if ($value === NULL) {
-			$value = $this->renderChildren();
+			$value = $renderChildrenClosure();
 		}
 		if (!is_integer($value) && !is_float($value)) {
 			if (is_numeric($value)) {
@@ -66,14 +81,13 @@ class BytesViewHelper extends AbstractViewHelper {
 		}
 		$bytes = max($value, 0);
 		$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-		$pow = min($pow, count($this->units) - 1);
+		$pow = min($pow, count(self::$units) - 1);
 		$bytes /= pow(2, (10 * $pow));
 
 		return sprintf(
 			'%s %s',
-			number_format(round($bytes, 4 * $decimals), $decimals, $decimalSeparator, $thousandsSeparator),
-			$this->units[$pow]
+			number_format(round($bytes, 4 * $arguments['decimals']), $arguments['decimals'], $arguments['decimalSeparator'], $arguments['thousandsSeparator']),
+			self::$units[$pow]
 		);
 	}
-
 }

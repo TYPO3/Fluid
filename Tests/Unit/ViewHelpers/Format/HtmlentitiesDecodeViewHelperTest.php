@@ -13,14 +13,16 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 require_once(__DIR__ . '/../Fixtures/UserWithoutToString.php');
 require_once(__DIR__ . '/../Fixtures/UserWithToString.php');
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithToString;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesDecodeViewHelper
  */
-class HtmlentitiesDecodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class HtmlentitiesDecodeViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesDecodeViewHelper
@@ -28,7 +30,10 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
+		parent::setUp();
 		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesDecodeViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
 	}
 
 	/**
