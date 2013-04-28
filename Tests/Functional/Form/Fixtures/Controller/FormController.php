@@ -44,7 +44,6 @@ class FormController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function editAction(\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $fooPost = NULL) {
 		$this->view->assign('fooPost', $fooPost);
-
 	}
 
 	/**
@@ -53,5 +52,14 @@ class FormController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 */
 	public function updateAction(\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $post) {
 		return $post->getName() . '|' . $post->getAuthor()->getEmailAddress();
+	}
+
+	/**
+	 * @param string $email
+	 * @Flow\Validate(argumentName="email", type="EmailAddress")
+	 * @return string
+	 */
+	public function checkAction($email = NULL) {
+		$this->view->assign('email', $email);
 	}
 }

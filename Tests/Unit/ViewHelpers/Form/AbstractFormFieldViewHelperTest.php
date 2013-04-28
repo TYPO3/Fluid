@@ -279,12 +279,9 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$expectedResult = $this->getMock('TYPO3\Flow\Error\Result');
 
 		$mockFormResult = $this->getMock('TYPO3\Flow\Error\Result');
-		$mockFormResult->expects($this->once())->method('forProperty')->with('bar')->will($this->returnValue($expectedResult));
+		$mockFormResult->expects($this->once())->method('forProperty')->with('foo.bar')->will($this->returnValue($expectedResult));
 
-		$mockResult = $this->getMock('TYPO3\Flow\Error\Result');
-		$mockResult->expects($this->once())->method('forProperty')->with('foo')->will($this->returnValue($mockFormResult));
-
-		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockResult));
+		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockFormResult));
 
 		$actualResult = $formViewHelper->_call('getMappingResultsForProperty');
 		$this->assertEquals($expectedResult, $actualResult);
@@ -293,14 +290,89 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
-	public function getMappingResultsForPropertyReturnsEmptyResultIfPropertyIsNotSet() {
-		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument'), array(), '', FALSE);
+	public function getMappingResultsForPropertyReturnsEmptyResultIfNoErrorOccurredInObjectAccessorMode() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$formViewHelper->expects($this->once())->method('hasArgument')->with('property')->will($this->returnValue(FALSE));
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 
 		$actualResult = $formViewHelper->_call('getMappingResultsForProperty');
-		$this->assertInstanceOf('TYPO3\Flow\Error\Result', $actualResult);
 		$this->assertEmpty($actualResult->getFlattenedErrors());
+	}
+
+	/**
+	 * @test
+	 */
+	public function getMappingResultsForPropertyReturnsEmptyResultIfNoErrorOccurredInNonObjectAccessorMode() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(FALSE));
+
+		$actualResult = $formViewHelper->_call('getMappingResultsForProperty');
+		$this->assertEmpty($actualResult->getFlattenedErrors());
+	}
+
+	/**
+	 * @test
+	 */
+	public function getMappingResultsForPropertyReturnsValidationResultsIfErrorsHappenedInObjectAccessorMode() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
+		$formViewHelper->_set('arguments', array('property' => 'propertyName'));
+
+		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue('someObject'));
+
+		$validationResults = $this->getMock('TYPO3\Flow\Error\Result');
+		$validationResults->expects($this->once())->method('forProperty')->with('someObject.propertyName')->will($this->returnValue($validationResults));
+		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($validationResults));
+		$formViewHelper->_call('getMappingResultsForProperty');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getMappingResultsForSubPropertyReturnsValidationResultsIfErrorsHappenedInObjectAccessorMode() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
+		$formViewHelper->_set('arguments', array('property' => 'propertyName.subPropertyName'));
+
+		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue('someObject'));
+
+		$validationResults = $this->getMock('TYPO3\Flow\Error\Result');
+		$validationResults->expects($this->once())->method('forProperty')->with('someObject.propertyName.subPropertyName')->will($this->returnValue($validationResults));
+		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($validationResults));
+		$formViewHelper->_call('getMappingResultsForProperty');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getMappingResultsForPropertyReturnsValidationResultsIfErrorsHappenedInNonObjectAccessorMode() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(FALSE));
+		$formViewHelper->_set('arguments', array('name' => 'propertyName'));
+
+		$validationResults = $this->getMock('TYPO3\Flow\Error\Result');
+		$validationResults->expects($this->once())->method('forProperty')->with('propertyName');
+		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($validationResults));
+		$formViewHelper->_call('getMappingResultsForProperty');
+	}
+
+	/**
+	 * @test
+	 */
+	public function getMappingResultsForSubPropertyReturnsValidationResultsIfErrorsHappenedInNonObjectAccessorMode() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
+		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(FALSE));
+		$formViewHelper->_set('arguments', array('name' => 'propertyName[subPropertyName]'));
+
+		$validationResults = $this->getMock('TYPO3\Flow\Error\Result');
+		$validationResults->expects($this->once())->method('forProperty')->with('propertyName.subPropertyName');
+		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($validationResults));
+		$formViewHelper->_call('getMappingResultsForProperty');
 	}
 
 
@@ -548,4 +620,5 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 
 		$formViewHelper->_call('renderHiddenFieldForEmptyValue');
 	}
+
 }
