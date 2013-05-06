@@ -57,6 +57,11 @@ class Resource implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	protected $defaultPackageKey;
 
 	/**
+	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
+	 */
+	protected $objectManager;
+
+	/**
 	 * Inject object factory
 	 *
 	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
