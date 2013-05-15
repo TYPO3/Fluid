@@ -11,7 +11,11 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\I18n\Cldr\Reader\NumbersReader;
+use TYPO3\Flow\I18n\Exception as I18nException;
+use TYPO3\Fluid\Core\ViewHelper\AbstractLocaleAwareViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 
 /**
  * Formats a number with custom precision, decimal point and grouped thousands.
@@ -33,9 +37,31 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  * 423.423,2
  * </output>
  *
+ * <code title="Inline notation with current locale used">
+ * {someNumber -> f:format.number(forceLocale: true)}
+ * </code>
+ * <output>
+ * 54.321,00
+ * (depending on the value of {someNumber} and the current locale)
+ * </output>
+ *
+ * <code title="Inline notation with specific locale used">
+ * {someNumber -> f:format.currency(forceLocale: 'de_DE')}
+ * </code>
+ * <output>
+ * 54.321,00
+ * (depending on the value of {someNumber})
+ * </output>
+ *
  * @api
  */
-class NumberViewHelper extends AbstractViewHelper {
+class NumberViewHelper extends AbstractLocaleAwareViewHelper {
+
+	/**
+	 * @Flow\Inject
+	 * @var \TYPO3\Flow\I18n\Formatter\NumberFormatter
+	 */
+	protected $numberFormatter;
 
 	/**
 	 * Format the numeric value as a number with grouped thousands, decimal point and
@@ -44,11 +70,24 @@ class NumberViewHelper extends AbstractViewHelper {
 	 * @param int $decimals The number of digits after the decimal point
 	 * @param string $decimalSeparator The decimal point character
 	 * @param string $thousandsSeparator The character for grouping the thousand digits
+	 * @param string $localeFormatLength Format length if locale set in $forceLocale. Must be one of TYPO3\Flow\I18n\Cldr\Reader\NumbersReader::FORMAT_LENGTH_*'s constants.
 	 * @return string The formatted number
 	 * @api
+	 * @throws ViewHelperException
 	 */
-	public function render($decimals = 2, $decimalSeparator = '.', $thousandsSeparator = ',') {
+	public function render($decimals = 2, $decimalSeparator = '.', $thousandsSeparator = ',', $localeFormatLength = NumbersReader::FORMAT_LENGTH_DEFAULT) {
 		$stringToFormat = $this->renderChildren();
-		return number_format((float)$stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
+
+		$useLocale = $this->getLocale();
+		if ($useLocale !== NULL) {
+			try {
+				$output = $this->numberFormatter->formatDecimalNumber($stringToFormat, $useLocale, $localeFormatLength);
+			} catch (I18nException $exception) {
+				throw new ViewHelperException($exception->getMessage(), 1382351148, $exception);
+			}
+		} else {
+			$output = number_format((float)$stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
+		}
+		return $output;
 	}
 }

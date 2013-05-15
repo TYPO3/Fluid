@@ -12,8 +12,10 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\I18n;
-use TYPO3\Fluid\Core\ViewHelper;
+use TYPO3\Flow\I18n\Exception as I18nException;
+use TYPO3\Flow\I18n\Formatter\DatetimeFormatter;
+use TYPO3\Fluid\Core\ViewHelper\AbstractLocaleAwareViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 
 /**
  * Formats a \DateTime object.
@@ -86,7 +88,7 @@ use TYPO3\Fluid\Core\ViewHelper;
  *
  * @api
  */
-class DateViewHelper extends ViewHelper\AbstractViewHelper {
+class DateViewHelper extends AbstractLocaleAwareViewHelper {
 
 	/**
 	 * @var boolean
@@ -95,30 +97,22 @@ class DateViewHelper extends ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\I18n\Formatter\DatetimeFormatter
+	 * @var DatetimeFormatter
 	 */
-	protected $formatter;
-
-	/**
-	 * @Flow\Inject
-	 * @var \TYPO3\Flow\I18n\Service
-	 */
-	protected $localizationService;
+	protected $datetimeFormatter;
 
 	/**
 	 * Render the supplied DateTime object as a formatted date.
 	 *
 	 * @param mixed $date either a \DateTime object or a string that is accepted by \DateTime constructor
 	 * @param string $format Format String which is taken to format the Date/Time
-	 * @param mixed $forceLocale Whether if, and what, Locale should be used. May be boolean, string or \TYPO3\Flow\I18n\Locale
 	 * @param string $localeFormatType Whether to format (according to locale set in $forceLocale) date, time or datetime. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_TYPE_*'s constants.
 	 * @param string $localeFormatLength Format length if locale set in $forceLocale. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_LENGTH_*'s constants.
-	 *
-	 * @throws ViewHelper\Exception
 	 * @return string Formatted date
+	 * @throws ViewHelperException
 	 * @api
 	 */
-	public function render($date = NULL, $format = 'Y-m-d', $forceLocale = NULL, $localeFormatType = NULL, $localeFormatLength = NULL) {
+	public function render($date = NULL, $format = 'Y-m-d', $localeFormatType = NULL, $localeFormatLength = NULL) {
 		if ($date === NULL) {
 			$date = $this->renderChildren();
 			if ($date === NULL) {
@@ -129,48 +123,21 @@ class DateViewHelper extends ViewHelper\AbstractViewHelper {
 			try {
 				$date = new \DateTime($date);
 			} catch (\Exception $exception) {
-				throw new ViewHelper\Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579, $exception);
+				throw new ViewHelperException('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579, $exception);
 			}
 		}
 
-		if ($forceLocale !== NULL) {
-			$format = array(0 => $localeFormatType, 1 => $localeFormatLength);
-			$output = $this->renderUsingLocale($date, $forceLocale, $format);
+		$useLocale = $this->getLocale();
+		if ($useLocale !== NULL) {
+			try {
+				$output = $this->datetimeFormatter->format($date, $useLocale, array(0 => $localeFormatType, 1 => $localeFormatLength));
+			} catch(I18nException $exception) {
+				throw new ViewHelperException(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()) , 1342610987, $exception);
+			}
 		} else {
 			$output = $date->format($format);
 		}
 
 		return $output;
-	}
-
-	/**
-	 * @param \DateTime $dateTime
-	 * @param mixed $locale string or boolean or \TYPO3\Flow\I18n\Locale
-	 * @param array $formatConfiguration The format configuration to use, index 0 is the type, index 1 is the format length
-	 *
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @throws ViewHelper\Exception
-	 * @return string
-	 */
-	protected function renderUsingLocale(\DateTime $dateTime, $locale, array $formatConfiguration) {
-		if ($locale instanceof I18n\Locale) {
-			$useLocale = $locale;
-		} elseif (is_string($locale)) {
-			try {
-				$useLocale = new I18n\Locale($locale);
-			} catch (I18n\Exception $exception) {
-				throw new ViewHelper\Exception\InvalidVariableException('"' . $locale . '" is not a valid locale identifier.', 1342610148, $exception);
-			}
-		} else {
-			$useLocale = $this->localizationService->getConfiguration()->getCurrentLocale();
-		}
-
-		try {
-			$return = $this->formatter->format($dateTime, $useLocale, $formatConfiguration);
-		} catch(I18n\Exception $exception) {
-			throw new ViewHelper\Exception(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()), 1342610987, $exception);
-		}
-
-		return $return;
 	}
 }
