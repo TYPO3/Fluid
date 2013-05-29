@@ -37,6 +37,9 @@ namespace TYPO3\Fluid\ViewHelpers;
  * depending on {foo.bar.baz}
  * </output>
  *
+ * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
+ * you might want to fine-tune your "view model" (the data you assign to the view).
+ *
  * @api
  */
 class AliasViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

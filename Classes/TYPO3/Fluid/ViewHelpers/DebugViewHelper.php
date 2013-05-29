@@ -13,7 +13,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 
 
 /**
- * Viewhelper that outputs its childnodes with \TYPO3\var_dump()
+ * View helper that outputs its child nodes with \TYPO3\Flow\var_dump()
  *
  * = Examples =
  *
@@ -37,6 +37,9 @@ namespace TYPO3\Fluid\ViewHelpers;
  * <output>
  * the type or class name of {object}
  * </output>
+ *
+ * Note: This view helper is only meant to be used during development
+ *
  * @api
  */
 class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

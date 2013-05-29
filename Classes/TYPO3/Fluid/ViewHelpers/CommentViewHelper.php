@@ -40,6 +40,10 @@ namespace TYPO3\Fluid\ViewHelpers;
  * <output>
  * </output>
  *
+ * Note: Using this view helper won't have a notable effect on performance, especially once the template is parsed.
+ * However it can lead to reduced readability. You can use layouts and partials to split a large template into smaller
+ * parts. Using self-descriptive names for the partials can make comments redundant.
+ *
  * @api
  */
 class CommentViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

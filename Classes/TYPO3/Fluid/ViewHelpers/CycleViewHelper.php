@@ -43,6 +43,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </ul>
  * </output>
  *
+ * Note: The above examples could also be achieved using the "iteration" argument of the ForViewHelper
+ *
  * @api
  */
 class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {

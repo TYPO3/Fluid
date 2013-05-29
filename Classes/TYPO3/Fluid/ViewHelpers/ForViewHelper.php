@@ -12,7 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 /**
- * Loop view helper which can be used to interate over array.
+ * Loop view helper which can be used to iterate over arrays.
  * Implements what a basic foreach()-PHP-method does.
  *
  * = Examples =
