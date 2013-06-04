@@ -11,7 +11,6 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
@@ -24,8 +23,8 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
  *
  * <code title="Simple Switch statement">
  * <f:switch expression="{person.gender}">
- *   <f:case case="male">Mr.</f:case>
- *   <f:case case="female">Mrs.</f:case>
+ *   <f:case value="male">Mr.</f:case>
+ *   <f:case value="female">Mrs.</f:case>
  * </f:switch>
  * </code>
  * <output>
