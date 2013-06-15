@@ -39,7 +39,7 @@ class BytesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	/**
 	 * @var array
 	 */
-	protected $units = array('B', 'KB', 'MB', 'GB', 'TB', 'EB', 'ZB', 'YB');
+	protected $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 
 	/**
 	 * Render the supplied byte count as a human readable string.
@@ -55,10 +55,17 @@ class BytesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-		$bytes = max((integer)$value, 0);
+		if (!is_integer($value) && !is_float($value)) {
+			if (is_numeric($value)) {
+				$value = (float)$value;
+			} else {
+				$value = 0;
+			}
+		}
+		$bytes = max($value, 0);
 		$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
 		$pow = min($pow, count($this->units) - 1);
-		$bytes /= (1 << (10 * $pow));
+		$bytes /= pow(2, (10 * $pow));
 
 		return sprintf(
 			'%s %s',

@@ -55,13 +55,6 @@ class BytesViewHelperTest extends UnitTestCase {
 				'thousandsSeparator' => NULL,
 				'expected' => '0,00 B'
 			),
-			array(
-				'value' => PHP_INT_MAX + 1,
-				'decimals' => NULL,
-				'decimalSeparator' => NULL,
-				'thousandsSeparator' => NULL,
-				'expected' => '0 B'
-			),
 
 				// valid values
 			array(
@@ -70,6 +63,13 @@ class BytesViewHelperTest extends UnitTestCase {
 				'decimalSeparator' => NULL,
 				'thousandsSeparator' => NULL,
 				'expected' => '123 B'
+			),
+			array(
+				'value' => '43008',
+				'decimals' => 1,
+				'decimalSeparator' => NULL,
+				'thousandsSeparator' => NULL,
+				'expected' => '42.0 KB'
 			),
 			array(
 				'value' => 1024,
@@ -92,6 +92,20 @@ class BytesViewHelperTest extends UnitTestCase {
 				'thousandsSeparator' => '.',
 				'expected' => '1.024.0 MB'
 			),
+			array(
+				'value' => pow(1024, 5),
+				'decimals' => 1,
+				'decimalSeparator' => NULL,
+				'thousandsSeparator' => NULL,
+				'expected' => '1.0 PB'
+			),
+			array(
+				'value' => pow(1024, 8),
+				'decimals' => 1,
+				'decimalSeparator' => NULL,
+				'thousandsSeparator' => NULL,
+				'expected' => '1.0 YB'
+			)
 		);
 	}
 
