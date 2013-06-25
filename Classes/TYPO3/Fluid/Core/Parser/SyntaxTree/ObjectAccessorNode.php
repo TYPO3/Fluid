@@ -97,6 +97,9 @@ class ObjectAccessorNode extends AbstractNode {
 			if ($subject instanceof RenderingContextAwareInterface) {
 				$subject->setRenderingContext($renderingContext);
 			}
+			if ($subject instanceof TemplateObjectAccessInterface) {
+				$subject = $subject->objectAccess();
+			}
 		}
 		return $subject;
 	}
