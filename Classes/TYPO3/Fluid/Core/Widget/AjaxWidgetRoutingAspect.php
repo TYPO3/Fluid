@@ -59,7 +59,7 @@ class AjaxWidgetRoutingAspect {
 			} else {
 				$serializedWidgetContextWithHmac = $actionRequest->getInternalArgument('__widgetContext');
 				$serializedWidgetContext = $this->hashService->validateAndStripHmac($serializedWidgetContextWithHmac);
-				$widgetContext = unserialize($serializedWidgetContext);
+				$widgetContext = unserialize(base64_decode($serializedWidgetContext));
 			}
 
 			$actionRequest->setArgument('__widgetContext', $widgetContext);

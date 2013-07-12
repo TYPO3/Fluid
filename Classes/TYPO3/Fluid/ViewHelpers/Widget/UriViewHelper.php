@@ -83,7 +83,7 @@ class UriViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:widget.uri>', 1307450639);
 		}
 		if ($this->arguments['includeWidgetContext'] === TRUE) {
-			$serializedWidgetContext = serialize($widgetContext);
+			$serializedWidgetContext = base64_encode(serialize($widgetContext));
 			$arguments['__widgetContext'] = $this->hashService->appendHmac($serializedWidgetContext);
 		} else {
 			$arguments['__widgetId'] = $widgetContext->getAjaxWidgetIdentifier();
