@@ -11,15 +11,20 @@ namespace TYPO3\Fluid\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Mvc\Controller\ControllerContext;
+use TYPO3\Flow\Utility\Files;
+
 /**
  * The main template view. Should be used as view if you want Fluid Templating
  *
  * @api
  */
-class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
+class TemplateView extends AbstractTemplateView {
 
 	/**
 	 * Pattern to be resolved for "@templateRoot" in the other patterns.
+	 * Following placeholders are supported:
+	 * - "@packageResourcesPath"
 	 *
 	 * @var string
 	 */
@@ -27,6 +32,8 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * Pattern to be resolved for "@partialRoot" in the other patterns.
+	 * Following placeholders are supported:
+	 * - "@packageResourcesPath"
 	 *
 	 * @var string
 	 */
@@ -34,34 +41,43 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * Pattern to be resolved for "@layoutRoot" in the other patterns.
+	 * Following placeholders are supported:
+	 * - "@packageResourcesPath"
 	 *
 	 * @var string
 	 */
 	protected $layoutRootPathPattern = '@packageResourcesPath/Private/Layouts';
 
 	/**
-	 * Path to the template root. If NULL, then $this->templateRootPathPattern will be used.
+	 * Path(s) to the template root. If NULL, then $this->templateRootPathPattern will be used.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $templateRootPath = NULL;
+	protected $templateRootPaths = NULL;
 
 	/**
-	 * Path to the partial root. If NULL, then $this->partialRootPathPattern will be used.
+	 * Path(s) to the partial root. If NULL, then $this->partialRootPathPattern will be used.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $partialRootPath = NULL;
+	protected $partialRootPaths = NULL;
 
 	/**
-	 * Path to the layout root. If NULL, then $this->layoutRootPathPattern will be used.
+	 * Path(s) to the layout root. If NULL, then $this->layoutRootPathPattern will be used.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $layoutRootPath = NULL;
+	protected $layoutRootPaths = NULL;
 
 	/**
 	 * File pattern for resolving the template file
+	 * Following placeholders are supported:
+	 * - "@templateRoot"
+	 * - "@partialRoot"
+	 * - "@layoutRoot"
+	 * - "@subpackage"
+	 * - "@action"
+	 * - "@format"
 	 *
 	 * @var string
 	 */
@@ -69,6 +85,13 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * Directory pattern for global partials. Not part of the public API, should not be changed for now.
+	 * Following placeholders are supported:
+	 * - "@templateRoot"
+	 * - "@partialRoot"
+	 * - "@layoutRoot"
+	 * - "@subpackage"
+	 * - "@partial"
+	 * - "@format"
 	 *
 	 * @var string
 	 */
@@ -76,6 +99,13 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 
 	/**
 	 * File pattern for resolving the layout
+	 * Following placeholders are supported:
+	 * - "@templateRoot"
+	 * - "@partialRoot"
+	 * - "@layoutRoot"
+	 * - "@subpackage"
+	 * - "@layout"
+	 * - "@format"
 	 *
 	 * @var string
 	 */
@@ -96,7 +126,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	protected $layoutPathAndFilename = NULL;
 
 	//PLACEHOLDER
-	// Here, the backporter can insert a constructor method, which is needed for Fluid v4.
+	// Here, the backporter can insert a constructor method, which is needed for the TYPO3 CMS extension
 
 	/**
 	 * Sets the path and name of of the template file. Effectively overrides the
@@ -122,31 +152,147 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	}
 
 	/**
-	 * Checks whether a template can be resolved for the current request context.
-	 *
-	 * @param \TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext Controller context which is available inside the view
-	 * @return boolean
-	 */
-	public function canRender(\TYPO3\Flow\Mvc\Controller\ControllerContext $controllerContext) {
-		$this->setControllerContext($controllerContext);
-		try {
-			$this->getTemplateSource();
-			return TRUE;
-		} catch (\TYPO3\Fluid\View\Exception\InvalidTemplateResourceException $e) {
-			return FALSE;
-		}
-	}
-
-	/**
 	 * Set the root path to the templates.
 	 * If set, overrides the one determined from $this->templateRootPathPattern
 	 *
 	 * @param string $templateRootPath Root path to the templates. If set, overrides the one determined from $this->templateRootPathPattern
 	 * @return void
 	 * @api
+	 * @see setTemplateRootPaths()
 	 */
 	public function setTemplateRootPath($templateRootPath) {
-		$this->templateRootPath = $templateRootPath;
+		$this->setTemplateRootPaths(array($templateRootPath));
+	}
+
+	/**
+	 * @return string Path to template root directory
+	 * @deprecated since 2.1.0 Use getTemplateRootPaths() instead
+	 */
+	protected function getTemplateRootPath() {
+		$templateRootPaths = $this->getTemplateRootPaths();
+		return array_shift($templateRootPaths);
+	}
+
+	/**
+	 * Resolves the template root to be used inside other paths.
+	 *
+	 * @return array Path(s) to template root directory
+	 */
+	public function getTemplateRootPaths() {
+		if ($this->templateRootPaths !== NULL) {
+			return $this->templateRootPaths;
+		}
+		/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+		$actionRequest = $this->controllerContext->getRequest();
+		return array(str_replace('@packageResourcesPath', 'resource://' . $actionRequest->getControllerPackageKey(), $this->templateRootPathPattern));
+	}
+
+	/**
+	 * Set the root path(s) to the templates.
+	 * If set, overrides the one determined from $this->templateRootPathPattern
+	 *
+	 * @param array $templateRootPaths Root path(s) to the templates. If set, overrides the one determined from $this->templateRootPathPattern
+	 * @return void
+	 * @api
+	 */
+	public function setTemplateRootPaths(array $templateRootPaths) {
+		$this->templateRootPaths = $templateRootPaths;
+	}
+
+	/**
+	 * Set the root path to the partials.
+	 * If set, overrides the one determined from $this->partialRootPathPattern
+	 *
+	 * @param string $partialRootPath Root path to the partials. If set, overrides the one determined from $this->partialRootPathPattern
+	 * @return void
+	 * @api
+	 * @see setPartialRootPaths()
+	 */
+	public function setPartialRootPath($partialRootPath) {
+		$this->setPartialRootPaths(array($partialRootPath));
+	}
+
+	/**
+	 * @return string Path to partial root directory
+	 * @deprecated since 2.1.0 Use setPartialRootPaths() instead
+	 */
+	protected function getPartialRootPath() {
+		$partialRootPaths = $this->getPartialRootPaths();
+		return array_shift($partialRootPaths);
+	}
+
+	/**
+	 * Set the root path(s) to the partials.
+	 * If set, overrides the one determined from $this->partialRootPathPattern
+	 *
+	 * @param array $partialRootPaths Root paths to the partials. If set, overrides the one determined from $this->partialRootPathPattern
+	 * @return void
+	 * @api
+	 */
+	public function setPartialRootPaths(array $partialRootPaths) {
+		$this->partialRootPaths = $partialRootPaths;
+	}
+
+	/**
+	 * Resolves the partial root to be used inside other paths.
+	 *
+	 * @return array Path(s) to partial root directory
+	 */
+	protected function getPartialRootPaths() {
+		if ($this->partialRootPaths !== NULL) {
+			return $this->partialRootPaths;
+		}
+		/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+		$actionRequest = $this->controllerContext->getRequest();
+		return array(str_replace('@packageResourcesPath', 'resource://' . $actionRequest->getControllerPackageKey(), $this->partialRootPathPattern));
+	}
+
+	/**
+	 * Set the root path to the layouts.
+	 * If set, overrides the one determined from $this->layoutRootPathPattern
+	 *
+	 * @param string $layoutRootPath Root path to the layouts. If set, overrides the one determined from $this->layoutRootPathPattern
+	 * @return void
+	 * @api
+	 * @see setLayoutRootPaths()
+	 */
+	public function setLayoutRootPath($layoutRootPath) {
+		$this->setLayoutRootPaths(array($layoutRootPath));
+	}
+
+	/**
+	 * Set the root path(s) to the layouts.
+	 * If set, overrides the one determined from $this->layoutRootPathPattern
+	 *
+	 * @param array $layoutRootPaths Root path to the layouts. If set, overrides the one determined from $this->layoutRootPathPattern
+	 * @return void
+	 * @api
+	 */
+	public function setLayoutRootPaths(array $layoutRootPaths) {
+		$this->layoutRootPaths = $layoutRootPaths;
+	}
+
+	/**
+	 * @return string Path to layout root directory
+	 * @deprecated since 2.1.0 Use getLayoutRootPaths() instead
+	 */
+	protected function getLayoutRootPath() {
+		$layoutRootPaths = $this->getLayoutRootPaths();
+		return array_shift($layoutRootPaths);
+	}
+
+	/**
+	 * Resolves the layout root to be used inside other paths.
+	 *
+	 * @return string Path(s) to layout root directory
+	 */
+	protected function getLayoutRootPaths() {
+		if ($this->layoutRootPaths !== NULL) {
+			return $this->layoutRootPaths;
+		}
+		/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+		$actionRequest = $this->controllerContext->getRequest();
+		return array(str_replace('@packageResourcesPath', 'resource://' . $actionRequest->getControllerPackageKey(), $this->layoutRootPathPattern));
 	}
 
 	/**
@@ -159,7 +305,9 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	protected function getTemplateIdentifier($actionName = NULL) {
 		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
 		if ($actionName === NULL) {
-			$actionName = $this->controllerContext->getRequest()->getControllerActionName();
+			/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+			$actionRequest = $this->controllerContext->getRequest();
+			$actionName = $actionRequest->getControllerActionName();
 		}
 		$prefix = 'action_' . $actionName;
 		return $this->createIdentifierForFile($templatePathAndFilename, $prefix);
@@ -171,13 +319,13 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
-	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getTemplateSource($actionName = NULL) {
 		$templatePathAndFilename = $this->getTemplatePathAndFilename($actionName);
-		$templateSource = \TYPO3\Flow\Utility\Files::getFileContents($templatePathAndFilename, FILE_TEXT);
+		$templateSource = Files::getFileContents($templatePathAndFilename, FILE_TEXT);
 		if ($templateSource === FALSE) {
-			throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
+			throw new Exception\InvalidTemplateResourceException('"' . $templatePathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
 		return $templateSource;
 	}
@@ -188,14 +336,16 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
-	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getTemplatePathAndFilename($actionName = NULL) {
 		if ($this->templatePathAndFilename !== NULL) {
 			return $this->templatePathAndFilename;
 		}
 		if ($actionName === NULL) {
-			$actionName = $this->controllerContext->getRequest()->getControllerActionName();
+			/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+			$actionRequest = $this->controllerContext->getRequest();
+			$actionName = $actionRequest->getControllerActionName();
 		}
 		$actionName = ucfirst($actionName);
 
@@ -206,7 +356,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 				return $templatePathAndFilename;
 			}
 		}
-		throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
+		throw new Exception\InvalidTemplateResourceException('Template could not be loaded. I tried "' . implode('", "', $paths) . '"', 1225709595);
 	}
 
 	/**
@@ -232,13 +382,13 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string contents of the layout template
-	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getLayoutSource($layoutName = 'Default') {
 		$layoutPathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-		$layoutSource = \TYPO3\Flow\Utility\Files::getFileContents($layoutPathAndFilename, FILE_TEXT);
+		$layoutSource = Files::getFileContents($layoutPathAndFilename, FILE_TEXT);
 		if ($layoutSource === FALSE) {
-			throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $layoutPathAndFilename . '" is not a valid template resource URI.', 1257246929);
+			throw new Exception\InvalidTemplateResourceException('"' . $layoutPathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
 		return $layoutSource;
 	}
@@ -253,7 +403,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $layoutName Name of the layout to use. If none given, use "Default"
 	 * @return string Path and filename of layout files
-	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getLayoutPathAndFilename($layoutName = 'Default') {
 		if ($this->layoutPathAndFilename !== NULL) {
@@ -267,7 +417,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 				return $layoutPathAndFilename;
 			}
 		}
-		throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -288,13 +438,13 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $partialName The name of the partial
 	 * @return string contents of the partial template
-	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getPartialSource($partialName) {
 		$partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
-		$partialSource = \TYPO3\Flow\Utility\Files::getFileContents($partialPathAndFilename, FILE_TEXT);
+		$partialSource = Files::getFileContents($partialPathAndFilename, FILE_TEXT);
 		if ($partialSource === FALSE) {
-			throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('"' . $partialPathAndFilename . '" is not a valid template resource URI.', 1257246929);
+			throw new Exception\InvalidTemplateResourceException('"' . $partialPathAndFilename . '" is not a valid template resource URI.', 1257246929);
 		}
 		return $partialSource;
 	}
@@ -304,7 +454,7 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 *
 	 * @param string $partialName The name of the partial
 	 * @return string the full path which should be used. The path definitely exists.
-	 * @throws \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	protected function getPartialPathAndFilename($partialName) {
 		$paths = $this->expandGenericPathPattern($this->partialPathAndFilenamePattern, TRUE, TRUE);
@@ -314,74 +464,34 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 				return $partialPathAndFilename;
 			}
 		}
-		throw new \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
-	 * Resolves the template root to be used inside other paths.
+	 * Checks whether a template can be resolved for the current request context.
 	 *
-	 * @return string Path to template root directory
+	 * @param ControllerContext $controllerContext Controller context which is available inside the view
+	 * @return boolean
 	 */
-	public function getTemplateRootPath() {
-		if ($this->templateRootPath !== NULL) {
-			return $this->templateRootPath;
-		} else {
-			return str_replace('@packageResourcesPath', 'resource://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->templateRootPathPattern);
+	public function canRender(ControllerContext $controllerContext) {
+		$this->setControllerContext($controllerContext);
+		try {
+			$this->getTemplateSource();
+			return TRUE;
+		} catch (Exception\InvalidTemplateResourceException $e) {
+			return FALSE;
 		}
 	}
 
 	/**
-	 * Set the root path to the partials.
-	 * If set, overrides the one determined from $this->partialRootPathPattern
+	 * Processes following placeholders inside $pattern:
+	 *  - "@templateRoot"
+	 *  - "@partialRoot"
+	 *  - "@layoutRoot"
+	 *  - "@subpackage"
+	 *  - "@controller"
+	 *  - "@format"
 	 *
-	 * @param string $partialRootPath Root path to the partials. If set, overrides the one determined from $this->partialRootPathPattern
-	 * @return void
-	 * @api
-	 */
-	public function setPartialRootPath($partialRootPath) {
-		$this->partialRootPath = $partialRootPath;
-	}
-
-	/**
-	 * Resolves the partial root to be used inside other paths.
-	 *
-	 * @return string Path to partial root directory
-	 */
-	protected function getPartialRootPath() {
-		if ($this->partialRootPath !== NULL) {
-			return $this->partialRootPath;
-		} else {
-			return str_replace('@packageResourcesPath', 'resource://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->partialRootPathPattern);
-		}
-	}
-
-	/**
-	 * Set the root path to the layouts.
-	 * If set, overrides the one determined from $this->layoutRootPathPattern
-	 *
-	 * @param string $layoutRootPath Root path to the layouts. If set, overrides the one determined from $this->layoutRootPathPattern
-	 * @return void
-	 * @api
-	 */
-	public function setLayoutRootPath($layoutRootPath) {
-		$this->layoutRootPath = $layoutRootPath;
-	}
-
-	/**
-	 * Resolves the layout root to be used inside other paths.
-	 *
-	 * @return string Path to layout root directory
-	 */
-	protected function getLayoutRootPath() {
-		if ($this->layoutRootPath !== NULL) {
-			return $this->layoutRootPath;
-		} else {
-			return str_replace('@packageResourcesPath', 'resource://' . $this->controllerContext->getRequest()->getControllerPackageKey(), $this->layoutRootPathPattern);
-		}
-	}
-
-	/**
-	 * Processes "@templateRoot", "@subpackage", "@controller", and "@format" placeholders inside $pattern.
 	 * This method is used to generate "fallback chains" for file system locations where a certain Partial can reside.
 	 *
 	 * If $bubbleControllerAndSubpackage is FALSE and $formatIsOptional is FALSE, then the resulting array will only have one element
@@ -406,37 +516,65 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @param string $pattern Pattern to be resolved
 	 * @param boolean $bubbleControllerAndSubpackage if TRUE, then we successively split off parts from "@controller" and "@subpackage" until both are empty.
 	 * @param boolean $formatIsOptional if TRUE, then half of the resulting strings will have ."@format" stripped off, and the other half will have it.
-	 * @return array unix style path
+	 * @return array unix style paths
 	 */
 	protected function expandGenericPathPattern($pattern, $bubbleControllerAndSubpackage, $formatIsOptional) {
-		$pattern = str_replace('@templateRoot', $this->getTemplateRootPath(), $pattern);
-		$pattern = str_replace('@partialRoot', $this->getPartialRootPath(), $pattern);
-		$pattern = str_replace('@layoutRoot', $this->getLayoutRootPath(), $pattern);
+		$paths = array($pattern);
+		$this->expandPatterns($paths, '@templateRoot', $this->getTemplateRootPaths());
+		$this->expandPatterns($paths, '@partialRoot', $this->getPartialRootPaths());
+		$this->expandPatterns($paths, '@layoutRoot', $this->getLayoutRootPaths());
 
-		$subpackageKey = $this->controllerContext->getRequest()->getControllerSubpackageKey();
-		$controllerName = $this->controllerContext->getRequest()->getControllerName();
-
-		$subpackageParts = ($subpackageKey !== NULL) ? explode(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR, $subpackageKey) : array();
-
-		$results = array();
-
-		$i = ($controllerName === NULL) ? 0 : -1;
-		do {
-			$temporaryPattern = $pattern;
-			if ($i < 0) {
-				$temporaryPattern = str_replace('@controller', $controllerName, $temporaryPattern);
-			} else {
-				$temporaryPattern = str_replace('//', '/', str_replace('@controller', '', $temporaryPattern));
+		/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+		$actionRequest = $this->controllerContext->getRequest();
+		$subpackageKey = $actionRequest->getControllerSubpackageKey();
+		$controllerName = $actionRequest->getControllerName();
+		if ($bubbleControllerAndSubpackage) {
+			$numberOfPathsBeforeSubpackageExpansion = count($paths);
+			$subpackageKeyParts = ($subpackageKey !== NULL) ? explode('\\', $subpackageKey) : array();
+			$numberOfSubpackageParts = count($subpackageKeyParts);
+			$subpackageReplacements = array();
+			for ($i = 0; $i <= $numberOfSubpackageParts; $i ++) {
+				$subpackageReplacements[] = implode('/', ($i < 0 ? $subpackageKeyParts : array_slice($subpackageKeyParts, $i)));
 			}
-			$temporaryPattern = str_replace('@subpackage', implode('/', ($i < 0 ? $subpackageParts : array_slice($subpackageParts, $i))), $temporaryPattern);
+			$this->expandPatterns($paths, '@subpackage', $subpackageReplacements);
 
-			$results[] = \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('@format', $this->controllerContext->getRequest()->getFormat(), $temporaryPattern));
-			if ($formatIsOptional) {
-				$results[] = \TYPO3\Flow\Utility\Files::getUnixStylePath(str_replace('.@format', '', $temporaryPattern));
+			for ($i = ($numberOfPathsBeforeSubpackageExpansion - 1) * ($numberOfSubpackageParts + 1); $i >= 0; $i -= ($numberOfSubpackageParts + 1)) {
+				array_splice($paths, $i, 0, str_replace('@controller', $controllerName, $paths[$i]));
 			}
-		} while ($i++ < count($subpackageParts) && $bubbleControllerAndSubpackage);
+			$this->expandPatterns($paths, '@controller', array(''));
+		} else {
+			$this->expandPatterns($paths, '@subpackage', array($subpackageKey));
+			$this->expandPatterns($paths, '@controller', array($controllerName));
+		}
 
-		return $results;
+		if ($formatIsOptional) {
+			$this->expandPatterns($paths, '.@format', array('.' . $actionRequest->getFormat(), ''));
+			$this->expandPatterns($paths, '@format', array($actionRequest->getFormat(), ''));
+		} else {
+			$this->expandPatterns($paths, '.@format', array('.' . $actionRequest->getFormat()));
+			$this->expandPatterns($paths, '@format', array($actionRequest->getFormat()));
+		}
+
+		return array_values(array_unique($paths));
+	}
+
+	/**
+	 * Expands the given $patterns by adding an array element for each $replacement
+	 * replacing occurrences of $search.
+	 *
+	 * @param array $patterns
+	 * @param string $search
+	 * @param array $replacements
+	 * @return void
+	 */
+	protected function expandPatterns(array &$patterns, $search, array $replacements) {
+		$patternsWithReplacements = array();
+		foreach ($patterns as $pattern) {
+			foreach ($replacements as $replacement) {
+				$patternsWithReplacements[] = Files::getUnixStylePath(str_replace($search, $replacement, $pattern));
+			}
+		}
+		$patterns = $patternsWithReplacements;
 	}
 
 	/**
@@ -449,13 +587,14 @@ class TemplateView extends \TYPO3\Fluid\View\AbstractTemplateView {
 	 * @return string
 	 */
 	protected function createIdentifierForFile($pathAndFilename, $prefix) {
-		$request = $this->controllerContext->getRequest();
-		$packageKey = $request->getControllerPackageKey();
-		$subPackageKey = $request->getControllerSubpackageKey();
+		/** @var $actionRequest \TYPO3\Flow\Mvc\ActionRequest */
+		$actionRequest = $this->controllerContext->getRequest();
+		$packageKey = $actionRequest->getControllerPackageKey();
+		$subPackageKey = $actionRequest->getControllerSubpackageKey();
 		if ($subPackageKey !== NULL) {
 			$packageKey .= '_' . $subPackageKey;
 		}
-		$controllerName = $request->getControllerName();
+		$controllerName = $actionRequest->getControllerName();
 		$templateModifiedTimestamp = filemtime($pathAndFilename);
 		$templateIdentifier = sprintf('%s_%s_%s_%s', $packageKey, $controllerName, $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
 		return $templateIdentifier;
