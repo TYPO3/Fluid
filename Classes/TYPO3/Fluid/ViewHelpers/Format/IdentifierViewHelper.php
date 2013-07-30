@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * This ViewHelper renders the identifier of a persisted object (if it has an identity).
@@ -42,7 +44,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @api
  */
-class IdentifierViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class IdentifierViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @Flow\Inject
@@ -60,7 +62,7 @@ class IdentifierViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 	 *
 	 * @param object $value the object to render the identifier for, or NULL if VH children should be used
 	 * @return mixed the identifier of $value, usually the UUID
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception if the given value is no object
+	 * @throws ViewHelper\Exception if the given value is no object
 	 * @api
 	 */
 	public function render($value = NULL) {
@@ -71,7 +73,7 @@ class IdentifierViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 			return NULL;
 		}
 		if (!is_object($value)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('f:format.identifier expects an object, ' . gettype($value) . ' given.', 1337700024);
+			throw new ViewHelper\Exception('f:format.identifier expects an object, ' . gettype($value) . ' given.', 1337700024);
 		}
 		return $this->persistenceManager->getIdentifierByObject($value);
 	}

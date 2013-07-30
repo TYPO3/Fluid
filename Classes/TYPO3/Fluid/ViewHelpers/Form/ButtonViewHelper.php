@@ -32,7 +32,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *
  * @api
  */
-class ButtonViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class ButtonViewHelper extends AbstractFormFieldViewHelper {
 
 	/**
 	 * @var string

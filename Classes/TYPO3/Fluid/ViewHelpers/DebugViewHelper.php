@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * View helper that outputs its child nodes with \TYPO3\Flow\var_dump()
@@ -32,7 +33,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * </output>
  *
  * <code title="only output the type">
- * {object -> f:debug(typeOnly: 1)}
+ * {object -> f:debug(typeOnly: true)}
  * </code>
  * <output>
  * the type or class name of {object}
@@ -42,7 +43,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class DebugViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class DebugViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  * This view helper implements an if/else condition.
@@ -84,7 +86,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * @see \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
  * @api
  */
-class IfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class IfViewHelper extends AbstractConditionViewHelper {
 
 	/**
 	 * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.

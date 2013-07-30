@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -86,7 +86,7 @@ use TYPO3\Fluid\Core\ViewHelper;
  *
  * @api
  */
-class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class DateViewHelper extends ViewHelper\AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -114,7 +114,7 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param string $localeFormatType Whether to format (according to locale set in $forceLocale) date, time or datetime. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_TYPE_*'s constants.
 	 * @param string $localeFormatLength Format length if locale set in $forceLocale. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_LENGTH_*'s constants.
 	 *
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 * @return string Formatted date
 	 * @api
 	 */
@@ -129,7 +129,7 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			try {
 				$date = new \DateTime($date);
 			} catch (\Exception $exception) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579, $exception);
+				throw new ViewHelper\Exception('"' . $date . '" could not be parsed by \DateTime constructor.', 1241722579, $exception);
 			}
 		}
 
@@ -149,7 +149,7 @@ class DateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $formatConfiguration The format configuration to use, index 0 is the type, index 1 is the format length
 	 *
 	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 * @return string
 	 */
 	protected function renderUsingLocale(\DateTime $dateTime, $locale, array $formatConfiguration) {

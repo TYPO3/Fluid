@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\Core\Widget;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * The WidgetContext stores all information a widget needs to know about the
@@ -69,7 +71,7 @@ class WidgetContext {
 	 * The child nodes of the Widget ViewHelper.
 	 * Only available inside non-AJAX requests.
 	 *
-	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @var RootNode
 	 * @Flow\Transient
 	 */
 	protected $viewHelperChildNodes; // TODO: rename to something more meaningful.
@@ -78,7 +80,7 @@ class WidgetContext {
 	 * The rendering context of the ViewHelperChildNodes.
 	 * Only available inside non-AJAX requests.
 	 *
-	 * @var \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @var RenderingContextInterface
 	 * @Flow\Transient
 	 */
 	protected $viewHelperChildNodeRenderingContext;
@@ -156,24 +158,24 @@ class WidgetContext {
 	}
 
 	/**
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext
+	 * @param RootNode $viewHelperChildNodes
+	 * @param RenderingContextInterface $viewHelperChildNodeRenderingContext
 	 * @return void
 	 */
-	public function setViewHelperChildNodes(\TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode $viewHelperChildNodes, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $viewHelperChildNodeRenderingContext) {
+	public function setViewHelperChildNodes(RootNode $viewHelperChildNodes, RenderingContextInterface $viewHelperChildNodeRenderingContext) {
 		$this->viewHelperChildNodes = $viewHelperChildNodes;
 		$this->viewHelperChildNodeRenderingContext = $viewHelperChildNodeRenderingContext;
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @return RootNode
 	 */
 	public function getViewHelperChildNodes() {
 		return $this->viewHelperChildNodes;
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Rendering\RenderingContextInterface
+	 * @return RenderingContextInterface
 	 */
 	public function getViewHelperChildNodeRenderingContext() {
 		return $this->viewHelperChildNodeRenderingContext;

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper\Facets;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -16,7 +16,7 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  * need access to the direct children in the Syntax Tree at rendering-time.
  * This might happen if you only want to selectively render a part of the syntax
  * tree depending on some conditions.
- * To render subnodes, you can fetch the RenderingContext via $this->renderingContext.
+ * To render sub nodes, you can fetch the RenderingContext via $this->renderingContext.
  *
  * In most cases, you will not need this facet, and it is NO PUBLIC API!
  * Right now it is only used internally for conditions, so by subclassing TYPO3\Fluid\Core\ViewHelpers\AbstractConditionViewHelper, this should be all you need.

@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
 
 /**
  * VariableContainer which stores template variables.
@@ -57,10 +59,10 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 */
 	public function add($identifier, $value) {
 		if (array_key_exists($identifier, $this->variables)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Duplicate variable declaration, "' . $identifier . '" already set!', 1224479063);
+			throw new InvalidVariableException('Duplicate variable declaration, "' . $identifier . '" already set!', 1224479063);
 		}
 		if (in_array(strtolower($identifier), self::$reservedVariableNames)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('"' . $identifier . '" is a reserved variable name and cannot be used as variable identifier.', 1256730379);
+			throw new InvalidVariableException('"' . $identifier . '" is a reserved variable name and cannot be used as variable identifier.', 1256730379);
 		}
 		$this->variables[$identifier] = $value;
 	}
@@ -96,7 +98,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 		}
 
 		if (!array_key_exists($identifier, $this->variables)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
+			throw new InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
 		}
 		return $this->variables[$identifier];
 	}
@@ -111,7 +113,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 */
 	public function remove($identifier) {
 		if (!array_key_exists($identifier, $this->variables)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+			throw new InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
 		}
 		unset($this->variables[$identifier]);
 	}

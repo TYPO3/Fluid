@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * Encodes the given string according to http://www.faqs.org/rfcs/rfc3986.html (applying PHPs rawurlencode() function)
@@ -33,7 +36,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *
  * @api
  */
-class UrlencodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class UrlencodeViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
@@ -50,7 +53,7 @@ class UrlencodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * @return mixed
 	 * @see http://www.php.net/manual/function.urlencode.php
 	 * @api
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
 	public function render($value = NULL) {
 		if ($value === NULL) {
@@ -60,7 +63,7 @@ class UrlencodeViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 			return rawurlencode($value);
 		}
 
-		throw new \TYPO3\Fluid\Core\ViewHelper\Exception('This ViewHelper works with values that are of type string or objects that implement a __toString method. You provided "' . is_object($value) ? get_class($value) : gettype($value) . '"', 1359389241);
+		throw new ViewHelper\Exception('This ViewHelper works with values that are of type string or objects that implement a __toString method. You provided "' . is_object($value) ? get_class($value) : gettype($value) . '"', 1359389241);
 	}
 }
 

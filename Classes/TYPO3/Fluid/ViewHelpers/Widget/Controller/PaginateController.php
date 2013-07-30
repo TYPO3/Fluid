@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,9 +11,13 @@ namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Utility\Arrays;
+use TYPO3\Fluid\Core\Widget\AbstractWidgetController;
+
 /**
+ * Controller for the paginate widget
  */
-class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
+class PaginateController extends AbstractWidgetController {
 
 	/**
 	 * @var \TYPO3\Flow\Persistence\QueryResultInterface
@@ -65,7 +69,7 @@ class PaginateController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetControll
 	 */
 	public function initializeAction() {
 		$this->objects = $this->widgetConfiguration['objects'];
-		$this->configuration = \TYPO3\Flow\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
+		$this->configuration = Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
 		$this->numberOfPages = ceil(count($this->objects) / (integer)$this->configuration['itemsPerPage']);
 		$this->maximumNumberOfLinks = (integer)$this->configuration['maximumNumberOfLinks'];
 	}

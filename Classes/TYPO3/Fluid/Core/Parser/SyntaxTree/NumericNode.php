@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,12 +11,14 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Parser;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * Numeric Syntax Tree Node - is a container for numerics.
+ * Numeric Syntax Tree Node - is a container for numeric values.
  *
  */
-class NumericNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class NumericNode extends AbstractNode {
 
 	/**
 	 * Contents of the numeric node
@@ -28,11 +30,11 @@ class NumericNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Constructor.
 	 *
 	 * @param string|number $value value to store in this numericNode
-	 * @throws \TYPO3\Fluid\Core\Parser\Exception
+	 * @throws Parser\Exception
 	 */
 	public function __construct($value) {
 		if (!is_numeric($value)) {
-			throw new \TYPO3\Fluid\Core\Parser\Exception('Numeric node requires an argument of type number, "' . gettype($value) . '" given.');
+			throw new Parser\Exception('Numeric node requires an argument of type number, "' . gettype($value) . '" given.');
 		}
 		$this->value = $value + 0;
 	}
@@ -40,10 +42,10 @@ class NumericNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Return the value associated to the syntax tree.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return number the value stored in this node/subtree.
 	 */
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(RenderingContextInterface $renderingContext) {
 		return $this->value;
 	}
 
@@ -59,12 +61,12 @@ class NumericNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * NumericNode does not allow adding child nodes, so this will always throw an exception.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
-	 * @throws \TYPO3\Fluid\Core\Parser\Exception
+	 * @param NodeInterface $childNode The sub node to add
+	 * @throws Parser\Exception
 	 * @return void
 	 */
-	public function addChildNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode) {
-		throw new \TYPO3\Fluid\Core\Parser\Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
+	public function addChildNode(NodeInterface $childNode) {
+		throw new Parser\Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
 	}
 }
 

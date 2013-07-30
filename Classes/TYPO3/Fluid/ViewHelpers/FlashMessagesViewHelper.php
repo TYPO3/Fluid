@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Error\Message;
+use TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 /**
  * View helper which renders the flash messages (if there are any) as an unsorted list.
@@ -58,7 +60,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @api
  */
-class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class FlashMessagesViewHelper extends AbstractTagBasedViewHelper {
 
 	/**
 	 * @var string
@@ -100,12 +102,13 @@ class FlashMessagesViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBa
 	 * Render the flash messages as unsorted list. This is triggered if no "as" argument is given
 	 * to the ViewHelper.
 	 *
-	 * @param array $flashMessages
+	 * @param array<Message> $flashMessages
 	 * @return string
 	 */
 	protected function renderAsList(array $flashMessages) {
 		$flashMessagesClass = $this->arguments['class'] !== NULL ? $this->arguments['class'] : 'flashmessages';
 		$tagContent = '';
+		/** @var $singleFlashMessage Message */
 		foreach ($flashMessages as $singleFlashMessage) {
 			$severityClass = sprintf('%s-%s', $flashMessagesClass, strtolower($singleFlashMessage->getSeverity()));
 			$messageContent = htmlspecialchars($singleFlashMessage->render());

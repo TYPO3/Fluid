@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\Core\Parser;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 
 /**
  * An interceptor interface. Interceptors are used in the parsing stage to change
@@ -26,12 +28,12 @@ interface InterceptorInterface {
 	 * The interceptor can process the given node at will and must return a node
 	 * that will be used in place of the given node.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $parsingState the parsing state
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @param ParsingState $parsingState the parsing state
+	 * @return NodeInterface
 	 */
-	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState);
+	public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState);
 
 	/**
 	 * The interceptor should define at which interception positions it wants to be called.

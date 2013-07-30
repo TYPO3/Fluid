@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Error\Result;
+use TYPO3\Flow\Reflection\ObjectAccess;
 
 /**
  * Abstract Form View Helper. Bundles functionality related to direct property access of objects in other Form ViewHelpers.
@@ -20,7 +22,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *
  * @api
  */
-abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 
 	/**
 	 * Initialize arguments.
@@ -89,7 +91,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 
 		if ($this->hasArgument('value')) {
 			$value = $this->arguments['value'];
-		} elseif ($this->hasMappingErrorOccured()) {
+		} elseif ($this->hasMappingErrorOccurred()) {
 			$value = $this->getLastSubmittedFormData();
 		} elseif ($this->isObjectAccessorMode() && $this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
 			$this->addAdditionalIdentityPropertiesIfNeeded();
@@ -105,27 +107,38 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	}
 
 	/**
-	 * Checks if a property mapping error has occured in the last request.
-	 *
-	 * @return boolean TRUE if a mapping error occured, FALSE otherwise
+	 * @return boolean TRUE if a mapping error occurred, FALSE otherwise
+	 * @deprecated since 2.1.0 Use hasMappingErrorOccurred() instead
 	 */
 	protected function hasMappingErrorOccured() {
-		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
+		return $this->hasMappingErrorOccurred();
+	}
+
+	/**
+	 * Checks if a property mapping error has occurred in the last request.
+	 *
+	 * @return boolean TRUE if a mapping error occurred, FALSE otherwise
+	 */
+	protected function hasMappingErrorOccurred() {
+		$request = $this->controllerContext->getRequest();
+		/** @var $validationResults Result */
+		$validationResults = $request->getInternalArgument('__submittedArgumentValidationResults');
 		return ($validationResults !== NULL && $validationResults->hasErrors());
 	}
 
 	/**
 	 * Get the form data which has last been submitted; only returns valid data in case
-	 * a property mapping error has occured. Check with hasMappingErrorOccured() before!
+	 * a property mapping error has occurred. Check with hasMappingErrorOccurred() before!
 	 *
 	 * @return mixed
 	 */
 	protected function getLastSubmittedFormData() {
 		$value = NULL;
-		$submittedArguments = $this->controllerContext->getRequest()->getInternalArgument('__submittedArguments');
+		$request = $this->controllerContext->getRequest();
+		$submittedArguments = $request->getInternalArgument('__submittedArguments');
 		if ($submittedArguments !== NULL) {
 			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
-			$value = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
+			$value = ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
 		}
 		return $value;
 	}
@@ -145,7 +158,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 			$objectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 				// If Count == 2 -> we need to go through the for-loop exactly once
 			for ($i=1; $i < count($propertySegments); $i++) {
-				$object = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
+				$object = ObjectAccess::getPropertyPath($formObject, implode('.', array_slice($propertySegments, 0, $i)));
 				$objectName .= '[' . $propertySegments[$i-1] . ']';
 				$hiddenIdentityField = $this->renderHiddenIdentityField($object, $objectName);
 
@@ -172,7 +185,7 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 		if (is_array($formObject)) {
 			return isset($formObject[$propertyName]) ? $formObject[$propertyName] : NULL;
 		}
-		return \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($formObject, $propertyName);
+		return ObjectAccess::getPropertyPath($formObject, $propertyName);
 	}
 
 	/**
@@ -210,15 +223,17 @@ abstract class AbstractFormFieldViewHelper extends \TYPO3\Fluid\ViewHelpers\Form
 	/**
 	 * Get errors for the property and form name of this view helper
 	 *
-	 * @return \TYPO3\Flow\Error\Result
+	 * @return Result
 	 */
 	protected function getMappingResultsForProperty() {
 		if (!$this->isObjectAccessorMode()) {
-			return new \TYPO3\Flow\Error\Result();
+			return new Result();
 		}
-		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
+		$request = $this->controllerContext->getRequest();
+		/** @var $validationResults Result */
+		$validationResults = $request->getInternalArgument('__submittedArgumentValidationResults');
 		if ($validationResults === NULL) {
-			return new \TYPO3\Flow\Error\Result();
+			return new Result();
 		}
 		$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
 		return $validationResults->forProperty($formObjectName)->forProperty($this->arguments['property']);

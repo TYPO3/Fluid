@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper\Facets;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,10 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * If a ViewHelper implements CompilableInterface, it can directly influence the way
@@ -63,10 +67,10 @@ interface CompilableInterface {
 	 *
 	 * @param array $arguments
 	 * @param \Closure $renderChildrenClosure
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return string the resulting string which is directly shown
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
 
 	/**
 	 * This method is called on compilation time.
@@ -94,11 +98,11 @@ interface CompilableInterface {
 	 * @param string $argumentsVariableName Name of the variable in which the ViewHelper arguments are stored
 	 * @param string $renderChildrenClosureVariableName Name of the closure which can be executed to render the child nodes
 	 * @param string $initializationPhpCode
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
-	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
+	 * @param AbstractNode $syntaxTreeNode
+	 * @param TemplateCompiler $templateCompiler
 	 * @return string
 	 */
-	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler);
+	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, AbstractNode $syntaxTreeNode, TemplateCompiler $templateCompiler);
 }
 
 ?>

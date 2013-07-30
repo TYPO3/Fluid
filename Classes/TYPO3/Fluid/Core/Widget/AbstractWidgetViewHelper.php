@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,19 +12,25 @@ namespace TYPO3\Fluid\Core\Widget;
  *                                                                        */
 
 
+use TYPO3\Flow\Http\Response;
+use TYPO3\Flow\Mvc\ActionRequest;
 use TYPO3\Flow\Object\DependencyInjection\DependencyProxy;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
+use TYPO3\Fluid\Core\Widget\Exception\MissingControllerException;
 
 /**
  * @api
  */
-abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface {
+abstract class AbstractWidgetViewHelper extends AbstractViewHelper implements ChildNodeAccessInterface {
 
 	/**
 	 * The Controller associated to this widget.
 	 * This needs to be filled by the individual subclass using
 	 * property injection.
 	 *
-	 * @var \TYPO3\Fluid\Core\Widget\AbstractWidgetController
+	 * @var AbstractWidgetController
 	 * @api
 	 */
 	protected $controller;
@@ -49,28 +55,28 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	protected $storeConfigurationInSession = TRUE;
 
 	/**
-	 * @var \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder
+	 * @var AjaxWidgetContextHolder
 	 */
 	private $ajaxWidgetContextHolder;
 
 	/**
-	 * @var \TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @var WidgetContext
 	 */
 	private $widgetContext;
 
 	/**
-	 * @param \TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder
+	 * @param AjaxWidgetContextHolder $ajaxWidgetContextHolder
 	 * @return void
 	 */
-	public function injectAjaxWidgetContextHolder(\TYPO3\Fluid\Core\Widget\AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
+	public function injectAjaxWidgetContextHolder(AjaxWidgetContextHolder $ajaxWidgetContextHolder) {
 		$this->ajaxWidgetContextHolder = $ajaxWidgetContextHolder;
 	}
 
 	/**
-	 * @param \TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext
+	 * @param WidgetContext $widgetContext
 	 * @return void
 	 */
-	public function injectWidgetContext(\TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext) {
+	public function injectWidgetContext(WidgetContext $widgetContext) {
 		$this->widgetContext = $widgetContext;
 	}
 
@@ -124,6 +130,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * @return void
 	 */
 	public function setChildNodes(array $childNodes) {
+		/** @var $rootNode RootNode */
 		$rootNode = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		foreach ($childNodes as $childNode) {
 			$rootNode->addChildNode($childNode);
@@ -167,7 +174,7 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	 * Initiate a sub request to $this->controller. Make sure to fill $this->controller
 	 * via Dependency Injection.
 	 *
-	 * @return \TYPO3\Flow\Http\Response the response of this request.
+	 * @return Response the response of this request.
 	 * @throws Exception\MissingControllerException
 	 * @api
 	 */
@@ -175,16 +182,18 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 		if ($this->controller instanceof DependencyProxy) {
 			$this->controller->_activateDependency();
 		}
-		if (!($this->controller instanceof \TYPO3\Fluid\Core\Widget\AbstractWidgetController)) {
-			throw new \TYPO3\Fluid\Core\Widget\Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\Flow\Annotations\Inject annotation in your widget class.', 1284401632);
+		if (!($this->controller instanceof AbstractWidgetController)) {
+			throw new MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\Flow\Annotations\Inject annotation in your widget class.', 1284401632);
 		}
 
+		/** @var $subRequest ActionRequest */
 		$subRequest = $this->objectManager->get('TYPO3\Flow\Mvc\ActionRequest', $this->controllerContext->getRequest());
 		$this->passArgumentsToSubRequest($subRequest);
 		$subRequest->setArgument('__widgetContext', $this->widgetContext);
 		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
 		$subRequest->setArgumentNamespace('--' . $this->widgetContext->getWidgetIdentifier());
 
+		/** @var $subResponse Response */
 		$subResponse = $this->objectManager->get('TYPO3\Flow\Http\Response');
 		$this->controller->processRequest($subRequest, $subResponse);
 		return $subResponse;
@@ -193,10 +202,10 @@ abstract class AbstractWidgetViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abs
 	/**
 	 * Pass the arguments of the widget to the subrequest.
 	 *
-	 * @param \TYPO3\Flow\Mvc\ActionRequest $subRequest
+	 * @param ActionRequest $subRequest
 	 * @return void
 	 */
-	private function passArgumentsToSubRequest(\TYPO3\Flow\Mvc\ActionRequest $subRequest) {
+	private function passArgumentsToSubRequest(ActionRequest $subRequest) {
 		$arguments = $this->controllerContext->getRequest()->getPluginArguments();
 		$widgetIdentifier = $this->widgetContext->getWidgetIdentifier();
 

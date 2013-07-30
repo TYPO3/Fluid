@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,9 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Flow\Error\Result;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Validation results view helper
@@ -58,7 +61,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *
  * @api
  */
-class ValidationResultsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ValidationResultsViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Iterates through selected errors of the request.
@@ -69,7 +72,9 @@ class ValidationResultsViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractV
 	 * @api
 	 */
 	public function render($for = '', $as = 'validationResults') {
-		$validationResults = $this->controllerContext->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
+		$request = $this->controllerContext->getRequest();
+		/** @var $validationResults Result */
+		$validationResults = $request->getInternalArgument('__submittedArgumentValidationResults');
 		if ($validationResults !== NULL && $for !== '') {
 			$validationResults = $validationResults->forProperty($for);
 		}

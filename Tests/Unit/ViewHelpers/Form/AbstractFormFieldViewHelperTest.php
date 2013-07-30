@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -258,56 +258,47 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
-	public function getErrorsForPropertyReturnsErrorsFromRequestIfPropertyIsSet() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-
+	public function getMappingResultsForPropertyReturnsErrorsFromRequestIfPropertyIsSet() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
 		$formViewHelper->expects($this->once())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->once())->method('offsetGet')->with('property')->will($this->returnValue('bar'));
-		$formViewHelper->_set('arguments', $mockArguments);
+		$formViewHelper->_set('arguments', array('property' => 'bar'));
 		$this->viewHelperVariableContainer->expects($this->any())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue('foo'));
 
-		$mockArgumentError = $this->getMock('TYPO3\Flow\Mvc\Controller\ArgumentError', array(), array('foo'));
-		$mockArgumentError->expects($this->once())->method('getPropertyName')->will($this->returnValue('foo'));
-		$mockPropertyError = $this->getMock('TYPO3\Flow\Validation\PropertyError', array(), array('bar'));
-		$mockPropertyError->expects($this->once())->method('getPropertyName')->will($this->returnValue('bar'));
-		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
-		$mockPropertyError->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockError)));
-		$mockArgumentError->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockPropertyError)));
-		$this->request->expects($this->once())->method('getErrors')->will($this->returnValue(array($mockArgumentError)));
+		$expectedResult = $this->getMock('TYPO3\Flow\Error\Result');
 
-		$errors = $formViewHelper->_call('getErrorsForProperty');
-		$this->assertEquals(array($mockError), $errors);
+		$mockFormResult = $this->getMock('TYPO3\Flow\Error\Result');
+		$mockFormResult->expects($this->once())->method('forProperty')->with('bar')->will($this->returnValue($expectedResult));
+
+		$mockResult = $this->getMock('TYPO3\Flow\Error\Result');
+		$mockResult->expects($this->once())->method('forProperty')->with('foo')->will($this->returnValue($mockFormResult));
+
+		$this->request->expects($this->once())->method('getInternalArgument')->with('__submittedArgumentValidationResults')->will($this->returnValue($mockResult));
+
+		$actualResult = $formViewHelper->_call('getMappingResultsForProperty');
+		$this->assertEquals($expectedResult, $actualResult);
 	}
 
 	/**
 	 * @test
 	 */
-	public function getErrorsForPropertyReturnsEmptyArrayIfPropertyIsNotSet() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
+	public function getMappingResultsForPropertyReturnsEmptyResultIfPropertyIsNotSet() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->once())->method('hasArgument')->with('property')->will($this->returnValue(FALSE));
-		$formViewHelper->_set('arguments', $mockArguments);
+		$formViewHelper->expects($this->once())->method('hasArgument')->with('property')->will($this->returnValue(FALSE));
 
-		$errors = $formViewHelper->_call('getErrorsForProperty');
-		$this->assertEquals(array(), $errors);
+		$actualResult = $formViewHelper->_call('getMappingResultsForProperty');
+		$this->assertInstanceOf('TYPO3\Flow\Error\Result', $actualResult);
+		$this->assertEmpty($actualResult->getFlattenedErrors());
 	}
 
 
 	/**
 	 * @test
 	 */
-	public function setErrorClassAttributeDoesNotSetClassAttributeIfNoErrorOccured() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
+	public function setErrorClassAttributeDoesNotSetClassAttributeIfNoErrorOccurred() {
 		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getErrorsForProperty'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->once())->method('hasArgument')->with('class')->will($this->returnValue(FALSE));
-		$formViewHelper->_set('arguments', $mockArguments);
 
 		$this->tagBuilder->expects($this->never())->method('addAttribute');
 
@@ -317,17 +308,15 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
-	public function setErrorClassAttributeSetsErrorClassIfAnErrorOccured() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getErrorsForProperty'), array(), '', FALSE);
+	public function setErrorClassAttributeSetsErrorClassIfAnErrorOccurred() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getMappingResultsForProperty'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(FALSE));
-		$mockArguments->expects($this->at(1))->method('hasArgument')->with('errorClass')->will($this->returnValue(FALSE));
-		$formViewHelper->_set('arguments', $mockArguments);
+		$formViewHelper->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(FALSE));
+		$formViewHelper->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(FALSE));
 
-		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
-		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
+		$mockResult = $this->getMock('TYPO3\Flow\Error\Result');
+		$mockResult->expects($this->atLeastOnce())->method('hasErrors')->will($this->returnValue(TRUE));
+		$formViewHelper->expects($this->once())->method('getMappingResultsForProperty')->will($this->returnValue($mockResult));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'error');
 
@@ -337,18 +326,16 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
-	public function setErrorClassAttributeAppendsErrorClassToExistingClassesIfAnErrorOccured() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getErrorsForProperty'), array(), '', FALSE);
+	public function setErrorClassAttributeAppendsErrorClassToExistingClassesIfAnErrorOccurred() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getMappingResultsForProperty'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(TRUE));
-		$mockArguments->expects($this->at(1))->method('offsetGet')->with('class')->will($this->returnValue('default classes'));
-		$mockArguments->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(FALSE));
-		$formViewHelper->_set('arguments', $mockArguments);
+		$formViewHelper->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(TRUE));
+		$formViewHelper->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(FALSE));
+		$formViewHelper->_set('arguments', array('class' => 'default classes'));
 
-		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
-		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
+		$mockResult = $this->getMock('TYPO3\Flow\Error\Result');
+		$mockResult->expects($this->atLeastOnce())->method('hasErrors')->will($this->returnValue(TRUE));
+		$formViewHelper->expects($this->once())->method('getMappingResultsForProperty')->will($this->returnValue($mockResult));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'default classes error');
 
@@ -358,18 +345,16 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
-	public function setErrorClassAttributeSetsCustomErrorClassIfAnErrorOccured() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getErrorsForProperty'), array(), '', FALSE);
+	public function setErrorClassAttributeSetsCustomErrorClassIfAnErrorOccurred() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getMappingResultsForProperty'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(FALSE));
-		$mockArguments->expects($this->at(1))->method('hasArgument')->with('errorClass')->will($this->returnValue(TRUE));
-		$mockArguments->expects($this->at(2))->method('offsetGet')->with('errorClass')->will($this->returnValue('custom-error-class'));
-		$formViewHelper->_set('arguments', $mockArguments);
+		$formViewHelper->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(FALSE));
+		$formViewHelper->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(TRUE));
+		$formViewHelper->_set('arguments', array('errorClass' => 'custom-error-class'));
 
-		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
-		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
+		$mockResult = $this->getMock('TYPO3\Flow\Error\Result');
+		$mockResult->expects($this->atLeastOnce())->method('hasErrors')->will($this->returnValue(TRUE));
+		$formViewHelper->expects($this->once())->method('getMappingResultsForProperty')->will($this->returnValue($mockResult));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'custom-error-class');
 
@@ -379,19 +364,16 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 	/**
 	 * @test
 	 */
-	public function setErrorClassAttributeAppendsCustomErrorClassIfAnErrorOccured() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
-		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getErrorsForProperty'), array(), '', FALSE);
+	public function setErrorClassAttributeAppendsCustomErrorClassIfAnErrorOccurred() {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('hasArgument', 'getMappingResultsForProperty'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
-		$mockArguments = $this->getMock('TYPO3\Fluid\Core\ViewHelper\Arguments', array(), array(), '', FALSE);
-		$mockArguments->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(TRUE));
-		$mockArguments->expects($this->at(1))->method('offsetGet')->with('class')->will($this->returnValue('default classes'));
-		$mockArguments->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(TRUE));
-		$mockArguments->expects($this->at(3))->method('offsetGet')->with('errorClass')->will($this->returnValue('custom-error-class'));
-		$formViewHelper->_set('arguments', $mockArguments);
+		$formViewHelper->expects($this->at(0))->method('hasArgument')->with('class')->will($this->returnValue(TRUE));
+		$formViewHelper->expects($this->at(2))->method('hasArgument')->with('errorClass')->will($this->returnValue(TRUE));
+		$formViewHelper->_set('arguments', array('class' => 'default classes', 'errorClass' => 'custom-error-class'));
 
-		$mockError = $this->getMock('TYPO3\Flow\Error\Error', array(), array(), '', FALSE);
-		$formViewHelper->expects($this->once())->method('getErrorsForProperty')->will($this->returnValue(array($mockError)));
+		$mockResult = $this->getMock('TYPO3\Flow\Error\Result');
+		$mockResult->expects($this->atLeastOnce())->method('hasErrors')->will($this->returnValue(TRUE));
+		$formViewHelper->expects($this->once())->method('getMappingResultsForProperty')->will($this->returnValue($mockResult));
 
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('class', 'default classes custom-error-class');
 

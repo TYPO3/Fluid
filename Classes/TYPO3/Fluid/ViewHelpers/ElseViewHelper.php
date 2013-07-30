@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
@@ -31,7 +33,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * @see TYPO3\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
-class ElseViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ElseViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @return string the rendered string

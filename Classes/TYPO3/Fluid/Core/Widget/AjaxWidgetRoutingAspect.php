@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -17,7 +17,7 @@ use TYPO3\Flow\Mvc\ActionRequest;
 
 /**
  * Aspect which intercepts the regular routing mechanism and creates a matching
- * ActoinRequest if an AJAX widget request was detected.
+ * ActionRequest if an AJAX widget request was detected.
  *
  * @Flow\Scope("singleton")
  * @Flow\Aspect
@@ -52,6 +52,7 @@ class AjaxWidgetRoutingAspect {
 		$httpRequest = $joinPoint->getMethodArgument('httpRequest');
 
 		if ($httpRequest->hasArgument('__widgetId') || $httpRequest->hasArgument('__widgetContext')) {
+			/** @var $actionRequest ActionRequest */
 			$actionRequest = $httpRequest->createActionRequest();
 			$widgetId = $actionRequest->getInternalArgument('__widgetId');
 			if ($widgetId !== NULL) {

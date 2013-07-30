@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,10 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException;
+use TYPO3\Flow\I18n\Locale;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * Returns translated message using source message or key ID.
@@ -63,7 +67,7 @@ use TYPO3\Flow\Annotations as Flow;
  * </output>
  *
  */
-class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class TranslateViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var \TYPO3\Flow\I18n\Translator
@@ -85,15 +89,15 @@ class TranslateViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelpe
 	 * @param mixed $quantity A number to find plural form for (float or int), NULL to not use plural forms
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
 	public function render($id = NULL, $value = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;
 		if ($locale !== NULL) {
 			try {
-				$localeObject = new \TYPO3\Flow\I18n\Locale($locale);
-			} catch (\TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException $e) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
+				$localeObject = new Locale($locale);
+			} catch (InvalidLocaleIdentifierException $e) {
+				throw new ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
 			}
 		}
 		if ($package === NULL) $package = $this->controllerContext->getRequest()->getControllerPackageKey();

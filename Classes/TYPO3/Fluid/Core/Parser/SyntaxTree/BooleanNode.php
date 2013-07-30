@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,11 +12,13 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\Parser;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * A node which is used inside boolean arguments
  */
-class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class BooleanNode extends AbstractNode {
 
 	/**
 	 * List of comparators which are supported in the boolean expression language.
@@ -39,7 +41,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		^                 # Start with first input symbol
 		(?:               # start repeat
 			COMPARATORS   # We allow all comparators
-			|\s*          # Arbitary spaces
+			|\s*          # Arbitrary spaces
 			|-?           # Numbers, possibly with the "minus" symbol in front.
 				[0-9]+    # some digits
 				(?:       # and optionally a dot, followed by some more digits
@@ -62,14 +64,14 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Left side of the comparison
 	 *
-	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var AbstractNode
 	 */
 	protected $leftSide;
 
 	/**
 	 * Right side of the comparison
 	 *
-	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var AbstractNode
 	 */
 	protected $rightSide;
 
@@ -86,7 +88,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * If no comparator was found, the syntax tree node should be
 	 * converted to boolean.
 	 *
-	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var AbstractNode
 	 */
 	protected $syntaxTreeNode;
 
@@ -94,24 +96,24 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Constructor. Parses the syntax tree node and fills $this->leftSide, $this->rightSide,
 	 * $this->comparator and $this->syntaxTreeNode.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
-	 * @throws \TYPO3\Fluid\Core\Parser\Exception
+	 * @param AbstractNode $syntaxTreeNode
+	 * @throws Parser\Exception
 	 */
-	public function __construct(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode) {
+	public function __construct(AbstractNode $syntaxTreeNode) {
 		$childNodes = $syntaxTreeNode->getChildNodes();
 		if (count($childNodes) > 3) {
-			throw new \TYPO3\Fluid\Core\Parser\Exception('A boolean expression has more than tree parts.', 1244201848);
+			throw new Parser\Exception('A boolean expression has more than tree parts.', 1244201848);
 		} elseif (count($childNodes) === 0) {
 			// In this case, we do not have child nodes; i.e. the current SyntaxTreeNode
 			// is a text node with a literal comparison like "1 == 1"
 			$childNodes = array($syntaxTreeNode);
 		}
 
-		$this->leftSide = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
-		$this->rightSide = new \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode();
+		$this->leftSide = new RootNode();
+		$this->rightSide = new RootNode();
 		$this->comparator = NULL;
 		foreach ($childNodes as $childNode) {
-			if ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode 
+			if ($childNode instanceof TextNode
 				&& !preg_match(str_replace('COMPARATORS', implode('|', self::$comparators), self::$booleanExpressionTextNodeCheckerRegularExpression), $childNode->getText())) {
 				// $childNode is text node, and no comparator found.
 				$this->comparator = NULL;
@@ -122,24 +124,24 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 			if ($this->comparator !== NULL) {
 				// comparator already set, we are evaluating the right side of the comparator
 				$this->rightSide->addChildNode($childNode);
-			} elseif ($childNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode
+			} elseif ($childNode instanceof TextNode
 				&& ($this->comparator = $this->getComparatorFromString($childNode->getText()))) {
 				// comparator in current string segment
 				$explodedString = explode($this->comparator, $childNode->getText());
 				if (isset($explodedString[0]) && trim($explodedString[0]) !== '') {
 					$value = trim($explodedString[0]);
 					if (is_numeric($value)) {
-						$this->leftSide->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\NumericNode($value));
+						$this->leftSide->addChildNode(new NumericNode($value));
 					} else {
-						$this->leftSide->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode(preg_replace('/(^[\'"]|[\'"]$)/', '', $value)));
+						$this->leftSide->addChildNode(new TextNode(preg_replace('/(^[\'"]|[\'"]$)/', '', $value)));
 					}
 				}
 				if (isset($explodedString[1]) && trim($explodedString[1]) !== '') {
 					$value = trim($explodedString[1]);
 					if (is_numeric($value)) {
-						$this->rightSide->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\NumericNode($value));
+						$this->rightSide->addChildNode(new NumericNode($value));
 					} else {
-						$this->rightSide->addChildNode(new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode(preg_replace('/(^[\'"]|[\'"]$)/', '', $value)));
+						$this->rightSide->addChildNode(new TextNode(preg_replace('/(^[\'"]|[\'"]$)/', '', $value)));
 					}
 				}
 			} else {
@@ -163,7 +165,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return AbstractNode
 	 * @Flow\Internal
 	 */
 	public function getSyntaxTreeNode() {
@@ -171,7 +173,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return AbstractNode
 	 * @Flow\Internal
 	 */
 	public function getLeftSide() {
@@ -179,7 +181,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return AbstractNode
 	 * @Flow\Internal
 	 */
 	public function getRightSide() {
@@ -187,10 +189,10 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	}
 
 	/**
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return boolean the boolean value
 	 */
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(RenderingContextInterface $renderingContext) {
 		if ($this->comparator !== NULL) {
 			return self::evaluateComparator($this->comparator, $this->leftSide->evaluate($renderingContext), $this->rightSide->evaluate($renderingContext));
 		} else {
@@ -217,7 +219,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * @param mixed $evaluatedLeftSide
 	 * @param mixed $evaluatedRightSide
 	 * @return boolean TRUE if comparison of left and right side using the comparator emit TRUE, false otherwise
-	 * @throws \TYPO3\Fluid\Core\Parser\Exception
+	 * @throws Parser\Exception
 	 */
 	static public function evaluateComparator($comparator, $evaluatedLeftSide, $evaluatedRightSide) {
 		switch ($comparator) {
@@ -261,7 +263,7 @@ class BooleanNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 				}
 				return ($evaluatedLeftSide <= $evaluatedRightSide);
 			default:
-				throw new \TYPO3\Fluid\Core\Parser\Exception('Comparator "' . $comparator . '" is not implemented.', 1244234398);
+				throw new Parser\Exception('Comparator "' . $comparator . '" is not implemented.', 1244234398);
 		}
 	}
 

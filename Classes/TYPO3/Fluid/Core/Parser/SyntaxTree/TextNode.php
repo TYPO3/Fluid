@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,10 +11,13 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Parser;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+
 /**
  * Text Syntax Tree Node - is a container for strings.
  */
-class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class TextNode extends AbstractNode {
 
 	/**
 	 * Contents of the text node
@@ -27,11 +30,11 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Constructor.
 	 *
 	 * @param string $text text to store in this textNode
-	 * @throws \TYPO3\Fluid\Core\Parser\Exception
+	 * @throws Parser\Exception
 	 */
 	public function __construct($text) {
 		if (!is_string($text)) {
-			throw new \TYPO3\Fluid\Core\Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+			throw new Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
 		}
 		$this->text = $text;
 	}
@@ -40,10 +43,10 @@ class TextNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Return the text associated to the syntax tree. Text from child nodes is
 	 * appended to the text in the node's own text.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return string the text stored in this node/subtree.
 	 */
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(RenderingContextInterface $renderingContext) {
 		return $this->text . $this->evaluateChildNodes($renderingContext);
 	}
 

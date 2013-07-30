@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,10 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
+use TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException;
+use TYPO3\Fluid\Core\Widget\WidgetContext;
 
 /**
  * widget.link ViewHelper
@@ -29,7 +33,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @api
  */
-class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class LinkViewHelper extends AbstractTagBasedViewHelper {
 
 	/**
 	 * @Flow\Inject
@@ -66,7 +70,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * @param boolean $ajax TRUE if the URI should be to an AJAX widget, FALSE otherwise.
 	 * @param boolean $includeWidgetContext TRUE if the URI should contain the serialized widget context (only useful for stateless AJAX widgets)
 	 * @return string The rendered link
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception if $action argument is not specified and $ajax is FALSE
+	 * @throws ViewHelper\Exception if $action argument is not specified and $ajax is FALSE
 	 * @api
 	 */
 	public function render($action = NULL, $arguments = array(), $section = '', $format = '', $ajax = FALSE, $includeWidgetContext = FALSE) {
@@ -74,7 +78,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 			$uri = $this->getAjaxUri();
 		} else {
 			if ($action === NULL) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('You have to specify the target action when creating a widget URI with the widget.link ViewHelper', 1357648227);
+				throw new ViewHelper\Exception('You have to specify the target action when creating a widget URI with the widget.link ViewHelper', 1357648227);
 			}
 			$uri = $this->getWidgetUri();
 		}
@@ -89,7 +93,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * Get the URI for an AJAX Request.
 	 *
 	 * @return string the AJAX URI
-	 * @throws \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
+	 * @throws WidgetContextNotFoundException
 	 */
 	protected function getAjaxUri() {
 		$action = $this->arguments['action'];
@@ -102,9 +106,10 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 		if (strlen($this->arguments['format']) > 0) {
 			$arguments['@format'] = $this->arguments['format'];
 		}
+		/** @var $widgetContext WidgetContext */
 		$widgetContext = $this->controllerContext->getRequest()->getInternalArgument('__widgetContext');
 		if ($widgetContext === NULL) {
-			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('Widget context not found in <f:widget.link>', 1307450686);
+			throw new WidgetContextNotFoundException('Widget context not found in <f:widget.link>', 1307450686);
 		}
 		if ($this->arguments['includeWidgetContext'] === TRUE) {
 			$serializedWidgetContext = serialize($widgetContext);
@@ -119,7 +124,7 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 	 * Get the URI for a non-AJAX Request.
 	 *
 	 * @return string the Widget URI
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 * @todo argumentsToBeExcludedFromQueryString does not work yet, needs to be fixed.
 	 */
 	protected function getWidgetUri() {
@@ -139,8 +144,8 @@ class LinkViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHe
 			->setFormat($this->arguments['format']);
 		try {
 			$uri = $uriBuilder->uriFor($this->arguments['action'], $this->arguments['arguments'], '', '', '');
-		} catch (\TYPO3\Flow\Exception $exception) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+		} catch (\Exception $exception) {
+			throw new ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 		}
 		return $uri;
 	}

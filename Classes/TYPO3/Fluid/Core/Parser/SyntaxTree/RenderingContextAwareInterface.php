@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Interface for objects which are aware of Fluid's rendering context. All objects
@@ -22,10 +24,10 @@ interface RenderingContextAwareInterface {
 	/**
 	 * Sets the current rendering context
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return void
 	 */
-	public function setRenderingContext(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
+	public function setRenderingContext(RenderingContextInterface $renderingContext);
 
 }
 

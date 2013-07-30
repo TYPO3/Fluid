@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Compiler;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,16 +12,21 @@ namespace TYPO3\Fluid\Core\Compiler;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Core\Bootstrap;
+use TYPO3\Flow\Object\Configuration\Configuration;
+use TYPO3\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Abstract Fluid Compiled template.
  *
  * INTERNAL!!
  */
-abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
+abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 
 	/**
-	 * @var array
+	 * @var array<\SplObjectStorage>
 	 */
 	protected $viewHelpersByPositionAndContext = array();
 
@@ -32,32 +37,35 @@ abstract class AbstractCompiledTemplate implements \TYPO3\Fluid\Core\Parser\Pars
 	 * Public such that it is callable from within closures
 	 *
 	 * @param integer $uniqueCounter
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @param string $viewHelperName
-	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
+	 * @return AbstractViewHelper
 	 * @Flow\Internal
 	 */
-	public function getViewHelper($uniqueCounter, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext, $viewHelperName) {
-		if (\TYPO3\Flow\Core\Bootstrap::$staticObjectManager->getScope($viewHelperName) === \TYPO3\Flow\Object\Configuration\Configuration::SCOPE_SINGLETON) {
-			// if ViewHelper is Singleton, do NOT instanciate with NEW, but re-use it.
-			$viewHelper = \TYPO3\Flow\Core\Bootstrap::$staticObjectManager->get($viewHelperName);
+	public function getViewHelper($uniqueCounter, RenderingContextInterface $renderingContext, $viewHelperName) {
+		if (Bootstrap::$staticObjectManager->getScope($viewHelperName) === Configuration::SCOPE_SINGLETON) {
+			// if ViewHelper is Singleton, do NOT instantiate with NEW, but re-use it.
+			$viewHelper = Bootstrap::$staticObjectManager->get($viewHelperName);
 			$viewHelper->resetState();
 			return $viewHelper;
 		}
 		if (isset($this->viewHelpersByPositionAndContext[$uniqueCounter])) {
-			if ($this->viewHelpersByPositionAndContext[$uniqueCounter]->contains($renderingContext)) {
-				$viewHelper = $this->viewHelpersByPositionAndContext[$uniqueCounter][$renderingContext];
+			/** @var $viewHelpers \SplObjectStorage */
+			$viewHelpers = $this->viewHelpersByPositionAndContext[$uniqueCounter];
+			if ($viewHelpers->contains($renderingContext)) {
+				$viewHelper = $viewHelpers->offsetGet($renderingContext);
 				$viewHelper->resetState();
 				return $viewHelper;
 			} else {
 				$viewHelperInstance = new $viewHelperName;
-				$this->viewHelpersByPositionAndContext[$uniqueCounter]->attach($renderingContext, $viewHelperInstance);
+				$viewHelpers->attach($renderingContext, $viewHelperInstance);
 				return $viewHelperInstance;
 			}
 		} else {
-			$this->viewHelpersByPositionAndContext[$uniqueCounter] = new \SplObjectStorage();
 			$viewHelperInstance = new $viewHelperName;
-			$this->viewHelpersByPositionAndContext[$uniqueCounter]->attach($renderingContext, $viewHelperInstance);
+			$viewHelpers = new \SplObjectStorage();
+			$viewHelpers->attach($renderingContext, $viewHelperInstance);
+			$this->viewHelpersByPositionAndContext[$uniqueCounter] = $viewHelpers;
 			return $viewHelperInstance;
 		}
 	}

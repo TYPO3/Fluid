@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -13,12 +13,12 @@ namespace TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * Tag based view helper.
- * Sould be used as the base class for all view helpers which output simple tags, as it provides some
+ * Should be used as the base class for all view helpers which output simple tags, as it provides some
  * convenience methods to register default attributes, ...
  *
  * @api
  */
-abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Names of all registered tag attributes
@@ -30,7 +30,7 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	/**
 	 * Tag builder instance
 	 *
-	 * @var \TYPO3\Fluid\Core\ViewHelper\TagBuilder
+	 * @var TagBuilder
 	 * @api
 	 */
 	protected $tag = NULL;
@@ -46,10 +46,10 @@ abstract class AbstractTagBasedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\A
 	/**
 	 * Inject a TagBuilder
 	 *
-	 * @param \TYPO3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder Tag builder
+	 * @param TagBuilder $tagBuilder Tag builder
 	 * @return void
 	 */
-	public function injectTagBuilder(\TYPO3\Fluid\Core\ViewHelper\TagBuilder $tagBuilder) {
+	public function injectTagBuilder(TagBuilder $tagBuilder) {
 		$this->tag = $tagBuilder;
 	}
 

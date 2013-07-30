@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,12 +12,14 @@ namespace TYPO3\Fluid\Service;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Reflection\ClassReflection;
+use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
- * XML Schema (XSD) Generator. Will generate an XML schema which can be used for autocompletion
+ * XML Schema (XSD) Generator. Will generate an XML schema which can be used for auto-completion
  * in schema-aware editors like Eclipse XML editor.
  */
-class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
+class XsdGenerator extends AbstractGenerator {
 
 	/**
 	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
@@ -41,7 +43,7 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 
 		$classNames = $this->getClassNamesInNamespace($viewHelperNamespace);
 		if (count($classNames) === 0) {
-			throw new \TYPO3\Fluid\Service\Exception(sprintf('No ViewHelpers found in namespace "%s"', $viewHelperNamespace), 1330029328);
+			throw new Exception(sprintf('No ViewHelpers found in namespace "%s"', $viewHelperNamespace), 1330029328);
 		}
 
 		$xmlRootNode = new \SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
@@ -63,7 +65,7 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 	 * @return void
 	 */
 	protected function generateXmlForClassName($className, $viewHelperNamespace, \SimpleXMLElement $xmlRootNode) {
-		$reflectionClass = new \TYPO3\Flow\Reflection\ClassReflection($className);
+		$reflectionClass = new ClassReflection($className);
 		if (!$reflectionClass->isSubclassOf($this->abstractViewHelperReflectionClass)) {
 			return;
 		}
@@ -97,6 +99,7 @@ class XsdGenerator extends \TYPO3\Fluid\Service\AbstractGenerator {
 		$viewHelper = $this->objectManager->get($className);
 		$argumentDefinitions = $viewHelper->prepareArguments();
 
+		/** @var $argumentDefinition ArgumentDefinition */
 		foreach ($argumentDefinitions as $argumentDefinition) {
 			$xsdAttribute = $xsdElement->addChild('xsd:attribute');
 			$xsdAttribute['type'] = 'xsd:string';

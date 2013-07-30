@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * A view helper for formatting values with printf. Either supply an array for
@@ -48,7 +50,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *
  * @api
  */
-class PrintfViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class PrintfViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Format the arguments with the given printf format string.

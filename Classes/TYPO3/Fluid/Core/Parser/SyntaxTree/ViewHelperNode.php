@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -13,11 +13,15 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Object\DependencyInjection\DependencyProxy;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
 
 /**
  * Node which will call a ViewHelper associated with this node.
  */
-class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class ViewHelperNode extends AbstractNode {
 
 	/**
 	 * Class name of view helper
@@ -29,14 +33,14 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Arguments of view helper - References to RootNodes.
 	 *
-	 * @var array
+	 * @var array<NodeInterface>
 	 */
 	protected $arguments = array();
 
 	/**
 	 * The ViewHelper associated with this node
 	 *
-	 * @var \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
+	 * @var AbstractViewHelper
 	 */
 	protected $uninitializedViewHelper = NULL;
 
@@ -51,10 +55,10 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	/**
 	 * Constructor.
 	 *
-	 * @param \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper The view helper
-	 * @param array $arguments Arguments of view helper - each value is a RootNode.
+	 * @param AbstractViewHelper $viewHelper The view helper
+	 * @param array $arguments<NodeInterface> Arguments of view helper - each value is a RootNode.
 	 */
-	public function __construct(\TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper, array $arguments) {
+	public function __construct(AbstractViewHelper $viewHelper, array $arguments) {
 		$this->uninitializedViewHelper = $viewHelper;
 		$this->viewHelpersByContext = new \SplObjectStorage();
 		$this->arguments = $arguments;
@@ -65,7 +69,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 * Returns the attached (but still uninitialized) ViewHelper for this ViewHelperNode.
 	 * We need this method because sometimes Interceptors need to ask some information from the ViewHelper.
 	 *
-	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper the attached ViewHelper, if it is initialized
+	 * @return AbstractViewHelper the attached ViewHelper, if it is initialized
 	 */
 	public function getUninitializedViewHelper() {
 		return $this->uninitializedViewHelper;
@@ -100,12 +104,12 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return object evaluated node after the view helper has been called.
 	 */
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(RenderingContextInterface $renderingContext) {
 		if ($this->viewHelpersByContext->contains($renderingContext)) {
-			$viewHelper = $this->viewHelpersByContext[$renderingContext];
+			$viewHelper = $this->viewHelpersByContext->offsetGet($renderingContext);
 			$viewHelper->resetState();
 		} else {
 			$viewHelper = clone $this->uninitializedViewHelper;
@@ -114,8 +118,10 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 
 		$evaluatedArguments = array();
 		if (count($viewHelper->prepareArguments())) {
+			/** @var $argumentDefinition ArgumentDefinition */
 			foreach ($viewHelper->prepareArguments() as $argumentName => $argumentDefinition) {
 				if (isset($this->arguments[$argumentName])) {
+					/** @var $argumentValue NodeInterface */
 					$argumentValue = $this->arguments[$argumentName];
 					$evaluatedArguments[$argumentName] = $argumentValue->evaluate($renderingContext);
 				} else {
@@ -128,7 +134,7 @@ class ViewHelperNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
 		$viewHelper->setViewHelperNode($this);
 		$viewHelper->setRenderingContext($renderingContext);
 
-		if ($viewHelper instanceof \TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface) {
+		if ($viewHelper instanceof ChildNodeAccessInterface) {
 			$viewHelper->setChildNodes($this->childNodes);
 		}
 

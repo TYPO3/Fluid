@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,15 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
+use TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface;
+use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
  * A Section view helper
@@ -53,7 +62,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface, \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
+class SectionViewHelper extends AbstractViewHelper implements PostParseInterface, CompilableInterface {
 
 	/**
 	 * Initialize the arguments.
@@ -69,13 +78,15 @@ class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * Save the associated view helper node in a static public class variable.
 	 * called directly after the view helper was built.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
-	 * @param array $viewHelperArguments
-	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @param ViewHelperNode $syntaxTreeNode
+	 * @param array $viewHelperArguments<TextNode>
+	 * @param TemplateVariableContainer $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
-		$sectionName = $viewHelperArguments['name']->getText();
+	static public function postParseEvent(ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, TemplateVariableContainer $variableContainer) {
+		/** @var $nameArgument TextNode */
+		$nameArgument = $viewHelperArguments['name'];
+		$sectionName = $nameArgument->getText();
 		if (!$variableContainer->exists('sections')) {
 			$variableContainer->add('sections', array());
 		}
@@ -105,11 +116,11 @@ class SectionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper 
 	 * @param string $argumentsVariableName
 	 * @param string $renderChildrenClosureVariableName
 	 * @param string $initializationPhpCode
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode
-	 * @param \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler
+	 * @param AbstractNode $syntaxTreeNode
+	 * @param TemplateCompiler $templateCompiler
 	 * @return string
 	 */
-	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $syntaxTreeNode, \TYPO3\Fluid\Core\Compiler\TemplateCompiler $templateCompiler) {
+	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, AbstractNode $syntaxTreeNode, TemplateCompiler $templateCompiler) {
 		return '\'\'';
 	}
 }

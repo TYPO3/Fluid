@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -27,16 +27,18 @@ class Configuration {
 	/**
 	 * Adds an interceptor to apply to values coming from object accessors.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\InterceptorInterface $interceptor
+	 * @param InterceptorInterface $interceptor
 	 * @return void
 	 */
-	public function addInterceptor(\TYPO3\Fluid\Core\Parser\InterceptorInterface $interceptor) {
+	public function addInterceptor(InterceptorInterface $interceptor) {
 		foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
 			if (!isset($this->interceptors[$interceptionPoint])) {
 				$this->interceptors[$interceptionPoint] = new \SplObjectStorage();
 			}
-			if (!$this->interceptors[$interceptionPoint]->contains($interceptor)) {
-				$this->interceptors[$interceptionPoint]->attach($interceptor);
+			/** @var $interceptors \SplObjectStorage */
+			$interceptors = $this->interceptors[$interceptionPoint];
+			if (!$interceptors->contains($interceptor)) {
+				$interceptors->attach($interceptor);
 			}
 		}
 	}

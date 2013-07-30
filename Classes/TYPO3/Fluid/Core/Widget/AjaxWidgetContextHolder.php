@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Widget;
 
 /*
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Core\Widget;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException;
 
 /**
  * This object stores the WidgetContext for the currently active widgets
@@ -44,13 +45,13 @@ class AjaxWidgetContextHolder {
 	 * Get the widget context for the given $ajaxWidgetId.
 	 *
 	 * @param integer $ajaxWidgetId
-	 * @return \TYPO3\Fluid\Core\Widget\WidgetContext
+	 * @return WidgetContext
 	 * @throws Exception\WidgetContextNotFoundException
 	 */
 	public function get($ajaxWidgetId) {
 		$ajaxWidgetId = (int) $ajaxWidgetId;
 		if (!isset($this->widgetContexts[$ajaxWidgetId])) {
-			throw new \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException('No widget context was found for the Ajax Widget Identifier "' . $ajaxWidgetId . '". This only happens if AJAX URIs are called without including the widget on a page.', 1284793775);
+			throw new WidgetContextNotFoundException('No widget context was found for the Ajax Widget Identifier "' . $ajaxWidgetId . '". This only happens if AJAX URIs are called without including the widget on a page.', 1284793775);
 		}
 		return $this->widgetContexts[$ajaxWidgetId];
 	}
@@ -59,11 +60,11 @@ class AjaxWidgetContextHolder {
 	 * Stores the WidgetContext inside the Context, and sets the
 	 * AjaxWidgetIdentifier inside the Widget Context correctly.
 	 *
-	 * @param \TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext
+	 * @param WidgetContext $widgetContext
 	 * @return void
 	 * @Flow\Session(autoStart=true)
 	 */
-	public function store(\TYPO3\Fluid\Core\Widget\WidgetContext $widgetContext) {
+	public function store(WidgetContext $widgetContext) {
 		$ajaxWidgetId = $this->nextFreeAjaxWidgetId++;
 		$widgetContext->setAjaxWidgetIdentifier($ajaxWidgetId);
 		$this->widgetContexts[$ajaxWidgetId] = $widgetContext;

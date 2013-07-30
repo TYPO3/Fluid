@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,11 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Loop view helper which can be used to iterate over arrays.
@@ -58,7 +63,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface {
+class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * Iterates through elements of $each and renders child nodes
@@ -78,23 +83,25 @@ class ForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper impl
 	/**
 	 * @param array $arguments
 	 * @param \Closure $renderChildrenClosure
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return string
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$templateVariableContainer = $renderingContext->getTemplateVariableContainer();
 		if ($arguments['each'] === NULL) {
 			return '';
 		}
 		if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+			throw new ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
 		}
 
 		if ($arguments['reverse'] === TRUE) {
 				// array_reverse only supports arrays
 			if (is_object($arguments['each'])) {
-				$arguments['each'] = iterator_to_array($arguments['each']);
+				/** @var $each \Traversable */
+				$each = $arguments['each'];
+				$arguments['each'] = iterator_to_array($each);
 			}
 			$arguments['each'] = array_reverse($arguments['each']);
 		}

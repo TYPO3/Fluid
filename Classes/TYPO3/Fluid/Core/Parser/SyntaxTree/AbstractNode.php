@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,10 +11,13 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Parser;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+
 /**
  * Abstract node in the syntax tree which has been built.
  */
-abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface {
+abstract class AbstractNode implements NodeInterface {
 
 	/**
 	 * List of Child Nodes.
@@ -26,19 +29,20 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
-	 * @throws \TYPO3\Fluid\Core\Parser\Exception
+	 * @throws Parser\Exception
 	 */
-	public function evaluateChildNodes(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluateChildNodes(RenderingContextInterface $renderingContext) {
 		$output = NULL;
+		/** @var $subNode NodeInterface */
 		foreach ($this->childNodes as $subNode) {
 			if ($output === NULL) {
 				$output = $subNode->evaluate($renderingContext);
 			} else {
 				if (is_object($output)) {
 					if (!method_exists($output, '__toString')) {
-						throw new \TYPO3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($output) . '" to string.', 1248356140);
+						throw new Parser\Exception('Cannot cast object of type "' . get_class($output) . '" to string.', 1248356140);
 					}
 					$output = $output->__toString();
 				} else {
@@ -48,7 +52,7 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 
 				if (is_object($subNodeOutput)) {
 					if (!method_exists($subNodeOutput, '__toString')) {
-						throw new \TYPO3\Fluid\Core\Parser\Exception('Cannot cast object of type "' . get_class($subNodeOutput) . '" to string.', 1273753083);
+						throw new Parser\Exception('Cannot cast object of type "' . get_class($subNodeOutput) . '" to string.', 1273753083);
 					}
 					$output .= $subNodeOutput->__toString();
 				} else {
@@ -70,12 +74,12 @@ abstract class AbstractNode implements \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeI
 	}
 
 	/**
-	 * Appends a subnode to this node. Is used inside the parser to append children
+	 * Appends a sub node to this node. Is used inside the parser to append children
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
+	 * @param NodeInterface $childNode The sub node to add
 	 * @return void
 	 */
-	public function addChildNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode) {
+	public function addChildNode(NodeInterface $childNode) {
 		$this->childNodes[] = $childNode;
 	}
 }

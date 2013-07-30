@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,19 +11,20 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+
 /**
  * Node in the syntax tree.
- *
  */
 interface NodeInterface {
 
 	/**
 	 * Evaluate all child nodes and return the evaluated results.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
 	 */
-	public function evaluateChildNodes(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
+	public function evaluateChildNodes(RenderingContextInterface $renderingContext);
 
 	/**
 	 * Returns all child nodes for a given node.
@@ -33,20 +34,20 @@ interface NodeInterface {
 	public function getChildNodes();
 
 	/**
-	 * Appends a subnode to this node. Is used inside the parser to append children
+	 * Appends a sub node to this node. Is used inside the parser to append children
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode The subnode to add
+	 * @param NodeInterface $childNode The sub node to add
 	 * @return void
 	 */
-	public function addChildNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $childNode);
+	public function addChildNode(NodeInterface $childNode);
 
 	/**
 	 * Evaluates the node - can return not only strings, but arbitary objects.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed Evaluated node
 	 */
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext);
+	public function evaluate(RenderingContextInterface $renderingContext);
 }
 
 ?>

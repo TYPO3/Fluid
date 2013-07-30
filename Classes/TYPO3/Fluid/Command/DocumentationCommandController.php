@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Command;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,13 +12,15 @@ namespace TYPO3\Fluid\Command;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Cli\CommandController;
+use TYPO3\Fluid\Service;
 
 /**
  * Command controller for Fluid documentation rendering
  *
  * @Flow\Scope("singleton")
  */
-class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
+class DocumentationCommandController extends CommandController {
 
 	/**
 	 * @Flow\Inject
@@ -44,10 +46,11 @@ class DocumentationCommandController extends \TYPO3\Flow\Cli\CommandController {
 		if ($xsdNamespace === NULL) {
 			$xsdNamespace = sprintf('http://typo3.org/ns/%s', str_replace('\\', '/', $phpNamespace));
 		}
+		$xsdSchema = '';
 		try {
 			$xsdSchema = $this->xsdGenerator->generateXsd($phpNamespace, $xsdNamespace);
-		} catch (\TYPO3\Fluid\Service\Exception $exception) {
-			$this->outputLine('An error occured while trying to generate the XSD schema:');
+		} catch (Service\Exception $exception) {
+			$this->outputLine('An error occurred while trying to generate the XSD schema:');
 			$this->outputLine('%s', array($exception->getMessage()));
 			$this->quit(1);
 		}

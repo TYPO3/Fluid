@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\Interceptor;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,11 +11,17 @@ namespace TYPO3\Fluid\Core\Parser\Interceptor;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Object\ObjectManagerInterface;
+use TYPO3\Fluid\Core\Parser\InterceptorInterface;
+use TYPO3\Fluid\Core\Parser\ParsingState;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+
 /**
- * An interceptor adding the escape viewhelper to the suitable places.
- *
+ * An interceptor adding the "Htmlspecialchars" viewhelper to the suitable places.
  */
-class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
+class Escape implements InterceptorInterface {
 
 	/**
 	 * Is the interceptor enabled right now?
@@ -32,17 +38,17 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	protected $viewHelperNodesWhichDisableTheInterceptor = array();
 
 	/**
-	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
+	 * @var ObjectManagerInterface
 	 */
 	protected $objectManager;
 
 	/**
 	 * Inject object manager
 	 *
-	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
+	 * @param ObjectManagerInterface $objectManager
 	 * @return void
 	 */
-	public function injectObjectManager(\TYPO3\Flow\Object\ObjectManagerInterface $objectManager) {
+	public function injectObjectManager(ObjectManagerInterface $objectManager) {
 		$this->objectManager = $objectManager;
 	}
 
@@ -50,25 +56,26 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
 	 * If "escapingInterceptorEnabled" in the ViewHelper is FALSE, will disable itself inside the ViewHelpers body.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @param \TYPO3\Fluid\Core\Parser\ParsingState $parsingState the current parsing state. Not needed in this interceptor.
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
+	 * @return NodeInterface
 	 */
-	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
-		if ($interceptorPosition === \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
+	public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState) {
+		if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
+			/** @var $node ViewHelperNode */
 			if (!$node->getUninitializedViewHelper()->isEscapingInterceptorEnabled()) {
 				$this->interceptorEnabled = FALSE;
 				$this->viewHelperNodesWhichDisableTheInterceptor[] = $node;
 			}
-		} elseif ($interceptorPosition === \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER) {
+		} elseif ($interceptorPosition === InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER) {
 			if (end($this->viewHelperNodesWhichDisableTheInterceptor) === $node) {
 				array_pop($this->viewHelperNodesWhichDisableTheInterceptor);
 				if (count($this->viewHelperNodesWhichDisableTheInterceptor) === 0) {
 					$this->interceptorEnabled = TRUE;
 				}
 			}
-		} elseif ($this->interceptorEnabled && $node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
+		} elseif ($this->interceptorEnabled && $node instanceof ObjectAccessorNode) {
 			$escapeViewHelper = $this->objectManager->get('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
 			$node = $this->objectManager->get(
 				'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
@@ -86,9 +93,9 @@ class Escape implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 	 */
 	public function getInterceptionPoints() {
 		return array(
-			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,
-			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER,
-			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR
+			InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,
+			InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER,
+			InterceptorInterface::INTERCEPT_OBJECTACCESSOR
 		);
 	}
 }

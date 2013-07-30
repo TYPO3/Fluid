@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,9 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
+use TYPO3\Fluid\View\AbstractTemplateView;
 
 /**
  * @api
@@ -26,7 +29,7 @@ class ViewHelperVariableContainer {
 
 	/**
 	 *
-	 * @var \TYPO3\Fluid\View\AbstractTemplateView
+	 * @var AbstractTemplateView
 	 */
 	protected $view;
 
@@ -40,12 +43,12 @@ class ViewHelperVariableContainer {
 	 * @param string $key Key of the data
 	 * @param mixed $value The value to store
 	 * @return void
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
+	 * @throws InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
 	public function add($viewHelperName, $key, $value) {
 		if ($this->exists($viewHelperName, $key)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('The key "' . $viewHelperName . '->' . $key . '" was already stored and you cannot override it.', 1243352010);
+			throw new InvalidVariableException('The key "' . $viewHelperName . '->' . $key . '" was already stored and you cannot override it.', 1243352010);
 		}
 		$this->addOrUpdate($viewHelperName, $key, $value);
 	}
@@ -73,12 +76,12 @@ class ViewHelperVariableContainer {
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data
 	 * @return mixed The object stored
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
+	 * @throws InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
 	public function get($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
+			throw new InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
 		}
 		return $this->objects[$viewHelperName][$key];
 	}
@@ -101,12 +104,12 @@ class ViewHelperVariableContainer {
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
 	 * @param string $key Key of the data to remove
 	 * @return void
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException if there was no key with the specified name
+	 * @throws InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
 	public function remove($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
+			throw new InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
 		}
 		unset($this->objects[$viewHelperName][$key]);
 	}
@@ -114,10 +117,10 @@ class ViewHelperVariableContainer {
 	/**
 	 * Set the view to pass it to ViewHelpers.
 	 *
-	 * @param \TYPO3\Fluid\View\AbstractTemplateView $view View to set
+	 * @param AbstractTemplateView $view View to set
 	 * @return void
 	 */
-	public function setView(\TYPO3\Fluid\View\AbstractTemplateView $view) {
+	public function setView(AbstractTemplateView $view) {
 		$this->view = $view;
 	}
 
@@ -126,7 +129,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * !!! This is NOT a public API and might still change!!!
 	 *
-	 * @return \TYPO3\Fluid\View\AbstractTemplateView The View
+	 * @return AbstractTemplateView The View
 	 */
 	public function getView() {
 		return $this->view;

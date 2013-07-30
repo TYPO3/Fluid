@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Service;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\Service;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Reflection\ClassReflection;
+use TYPO3\Fluid\Fluid;
 
 /**
  * Common base class for XML generators.
@@ -21,7 +23,7 @@ abstract class AbstractGenerator {
 	/**
 	 * The reflection class for AbstractViewHelper. Is needed quite often, that's why we use a pre-initialized one.
 	 *
-	 * @var \TYPO3\Flow\Reflection\ClassReflection
+	 * @var ClassReflection
 	 */
 	protected $abstractViewHelperReflectionClass;
 
@@ -44,8 +46,8 @@ abstract class AbstractGenerator {
 	 *
 	 */
 	public function __construct() {
-		\TYPO3\Fluid\Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
-		$this->abstractViewHelperReflectionClass = new \TYPO3\Flow\Reflection\ClassReflection('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
+		Fluid::$debugMode = TRUE; // We want ViewHelper argument documentation
+		$this->abstractViewHelperReflectionClass = new ClassReflection('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
 	}
 
 	/**
@@ -81,7 +83,7 @@ abstract class AbstractGenerator {
 	 */
 	protected function getTagNameForClass($className, $namespace) {
 		$strippedClassName = substr($className, strlen($namespace));
-		$classNameParts = explode(\TYPO3\Fluid\Fluid::NAMESPACE_SEPARATOR, $strippedClassName);
+		$classNameParts = explode('\\', $strippedClassName);
 
 		if (count($classNameParts) == 1) {
 			$tagName = lcfirst(substr($classNameParts[0], 0, -10)); // strip the "ViewHelper" ending

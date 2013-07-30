@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\ViewHelper;
+use TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper;
 
 /**
  * Form view helper. Generates a <form> Tag.
@@ -42,7 +44,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @api
  */
-class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper {
+class FormViewHelper extends AbstractFormViewHelper {
 
 	/**
 	 * @var string
@@ -108,12 +110,12 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * @param boolean $useParentRequest If set, the parent Request will be used instead ob the current one
 	 * @return string rendered form
 	 * @api
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
 	public function render($action = NULL, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $object = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $fieldNamePrefix = NULL, $actionUri = NULL, $objectName = NULL, $useParentRequest = FALSE) {
 		$this->formActionUri = NULL;
 		if ($action === NULL && $actionUri === NULL) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('FormViewHelper requires "actionUri" or "action" argument to be specified', 1355243748);
+			throw new ViewHelper\Exception('FormViewHelper requires "actionUri" or "action" argument to be specified', 1355243748);
 		}
 		$this->tag->addAttribute('action', $this->getFormActionUri());
 
@@ -165,7 +167,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 	 * Otherwise this creates the action URI using the UriBuilder
 	 *
 	 * @return string
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception if the action URI could not be created
+	 * @throws ViewHelper\Exception if the action URI could not be created
 	 */
 	protected function getFormActionUri() {
 		if ($this->formActionUri !== NULL) {
@@ -178,7 +180,7 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			if ($this->arguments['useParentRequest'] === TRUE) {
 				$request = $this->controllerContext->getRequest();
 				if ($request->isMainRequest()) {
-					throw new \TYPO3\Fluid\Core\ViewHelper\Exception('You can\'t use the parent Request, you are already in the MainRequest.', 1361354942);
+					throw new ViewHelper\Exception('You can\'t use the parent Request, you are already in the MainRequest.', 1361354942);
 				}
 				$uriBuilder = clone $uriBuilder;
 				$uriBuilder->setRequest($request->getParentRequest());
@@ -198,8 +200,8 @@ class FormViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelpe
 			try {
 				$this->formActionUri = $uriBuilder
 					->uriFor($this->arguments['action'], $this->arguments['arguments'], $this->arguments['controller'], $this->arguments['package'], $this->arguments['subpackage']);
-			} catch (\TYPO3\Flow\Exception $exception) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+			} catch (\Exception $exception) {
+				throw new ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 			}
 		}
 		return $this->formActionUri;

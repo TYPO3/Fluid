@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Wrapper for PHPs json_encode function.
@@ -33,7 +34,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * </output>
  *
  * <code title="non-associative array with forced object">
- * {f:format.json(value: {0: 'bar', 1: 'baz'}, forceObject: 1)}
+ * {f:format.json(value: {0: 'bar', 1: 'baz'}, forceObject: true)}
  * </code>
  * <output>
  * {"0":"bar","1":"baz"}
@@ -41,7 +42,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *
  * @api
  */
-class JsonViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class JsonViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean

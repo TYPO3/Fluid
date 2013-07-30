@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -16,11 +16,6 @@ namespace TYPO3\Fluid;
  *
  */
 class Fluid {
-
-	/**
-	 * PHP Namespace separator. Backslash in v5, and _ in v4.
-	 */
-	const NAMESPACE_SEPARATOR = '\\';
 
 	/**
 	 * Can be used to enable the verbose mode of Fluid.

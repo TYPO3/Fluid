@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Security;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,10 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Flow\Security\Authentication\TokenInterface;
+use TYPO3\Flow\Security\Context;
+use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 
 /**
@@ -43,19 +47,19 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
  *
  * @api
  */
-class IfAuthenticatedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper {
+class IfAuthenticatedViewHelper extends AbstractConditionViewHelper {
 	/**
-	 * @var \TYPO3\Flow\Security\Context
+	 * @var Context
 	 */
 	protected $securityContext;
 
 	/**
 	 * Injects the Security Context
 	 *
-	 * @param \TYPO3\Flow\Security\Context $securityContext
+	 * @param Context $securityContext
 	 * @return void
 	 */
-	public function injectSecurityContext(\TYPO3\Flow\Security\Context $securityContext) {
+	public function injectSecurityContext(Context $securityContext) {
 		$this->securityContext = $securityContext;
 	}
 
@@ -67,6 +71,7 @@ class IfAuthenticatedViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractCon
 	 */
 	public function render() {
 		$activeTokens = $this->securityContext->getAuthenticationTokens();
+		/** @var $token TokenInterface */
 		foreach ($activeTokens as $token) {
 			if ($token->isAuthenticated()) {
 				return $this->renderThenChild();

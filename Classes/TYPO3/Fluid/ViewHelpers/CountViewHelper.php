@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,9 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * This ViewHelper counts elements of the specified array or countable object.
@@ -32,7 +35,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CountViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -44,7 +47,7 @@ class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array|\Countable $subject The array or \Countable to be counted
 	 * @return integer The number of elements
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 * @api
 	 */
 	public function render($subject = NULL) {
@@ -52,7 +55,7 @@ class CountViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			$subject = $this->renderChildren();
 		}
 		if (is_object($subject) && !$subject instanceof \Countable) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception('CountViewHelper only supports arrays and objects implementing \Countable interface. Given: "' . get_class($subject) . '"', 1279808078);
+			throw new ViewHelper\Exception('CountViewHelper only supports arrays and objects implementing \Countable interface. Given: "' . get_class($subject) . '"', 1279808078);
 		}
 		return count($subject);
 	}

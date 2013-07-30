@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,9 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * This ViewHelper cycles through the specified values.
@@ -47,7 +50,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CycleViewHelper extends AbstractViewHelper {
 
 	/**
 	 * The values to be iterated through
@@ -97,12 +100,12 @@ class CycleViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 *
 	 * @param array|\Traversable $values The array or \SplObjectStorage to be stored in $this->values
 	 * @return void
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
 	protected function initializeValues($values) {
 		if (is_object($values)) {
 			if (!$values instanceof \Traversable) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
+				throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
 			}
 			$this->values = iterator_to_array($values, FALSE);
 		} else {

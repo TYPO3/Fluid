@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,12 +12,14 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Reflection\Exception\PropertyNotAccessibleException;
+use TYPO3\Flow\Reflection\ObjectAccess;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
- *
  */
-class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode {
+class ObjectAccessorNode extends AbstractNode {
 
 	/**
 	 * Object path which will be called. Is a list like "post.name.email"
@@ -59,10 +61,10 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 * The first part of the object path has to be a variable in the
 	 * TemplateVariableContainer.
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return object The evaluated object, can be any object type.
 	 */
-	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function evaluate(RenderingContextInterface $renderingContext) {
 		return self::getPropertyPath($renderingContext->getTemplateVariableContainer(), $this->objectPath, $renderingContext);
 	}
 
@@ -76,15 +78,15 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 	 *
 	 * @param mixed $subject An object or array
 	 * @param string $propertyPath
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed Value of the property
 	 */
-	static public function getPropertyPath($subject, $propertyPath, \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	static public function getPropertyPath($subject, $propertyPath, RenderingContextInterface $renderingContext) {
 		$propertyPathSegments = explode('.', $propertyPath);
 		foreach ($propertyPathSegments as $pathSegment) {
 			try {
-				$subject = \TYPO3\Flow\Reflection\ObjectAccess::getProperty($subject, $pathSegment);
-			} catch (\TYPO3\Flow\Reflection\Exception\PropertyNotAccessibleException $exception) {
+				$subject = ObjectAccess::getProperty($subject, $pathSegment);
+			} catch (PropertyNotAccessibleException $exception) {
 				$subject = NULL;
 			}
 
@@ -92,7 +94,7 @@ class ObjectAccessorNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNod
 				break;
 			}
 
-			if ($subject instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\RenderingContextAwareInterface) {
+			if ($subject instanceof RenderingContextAwareInterface) {
 				$subject->setRenderingContext($renderingContext);
 			}
 		}

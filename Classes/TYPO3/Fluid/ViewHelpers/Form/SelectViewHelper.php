@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Form;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,11 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException;
+use TYPO3\Flow\I18n\Locale;
+use TYPO3\Flow\Reflection\ObjectAccess;
+use TYPO3\Fluid;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * This view helper generates a <select> dropdown list for the use with a form.
@@ -95,7 +100,7 @@ use TYPO3\Flow\Annotations as Flow;
  *
  * @api
  */
-class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper {
+class SelectViewHelper extends AbstractFormFieldViewHelper {
 
 	/**
 	 * @Flow\Inject
@@ -195,7 +200,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * Render the option tags.
 	 *
 	 * @return array an associative array of options, key will be the value of the option tag
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
 	protected function getOptions() {
 		if (!is_array($this->arguments['options']) && !($this->arguments['options'] instanceof \Traversable)) {
@@ -205,12 +210,12 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 		foreach ($this->arguments['options'] as $key => $value) {
 			if (is_object($value)) {
 				if ($this->hasArgument('optionValueField')) {
-					$key = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
+					$key = ObjectAccess::getPropertyPath($value, $this->arguments['optionValueField']);
 					if (is_object($key)) {
 						if (method_exists($key, '__toString')) {
 							$key = (string)$key;
 						} else {
-							throw new \TYPO3\Fluid\Core\ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
+							throw new ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
 						}
 					}
 				} elseif ($this->persistenceManager->getIdentifierByObject($value) !== NULL) {
@@ -218,16 +223,16 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 				} elseif (method_exists($value, '__toString')) {
 					$key = (string)$value;
 				} else {
-					throw new \TYPO3\Fluid\Core\ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
+					throw new ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
 				}
 
 				if ($this->hasArgument('optionLabelField')) {
-					$value = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $this->arguments['optionLabelField']);
+					$value = ObjectAccess::getPropertyPath($value, $this->arguments['optionLabelField']);
 					if (is_object($value)) {
 						if (method_exists($value, '__toString')) {
 							$value = (string)$value;
 						} else {
-							throw new \TYPO3\Fluid\Core\ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.' , 1247827553);
+							throw new ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.' , 1247827553);
 						}
 					}
 				} elseif (method_exists($value, '__toString')) {
@@ -291,7 +296,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	protected function getOptionValueScalar($valueElement) {
 		if (is_object($valueElement)) {
 			if ($this->hasArgument('optionValueField')) {
-				return \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
+				return ObjectAccess::getPropertyPath($valueElement, $this->arguments['optionValueField']);
 			} elseif ($this->persistenceManager->getIdentifierByObject($valueElement) !== NULL) {
 				return $this->persistenceManager->getIdentifierByObject($valueElement);
 			} else {
@@ -329,8 +334,8 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 	 * @param string $value option tag value
 	 * @param string $label option tag label
 	 * @return string
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
-	 * @throws \TYPO3\Fluid\Exception
+	 * @throws ViewHelper\Exception
+	 * @throws Fluid\Exception
 	 */
 	protected function getTranslatedLabel($value, $label) {
 		$translationConfiguration = $this->arguments['translate'];
@@ -342,9 +347,9 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 
 		if (isset($translationConfiguration['locale'])) {
 			try {
-				$localeObject = new \TYPO3\Flow\I18n\Locale($translationConfiguration['locale']);
-			} catch (\TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException $e) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('"' . $translationConfiguration['locale'] . '" is not a valid locale identifier.' , 1330013193);
+				$localeObject = new Locale($translationConfiguration['locale']);
+			} catch (InvalidLocaleIdentifierException $e) {
+				throw new ViewHelper\Exception('"' . $translationConfiguration['locale'] . '" is not a valid locale identifier.' , 1330013193);
 			}
 		} else {
 			$localeObject = NULL;
@@ -358,7 +363,7 @@ class SelectViewHelper extends \TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldVi
 				$id =  $prefix . (isset($translationConfiguration['using']) && $translationConfiguration['using'] === 'label' ? $label : $value);
 				return $this->translator->translateById($id, array(), NULL, $localeObject, $sourceName, $packageKey);
 			default:
-				throw new \TYPO3\Fluid\Exception('You can only request to translate by "label" or by "id", but asked for "' . $translateBy . '" in your SelectViewHelper tag.', 1340050647);
+				throw new Fluid\Exception('You can only request to translate by "label" or by "id", but asked for "' . $translateBy . '" in your SelectViewHelper tag.', 1340050647);
 		}
 	}
 }

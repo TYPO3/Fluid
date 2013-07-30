@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\Parser;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,17 +11,23 @@ namespace TYPO3\Fluid\Core\Parser;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\View;
+
 /**
  * Stores all information relevant for one parsing pass - that is, the root node,
  * and the current stack of open nodes (nodeStack) and a variable container used
  * for PostParseFacets.
  */
-class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
+class ParsingState implements ParsedTemplateInterface {
 
 	/**
 	 * Root node reference
 	 *
-	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @var RootNode
 	 */
 	protected $rootNode;
 
@@ -36,14 +42,14 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Variable container where ViewHelpers implementing the PostParseFacet can
 	 * store things in.
 	 *
-	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
+	 * @var TemplateVariableContainer
 	 */
 	protected $variableContainer;
 
 	/**
 	 * The layout name of the current template or NULL if the template does not contain a layout definition
 	 *
-	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @var AbstractNode
 	 */
 	protected $layoutNameNode;
 
@@ -56,27 +62,27 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Injects a variable container. ViewHelpers implementing the PostParse
 	 * Facet can store information inside this variableContainer.
 	 *
-	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @param TemplateVariableContainer $variableContainer
 	 * @return void
 	 */
-	public function injectVariableContainer(\TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+	public function injectVariableContainer(TemplateVariableContainer $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 
 	/**
 	 * Set root node of this parsing state
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $rootNode
+	 * @param AbstractNode $rootNode
 	 * @return void
 	 */
-	public function setRootNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $rootNode) {
+	public function setRootNode(AbstractNode $rootNode) {
 		$this->rootNode = $rootNode;
 	}
 
 	/**
 	 * Get root node of this parsing state.
 	 *
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode The root node
+	 * @return AbstractNode The root node
 	 */
 	public function getRootNode() {
 		return $this->rootNode;
@@ -85,10 +91,10 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	/**
 	 * Render the parsed template with rendering context
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext The rendering context to use
+	 * @param RenderingContextInterface $renderingContext The rendering context to use
 	 * @return string Rendered string
 	 */
-	public function render(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function render(RenderingContextInterface $renderingContext) {
 		return $this->rootNode->evaluate($renderingContext);
 	}
 
@@ -96,17 +102,17 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * Push a node to the node stack. The node stack holds all currently open
 	 * templating tags.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node Node to push to node stack
+	 * @param AbstractNode $node Node to push to node stack
 	 * @return void
 	 */
-	public function pushNodeToStack(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $node) {
+	public function pushNodeToStack(AbstractNode $node) {
 		array_push($this->nodeStack, $node);
 	}
 
 	/**
 	 * Get the top stack element, without removing it.
 	 *
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element.
+	 * @return AbstractNode the top stack element.
 	 */
 	public function getNodeFromStack() {
 		return $this->nodeStack[count($this->nodeStack) - 1];
@@ -115,7 +121,7 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	/**
 	 * Pop the top stack element (=remove it) and return it back.
 	 *
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode the top stack element, which was removed.
+	 * @return AbstractNode the top stack element, which was removed.
 	 */
 	public function popNodeFromStack() {
 		return array_pop($this->nodeStack);
@@ -133,7 +139,7 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	/**
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *
-	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer The variable container or NULL if none has been set yet
+	 * @return TemplateVariableContainer The variable container or NULL if none has been set yet
 	 * @todo Rename to getPostParseVariableContainer
 	 */
 	public function getVariableContainer() {
@@ -141,15 +147,15 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	}
 
 	/**
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $layoutNameNode name of the layout that is defined in this template via <f:layout name="..." />
+	 * @param AbstractNode $layoutNameNode name of the layout that is defined in this template via <f:layout name="..." />
 	 * @return void
 	 */
-	public function setLayoutNameNode(\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode $layoutNameNode) {
+	public function setLayoutNameNode(AbstractNode $layoutNameNode) {
 		$this->layoutNameNode = $layoutNameNode;
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
+	 * @return AbstractNode
 	 */
 	public function getLayoutNameNode() {
 		return $this->layoutNameNode;
@@ -170,11 +176,11 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 	 * If no layout is defined, this returns NULL
 	 * This requires the current rendering context in order to be able to evaluate the layout name
 	 *
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param RenderingContextInterface $renderingContext
 	 * @return string
-	 * @throws \TYPO3\Fluid\View\Exception
+	 * @throws View\Exception
 	 */
-	public function getLayoutName(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
+	public function getLayoutName(RenderingContextInterface $renderingContext) {
 		if (!$this->hasLayout()) {
 			return NULL;
 		}
@@ -182,7 +188,7 @@ class ParsingState implements \TYPO3\Fluid\Core\Parser\ParsedTemplateInterface {
 		if (!empty($layoutName)) {
 			return $layoutName;
 		}
-		throw new \TYPO3\Fluid\View\Exception('The layoutName could not be evaluated to a string', 1296805368);
+		throw new View\Exception('The layoutName could not be evaluated to a string', 1296805368);
 	}
 
 	/**

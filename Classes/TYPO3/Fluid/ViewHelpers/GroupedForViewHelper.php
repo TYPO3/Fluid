@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,10 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Flow\Reflection\ObjectAccess;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * Grouped loop view helper.
@@ -72,7 +76,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class GroupedForViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Iterates through elements of $each and renders child nodes
@@ -82,7 +86,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 	 * @param string $groupBy Group by this property
 	 * @param string $groupKey The name of the variable to store the current group
 	 * @return string Rendered string
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 * @api
 	 */
 	public function render($each, $as, $groupBy, $groupKey = 'groupKey') {
@@ -92,7 +96,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 		}
 		if (is_object($each)) {
 			if (!$each instanceof \Traversable) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface', 1253108907);
+				throw new ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface', 1253108907);
 			}
 			$each = iterator_to_array($each);
 		}
@@ -115,7 +119,7 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 	 * @param array $elements The array / traversable object to be grouped
 	 * @param string $groupBy Group by this property
 	 * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 */
 	protected function groupElements(array $elements, $groupBy) {
 		$groups = array('keys' => array(), 'values' => array());
@@ -123,9 +127,9 @@ class GroupedForViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelp
 			if (is_array($value)) {
 				$currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : NULL;
 			} elseif (is_object($value)) {
-				$currentGroupIndex = \TYPO3\Flow\Reflection\ObjectAccess::getPropertyPath($value, $groupBy);
+				$currentGroupIndex = ObjectAccess::getPropertyPath($value, $groupBy);
 			} else {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
+				throw new ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
 			$currentGroupKeyValue = $currentGroupIndex;
 			if ($currentGroupIndex instanceof \DateTime) {

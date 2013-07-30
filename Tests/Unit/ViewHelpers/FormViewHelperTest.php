@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License, either version 3 of the   *
@@ -131,16 +131,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @test
 	 */
 	public function renderCallsRenderHiddenIdentityField() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
 		$object = new \stdClass();
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'getFormObjectName'), array(), '', FALSE);
 
 		$this->arguments['object'] = $object;
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
-
-		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
-		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
 		$viewHelper->expects($this->atLeastOnce())->method('getFormObjectName')->will($this->returnValue('MyName'));
 		$viewHelper->expects($this->once())->method('renderHiddenIdentityField')->with($object, 'MyName');
@@ -207,14 +203,10 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @test
 	 */
 	public function renderCallsRenderAdditionalIdentityFields() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderAdditionalIdentityFields'), array(), '', FALSE);
 		$viewHelper->expects($this->once())->method('renderAdditionalIdentityFields');
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
-
-		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
-		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
 		$viewHelper->render('index');
 	}
@@ -263,13 +255,9 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @test
 	 */
 	public function renderHiddenReferrerFieldsAddCurrentControllerAndActionAsHiddenFields() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
-
-		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
-		$viewHelper->injectObjectSerializer($mockObjectSerializer);
 
 		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('packageKey'));
 		$this->request->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subpackageKey'));
@@ -277,10 +265,11 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->request->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('controllerActionName'));
 
 		$hiddenFields = $viewHelper->_call('renderHiddenReferrerFields');
-		$expectedResult = chr(10) . '<input type="hidden" name="__referrer[packageKey]" value="packageKey" />' . chr(10) .
-			'<input type="hidden" name="__referrer[subpackageKey]" value="subpackageKey" />' . chr(10) .
-			'<input type="hidden" name="__referrer[controllerName]" value="controllerName" />' . chr(10) .
-			'<input type="hidden" name="__referrer[actionName]" value="controllerActionName" />' . chr(10);
+		$expectedResult = chr(10) . '<input type="hidden" name="__referrer[@package]" value="packageKey" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@subpackage]" value="subpackageKey" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@controller]" value="controllerName" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@action]" value="controllerActionName" />' . chr(10) .
+			'<input type="hidden" name="__referrer[arguments]" value="" />' . chr(10);
 		$this->assertEquals($expectedResult, $hiddenFields);
 	}
 
@@ -288,21 +277,18 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 * @test
 	 */
 	public function renderHiddenReferrerFieldsAddCurrentControllerAndActionOfParentAndSubRequestAsHiddenFields() {
-		$this->markTestIncomplete('Sebastian -- TODO after T3BOARD');
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
 
-		$mockObjectSerializer = $this->getMock('TYPO3\Flow\Object\ObjectSerializer');
-		$viewHelper->injectObjectSerializer($mockObjectSerializer);
-
-		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\Web\SubRequest', array(), array(), '', FALSE);
+		$mockSubRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array(), 'Foo', FALSE);
+		$mockSubRequest->expects($this->atLeastOnce())->method('isMainRequest')->will($this->returnValue(FALSE));
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('subRequestPackageKey'));
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subRequestSubpackageKey'));
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerName')->will($this->returnValue('subRequestControllerName'));
 		$mockSubRequest->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('subRequestControllerActionName'));
-		$mockSubRequest->expects($this->any())->method('getParentRequest')->will($this->returnValue($this->request));
-		$mockSubRequest->expects($this->any())->method('getArgumentNamespace')->will($this->returnValue('subRequestArgumentNamespace'));
+		$mockSubRequest->expects($this->atLeastOnce())->method('getParentRequest')->will($this->returnValue($this->request));
+		$mockSubRequest->expects($this->atLeastOnce())->method('getArgumentNamespace')->will($this->returnValue('subRequestArgumentNamespace'));
 
 		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('packageKey'));
 		$this->request->expects($this->atLeastOnce())->method('getControllerSubpackageKey')->will($this->returnValue('subpackageKey'));
@@ -310,19 +296,21 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->request->expects($this->atLeastOnce())->method('getControllerActionName')->will($this->returnValue('controllerActionName'));
 
 		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
-		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
-		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockSubRequest));
+		$this->controllerContext->expects($this->atLeastOnce())->method('getRequest')->will($this->returnValue($mockSubRequest));
+		$this->renderingContext->setControllerContext($this->controllerContext);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
 		$hiddenFields = $viewHelper->_call('renderHiddenReferrerFields');
-		$expectedResult = chr(10) . '<input type="hidden" name="subRequestArgumentNamespace[__referrer][packageKey]" value="subRequestPackageKey" />' . chr(10) .
-			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][subpackageKey]" value="subRequestSubpackageKey" />' . chr(10) .
-			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][controllerName]" value="subRequestControllerName" />' . chr(10) .
-			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][actionName]" value="subRequestControllerActionName" />' . chr(10) .
-			'<input type="hidden" name="__referrer[packageKey]" value="packageKey" />' . chr(10) .
-			'<input type="hidden" name="__referrer[subpackageKey]" value="subpackageKey" />' . chr(10) .
-			'<input type="hidden" name="__referrer[controllerName]" value="controllerName" />' . chr(10) .
-			'<input type="hidden" name="__referrer[actionName]" value="controllerActionName" />' . chr(10);
+		$expectedResult = chr(10) . '<input type="hidden" name="subRequestArgumentNamespace[__referrer][@package]" value="subRequestPackageKey" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][@subpackage]" value="subRequestSubpackageKey" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][@controller]" value="subRequestControllerName" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][@action]" value="subRequestControllerActionName" />' . chr(10) .
+			'<input type="hidden" name="subRequestArgumentNamespace[__referrer][arguments]" value="" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@package]" value="packageKey" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@subpackage]" value="subpackageKey" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@controller]" value="controllerName" />' . chr(10) .
+			'<input type="hidden" name="__referrer[@action]" value="controllerActionName" />' . chr(10) .
+			'<input type="hidden" name="__referrer[arguments]" value="" />' . chr(10);
 
 		$this->assertEquals($expectedResult, $hiddenFields);
 	}

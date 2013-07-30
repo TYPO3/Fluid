@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\Core\ViewHelper\Facets;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,9 @@ namespace TYPO3\Fluid\Core\ViewHelper\Facets;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
  * Post Parse Facet. Your view helper should implement this if you want a callback
@@ -34,12 +37,12 @@ interface PostParseInterface {
 	 * You can store some data inside the variableContainer given here, which
 	 * can be used f.e. inside the TemplateView.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
+	 * @param ViewHelperNode $syntaxTreeNode The current node in the syntax tree corresponding to this view helper.
 	 * @param array $viewHelperArguments View helper arguments as an array of SyntaxTrees. If you really need an argument, make sure to call $viewHelperArguments[$argName]->render(...)!
-	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
+	 * @param TemplateVariableContainer $variableContainer Variable container you can use to pass on some variables to the view.
 	 * @return void
 	 */
-	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer);
+	static public function postParseEvent(ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, TemplateVariableContainer $variableContainer);
 
 }
 

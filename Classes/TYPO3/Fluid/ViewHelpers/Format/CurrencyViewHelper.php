@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Format;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
 use TYPO3\Flow\I18n;
 
@@ -60,7 +61,7 @@ use TYPO3\Flow\I18n;
  *
  * @api
  */
-class CurrencyViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class CurrencyViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @Flow\Inject

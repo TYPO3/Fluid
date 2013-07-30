@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,6 +11,8 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper;
 
 /**
  * A view helper for creating URIs to actions.
@@ -35,7 +37,7 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  *
  * @api
  */
-class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
+class ActionViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Render the Uri.
@@ -53,7 +55,7 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
 	 * @param boolean $useParentRequest If set, the parent Request will be used instead of the current one
 	 * @return string The rendered link
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @throws ViewHelper\Exception
 	 * @api
 	 */
 	public function render($action, array $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '', array $additionalParams = array(), $absolute = FALSE, $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $useParentRequest = FALSE) {
@@ -61,7 +63,7 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 		if ($useParentRequest === TRUE) {
 			$request = $this->controllerContext->getRequest();
 			if ($request->isMainRequest()) {
-				throw new \TYPO3\Fluid\Core\ViewHelper\Exception('You can\'t use the parent Request, you are already in the MainRequest.', 1360590758);
+				throw new ViewHelper\Exception('You can\'t use the parent Request, you are already in the MainRequest.', 1360590758);
 			}
 			$uriBuilder = clone $uriBuilder;
 			$uriBuilder->setRequest($request->getParentRequest());
@@ -76,8 +78,8 @@ class ActionViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 			->setFormat($format);
 		try {
 			$uri = $uriBuilder->uriFor($action, $arguments, $controller, $package, $subpackage);
-		} catch (\TYPO3\Flow\Exception $exception) {
-			throw new \TYPO3\Fluid\Core\ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
+		} catch (\Exception $exception) {
+			throw new ViewHelper\Exception($exception->getMessage(), $exception->getCode(), $exception);
 		}
 		return $uri;
 	}

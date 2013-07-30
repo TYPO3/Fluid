@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -10,6 +10,12 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+
+use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface;
+use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
  * With this tag, you can select a layout to be used for the current template.
@@ -25,7 +31,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  *
  * @api
  */
-class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper implements \TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface {
+class LayoutViewHelper extends AbstractViewHelper implements PostParseInterface {
 
 	/**
 	 * Initialize arguments
@@ -40,16 +46,16 @@ class LayoutViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper i
 	/**
 	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
 	 *
-	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode
+	 * @param ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments
-	 * @param \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer
+	 * @param TemplateVariableContainer $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(\TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer $variableContainer) {
+	static public function postParseEvent(ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, TemplateVariableContainer $variableContainer) {
 		if (isset($viewHelperArguments['name'])) {
 			$layoutNameNode = $viewHelperArguments['name'];
 		} else {
-			$layoutNameNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode('Default');
+			$layoutNameNode = new TextNode('Default');
 		}
 
 		$variableContainer->add('layoutName', $layoutNameNode);

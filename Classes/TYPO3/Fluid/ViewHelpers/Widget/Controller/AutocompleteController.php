@@ -2,7 +2,7 @@
 namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
 
 /*                                                                        *
- * This script belongs to the TYPO3 Flow package "Fluid".                 *
+ * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU Lesser General Public License, either version 3   *
@@ -11,9 +11,15 @@ namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Persistence\QueryResultInterface;
+use TYPO3\Flow\Reflection\ObjectAccess;
+use TYPO3\Flow\Utility\Arrays;
+use TYPO3\Fluid\Core\Widget\AbstractWidgetController;
+
 /**
+ * Controller for the auto-complete widget
  */
-class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
+class AutocompleteController extends AbstractWidgetController {
 
 	/**
 	 * @var array
@@ -24,7 +30,7 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 	 * @return void
 	 */
 	public function initializeAction() {
-		$this->configuration = \TYPO3\Flow\Utility\Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
+		$this->configuration = Arrays::arrayMergeRecursiveOverrule($this->configuration, $this->widgetConfiguration['configuration'], TRUE);
 	}
 
 	/**
@@ -40,7 +46,9 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 	 */
 	public function autocompleteAction($term) {
 		$searchProperty = $this->widgetConfiguration['searchProperty'];
-		$query = clone $this->widgetConfiguration['objects']->getQuery();
+		/** @var $queryResult QueryResultInterface */
+		$queryResult = $this->widgetConfiguration['objects'];
+		$query = clone $queryResult->getQuery();
 		$constraint = $query->getConstraint();
 
 		if ($constraint !== NULL) {
@@ -62,7 +70,7 @@ class AutocompleteController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetCont
 		$output = array();
 		$values = array();
 		foreach ($results as $singleResult) {
-			$val = \TYPO3\Flow\Reflection\ObjectAccess::getProperty($singleResult, $searchProperty);
+			$val = ObjectAccess::getProperty($singleResult, $searchProperty);
 			if (isset($values[$val])) continue;
 			$values[$val] = TRUE;
 			$output[] = array(
