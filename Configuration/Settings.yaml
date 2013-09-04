@@ -1,0 +1,9 @@
+TYPO3:
+  Flow:
+    http:
+      chain:
+        'process':
+          chain:
+            'ajaxWidget':
+              position: 'before routing'
+              component: 'TYPO3\Fluid\Core\Widget\AjaxWidgetComponent'
