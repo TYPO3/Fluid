@@ -56,8 +56,8 @@ class ParserIntegrationTest extends FunctionalTestCase {
 	 * @dataProvider exampleTemplates
 	 */
 	public function templateIsEvaluatedCorrectly($source, $variables, $expected) {
-		$request = Request::create(new Uri('http://localhost'));
-		$actionRequest = $request->createActionRequest();
+		$httpRequest = Request::create(new Uri('http://localhost'));
+		$actionRequest = new \TYPO3\Flow\Mvc\ActionRequest($httpRequest);
 
 		$standaloneView = new StandaloneView($actionRequest, uniqid());
 		$standaloneView->assignMultiple($variables);

@@ -52,8 +52,7 @@ class AjaxWidgetRoutingAspect {
 		$httpRequest = $joinPoint->getMethodArgument('httpRequest');
 
 		if ($httpRequest->hasArgument('__widgetId') || $httpRequest->hasArgument('__widgetContext')) {
-			/** @var $actionRequest ActionRequest */
-			$actionRequest = $httpRequest->createActionRequest();
+			$actionRequest = new ActionRequest($httpRequest);
 			$widgetId = $actionRequest->getInternalArgument('__widgetId');
 			if ($widgetId !== NULL) {
 				$widgetContext = $this->ajaxWidgetContextHolder->get($widgetId);
