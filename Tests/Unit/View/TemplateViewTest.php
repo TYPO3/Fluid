@@ -16,26 +16,30 @@ include_once(__DIR__ . '/Fixtures/TemplateViewFixture.php');
 
 use org\bovigo\vfs\vfsStreamWrapper;
 use org\bovigo\vfs\vfsStreamDirectory;
+use TYPO3\Flow\Http\Request;
+use TYPO3\Flow\Http\Uri;
+use TYPO3\Flow\Mvc\Controller\ControllerContext;
+use TYPO3\Flow\Tests\UnitTestCase;
 use TYPO3\Fluid\View\TemplateView;
 
 /**
  * Testcase for the TemplateView
  */
-class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class TemplateViewTest extends UnitTestCase {
 
 	/**
 	 * Helper to build mock controller context needed to test expandGenericPathPattern.
 	 *
 	 * @param string $packageKey
 	 * @param string $subPackageKey
-	 * @param string $controllerClassName
+	 * @param string $controllerName
 	 * @param string $format
-	 * @return \TYPO3\Flow\Mvc\Controller\ControllerContext
+	 * @return ControllerContext
 	 */
 	protected function setupMockControllerContextForPathResolving($packageKey, $subPackageKey, $controllerName, $format) {
 		$controllerObjectName = "TYPO3\\$packageKey\\" . ($subPackageKey != $subPackageKey . '\\' ? : '') . 'Controller\\' . $controllerName . 'Controller';
 
-		$httpRequest = \TYPO3\Flow\Http\Request::create(new \TYPO3\Flow\Http\Uri('http://robertlemke.com/blog'));
+		$httpRequest = Request::create(new Uri('http://robertlemke.com/blog'));
 		$mockRequest = $this->getMock('TYPO3\Flow\Mvc\ActionRequest', array(), array($httpRequest));
 		$mockRequest->expects($this->any())->method('getControllerPackageKey')->will($this->returnValue($packageKey));
 		$mockRequest->expects($this->any())->method('getControllerSubPackageKey')->will($this->returnValue($subPackageKey));
@@ -43,6 +47,7 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockRequest->expects($this->any())->method('getControllerObjectName')->will($this->returnValue($controllerObjectName));
 		$mockRequest->expects($this->any())->method('getFormat')->will($this->returnValue($format));
 
+		/** @var $mockControllerContext ControllerContext */
 		$mockControllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array('getRequest'), array(), '', FALSE);
 		$mockControllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($mockRequest));
 
@@ -610,7 +615,7 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		\file_put_contents('vfs://MyPartials/SomePartial', 'contentsOfSomePartial');
 
 		$paths = array(
-			'vfs://NonExistantDir/UnknowFile.html',
+			'vfs://NonExistentDir/UnknowFile.html',
 			'vfs://MyPartials/SomePartial.html',
 			'vfs://MyPartials/SomePartial'
 		);
@@ -628,13 +633,13 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function resolveTemplatePathAndFilenameChecksDifferentPathPatternsAndReturnsTheFirstPathWhichExists() {
+	public function getTemplateSourceChecksDifferentPathPatternsAndReturnsTheFirstPathWhichExists() {
 		vfsStreamWrapper::register();
 		mkdir('vfs://MyTemplates');
 		\file_put_contents('vfs://MyTemplates/MyCoolAction.html', 'contentsOfMyCoolAction');
 
 		$paths = array(
-			'vfs://NonExistantDir/UnknowFile.html',
+			'vfs://NonExistentDir/UnknownFile.html',
 			'vfs://MyTemplates/@action.html'
 		);
 
@@ -646,7 +651,42 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateView->setOption('layoutRootPaths', array('MyLayouts'));
 
 		$this->assertSame('contentsOfMyCoolAction', $templateView->_call('getTemplateSource', 'myCoolAction'));
+	}
 
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function getTemplatePathAndFilenameThrowsExceptionIfNoPathCanBeResolved() {
+		vfsStreamWrapper::register();
+		$paths = array(
+			'vfs://NonExistentDir/UnknownFile.html',
+			'vfs://NonExistentDir/AnotherUnknownFile.html',
+		);
+
+		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('expandGenericPathPattern'));
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@templateRoot/@subpackage/@controller/@action.@format', FALSE, FALSE)->will($this->returnValue($paths));
+
+		$templateView->_call('getTemplatePathAndFilename', 'myCoolAction');
+	}
+
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function getTemplatePathAndFilenameThrowsExceptionIfResolvedPathPointsToADirectory() {
+		vfsStreamWrapper::register();
+		mkdir('vfs://MyTemplates/NotAFile');
+		$paths = array(
+			'vfs://NonExistentDir/UnknownFile.html',
+			'vfs://MyTemplates/NotAFile'
+		);
+
+		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('expandGenericPathPattern'));
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@templateRoot/@subpackage/@controller/@action.@format', FALSE, FALSE)->will($this->returnValue($paths));
+
+		$templateView->_call('getTemplatePathAndFilename', 'myCoolAction');
 	}
 
 	/**
@@ -662,6 +702,79 @@ class TemplateViewTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$this->assertSame('contentsOfMyCoolAction', $templateView->_call('getTemplateSource'));
 	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function getLayoutPathAndFilenameThrowsExceptionIfNoPathCanBeResolved() {
+		vfsStreamWrapper::register();
+		$paths = array(
+			'vfs://NonExistentDir/UnknownFile.html',
+			'vfs://NonExistentDir/AnotherUnknownFile.html',
+		);
+
+		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('expandGenericPathPattern'));
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@layoutRoot/@layout.@format', TRUE, TRUE)->will($this->returnValue($paths));
+
+		$templateView->_call('getLayoutPathAndFilename', 'SomeLayout');
+	}
+
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function getLayoutPathAndFilenameThrowsExceptionIfResolvedPathPointsToADirectory() {
+		vfsStreamWrapper::register();
+		mkdir('vfs://MyTemplates/NotAFile');
+		$paths = array(
+			'vfs://NonExistentDir/UnknownFile.html',
+			'vfs://MyTemplates/NotAFile'
+		);
+
+		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('expandGenericPathPattern'));
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@layoutRoot/@layout.@format', TRUE, TRUE)->will($this->returnValue($paths));
+
+		$templateView->_call('getLayoutPathAndFilename', 'SomeLayout');
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function getPartialPathAndFilenameThrowsExceptionIfNoPathCanBeResolved() {
+		vfsStreamWrapper::register();
+		$paths = array(
+			'vfs://NonExistentDir/UnknownFile.html',
+			'vfs://NonExistentDir/AnotherUnknownFile.html',
+		);
+
+		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('expandGenericPathPattern'));
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@partialRoot/@subpackage/@partial.@format', TRUE, TRUE)->will($this->returnValue($paths));
+
+		$templateView->_call('getPartialPathAndFilename', 'SomePartial');
+	}
+
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function getPartialPathAndFilenameThrowsExceptionIfResolvedPathPointsToADirectory() {
+		vfsStreamWrapper::register();
+		mkdir('vfs://MyTemplates/NotAFile');
+		$paths = array(
+			'vfs://NonExistentDir/UnknownFile.html',
+			'vfs://MyTemplates/NotAFile'
+		);
+
+		$templateView = $this->getAccessibleMock('TYPO3\Fluid\View\TemplateView', array('expandGenericPathPattern'));
+		$templateView->expects($this->once())->method('expandGenericPathPattern')->with('@partialRoot/@subpackage/@partial.@format', TRUE, TRUE)->will($this->returnValue($paths));
+
+		$templateView->_call('getPartialPathAndFilename', 'SomePartial');
+	}
+
 }
 
 ?>

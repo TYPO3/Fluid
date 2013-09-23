@@ -87,12 +87,25 @@ class StandaloneViewTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * @test
 	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
-	public function renderThrowsExceptionSpecifiedTemplatePathAndFilenameDoesNotExist() {
+	public function renderThrowsExceptionIfSpecifiedTemplatePathAndFilenameDoesNotExist() {
 		$request = Request::create(new Uri('http://localhost'));
 		$actionRequest = $request->createActionRequest();
 
 		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
 		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/NonExistingTemplate.txt');
+		$standaloneView->render();
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\View\Exception\InvalidTemplateResourceException
+	 */
+	public function renderThrowsExceptionIfSpecifiedTemplatePathAndFilenamePointsToADirectory() {
+		$request = Request::create(new Uri('http://localhost'));
+		$actionRequest = $request->createActionRequest();
+
+		$standaloneView = new \TYPO3\Fluid\Tests\Functional\View\Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
+		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures');
 		$standaloneView->render();
 	}
 

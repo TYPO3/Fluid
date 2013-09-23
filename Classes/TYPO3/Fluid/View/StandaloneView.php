@@ -256,7 +256,7 @@ class StandaloneView extends AbstractTemplateView {
 			$templatePathAndFilename = $this->getTemplatePathAndFilename();
 			if ($templatePathAndFilename === NULL) {
 				throw new InvalidTemplateResourceException('Neither TemplateSource nor TemplatePathAndFilename have been specified', 1327431077);
-			} elseif (!file_exists($templatePathAndFilename)) {
+			} elseif (!is_file($templatePathAndFilename)) {
 				throw new InvalidTemplateResourceException(sprintf('Template file "%s" could not be loaded', $templatePathAndFilename), 1327431091);
 			}
 			$templatePathAndFilenameInfo = pathinfo($templatePathAndFilename);
@@ -283,7 +283,7 @@ class StandaloneView extends AbstractTemplateView {
 			throw new Exception\InvalidTemplateResourceException('No template has been specified. Use either setTemplateSource() or setTemplatePathAndFilename().', 1288085266);
 		}
 		if ($this->templateSource === NULL) {
-			if (!file_exists($this->templatePathAndFilename)) {
+			if (!is_file($this->templatePathAndFilename)) {
 				throw new Exception\InvalidTemplateResourceException('Template could not be found at "' . $this->templatePathAndFilename . '".', 1288087061);
 			}
 			$this->templateSource = file_get_contents($this->templatePathAndFilename);
@@ -342,7 +342,7 @@ class StandaloneView extends AbstractTemplateView {
 		$possibleLayoutPaths[] = Files::getUnixStylePath($layoutRootPath . '/' . $layoutName . '.' . $this->getRequest()->getFormat());
 		$possibleLayoutPaths[] = Files::getUnixStylePath($layoutRootPath . '/' . $layoutName);
 		foreach ($possibleLayoutPaths as $layoutPathAndFilename) {
-			if (file_exists($layoutPathAndFilename)) {
+			if (is_file($layoutPathAndFilename)) {
 				return $layoutPathAndFilename;
 			}
 		}
@@ -395,7 +395,7 @@ class StandaloneView extends AbstractTemplateView {
 		$possiblePartialPaths[] = Files::getUnixStylePath($partialRootPath . '/' . $partialName . '.' . $this->getRequest()->getFormat());
 		$possiblePartialPaths[] = Files::getUnixStylePath($partialRootPath . '/' . $partialName);
 		foreach ($possiblePartialPaths as $partialPathAndFilename) {
-			if (file_exists($partialPathAndFilename)) {
+			if (is_file($partialPathAndFilename)) {
 				return $partialPathAndFilename;
 			}
 		}

@@ -268,7 +268,7 @@ class TemplateView extends AbstractTemplateView {
 		$paths = $this->expandGenericPathPattern($this->options['templatePathAndFilenamePattern'], FALSE, FALSE);
 		foreach ($paths as &$templatePathAndFilename) {
 			$templatePathAndFilename = str_replace('@action', $actionName, $templatePathAndFilename);
-			if (file_exists($templatePathAndFilename)) {
+			if (is_file($templatePathAndFilename)) {
 				return $templatePathAndFilename;
 			}
 		}
@@ -329,11 +329,11 @@ class TemplateView extends AbstractTemplateView {
 		$layoutName = ucfirst($layoutName);
 		foreach ($paths as &$layoutPathAndFilename) {
 			$layoutPathAndFilename = str_replace('@layout', $layoutName, $layoutPathAndFilename);
-			if (file_exists($layoutPathAndFilename)) {
+			if (is_file($layoutPathAndFilename)) {
 				return $layoutPathAndFilename;
 			}
 		}
-		throw new Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new Exception\InvalidTemplateResourceException('The layout files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
@@ -376,11 +376,11 @@ class TemplateView extends AbstractTemplateView {
 		$paths = $this->expandGenericPathPattern($this->options['partialPathAndFilenamePattern'], TRUE, TRUE);
 		foreach ($paths as &$partialPathAndFilename) {
 			$partialPathAndFilename = str_replace('@partial', $partialName, $partialPathAndFilename);
-			if (file_exists($partialPathAndFilename)) {
+			if (is_file($partialPathAndFilename)) {
 				return $partialPathAndFilename;
 			}
 		}
-		throw new Exception\InvalidTemplateResourceException('The template files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
+		throw new Exception\InvalidTemplateResourceException('The partial files "' . implode('", "', $paths) . '" could not be loaded.', 1225709595);
 	}
 
 	/**
