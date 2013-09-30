@@ -69,5 +69,108 @@ class WidgetTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->assertSame('SomeAjaxController::ajaxAction("value1", "value2")', $response->getContent());
 	}
 
+	/**
+	 * @test
+	 */
+	public function redirectWithoutDelayAndNoParameterImmediatelyRedirectsToTargetAction() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="redirect-no-delay-no-param"]')->attr('href');
+
+		$response = $this->browser->request($redirectTriggerUri);
+		$this->assertSame('<div id="parameter"></div>', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
+	public function redirectWithoutDelayAndWithParameterImmediatelyRedirectsToTargetAction() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="redirect-no-delay-with-param"]')->attr('href');
+
+		$response = $this->browser->request($redirectTriggerUri);
+		$this->assertSame('<div id="parameter">foo, via redirect</div>', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
+	public function redirectWithDelayAndNoParameterOutputsRefreshMetaHeader() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="redirect-with-delay-no-param"]')->attr('href');
+
+		$this->browser->setFollowRedirects(FALSE);
+		$this->browser->request($redirectTriggerUri);
+		$this->browser->setFollowRedirects(TRUE);
+		$redirectHeader = $this->browser->getCrawler()->filterXPath('//meta[@http-equiv="refresh"]')->attr('content');
+		$this->assertSame('2;url=', substr($redirectHeader, 0, 6));
+
+		$redirectTargetUri = substr($redirectHeader, 6);
+		$response = $this->browser->request($redirectTargetUri);
+		$this->assertSame('<div id="parameter"></div>', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
+	public function redirectWithDelayAndWithParameterOutputsRefreshMetaHeader() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="redirect-with-delay-with-param"]')->attr('href');
+
+		$this->browser->setFollowRedirects(FALSE);
+		$this->browser->request($redirectTriggerUri);
+		$this->browser->setFollowRedirects(TRUE);
+		$redirectHeader = $this->browser->getCrawler()->filterXPath('//meta[@http-equiv="refresh"]')->attr('content');
+		$this->assertSame('2;url=', substr($redirectHeader, 0, 6));
+
+		$redirectTargetUri = substr($redirectHeader, 6);
+		$response = $this->browser->request($redirectTargetUri);
+		$this->assertSame('<div id="parameter">bar, via redirect</div>', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
+	public function redirectToDifferentControllerThrowsException() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="redirect-other-controller"]')->attr('href');
+
+		$response = $this->browser->request($redirectTriggerUri);
+		$this->assertSame(500, $response->getStatusCode());
+		$this->assertSame(1380284579, $response->getHeader('X-Flow-ExceptionCode'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function forwardWithoutParameterTriggersTargetAction() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="forward-no-param"]')->attr('href');
+
+		$response = $this->browser->request($redirectTriggerUri);
+		$this->assertSame('<div id="parameter"></div>', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
+	public function forwardWithParameterTriggersTargetAction() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="forward-with-param"]')->attr('href');
+
+		$response = $this->browser->request($redirectTriggerUri);
+		$this->assertSame('<div id="parameter">baz, via forward</div>', $response->getContent());
+	}
+
+	/**
+	 * @test
+	 */
+	public function forwardToDifferentControllerThrowsException() {
+		$this->browser->request('http://localhost/test/widget/redirecttest');
+		$redirectTriggerUri = $this->browser->getCrawler()->filterXPath('//*[@id="forward-other-controller"]')->attr('href');
+
+		$response = $this->browser->request($redirectTriggerUri);
+		$this->assertSame(500, $response->getStatusCode());
+		$this->assertSame(1380284579, $response->getHeader('X-Flow-ExceptionCode'));
+	}
 }
 ?>
