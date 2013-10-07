@@ -28,10 +28,10 @@ class Post {
 	protected $name;
 
 	/**
-	 * @var string
-	 * @Flow\Validate(type="EmailAddress")
+	 * @var User
+	 * @ORM\ManyToOne(cascade={"all"})
 	 */
-	protected $email;
+	protected $author;
 
 	/**
 	 * @var boolean
@@ -66,17 +66,18 @@ class Post {
 	}
 
 	/**
-	 * @return string
+	 * @param User $author
+	 * @return void
 	 */
-	public function getEmail() {
-		return $this->email;
+	public function setAuthor(User $author) {
+		$this->author = $author;
 	}
 
 	/**
-	 * @param string $email
+	 * @return User
 	 */
-	public function setEmail($email) {
-		$this->email = $email;
+	public function getAuthor() {
+		return $this->author;
 	}
 
 	/**

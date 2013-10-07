@@ -2,7 +2,7 @@
 
 <f:form action="create" object="{fooPost}" objectName="post">
 	<f:form.textfield id="name" property="name" />
-	<f:form.textfield id="email" property="email" />
+	<f:form.textfield id="email" property="author.emailAddress" />
 	<f:form.checkbox id="private" property="private" value="true" />
 
 	<f:form.radio id="category_foo" property="category" value="foo" />

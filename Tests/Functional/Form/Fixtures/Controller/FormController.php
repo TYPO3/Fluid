@@ -32,7 +32,7 @@ class FormController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return string
 	 */
 	public function createAction(\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $post) {
-		return $post->getName() . '|' . $post->getEmail();
+		return $post->getName() . '|' . $post->getAuthor()->getEmailAddress();
 	}
 
 	/**
@@ -52,7 +52,7 @@ class FormController extends \TYPO3\Flow\Mvc\Controller\ActionController {
 	 * @return string
 	 */
 	public function updateAction(\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post $post) {
-		return $post->getName() . '|' . $post->getEmail();
+		return $post->getName() . '|' . $post->getAuthor()->getEmailAddress();
 	}
 }
 ?>

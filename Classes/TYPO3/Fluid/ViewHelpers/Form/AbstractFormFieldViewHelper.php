@@ -160,6 +160,9 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 * @return void
 	 */
 	protected function addAdditionalIdentityPropertiesIfNeeded() {
+		if (!$this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			return;
+		}
 		$propertySegments = explode('.', $this->arguments['property']);
 		// hierarchical property. If there is no "." inside (thus $propertySegments == 1), we do not need to do anything
 		if (count($propertySegments) < 2) {

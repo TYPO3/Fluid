@@ -59,7 +59,7 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$form = $this->browser->getForm();
 
 		$form['post']['name']->setValue('Egon Olsen');
-		$form['post']['email']->setValue('test@typo3.org');
+		$form['post']['author']['emailAddress']->setValue('test@typo3.org');
 
 		$response = $this->browser->submit($form);
 		$this->assertSame('Egon Olsen|test@typo3.org', $response->getContent());
@@ -73,15 +73,15 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$form = $this->browser->getForm();
 
 		$form['post']['name']->setValue('Egon Olsen');
-		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['author']['emailAddress']->setValue('test_noValidEmail');
 
 		$this->browser->submit($form);
 		$form = $this->browser->getForm();
 		$this->assertSame('Egon Olsen', $form['post']['name']->getValue());
-		$this->assertSame('test_noValidEmail', $form['post']['email']->getValue());
+		$this->assertSame('test_noValidEmail', $form['post']['author']['emailAddress']->getValue());
 		$this->assertSame('f3-form-error', $this->browser->getCrawler()->filterXPath('//*[@id="email"]')->attr('class'));
 
-		$form['post']['email']->setValue('another@email.org');
+		$form['post']['author']['emailAddress']->setValue('another@email.org');
 
 		$response = $this->browser->submit($form);
 		$this->assertSame('Egon Olsen|another@email.org', $response->getContent());
@@ -97,15 +97,15 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$form = $this->browser->getForm();
 
 		$form['post']['name']->setValue('Egon Olsen');
-		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['author']['emailAddress']->setValue('test_noValidEmail');
 
 		$this->browser->submit($form);
 		$form = $this->browser->getForm();
 		$this->assertSame('Egon Olsen', $form['post']['name']->getValue());
-		$this->assertSame('test_noValidEmail', $form['post']['email']->getValue());
+		$this->assertSame('test_noValidEmail', $form['post']['author']['emailAddress']->getValue());
 		$this->assertSame('f3-form-error', $this->browser->getCrawler()->filterXPath('//*[@id="email"]')->attr('class'));
 
-		$form['post']['email']->setValue('another@email.org');
+		$form['post']['author']['emailAddress']->setValue('another@email.org');
 
 		$response = $this->browser->submit($form);
 		$this->assertSame('Egon Olsen|another@email.org', $response->getContent());
@@ -176,14 +176,14 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->browser->request('http://localhost/test/fluid/formobjects/edit?fooPost=' . $postIdentifier);
 		$form = $this->browser->getForm();
 		$form['post']['name']->setValue('Hello World');
-		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['author']['emailAddress']->setValue('test_noValidEmail');
 
 		$response = $this->browser->submit($form);
 		$this->assertNotSame('Hello World|test_noValidEmail', $response->getContent());
 
 		$this->persistenceManager->clearState();
 		$post = $this->persistenceManager->getObjectByIdentifier($postIdentifier, '\TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post');
-		$this->assertNotSame('test_noValidEmail', $post->getEmail(), 'The invalid email address "' . $post->getEmail() . '" was persisted!');
+		$this->assertNotSame('test_noValidEmail', $post->getAuthor()->getEmailAddress(), 'The invalid email address "' . $post->getAuthor()->getEmailAddress() . '" was persisted!');
 	}
 
 	/**
@@ -195,19 +195,19 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->browser->request('http://localhost/test/fluid/formobjects/edit?fooPost=' . $postIdentifier);
 		$form = $this->browser->getForm();
 		$form['post']['name']->setValue('Hello World');
-		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['author']['emailAddress']->setValue('test_noValidEmail');
 
 		$this->browser->submit($form);
 
 		$this->assertSame($postIdentifier, $this->browser->getCrawler()->filterXPath('//input[@name="post[__identity]"]')->attr('value'));
 
-		$form['post']['email']->setValue('foo@bar.org');
 		$form['post']['name']->setValue('Hello World');
+		$form['post']['author']['emailAddress']->setValue('foo@bar.org');
 		$response = $this->browser->submit($form);
 		$this->assertSame('Hello World|foo@bar.org', $response->getContent());
 
 		$post = $this->persistenceManager->getObjectByIdentifier($postIdentifier, 'TYPO3\Fluid\Tests\Functional\Form\Fixtures\Domain\Model\Post');
-		$this->assertSame('foo@bar.org', $post->getEmail());
+		$this->assertSame('foo@bar.org', $post->getAuthor()->getEmailAddress());
 	}
 
 	/**
@@ -292,8 +292,10 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * @return string UUID of the dummy post
 	 */
 	protected function setupDummyPost() {
+		$author = new Fixtures\Domain\Model\User();
+		$author->setEmailAddress('foo@bar.org');
 		$post = new Fixtures\Domain\Model\Post();
-		$post->setEmail('foo@bar.org');
+		$post->setAuthor($author);
 		$post->setName('myName');
 		$this->persistenceManager->add($post);
 		$postIdentifier = $this->persistenceManager->getIdentifierByObject($post);
@@ -310,7 +312,7 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->browser->request('http://localhost/test/fluid/formobjects');
 		$form = $this->browser->getForm();
 
-		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['author']['emailAddress']->setValue('test_noValidEmail');
 		$form['post']['private']->setValue(FALSE);
 
 		$this->browser->submit($form);
@@ -328,7 +330,7 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->browser->request('http://localhost/test/fluid/formobjects');
 		$form = $this->browser->getForm();
 
-		$form['post']['email']->setValue('test_noValidEmail');
+		$form['post']['author']['emailAddress']->setValue('test_noValidEmail');
 		$form['post']['category']->setValue('bar');
 		$form['post']['subCategory']->setValue('bar');
 
