@@ -54,5 +54,3 @@ class RenderingContextTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
 	}
 }
-
-?>

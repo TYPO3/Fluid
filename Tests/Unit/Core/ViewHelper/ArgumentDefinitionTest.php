@@ -34,5 +34,3 @@ class ArgumentDefinitionTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($argumentDefinition->isMethodParameter(), $isMethodParameter, 'isMethodParameter flag could not be retrieved correctly.');
 	}
 }
-
-?>

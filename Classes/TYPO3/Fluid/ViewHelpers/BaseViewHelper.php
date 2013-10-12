@@ -42,5 +42,3 @@ class BaseViewHelper extends AbstractViewHelper {
 		return '<base href="' . $this->controllerContext->getRequest()->getHttpRequest()->getBaseUri() . '" />';
 	}
 }
-
-?>

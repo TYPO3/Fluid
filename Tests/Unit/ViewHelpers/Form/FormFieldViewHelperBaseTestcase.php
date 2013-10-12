@@ -22,5 +22,3 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  */
 class FormFieldViewHelperBaseTestcase extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 }
-
-?>

@@ -20,5 +20,3 @@ use TYPO3\Flow;
  */
 class Exception extends Flow\Exception {
 }
-
-?>

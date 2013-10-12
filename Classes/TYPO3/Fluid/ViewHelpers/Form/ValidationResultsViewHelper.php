@@ -85,5 +85,3 @@ class ValidationResultsViewHelper extends AbstractViewHelper {
 		return $output;
 	}
 }
-
-?>

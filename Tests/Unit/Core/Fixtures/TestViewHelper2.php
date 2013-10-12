@@ -13,5 +13,3 @@ class TestViewHelper2 extends \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper {
 	public function render($param1, array $param2, $param3 = 'default') {
 	}
 }
-
-?>

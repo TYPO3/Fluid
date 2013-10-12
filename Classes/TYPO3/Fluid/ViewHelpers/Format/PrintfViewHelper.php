@@ -64,5 +64,3 @@ class PrintfViewHelper extends AbstractViewHelper {
 		return vsprintf($format, $arguments);
 	}
 }
-
-?>

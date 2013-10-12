@@ -89,5 +89,3 @@ class UrlencodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals(urlencode('http://typo3.com/foo&bar=1'), $actualResult);
 	}
 }
-
-?>

@@ -776,5 +776,3 @@ class TemplateViewTest extends UnitTestCase {
 	}
 
 }
-
-?>

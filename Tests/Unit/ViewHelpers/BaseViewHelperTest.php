@@ -33,5 +33,3 @@ class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->assertSame($expectedResult, $actualResult);
 	}
 }
-
-?>

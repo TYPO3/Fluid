@@ -78,4 +78,3 @@ class IdentifierViewHelper extends AbstractViewHelper {
 		return $this->persistenceManager->getIdentifierByObject($value);
 	}
 }
-?>

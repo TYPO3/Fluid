@@ -152,5 +152,3 @@ class ViewHelperNode extends AbstractNode {
 		return array('viewHelperClassName', 'arguments', 'childNodes');
 	}
 }
-
-?>

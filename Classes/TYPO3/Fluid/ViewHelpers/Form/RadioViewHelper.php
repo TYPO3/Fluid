@@ -100,5 +100,3 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

@@ -111,5 +111,3 @@ class CheckboxViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

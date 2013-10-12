@@ -45,5 +45,3 @@ interface PostParseInterface {
 	static public function postParseEvent(ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, TemplateVariableContainer $variableContainer);
 
 }
-
-?>

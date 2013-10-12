@@ -43,5 +43,3 @@ class ElseViewHelper extends AbstractViewHelper {
 		return $this->renderChildren();
 	}
 }
-
-?>

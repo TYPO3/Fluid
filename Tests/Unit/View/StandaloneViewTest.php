@@ -113,5 +113,3 @@ class StandaloneViewTest extends UnitTestCase {
 		$this->standaloneView->_call('getPartialPathAndFilename', 'NotAFile');
 	}
 }
-
-?>

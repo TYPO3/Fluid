@@ -116,4 +116,3 @@ class CurrencyViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->render('', ',', '.', TRUE);
 	}
 }
-?>

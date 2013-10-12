@@ -24,5 +24,3 @@ class TemplateViewFixture extends \TYPO3\Fluid\View\TemplateView {
 	protected function loadTemplateFile($templateFilePath) {
 	}
 }
-
-?>

@@ -157,4 +157,3 @@ class AbstractWidgetViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->viewHelper->_call('initiateSubRequest');
 	}
 }
-?>

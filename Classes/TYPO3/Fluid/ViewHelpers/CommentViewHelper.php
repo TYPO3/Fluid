@@ -64,5 +64,3 @@ class CommentViewHelper extends AbstractViewHelper {
 	public function render() {
 	}
 }
-
-?>

@@ -69,5 +69,3 @@ class TextareaViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

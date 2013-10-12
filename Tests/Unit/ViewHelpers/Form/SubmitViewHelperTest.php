@@ -45,5 +45,3 @@ class SubmitViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 		$this->viewHelper->render();
 	}
 }
-
-?>

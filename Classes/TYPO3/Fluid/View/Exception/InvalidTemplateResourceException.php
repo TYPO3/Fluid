@@ -20,5 +20,3 @@ use TYPO3\Fluid\View;
  */
 class InvalidTemplateResourceException extends View\Exception {
 }
-
-?>

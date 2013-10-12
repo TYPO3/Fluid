@@ -42,4 +42,3 @@ class SomeAjaxController extends AbstractWidgetController {
 	}
 
 }
-?>

@@ -59,5 +59,3 @@ class TextNode extends AbstractNode {
 		return $this->text;
 	}
 }
-
-?>

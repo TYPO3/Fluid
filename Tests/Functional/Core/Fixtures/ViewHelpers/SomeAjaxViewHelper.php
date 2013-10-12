@@ -42,4 +42,3 @@ class SomeAjaxViewHelper extends AbstractWidgetViewHelper {
 		return $this->initiateSubRequest();
 	}
 }
-?>

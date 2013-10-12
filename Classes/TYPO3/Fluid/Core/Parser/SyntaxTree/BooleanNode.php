@@ -342,5 +342,3 @@ class BooleanNode extends AbstractNode {
 		return FALSE;
 	}
 }
-
-?>

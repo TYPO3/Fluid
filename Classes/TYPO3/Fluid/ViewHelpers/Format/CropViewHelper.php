@@ -67,6 +67,3 @@ class CropViewHelper extends AbstractViewHelper {
 		}
 	}
 }
-
-
-?>

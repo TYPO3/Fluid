@@ -20,5 +20,3 @@ use TYPO3\Fluid\Core\ViewHelper;
  */
 class InvalidVariableException extends ViewHelper\Exception {
 }
-
-?>

@@ -75,6 +75,3 @@ class EmailViewHelper extends AbstractTagBasedViewHelper {
 		return $this->tag->render();
 	}
 }
-
-
-?>

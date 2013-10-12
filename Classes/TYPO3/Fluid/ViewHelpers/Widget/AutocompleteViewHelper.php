@@ -53,4 +53,3 @@ class AutocompleteViewHelper extends AbstractWidgetViewHelper {
 		return $this->initiateSubRequest();
 	}
 }
-?>

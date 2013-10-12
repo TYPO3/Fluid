@@ -212,5 +212,3 @@ class ParsingState implements ParsedTemplateInterface {
 		return FALSE;
 	}
 }
-
-?>

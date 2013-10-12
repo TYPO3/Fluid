@@ -43,4 +43,3 @@ class CaseViewHelper extends AbstractViewHelper {
 		return '';
 	}
 }
-?>

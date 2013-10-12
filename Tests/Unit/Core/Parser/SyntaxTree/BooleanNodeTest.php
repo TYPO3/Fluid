@@ -440,5 +440,3 @@ class BooleanNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertTrue(\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(new \stdClass()));
 	}
 }
-
-?>

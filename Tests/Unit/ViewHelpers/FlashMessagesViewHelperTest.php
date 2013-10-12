@@ -103,5 +103,3 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 		$this->viewHelper->render();
 	}
 }
-
-?>

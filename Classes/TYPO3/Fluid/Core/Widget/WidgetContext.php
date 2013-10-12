@@ -190,4 +190,3 @@ class WidgetContext {
 		return array('widgetIdentifier', 'ajaxWidgetIdentifier', 'ajaxWidgetConfiguration', 'controllerObjectName');
 	}
 }
-?>

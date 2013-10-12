@@ -680,5 +680,3 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser->_call('textHandler', $mockState, 'string');
 	}
 }
-
-?>

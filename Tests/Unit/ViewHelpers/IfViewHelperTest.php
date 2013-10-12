@@ -55,5 +55,3 @@ class IfViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 		$this->assertEquals('foo', $actualResult);
 	}
 }
-
-?>

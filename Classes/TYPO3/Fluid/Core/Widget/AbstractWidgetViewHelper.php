@@ -244,5 +244,3 @@ abstract class AbstractWidgetViewHelper extends AbstractViewHelper implements Ch
 	}
 
 }
-
-?>

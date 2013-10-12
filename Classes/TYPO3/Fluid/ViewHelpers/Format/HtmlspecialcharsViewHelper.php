@@ -86,5 +86,3 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper implements Compilabl
 				$valueVariableName, $valueVariableName, $valueVariableName, $argumentsVariableName, $argumentsVariableName, $argumentsVariableName);
 	}
 }
-
-?>

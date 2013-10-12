@@ -98,5 +98,3 @@ class EscapeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($this->mockNode, $actualResult);
 	}
 }
-
-?>

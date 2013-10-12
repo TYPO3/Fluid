@@ -472,4 +472,3 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	}
 
 }
-?>

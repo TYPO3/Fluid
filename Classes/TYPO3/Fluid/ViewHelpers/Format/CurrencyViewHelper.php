@@ -126,5 +126,3 @@ class CurrencyViewHelper extends AbstractViewHelper {
 		return $this->numberFormatter->formatCurrencyNumber($stringToFormat, $useLocale, $currencySign);
 	}
 }
-
-?>

@@ -56,5 +56,3 @@ class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('12300', $actualResult);
 	}
 }
-
-?>

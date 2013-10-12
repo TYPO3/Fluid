@@ -80,4 +80,3 @@ class IfAuthenticatedViewHelper extends AbstractConditionViewHelper {
 		return $this->renderElseChild();
 	}
 }
-?>

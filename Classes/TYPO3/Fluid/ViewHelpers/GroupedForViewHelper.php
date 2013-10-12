@@ -143,5 +143,3 @@ class GroupedForViewHelper extends AbstractViewHelper {
 		return $groups;
 	}
 }
-
-?>

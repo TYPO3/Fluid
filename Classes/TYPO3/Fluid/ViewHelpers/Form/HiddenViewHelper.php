@@ -65,5 +65,3 @@ class HiddenViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

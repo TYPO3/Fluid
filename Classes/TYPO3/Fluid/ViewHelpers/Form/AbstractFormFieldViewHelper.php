@@ -274,5 +274,3 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 		}
 	}
 }
-
-?>

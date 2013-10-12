@@ -174,5 +174,3 @@ class DateViewHelper extends ViewHelper\AbstractViewHelper {
 		return $return;
 	}
 }
-
-?>

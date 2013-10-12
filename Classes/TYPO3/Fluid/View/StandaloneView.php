@@ -418,4 +418,3 @@ class StandaloneView extends AbstractTemplateView {
 		return $templateIdentifier;
 	}
 }
-?>

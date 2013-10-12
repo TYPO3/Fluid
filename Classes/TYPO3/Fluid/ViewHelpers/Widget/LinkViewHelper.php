@@ -150,5 +150,3 @@ class LinkViewHelper extends AbstractTagBasedViewHelper {
 		return $uri;
 	}
 }
-
-?>

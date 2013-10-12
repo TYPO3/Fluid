@@ -367,5 +367,3 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 		}
 	}
 }
-
-?>

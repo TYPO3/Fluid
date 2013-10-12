@@ -114,5 +114,3 @@ class CycleViewHelper extends AbstractViewHelper {
 		$this->currentCycleIndex = 0;
 	}
 }
-
-?>

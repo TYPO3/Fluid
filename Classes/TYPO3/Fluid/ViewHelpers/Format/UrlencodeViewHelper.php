@@ -66,5 +66,3 @@ class UrlencodeViewHelper extends AbstractViewHelper {
 		throw new ViewHelper\Exception('This ViewHelper works with values that are of type string or objects that implement a __toString method. You provided "' . is_object($value) ? get_class($value) : gettype($value) . '"', 1359389241);
 	}
 }
-
-?>

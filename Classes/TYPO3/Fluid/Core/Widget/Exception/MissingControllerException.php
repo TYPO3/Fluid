@@ -18,4 +18,3 @@ use TYPO3\Fluid\Core\Widget;
  */
 class MissingControllerException extends Widget\Exception {
 }
-?>

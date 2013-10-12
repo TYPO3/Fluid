@@ -91,5 +91,3 @@ class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($view, $this->viewHelperVariableContainer->getView());
 	}
 }
-
-?>

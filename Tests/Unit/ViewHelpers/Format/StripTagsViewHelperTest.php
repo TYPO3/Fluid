@@ -81,5 +81,3 @@ class StripTagsViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($source, $actualResult);
 	}
 }
-
-?>

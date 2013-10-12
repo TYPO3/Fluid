@@ -70,6 +70,3 @@ class DebugViewHelper extends AbstractViewHelper {
 		return $output;
 	}
 }
-
-
-?>

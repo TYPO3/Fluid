@@ -92,5 +92,3 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	}
 
 }
-
-?>

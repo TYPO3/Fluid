@@ -99,4 +99,3 @@ class Escape implements InterceptorInterface {
 		);
 	}
 }
-?>

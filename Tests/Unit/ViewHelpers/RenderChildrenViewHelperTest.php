@@ -87,4 +87,3 @@ class RenderChildrenViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBa
 		$this->viewHelper->render();
 	}
 }
-?>

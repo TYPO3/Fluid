@@ -49,5 +49,3 @@ interface NodeInterface {
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext);
 }
-
-?>

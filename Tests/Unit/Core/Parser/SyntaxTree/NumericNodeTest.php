@@ -52,7 +52,3 @@ class NumericNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$node->addChildNode(clone $node);
 	}
 }
-
-
-
-?>

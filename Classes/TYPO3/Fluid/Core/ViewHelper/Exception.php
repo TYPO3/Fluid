@@ -18,4 +18,3 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  */
 class Exception extends \TYPO3\Fluid\Core\Exception {
 }
-?>

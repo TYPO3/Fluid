@@ -61,5 +61,3 @@ class DocumentationCommandController extends CommandController {
 		}
 	}
 }
-
-?>

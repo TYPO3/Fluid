@@ -31,5 +31,3 @@ class ThenViewHelper extends AbstractViewHelper {
 		return $this->renderChildren();
 	}
 }
-
-?>

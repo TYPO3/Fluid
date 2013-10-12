@@ -104,5 +104,3 @@ interface CompilableInterface {
 	 */
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, AbstractNode $syntaxTreeNode, TemplateCompiler $templateCompiler);
 }
-
-?>

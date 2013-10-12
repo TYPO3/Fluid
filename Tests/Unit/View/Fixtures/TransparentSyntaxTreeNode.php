@@ -21,5 +21,3 @@ class TransparentSyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\Abst
 	public function evaluate(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext) {
 	}
 }
-
-?>

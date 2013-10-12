@@ -49,5 +49,3 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 		$this->viewHelper->render('switchExpression');
 	}
 }
-
-?>

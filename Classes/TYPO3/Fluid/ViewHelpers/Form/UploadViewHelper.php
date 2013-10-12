@@ -120,6 +120,3 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 		return $this->propertyMapper->convert($resourceObject, 'TYPO3\Flow\Resource\Resource');
 	}
 }
-
-
-?>

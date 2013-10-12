@@ -82,4 +82,3 @@ class AutocompleteController extends AbstractWidgetController {
 		return json_encode($output);
 	}
 }
-?>

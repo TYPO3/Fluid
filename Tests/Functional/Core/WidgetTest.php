@@ -70,4 +70,3 @@ class WidgetTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	}
 
 }
-?>

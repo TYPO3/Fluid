@@ -76,5 +76,3 @@ class PasswordViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$this->viewHelper->render();
 	}
 }
-
-?>

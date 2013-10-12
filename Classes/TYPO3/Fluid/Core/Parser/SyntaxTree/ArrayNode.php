@@ -62,5 +62,3 @@ class ArrayNode extends AbstractNode {
 		return $this->internalArray;
 	}
 }
-
-?>

@@ -152,5 +152,3 @@ class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 		$this->assertEquals('ElseArgument', $actualResult);
 	}
 }
-
-?>

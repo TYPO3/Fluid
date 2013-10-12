@@ -132,5 +132,3 @@ class BytesViewHelperTest extends UnitTestCase {
 		$this->assertEquals('12 KB', $actualResult);
 	}
 }
-
-?>

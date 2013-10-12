@@ -100,5 +100,3 @@ abstract class AbstractFormViewHelper extends AbstractTagBasedViewHelper {
 		$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formFieldNames', $formFieldNames);
 	}
 }
-
-?>

@@ -20,5 +20,3 @@ use TYPO3\Fluid\View;
  */
 class InvalidSectionException extends View\Exception {
 }
-
-?>

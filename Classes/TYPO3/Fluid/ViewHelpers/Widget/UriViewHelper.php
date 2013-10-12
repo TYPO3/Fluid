@@ -126,5 +126,3 @@ class UriViewHelper extends AbstractViewHelper {
 		return $uri;
 	}
 }
-
-?>

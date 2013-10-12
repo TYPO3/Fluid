@@ -121,6 +121,3 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 		$viewHelper->render('someAction', array(), NULL, NULL, NULL, '', '', array(), FALSE, FALSE, array(), TRUE);
 	}
 }
-
-
-?>

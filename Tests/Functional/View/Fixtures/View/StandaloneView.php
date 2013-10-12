@@ -35,4 +35,3 @@ class StandaloneView extends \TYPO3\Fluid\View\StandaloneView {
 		return parent::createIdentifierForFile($pathAndFilename, $prefix);
 	}
 }
-?>

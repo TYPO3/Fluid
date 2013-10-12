@@ -18,5 +18,3 @@ namespace TYPO3\Fluid\Core;
  */
 class Exception extends \TYPO3\Fluid\Exception {
 }
-
-?>

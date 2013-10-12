@@ -36,5 +36,3 @@ class PrintfViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('foo 123 bar foo', $actualResult);
 	}
 }
-
-?>

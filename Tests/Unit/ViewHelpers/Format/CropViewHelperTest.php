@@ -75,4 +75,3 @@ class CropViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('', $actualResult);
 	}
 }
-?>

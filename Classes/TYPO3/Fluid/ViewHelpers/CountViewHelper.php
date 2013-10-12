@@ -60,5 +60,3 @@ class CountViewHelper extends AbstractViewHelper {
 		return count($subject);
 	}
 }
-
-?>

@@ -108,6 +108,3 @@ class ActionViewHelper extends AbstractTagBasedViewHelper {
 		return $this->tag->render();
 	}
 }
-
-
-?>

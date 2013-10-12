@@ -52,5 +52,3 @@ class RawViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($childNodes, $actualResult);
 	}
 }
-
-?>

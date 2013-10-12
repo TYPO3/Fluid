@@ -123,5 +123,3 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 		$this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
 	}
 }
-
-?>

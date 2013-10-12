@@ -124,5 +124,3 @@ class RenderingContext implements RenderingContextInterface {
 		return $this->viewHelperVariableContainer;
 	}
 }
-
-?>

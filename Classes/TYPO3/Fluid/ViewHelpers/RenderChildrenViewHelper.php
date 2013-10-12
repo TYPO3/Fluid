@@ -105,4 +105,3 @@ class RenderChildrenViewHelper extends AbstractViewHelper {
 		}
 	}
 }
-?>

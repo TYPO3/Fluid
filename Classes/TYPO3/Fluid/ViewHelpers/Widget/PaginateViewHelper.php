@@ -65,5 +65,3 @@ class PaginateViewHelper extends AbstractWidgetViewHelper {
 		return $response->getContent();
 	}
 }
-
-?>

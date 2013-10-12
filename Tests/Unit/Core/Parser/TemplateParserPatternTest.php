@@ -353,5 +353,3 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		return str_replace('NAMESPACE', implode('|', $namespace), $regularExpression);
 	}
 }
-
-?>

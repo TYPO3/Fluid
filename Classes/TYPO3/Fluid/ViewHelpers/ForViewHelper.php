@@ -138,5 +138,3 @@ class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
 		return $output;
 	}
 }
-
-?>

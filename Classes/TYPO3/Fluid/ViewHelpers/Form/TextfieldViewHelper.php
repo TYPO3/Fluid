@@ -80,5 +80,3 @@ class TextfieldViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

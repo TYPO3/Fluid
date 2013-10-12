@@ -70,5 +70,3 @@ class AjaxWidgetContextHolder {
 		$this->widgetContexts[$ajaxWidgetId] = $widgetContext;
 	}
 }
-
-?>

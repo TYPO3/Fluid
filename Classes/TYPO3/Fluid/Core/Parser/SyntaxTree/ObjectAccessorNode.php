@@ -104,4 +104,3 @@ class ObjectAccessorNode extends AbstractNode {
 		return $subject;
 	}
 }
-?>

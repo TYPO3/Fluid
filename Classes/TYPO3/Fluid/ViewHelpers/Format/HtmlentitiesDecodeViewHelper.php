@@ -66,5 +66,3 @@ class HtmlentitiesDecodeViewHelper extends AbstractViewHelper {
 		return html_entity_decode($value, $flags, $encoding);
 	}
 }
-
-?>

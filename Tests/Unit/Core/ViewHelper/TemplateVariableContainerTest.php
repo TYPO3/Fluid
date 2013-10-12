@@ -184,5 +184,3 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->variableContainer->add(strtoupper($identifier), 'foo');
 	}
 }
-
-?>

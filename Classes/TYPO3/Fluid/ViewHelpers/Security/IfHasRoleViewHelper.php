@@ -91,4 +91,3 @@ class IfHasRoleViewHelper extends AbstractConditionViewHelper {
 		}
 	}
 }
-?>

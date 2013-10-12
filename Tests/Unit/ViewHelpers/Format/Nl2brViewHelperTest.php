@@ -46,5 +46,3 @@ class Nl2brViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('Line 1<br />' . chr(13) . chr(10) . 'Line 2', $actualResult);
 	}
 }
-
-?>

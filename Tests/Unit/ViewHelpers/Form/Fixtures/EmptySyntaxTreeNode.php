@@ -20,5 +20,3 @@ class EmptySyntaxTreeNode extends \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelper
 
 	}
 }
-
-?>

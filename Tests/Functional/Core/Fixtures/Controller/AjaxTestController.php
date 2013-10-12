@@ -38,4 +38,3 @@ class AjaxTestController extends ActionController {
 	}
 
 }
-?>

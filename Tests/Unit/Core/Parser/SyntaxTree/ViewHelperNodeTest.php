@@ -156,5 +156,3 @@ class ViewHelperNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelperNode->evaluate($this->renderingContext);
 	}
 }
-
-?>

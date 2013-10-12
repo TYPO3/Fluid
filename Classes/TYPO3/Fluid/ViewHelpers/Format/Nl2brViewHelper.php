@@ -48,5 +48,3 @@ class Nl2brViewHelper extends AbstractViewHelper {
 		return nl2br($content);
 	}
 }
-
-?>

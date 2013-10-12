@@ -46,5 +46,3 @@ class AbstractNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($this->abstractNode->getChildNodes(), array($this->childNode));
 	}
 }
-
-?>

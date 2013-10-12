@@ -40,6 +40,3 @@ class EmailViewHelper extends AbstractViewHelper {
 		return 'mailto:' . $email;
 	}
 }
-
-
-?>

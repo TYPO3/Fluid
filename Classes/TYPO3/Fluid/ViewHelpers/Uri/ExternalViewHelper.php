@@ -51,5 +51,3 @@ class ExternalViewHelper extends AbstractViewHelper {
 		return $uri;
 	}
 }
-
-?>

@@ -63,5 +63,3 @@ class ParsingStateTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
 	}
 }
-
-?>

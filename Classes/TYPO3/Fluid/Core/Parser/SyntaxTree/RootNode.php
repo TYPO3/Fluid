@@ -28,5 +28,3 @@ class RootNode extends AbstractNode {
 		return $this->evaluateChildNodes($renderingContext);
 	}
 }
-
-?>

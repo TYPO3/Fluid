@@ -30,5 +30,3 @@ interface RenderingContextAwareInterface {
 	public function setRenderingContext(RenderingContextInterface $renderingContext);
 
 }
-
-?>

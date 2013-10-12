@@ -86,4 +86,3 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 
 	// TOKEN-2
 }
-?>

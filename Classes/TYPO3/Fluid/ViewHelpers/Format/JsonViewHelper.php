@@ -73,4 +73,3 @@ class JsonViewHelper extends AbstractViewHelper {
 		return json_encode($value, $options);
 	}
 }
-?>

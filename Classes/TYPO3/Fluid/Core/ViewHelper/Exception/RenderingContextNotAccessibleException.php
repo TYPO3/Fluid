@@ -20,5 +20,3 @@ use TYPO3\Fluid\Core\ViewHelper;
  */
 class RenderingContextNotAccessibleException extends ViewHelper\Exception {
 }
-
-?>

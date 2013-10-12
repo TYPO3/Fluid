@@ -25,5 +25,3 @@ class Package extends BasePackage {
 	protected $protected = TRUE;
 
 }
-
-?>

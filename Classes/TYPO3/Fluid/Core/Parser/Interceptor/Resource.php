@@ -145,4 +145,3 @@ class Resource implements InterceptorInterface {
 		);
 	}
 }
-?>

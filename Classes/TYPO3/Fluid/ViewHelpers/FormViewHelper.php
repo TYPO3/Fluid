@@ -490,4 +490,3 @@ class FormViewHelper extends AbstractFormViewHelper {
 		return '<input type="hidden" name="__csrfToken" value="' . htmlspecialchars($csrfToken) . '" />' . chr(10);
 	}
 }
-?>

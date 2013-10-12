@@ -538,5 +538,3 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$formViewHelper->_call('renderHiddenFieldForEmptyValue');
 	}
 }
-
-?>

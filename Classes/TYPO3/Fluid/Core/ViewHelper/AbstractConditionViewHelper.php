@@ -160,5 +160,3 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper implements
 		return TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION;
 	}
 }
-
-?>

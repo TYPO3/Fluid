@@ -122,4 +122,3 @@ class CaseViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($expected, $viewHelper->render($input, $mode), sprintf('The conversion with mode "%s" did not perform as expected.', $mode));
 	}
 }
-?>

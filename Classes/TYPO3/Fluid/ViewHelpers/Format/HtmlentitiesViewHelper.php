@@ -69,5 +69,3 @@ class HtmlentitiesViewHelper extends AbstractViewHelper {
 		return htmlentities($value, $flags, $encoding, $doubleEncode);
 	}
 }
-
-?>

@@ -134,4 +134,3 @@ class CaseViewHelper extends AbstractViewHelper {
 		return $output;
 	}
 }
-?>

@@ -53,4 +53,3 @@ class AjaxWidgetContextHolderTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$ajaxWidgetContextHolder->get(42);
 	}
 }
-?>

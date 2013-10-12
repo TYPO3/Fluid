@@ -123,4 +123,3 @@ class XsdGenerator extends AbstractGenerator {
 		$this->addChildWithCData($xsdAnnotation, 'xsd:documentation', $documentation);
 	}
 }
-?>

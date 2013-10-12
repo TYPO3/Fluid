@@ -37,7 +37,3 @@ class SectionViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
 	}
 }
-
-
-
-?>

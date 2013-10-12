@@ -84,5 +84,3 @@ class ActionViewHelper extends AbstractViewHelper {
 		return $uri;
 	}
 }
-
-?>

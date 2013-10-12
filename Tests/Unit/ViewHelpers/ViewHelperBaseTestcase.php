@@ -98,5 +98,3 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 		}
 	}
 }
-
-?>

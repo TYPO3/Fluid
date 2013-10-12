@@ -352,5 +352,3 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->assertEquals('', $this->browser->getCrawler()->filterXPath('//input[@id="subCategory_bar"]')->attr('checked'));
 	}
 }
-
-?>

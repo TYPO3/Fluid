@@ -77,5 +77,3 @@ class BytesViewHelper extends AbstractViewHelper {
 	}
 
 }
-
-?>

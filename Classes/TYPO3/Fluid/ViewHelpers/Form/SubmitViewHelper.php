@@ -69,5 +69,3 @@ class SubmitViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

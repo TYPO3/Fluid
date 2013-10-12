@@ -124,5 +124,3 @@ class SectionViewHelper extends AbstractViewHelper implements PostParseInterface
 		return '\'\'';
 	}
 }
-
-?>

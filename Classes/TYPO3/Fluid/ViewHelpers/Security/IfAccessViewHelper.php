@@ -95,5 +95,3 @@ class IfAccessViewHelper extends AbstractConditionViewHelper {
 		return TRUE;
 	}
 }
-
-?>

@@ -64,5 +64,3 @@ class StripTagsViewHelper extends AbstractViewHelper {
 		return strip_tags($value);
 	}
 }
-
-?>

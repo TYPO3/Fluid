@@ -70,5 +70,3 @@ class LayoutViewHelper extends AbstractViewHelper implements PostParseInterface 
 	public function render() {
 	}
 }
-
-?>

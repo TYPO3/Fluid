@@ -118,5 +118,3 @@ class HtmlentitiesViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($source, $actualResult);
 	}
 }
-
-?>

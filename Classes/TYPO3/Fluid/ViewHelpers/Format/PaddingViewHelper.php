@@ -66,5 +66,3 @@ class PaddingViewHelper extends AbstractViewHelper {
 		return str_pad($string, $padLength, $padString, $padTypes[$padType]);
 	}
 }
-
-?>

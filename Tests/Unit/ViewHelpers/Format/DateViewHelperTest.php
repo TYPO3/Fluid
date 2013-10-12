@@ -128,5 +128,3 @@ class DateViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->render(new \DateTime(), NULL, TRUE);
 	}
 }
-
-?>

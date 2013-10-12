@@ -206,5 +206,3 @@ class TagBuilderTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('', $tagBuilder->render());
 	}
 }
-
-?>

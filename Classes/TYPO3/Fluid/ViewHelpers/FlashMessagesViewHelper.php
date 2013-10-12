@@ -141,4 +141,3 @@ class FlashMessagesViewHelper extends AbstractTagBasedViewHelper {
 		return $content;
 	}
 }
-?>

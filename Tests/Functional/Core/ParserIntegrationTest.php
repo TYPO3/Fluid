@@ -63,4 +63,3 @@ class ParserIntegrationTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$this->assertSame($expected, $actual);
 	}
 }
-?>

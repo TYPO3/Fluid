@@ -40,5 +40,3 @@ class EmailViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$this->assertEquals('mailto:some@email.tld', $actualResult);
 	}
 }
-
-?>

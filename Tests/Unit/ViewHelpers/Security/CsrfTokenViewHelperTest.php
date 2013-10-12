@@ -32,5 +32,3 @@ class CsrfTokenViewHelperTest extends UnitTestCase {
 		$this->assertEquals('TheCsrfToken', $actualResult);
 	}
 }
-
-?>

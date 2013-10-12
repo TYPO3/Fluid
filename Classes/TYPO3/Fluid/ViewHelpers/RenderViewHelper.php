@@ -107,5 +107,3 @@ class RenderViewHelper extends AbstractViewHelper {
 		return $arguments;
 	}
 }
-
-?>

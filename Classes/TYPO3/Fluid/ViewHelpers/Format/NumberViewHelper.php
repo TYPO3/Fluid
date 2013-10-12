@@ -52,5 +52,3 @@ class NumberViewHelper extends AbstractViewHelper {
 		return number_format($stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
 	}
 }
-
-?>

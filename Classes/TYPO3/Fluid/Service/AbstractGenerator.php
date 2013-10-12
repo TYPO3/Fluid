@@ -113,4 +113,3 @@ abstract class AbstractGenerator {
 	}
 
 }
-?>

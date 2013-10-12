@@ -73,5 +73,3 @@ class ExternalViewHelper extends AbstractTagBasedViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

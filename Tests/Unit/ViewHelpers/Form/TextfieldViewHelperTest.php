@@ -76,5 +76,3 @@ class TextfieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\F
 		$this->viewHelper->render();
 	}
 }
-
-?>

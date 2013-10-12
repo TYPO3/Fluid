@@ -125,4 +125,3 @@ class SwitchViewHelper extends AbstractViewHelper implements ChildNodeAccessInte
 		}
 	}
 }
-?>

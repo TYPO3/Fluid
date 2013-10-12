@@ -413,5 +413,3 @@ EOD;
 		return '$' . $prefix . $this->variableCounter++;
 	}
 }
-
-?>

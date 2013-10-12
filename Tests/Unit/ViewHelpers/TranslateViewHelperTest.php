@@ -109,5 +109,3 @@ class TranslateViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 		$this->assertEquals('some.label', $result);
 	}
 }
-
-?>

@@ -123,5 +123,3 @@ class CycleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcas
 		$this->viewHelper->render($traversableObject, 'innerVariable');
 	}
 }
-
-?>

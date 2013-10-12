@@ -69,5 +69,3 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 		$this->assertFalse($viewHelper->_call('hasAccessToResource', 'myResource'));
 	}
 }
-
-?>

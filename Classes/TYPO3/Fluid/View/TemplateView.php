@@ -516,5 +516,3 @@ class TemplateView extends AbstractTemplateView {
 		return $templateIdentifier;
 	}
 }
-
-?>

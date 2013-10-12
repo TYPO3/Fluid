@@ -97,5 +97,3 @@ class IdentifierViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTe
 		$this->viewHelper->render($notAnObject);
 	}
 }
-
-?>

@@ -83,5 +83,3 @@ abstract class AbstractNode implements NodeInterface {
 		$this->childNodes[] = $childNode;
 	}
 }
-
-?>

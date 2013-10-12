@@ -54,5 +54,3 @@ abstract class AbstractWidgetController extends ActionController {
 	}
 
 }
-
-?>

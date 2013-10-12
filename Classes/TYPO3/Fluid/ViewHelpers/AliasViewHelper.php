@@ -64,5 +64,3 @@ class AliasViewHelper extends AbstractViewHelper {
 		return $output;
 	}
 }
-
-?>

@@ -56,4 +56,3 @@ class ObjectAccessorNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	}
 
 }
-?>

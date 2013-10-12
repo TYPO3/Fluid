@@ -77,5 +77,3 @@ class ButtonViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

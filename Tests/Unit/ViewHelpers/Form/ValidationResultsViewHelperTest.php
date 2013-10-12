@@ -85,4 +85,3 @@ class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	}
 
 }
-?>

@@ -20,5 +20,3 @@ use TYPO3\Fluid;
  */
 class Exception extends Fluid\Exception {
 }
-
-?>

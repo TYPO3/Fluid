@@ -52,4 +52,3 @@ class AbstractWidgetControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals('myConfiguration', $widgetConfiguration);
 	}
 }
-?>

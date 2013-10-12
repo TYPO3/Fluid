@@ -68,5 +68,3 @@ class PasswordViewHelper extends AbstractFormFieldViewHelper {
 		return $this->tag->render();
 	}
 }
-
-?>

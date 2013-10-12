@@ -67,5 +67,3 @@ class RawViewHelper extends AbstractViewHelper {
 		}
 	}
 }
-
-?>

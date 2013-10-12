@@ -485,5 +485,3 @@ abstract class AbstractTemplateView extends AbstractView {
 		return TRUE;
 	}
 }
-
-?>

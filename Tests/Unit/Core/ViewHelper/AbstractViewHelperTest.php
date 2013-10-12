@@ -288,5 +288,3 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertSame($viewHelper->_get('controllerContext'), $controllerContext);
 	}
 }
-
-?>
