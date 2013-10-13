@@ -13,7 +13,6 @@ namespace TYPO3\Fluid\Tests\Functional\View;
 
 use TYPO3\Flow\Http\Request;
 use TYPO3\Flow\Http\Uri;
-use TYPO3\Flow\Mvc\ActionRequest;
 
 /**
  * Testcase for Standalone View

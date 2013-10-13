@@ -11,10 +11,6 @@ namespace TYPO3\Fluid\Tests\Functional\Form;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Http\Request;
-use TYPO3\Flow\Http\Uri;
-use TYPO3\Flow\Mvc\ActionRequest;
-
 /**
  * Testcase for Standalone View
  *
