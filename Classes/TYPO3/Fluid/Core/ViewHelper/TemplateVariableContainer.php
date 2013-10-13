@@ -83,13 +83,11 @@ class TemplateVariableContainer implements \ArrayAccess {
 		switch ($identifier) {
 			case '_all':
 				return $this->variables;
-			break;
 
 			case 'true':
 			case 'on':
 			case 'yes':
 				return TRUE;
-			break;
 
 			case 'false':
 			case 'off':

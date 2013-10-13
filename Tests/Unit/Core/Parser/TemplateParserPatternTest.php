@@ -58,7 +58,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$expected = array('Hallo ', '<f:testing>', '<![CDATA[<f:notparsed>]]>', '</f:testing>');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly if there is a CDATA section the parser should ignore.');
 
-		$veryLongViewHelper ='<f:form enctype="multipart/form-data" onsubmit="void(0)" onreset="void(0)" action="someAction" arguments="{arg1: \'val1\', arg2: \'val2\'}" controller="someController" package="YourCompanyName.somePackage" subpackage="YourCompanyName.someSubpackage" section="someSection" format="txt" additionalParams="{param1: \'val1\', param2: \'val2\'}" absolute="true" addQueryString="true" argumentsToBeExcludedFromQueryString="{0: \'foo\'}" />';
+		$veryLongViewHelper = '<f:form enctype="multipart/form-data" onsubmit="void(0)" onreset="void(0)" action="someAction" arguments="{arg1: \'val1\', arg2: \'val2\'}" controller="someController" package="YourCompanyName.somePackage" subpackage="YourCompanyName.someSubpackage" section="someSection" format="txt" additionalParams="{param1: \'val1\', param2: \'val2\'}" absolute="true" addQueryString="true" argumentsToBeExcludedFromQueryString="{0: \'foo\'}" />';
 		$source = $veryLongViewHelper . 'Begin' . $veryLongViewHelper . 'End';
 		$expected = array($veryLongViewHelper, 'Begin', $veryLongViewHelper, 'End');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly if the VH has lots of arguments.');
@@ -196,7 +196,6 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$expected = array('abc ', '{bla.blubb->f:for(param:42)}', ' def');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(4)');
 
-
 		$source = 'abc {f:for(bla:"post{{")} def';
 		$expected = array('abc ', '{f:for(bla:"post{{")}', ' def');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(5)');
@@ -267,7 +266,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals(preg_match($pattern, '{bla-blubb.recursive_value->f:for()->f:for()}'), 1, 'Object accessor not identified if there is a recursive ViewHelper inside!');
 		$this->assertEquals(preg_match($pattern, '{f:for(arg1:arg1value, arg2: "bla\"blubb")}'), 1, 'Object accessor not identified if there is an argument inside!');
 		$this->assertEquals(preg_match($pattern, '{dash:value}'), 0, 'Object accessor identified, but was array!');
-		//$this->assertEquals(preg_match($pattern, '{}'), 0, 'Object accessor identified, and it was empty!');
+		// $this->assertEquals(preg_match($pattern, '{}'), 0, 'Object accessor identified, and it was empty!');
 	}
 
 	/**

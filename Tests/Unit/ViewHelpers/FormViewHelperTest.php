@@ -225,7 +225,7 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper->expects($this->once())->method('renderEmptyHiddenFields')->will($this->returnValue('emptyHiddenFields'));
 		$viewHelper->expects($this->once())->method('renderTrustedPropertiesField')->will($this->returnValue('trustedPropertiesField'));
 
-		$expectedResult = chr(10) . '<div style="display: none">' . 'hiddenIdentityFieldadditionalIdentityFieldshiddenReferrerFieldsemptyHiddenFieldstrustedPropertiesField' . chr(10) . '</div>' . chr(10) . 'formContent';
+		$expectedResult = chr(10) . '<div style="display: none">hiddenIdentityFieldadditionalIdentityFieldshiddenReferrerFieldsemptyHiddenFieldstrustedPropertiesField' . chr(10) . '</div>' . chr(10) . 'formContent';
 		$this->tagBuilder->expects($this->once())->method('setContent')->with($expectedResult);
 
 		$viewHelper->render('index');

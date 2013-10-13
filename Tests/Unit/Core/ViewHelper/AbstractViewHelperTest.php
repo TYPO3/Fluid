@@ -188,8 +188,8 @@ class AbstractViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$viewHelper->injectReflectionService($this->mockReflectionService);
 
 		$expected = array(
-			'param1' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'integer', '', TRUE, null, TRUE),
-			'param2' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'array', '', TRUE, null, TRUE),
+			'param1' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param1', 'integer', '', TRUE, NULL, TRUE),
+			'param2' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param2', 'array', '', TRUE, NULL, TRUE),
 			'param3' => new \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition('param3', 'string', '', FALSE, 'default', TRUE),
 		);
 

@@ -117,7 +117,7 @@ class CurrencyViewHelper extends AbstractViewHelper {
 			try {
 				$useLocale = new I18n\Locale($locale);
 			} catch (I18n\Exception $exception) {
-				throw new InvalidVariableException('"' . $locale . '" is not a valid locale identifier.' , 1342610148, $exception);
+				throw new InvalidVariableException('"' . $locale . '" is not a valid locale identifier.', 1342610148, $exception);
 			}
 		} else {
 			$useLocale = $this->localizationService->getConfiguration()->getCurrentLocale();

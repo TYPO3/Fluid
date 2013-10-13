@@ -45,7 +45,7 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 			'@subpackage' => 'Tests\Functional\Form\Fixtures',
 			'@controller' => 'Form',
 			'@action' => 'index',
-			'@format' =>'html'
+			'@format' => 'html'
 		));
 		$route->setAppendExceedingArguments(TRUE);
 		$this->router->addRoute($route);

@@ -227,7 +227,7 @@ EOD;
 	protected function convertViewHelperNode(ViewHelperNode $node) {
 		$initializationPhpCode = '// Rendering ViewHelper ' . $node->getViewHelperClassName() . chr(10);
 
-			// Build up $arguments array
+		// Build up $arguments array
 		$argumentsVariableName = $this->variableName('arguments');
 		$initializationPhpCode .= sprintf('%s = array();', $argumentsVariableName) . chr(10);
 
@@ -246,12 +246,12 @@ EOD;
 			}
 		}
 
-			// Build up closure which renders the child nodes
+		// Build up closure which renders the child nodes
 		$renderChildrenClosureVariableName = $this->variableName('renderChildrenClosure');
 		$initializationPhpCode .= sprintf('%s = %s;', $renderChildrenClosureVariableName, $this->wrapChildNodesInClosure($node)) . chr(10);
 
 		if ($node->getUninitializedViewHelper() instanceof CompilableInterface) {
-				// ViewHelper is compilable
+			// ViewHelper is compilable
 			$viewHelperInitializationPhpCode = '';
 			$convertedViewHelperExecutionCode = $node->getUninitializedViewHelper()->compile($argumentsVariableName, $renderChildrenClosureVariableName, $viewHelperInitializationPhpCode, $node, $this);
 			$initializationPhpCode .= $viewHelperInitializationPhpCode;
@@ -263,7 +263,7 @@ EOD;
 			}
 		}
 
-			// ViewHelper is not compilable, so we need to instanciate it directly and render it.
+		// ViewHelper is not compilable, so we need to instanciate it directly and render it.
 		$viewHelperVariableName = $this->variableName('viewHelper');
 
 		$initializationPhpCode .= sprintf('%s = $self->getViewHelper(\'%s\', $renderingContext, \'%s\');', $viewHelperVariableName, $viewHelperVariableName, $node->getViewHelperClassName()) . chr(10);

@@ -97,10 +97,12 @@ class TranslateViewHelper extends AbstractViewHelper {
 			try {
 				$localeObject = new Locale($locale);
 			} catch (InvalidLocaleIdentifierException $e) {
-				throw new ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.' , 1279815885);
+				throw new ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.', 1279815885);
 			}
 		}
-		if ($package === NULL) $package = $this->controllerContext->getRequest()->getControllerPackageKey();
+		if ($package === NULL) {
+			$package = $this->controllerContext->getRequest()->getControllerPackageKey();
+		}
 		$originalLabel = $value === NULL ? $this->renderChildren() : $value;
 
 		if ($id === NULL) {

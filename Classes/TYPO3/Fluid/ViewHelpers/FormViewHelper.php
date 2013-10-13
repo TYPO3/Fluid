@@ -133,7 +133,7 @@ class FormViewHelper extends AbstractFormViewHelper {
 
 		$formContent = $this->renderChildren();
 
-			// wrap hidden field in div container in order to create XHTML valid output
+		// wrap hidden field in div container in order to create XHTML valid output
 		$content = chr(10) . '<div style="display: none">';
 		if (strtolower($this->arguments['method']) === 'get') {
 			$content .= $this->renderHiddenActionUriQueryParameters();
@@ -142,7 +142,7 @@ class FormViewHelper extends AbstractFormViewHelper {
 		$content .= $this->renderAdditionalIdentityFields();
 		$content .= $this->renderHiddenReferrerFields();
 		$content .= $this->renderEmptyHiddenFields();
-			// Render the trusted list of all properties after everything else has been rendered
+		// Render the trusted list of all properties after everything else has been rendered
 		$content .= $this->renderTrustedPropertiesField();
 		if (strtolower($this->arguments['method']) !== 'get') {
 			$content .= $this->renderCsrfTokenField();
@@ -278,8 +278,8 @@ class FormViewHelper extends AbstractFormViewHelper {
 
 		$arguments = $request->getArguments();
 		if ($argumentNamespace !== NULL && isset($arguments[$argumentNamespace])) {
-				// A sub request was there; thus we can unset the sub requests arguments,
-				// as they are transferred separately via the code block shown above.
+			// A sub request was there; thus we can unset the sub requests arguments,
+			// as they are transferred separately via the code block shown above.
 			unset($arguments[$argumentNamespace]);
 		}
 
@@ -292,7 +292,7 @@ class FormViewHelper extends AbstractFormViewHelper {
 		);
 
 		foreach ($referrer as $referrerKey => $referrerValue) {
-			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']' . '" value="' . htmlspecialchars($referrerValue) . '" />' . chr(10);
+			$result .= '<input type="hidden" name="__referrer[' . $referrerKey . ']" value="' . htmlspecialchars($referrerValue) . '" />' . chr(10);
 		}
 		return $result;
 	}

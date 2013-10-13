@@ -33,7 +33,7 @@ class BytesViewHelperTest extends UnitTestCase {
 	public function valueDataProvider() {
 		return array(
 
-				// invalid values
+			// invalid values
 			array(
 				'value' => 'invalid',
 				'decimals' => NULL,
@@ -56,7 +56,7 @@ class BytesViewHelperTest extends UnitTestCase {
 				'expected' => '0,00 B'
 			),
 
-				// valid values
+			// valid values
 			array(
 				'value' => 123,
 				'decimals' => NULL,

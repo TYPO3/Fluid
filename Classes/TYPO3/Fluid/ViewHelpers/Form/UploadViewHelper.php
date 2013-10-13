@@ -90,8 +90,8 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 			}
 			$filenameValue = $resourceObject->getFilename();
 			$resourcePointerValue = $resourceObject->getResourcePointer();
-			$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][filename]" value="' . htmlspecialchars($filenameValue) . '"' . $filenameIdAttribute . ' />';
-			$output .= '<input type="hidden" name="'. $this->getName() . '[submittedFile][resourcePointer]" value="' . htmlspecialchars($resourcePointerValue) . '"' . $resourcePointerIdAttribute . ' />';
+			$output .= '<input type="hidden" name="' . $this->getName() . '[submittedFile][filename]" value="' . htmlspecialchars($filenameValue) . '"' . $filenameIdAttribute . ' />';
+			$output .= '<input type="hidden" name="' . $this->getName() . '[submittedFile][resourcePointer]" value="' . htmlspecialchars($resourcePointerValue) . '"' . $resourcePointerIdAttribute . ' />';
 		}
 
 		$this->tag->addAttribute('type', 'file');

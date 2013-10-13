@@ -97,7 +97,7 @@ class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
 		}
 
 		if ($arguments['reverse'] === TRUE) {
-				// array_reverse only supports arrays
+			// array_reverse only supports arrays
 			if (is_object($arguments['each'])) {
 				/** @var $each \Traversable */
 				$each = $arguments['each'];

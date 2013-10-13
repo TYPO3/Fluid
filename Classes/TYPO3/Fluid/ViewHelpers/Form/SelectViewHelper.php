@@ -160,9 +160,9 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 
 		$this->setErrorClassAttribute();
 
-			// register field name for token generation.
-			// in case it is a multi-select, we need to register the field name
-			// as often as there are elements in the box
+		// register field name for token generation.
+		// in case it is a multi-select, we need to register the field name
+		// as often as there are elements in the box
 		if ($this->hasArgument('multiple') && $this->arguments['multiple'] !== '') {
 			$this->renderHiddenFieldForEmptyValue();
 			for ($i = 0; $i < count($options); $i++) {
@@ -215,7 +215,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 						if (method_exists($key, '__toString')) {
 							$key = (string)$key;
 						} else {
-							throw new ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.' , 1247827428);
+							throw new ViewHelper\Exception('Identifying value for object of class "' . get_class($value) . '" was an object.', 1247827428);
 						}
 					}
 				} elseif ($this->persistenceManager->getIdentifierByObject($value) !== NULL) {
@@ -223,7 +223,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 				} elseif (method_exists($value, '__toString')) {
 					$key = (string)$value;
 				} else {
-					throw new ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.' , 1247826696);
+					throw new ViewHelper\Exception('No identifying value for object of class "' . get_class($value) . '" found.', 1247826696);
 				}
 
 				if ($this->hasArgument('optionLabelField')) {
@@ -232,7 +232,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 						if (method_exists($value, '__toString')) {
 							$value = (string)$value;
 						} else {
-							throw new ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.' , 1247827553);
+							throw new ViewHelper\Exception('Label value for object of class "' . get_class($value) . '" was an object without a __toString() method.', 1247827553);
 						}
 					}
 				} elseif (method_exists($value, '__toString')) {
@@ -349,7 +349,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 			try {
 				$localeObject = new Locale($translationConfiguration['locale']);
 			} catch (InvalidLocaleIdentifierException $e) {
-				throw new ViewHelper\Exception('"' . $translationConfiguration['locale'] . '" is not a valid locale identifier.' , 1330013193);
+				throw new ViewHelper\Exception('"' . $translationConfiguration['locale'] . '" is not a valid locale identifier.', 1330013193);
 			}
 		} else {
 			$localeObject = NULL;

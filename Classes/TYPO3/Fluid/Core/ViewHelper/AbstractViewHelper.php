@@ -272,7 +272,7 @@ abstract class AbstractViewHelper {
 			if (!$this->objectManager->getContext()->isProduction()) {
 				throw $exception;
 			} else {
-				$this->systemLogger->log('An Exception was captured: '. $exception->getMessage() . '(' . $exception->getCode() . ')', LOG_ERR, 'TYPO3.Fluid', get_class($this));
+				$this->systemLogger->log('An Exception was captured: ' . $exception->getMessage() . '(' . $exception->getCode() . ')', LOG_ERR, 'TYPO3.Fluid', get_class($this));
 				return '';
 			}
 		}
@@ -447,7 +447,7 @@ abstract class AbstractViewHelper {
 	 * @return string rendered string, view helper specific
 	 * @api
 	 */
-	//abstract public function render();
+	// abstract public function render();
 
 	/**
 	 * Tests if the given $argumentName is set, and not NULL.

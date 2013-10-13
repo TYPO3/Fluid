@@ -409,7 +409,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 
 		$mockTemplateParser->_call('abortIfUnregisteredArgumentsExist', $expectedArguments, $actualArguments);
-			// dummy assertion to avoid "did not perform any assertions" error
+		// dummy assertion to avoid "did not perform any assertions" error
 		$this->assertTrue(TRUE);
 	}
 
@@ -443,7 +443,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 
 		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
-			// dummy assertion to avoid "did not perform any assertions" error
+		// dummy assertion to avoid "did not perform any assertions" error
 		$this->assertTrue(TRUE);
 	}
 

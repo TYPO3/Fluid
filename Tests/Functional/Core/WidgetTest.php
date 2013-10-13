@@ -31,7 +31,7 @@ class WidgetTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 			'@package' => 'TYPO3.Fluid',
 			'@subpackage' => 'Tests\Functional\Core\Fixtures',
 			'@action' => 'index',
-			'@format' =>'html'
+			'@format' => 'html'
 		));
 		$route->setAppendExceedingArguments(TRUE);
 		$this->router->addRoute($route);

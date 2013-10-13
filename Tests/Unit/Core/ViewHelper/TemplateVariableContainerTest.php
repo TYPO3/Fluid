@@ -169,7 +169,7 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @param string $identifier
 	 * @dataProvider reservedVariableNameDataProvider
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 **/
+	 */
 	public function attemptToGetReservedVariableInUncoveredLetterCaseThrowsException($identifier) {
 		$this->variableContainer->get(strtoupper($identifier));
 	}
@@ -179,7 +179,7 @@ class TemplateVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @param string $identifier
 	 * @dataProvider reservedVariableNameDataProvider
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 **/
+	 */
 	public function attemptToSetReservedVariableInUncoveredLetterCaseThrowsException($identifier) {
 		$this->variableContainer->add(strtoupper($identifier), 'foo');
 	}

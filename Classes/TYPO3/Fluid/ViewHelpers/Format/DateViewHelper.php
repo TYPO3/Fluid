@@ -159,7 +159,7 @@ class DateViewHelper extends ViewHelper\AbstractViewHelper {
 			try {
 				$useLocale = new I18n\Locale($locale);
 			} catch (I18n\Exception $exception) {
-				throw new ViewHelper\Exception\InvalidVariableException('"' . $locale . '" is not a valid locale identifier.' , 1342610148, $exception);
+				throw new ViewHelper\Exception\InvalidVariableException('"' . $locale . '" is not a valid locale identifier.', 1342610148, $exception);
 			}
 		} else {
 			$useLocale = $this->localizationService->getConfiguration()->getCurrentLocale();
@@ -168,7 +168,7 @@ class DateViewHelper extends ViewHelper\AbstractViewHelper {
 		try {
 			$return = $this->formatter->format($dateTime, $useLocale, $formatConfiguration);
 		} catch(I18n\Exception $exception) {
-			throw new ViewHelper\Exception(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()) , 1342610987, $exception);
+			throw new ViewHelper\Exception(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()), 1342610987, $exception);
 		}
 
 		return $return;

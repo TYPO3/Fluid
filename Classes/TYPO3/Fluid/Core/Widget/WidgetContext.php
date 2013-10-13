@@ -71,10 +71,12 @@ class WidgetContext {
 	 * The child nodes of the Widget ViewHelper.
 	 * Only available inside non-AJAX requests.
 	 *
+	 * TODO: rename to something more meaningful.
+	 *
 	 * @var RootNode
 	 * @Flow\Transient
 	 */
-	protected $viewHelperChildNodes; // TODO: rename to something more meaningful.
+	protected $viewHelperChildNodes;
 
 	/**
 	 * The rendering context of the ViewHelperChildNodes.

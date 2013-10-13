@@ -84,7 +84,7 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 				$propertyValue = $this->getPropertyValue();
 			}
 
-				// no type-safe comparison by intention
+			// no type-safe comparison by intention
 			$checked = $propertyValue == $valueAttribute;
 		}
 

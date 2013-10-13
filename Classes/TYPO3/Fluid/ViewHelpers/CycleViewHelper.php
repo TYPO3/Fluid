@@ -105,7 +105,7 @@ class CycleViewHelper extends AbstractViewHelper {
 	protected function initializeValues($values) {
 		if (is_object($values)) {
 			if (!$values instanceof \Traversable) {
-				throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface' , 1248728393);
+				throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
 			}
 			$this->values = iterator_to_array($values, FALSE);
 		} else {

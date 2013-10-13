@@ -383,7 +383,7 @@ class TemplateParser {
 		$matches = array();
 		preg_match_all(self::$SCAN_PATTERN_XMLNSDECLARATION, $templateString, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
-				// skip reserved "f" namespace identifier
+			// skip reserved "f" namespace identifier
 			if ($match['identifier'] === 'f') {
 				continue;
 			}
@@ -502,7 +502,7 @@ class TemplateParser {
 		}
 		$viewHelper = $this->objectManager->get($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
 
-			// The following three checks are only done *in an uncached template*, and not needed anymore in the cached version
+		// The following three checks are only done *in an uncached template*, and not needed anymore in the cached version
 		$expectedViewHelperArguments = $viewHelper->prepareArguments();
 		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $argumentsObjectTree);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $argumentsObjectTree);
@@ -516,7 +516,7 @@ class TemplateParser {
 			$state->setCompilable(FALSE);
 		}
 
-			// PostParse Facet
+		// PostParse Facet
 		if ($viewHelper instanceof PostParseInterface) {
 			// Don't just use $viewHelper::postParseEvent(...),
 			// as this will break with PHP < 5.3.
@@ -644,17 +644,17 @@ class TemplateParser {
 		$viewHelperString .= $additionalViewHelpersString;
 		$numberOfViewHelpers = 0;
 
-			// The following post-processing handles a case when there is only a ViewHelper, and no Object Accessor.
-			// Resolves bug #5107.
+		// The following post-processing handles a case when there is only a ViewHelper, and no Object Accessor.
+		// Resolves bug #5107.
 		if (strlen($delimiter) === 0 && strlen($viewHelperString) > 0) {
 			$viewHelperString = $objectAccessorString . $viewHelperString;
 			$objectAccessorString = '';
 		}
 
-			// ViewHelpers
+		// ViewHelpers
 		$matches = array();
 		if (strlen($viewHelperString) > 0 && preg_match_all(self::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
-				// The last ViewHelper has to be added first for correct chaining.
+			// The last ViewHelper has to be added first for correct chaining.
 			foreach (array_reverse($matches) as $singleMatch) {
 				if (strlen($singleMatch['ViewHelperArguments']) > 0) {
 					$arguments = $this->postProcessArgumentsForObjectAccessor($this->recursiveArrayHandler($singleMatch['ViewHelperArguments']));
@@ -666,7 +666,7 @@ class TemplateParser {
 			}
 		}
 
-			// Object Accessor
+		// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
 
 			/** @var $node ObjectAccessorNode */
@@ -676,8 +676,8 @@ class TemplateParser {
 			$state->getNodeFromStack()->addChildNode($node);
 		}
 
-			// Close ViewHelper Tags if needed.
-		for ($i=0; $i<$numberOfViewHelpers; $i++) {
+		// Close ViewHelper Tags if needed.
+		for ($i = 0; $i < $numberOfViewHelpers; $i++) {
 			$node = $state->popNodeFromStack();
 			$this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
 		}
@@ -693,10 +693,10 @@ class TemplateParser {
 	 */
 	protected function callInterceptor(NodeInterface &$node, $interceptionPoint, ParsingState $state) {
 		if ($this->configuration !== NULL) {
-				// $this->configuration is UNSET inside the arguments of a ViewHelper.
-				// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
-				// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
-				// TODO: Clean up this.
+			// $this->configuration is UNSET inside the arguments of a ViewHelper.
+			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
+			// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
+			// TODO: Clean up this.
 			$interceptors = $this->configuration->getInterceptors($interceptionPoint);
 			if (count($interceptors) > 0) {
 				/** @var $interceptor InterceptorInterface */
@@ -821,7 +821,7 @@ class TemplateParser {
 			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 				$this->objectAccessorHandler($state, $matchedVariables['Object'], $matchedVariables['Delimiter'], (isset($matchedVariables['ViewHelper']) ? $matchedVariables['ViewHelper'] : ''), (isset($matchedVariables['AdditionalViewHelpers']) ? $matchedVariables['AdditionalViewHelpers'] : ''));
 			} elseif ($context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS && preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0) {
-					// We only match arrays if we are INSIDE viewhelper arguments
+				// We only match arrays if we are INSIDE viewhelper arguments
 				$this->arrayHandler($state, $matchedVariables['Array']);
 			} else {
 				$this->textHandler($state, $section);
