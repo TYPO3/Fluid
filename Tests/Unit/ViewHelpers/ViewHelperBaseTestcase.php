@@ -10,6 +10,8 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
+use TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Base test class for testing view helpers
@@ -20,6 +22,16 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @var \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
+
+	/**
+	 * Mock contents of the $viewHelperVariableContainer in the format:
+	 * array(
+	 *  'Some\ViewHelper\Class' => array('key1' => 'value1', 'key2' => 'value2')
+	 * )
+	 *
+	 * @var array
+	 */
+	protected $viewHelperVariableContainerData = array();
 
 	/**
 	 * @var \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
@@ -61,6 +73,8 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function setUp() {
 		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$this->viewHelperVariableContainer->expects($this->any())->method('exists')->will($this->returnCallback(array($this, 'viewHelperVariableContainerExistsCallback')));
+		$this->viewHelperVariableContainer->expects($this->any())->method('get')->will($this->returnCallback(array($this, 'viewHelperVariableContainerGetCallback')));
 		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
 		$this->uriBuilder = $this->getMock('TYPO3\Flow\Mvc\Routing\UriBuilder');
 		$this->uriBuilder->expects($this->any())->method('reset')->will($this->returnValue($this->uriBuilder));
@@ -86,13 +100,31 @@ abstract class ViewHelperBaseTestcase extends \TYPO3\Flow\Tests\UnitTestCase {
 	}
 
 	/**
-	 * @param \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper
+	 * @param string $viewHelperName
+	 * @param string $key
+	 * @return boolean
+	 */
+	public function viewHelperVariableContainerExistsCallback($viewHelperName, $key) {
+		return isset($this->viewHelperVariableContainerData[$viewHelperName][$key]);
+	}
+
+	/**
+	 * @param string $viewHelperName
+	 * @param string $key
+	 * @return boolean
+	 */
+	public function viewHelperVariableContainerGetCallback($viewHelperName, $key) {
+		return $this->viewHelperVariableContainerData[$viewHelperName][$key];
+	}
+
+	/**
+	 * @param AbstractViewHelper $viewHelper
 	 * @return void
 	 */
-	protected function injectDependenciesIntoViewHelper(\TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $viewHelper) {
+	protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper) {
 		$viewHelper->setRenderingContext($this->renderingContext);
 		$viewHelper->setArguments($this->arguments);
-		if ($viewHelper instanceof \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper) {
+		if ($viewHelper instanceof AbstractTagBasedViewHelper) {
 			$viewHelper->injectTagBuilder($this->tagBuilder);
 		}
 	}

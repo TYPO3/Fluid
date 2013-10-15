@@ -117,8 +117,24 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$form['email']->setValue('test_noValidEmail');
 
 		$this->browser->submit($form);
+
 		$form = $this->browser->getForm();
 		$this->assertSame('f3-form-error', $this->browser->getCrawler()->filterXPath('//*[@id="email"]')->attr('class'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function valueOfNonObjectAccessorFieldsIsOverriddenBySubmittedValueIfValidationErrorsOccur() {
+		$this->browser->request('http://localhost/test/fluid/formobjects/check');
+		$form = $this->browser->getForm();
+
+		$form['email']->setValue('test_noValidEmail');
+
+		$this->browser->submit($form);
+
+		$form = $this->browser->getForm();
+		$this->assertSame('test_noValidEmail', $form['email']->getValue());
 	}
 
 	/**

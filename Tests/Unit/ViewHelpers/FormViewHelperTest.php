@@ -16,13 +16,14 @@ use TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface;
 use TYPO3\Flow\Security\Context;
 use TYPO3\Flow\Security\Cryptography\HashService;
 use TYPO3\Fluid\ViewHelpers\FormViewHelper;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  * Test for the Form view helper
  */
-class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class FormViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var HashService|\PHPUnit_Framework_MockObject_MockObject
@@ -152,6 +153,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$object = new \stdClass();
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren', 'renderHiddenIdentityField', 'getFormObjectName'), array(), '', FALSE);
 
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formFieldNames' => array(),
+			)
+		);
+
 		$this->arguments['object'] = $object;
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
@@ -173,6 +180,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
 		$viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue('formContent'));
+
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formFieldNames' => array(),
+			)
+		);
 
 		$expectedResult = chr(10) .
 			'<div style="display: none">' . chr(10) .
@@ -202,6 +215,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
 		$viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue('formContent'));
 
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formFieldNames' => array(),
+			)
+		);
+
 		$expectedResult = '<input type="hidden" name="foo" value="&lt;bar&gt;" />';
 		$this->tagBuilder->expects($this->once())->method('setContent')->with($this->stringContains($expectedResult));
 
@@ -219,6 +238,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
 		$viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue('formContent'));
+
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formFieldNames' => array(),
+			)
+		);
 
 		$expectedResult = chr(10) .
 			'<div style="display: none">' . chr(10) .
@@ -243,6 +268,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper->expects($this->once())->method('renderAdditionalIdentityFields');
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
+
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formFieldNames' => array(),
+			)
+		);
 
 		$viewHelper->render('index');
 	}
@@ -276,8 +307,11 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 			'object1[object2]' => '<input type="hidden" name="object1[object2][__identity]" value="42" />',
 			'object1[object2][subobject]' => '<input type="hidden" name="object1[object2][subobject][__identity]" value="21" />'
 		);
-		$this->viewHelperVariableContainer->expects($this->once())->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'additionalIdentityProperties')->will($this->returnValue($identityProperties));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'additionalIdentityProperties' => $identityProperties,
+			)
+		);
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
@@ -439,8 +473,11 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 	 */
 	public function renderEmptyHiddenFieldsRendersOneHiddenFieldPerEntry() {
 		$emptyHiddenFieldNames = array('fieldName1', 'fieldName2');
-		$this->viewHelperVariableContainer->expects($this->once())->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'emptyHiddenFieldNames')->will($this->returnValue($emptyHiddenFieldNames));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'emptyHiddenFieldNames' => $emptyHiddenFieldNames,
+			)
+		);
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
@@ -456,6 +493,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->_set('formActionUri', 'someUri');
+
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formFieldNames' => array(),
+			)
+		);
 
 		$viewHelper->render('index');
 		$this->assertNull($viewHelper->_get('formActionUri'));

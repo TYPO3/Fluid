@@ -116,8 +116,11 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 	public function prefixFieldNameReturnsGivenFieldNameIfFieldNamePrefixIsEmpty() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->viewHelperVariableContainer->expects($this->any())->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue(''));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'fieldNamePrefix' => '',
+			)
+		);
 
 		$this->assertSame('someFieldName', $viewHelper->_call('prefixFieldName', 'someFieldName'));
 	}
@@ -128,8 +131,11 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 	public function prefixFieldNamePrefixesGivenFieldNameWithFieldNamePrefix() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->viewHelperVariableContainer->expects($this->any())->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue('somePrefix'));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'fieldNamePrefix' => 'somePrefix',
+			)
+		);
 
 		$this->assertSame('somePrefix[someFieldName]', $viewHelper->_call('prefixFieldName', 'someFieldName'));
 	}
@@ -140,8 +146,11 @@ class AbstractFormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBase
 	public function prefixFieldNamePreservesSquareBracketsOfFieldName() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper', array('dummy'), array(), '', FALSE);
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->viewHelperVariableContainer->expects($this->any())->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->once())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'fieldNamePrefix')->will($this->returnValue('somePrefix[foo]'));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'fieldNamePrefix' => 'somePrefix[foo]',
+			)
+		);
 
 		$this->assertSame('somePrefix[foo][someFieldName][bar]', $viewHelper->_call('prefixFieldName', 'someFieldName[bar]'));
 	}

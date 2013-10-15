@@ -25,7 +25,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\CheckboxViewHelper', array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\CheckboxViewHelper', array('setErrorClassAttribute', 'getName', 'getValueAttribute', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
 		$this->arguments['property'] = '';
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
@@ -43,7 +43,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->initialize();
@@ -61,7 +61,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->initialize();
@@ -78,7 +78,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(TRUE));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -99,7 +99,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(TRUE));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -119,7 +119,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(array()));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -139,7 +139,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(array('foo', 'bar', 'baz')));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -159,7 +159,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(new \ArrayObject(array('foo', 'bar', 'baz'))));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -179,7 +179,7 @@ class CheckboxViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Fo
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(new \stdClass()));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);

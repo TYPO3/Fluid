@@ -105,6 +105,7 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 		$this->tag->addAttribute('type', 'file');
 		$this->tag->addAttribute('name', $name);
 
+		$this->addAdditionalIdentityPropertiesIfNeeded();
 		$this->setErrorClassAttribute();
 
 		$output .= $this->tag->render();
@@ -121,10 +122,17 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 		if ($this->getMappingResultsForProperty()->hasErrors()) {
 			return NULL;
 		}
-		$resourceObject = $this->getValue(FALSE);
-		if ($resourceObject instanceof Resource) {
-			return $resourceObject;
+		$resource = NULL;
+		if ($this->hasMappingErrorOccurred()) {
+			$resource = $this->getLastSubmittedFormData();
+		} elseif ($this->isObjectAccessorMode()) {
+			$resource = $this->getPropertyValue();
+		} elseif ($this->hasArgument('value')) {
+			$resource = $this->arguments['value'];
 		}
-		return $this->propertyMapper->convert($resourceObject, 'TYPO3\Flow\Resource\Resource');
+		if ($resource instanceof Resource) {
+			return $resource;
+		}
+		return $this->propertyMapper->convert($resource, 'TYPO3\Flow\Resource\Resource');
 	}
 }

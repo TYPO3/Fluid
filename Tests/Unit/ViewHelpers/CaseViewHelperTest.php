@@ -37,7 +37,6 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
 	 */
 	public function renderThrowsExceptionIfSwitchExpressionIsNotSetInViewHelperVariableContainer() {
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('exists')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue(FALSE));
 		$this->viewHelper->render('foo');
 	}
 
@@ -45,8 +44,11 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderReturnsChildNodesIfTheSpecifiedValueIsEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('exists')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue('someValue'));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\SwitchViewHelper' => array(
+				'switchExpression' => 'someValue',
+			)
+		);
 
 		$renderedChildNodes = 'ChildNodes';
 		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue($renderedChildNodes));
@@ -58,9 +60,11 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderSetsBreakStateInViewHelperVariableContainerIfTheSpecifiedValueIsEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('exists')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue('someValue'));
-
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\SwitchViewHelper' => array(
+				'switchExpression' => 'someValue',
+			)
+		);
 		$this->viewHelperVariableContainer->expects($this->once())->method('addOrUpdate')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'break', TRUE);
 
 		$this->viewHelper->render('someValue');
@@ -73,8 +77,11 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 		$numericValue = 123;
 		$stringValue = '123';
 
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('exists')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue($numericValue));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\SwitchViewHelper' => array(
+				'switchExpression' => $numericValue,
+			)
+		);
 
 		$this->viewHelperVariableContainer->expects($this->once())->method('addOrUpdate')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'break', TRUE);
 
@@ -86,8 +93,11 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderReturnsAnEmptyStringIfTheSpecifiedValueIsNotEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('exists')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue(TRUE));
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')->will($this->returnValue('someValue'));
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\SwitchViewHelper' => array(
+				'switchExpression' => 'someValue',
+			)
+		);
 		$this->assertSame('', $this->viewHelper->render('someOtherValue'));
 	}
 

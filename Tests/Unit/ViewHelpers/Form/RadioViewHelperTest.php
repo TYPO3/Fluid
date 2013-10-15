@@ -25,7 +25,7 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\RadioViewHelper', array('setErrorClassAttribute', 'getName', 'getValue', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\RadioViewHelper', array('setErrorClassAttribute', 'getName', 'getValueAttribute', 'isObjectAccessorMode', 'getPropertyValue', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -42,7 +42,7 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->initialize();
@@ -61,7 +61,7 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->initialize();
@@ -78,9 +78,9 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
-		$this->viewHelper->expects($this->never())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
-		$this->viewHelper->expects($this->never())->method('getPropertyValue')->will($this->returnValue(TRUE));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
+		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue('propertyValue'));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
 		$this->viewHelper->initialize();
@@ -100,7 +100,7 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(TRUE));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -120,7 +120,7 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 		$mockTagBuilder->expects($this->at(3))->method('addAttribute')->with('value', 'bar');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue(array()));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -141,7 +141,7 @@ class RadioViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\FormF
 		$mockTagBuilder->expects($this->at(4))->method('addAttribute')->with('checked', 'checked');
 
 		$this->viewHelper->expects($this->any())->method('getName')->will($this->returnValue('foo'));
-		$this->viewHelper->expects($this->any())->method('getValue')->will($this->returnValue('bar'));
+		$this->viewHelper->expects($this->any())->method('getValueAttribute')->will($this->returnValue('bar'));
 		$this->viewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$this->viewHelper->expects($this->any())->method('getPropertyValue')->will($this->returnValue('bar'));
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);

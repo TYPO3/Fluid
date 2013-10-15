@@ -67,7 +67,6 @@ class CheckboxViewHelper extends AbstractFormFieldViewHelper {
 	 *
 	 * @param boolean $checked Specifies that the input element should be preselected
 	 * @param boolean $multiple Specifies whether this checkbox belongs to a multivalue (is part of a checkbox group)
-	 *
 	 * @return string
 	 * @api
 	 */
@@ -75,39 +74,56 @@ class CheckboxViewHelper extends AbstractFormFieldViewHelper {
 		$this->tag->addAttribute('type', 'checkbox');
 
 		$nameAttribute = $this->getName();
-		$valueAttribute = $this->getValue();
-		if ($this->isObjectAccessorMode()) {
-			if ($this->hasMappingErrorOccurred()) {
-				$propertyValue = $this->getLastSubmittedFormData();
-			} else {
-				$propertyValue = $this->getPropertyValue();
-			}
+		$valueAttribute = $this->getValueAttribute();
+		$propertyValue = NULL;
+		if ($this->hasMappingErrorOccurred()) {
+			$propertyValue = $this->getLastSubmittedFormData();
+		}
+		if ($checked === NULL && $propertyValue === NULL) {
+			$propertyValue = $this->getPropertyValue();
+		}
 
-			if ($propertyValue instanceof \Traversable) {
-				$propertyValue = iterator_to_array($propertyValue);
+		if ($propertyValue instanceof \Traversable) {
+			$propertyValue = iterator_to_array($propertyValue);
+		}
+		if (is_array($propertyValue)) {
+			if ($checked === NULL) {
+				$checked = in_array($valueAttribute, $propertyValue);
 			}
-			if (is_array($propertyValue)) {
-				if ($checked === NULL) {
-					$checked = in_array($valueAttribute, $propertyValue);
-				}
-				$nameAttribute .= '[]';
-			} elseif ($multiple === TRUE) {
-				$nameAttribute .= '[]';
-			} elseif ($checked === NULL && $propertyValue !== NULL) {
-				$checked = (boolean)$propertyValue === (boolean)$valueAttribute;
-			}
+			$nameAttribute .= '[]';
+		} elseif ($multiple === TRUE) {
+			$nameAttribute .= '[]';
+		} elseif ($propertyValue !== NULL) {
+			$checked = (boolean)$propertyValue === (boolean)$valueAttribute;
 		}
 
 		$this->registerFieldNameForFormTokenGeneration($nameAttribute);
 		$this->tag->addAttribute('name', $nameAttribute);
 		$this->tag->addAttribute('value', $valueAttribute);
-		if ($checked) {
+		if ($checked === TRUE) {
 			$this->tag->addAttribute('checked', 'checked');
 		}
 
+		$this->addAdditionalIdentityPropertiesIfNeeded();
 		$this->setErrorClassAttribute();
 
 		$this->renderHiddenFieldForEmptyValue();
 		return $this->tag->render();
+	}
+
+	/**
+	 * Overrides AbstractFormFieldViewHelper::getValueAttribute() as the value attribute of this ViewHelper must not take previously submitted form data into account
+	 *
+	 * @return mixed Value
+	 */
+	protected function getValueAttribute() {
+		$value = NULL;
+		if ($this->hasArgument('value')) {
+			$value = $this->arguments['value'];
+		}
+		if (is_object($value)) {
+			$value = $this->persistenceManager->getIdentifierByObject($value);
+		}
+		return $value;
 	}
 }

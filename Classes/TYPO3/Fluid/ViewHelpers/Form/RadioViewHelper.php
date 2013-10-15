@@ -68,7 +68,6 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 	 * Renders the checkbox.
 	 *
 	 * @param boolean $checked Specifies that the input element should be preselected
-	 *
 	 * @return string
 	 * @api
 	 */
@@ -76,14 +75,17 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 		$this->tag->addAttribute('type', 'radio');
 
 		$nameAttribute = $this->getName();
-		$valueAttribute = $this->getValue();
-		if ($checked === NULL && $this->isObjectAccessorMode()) {
-			if ($this->hasMappingErrorOccurred()) {
-				$propertyValue = $this->getLastSubmittedFormData();
-			} else {
-				$propertyValue = $this->getPropertyValue();
-			}
+		$valueAttribute = $this->getValueAttribute();
 
+		$propertyValue = NULL;
+		if ($this->hasMappingErrorOccurred()) {
+			$propertyValue = $this->getLastSubmittedFormData();
+		}
+		if ($checked === NULL && $propertyValue === NULL) {
+			$propertyValue = $this->getPropertyValue();
+		}
+
+		if ($propertyValue !== NULL) {
 			// no type-safe comparison by intention
 			$checked = $propertyValue == $valueAttribute;
 		}
@@ -91,12 +93,29 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 		$this->registerFieldNameForFormTokenGeneration($nameAttribute);
 		$this->tag->addAttribute('name', $nameAttribute);
 		$this->tag->addAttribute('value', $valueAttribute);
-		if ($checked) {
+		if ($checked === TRUE) {
 			$this->tag->addAttribute('checked', 'checked');
 		}
 
+		$this->addAdditionalIdentityPropertiesIfNeeded();
 		$this->setErrorClassAttribute();
 
 		return $this->tag->render();
+	}
+
+	/**
+	 * Overrides AbstractFormFieldViewHelper::getValueAttribute() as the value attribute of this ViewHelper must not take previously submitted form data into account
+	 *
+	 * @return mixed Value
+	 */
+	protected function getValueAttribute() {
+		$value = NULL;
+		if ($this->hasArgument('value')) {
+			$value = $this->arguments['value'];
+		}
+		if (is_object($value)) {
+			$value = $this->persistenceManager->getIdentifierByObject($value);
+		}
+		return $value;
 	}
 }

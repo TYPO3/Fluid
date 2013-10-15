@@ -65,7 +65,7 @@ class TextfieldViewHelper extends AbstractFormFieldViewHelper {
 		$this->tag->addAttribute('type', $type);
 		$this->tag->addAttribute('name', $name);
 
-		$value = $this->getValue();
+		$value = $this->getValueAttribute();
 
 		if ($value !== NULL) {
 			$this->tag->addAttribute('value', $value);
@@ -75,6 +75,7 @@ class TextfieldViewHelper extends AbstractFormFieldViewHelper {
 			$this->tag->addAttribute('required', 'required');
 		}
 
+		$this->addAdditionalIdentityPropertiesIfNeeded();
 		$this->setErrorClassAttribute();
 
 		return $this->tag->render();

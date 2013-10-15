@@ -93,6 +93,7 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 *
 	 * @param boolean $convertObjects whether or not to convert objects to identifiers
 	 * @return mixed Value
+	 * @deprecated since Flow 3.0. Use getValueAttribute() and (if applicable) addAdditionalIdentityPropertiesIfNeeded()
 	 */
 	protected function getValue($convertObjects = TRUE) {
 		$value = NULL;
@@ -113,6 +114,36 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 			if ($identifier !== NULL) {
 				$value = $identifier;
 			}
+		}
+		return $value;
+	}
+
+	/**
+	 * Returns the current value of this Form ViewHelper and converts it to an identifier string in case it's an object
+	 * The value is determined as follows:
+	 * * If property mapping errors occurred and the form is re-displayed, the *last submitted* value is returned
+	 * * Else the bound property is returned (only in objectAccessor-mode)
+	 * * As fallback the "value" argument of this ViewHelper is used
+	 *
+	 * Note: This method should *not* be used for form elements that must not change the value attribute, e.g. (radio) buttons and checkboxes.
+	 *
+	 * @return mixed Value
+	 */
+	protected function getValueAttribute() {
+		$value = NULL;
+		$submittedFormData = NULL;
+		if ($this->hasMappingErrorOccurred()) {
+			$submittedFormData = $this->getLastSubmittedFormData();
+		}
+		if ($submittedFormData !== NULL) {
+			$value = $submittedFormData;
+		} elseif ($this->hasArgument('value')) {
+			$value = $this->arguments['value'];
+		} elseif ($this->isObjectAccessorMode()) {
+			$value = $this->getPropertyValue();
+		}
+		if (is_object($value)) {
+			$value = $this->persistenceManager->getIdentifierByObject($value);
 		}
 		return $value;
 	}
@@ -157,6 +188,9 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 * @return void
 	 */
 	protected function addAdditionalIdentityPropertiesIfNeeded() {
+		if (!$this->isObjectAccessorMode()) {
+			return;
+		}
 		if (!$this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
 			return;
 		}

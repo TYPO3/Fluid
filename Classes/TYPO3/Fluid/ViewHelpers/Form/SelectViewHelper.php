@@ -173,6 +173,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 		$options = $this->getOptions();
 		$this->tag->setContent($this->renderOptionTags($options));
 
+		$this->addAdditionalIdentityPropertiesIfNeeded();
 		$this->setErrorClassAttribute();
 
 		// register field name for token generation.
@@ -301,7 +302,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 	 * @return mixed value string or an array of strings
 	 */
 	protected function getSelectedValue() {
-		$value = $this->getValue();
+		$value = $this->getValueAttribute();
 		if (!is_array($value) && !($value instanceof  \Traversable)) {
 			return $this->getOptionValueScalar($value);
 		}
