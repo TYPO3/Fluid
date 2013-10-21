@@ -49,6 +49,6 @@ class NumberViewHelper extends AbstractViewHelper {
 	 */
 	public function render($decimals = 2, $decimalSeparator = '.', $thousandsSeparator = ',') {
 		$stringToFormat = $this->renderChildren();
-		return number_format($stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
+		return number_format((float)$stringToFormat, $decimals, $decimalSeparator, $thousandsSeparator);
 	}
 }

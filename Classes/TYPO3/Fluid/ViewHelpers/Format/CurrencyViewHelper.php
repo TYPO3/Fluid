@@ -94,7 +94,7 @@ class CurrencyViewHelper extends AbstractViewHelper {
 			}
 			$output = $this->renderUsingLocale($stringToFormat, $forceLocale, $currencySign);
 		} else {
-			$output = number_format($stringToFormat, 2, $decimalSeparator, $thousandsSeparator);
+			$output = number_format((float)$stringToFormat, 2, $decimalSeparator, $thousandsSeparator);
 			if ($currencySign !== '') {
 				$output .= ' ' . $currencySign;
 			}
