@@ -86,12 +86,6 @@ class IfAccessViewHelper extends AbstractConditionViewHelper {
 	 * @return boolean TRUE if we currently have access to the given resource
 	 */
 	protected function hasAccessToResource($resource) {
-		try {
-			$this->accessDecisionManager->decideOnResource($resource);
-		} catch (AccessDeniedException $e) {
-			return FALSE;
-		}
-
-		return TRUE;
+		return $this->accessDecisionManager->hasAccessToResource($resource);
 	}
 }
