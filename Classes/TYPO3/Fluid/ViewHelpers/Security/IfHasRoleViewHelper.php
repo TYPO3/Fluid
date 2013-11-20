@@ -75,7 +75,7 @@ class IfHasRoleViewHelper extends AbstractConditionViewHelper {
 	 * @api
 	 */
 	public function render($role, $packageKey = NULL) {
-		if ($role !== 'Everybody' && $role !== 'Anonymous' && strpos($role, '.') === FALSE && strpos($role, ':') === FALSE) {
+		if ($role !== 'Everybody' && $role !== 'Anonymous' && $role !== 'AuthenticatedUser' && strpos($role, '.') === FALSE && strpos($role, ':') === FALSE) {
 			if ($packageKey === NULL) {
 				$request = $this->controllerContext->getRequest();
 				$role = $request->getControllerPackageKey() . ':' . $role;

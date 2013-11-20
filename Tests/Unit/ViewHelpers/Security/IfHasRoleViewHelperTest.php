@@ -11,6 +11,11 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Security;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Reflection\ObjectAccess;
+use TYPO3\Flow\Security\Policy\PolicyService;
+use TYPO3\Flow\Security\Policy\Role;
+use TYPO3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper;
+
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
@@ -105,5 +110,45 @@ class IfHasRoleViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTes
 
 		$actualResult = $mockViewHelper->render('someGA');
 		$this->assertEquals('ElseViewHelperResults', $actualResult);
+	}
+
+	/**
+	 * signature: $roleIdentifier
+	 */
+	public function systemRolesDataProvider() {
+		$policyService = new PolicyService();
+		$systemRoles = ObjectAccess::getProperty($policyService, 'systemRoles', TRUE);
+		$systemRoleNames = array();
+		/** @var $systemRole Role */
+		foreach ($systemRoles as $systemRole) {
+			$systemRoleNames[] = array($systemRole->getIdentifier());
+		}
+		return $systemRoleNames;
+	}
+
+	/**
+	 * @test
+	 * @dataProvider systemRolesDataProvider
+	 */
+	public function viewHelperDoesntMagicallyAugmentRoleIdentifierForSystemRole($roleIdentifier) {
+		$mockSecurityContext = $this->getMock('TYPO3\Flow\Security\Context', array(), array(), '', FALSE);
+		$mockSecurityContext->expects($this->once())->method('hasRole')->with($roleIdentifier);
+		$viewHelper = new IfHasRoleViewHelper;
+		$this->inject($viewHelper, 'securityContext', $mockSecurityContext);
+		$viewHelper->render($roleIdentifier);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider systemRolesDataProvider
+	 */
+	public function viewHelperRendersThenChildForSystemRoles($roleIdentifier) {
+		$mockSecurityContext = $this->getMock('TYPO3\Flow\Security\Context', array(), array(), '', FALSE);
+		$mockSecurityContext->expects($this->once())->method('hasRole')->will($this->returnValue(TRUE));
+
+		$mockViewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Security\IfHasRoleViewHelper', array('renderThenChild'));
+		$mockViewHelper->expects($this->once())->method('renderThenChild')->will($this->returnValue('ThenViewHelperResults'));
+		$this->inject($mockViewHelper, 'securityContext', $mockSecurityContext);
+		$this->assertEquals('ThenViewHelperResults', $mockViewHelper->render($roleIdentifier));
 	}
 }
