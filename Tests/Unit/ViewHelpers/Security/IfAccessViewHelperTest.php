@@ -11,6 +11,9 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Security;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface;
+use TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper;
+
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
@@ -20,14 +23,30 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
+	 * @var AccessDecisionManagerInterface
+	 */
+	protected $mockAccessDecisionManager;
+
+	/**
+	 * @var IfAccessViewHelper
+	 */
+	protected $ifAccessViewHelper;
+
+	public function setUp() {
+		$this->mockAccessDecisionManager = $this->getMockBuilder('TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface')->getMock();
+
+		$this->ifAccessViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('renderThenChild', 'renderElseChild'));
+		$this->inject($this->ifAccessViewHelper, 'accessDecisionManager', $this->mockAccessDecisionManager);
+	}
+
+	/**
 	 * @test
 	 */
 	public function viewHelperRendersThenIfHasAccessToResourceReturnsTrue() {
-		$mockViewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('renderThenChild', 'hasAccessToResource'));
-		$mockViewHelper->expects($this->once())->method('renderThenChild')->will($this->returnValue('foo'));
-		$mockViewHelper->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(TRUE));
+		$this->mockAccessDecisionManager->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(TRUE));
+		$this->ifAccessViewHelper->expects($this->once())->method('renderThenChild')->will($this->returnValue('foo'));
 
-		$actualResult = $mockViewHelper->render('someResource');
+		$actualResult = $this->ifAccessViewHelper->render('someResource');
 		$this->assertEquals('foo', $actualResult);
 	}
 
@@ -35,37 +54,10 @@ class IfAccessViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 * @test
 	 */
 	public function viewHelperRendersElseIfHasAccessToResourceReturnsFalse() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('hasAccessToResource', 'renderElseChild'));
-		$viewHelper->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(FALSE));
-		$viewHelper->expects($this->once())->method('renderElseChild')->will($this->returnValue('ElseViewHelperResults'));
+		$this->mockAccessDecisionManager->expects($this->once())->method('hasAccessToResource')->with('someResource')->will($this->returnValue(FALSE));
+		$this->ifAccessViewHelper->expects($this->once())->method('renderElseChild')->will($this->returnValue('ElseViewHelperResults'));
 
-		$actualResult = $viewHelper->render('someResource');
+		$actualResult = $this->ifAccessViewHelper->render('someResource');
 		$this->assertEquals('ElseViewHelperResults', $actualResult);
-	}
-
-	/**
-	 * @test
-	 */
-	public function hasAccessToResourceReturnsTrueIfNoAccessDenyExceptionsHasBeenThrownByTheAccessDecisionManager() {
-		$mockAccessDecisionManager = $this->getMock('TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
-		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource');
-
-		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('dummy'));
-		$viewHelper->injectAccessDecisionManager($mockAccessDecisionManager);
-
-		$this->assertTrue($viewHelper->_call('hasAccessToResource', 'myResource'));
-	}
-
-	/**
-	 * @test
-	 */
-	public function hasAccessToResourceReturnsFalseIfAnAccessDenyExceptionsHasBeenThrownByTheAccessDecisionManager() {
-		$mockAccessDecisionManager = $this->getMock('TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface', array(), array(), '', FALSE);
-		$mockAccessDecisionManager->expects($this->once())->method('decideOnResource')->with('myResource')->will($this->throwException(new \TYPO3\Flow\Security\Exception\AccessDeniedException()));
-
-		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Security\IfAccessViewHelper', array('dummy'));
-		$viewHelper->injectAccessDecisionManager($mockAccessDecisionManager);
-
-		$this->assertFalse($viewHelper->_call('hasAccessToResource', 'myResource'));
 	}
 }

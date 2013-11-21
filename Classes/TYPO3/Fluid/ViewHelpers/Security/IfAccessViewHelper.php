@@ -72,20 +72,10 @@ class IfAccessViewHelper extends AbstractConditionViewHelper {
 	 * @api
 	 */
 	public function render($resource) {
-		if ($this->hasAccessToResource($resource)) {
+		if ($this->accessDecisionManager->hasAccessToResource($resource)) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();
 		}
-	}
-
-	/**
-	 * Check if we currently have access to the given resource
-	 *
-	 * @param string $resource The resource to check
-	 * @return boolean TRUE if we currently have access to the given resource
-	 */
-	protected function hasAccessToResource($resource) {
-		return $this->accessDecisionManager->hasAccessToResource($resource);
 	}
 }
