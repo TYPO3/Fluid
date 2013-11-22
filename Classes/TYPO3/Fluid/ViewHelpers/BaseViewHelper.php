@@ -14,9 +14,9 @@ namespace TYPO3\Fluid\ViewHelpers;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * View helper which creates a <base href="..."></base> tag. The Base URI
+ * View helper which creates a <base href="..." /> tag. The Base URI
  * is taken from the current request.
- * In TYPO3 Flow, you should always include this ViewHelper to make the links work.
+ * In TYPO3 Flow, this ViewHelper is no longer required to make the links work.
  *
  * = Examples =
  *
@@ -28,7 +28,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  * (depending on your domain)
  * </output>
  *
- * @api
+ * @deprecated since 2.1.0 this ViewHelper is no longer required for regular links and forms
  */
 class BaseViewHelper extends AbstractViewHelper {
 
