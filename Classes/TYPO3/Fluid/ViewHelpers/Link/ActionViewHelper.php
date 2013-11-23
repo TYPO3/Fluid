@@ -73,11 +73,12 @@ class ActionViewHelper extends AbstractTagBasedViewHelper {
 	 * @param boolean $addQueryString If set, the current query parameters will be kept in the URI
 	 * @param array $argumentsToBeExcludedFromQueryString arguments to be removed from the URI. Only active if $addQueryString = TRUE
 	 * @param boolean $useParentRequest If set, the parent Request will be used instead of the current one
+	 * @param boolean $absolute By default this ViewHelper renders links with absolute URIs. If this is FALSE, a relative URI is created instead
 	 * @return string The rendered link
 	 * @throws ViewHelper\Exception
 	 * @api
 	 */
-	public function render($action, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $useParentRequest = FALSE) {
+	public function render($action, $arguments = array(), $controller = NULL, $package = NULL, $subpackage = NULL, $section = '', $format = '',  array $additionalParams = array(), $addQueryString = FALSE, array $argumentsToBeExcludedFromQueryString = array(), $useParentRequest = FALSE, $absolute = TRUE) {
 		$uriBuilder = $this->controllerContext->getUriBuilder();
 		if ($useParentRequest) {
 			$request = $this->controllerContext->getRequest();
@@ -91,7 +92,7 @@ class ActionViewHelper extends AbstractTagBasedViewHelper {
 		$uriBuilder
 			->reset()
 			->setSection($section)
-			->setCreateAbsoluteUri(TRUE)
+			->setCreateAbsoluteUri($absolute)
 			->setArguments($additionalParams)
 			->setAddQueryString($addQueryString)
 			->setArgumentsToBeExcludedFromQueryString($argumentsToBeExcludedFromQueryString)
