@@ -11,6 +11,7 @@ namespace TYPO3\Fluid;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Core\Bootstrap;
 use TYPO3\Flow\Package\Package as BasePackage;
 
 /**
@@ -24,4 +25,28 @@ class Package extends BasePackage {
 	 */
 	protected $protected = TRUE;
 
+
+	/**
+	 * Invokes custom PHP code directly after the package manager has been initialized.
+	 *
+	 * @param Bootstrap $bootstrap The current bootstrap
+	 * @return void
+	 */
+	public function boot(Bootstrap $bootstrap) {
+		$dispatcher = $bootstrap->getSignalSlotDispatcher();
+
+			// Use a closure to invoke the TemplateCompiler, since the object is not registered during compiletime
+		$flushTemplates = function($identifier, $changedFiles) use ($bootstrap) {
+			if ($identifier !== 'Flow_ClassFiles') {
+				return;
+			}
+
+			$objectManager = $bootstrap->getObjectManager();
+			if ($objectManager->isRegistered('TYPO3\Fluid\Core\Compiler\TemplateCompiler')) {
+				$templateCompiler = $objectManager->get('TYPO3\Fluid\Core\Compiler\TemplateCompiler');
+				$templateCompiler->flushTemplatesOnViewHelperChanges($changedFiles);
+			}
+		};
+		$dispatcher->connect('TYPO3\Flow\Monitor\FileMonitor', 'filesHaveChanged', $flushTemplates);
+	}
 }
