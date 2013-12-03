@@ -122,4 +122,50 @@ class ActionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestca
 
 		$viewHelper->render('someAction', array(), NULL, NULL, NULL, '', '', array(), FALSE, array(), TRUE);
 	}
+
+	/**
+	 * @test
+	 */
+	public function renderCreatesAbsoluteUrisByDefault() {
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Link\ActionViewHelper', array('renderChildren'));
+
+		$parentRequest = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
+
+		$this->request = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
+
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
+
+		$this->uriBuilder->expects($this->atLeastOnce())->method('setCreateAbsoluteUri')->with(TRUE);
+
+		$this->renderingContext->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$viewHelper->render('someAction');
+	}
+
+
+	/**
+	 * @test
+	 */
+	public function renderCreatesRelativeUrisIfAbsoluteIsFalse() {
+		/** @var $viewHelper \TYPO3\Fluid\ViewHelpers\Link\ActionViewHelper */
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Link\ActionViewHelper', array('renderChildren'));
+
+		$parentRequest = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
+
+		$this->request = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
+
+		$this->controllerContext = $this->getMock('TYPO3\Flow\Mvc\Controller\ControllerContext', array(), array(), '', FALSE);
+		$this->controllerContext->expects($this->any())->method('getUriBuilder')->will($this->returnValue($this->uriBuilder));
+		$this->controllerContext->expects($this->any())->method('getRequest')->will($this->returnValue($this->request));
+
+		$this->uriBuilder->expects($this->atLeastOnce())->method('setCreateAbsoluteUri')->with(FALSE);
+
+		$this->renderingContext->setControllerContext($this->controllerContext);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$viewHelper->render('someAction', array(), NULL, NULL, NULL, '', '', array(), FALSE, array(), FALSE, FALSE);
+	}
 }
