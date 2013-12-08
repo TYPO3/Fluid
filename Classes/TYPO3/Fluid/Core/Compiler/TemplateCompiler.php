@@ -420,6 +420,10 @@ EOD;
 	 * @return void
 	 */
 	public function flushTemplatesOnViewHelperChanges(array $changedFiles) {
+		if (!$this->templateCache instanceof PhpFrontend) {
+			return;
+		}
+
 		foreach ($changedFiles as $pathAndFilename => $status) {
 			if (strrpos($pathAndFilename, 'ViewHelper.php') !== FALSE) {
 				$this->templateCache->flush();

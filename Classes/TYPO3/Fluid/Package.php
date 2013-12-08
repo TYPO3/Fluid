@@ -25,7 +25,6 @@ class Package extends BasePackage {
 	 */
 	protected $protected = TRUE;
 
-
 	/**
 	 * Invokes custom PHP code directly after the package manager has been initialized.
 	 *
