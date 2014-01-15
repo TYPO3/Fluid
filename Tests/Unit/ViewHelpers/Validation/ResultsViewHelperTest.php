@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Form;
+namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Validation;
 
 /*                                                                        *
  * This script belongs to the TYPO3 Flow package "TYPO3.Fluid".           *
@@ -18,16 +18,16 @@ require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
  * Test for the Validation Results view helper
  *
  */
-class ValidationResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class ResultsViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Validation\ResultsViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMockBuilder('TYPO3\Fluid\ViewHelpers\Form\ValidationResultsViewHelper')
+		$this->viewHelper = $this->getMockBuilder('TYPO3\Fluid\ViewHelpers\Validation\ResultsViewHelper')
 			->setMethods(array('renderChildren'))
 			->getMock();
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
