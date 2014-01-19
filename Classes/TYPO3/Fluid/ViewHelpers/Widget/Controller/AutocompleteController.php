@@ -70,7 +70,7 @@ class AutocompleteController extends AbstractWidgetController {
 		$output = array();
 		$values = array();
 		foreach ($results as $singleResult) {
-			$val = ObjectAccess::getProperty($singleResult, $searchProperty);
+			$val = ObjectAccess::getPropertyPath($singleResult, $searchProperty);
 			if (isset($values[$val])) {
 				continue;
 			}
