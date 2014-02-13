@@ -132,7 +132,7 @@ class DateViewHelper extends AbstractLocaleAwareViewHelper {
 			try {
 				$output = $this->datetimeFormatter->format($date, $useLocale, array(0 => $localeFormatType, 1 => $localeFormatLength));
 			} catch(I18nException $exception) {
-				throw new ViewHelperException(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()) , 1342610987, $exception);
+				throw new ViewHelperException(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()), 1342610987, $exception);
 			}
 		} else {
 			$output = $date->format($format);

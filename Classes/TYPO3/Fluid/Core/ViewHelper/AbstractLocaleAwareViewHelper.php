@@ -55,7 +55,7 @@ abstract class AbstractLocaleAwareViewHelper extends AbstractViewHelper {
 			try {
 				$useLocale = new I18n\Locale($forceLocale);
 			} catch (I18n\Exception $exception) {
-				throw new InvalidVariableException('"' . $forceLocale . '" is not a valid locale identifier.' , 1342610148, $exception);
+				throw new InvalidVariableException('"' . $forceLocale . '" is not a valid locale identifier.', 1342610148, $exception);
 			}
 		} elseif ($forceLocale === TRUE) {
 			$useLocale = $this->localizationService->getConfiguration()->getCurrentLocale();

@@ -449,7 +449,7 @@ class TemplateView extends AbstractTemplateView {
 			$subpackageKeyParts = ($subpackageKey !== NULL) ? explode('\\', $subpackageKey) : array();
 			$numberOfSubpackageParts = count($subpackageKeyParts);
 			$subpackageReplacements = array();
-			for ($i = 0; $i <= $numberOfSubpackageParts; $i ++) {
+			for ($i = 0; $i <= $numberOfSubpackageParts; $i++) {
 				$subpackageReplacements[] = implode('/', ($i < 0 ? $subpackageKeyParts : array_slice($subpackageKeyParts, $i)));
 			}
 			$this->expandPatterns($paths, '@subpackage', $subpackageReplacements);
