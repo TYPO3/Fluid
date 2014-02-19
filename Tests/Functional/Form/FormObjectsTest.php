@@ -128,10 +128,11 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 	 * @test
 	 */
 	public function objectIsNotCreatedAnymoreIfIdentityFieldHasBeenAdded() {
+		$postIdentifier = $this->setupDummyPost();
 		$this->browser->request('http://localhost/test/fluid/formobjects');
 		$form = $this->browser->getForm();
 
-		$identityFieldDom = dom_import_simplexml(simplexml_load_string('<input type="text" name="post[__identity]" value="someIdentity" />'));
+		$identityFieldDom = dom_import_simplexml(simplexml_load_string('<input type="text" name="post[__identity]" value="' . $postIdentifier . '" />'));
 		$form->set(new \Symfony\Component\DomCrawler\Field\InputFormField($identityFieldDom));
 
 		$this->browser->submit($form);
