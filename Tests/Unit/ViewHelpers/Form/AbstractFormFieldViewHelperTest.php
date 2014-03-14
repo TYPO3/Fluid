@@ -139,13 +139,11 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 		$this->assertSame($expected, $actual);
 	}
 
-	/**
-	 * @test
-	 */
-	public function getValueBuildsValueFromPropertyAndFormObjectIfInObjectAccessorMode() {
-		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode', 'addAdditionalIdentityPropertiesIfNeeded'), array(), '', FALSE);
-		$this->injectDependenciesIntoViewHelper($formViewHelper);
 
+	/**
+	 * This is in order to proof that object access behaves similar to a plain array with the same structure
+	 */
+	public function formObjectVariantsDataProvider() {
 		$className = 'test_' . uniqid();
 		$mockObject = eval('
 			class ' . $className . ' {
@@ -158,10 +156,23 @@ class AbstractFormFieldViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelper
 			}
 			return new ' . $className . ';
 		');
+		return array(
+			array($mockObject),
+			array('value' => array('value' => array('something' => 'MyString')))
+		);
+	}
+
+	/**
+	 * @test
+	 * @dataProvider formObjectVariantsDataProvider
+	 */
+	public function getValueBuildsValueFromPropertyAndFormObjectIfInObjectAccessorMode($formObject) {
+		$formViewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\AbstractFormFieldViewHelper', array('isObjectAccessorMode', 'addAdditionalIdentityPropertiesIfNeeded'), array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($formViewHelper);
 
 		$formViewHelper->expects($this->any())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$formViewHelper->expects($this->once())->method('addAdditionalIdentityPropertiesIfNeeded');
-		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($mockObject));
+		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue($formObject));
 		$this->viewHelperVariableContainer->expects($this->atLeastOnce())->method('exists')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')->will($this->returnValue(TRUE));
 
 		$arguments = array('name' => NULL, 'value' => NULL, 'property' => 'value.something');

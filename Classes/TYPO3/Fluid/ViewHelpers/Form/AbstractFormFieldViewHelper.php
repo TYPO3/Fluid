@@ -194,12 +194,8 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 			return NULL;
 		}
 		$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-		$propertyName = $this->arguments['property'];
-
-		if (is_array($formObject)) {
-			return isset($formObject[$propertyName]) ? $formObject[$propertyName] : NULL;
-		}
-		return ObjectAccess::getPropertyPath($formObject, $propertyName);
+		$propertyNameOrPath = $this->arguments['property'];
+		return ObjectAccess::getPropertyPath($formObject, $propertyNameOrPath);
 	}
 
 	/**
