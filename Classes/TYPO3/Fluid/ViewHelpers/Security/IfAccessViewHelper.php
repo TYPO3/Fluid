@@ -11,9 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface;
+use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Security\Authorization\PrivilegeManagerInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
-
 
 /**
  * This view helper implements an ifAccess/else condition.
@@ -21,15 +21,15 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * = Examples =
  *
  * <code title="Basic usage">
- * <f:security.ifAccess resource="someResource">
- *   This is being shown in case you have access to the given resource
+ * <f:security.ifAccess privilegeTarget="somePrivilegeTargetIdentifier">
+ *   This is being shown in case you have access to the given privilege
  * </f:security.ifAccess>
  * </code>
  *
- * Everything inside the <f:ifAccess> tag is being displayed if you have access to the given resource.
+ * Everything inside the <f:ifAccess> tag is being displayed if you have access to the given privilege.
  *
  * <code title="IfAccess / then / else">
- * <f:security.ifAccess resource="someResource">
+ * <f:security.ifAccess privilegeTarget="somePrivilegeTargetIdentifier">
  *   <f:then>
  *     This is being shown in case you have access.
  *   </f:then>
@@ -42,36 +42,30 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * Everything inside the "then" tag is displayed if you have access.
  * Otherwise, everything inside the "else"-tag is displayed.
  *
- *
+ * <code title="Inline syntax with privilege parameters">
+ * {f:security.ifAccess(privilegeTarget: 'someTarget', parameters: '{param1: \'value1\'}', then: 'has access', else: 'has no access')}
+ * </code>
  *
  * @api
  */
 class IfAccessViewHelper extends AbstractConditionViewHelper {
 
 	/**
-	 * @var AccessDecisionManagerInterface
+	 * @Flow\Inject
+	 * @var PrivilegeManagerInterface
 	 */
-	protected $accessDecisionManager;
-
-	/**
-	 * Injects the access decision manager
-	 *
-	 * @param AccessDecisionManagerInterface $accessDecisionManager The access decision manager
-	 * @return void
-	 */
-	public function injectAccessDecisionManager(AccessDecisionManagerInterface $accessDecisionManager) {
-		$this->accessDecisionManager = $accessDecisionManager;
-	}
+	protected $privilegeManager;
 
 	/**
 	 * renders <f:then> child if access to the given resource is allowed, otherwise renders <f:else> child.
 	 *
-	 * @param string $resource Policy resource
-	 * @return string the rendered string
+	 * @param string $privilegeTarget The Privilege target identifier
+	 * @param array $parameters optional privilege target parameters to be evaluated
+	 * @return string the rendered then/else child nodes depending on the access
 	 * @api
 	 */
-	public function render($resource) {
-		if ($this->accessDecisionManager->hasAccessToResource($resource)) {
+	public function render($privilegeTarget, array $parameters = array()) {
+		if ($this->privilegeManager->isPrivilegeTargetGranted($privilegeTarget, $parameters)) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();
