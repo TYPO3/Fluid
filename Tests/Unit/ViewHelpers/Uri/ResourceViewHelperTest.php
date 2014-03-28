@@ -11,11 +11,13 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Uri;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\I18n\Locale;
+use TYPO3\Flow\Resource\Resource;
+
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
 /**
- * Testcase for the resource uri view helper
- *
+ * Test case for the resource uri view helper
  */
 class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
@@ -24,12 +26,23 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 */
 	protected $viewHelper;
 
+	/**
+	 * @var \PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $mockI18nService;
+
+	/**
+	 * @var \PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $mockResourceManager;
+
 	public function setUp() {
 		parent::setUp();
-		$this->mockResourcePublisher = $this->getMock('TYPO3\Flow\Resource\Publishing\ResourcePublisher');
+		$this->mockResourceManager = $this->getMock('TYPO3\Flow\Resource\ResourceManager');
 		$this->mockI18nService = $this->getMock('TYPO3\Flow\I18n\Service');
+
 		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Uri\ResourceViewHelper', array('renderChildren'), array(), '', FALSE);
-		$this->inject($this->viewHelper, 'resourcePublisher', $this->mockResourcePublisher);
+		$this->inject($this->viewHelper, 'resourceManager', $this->mockResourceManager);
 		$this->inject($this->viewHelper, 'i18nService', $this->mockI18nService);
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
@@ -39,103 +52,75 @@ class ResourceViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTest
 	 * @test
 	 */
 	public function renderUsesCurrentControllerPackageKeyToBuildTheResourceUri() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
-		$this->mockI18nService->expects($this->atLeastOnce())->method('getLocalizedFilename')->will($this->returnValue(array('foo')));
-		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('PackageKey'));
-
-		$resourceUri = $this->viewHelper->render('foo');
-		$this->assertEquals('Resources/Packages/PackageKey/foo', $resourceUri);
+		$this->mockResourceManager->expects($this->atLeastOnce())->method('getPublicPackageResourceUri')->with('ThePackageKey', 'Styles/Main.css')->will($this->returnValue('TheCorrectResourceUri'));
+		$this->request->expects($this->atLeastOnce())->method('getControllerPackageKey')->will($this->returnValue('ThePackageKey'));
+		$resourceUri = $this->viewHelper->render('Styles/Main.css', NULL, NULL, FALSE);
+		$this->assertEquals('TheCorrectResourceUri', $resourceUri);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderUsesCustomPackageKeyIfSpecified() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('Resources/'));
-		$this->mockI18nService->expects($this->atLeastOnce())->method('getLocalizedFilename')->will($this->returnValue(array('foo')));
-		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
-		$this->assertEquals('Resources/Packages/SomePackage/foo', $resourceUri);
-	}
-
-	/**
-	 * @test
-	 */
-	public function renderUsesStaticResourcesBaseUri() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
-		$this->mockI18nService->expects($this->atLeastOnce())->method('getLocalizedFilename')->will($this->returnValue(array('foo')));
-		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
-		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo', $resourceUri);
+		$this->mockResourceManager->expects($this->atLeastOnce())->method('getPublicPackageResourceUri')->with('ThePackageKey', 'Styles/Main.css')->will($this->returnValue('TheCorrectResourceUri'));
+		$resourceUri = $this->viewHelper->render('Styles/Main.css', 'ThePackageKey', NULL, FALSE);
+		$this->assertEquals('TheCorrectResourceUri', $resourceUri);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderUsesProvidedResourceObjectInsteadOfPackageAndPath() {
-		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource', array(), array(), '', FALSE);
-
-		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2.jpg'));
-
-		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource);
-		$this->assertEquals('http://foo/Resources/Persistent/ac9b6187f4c55b461d69e22a57925ff61ee89cb2.jpg', $resourceUri);
+		$resource = new Resource();
+		$this->mockResourceManager->expects($this->atLeastOnce())->method('getPublicPersistentResourceUri')->with($resource)->will($this->returnValue('TheCorrectResourceUri'));
+		$resourceUri = $this->viewHelper->render(NULL, NULL, $resource, FALSE);
+		$this->assertEquals('TheCorrectResourceUri', $resourceUri);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderCreatesASpecialBrokenResourceUriIfTheResourceCouldNotBePublished() {
-		$mockResource = $this->getMock('TYPO3\Flow\Resource\Resource', array(), array(), '', FALSE);
-
-		$this->mockResourcePublisher->expects($this->once())->method('getPersistentResourceWebUri')->with($mockResource)->will($this->returnValue(FALSE));
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('http://foo/MyOwnResources/'));
-
-		$resourceUri = $this->viewHelper->render(NULL, NULL, $mockResource);
-		$this->assertEquals('http://foo/MyOwnResources/BrokenResource', $resourceUri);
+		$resource = new Resource();
+		$this->mockResourceManager->expects($this->atLeastOnce())->method('getPublicPersistentResourceUri')->with($resource)->will($this->returnValue(FALSE));
+		$resourceUri = $this->viewHelper->render(NULL, NULL, $resource, FALSE);
+		$this->assertEquals('404-Resource-Not-Found', $resourceUri);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderLocalizesResource() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
-		$this->mockI18nService->expects($this->once())->method('getLocalizedFilename')->with('resource://SomePackage/Public/foo')->will($this->returnValue(array('resource://SomePackage/Public/foo.de', new \TYPO3\Flow\I18n\Locale('de'))));
-		$resourceUri = $this->viewHelper->render('foo', 'SomePackage');
-		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo.de', $resourceUri);
+		$this->mockI18nService->expects($this->once())->method('getLocalizedFilename')->with('resource://ThePackageKey/Public/Styles/Main.css')->will($this->returnValue(array('resource://ThePackageKey/Public/Styles/Main.css.de', new Locale('de'))));
+		$this->mockResourceManager->expects($this->atLeastOnce())->method('getPublicPackageResourceUri')->with('ThePackageKey', 'Styles/Main.css.de')->will($this->returnValue('TheCorrectResourceUri'));
+		$resourceUri = $this->viewHelper->render('Styles/Main.css', 'ThePackageKey');
+		$this->assertEquals('TheCorrectResourceUri', $resourceUri);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderLocalizesResourceGivenAsResourceUri() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
-		$this->mockI18nService
-			->expects($this->once())
-			->method('getLocalizedFilename')
-			->with('resource://SomePackage/Public/Images/foo.jpg')
-			->will($this->returnValue(array('resource://SomePackage/Public/Images/foo.de.jpg', new \TYPO3\Flow\I18n\Locale('de'))));
-
-		$resourceUri = $this->viewHelper->render('resource://SomePackage/Public/Images/foo.jpg');
-		$this->assertEquals('CustomDirectory/Packages/SomePackage/Images/foo.de.jpg', $resourceUri);
+		$this->mockI18nService->expects($this->once())->method('getLocalizedFilename')->with('resource://ThePackageKey/Public/Styles/Main.css')->will($this->returnValue(array('resource://ThePackageKey/Public/Styles/Main.de.css', new Locale('de'))));
+		$this->mockResourceManager->expects($this->atLeastOnce())->method('getPublicPackageResourceUri')->with('ThePackageKey', 'Styles/Main.de.css')->will($this->returnValue('TheCorrectResourceUri'));
+		$resourceUri = $this->viewHelper->render('resource://ThePackageKey/Public/Styles/Main.css');
+		$this->assertEquals('TheCorrectResourceUri', $resourceUri);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderSkipsLocalizationIfRequested() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
 		$this->mockI18nService->expects($this->never())->method('getLocalizedFilename');
-		$resourceUri = $this->viewHelper->render('foo', 'SomePackage', NULL, FALSE);
-		$this->assertEquals('CustomDirectory/Packages/SomePackage/foo', $resourceUri);
+		$this->viewHelper->render('foo', 'SomePackage', NULL, FALSE);
 	}
 
 	/**
 	 * @test
 	 */
 	public function renderSkipsLocalizationForResourcesGivenAsResourceUriIfRequested() {
-		$this->mockResourcePublisher->expects($this->atLeastOnce())->method('getStaticResourcesWebBaseUri')->will($this->returnValue('CustomDirectory/'));
 		$this->mockI18nService->expects($this->never())->method('getLocalizedFilename');
-
-		$resourceUri = $this->viewHelper->render('resource://SomePackage/Public/Images/foo.jpg', NULL, NULL, FALSE);
-		$this->assertEquals('CustomDirectory/Packages/SomePackage/Images/foo.jpg', $resourceUri);
+		$this->viewHelper->render('resource://SomePackage/Public/Images/foo.jpg', NULL, NULL, FALSE);
 	}
 
 	/**

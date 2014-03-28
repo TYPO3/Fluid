@@ -13,7 +13,7 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\I18n\Service;
-use TYPO3\Flow\Resource\Publishing\ResourcePublisher;
+use TYPO3\Flow\Resource\ResourceManager;
 use TYPO3\Flow\Resource\Resource;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
@@ -61,9 +61,9 @@ class ResourceViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var ResourcePublisher
+	 * @var ResourceManager
 	 */
-	protected $resourcePublisher;
+	protected $resourceManager;
 
 	/**
 	 * @Flow\Inject
@@ -84,9 +84,9 @@ class ResourceViewHelper extends AbstractViewHelper {
 	 */
 	public function render($path = NULL, $package = NULL, Resource $resource = NULL, $localize = TRUE) {
 		if ($resource !== NULL) {
-			$uri = $this->resourcePublisher->getPersistentResourceWebUri($resource);
+			$uri = $this->resourceManager->getPublicPersistentResourceUri($resource);
 			if ($uri === FALSE) {
-				$uri = $this->resourcePublisher->getStaticResourcesWebBaseUri() . 'BrokenResource';
+				$uri = '404-Resource-Not-Found';
 			}
 		} else {
 			if ($path === NULL) {
@@ -113,7 +113,7 @@ class ResourceViewHelper extends AbstractViewHelper {
 					$path = $matches[2];
 				}
 			}
-			$uri = $this->resourcePublisher->getStaticResourcesWebBaseUri() . 'Packages/' . $package . '/' . $path;
+			$uri = $this->resourceManager->getPublicPackageResourceUri($package, $path);
 		}
 		return $uri;
 	}

@@ -80,17 +80,13 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 		$this->registerFieldNameForFormTokenGeneration($name);
 
 		$output = '';
-		$resourceObject = $this->getUploadedResource();
-		if ($resourceObject !== NULL) {
-			$filenameIdAttribute = $resourcePointerIdAttribute = '';
+		$resource = $this->getUploadedResource();
+		if ($resource !== NULL) {
+			$resourceIdentityAttribute = '';
 			if ($this->hasArgument('id')) {
-				$filenameIdAttribute = ' id="' . htmlspecialchars($this->arguments['id']) . '-filename"';
-				$resourcePointerIdAttribute = ' id="' . htmlspecialchars($this->arguments['id']) . '-resourcePointer"';
+				$resourceIdentityAttribute = ' id="' . htmlspecialchars($this->arguments['id']) . '-resource-identity"';
 			}
-			$filenameValue = $resourceObject->getFilename();
-			$resourcePointerValue = $resourceObject->getResourcePointer();
-			$output .= '<input type="hidden" name="' . $this->getName() . '[submittedFile][filename]" value="' . htmlspecialchars($filenameValue) . '"' . $filenameIdAttribute . ' />';
-			$output .= '<input type="hidden" name="' . $this->getName() . '[submittedFile][resourcePointer]" value="' . htmlspecialchars($resourcePointerValue) . '"' . $resourcePointerIdAttribute . ' />';
+			$output .= '<input type="hidden" name="'. $this->getName() . '[originallySubmittedResource][__identity]" value="' . $this->persistenceManager->getIdentifierByObject($resource) . '"' . $resourceIdentityAttribute . ' />';
 		}
 
 		$this->tag->addAttribute('type', 'file');
