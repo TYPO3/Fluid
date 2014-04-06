@@ -90,7 +90,7 @@ class CycleViewHelper extends AbstractViewHelper {
 		$output = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);
 
-		$this->currentCycleIndex ++;
+		$this->currentCycleIndex++;
 
 		return $output;
 	}
