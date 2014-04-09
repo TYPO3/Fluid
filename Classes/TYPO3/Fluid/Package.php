@@ -34,6 +34,30 @@ class Package extends BasePackage {
 	public function boot(Bootstrap $bootstrap) {
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
 
+		$context = $bootstrap->getContext();
+		if (!$context->isProduction()) {
+			$dispatcher->connect('TYPO3\Flow\Core\Booting\Sequence', 'afterInvokeStep', function ($step) use ($bootstrap, $dispatcher) {
+				if ($step->getIdentifier() === 'typo3.flow:systemfilemonitor') {
+					$templateFileMonitor = \TYPO3\Flow\Monitor\FileMonitor::createFileMonitorAtBoot('Fluid_TemplateFiles', $bootstrap);
+					$packageManager = $bootstrap->getEarlyInstance('TYPO3\Flow\Package\PackageManagerInterface');
+					foreach ($packageManager->getActivePackages() as $packageKey => $package) {
+						if ($packageManager->isPackageFrozen($packageKey)) {
+							continue;
+						}
+
+						$templatesPath = $package->getResourcesPath() . 'Private/Templates';
+
+						if (is_dir($templatesPath)) {
+							$templateFileMonitor->monitorDirectory($templatesPath);
+						}
+					}
+
+					$templateFileMonitor->detectChanges();
+					$templateFileMonitor->shutdownObject();
+				}
+			});
+		}
+
 			// Use a closure to invoke the TemplateCompiler, since the object is not registered during compiletime
 		$flushTemplates = function($identifier, $changedFiles) use ($bootstrap) {
 			if ($identifier !== 'Flow_ClassFiles') {
