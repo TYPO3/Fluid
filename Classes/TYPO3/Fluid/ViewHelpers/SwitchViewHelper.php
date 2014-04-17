@@ -19,16 +19,19 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
  * Switch view helper which can be used to render content depending on a value or expression.
  * Implements what a basic switch()-PHP-method does.
  *
+ * An optional default case can be specified which is rendered if none of the "f:case" conditions matches.
+ *
  * = Examples =
  *
  * <code title="Simple Switch statement">
  * <f:switch expression="{person.gender}">
  *   <f:case value="male">Mr.</f:case>
  *   <f:case value="female">Mrs.</f:case>
+ *   <f:defaultCase>Mr. / Mrs.</f:defaultCase>
  * </f:switch>
  * </code>
  * <output>
- * Mr. / Mrs. (depending on the value of {person.gender})
+ * "Mr.", "Mrs." or "Mr. / Mrs." (depending on the value of {person.gender})
  * </output>
  *
  * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
@@ -80,14 +83,23 @@ class SwitchViewHelper extends AbstractViewHelper implements ChildNodeAccessInte
 		$templateVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', $expression);
 		$templateVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'break', FALSE);
 
+		$defaultCaseViewHelperNode = NULL;
 		foreach ($this->childNodes as $childNode) {
+			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\DefaultCaseViewHelper') {
+				$defaultCaseViewHelperNode = $childNode;
+			}
 			if (!$childNode instanceof ViewHelperNode || $childNode->getViewHelperClassName() !== 'TYPO3\Fluid\ViewHelpers\CaseViewHelper') {
 				continue;
 			}
 			$content = $childNode->evaluate($this->renderingContext);
 			if ($templateVariableContainer->get('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'break') === TRUE) {
+				$defaultCaseViewHelperNode = NULL;
 				break;
 			}
+		}
+
+		if ($defaultCaseViewHelperNode !== NULL) {
+			$content = $defaultCaseViewHelperNode->evaluate($this->renderingContext);
 		}
 
 		$templateVariableContainer->remove('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression');
