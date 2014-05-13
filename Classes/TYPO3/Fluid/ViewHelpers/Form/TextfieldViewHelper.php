@@ -58,7 +58,7 @@ class TextfieldViewHelper extends AbstractFormFieldViewHelper {
 	 * @return string
 	 * @api
 	 */
-	public function render($required = NULL, $type = 'text') {
+	public function render($required = FALSE, $type = 'text') {
 		$name = $this->getName();
 		$this->registerFieldNameForFormTokenGeneration($name);
 
@@ -71,7 +71,7 @@ class TextfieldViewHelper extends AbstractFormFieldViewHelper {
 			$this->tag->addAttribute('value', $value);
 		}
 
-		if ($required !== NULL) {
+		if ($required === TRUE) {
 			$this->tag->addAttribute('required', 'required');
 		}
 

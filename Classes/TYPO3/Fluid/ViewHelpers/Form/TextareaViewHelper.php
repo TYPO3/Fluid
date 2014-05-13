@@ -47,6 +47,7 @@ class TextareaViewHelper extends AbstractFormFieldViewHelper {
 		$this->registerTagAttribute('placeholder', 'string', 'The placeholder of the textarea');
 		$this->registerTagAttribute('autofocus', 'string', 'Specifies that a text area should automatically get focus when the page loads');
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('required', 'boolean', 'If the field should be marked as required or not', FALSE, FALSE);
 		$this->registerUniversalTagAttributes();
 	}
 
@@ -63,6 +64,10 @@ class TextareaViewHelper extends AbstractFormFieldViewHelper {
 		$this->tag->forceClosingTag(TRUE);
 		$this->tag->addAttribute('name', $name);
 		$this->tag->setContent(htmlspecialchars($this->getValue()));
+
+		if ($this->hasArgument('required') && $this->arguments['required'] === TRUE) {
+			$this->tag->addAttribute('required', 'required');
+		}
 
 		$this->setErrorClassAttribute();
 
