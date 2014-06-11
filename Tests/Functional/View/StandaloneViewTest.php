@@ -240,4 +240,35 @@ class StandaloneViewTest extends FunctionalTestCase {
 		$this->assertSame($expected, $actual);
 	}
 
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 */
+	public function viewThrowsExceptionWhenUnknownViewHelperIsCalled() {
+		$httpRequest = Request::create(new Uri('http://localhost'));
+		$actionRequest = new ActionRequest($httpRequest);
+		$actionRequest->setFormat('txt');
+		$standaloneView = new Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
+		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithUnknownViewHelper.txt');
+		$standaloneView->setLayoutRootPath(__DIR__ . '/Fixtures/SpecialLayouts');
+
+		$standaloneView->render();
+	}
+
+	/**
+	 * @test
+	 */
+	public function xmlNamespacesCanBeIgnored() {
+		$httpRequest = Request::create(new Uri('http://localhost'));
+		$actionRequest = new ActionRequest($httpRequest);
+		$actionRequest->setFormat('txt');
+		$standaloneView = new Fixtures\View\StandaloneView($actionRequest, $this->standaloneViewNonce);
+		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplateWithCustomNamespaces.txt');
+		$standaloneView->setLayoutRootPath(__DIR__ . '/Fixtures/SpecialLayouts');
+
+		$expected = '<foo:bar /><bar:foo></bar:foo><foo.bar:baz />foobar';
+		$actual = $standaloneView->render();
+		$this->assertSame($expected, $actual);
+	}
+
 }

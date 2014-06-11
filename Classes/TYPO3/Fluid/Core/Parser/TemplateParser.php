@@ -27,11 +27,10 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface;
 
 /**
  * Template parser building up an object syntax tree
- *
  */
 class TemplateParser {
 
-	static public $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z]+[a-zA-Z0-9]*)\s*=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*}/m';
+	static public $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/m';
 	static public $SCAN_PATTERN_XMLNSDECLARATION = '/\sxmlns:(?P<identifier>.*?)="(?P<xmlNamespace>.*?)"/m';
 
 	/**
@@ -50,7 +49,7 @@ class TemplateParser {
 	static public $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
 		(
 			(?: <\/?                                      # Start dynamic tags
-					(?:(?:NAMESPACE):[a-zA-Z0-9\\.]+)     # A tag consists of the namespace prefix and word characters
+					(?:(?:[a-z0-9\\.]*):[a-zA-Z0-9\\.]+)     # A tag consists of the namespace prefix and word characters
 					(?:                                   # Begin tag arguments
 						\s*[a-zA-Z0-9:-]+                  # Argument Keys
 						=                                 # =
@@ -73,7 +72,7 @@ class TemplateParser {
 	 */
 	static public $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/
 		^<                                                # A Tag begins with <
-		(?P<NamespaceIdentifier>NAMESPACE):               # Then comes the Namespace prefix followed by a :
+		(?P<NamespaceIdentifier>[a-z0-9\\.]*):               # Then comes the Namespace prefix followed by a :
 		(?P<MethodIdentifier>                             # Now comes the Name of the ViewHelper
 			[a-zA-Z0-9\\.]+
 		)
@@ -98,7 +97,7 @@ class TemplateParser {
 	 * tag.
 	 *
 	 */
-	static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>NAMESPACE):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+	static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>[a-z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 
 	/**
 	 * This regular expression splits the tag arguments into its parts
@@ -270,11 +269,19 @@ class TemplateParser {
 
 	/**
 	 * Namespace identifiers and their component name prefix (Associative array).
+	 *
 	 * @var array
 	 */
 	protected $namespaces = array(
 		'f' => 'TYPO3\Fluid\ViewHelpers'
 	);
+
+	/**
+	 * Namespace identifiers that should be skipped during parsing (simple array of regular expressions)
+	 *
+	 * @var array
+	 */
+	protected $ignoredNamespaceIdentifierPatterns = array();
 
 	/**
 	 * @var ObjectManagerInterface
@@ -366,6 +373,7 @@ class TemplateParser {
 	 * @return void
 	 */
 	protected function reset() {
+		$this->ignoredNamespaceIdentifierPatterns = array();
 		$this->namespaces = array(
 			'f' => 'TYPO3\Fluid\ViewHelpers'
 		);
@@ -401,14 +409,23 @@ class TemplateParser {
 			}
 			$this->namespaces[$match['identifier']] = $phpNamespace;
 		}
+
 		$matches = array();
 		preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
 			if (array_key_exists($match['identifier'], $this->namespaces)) {
 				throw new Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $match['identifier']), 1224241246);
 			}
-			$this->namespaces[$match['identifier']] = $match['phpNamespace'];
+			if (isset($match['phpNamespace'])) {
+				if (strpos($match['identifier'], '*') !== FALSE) {
+					throw new Exception(sprintf('Only ignored namespace declarations may contain the placeholder "*". Remove the PHP namespace from "%s" or fix the identifier.', $match[0]), 1382528528);
+				}
+				$this->namespaces[$match['identifier']] = $match['phpNamespace'];
+			} else {
+				$this->ignoredNamespaceIdentifierPatterns[] = '/^' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $match['identifier']) . '$/';
+			}
 		}
+
 		if ($matches !== array()) {
 			$templateString = preg_replace(self::$SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
 		}
@@ -423,8 +440,7 @@ class TemplateParser {
 	 * @return array Splitted template
 	 */
 	protected function splitTemplateAtDynamicTags($templateString) {
-		$regularExpression = $this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS);
-		return preg_split($regularExpression, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		return preg_split(self::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	}
 
 	/**
@@ -436,8 +452,8 @@ class TemplateParser {
 	 * @throws Exception
 	 */
 	protected function buildObjectTree($splitTemplate, $context) {
-		$regularExpression_openingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG);
-		$regularExpression_closingViewHelperTag = $this->prepareTemplateRegularExpression(self::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG);
+		$regularExpression_openingViewHelperTag = self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG;
+		$regularExpression_closingViewHelperTag = self::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG;
 
 		/** @var $state ParsingState */
 		$state = $this->objectManager->get('TYPO3\Fluid\Core\Parser\ParsingState');
@@ -450,13 +466,20 @@ class TemplateParser {
 			$matchedVariables = array();
 			if (preg_match(self::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->textHandler($state, $matchedVariables[1]);
+				continue;
 			} elseif (preg_match($regularExpression_openingViewHelperTag, $templateElement, $matchedVariables) > 0) {
-				$this->openingViewHelperTagHandler($state, $matchedVariables['NamespaceIdentifier'], $matchedVariables['MethodIdentifier'], $matchedVariables['Attributes'], ($matchedVariables['Selfclosing'] === '' ? FALSE : TRUE));
+				$viewHelperWasOpened = $this->openingViewHelperTagHandler($state, $matchedVariables['NamespaceIdentifier'], $matchedVariables['MethodIdentifier'], $matchedVariables['Attributes'], ($matchedVariables['Selfclosing'] === '' ? FALSE : TRUE));
+				if ($viewHelperWasOpened === TRUE) {
+					continue;
+				}
 			} elseif (preg_match($regularExpression_closingViewHelperTag, $templateElement, $matchedVariables) > 0) {
-				$this->closingViewHelperTagHandler($state, $matchedVariables['NamespaceIdentifier'], $matchedVariables['MethodIdentifier']);
-			} else {
-				$this->textAndShorthandSyntaxHandler($state, $templateElement, $context);
+				$viewHelperWasClosed = $this->closingViewHelperTagHandler($state, $matchedVariables['NamespaceIdentifier'], $matchedVariables['MethodIdentifier']);
+				if ($viewHelperWasClosed === TRUE) {
+					continue;
+				}
 			}
+
+			$this->textAndShorthandSyntaxHandler($state, $templateElement, $context);
 		}
 
 		if ($state->countNodeStack() !== 1) {
@@ -473,16 +496,18 @@ class TemplateParser {
 	 * @param string $methodIdentifier Method identifier
 	 * @param string $arguments Arguments string, not yet parsed
 	 * @param boolean $selfclosing true, if the tag is a self-closing tag.
-	 * @return void
+	 * @return boolean
 	 */
 	protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
 		$argumentsObjectTree = $this->parseArguments($arguments);
-		$this->initializeViewHelperAndAddItToStack($state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree);
+		$viewHelperWasOpened = $this->initializeViewHelperAndAddItToStack($state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree);
 
-		if ($selfclosing) {
+		if ($viewHelperWasOpened === TRUE && $selfclosing === TRUE) {
 			$node = $state->popNodeFromStack();
 			$this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
 		}
+
+		return $viewHelperWasOpened;
 	}
 
 	/**
@@ -493,12 +518,12 @@ class TemplateParser {
 	 * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
 	 * @param string $methodIdentifier Method identifier
 	 * @param array $argumentsObjectTree Arguments object tree
-	 * @return void
+	 * @return boolean whether the viewHelper was found and added to the stack or not
 	 * @throws Exception
 	 */
 	protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
-		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
+		if ($this->isNamespaceValid($namespaceIdentifier, $methodIdentifier) === FALSE) {
+			return FALSE;
 		}
 		$resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
 		$actualViewHelperClassName = $this->objectManager->getCaseSensitiveObjectName($resolvedViewHelperClassName);
@@ -540,6 +565,8 @@ class TemplateParser {
 		$this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
 
 		$state->pushNodeToStack($currentViewHelperNode);
+
+		return TRUE;
 	}
 
 	/**
@@ -624,13 +651,14 @@ class TemplateParser {
 	 * @param ParsingState $state The current parsing state
 	 * @param string $namespaceIdentifier Namespace identifier for the closing tag.
 	 * @param string $methodIdentifier Method identifier.
-	 * @return void
+	 * @return boolean whether the viewHelper was found and added to the stack or not
 	 * @throws Exception
 	 */
 	protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
-		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new Exception('Namespace could not be resolved. This exception should never be thrown!', 1224256186);
+		if ($this->isNamespaceValid($namespaceIdentifier, $methodIdentifier) === FALSE) {
+			return FALSE;
 		}
+
 		$lastStackElement = $state->popNodeFromStack();
 		if (!($lastStackElement instanceof ViewHelperNode)) {
 			throw new Exception('You closed a templating tag which you never opened!', 1224485838);
@@ -639,6 +667,8 @@ class TemplateParser {
 			throw new Exception('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier), 1224485398);
 		}
 		$this->callInterceptor($lastStackElement, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
+
+		return TRUE;
 	}
 
 	/**
@@ -675,8 +705,10 @@ class TemplateParser {
 				} else {
 					$arguments = array();
 				}
-				$this->initializeViewHelperAndAddItToStack($state, $singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier'], $arguments);
-				$numberOfViewHelpers++;
+				$viewHelperWasAdded = $this->initializeViewHelperAndAddItToStack($state, $singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier'], $arguments);
+				if ($viewHelperWasAdded === TRUE) {
+					$numberOfViewHelpers++;
+				}
 			}
 		}
 
@@ -806,18 +838,6 @@ class TemplateParser {
 	}
 
 	/**
-	 * Takes a regular expression template and replaces "NAMESPACE" with the
-	 * currently registered namespace identifiers. Returns a regular expression
-	 * which is ready to use.
-	 *
-	 * @param string $regularExpression Regular expression template
-	 * @return string Regular expression ready to be used
-	 */
-	protected function prepareTemplateRegularExpression($regularExpression) {
-		return str_replace('NAMESPACE', implode('|', array_keys($this->namespaces)), $regularExpression);
-	}
-
-	/**
 	 * Handler for everything which is not a ViewHelperNode.
 	 *
 	 * This includes Text, array syntax, and object accessor syntax.
@@ -828,7 +848,7 @@ class TemplateParser {
 	 * @return void
 	 */
 	protected function textAndShorthandSyntaxHandler(ParsingState $state, $text, $context) {
-		$sections = preg_split($this->prepareTemplateRegularExpression(self::$SPLIT_PATTERN_SHORTHANDSYNTAX), $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		$sections = preg_split(self::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 
 		foreach ($sections as $section) {
 			$matchedVariables = array();
@@ -909,5 +929,34 @@ class TemplateParser {
 		$this->callInterceptor($node, InterceptorInterface::INTERCEPT_TEXT, $state);
 
 		$state->getNodeFromStack()->addChildNode($node);
+	}
+
+	/**
+	 * Validates the given namespaceIdentifier and throws an exception
+	 * if the namespace is unknown and not ignored
+	 *
+	 * @param string $namespaceIdentifier
+	 * @param string $methodIdentifier
+	 * @return boolean TRUE if the given namespace is valid, otherwise FALSE
+	 * @throws Exception if the given namespace can't be resolved and is not ignored
+	 */
+	protected function isNamespaceValid($namespaceIdentifier, $methodIdentifier) {
+		if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
+			return TRUE;
+		}
+
+		foreach ($this->ignoredNamespaceIdentifierPatterns as $namespaceIdentifierPattern) {
+			if (preg_match($namespaceIdentifierPattern, $namespaceIdentifier) === 1) {
+				return FALSE;
+			}
+		}
+
+		throw new Exception(sprintf('Error while rendering a ViewHelper
+			The namespace of ViewHelper notation "<%1$s:%2$s.../>" could not be resolved.
+
+			Possible reasons are:
+			* you have a spelling error in the viewHelper namespace
+			* you forgot to import the namespace using "{namespace %1$s=Some\Package\ViewHelpers}"
+			* you\'re trying to use a non-fluid xml namespace, in which case you can use "{namespace %1$s}" to ignore this namespace for fluid rendering', $namespaceIdentifier, $methodIdentifier), 1402521855);
 	}
 }

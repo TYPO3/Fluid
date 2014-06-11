@@ -1,0 +1,1 @@
+{namespace f*}{namespace bar}<foo:bar /><bar:foo></bar:foo><foo.bar:baz /><f:format.raw>foobar</f:format.raw>

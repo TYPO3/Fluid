@@ -35,7 +35,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('typo3', 't3', 'f'));
 
 		$source = '<html><head> <f:a.testing /> <f:blablubb> {testing}</f4:blz> </t3:hi.jo>';
-		$expected = array('<html><head> ','<f:a.testing />', ' ', '<f:blablubb>', ' {testing}</f4:blz> ', '</t3:hi.jo>');
+		$expected = array('<html><head> ','<f:a.testing />', ' ', '<f:blablubb>', ' {testing}', '</f4:blz>', ' ', '</t3:hi.jo>');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with simple tags.');
 
 		$source = 'hi<f:testing attribute="Hallo>{yep}" nested:attribute="jup" />ja';
@@ -157,7 +157,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f'));
 		$this->assertEquals(preg_match($pattern, '</f:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
 		$this->assertEquals(preg_match($pattern, '</f:bla.a    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
-		$this->assertEquals(preg_match($pattern, '</t:bla>'), 0, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does match match a tag it should not match.');
+		$this->assertEquals(preg_match($pattern, '</t:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a unknown namespace tag it should match.');
 	}
 
 	/**

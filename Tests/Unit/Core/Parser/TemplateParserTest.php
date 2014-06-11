@@ -268,13 +268,12 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser->injectObjectManager($mockObjectManager);
 		$templateParser->expects($this->at(0))->method('textAndShorthandSyntaxHandler')->with($mockState, 'The first part is simple');
 		$templateParser->expects($this->at(1))->method('textHandler')->with($mockState, '<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>');
-		$templateParser->expects($this->at(2))->method('openingViewHelperTagHandler')->with($mockState, 'f', 'format.printf', ' arguments="{number : 362525200}"', FALSE);
+		$templateParser->expects($this->at(2))->method('openingViewHelperTagHandler')->with($mockState, 'f', 'format.printf', ' arguments="{number : 362525200}"', FALSE)->will($this->returnValue(TRUE));
 		$templateParser->expects($this->at(3))->method('textAndShorthandSyntaxHandler')->with($mockState, '%.3e');
-		$templateParser->expects($this->at(4))->method('closingViewHelperTagHandler')->with($mockState, 'f', 'format.printf');
+		$templateParser->expects($this->at(4))->method('closingViewHelperTagHandler')->with($mockState, 'f', 'format.printf')->will($this->returnValue(TRUE));
 		$templateParser->expects($this->at(5))->method('textAndShorthandSyntaxHandler')->with($mockState, 'and here goes some {text} that could have {shorthand}');
 
 		$splitTemplate = $templateParser->_call('splitTemplateAtDynamicTags', 'The first part is simple<![CDATA[<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>]]><f:format.printf arguments="{number : 362525200}">%.3e</f:format.printf>and here goes some {text} that could have {shorthand}');
-
 		$templateParser->_call('buildObjectTree', $splitTemplate, \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
@@ -300,6 +299,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface')));
 
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('parseArguments', 'initializeViewHelperAndAddItToStack'));
+		$templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue(TRUE));
 
 		$templateParser->_call('openingViewHelperTagHandler', $mockState, '', '', array(), TRUE);
 	}
@@ -520,8 +520,8 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('recursiveArrayHandler', 'postProcessArgumentsForObjectAccessor', 'initializeViewHelperAndAddItToStack'));
 		$templateParser->expects($this->at(0))->method('recursiveArrayHandler')->with('format: "H:i"')->will($this->returnValue(array('format' => 'H:i')));
 		$templateParser->expects($this->at(1))->method('postProcessArgumentsForObjectAccessor')->with(array('format' => 'H:i'))->will($this->returnValue(array('processedArguments')));
-		$templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')->with($mockState, 'f', 'format.date', array('processedArguments'));
-		$templateParser->expects($this->at(3))->method('initializeViewHelperAndAddItToStack')->with($mockState, 'f', 'base', array());
+		$templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')->with($mockState, 'f', 'format.date', array('processedArguments'))->will($this->returnValue(TRUE));
+		$templateParser->expects($this->at(3))->method('initializeViewHelperAndAddItToStack')->with($mockState, 'f', 'base', array())->will($this->returnValue(TRUE));
 
 		$templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:base() f:format.date(format: "H:i")', '');
 	}

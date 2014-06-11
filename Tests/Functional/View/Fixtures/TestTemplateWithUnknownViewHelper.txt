@@ -1,0 +1,2 @@
+{namespace fo}
+<foo:bar />
