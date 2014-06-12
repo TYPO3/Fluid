@@ -58,7 +58,7 @@ class FlashMessagesViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBas
 	}
 
 	/**
-	 * @test
+	 * Data provider for renderTests()
 	 */
 	public function renderDataProvider() {
 		return array(

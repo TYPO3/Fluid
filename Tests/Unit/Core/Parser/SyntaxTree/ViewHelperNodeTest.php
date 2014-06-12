@@ -154,5 +154,8 @@ class ViewHelperNodeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$viewHelperNode->evaluate($this->renderingContext);
 		$viewHelperNode->evaluate($this->renderingContext);
+
+		// dummy assertion to avoid "risky test" warning
+		$this->assertTrue(TRUE);
 	}
 }
