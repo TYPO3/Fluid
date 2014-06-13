@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\Core\Parser;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Object\ObjectManagerInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ArrayNode;
@@ -368,6 +369,21 @@ class TemplateParser {
 	}
 
 	/**
+	 * Registers the given identifier/namespace mapping so that ViewHelper class names can be properly resolved while parsing
+	 *
+	 * @param string $identifier
+	 * @param string $phpNamespace
+	 * @return void
+	 * @throws Exception if the specified identifier is already registered
+	 */
+	public function registerNamespace($identifier, $phpNamespace) {
+		if (array_key_exists($identifier, $this->namespaces)) {
+			throw new Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $identifier), 1224241246);
+		}
+		$this->namespaces[$identifier] = $phpNamespace;
+	}
+
+	/**
 	 * Resets the parser to its default values.
 	 *
 	 * @return void
@@ -377,6 +393,7 @@ class TemplateParser {
 		$this->namespaces = array(
 			'f' => 'TYPO3\Fluid\ViewHelpers'
 		);
+		$this->emitInitializeNamespaces($this);
 	}
 
 	/**
@@ -395,9 +412,7 @@ class TemplateParser {
 			if ($match['identifier'] === 'f') {
 				continue;
 			}
-			if (array_key_exists($match['identifier'], $this->namespaces)) {
-				throw new Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $match['identifier']), 1331135889);
-			}
+
 			if (isset($this->settings['namespaces'][$match['xmlNamespace']])) {
 				$phpNamespace = $this->settings['namespaces'][$match['xmlNamespace']];
 			} else {
@@ -407,20 +422,17 @@ class TemplateParser {
 				}
 				$phpNamespace = str_replace('/', '\\', $matchedPhpNamespace['PhpNamespace']);
 			}
-			$this->namespaces[$match['identifier']] = $phpNamespace;
+			$this->registerNamespace($match['identifier'], $phpNamespace);
 		}
 
 		$matches = array();
 		preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
-			if (array_key_exists($match['identifier'], $this->namespaces)) {
-				throw new Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $match['identifier']), 1224241246);
-			}
 			if (isset($match['phpNamespace'])) {
 				if (strpos($match['identifier'], '*') !== FALSE) {
 					throw new Exception(sprintf('Only ignored namespace declarations may contain the placeholder "*". Remove the PHP namespace from "%s" or fix the identifier.', $match[0]), 1382528528);
 				}
-				$this->namespaces[$match['identifier']] = $match['phpNamespace'];
+				$this->registerNamespace($match['identifier'], $match['phpNamespace']);
 			} else {
 				$this->ignoredNamespaceIdentifierPatterns[] = '/^' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $match['identifier']) . '$/';
 			}
@@ -958,5 +970,15 @@ class TemplateParser {
 			* you have a spelling error in the viewHelper namespace
 			* you forgot to import the namespace using "{namespace %1$s=Some\Package\ViewHelpers}"
 			* you\'re trying to use a non-fluid xml namespace, in which case you can use "{namespace %1$s}" to ignore this namespace for fluid rendering', $namespaceIdentifier, $methodIdentifier), 1402521855);
+	}
+
+	/**
+	 * Signals that namespaces have been initialized
+	 *
+	 * @param TemplateParser $templateParser an instance of this class, so that new namespaces can be registered via registerNamespace()
+	 * @return void
+	 * @Flow\Signal
+	 */
+	public function emitInitializeNamespaces(TemplateParser $templateParser) {
 	}
 }
