@@ -14,10 +14,14 @@ namespace TYPO3\Fluid\Core\Widget;
 
 use TYPO3\Flow\Http\Response;
 use TYPO3\Flow\Mvc\ActionRequest;
+use TYPO3\Flow\Mvc\Exception\ForwardException;
+use TYPO3\Flow\Mvc\Exception\InfiniteLoopException;
+use TYPO3\Flow\Mvc\Exception\StopActionException;
 use TYPO3\Flow\Object\DependencyInjection\DependencyProxy;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
+use TYPO3\Fluid\Core\Widget\Exception\InvalidControllerException;
 use TYPO3\Fluid\Core\Widget\Exception\MissingControllerException;
 
 /**
@@ -176,6 +180,8 @@ abstract class AbstractWidgetViewHelper extends AbstractViewHelper implements Ch
 	 *
 	 * @return Response the response of this request.
 	 * @throws Exception\MissingControllerException
+	 * @throws \TYPO3\Flow\Mvc\Exception\StopActionException
+	 * @throws \TYPO3\Flow\Mvc\Exception\InfiniteLoopException
 	 * @api
 	 */
 	protected function initiateSubRequest() {
@@ -183,24 +189,49 @@ abstract class AbstractWidgetViewHelper extends AbstractViewHelper implements Ch
 			$this->controller->_activateDependency();
 		}
 		if (!($this->controller instanceof AbstractWidgetController)) {
-			throw new MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\Flow\Annotations\Inject annotation in your widget class.', 1284401632);
+			throw new Exception\MissingControllerException('initiateSubRequest() can not be called if there is no controller inside $this->controller. Make sure to add the @TYPO3\Flow\Annotations\Inject annotation in your widget class.', 1284401632);
 		}
 
 		/** @var $subRequest ActionRequest */
 		$subRequest = $this->objectManager->get('TYPO3\Flow\Mvc\ActionRequest', $this->controllerContext->getRequest());
+		/** @var $subResponse Response */
+		$subResponse = $this->objectManager->get('TYPO3\Flow\Http\Response', $this->controllerContext->getResponse());
+
 		$this->passArgumentsToSubRequest($subRequest);
 		$subRequest->setArgument('__widgetContext', $this->widgetContext);
-		$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
 		$subRequest->setArgumentNamespace('--' . $this->widgetContext->getWidgetIdentifier());
 
-		/** @var $subResponse Response */
-		$subResponse = $this->objectManager->get('TYPO3\Flow\Http\Response');
-		$this->controller->processRequest($subRequest, $subResponse);
+		$dispatchLoopCount = 0;
+		while (!$subRequest->isDispatched()) {
+			if ($dispatchLoopCount++ > 99) {
+				throw new InfiniteLoopException('Could not ultimately dispatch the widget request after '  . $dispatchLoopCount . ' iterations.', 1380282310);
+			}
+			$widgetControllerObjectName = $this->widgetContext->getControllerObjectName();
+			if ($subRequest->getControllerObjectName() !== '' && $subRequest->getControllerObjectName() !== $widgetControllerObjectName) {
+				throw new Exception\InvalidControllerException(sprintf('You are not allowed to initiate requests to different controllers from a widget.' . chr(10) . 'widget controller: "%s", requested controller: "%s".', $widgetControllerObjectName, $subRequest->getControllerObjectName()), 1380284579);
+			}
+			$subRequest->setControllerObjectName($this->widgetContext->getControllerObjectName());
+			try {
+				$this->controller->processRequest($subRequest, $subResponse);
+			} catch (StopActionException $exception) {
+				if ($exception instanceof ForwardException) {
+					$subRequest = $exception->getNextRequest();
+					continue;
+				}
+				/** @var $parentResponse Response */
+				$parentResponse = $this->controllerContext->getResponse();
+				$parentResponse
+					->setStatus($subResponse->getStatusCode())
+					->setContent($subResponse->getContent())
+					->setHeader('Location', $subResponse->getHeader('Location'));
+				throw $exception;
+			}
+		}
 		return $subResponse;
 	}
 
 	/**
-	 * Pass the arguments of the widget to the subrequest.
+	 * Pass the arguments of the widget to the sub request.
 	 *
 	 * @param ActionRequest $subRequest
 	 * @return void
@@ -217,7 +248,9 @@ abstract class AbstractWidgetViewHelper extends AbstractViewHelper implements Ch
 			}
 			$subRequest->setArguments($arguments[$widgetIdentifier]);
 		}
-		$subRequest->setControllerActionName($controllerActionName);
+		if ($subRequest->getControllerActionName() === NULL) {
+			$subRequest->setControllerActionName($controllerActionName);
+		}
 	}
 
 	/**

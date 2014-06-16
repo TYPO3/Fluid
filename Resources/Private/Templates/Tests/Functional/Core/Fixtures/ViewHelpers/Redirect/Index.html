@@ -1,0 +1,30 @@
+<h2>Redirects:</h2>
+<ul>
+	<li>
+		<f:widget.link id="redirect-no-delay-no-param" action="redirectTest">No delay, no parameter</f:widget.link>
+	</li>
+	<li>
+		<f:widget.link id="redirect-no-delay-with-param" action="redirectTest" arguments="{parameter: 'foo'}">No delay, with parameter</f:widget.link>
+	</li>
+	<li>
+		<f:widget.link id="redirect-with-delay-no-param" action="redirectTest" arguments="{delay: 2}">2 sec delay, no parameter</f:widget.link>
+	</li>
+	<li>
+		<f:widget.link id="redirect-with-delay-with-param" action="redirectTest" arguments="{delay: 2, parameter: 'bar'}">2 sec delay, with parameter</f:widget.link>
+	</li>
+	<li>
+		<f:widget.link id="redirect-other-controller" action="redirectTest" arguments="{otherController: true}">redirect to other controller (expected: Exception!)</f:widget.link>
+	</li>
+</ul>
+<h2>Forwards:</h2>
+<ul>
+	<li>
+		<f:widget.link id="forward-no-param" action="forwardTest">No parameter</f:widget.link>
+	</li>
+	<li>
+		<f:widget.link id="forward-with-param" action="forwardTest" arguments="{parameter: 'baz'}">With parameter</f:widget.link>
+	</li>
+	<li>
+		<f:widget.link id="forward-other-controller" action="forwardTest" arguments="{otherController: true}">forward to other controller (expected: Exception!)</f:widget.link>
+	</li>
+</ul>
