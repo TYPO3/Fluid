@@ -13,12 +13,10 @@ namespace TYPO3\Fluid\Tests\Unit\View;
 
 
 use org\bovigo\vfs\vfsStreamWrapper;
-use org\bovigo\vfs\vfsStreamDirectory;
 use TYPO3\Flow\Mvc\ActionRequest;
 use TYPO3\Flow\Mvc\Controller\ControllerContext;
 use TYPO3\Flow\Tests\UnitTestCase;
 use TYPO3\Fluid\View\StandaloneView;
-use TYPO3\Fluid\View\TemplateView;
 
 /**
  * Testcase for the StandaloneView
