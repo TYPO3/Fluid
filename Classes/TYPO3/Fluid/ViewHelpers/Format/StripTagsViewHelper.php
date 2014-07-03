@@ -58,9 +58,9 @@ class StripTagsViewHelper extends AbstractViewHelper {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-		if (!is_string($value)) {
-			return $value;
+		if (is_string($value) || (is_object($value) && method_exists($value, '__toString'))) {
+			return strip_tags($value);
 		}
-		return strip_tags($value);
+		return $value;
 	}
 }

@@ -63,7 +63,8 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper implements Compilabl
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-		if (!is_string($value)) {
+
+		if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {
 			return $value;
 		}
 		$flags = $keepQuotes ? ENT_NOQUOTES : ENT_COMPAT;
@@ -80,9 +81,10 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper implements Compilabl
 	 */
 	public function compile($argumentsVariableName, $renderChildrenClosureVariableName, &$initializationPhpCode, AbstractNode $syntaxTreeNode, TemplateCompiler $templateCompiler) {
 		$valueVariableName = $templateCompiler->variableName('value');
-		$initializationPhpCode .= sprintf('%s = (%s[\'value\'] !== NULL ? %s[\'value\'] : %s());', $valueVariableName, $argumentsVariableName, $argumentsVariableName, $renderChildrenClosureVariableName) . chr(10);
+		$initializationPhpCode .= sprintf('%1$s = (%2$s[\'value\'] !== NULL ? %2$s[\'value\'] : %3$s());', $valueVariableName, $argumentsVariableName, $renderChildrenClosureVariableName) . chr(10);
 
-		return sprintf('(!is_string(%s) ? %s : htmlspecialchars(%s, (%s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %s[\'encoding\'], %s[\'doubleEncode\']))',
-				$valueVariableName, $valueVariableName, $valueVariableName, $argumentsVariableName, $argumentsVariableName, $argumentsVariableName);
+		return sprintf('!is_string(%1$s) && !(is_object(%1$s) && method_exists(%1$s, \'__toString\')) ? %1$s : htmlspecialchars(%1$s, (%2$s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %2$s[\'encoding\'], %2$s[\'doubleEncode\'])',
+			$valueVariableName, $argumentsVariableName);
 	}
+
 }

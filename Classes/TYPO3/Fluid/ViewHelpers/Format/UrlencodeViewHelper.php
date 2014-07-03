@@ -59,10 +59,9 @@ class UrlencodeViewHelper extends AbstractViewHelper {
 		if ($value === NULL) {
 			$value = $this->renderChildren();
 		}
-		if (is_string($value) || (is_object($value) && method_exists($value, '__toString')) ) {
-			return rawurlencode($value);
+		if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {
+			throw new ViewHelper\Exception(sprintf('This ViewHelper works with values that are of type string or objects that implement a __toString method. You provided "%s"', is_object($value) ? get_class($value) : gettype($value)), 1359389241);
 		}
-
-		throw new ViewHelper\Exception('This ViewHelper works with values that are of type string or objects that implement a __toString method. You provided "' . is_object($value) ? get_class($value) : gettype($value) . '"', 1359389241);
+		return rawurlencode($value);
 	}
 }

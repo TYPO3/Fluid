@@ -11,6 +11,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../Fixtures/UserWithoutToString.php');
+require_once(__DIR__ . '/../Fixtures/UserWithToString.php');
+
+use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithoutToString;
+use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithToString;
+
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\HtmlentitiesDecodeViewHelper
  */
@@ -92,9 +98,28 @@ class HtmlentitiesDecodeViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function renderReturnsUnmodifiedSourceIfItIsNoString() {
-		$source = new \stdClass();
+	public function renderReturnsUnmodifiedSourceIfItIsANumber() {
+		$source = 123.45;
 		$actualResult = $this->viewHelper->render($source);
 		$this->assertSame($source, $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderDecodesObjectsToStrings() {
+		$user = new UserWithToString('Xaver &lt;b&gt;Cross-Site&lt;/b&gt;');
+		$expectedResult = 'Xaver <b>Cross-Site</b>';
+		$actualResult = $this->viewHelper->render($user);
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString() {
+		$user = new UserWithoutToString('Xaver <b>Cross-Site</b>');
+		$actualResult = $this->viewHelper->render($user);
+		$this->assertSame($user, $actualResult);
 	}
 }
