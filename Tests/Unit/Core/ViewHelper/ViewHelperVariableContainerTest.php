@@ -11,20 +11,23 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Tests\UnitTestCase;
+use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+
 require_once(__DIR__ . '/../Fixtures/TestViewHelper.php');
 
 /**
  * Testcase for AbstractViewHelper
  */
-class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class ViewHelperVariableContainerTest extends UnitTestCase {
 
 	/**
-	 * @var \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer
+	 * @var ViewHelperVariableContainer
 	 */
 	protected $viewHelperVariableContainer;
 
 	protected function setUp() {
-		$this->viewHelperVariableContainer = new \TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer();
+		$this->viewHelperVariableContainer = new ViewHelperVariableContainer();
 	}
 
 	/**
@@ -59,10 +62,18 @@ class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function addOrUpdateWorks() {
+	public function addOrUpdateSetsAKeyIfItDoesNotExistYet() {
 		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
-		$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
-		$this->assertEquals($this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'), 'value2');
+		$this->assertEquals($this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'), 'value1');
+	}
+
+	/**
+	 * @test
+	 */
+	public function addOrUpdateOverridesAnExistingKey() {
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey', 'value1');
+		$this->viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey', 'value2');
+		$this->assertEquals($this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey'), 'value2');
 	}
 
 	/**
@@ -80,6 +91,29 @@ class ViewHelperVariableContainerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 */
 	public function removingNonExistentKeyThrowsException() {
 		$this->viewHelperVariableContainer->remove('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
+	}
+
+	/**
+	 * @test
+	 */
+	public function existsReturnsFalseIfTheSpecifiedKeyDoesNotExist() {
+		$this->assertFalse($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelper\NonExistent', 'nonExistentKey'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function existsReturnsTrueIfTheSpecifiedKeyExists() {
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey', 'someValue');
+		$this->assertTrue($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function existsReturnsTrueIfTheSpecifiedKeyExistsAndIsNull() {
+		$this->viewHelperVariableContainer->add('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey', NULL);
+		$this->assertTrue($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelper\NonExistent', 'someKey'));
 	}
 
 	/**

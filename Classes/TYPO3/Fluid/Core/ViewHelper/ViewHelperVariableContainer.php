@@ -15,6 +15,8 @@ use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
 use TYPO3\Fluid\View\AbstractTemplateView;
 
 /**
+ * A key/value store that can be used by ViewHelpers to communicate between each other.
+ *
  * @api
  */
 class ViewHelperVariableContainer {
@@ -39,7 +41,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * In case the value is already inside, an exception is thrown.
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @param mixed $value The value to store
 	 * @return void
@@ -48,7 +50,7 @@ class ViewHelperVariableContainer {
 	 */
 	public function add($viewHelperName, $key, $value) {
 		if ($this->exists($viewHelperName, $key)) {
-			throw new InvalidVariableException('The key "' . $viewHelperName . '->' . $key . '" was already stored and you cannot override it.', 1243352010);
+			throw new InvalidVariableException(sprintf('The key "%s->%s" was already stored and you cannot override it. Use addOrUpdate() instead if you want to replace existing values', $viewHelperName, $key), 1243352010);
 		}
 		$this->addOrUpdate($viewHelperName, $key, $value);
 	}
@@ -58,7 +60,7 @@ class ViewHelperVariableContainer {
 	 * to your fully qualified ViewHelper Class Name.
 	 * In case the value is already inside, it is silently overridden.
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @param mixed $value The value to store
 	 * @return void
@@ -73,7 +75,7 @@ class ViewHelperVariableContainer {
 	/**
 	 * Gets a variable which is stored
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @return mixed The object stored
 	 * @throws InvalidVariableException if there was no key with the specified name
@@ -81,7 +83,7 @@ class ViewHelperVariableContainer {
 	 */
 	public function get($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) {
-			throw new InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '"', 1243325768);
+			throw new InvalidVariableException(sprintf('No value found for key "%s->%s"', $viewHelperName, $key), 1243325768);
 		}
 		return $this->objects[$viewHelperName][$key];
 	}
@@ -89,19 +91,19 @@ class ViewHelperVariableContainer {
 	/**
 	 * Determine whether there is a variable stored for the given key
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
 	 * @api
 	 */
 	public function exists($viewHelperName, $key) {
-		return isset($this->objects[$viewHelperName][$key]);
+		return isset($this->objects[$viewHelperName]) && array_key_exists($key, $this->objects[$viewHelperName]);
 	}
 
 	/**
 	 * Remove a value from the variable container
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like \TYPO3\Fluid\ViewHelpers\ForViewHelper)
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data to remove
 	 * @return void
 	 * @throws InvalidVariableException if there was no key with the specified name
@@ -109,7 +111,7 @@ class ViewHelperVariableContainer {
 	 */
 	public function remove($viewHelperName, $key) {
 		if (!$this->exists($viewHelperName, $key)) {
-			throw new InvalidVariableException('No value found for key "' . $viewHelperName . '->' . $key . '", thus the key cannot be removed.', 1243352249);
+			throw new InvalidVariableException(sprintf('No value found for key "%s->%s", thus the key cannot be removed.', $viewHelperName, $key), 1243352249);
 		}
 		unset($this->objects[$viewHelperName][$key]);
 	}
