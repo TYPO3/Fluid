@@ -14,6 +14,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException;
 use TYPO3\Flow\I18n\Locale;
+use TYPO3\Flow\I18n\Translator;
 use TYPO3\Flow\Reflection\ObjectAccess;
 use TYPO3\Fluid;
 use TYPO3\Fluid\Core\ViewHelper;
@@ -104,7 +105,7 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\I18n\Translator
+	 * @var Translator
 	 */
 	protected $translator;
 

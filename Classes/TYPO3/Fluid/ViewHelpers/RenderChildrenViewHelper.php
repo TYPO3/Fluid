@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\Widget\Exception\RenderingContextNotFoundException;
@@ -23,6 +24,26 @@ use TYPO3\Fluid\Core\Widget\WidgetContext;
  *
  * It renders everything inside the Widget ViewHelper, and you can pass additional
  * arguments.
+ *
+ * = Examples =
+ *
+ * <code title="Basic usage">
+ * <!-- in the widget template -->
+ * Header
+ * <f:renderChildren arguments="{foo: 'bar'}" />
+ * Footer
+ *
+ * <-- in the outer template, using the widget -->
+ *
+ * <x:widget.someWidget>
+ *   Foo: {foo}
+ * </x:widget.someWidget>
+ * </code>
+ * <output>
+ * Header
+ * Foo: bar
+ * Footer
+ * </output>
  *
  * @api
  */
@@ -58,7 +79,7 @@ class RenderChildrenViewHelper extends AbstractViewHelper {
 	}
 
 	/**
-	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode
+	 * @return RootNode
 	 */
 	protected function getWidgetChildNodes() {
 		return $this->getWidgetContext()->getViewHelperChildNodes();

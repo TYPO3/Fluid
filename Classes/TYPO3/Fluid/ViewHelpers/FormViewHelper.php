@@ -12,6 +12,9 @@ namespace TYPO3\Fluid\ViewHelpers;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService;
+use TYPO3\Flow\Security\Context;
+use TYPO3\Flow\Security\Cryptography\HashService;
 use TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper;
 
@@ -53,19 +56,19 @@ class FormViewHelper extends AbstractFormViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\Cryptography\HashService
+	 * @var HashService
 	 */
 	protected $hashService;
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\Context
+	 * @var Context
 	 */
 	protected $securityContext;
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService
+	 * @var MvcPropertyMappingConfigurationService
 	 */
 	protected $mvcPropertyMappingConfigurationService;
 

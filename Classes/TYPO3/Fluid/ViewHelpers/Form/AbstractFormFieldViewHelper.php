@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 use TYPO3\Flow\Error\Result;
+use TYPO3\Flow\Mvc\ActionRequest;
 use TYPO3\Flow\Reflection\ObjectAccess;
 
 /**
@@ -25,8 +26,6 @@ use TYPO3\Flow\Reflection\ObjectAccess;
 abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 
 	/**
-	 * Initialize arguments.
-	 *
 	 * @return void
 	 * @api
 	 */
@@ -53,7 +52,7 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	/**
 	 * Shortcut for retrieving the request from the controller context
 	 *
-	 * @return \TYPO3\Flow\Mvc\ActionRequest
+	 * @return ActionRequest
 	 */
 	protected function getRequest() {
 		return $this->controllerContext->getRequest();

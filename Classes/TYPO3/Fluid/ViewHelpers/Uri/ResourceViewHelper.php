@@ -12,6 +12,8 @@ namespace TYPO3\Fluid\ViewHelpers\Uri;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\I18n\Service;
+use TYPO3\Flow\Resource\Publishing\ResourcePublisher;
 use TYPO3\Flow\Resource\Resource;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
@@ -59,13 +61,13 @@ class ResourceViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Resource\Publishing\ResourcePublisher
+	 * @var ResourcePublisher
 	 */
 	protected $resourcePublisher;
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\I18n\Service
+	 * @var Service
 	 */
 	protected $i18nService;
 

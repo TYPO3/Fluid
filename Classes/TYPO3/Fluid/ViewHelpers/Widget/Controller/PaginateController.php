@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Widget\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Persistence\QueryResultInterface;
 use TYPO3\Flow\Utility\Arrays;
 use TYPO3\Fluid\Core\Widget\AbstractWidgetController;
 
@@ -20,7 +21,7 @@ use TYPO3\Fluid\Core\Widget\AbstractWidgetController;
 class PaginateController extends AbstractWidgetController {
 
 	/**
-	 * @var \TYPO3\Flow\Persistence\QueryResultInterface
+	 * @var QueryResultInterface
 	 */
 	protected $objects;
 

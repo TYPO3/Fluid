@@ -12,7 +12,6 @@ namespace TYPO3\Fluid\ViewHelpers\Security;
  *                                                                        */
 
 use TYPO3\Flow\Security\Authorization\AccessDecisionManagerInterface;
-use TYPO3\Flow\Security\Exception\AccessDeniedException;
 use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 

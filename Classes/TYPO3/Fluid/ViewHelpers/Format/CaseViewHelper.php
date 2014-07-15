@@ -98,7 +98,7 @@ class CaseViewHelper extends AbstractViewHelper {
 	 * @param string $value The input value. If not given, the evaluated child nodes will be used
 	 * @param string $mode The case to apply, must be one of this' CASE_* constants. Defaults to uppercase application
 	 * @return string the altered string.
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @throws InvalidVariableException
 	 * @api
 	 */
 	public function render($value = NULL, $mode = self::CASE_UPPER) {

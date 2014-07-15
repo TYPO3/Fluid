@@ -23,7 +23,7 @@ use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 /**
  * A Section view helper
  *
- * == Examples ==
+ * = Examples =
  *
  * <code title="Rendering sections">
  * <f:section name="someSection">This is a section. {foo}</f:section>

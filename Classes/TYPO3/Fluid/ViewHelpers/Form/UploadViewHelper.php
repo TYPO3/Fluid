@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers\Form;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Property\PropertyMapper;
 use TYPO3\Flow\Resource\Resource;
 
 /**
@@ -52,14 +53,12 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 	protected $tagName = 'input';
 
 	/**
-	 * @var \TYPO3\Flow\Property\PropertyMapper
 	 * @Flow\Inject
+	 * @var PropertyMapper
 	 */
 	protected $propertyMapper;
 
 	/**
-	 * Initialize the arguments.
-	 *
 	 * @return void
 	 * @api
 	 */

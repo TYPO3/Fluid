@@ -14,6 +14,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\I18n\Exception\InvalidLocaleIdentifierException;
 use TYPO3\Flow\I18n\Locale;
+use TYPO3\Flow\I18n\Translator;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper;
 
@@ -70,8 +71,8 @@ use TYPO3\Fluid\Core\ViewHelper;
 class TranslateViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @var \TYPO3\Flow\I18n\Translator
 	 * @Flow\Inject
+	 * @var Translator
 	 */
 	protected $translator;
 

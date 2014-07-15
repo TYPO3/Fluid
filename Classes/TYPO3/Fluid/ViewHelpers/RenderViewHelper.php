@@ -16,7 +16,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * ViewHelper that renders a section or a specified partial
  *
- * == Examples ==
+ * = Examples =
  *
  * <code title="Rendering partials">
  * <f:render partial="SomePartial" arguments="{foo: someVariable}" />

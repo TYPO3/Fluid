@@ -14,6 +14,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\I18n\Cldr\Reader\NumbersReader;
 use TYPO3\Flow\I18n\Exception as I18nException;
+use TYPO3\Flow\I18n\Formatter\NumberFormatter;
 use TYPO3\Fluid\Core\ViewHelper\AbstractLocaleAwareViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 
@@ -59,7 +60,7 @@ class NumberViewHelper extends AbstractLocaleAwareViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\I18n\Formatter\NumberFormatter
+	 * @var NumberFormatter
 	 */
 	protected $numberFormatter;
 

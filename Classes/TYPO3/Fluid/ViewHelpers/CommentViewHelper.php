@@ -25,7 +25,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Before
  * <f:comment>
  *   This is completely hidden.
- *   <f:debug>This does not get parsed</f:debug>
+ *   <f:debug>This does not get rendered</f:debug>
  * </f:comment>
  * After
  * </code>

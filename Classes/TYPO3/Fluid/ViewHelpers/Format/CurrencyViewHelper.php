@@ -13,8 +13,8 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\I18n\Exception as I18nException;
+use TYPO3\Flow\I18n\Formatter\NumberFormatter;
 use TYPO3\Fluid\Core\ViewHelper\AbstractLocaleAwareViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
 use TYPO3\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 
@@ -67,7 +67,7 @@ class CurrencyViewHelper extends AbstractLocaleAwareViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\I18n\Formatter\NumberFormatter
+	 * @var NumberFormatter
 	 */
 	protected $numberFormatter;
 
@@ -76,7 +76,7 @@ class CurrencyViewHelper extends AbstractLocaleAwareViewHelper {
 	 * @param string $decimalSeparator (optional) The separator for the decimal point.
 	 * @param string $thousandsSeparator (optional) The thousands separator.
 	 *
-	 * @throws \TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException
+	 * @throws InvalidVariableException
 	 * @return string the formatted amount.
 	 * @throws ViewHelperException
 	 * @api

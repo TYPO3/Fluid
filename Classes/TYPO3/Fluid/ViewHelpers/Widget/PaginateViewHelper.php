@@ -48,7 +48,7 @@ class PaginateViewHelper extends AbstractWidgetViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Fluid\ViewHelpers\Widget\Controller\PaginateController
+	 * @var Controller\PaginateController
 	 */
 	protected $controller;
 

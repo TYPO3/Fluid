@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\ViewHelpers\Widget;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Security\Cryptography\HashService;
 use TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException;
@@ -37,7 +38,7 @@ class LinkViewHelper extends AbstractTagBasedViewHelper {
 
 	/**
 	 * @Flow\Inject
-	 * @var \TYPO3\Flow\Security\Cryptography\HashService
+	 * @var HashService
 	 */
 	protected $hashService;
 
