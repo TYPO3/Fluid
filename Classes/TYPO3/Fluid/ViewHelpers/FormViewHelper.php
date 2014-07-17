@@ -19,23 +19,30 @@ use TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper;
 
 /**
- * Form view helper. Generates a <form> Tag.
+ * Used to output an HTML <form> tag which is targeted at the specified action, in the current controller and package.
+
+ * = Examples =
  *
- * = Basic usage =
- *
- * Use <f:form> to output an HTML <form> tag which is targeted at the specified action, in the current controller and package.
- * It will submit the form data via a POST request. If you want to change this, use method="get" as an argument.
- * <code title="Example">
+ * <code title="Basic usage, POST method">
  * <f:form action="...">...</f:form>
  * </code>
+ * <output>
+ * <form action="...">...</form>
+ * </output>
  *
- * = A complex form with a specified encoding type =
+ * <code title="Basic usage, GET method">
+ * <f:form action="..." method="get">...</f:form>
+ * </code>
+ * <output>
+ * <form method="GET" action="...">...</form>
+ * </output>
  *
- * <code title="Form with enctype set">
+ * <code title="Form with a sepcified encoding type">
  * <f:form action=".." controller="..." package="..." enctype="multipart/form-data">...</f:form>
  * </code>
- *
- * = A Form which should render a domain object =
+ * <output>
+ * <form enctype="multipart/form-data" action="...">...</form>
+ * </output>
  *
  * <code title="Binding a domain object to a form">
  * <f:form action="..." name="customer" object="{customer}">
@@ -43,7 +50,10 @@ use TYPO3\Fluid\ViewHelpers\Form\AbstractFormViewHelper;
  *   <f:form.textfield property="name" />
  * </f:form>
  * </code>
- * This automatically inserts the value of {customer.name} inside the textbox and adjusts the name of the textbox accordingly.
+ * <output>
+ * A form where the value of {customer.name} is automatically inserted inside the textbox; the name of the textbox is
+ * set to match the property name.
+ * </output>
  *
  * @api
  */

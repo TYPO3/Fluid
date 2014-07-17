@@ -21,7 +21,7 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
- * A Section view helper
+ * A ViewHelper to declare sections in templates for later use with e.g. the RenderViewHelper.
  *
  * = Examples =
  *
@@ -75,8 +75,8 @@ class SectionViewHelper extends AbstractViewHelper implements PostParseInterface
 	}
 
 	/**
-	 * Save the associated view helper node in a static public class variable.
-	 * called directly after the view helper was built.
+	 * Save the associated ViewHelper node in a static public class variable.
+	 * called directly after the ViewHelper was built.
 	 *
 	 * @param ViewHelperNode $syntaxTreeNode
 	 * @param array $viewHelperArguments<TextNode>

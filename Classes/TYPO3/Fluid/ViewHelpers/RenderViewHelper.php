@@ -14,7 +14,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * ViewHelper that renders a section or a specified partial
+ * A ViewHelper to render a section or a specified partial in a template.
  *
  * = Examples =
  *
