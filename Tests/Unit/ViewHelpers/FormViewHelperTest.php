@@ -179,12 +179,12 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', array('renderChildren'), array(), '', FALSE);
 
 		$this->arguments['method'] = 'GET';
-		$this->arguments['actionUri'] = 'http://localhost/fluid/test?foo=<baß>';
+		$this->arguments['actionUri'] = 'http://localhost/fluid/test?foo=<bar>';
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(FALSE));
 		$viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue('formContent'));
 
-		$expectedResult = '<input type="hidden" name="foo" value="&lt;baß&gt;" />';
+		$expectedResult = '<input type="hidden" name="foo" value="&lt;bar&gt;" />';
 		$this->tagBuilder->expects($this->once())->method('setContent')->with($this->stringContains($expectedResult));
 
 		$viewHelper->render('index');
