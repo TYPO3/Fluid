@@ -105,14 +105,15 @@ class DateViewHelper extends AbstractLocaleAwareViewHelper {
 	 * Render the supplied DateTime object as a formatted date.
 	 *
 	 * @param mixed $date either a \DateTime object or a string that is accepted by \DateTime constructor
-	 * @param string $format Format String which is taken to format the Date/Time
+	 * @param string $format Format String which is taken to format the Date/Time if none of the locale options are set.
 	 * @param string $localeFormatType Whether to format (according to locale set in $forceLocale) date, time or datetime. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_TYPE_*'s constants.
 	 * @param string $localeFormatLength Format length if locale set in $forceLocale. Must be one of TYPO3\Flow\I18n\Cldr\Reader\DatesReader::FORMAT_LENGTH_*'s constants.
-	 * @return string Formatted date
+	 * @param string $cldrFormat Format string in CLDR format (see http://cldr.unicode.org/translation/date-time)
 	 * @throws ViewHelperException
+	 * @return string Formatted date
 	 * @api
 	 */
-	public function render($date = NULL, $format = 'Y-m-d', $localeFormatType = NULL, $localeFormatLength = NULL) {
+	public function render($date = NULL, $format = 'Y-m-d', $localeFormatType = NULL, $localeFormatLength = NULL, $cldrFormat = NULL) {
 		if ($date === NULL) {
 			$date = $this->renderChildren();
 			if ($date === NULL) {
@@ -130,7 +131,11 @@ class DateViewHelper extends AbstractLocaleAwareViewHelper {
 		$useLocale = $this->getLocale();
 		if ($useLocale !== NULL) {
 			try {
-				$output = $this->datetimeFormatter->format($date, $useLocale, array(0 => $localeFormatType, 1 => $localeFormatLength));
+				if ($cldrFormat !== NULL) {
+					$output = $this->datetimeFormatter->formatDateTimeWithCustomPattern($date, $cldrFormat, $useLocale);
+				} else {
+					$output = $this->datetimeFormatter->format($date, $useLocale, array($localeFormatType, $localeFormatLength));
+				}
 			} catch(I18nException $exception) {
 				throw new ViewHelperException(sprintf('An error occurred while trying to format the given date/time: "%s"', $exception->getMessage()), 1342610987, $exception);
 			}
