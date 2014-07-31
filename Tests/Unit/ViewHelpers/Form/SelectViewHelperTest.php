@@ -87,7 +87,7 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	/**
 	 * @test
 	 */
-	public function OrderOfOptionsIsNotAlteredByDefault() {
+	public function orderOfOptionsIsNotAlteredByDefault() {
 		$this->tagBuilder->expects($this->once())->method('addAttribute')->with('name', 'myName');
 		$this->viewHelper->expects($this->once())->method('registerFieldNameForFormTokenGeneration')->with('myName');
 		$this->tagBuilder->expects($this->once())->method('setContent')->with('<option value="value3">label3</option>' . chr(10) . '<option value="value1">label1</option>' . chr(10) . '<option value="value2" selected="selected">label2</option>' . chr(10));
@@ -399,12 +399,12 @@ class SelectViewHelperTest extends \TYPO3\Fluid\Tests\Unit\ViewHelpers\Form\Form
 	 * @test
 	 */
 	public function translateLabelIsCalledIfTranslateArgumentIsGiven() {
-		$this->arguments['options'] = array();
+		$this->arguments['options'] = array('foo' => 'bar');
 		$this->arguments['translate'] = array('by' => 'id');
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\Form\SelectViewHelper', array('getTranslatedLabel', 'setErrorClassAttribute', 'registerFieldNameForFormTokenGeneration'));
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$viewHelper->expects($this->once())->method('getTranslatedLabel');
+		$viewHelper->expects($this->once())->method('getTranslatedLabel')->with('foo', 'bar');
 		$viewHelper->render();
 	}
 
