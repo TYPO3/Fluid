@@ -306,6 +306,38 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 */
+	public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassDoesNotExisit() {
+		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
+		$mockObjectManager->expects($this->atLeastOnce())->method('getCaseSensitiveObjectName')->with('TYPO3\Fluid\ViewHelpers\NonExistingViewHelper')->will($this->returnValue(FALSE));
+
+		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
+
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('abortIfUnregisteredArgumentsExist', 'abortIfRequiredArgumentsAreMissing', 'rewriteBooleanNodesInArgumentsObjectTree'));
+		$templateParser->injectObjectManager($mockObjectManager);
+
+		$templateParser->_call('initializeViewHelperAndAddItToStack', $mockState, 'f', 'nonExisting', array('arguments'));
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 */
+	public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassNameIsWronglyCased() {
+		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
+		$mockObjectManager->expects($this->atLeastOnce())->method('getCaseSensitiveObjectName')->with('TYPO3\Fluid\ViewHelpers\WRongLyCasedViewHelper')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\WronglyCasedViewHelper'));
+
+		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
+
+		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('abortIfUnregisteredArgumentsExist', 'abortIfRequiredArgumentsAreMissing', 'rewriteBooleanNodesInArgumentsObjectTree'));
+		$templateParser->injectObjectManager($mockObjectManager);
+
+		$templateParser->_call('initializeViewHelperAndAddItToStack', $mockState, 'f', 'wRongLyCased', array('arguments'));
+	}
+
+	/**
+	 * @test
 	 */
 	public function initializeViewHelperAndAddItToStackCreatesRequestedViewHelperAndViewHelperNode() {
 		$mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
@@ -315,8 +347,9 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockNodeOnStack->expects($this->once())->method('addChildNode')->with($mockViewHelperNode);
 
 		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
-		$mockObjectManager->expects($this->at(0))->method('get')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue($mockViewHelper));
-		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->will($this->returnValue($mockViewHelperNode));
+		$mockObjectManager->expects($this->at(0))->method('getCaseSensitiveObjectName')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\MyownViewHelper'));
+		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue($mockViewHelper));
+		$mockObjectManager->expects($this->at(2))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->will($this->returnValue($mockViewHelperNode));
 
 		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
 		$mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -342,8 +375,9 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockNodeOnStack = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface');
 
 		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
-		$mockObjectManager->expects($this->at(0))->method('get')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue($mockViewHelper));
-		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->will($this->returnValue($mockViewHelperNode));
+		$mockObjectManager->expects($this->at(0))->method('getCaseSensitiveObjectName')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\MyownViewHelper'));
+		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue($mockViewHelper));
+		$mockObjectManager->expects($this->at(2))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->will($this->returnValue($mockViewHelperNode));
 
 		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
 		$mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -367,8 +401,9 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockNodeOnStack->expects($this->once())->method('addChildNode')->with($mockViewHelperNode);
 
 		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');
-		$mockObjectManager->expects($this->at(0))->method('get')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue($mockViewHelper));
-		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->will($this->returnValue($mockViewHelperNode));
+		$mockObjectManager->expects($this->at(0))->method('getCaseSensitiveObjectName')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\MyownViewHelper'));
+		$mockObjectManager->expects($this->at(1))->method('get')->with('TYPO3\Fluid\ViewHelpers\MyownViewHelper')->will($this->returnValue($mockViewHelper));
+		$mockObjectManager->expects($this->at(2))->method('get')->with('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->will($this->returnValue($mockViewHelperNode));
 
 		$mockState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
 		$mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
