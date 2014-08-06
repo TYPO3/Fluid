@@ -41,12 +41,16 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 class HtmlentitiesDecodeViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
-	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
-	 * can decode the text's entities.
+	 * @var boolean
+	 */
+	protected $escapeChildren = FALSE;
+
+	/**
+	 * Disable the output escaping interceptor so that the result is not htmlspecialchar'd
 	 *
 	 * @var boolean
 	 */
-	protected $escapingInterceptorEnabled = FALSE;
+	protected $escapeOutput = FALSE;
 
 	/**
 	 * Converts all HTML entities to their applicable characters as needed using PHPs html_entity_decode() function.

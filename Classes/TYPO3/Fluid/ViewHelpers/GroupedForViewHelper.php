@@ -79,6 +79,11 @@ use TYPO3\Fluid\Core\ViewHelper;
 class GroupedForViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
 	 * @param array $each The array or \SplObjectStorage to iterated over

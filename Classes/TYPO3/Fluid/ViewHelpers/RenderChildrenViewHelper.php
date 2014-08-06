@@ -50,6 +50,11 @@ use TYPO3\Fluid\Core\Widget\WidgetContext;
 class RenderChildrenViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * @param array $arguments
 	 * @return string
 	 */

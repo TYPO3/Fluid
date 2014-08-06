@@ -48,12 +48,14 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class RawViewHelper extends AbstractViewHelper {
 
 	/**
-	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
-	 * can decode the text's entities.
-	 *
 	 * @var boolean
 	 */
-	protected $escapingInterceptorEnabled = FALSE;
+	protected $escapeChildren = FALSE;
+
+	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
 
 	/**
 	 * @param mixed $value The value to output

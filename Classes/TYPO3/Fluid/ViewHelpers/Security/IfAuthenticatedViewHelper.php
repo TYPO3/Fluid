@@ -48,6 +48,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * @api
  */
 class IfAuthenticatedViewHelper extends AbstractConditionViewHelper {
+
 	/**
 	 * @var Context
 	 */

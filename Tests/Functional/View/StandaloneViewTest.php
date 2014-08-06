@@ -134,9 +134,9 @@ class StandaloneViewTest extends FunctionalTestCase {
 	public function variablesAreEscapedByDefault() {
 		$standaloneView = new StandaloneView(NULL, $this->standaloneViewNonce);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
-		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
+		$standaloneView->setTemplateSource('Hello {name}.');
 
-		$expected = 'This is a test template. Hello Sebastian &lt;script&gt;alert(&quot;dangerous&quot;);&lt;/script&gt;.';
+		$expected = 'Hello Sebastian &lt;script&gt;alert(&quot;dangerous&quot;);&lt;/script&gt;.';
 		$actual = $standaloneView->render();
 		$this->assertSame($expected, $actual);
 	}
@@ -144,16 +144,12 @@ class StandaloneViewTest extends FunctionalTestCase {
 	/**
 	 * @test
 	 */
-	public function variablesAreEscapedIfRequestFormatIsHtml() {
-		$httpRequest = Request::create(new Uri('http://localhost'));
-		$actionRequest = new ActionRequest($httpRequest);
-		$actionRequest->setFormat('html');
-
-		$standaloneView = new StandaloneView($actionRequest, $this->standaloneViewNonce);
+	public function variablesAreNotEscapedIfEscapingIsDisabled() {
+		$standaloneView = new StandaloneView(NULL, $this->standaloneViewNonce);
 		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
-		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
+		$standaloneView->setTemplateSource('{escapingEnabled=false}Hello {name}.');
 
-		$expected = 'This is a test template. Hello Sebastian &lt;script&gt;alert(&quot;dangerous&quot;);&lt;/script&gt;.';
+		$expected = 'Hello Sebastian <script>alert("dangerous");</script>.';
 		$actual = $standaloneView->render();
 		$this->assertSame($expected, $actual);
 	}
@@ -161,24 +157,7 @@ class StandaloneViewTest extends FunctionalTestCase {
 	/**
 	 * @test
 	 */
-	public function variablesAreNotEscapedIfRequestFormatIsNotHtml() {
-		$httpRequest = Request::create(new Uri('http://localhost'));
-		$actionRequest = new ActionRequest($httpRequest);
-		$actionRequest->setFormat('txt');
-
-		$standaloneView = new StandaloneView($actionRequest, $this->standaloneViewNonce);
-		$standaloneView->assign('name', 'Sebastian <script>alert("dangerous");</script>');
-		$standaloneView->setTemplatePathAndFilename(__DIR__ . '/Fixtures/TestTemplate.txt');
-
-		$expected = 'This is a test template. Hello Sebastian <script>alert("dangerous");</script>.';
-		$actual = $standaloneView->render();
-		$this->assertSame($expected, $actual);
-	}
-
-	/**
-	 * @test
-	 */
-	public function partialWithDefaultLocationIsUsedIfNoPartialPathIsSetExplicitely() {
+	public function partialWithDefaultLocationIsUsedIfNoPartialPathIsSetExplicitly() {
 		$httpRequest = Request::create(new Uri('http://localhost'));
 		$actionRequest = new ActionRequest($httpRequest);
 		$actionRequest->setFormat('txt');
@@ -211,7 +190,7 @@ class StandaloneViewTest extends FunctionalTestCase {
 	/**
 	 * @test
 	 */
-	public function layoutWithDefaultLocationIsUsedIfNoLayoutPathIsSetExplicitely() {
+	public function layoutWithDefaultLocationIsUsedIfNoLayoutPathIsSetExplicitly() {
 		$httpRequest = Request::create(new Uri('http://localhost'));
 		$actionRequest = new ActionRequest($httpRequest);
 		$actionRequest->setFormat('txt');

@@ -288,7 +288,7 @@ class FormViewHelper extends AbstractFormViewHelper {
 				'arguments' => $this->hashService->appendHmac(base64_encode(serialize($request->getArguments())))
 			);
 			foreach ($referrer as $referrerKey => $referrerValue) {
-				$referrerValue = \htmlspecialchars($referrerValue);
+				$referrerValue = htmlspecialchars($referrerValue);
 				$result .= '<input type="hidden" name="' . $argumentNamespace . '[__referrer][' . $referrerKey . ']" value="' . $referrerValue . '" />' . chr(10);
 			}
 			$request = $request->getParentRequest();

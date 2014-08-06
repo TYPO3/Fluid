@@ -66,6 +66,11 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
 	 * @param array $each The array or \SplObjectStorage to iterated over

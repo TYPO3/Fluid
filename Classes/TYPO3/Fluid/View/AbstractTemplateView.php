@@ -11,10 +11,14 @@ namespace TYPO3\Fluid\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Mvc\ActionRequest;
 use TYPO3\Flow\Mvc\Controller\ControllerContext;
 use TYPO3\Flow\Mvc\View\AbstractView;
 use TYPO3\Flow\Object\ObjectManagerInterface;
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3\Fluid\Core\Parser\Configuration;
+use TYPO3\Fluid\Core\Parser\Interceptor\Escape as EscapeInterceptor;
+use TYPO3\Fluid\Core\Parser\Interceptor\Resource as ResourceInterceptor;
 use TYPO3\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Parser\TemplateParser;
@@ -409,14 +413,23 @@ abstract class AbstractTemplateView extends AbstractView {
 	/**
 	 * Build parser configuration
 	 *
-	 * @return \TYPO3\Fluid\Core\Parser\Configuration
+	 * @return Configuration
 	 */
 	protected function buildParserConfiguration() {
+		/** @var Configuration $parserConfiguration */
 		$parserConfiguration = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Configuration');
-		if (in_array($this->controllerContext->getRequest()->getFormat(), array('html', NULL))) {
-			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape'));
-			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource'));
+
+		/** @var EscapeInterceptor $escapeInterceptor */
+		$escapeInterceptor = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape');
+		$parserConfiguration->addEscapingInterceptor($escapeInterceptor);
+
+		$request = $this->controllerContext->getRequest();
+		if ($request instanceof ActionRequest && in_array($request->getFormat(), array('html', NULL))) {
+			/** @var ResourceInterceptor $resourceInterceptor */
+			$resourceInterceptor = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource');
+			$parserConfiguration->addInterceptor($resourceInterceptor);
 		}
+
 		return $parserConfiguration;
 	}
 

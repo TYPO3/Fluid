@@ -106,10 +106,31 @@ abstract class AbstractViewHelper {
 
 	/**
 	 * With this flag, you can disable the escaping interceptor inside this ViewHelper.
-	 * THIS MIGHT CHANGE WITHOUT NOTICE, NO PUBLIC API!
+	 *
 	 * @var boolean
+	 * @deprecated since 3.0 Use $escapeChildren instead!
 	 */
-	protected $escapingInterceptorEnabled = TRUE;
+	protected $escapingInterceptorEnabled = NULL;
+
+	/**
+	 * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
+	 * @see isChildrenEscapingEnabled()
+	 *
+	 * Note: If this is NULL the value of $this->escapingInterceptorEnabled is considered for backwards compatibility
+	 *
+	 * @var boolean
+	 * @api
+	 */
+	protected $escapeChildren = NULL;
+
+	/**
+	 * Specifies whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
+	 * @see isOutputEscapingEnabled()
+	 *
+	 * @var boolean
+	 * @api
+	 */
+	protected $escapeOutput = NULL;
 
 	/**
 	 * @param ObjectManagerInterface $objectManager
@@ -149,14 +170,40 @@ abstract class AbstractViewHelper {
 	}
 
 	/**
-	 * Returns whether the escaping interceptor should be disabled or enabled inside the tags contents.
+	 * Returns whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
 	 *
-	 * THIS METHOD MIGHT CHANGE WITHOUT NOTICE; NO PUBLIC API!
+	 * Note: This method is no public API, use $this->escapeChildren instead!
 	 *
 	 * @return boolean
 	 */
+	public function isChildrenEscapingEnabled() {
+		if ($this->escapeChildren !== NULL) {
+			return $this->escapeChildren !== FALSE;
+		}
+		return $this->escapingInterceptorEnabled !== FALSE;
+	}
+
+	/**
+	 * Returns whether the escaping interceptors should be disabled or enabled inside the tags contents.
+	 *
+	 * THIS METHOD MIGHT CHANGE WITHOUT NOTICE; NO PUBLIC API!
+	 *
+	 * @deprecated since 3.0 use isChildrenEscapingEnabled() instead
+	 * @return boolean
+	 */
 	public function isEscapingInterceptorEnabled() {
-		return $this->escapingInterceptorEnabled;
+		return $this->isChildrenEscapingEnabled();
+	}
+
+	/**
+	 * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
+	 *
+	 * Note: This method is no public API, use $this->escapeChildren instead!
+	 *
+	 * @return boolean
+	 */
+	public function isOutputEscapingEnabled() {
+		return $this->escapeOutput !== FALSE;
 	}
 
 	/**

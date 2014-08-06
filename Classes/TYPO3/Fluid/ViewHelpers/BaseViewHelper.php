@@ -33,12 +33,17 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class BaseViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * Render the "Base" tag by outputting $httpRequest->getBaseUri()
 	 *
 	 * @return string "base"-Tag.
 	 * @api
 	 */
 	public function render() {
-		return '<base href="' . $this->controllerContext->getRequest()->getHttpRequest()->getBaseUri() . '" />';
+		return '<base href="' . htmlspecialchars($this->controllerContext->getRequest()->getHttpRequest()->getBaseUri()) . '" />';
 	}
 }
