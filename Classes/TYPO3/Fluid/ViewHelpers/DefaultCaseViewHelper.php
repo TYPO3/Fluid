@@ -23,6 +23,11 @@ use TYPO3\Fluid\Core\ViewHelper;
 class DefaultCaseViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * @return string the contents of this view helper if no other "Case" view helper of the surrounding switch view helper matches
 	 * @throws ViewHelper\Exception
 	 * @api

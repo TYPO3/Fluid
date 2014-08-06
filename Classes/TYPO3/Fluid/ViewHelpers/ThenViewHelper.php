@@ -22,6 +22,11 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class ThenViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * Just render everything.
 	 *
 	 * @return string the rendered string

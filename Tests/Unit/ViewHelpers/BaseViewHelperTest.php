@@ -11,24 +11,45 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Http\Request;
+use TYPO3\Flow\Http\Uri;
+use TYPO3\Fluid\ViewHelpers\BaseViewHelper;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
+
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
  */
-class BaseViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class BaseViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @test
 	 */
 	public function renderTakesBaseUriFromControllerContext() {
-		$baseUri = new \TYPO3\Flow\Http\Uri('http://typo3.org/');
+		$baseUri = new Uri('http://typo3.org/');
 
-		$this->request->expects($this->any())->method('getHttpRequest')->will($this->returnValue(\TYPO3\Flow\Http\Request::create($baseUri)));
+		$this->request->expects($this->any())->method('getHttpRequest')->will($this->returnValue(Request::create($baseUri)));
 
-		$viewHelper = new \TYPO3\Fluid\ViewHelpers\BaseViewHelper();
+		$viewHelper = new BaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 
-		$expectedResult = '<base href="' . $baseUri . '" />';
+		$expectedResult = '<base href="' . htmlspecialchars($baseUri) . '" />';
+		$actualResult = $viewHelper->render();
+		$this->assertSame($expectedResult, $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderEscapesBaseUri() {
+		$baseUri = new Uri('<some nasty uri>');
+
+		$this->request->expects($this->any())->method('getHttpRequest')->will($this->returnValue(Request::create($baseUri)));
+
+		$viewHelper = new BaseViewHelper();
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+
+		$expectedResult = '<base href="http://' . htmlspecialchars($baseUri) . '/" />';
 		$actualResult = $viewHelper->render();
 		$this->assertSame($expectedResult, $actualResult);
 	}

@@ -1,7 +1,7 @@
 <script type="text/javascript">
 jQuery(function() {
 	jQuery("#{id}").autocomplete(<![CDATA[{]]>
-		source: "{f:widget.uri(action:'autocomplete', ajax: true)}",
+		source: "{f:widget.uri(action:'autocomplete', ajax: true) -> f:format.raw()}",
 		minLength: 2
 	});
 });

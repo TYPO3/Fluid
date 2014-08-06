@@ -45,6 +45,11 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\ChildNodeAccessInterface;
 class SwitchViewHelper extends AbstractViewHelper implements ChildNodeAccessInterface {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * An array of \TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode
 	 * @var array
 	 */

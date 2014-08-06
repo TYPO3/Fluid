@@ -64,6 +64,11 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class ResultsViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * Iterates through selected errors of the request.
 	 *
 	 * @param string $for The name of the error name (e.g. argument name or property name). This can also be a property path (like blog.title), and will then only display the validation errors of that property.

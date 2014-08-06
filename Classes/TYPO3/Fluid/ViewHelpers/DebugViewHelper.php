@@ -48,7 +48,12 @@ class DebugViewHelper extends AbstractViewHelper {
 	/**
 	 * @var boolean
 	 */
-	protected $escapingInterceptorEnabled = FALSE;
+	protected $escapeChildren = FALSE;
+
+	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
 
 	/**
 	 * Wrapper for \TYPO3\Flow\var_dump()

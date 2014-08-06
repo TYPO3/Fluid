@@ -24,10 +24,11 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 class Escape implements InterceptorInterface {
 
 	/**
-	 * Is the interceptor enabled right now?
+	 * Is the interceptor enabled right now for child nodes?
+	 *
 	 * @var boolean
 	 */
-	protected $interceptorEnabled = TRUE;
+	protected $childrenEscapingEnabled = TRUE;
 
 	/**
 	 * A stack of ViewHelperNodes which currently disable the interceptor.
@@ -64,26 +65,38 @@ class Escape implements InterceptorInterface {
 	public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState) {
 		if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
 			/** @var $node ViewHelperNode */
-			if (!$node->getUninitializedViewHelper()->isEscapingInterceptorEnabled()) {
-				$this->interceptorEnabled = FALSE;
+			if (!$node->getUninitializedViewHelper()->isChildrenEscapingEnabled()) {
+				$this->childrenEscapingEnabled = FALSE;
 				$this->viewHelperNodesWhichDisableTheInterceptor[] = $node;
 			}
 		} elseif ($interceptorPosition === InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER) {
 			if (end($this->viewHelperNodesWhichDisableTheInterceptor) === $node) {
 				array_pop($this->viewHelperNodesWhichDisableTheInterceptor);
 				if (count($this->viewHelperNodesWhichDisableTheInterceptor) === 0) {
-					$this->interceptorEnabled = TRUE;
+					$this->childrenEscapingEnabled = TRUE;
 				}
 			}
-		} elseif ($this->interceptorEnabled && $node instanceof ObjectAccessorNode) {
-			$escapeViewHelper = $this->objectManager->get('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
-			$node = $this->objectManager->get(
-				'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
-				$escapeViewHelper,
-				array('value' => $node)
-			);
+			/** @var $node ViewHelperNode */
+			if ($this->childrenEscapingEnabled && $node->getUninitializedViewHelper()->isOutputEscapingEnabled()) {
+				$node = $this->wrapNode($node);
+			}
+		} elseif ($this->childrenEscapingEnabled && $node instanceof ObjectAccessorNode) {
+			$node = $this->wrapNode($node);
 		}
 		return $node;
+	}
+
+	/**
+	 * @param NodeInterface $node
+	 * @return NodeInterface
+	 */
+	protected function wrapNode(NodeInterface $node) {
+		$escapeViewHelper = $this->objectManager->get('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
+		return $this->objectManager->get(
+			'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+			$escapeViewHelper,
+			array('value' => $node)
+		);
 	}
 
 	/**

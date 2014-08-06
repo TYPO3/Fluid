@@ -36,6 +36,11 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class ElseViewHelper extends AbstractViewHelper {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeOutput = FALSE;
+
+	/**
 	 * @return string the rendered string
 	 * @api
 	 */

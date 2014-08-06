@@ -48,6 +48,11 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 class PaddingViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
+	 * @var boolean
+	 */
+	protected $escapeChildren = FALSE;
+
+	/**
 	 * Pad a string to a certain length with another string
 	 *
 	 * @param integer $padLength Length of the resulting string. If the value of pad_length is negative or less than the length of the input string, no padding takes place.
@@ -83,7 +88,6 @@ class PaddingViewHelper extends AbstractViewHelper implements CompilableInterfac
 		if (!isset($padTypes[$padType])) {
 			$padType = 'right';
 		}
-
 		return str_pad($value, $arguments['padLength'], $arguments['padString'], $padTypes[$padType]);
 	}
 }
