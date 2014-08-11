@@ -132,7 +132,7 @@ class WidgetContext {
 	 * @param array $ajaxWidgetConfiguration
 	 * @return void
 	 */
-	public function setAjaxWidgetConfiguration($ajaxWidgetConfiguration) {
+	public function setAjaxWidgetConfiguration(array $ajaxWidgetConfiguration) {
 		$this->ajaxWidgetConfiguration = $ajaxWidgetConfiguration;
 	}
 
@@ -140,7 +140,7 @@ class WidgetContext {
 	 * @param array $nonAjaxWidgetConfiguration
 	 * @return void
 	 */
-	public function setNonAjaxWidgetConfiguration($nonAjaxWidgetConfiguration) {
+	public function setNonAjaxWidgetConfiguration(array $nonAjaxWidgetConfiguration) {
 		$this->nonAjaxWidgetConfiguration = $nonAjaxWidgetConfiguration;
 	}
 

@@ -105,8 +105,8 @@ class AbstractWidgetViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->viewHelper->setRenderingContext($renderingContext);
 
-		$this->viewHelper->expects($this->any())->method('getWidgetConfiguration')->will($this->returnValue('Some Widget Configuration'));
-		$this->widgetContext->expects($this->once())->method('setNonAjaxWidgetConfiguration')->with('Some Widget Configuration');
+		$this->viewHelper->expects($this->any())->method('getWidgetConfiguration')->will($this->returnValue(array('Some Widget Configuration')));
+		$this->widgetContext->expects($this->once())->method('setNonAjaxWidgetConfiguration')->with(array('Some Widget Configuration'));
 
 		$this->widgetContext->expects($this->once())->method('setWidgetIdentifier')->with(strtolower(str_replace('\\', '-', get_class($this->viewHelper))));
 
