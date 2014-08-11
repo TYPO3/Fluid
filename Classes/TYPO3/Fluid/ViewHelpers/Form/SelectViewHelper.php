@@ -186,7 +186,12 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 		$output = '';
 		if ($this->hasArgument('prependOptionLabel')) {
 			$value = $this->hasArgument('prependOptionValue') ? $this->arguments['prependOptionValue'] : '';
-			$label = $this->arguments['prependOptionLabel'];
+			if ($this->hasArgument('translate')) {
+				$label = $this->getTranslatedLabel($value, $this->arguments['prependOptionLabel']);
+			} else {
+				$label = $this->arguments['prependOptionLabel'];
+			}
+
 			$output .= $this->renderOptionTag($value, $label, FALSE) . chr(10);
 		} elseif (empty($options)) {
 			$options = array('' => '');
@@ -242,6 +247,11 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 					$value = $this->persistenceManager->getIdentifierByObject($value);
 				}
 			}
+
+			if ($this->hasArgument('translate')) {
+				$value = $this->getTranslatedLabel($key, $value);
+			}
+
 			$options[$key] = $value;
 		}
 		if ($this->arguments['sortByOptionLabel']) {
@@ -321,9 +331,6 @@ class SelectViewHelper extends AbstractFormFieldViewHelper {
 			$output .= ' selected="selected"';
 		}
 
-		if ($this->hasArgument('translate')) {
-			$label = $this->getTranslatedLabel($value, $label);
-		}
 		$output .= '>' . htmlspecialchars($label) . '</option>';
 
 		return $output;
