@@ -21,7 +21,7 @@ use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 class CropViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\Fluid\ViewHelpers\Format\CropViewHelper
+	 * @var \TYPO3\Fluid\ViewHelpers\Format\CropViewHelper|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected $viewHelper;
 
@@ -84,5 +84,14 @@ class CropViewHelperTest extends ViewHelperBaseTestcase {
 		$this->viewHelper->expects($this->never())->method('renderChildren');
 		$actualResult = $this->viewHelper->render(8, '...', '');
 		$this->assertEquals('', $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function viewHelperHandlesMultiByteValuesCorrectly() {
+		$this->viewHelper->expects($this->never())->method('renderChildren');
+		$actualResult = $this->viewHelper->render(3, '...', 'Äßütest');
+		$this->assertEquals('Äßü...', $actualResult);
 	}
 }

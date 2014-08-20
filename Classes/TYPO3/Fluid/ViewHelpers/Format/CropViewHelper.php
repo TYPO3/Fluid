@@ -13,6 +13,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Flow\Utility\Unicode\Functions as UnicodeUtilityFunctions;
 use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
@@ -73,8 +74,8 @@ class CropViewHelper extends AbstractViewHelper implements CompilableInterface {
 			$value = $renderChildrenClosure();
 		}
 
-		if (strlen($value) > $arguments['maxCharacters']) {
-			return substr($value, 0, $arguments['maxCharacters']) . $arguments['append'];
+		if (UnicodeUtilityFunctions::strlen($value) > $arguments['maxCharacters']) {
+			return UnicodeUtilityFunctions::substr($value, 0, $arguments['maxCharacters']) . $arguments['append'];
 		} else {
 			return $value;
 		}
