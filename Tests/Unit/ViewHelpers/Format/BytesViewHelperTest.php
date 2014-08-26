@@ -11,12 +11,15 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
 use TYPO3\Flow\Tests\UnitTestCase;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\BytesViewHelper
  */
-class BytesViewHelperTest extends UnitTestCase {
+class BytesViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Format\NumberViewHelper
@@ -24,7 +27,10 @@ class BytesViewHelperTest extends UnitTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
+		parent::setUp();
 		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\BytesViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
 	}
 
 	/**

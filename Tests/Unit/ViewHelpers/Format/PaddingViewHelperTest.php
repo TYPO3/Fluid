@@ -11,18 +11,33 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
+
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
+
 /**
  * Test for TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper
  */
-class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class PaddingViewHelperTest extends ViewHelperBaseTestcase {
+
+	/**
+	 * @var \TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper
+	 */
+	protected $viewHelper;
+
+	public function setUp() {
+		parent::setUp();
+		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
+	}
 
 	/**
 	 * @test
 	 */
 	public function stringsArePaddedWithBlanksByDefault() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
-		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-		$actualResult = $viewHelper->render(10);
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+		$actualResult = $this->viewHelper->render(10);
 		$this->assertEquals('foo       ', $actualResult);
 	}
 
@@ -30,9 +45,8 @@ class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function paddingStringCanBeSpecified() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
-		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-		$actualResult = $viewHelper->render(10, '-=');
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+		$actualResult = $this->viewHelper->render(10, '-=');
 		$this->assertEquals('foo-=-=-=-', $actualResult);
 	}
 
@@ -40,9 +54,8 @@ class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function stringIsNotTruncatedIfPadLengthIsBelowStringLength() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
-		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('some long string'));
-		$actualResult = $viewHelper->render(5);
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('some long string'));
+		$actualResult = $this->viewHelper->render(5);
 		$this->assertEquals('some long string', $actualResult);
 	}
 
@@ -50,9 +63,8 @@ class PaddingViewHelperTest extends \TYPO3\Flow\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function integersArePaddedCorrectly() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PaddingViewHelper', array('renderChildren'));
-		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123));
-		$actualResult = $viewHelper->render(5, '0');
+		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue(123));
+		$actualResult = $this->viewHelper->render(5, '0');
 		$this->assertEquals('12300', $actualResult);
 	}
 }

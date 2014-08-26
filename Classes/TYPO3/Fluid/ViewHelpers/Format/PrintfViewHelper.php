@@ -11,7 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * A view helper for formatting values with printf. Either supply an array for
@@ -50,17 +52,34 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class PrintfViewHelper extends AbstractViewHelper {
+class PrintfViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * Format the arguments with the given printf format string.
 	 *
 	 * @param array $arguments The arguments for vsprintf
+	 * @param string $value string to format
 	 * @return string The formatted value
 	 * @api
 	 */
-	public function render(array $arguments) {
-		$format = $this->renderChildren();
-		return vsprintf($format, $arguments);
+	public function render(array $arguments, $value = NULL) {
+		return self::renderStatic(array('arguments' => $arguments, 'value' => $value), $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * Applies vsprintf() on the specified value.
+	 *
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
+		if ($value === NULL) {
+			$value = $renderChildrenClosure();
+		}
+
+		return vsprintf($value, $arguments['arguments']);
 	}
 }

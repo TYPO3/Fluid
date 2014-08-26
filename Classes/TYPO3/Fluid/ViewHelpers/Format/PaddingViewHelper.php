@@ -11,10 +11,13 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Formats a string using PHPs str_pad function.
+ *
  * @see http://www.php.net/manual/en/function.str_pad.php
  *
  * = Examples =
@@ -42,7 +45,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class PaddingViewHelper extends AbstractViewHelper {
+class PaddingViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * Pad a string to a certain length with another string
@@ -51,18 +54,36 @@ class PaddingViewHelper extends AbstractViewHelper {
 	 * @param string $padString The padding string
 	 * @param string $padType Append the padding at this site (Possible values: right,left,both. Default: right)
 	 * @return string The formatted value
+	 * @param string $value string to format
 	 * @api
 	 */
-	public function render($padLength, $padString = ' ', $padType = 'right') {
-		$string = $this->renderChildren();
+	public function render($padLength, $padString = ' ', $padType = 'right', $value = NULL) {
+		return self::renderStatic(array('padLength' => $padLength, 'padString' => $padString, 'padType' => $padType, 'value' => $value), $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * Applies str_pad() on the specified value.
+	 *
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
+		if ($value === NULL) {
+			$value = $renderChildrenClosure();
+		}
 		$padTypes = array(
 			'left' => STR_PAD_LEFT,
 			'right' => STR_PAD_RIGHT,
 			'both' => STR_PAD_BOTH
 		);
+		$padType = $arguments['padType'];
 		if (!isset($padTypes[$padType])) {
 			$padType = 'right';
 		}
-		return str_pad($string, $padLength, $padString, $padTypes[$padType]);
+
+		return str_pad($value, $arguments['padLength'], $arguments['padString'], $padTypes[$padType]);
 	}
 }

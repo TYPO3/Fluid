@@ -11,8 +11,10 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Applies htmlentities() escaping to a value
@@ -34,10 +36,9 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Text with & " ' < > * replaced by HTML entities (htmlentities applied).
  * </output>
  *
- * @Flow\Scope("singleton")
  * @api
  */
-class HtmlentitiesViewHelper extends AbstractViewHelper {
+class HtmlentitiesViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
@@ -59,13 +60,26 @@ class HtmlentitiesViewHelper extends AbstractViewHelper {
 	 * @api
 	 */
 	public function render($value = NULL, $keepQuotes = FALSE, $encoding = 'UTF-8', $doubleEncode = TRUE) {
+		return self::renderStatic(array('value' => $value, 'keepQuotes' => $keepQuotes, 'encoding' => $encoding, 'doubleEncode' => $doubleEncode), $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * Applies htmlentities() on the specified value.
+	 *
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
 		if ($value === NULL) {
-			$value = $this->renderChildren();
+			$value = $renderChildrenClosure();
 		}
 		if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {
 			return $value;
 		}
-		$flags = $keepQuotes ? ENT_NOQUOTES : ENT_COMPAT;
-		return htmlentities($value, $flags, $encoding, $doubleEncode);
+		$flags = $arguments['keepQuotes'] ? ENT_NOQUOTES : ENT_COMPAT;
+		return htmlentities($value, $flags, $arguments['encoding'], $arguments['doubleEncode']);
 	}
 }

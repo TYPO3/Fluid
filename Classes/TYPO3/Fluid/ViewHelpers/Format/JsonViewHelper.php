@@ -11,7 +11,9 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Wrapper for PHPs json_encode function.
@@ -42,7 +44,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class JsonViewHelper extends AbstractViewHelper {
+class JsonViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
 	 * @var boolean
@@ -63,13 +65,27 @@ class JsonViewHelper extends AbstractViewHelper {
 	 * @api
 	 */
 	public function render($value = NULL, $forceObject = FALSE) {
+		return self::renderStatic(array('value' => $value, 'forceObject' => $forceObject), $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * Applies json_encode() on the specified value.
+	 *
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
 		if ($value === NULL) {
-			$value = $this->renderChildren();
+			$value = $renderChildrenClosure();
 		}
 		$options = JSON_HEX_TAG;
-		if ($forceObject !== FALSE) {
+		if ($arguments['forceObject'] !== FALSE) {
 			$options = $options | JSON_FORCE_OBJECT;
 		}
+
 		return json_encode($value, $options);
 	}
 }

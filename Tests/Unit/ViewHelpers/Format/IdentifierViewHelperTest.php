@@ -13,11 +13,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
+
 /**
- * Testcase for IdentifierViewHelper
- *
+ * Test for \TYPO3\Fluid\ViewHelpers\Format\IdentifierViewHelper
  */
-class IdentifierViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class IdentifierViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var \TYPO3\Fluid\ViewHelpers\Format\IdentifierViewHelper

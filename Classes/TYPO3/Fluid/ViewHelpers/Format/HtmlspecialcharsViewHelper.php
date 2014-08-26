@@ -18,6 +18,7 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 
 /**
  * Applies htmlspecialchars() escaping to a value
+ *
  * @see http://www.php.net/manual/function.htmlspecialchars.php
  *
  * = Examples =
@@ -68,10 +69,14 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper implements Compilabl
 			return $value;
 		}
 		$flags = $keepQuotes ? ENT_NOQUOTES : ENT_COMPAT;
+
 		return htmlspecialchars($value, $flags, $encoding, $doubleEncode);
 	}
 
 	/**
+	 * This ViewHelper is used a *lot* because it is used by the escape interceptor.
+	 * Therefore we render it to raw PHP code during compilation
+	 *
 	 * @param string $argumentsVariableName
 	 * @param string $renderChildrenClosureVariableName
 	 * @param string $initializationPhpCode
@@ -86,5 +91,4 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper implements Compilabl
 		return sprintf('!is_string(%1$s) && !(is_object(%1$s) && method_exists(%1$s, \'__toString\')) ? %1$s : htmlspecialchars(%1$s, (%2$s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %2$s[\'encoding\'], %2$s[\'doubleEncode\'])',
 			$valueVariableName, $argumentsVariableName);
 	}
-
 }

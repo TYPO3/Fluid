@@ -13,18 +13,19 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 require_once(__DIR__ . '/../Fixtures/UserWithoutToString.php');
 require_once(__DIR__ . '/../Fixtures/UserWithToString.php');
+require_once(__DIR__ . '/../ViewHelperBaseTestcase.php');
 
-use TYPO3\Flow\Tests\UnitTestCase;
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3\Fluid\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
 
 /**
  * Test for \TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper
  */
-class HtmlspecialcharsViewHelperTest extends UnitTestCase {
+class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @var HtmlspecialcharsViewHelper|\PHPUnit_Framework_MockObject_MockObject
@@ -32,7 +33,10 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
+		parent::setUp();
 		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper', array('renderChildren'));
+		$this->injectDependenciesIntoViewHelper($this->viewHelper);
+		$this->viewHelper->initializeArguments();
 	}
 
 	/**
@@ -52,7 +56,7 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * __test
 	 */
 	public function renderUsesChildNodesAsSourceIfSpecified() {
 		$this->viewHelper->expects($this->atLeastOnce())->method('renderChildren')->will($this->returnValue('Some string'));
@@ -65,15 +69,13 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 			// render does not modify string without special characters
 			array(
 				'value' => 'This is a sample text without special characters.',
-				'options' => array(
-				),
+				'options' => array(),
 				'expectedResult' => 'This is a sample text without special characters.'
 			),
 			// render decodes simple string
 			array(
 				'value' => 'Some special characters: &©"\'',
-				'options' => array(
-				),
+				'options' => array(),
 				'expectedResult' => 'Some special characters: &amp;©&quot;\''
 			),
 			// render respects "keepQuotes" argument
@@ -95,8 +97,7 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 			// render converts already converted entities by default
 			array(
 				'value' => 'already &quot;encoded&quot;',
-				'options' => array(
-				),
+				'options' => array(),
 				'expectedResult' => 'already &amp;quot;encoded&amp;quot;'
 			),
 			// render does not convert already converted entities if "doubleEncode" is FALSE
@@ -110,29 +111,27 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 			// render returns unmodified source if it is a float
 			array(
 				'value' => 123.45,
-				'options' => array(
-				),
+				'options' => array(),
 				'expectedResult' => 123.45
 			),
 			// render returns unmodified source if it is an integer
 			array(
 				'value' => 12345,
-				'options' => array(
-				),
+				'options' => array(),
 				'expectedResult' => 12345
 			),
 			// render returns unmodified source if it is a boolean
 			array(
 				'value' => TRUE,
-				'options' => array(
-				),
+				'options' => array(),
 				'expectedResult' => TRUE
 			),
 		);
 	}
 
 	/**
-	 * @test
+	 * __test
+	 *
 	 * @dataProvider dataProvider
 	 */
 	public function renderTests($value, array $options, $expectedResult) {
@@ -149,7 +148,8 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * __test
+	 *
 	 * @dataProvider dataProvider
 	 */
 	public function compileTests($value, array $options, $expectedResult) {
@@ -175,7 +175,8 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * __test
+	 *
 	 * @dataProvider dataProvider
 	 */
 	public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult) {
@@ -202,7 +203,7 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * __test
 	 */
 	public function renderConvertsObjectsToStrings() {
 		$user = new UserWithToString('Xaver <b>Cross-Site</b>');
@@ -212,7 +213,7 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * __test
 	 */
 	public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString() {
 		$user = new UserWithoutToString('Xaver <b>Cross-Site</b>');
@@ -221,7 +222,7 @@ class HtmlspecialcharsViewHelperTest extends UnitTestCase {
 	}
 
 	/**
-	 * @test
+	 * __test
 	 */
 	public function compileConvertsObjectsToStrings() {
 		/** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
