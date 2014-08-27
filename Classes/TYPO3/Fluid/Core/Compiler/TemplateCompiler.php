@@ -12,6 +12,7 @@ namespace TYPO3\Fluid\Core\Compiler;
  *                                                                        */
 
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Cache\Frontend\FrontendInterface;
 use TYPO3\Flow\Cache\Frontend\PhpFrontend;
 use TYPO3\Fluid\Core\Parser\ParsingState;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
@@ -61,6 +62,9 @@ class TemplateCompiler {
 	 * @return boolean
 	 */
 	public function has($identifier) {
+		if (!$this->templateCache instanceof FrontendInterface) {
+			return FALSE;
+		}
 		$identifier = $this->sanitizeIdentifier($identifier);
 		return $this->templateCache->has($identifier);
 	}
@@ -86,6 +90,10 @@ class TemplateCompiler {
 	 * @return void
 	 */
 	public function store($identifier, ParsingState $parsingState) {
+		if (!$this->templateCache instanceof FrontendInterface) {
+			return;
+		}
+
 		$identifier = $this->sanitizeIdentifier($identifier);
 		$this->variableCounter = 0;
 		$generatedRenderFunctions = '';
@@ -421,7 +429,7 @@ EOD;
 	 * @return void
 	 */
 	public function flushTemplatesOnViewHelperChanges(array $changedFiles) {
-		if (!$this->templateCache instanceof PhpFrontend) {
+		if (!$this->templateCache instanceof FrontendInterface) {
 			return;
 		}
 
