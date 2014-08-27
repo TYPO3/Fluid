@@ -10,24 +10,28 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Widget;
  *                                                                        *
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
-
+use TYPO3\Flow\Http\Request;
+use TYPO3\Flow\Http\Response;
+use TYPO3\Flow\Http\Uri;
+use TYPO3\Flow\Tests\UnitTestCase;
+use TYPO3\Fluid\Core\Widget\WidgetContext;
 
 /**
- * Testcase for AbstractWidgetController
+ * Test case for AbstractWidgetController
  */
-class AbstractWidgetControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class AbstractWidgetControllerTest extends UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
+	 * @expectedException \TYPO3\Fluid\Core\Widget\Exception\WidgetContextNotFoundException
 	 */
 	public function processRequestShouldThrowExceptionIfWidgetContextNotFound() {
 		$mockActionRequest = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
 		$mockActionRequest->expects($this->atLeastOnce())->method('getInternalArgument')->with('__widgetContext')->will($this->returnValue(NULL));
-		$mockResponse = $this->getMock('TYPO3\Flow\Http\Response');
+		$response = new Response();
 
 		$abstractWidgetController = $this->getMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('dummy'), array(), '', FALSE);
-		$abstractWidgetController->processRequest($mockActionRequest, $mockResponse);
+		$abstractWidgetController->processRequest($mockActionRequest, $response);
 	}
 
 	/**
@@ -37,12 +41,14 @@ class AbstractWidgetControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$mockActionRequest = $this->getMockBuilder('TYPO3\Flow\Mvc\ActionRequest')->disableOriginalConstructor()->getMock();
 		$mockResponse = $this->getMock('TYPO3\Flow\Http\Response');
 
-		$mockHttpRequest = $this->getMockBuilder('TYPO3\Flow\Http\Request')->disableOriginalConstructor()->getMock();
-		$mockHttpRequest->expects($this->any())->method('getNegotiatedMediaType')->will($this->returnValue('*/*'));
-		$mockActionRequest->expects($this->any())->method('getHttpRequest')->will($this->returnValue($mockHttpRequest));
+		$httpRequest = Request::create(new Uri('http://localhost'));
+		$mockActionRequest->expects($this->any())->method('getHttpRequest')->will($this->returnValue($httpRequest));
 
-		$widgetContext = $this->getMock('TYPO3\Fluid\Core\Widget\WidgetContext', array('getWidgetConfiguration'));
-		$widgetContext->expects($this->once())->method('getWidgetConfiguration')->will($this->returnValue('myConfiguration'));
+		$expectedWidgetConfiguration = array('foo' => uniqid());
+
+		$widgetContext = new WidgetContext();
+		$widgetContext->setAjaxWidgetConfiguration($expectedWidgetConfiguration);
+
 		$mockActionRequest->expects($this->atLeastOnce())->method('getInternalArgument')->with('__widgetContext')->will($this->returnValue($widgetContext));
 
 		$abstractWidgetController = $this->getAccessibleMock('TYPO3\Fluid\Core\Widget\AbstractWidgetController', array('resolveActionMethodName', 'initializeActionMethodArguments', 'initializeActionMethodValidators', 'mapRequestArgumentsToControllerArguments', 'detectFormat', 'resolveView', 'callActionMethod'));
@@ -50,7 +56,7 @@ class AbstractWidgetControllerTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 		$abstractWidgetController->processRequest($mockActionRequest, $mockResponse);
 
-		$widgetConfiguration = $abstractWidgetController->_get('widgetConfiguration');
-		$this->assertEquals('myConfiguration', $widgetConfiguration);
+		$actualWidgetConfiguration = $abstractWidgetController->_get('widgetConfiguration');
+		$this->assertEquals($expectedWidgetConfiguration, $actualWidgetConfiguration);
 	}
 }
