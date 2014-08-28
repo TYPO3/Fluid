@@ -15,11 +15,8 @@ use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Http\Component\Exception as ComponentException;
 use TYPO3\Flow\Http\Request;
 use TYPO3\Flow\Http\Component\ComponentContext;
-use TYPO3\Flow\Http\Component\ComponentInterface;
 use TYPO3\Flow\Mvc\ActionRequest;
-use TYPO3\Flow\Mvc\Dispatcher;
-use TYPO3\Flow\Object\ObjectManagerInterface;
-use TYPO3\Flow\Security\Context;
+use TYPO3\Flow\Mvc\DispatchComponent;
 use TYPO3\Flow\Security\Cryptography\HashService;
 
 /**
@@ -27,7 +24,7 @@ use TYPO3\Flow\Security\Cryptography\HashService;
  * It's task is to interrupt the default dispatching as soon as possible if the current request is an AJAX request
  * triggered by a Fluid widget (e.g. contains the arguments "__widgetId" or "__widgetContext").
  */
-class AjaxWidgetComponent implements ComponentInterface {
+class AjaxWidgetComponent extends DispatchComponent {
 
 	/**
 	 * @Flow\Inject
@@ -40,36 +37,6 @@ class AjaxWidgetComponent implements ComponentInterface {
 	 * @var AjaxWidgetContextHolder
 	 */
 	protected $ajaxWidgetContextHolder;
-
-	/**
-	 * @Flow\Inject
-	 * @var Dispatcher
-	 */
-	protected $dispatcher;
-
-	/**
-	 * @Flow\Inject
-	 * @var ObjectManagerInterface
-	 */
-	protected $objectManager;
-
-	/**
-	 * @Flow\Inject
-	 * @var Context
-	 */
-	protected $securityContext;
-
-	/**
-	 * @var array
-	 */
-	protected $options;
-
-	/**
-	 * @param array $options
-	 */
-	public function __construct(array $options = array()) {
-		$this->options = $options;
-	}
 
 	/**
 	 * Check if the current request contains a widget context.
@@ -87,13 +54,14 @@ class AjaxWidgetComponent implements ComponentInterface {
 		}
 		/** @var $actionRequest ActionRequest */
 		$actionRequest = $this->objectManager->get('TYPO3\Flow\Mvc\ActionRequest', $httpRequest);
+		$actionRequest->setArguments($this->mergeArguments($httpRequest, array()));
 		$actionRequest->setArgument('__widgetContext', $widgetContext);
 		$actionRequest->setControllerObjectName($widgetContext->getControllerObjectName());
+		$this->setDefaultControllerAndActionNameIfNoneSpecified($actionRequest);
 
 		$this->securityContext->setRequest($actionRequest);
 
 		$this->dispatcher->dispatch($actionRequest, $componentContext->getHttpResponse());
-
 		// stop processing the current component chain
 		$componentContext->setParameter('TYPO3\Flow\Http\Component\ComponentChain', 'cancel', TRUE);
 	}
@@ -118,4 +86,4 @@ class AjaxWidgetComponent implements ComponentInterface {
 	}
 
 }
-?>
+
