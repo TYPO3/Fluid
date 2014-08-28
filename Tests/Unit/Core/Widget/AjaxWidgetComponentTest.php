@@ -73,6 +73,16 @@ class AjaxWidgetComponentTest extends UnitTestCase {
 	protected $mockSecurityContext;
 
 	/**
+	 * @var PropertyMapper|\PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $mockPropertyMapper;
+
+	/**
+	 * @var PropertyMappingConfiguration|\PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $mockPropertyMappingConfiguration;
+
+	/**
 	 */
 	public function setUp() {
 		$this->ajaxWidgetComponent = new AjaxWidgetComponent();
@@ -83,6 +93,7 @@ class AjaxWidgetComponentTest extends UnitTestCase {
 		$this->mockComponentContext = $this->getMockBuilder('TYPO3\Flow\Http\Component\ComponentContext')->disableOriginalConstructor()->getMock();
 
 		$this->mockHttpRequest = $this->getMockBuilder('TYPO3\Flow\Http\Request')->disableOriginalConstructor()->getMock();
+		$this->mockHttpRequest->expects($this->any())->method('getArguments')->will($this->returnValue(array()));
 		$this->mockComponentContext->expects($this->any())->method('getHttpRequest')->will($this->returnValue($this->mockHttpRequest));
 
 		$this->mockHttpResponse = $this->getMockBuilder('TYPO3\Flow\Http\Response')->disableOriginalConstructor()->getMock();
@@ -100,6 +111,12 @@ class AjaxWidgetComponentTest extends UnitTestCase {
 		$this->mockSecurityContext = $this->getMockBuilder('TYPO3\Flow\Security\Context')->getMock();
 		$this->inject($this->ajaxWidgetComponent, 'securityContext', $this->mockSecurityContext);
 
+		$this->mockPropertyMappingConfiguration = $this->getMockBuilder('TYPO3\Flow\Property\PropertyMappingConfiguration')->disableOriginalConstructor()->getMock();
+		$this->inject($this->ajaxWidgetComponent, 'propertyMappingConfiguration', $this->mockPropertyMappingConfiguration);
+
+		$this->mockPropertyMapper = $this->getMockBuilder('TYPO3\Flow\Property\PropertyMapper')->disableOriginalConstructor()->getMock();
+		$this->mockPropertyMapper->expects($this->any())->method('convert')->with('', 'array', $this->mockPropertyMappingConfiguration)->will($this->returnValue(array()));
+		$this->inject($this->ajaxWidgetComponent, 'propertyMapper', $this->mockPropertyMapper);
 
 	}
 
