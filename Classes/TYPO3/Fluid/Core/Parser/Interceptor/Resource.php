@@ -41,21 +41,19 @@ class Resource implements InterceptorInterface {
 	 */
 	const PATTERN_SPLIT_AT_RESOURCE_URIS = '!
 		(
-			(?:                       # Start URL Part
-				\.\./                 # Either the string "../"
-				|[^"\'(]+/            # ... or a string with no quotes, and no opening bracket.
-			)*                        # a URL consists of multiple URL parts
-			Public/                   # the string "Public/"
-			[^"\')]+                  # followed by arbitrary characters except quotes or closing brackets.
+			(?:[^"\'(\s]+/      # URL part: A string with no quotes, no opening parentheses and no whitespace
+			)*                  # a URL consists of multiple URL parts
+			Public/             # the string "Public/"
+			[\w._ /]+           # followed by any number of [\w._ /]
 		)
-		!x';
+		!ux';
 
 	/**
 	 * Is the text at hand a resource URI and what are path/package?
 	 * @var string
 	 * @see \TYPO3\Flow\Pckage\Package::PATTERN_MATCH_PACKAGEKEY
 	 */
-	const PATTERN_MATCH_RESOURCE_URI = '!(?:../)*(?:(?P<Package>[A-Z][A-Za-z0-9_]+)/Resources/)?Public/(?P<Path>[^"]+)!';
+	const PATTERN_MATCH_RESOURCE_URI = '!(?:../)*(?:(?P<Package>[A-Za-z0-9]+\.(?:[A-Za-z0-9][\.a-z0-9]*)+)/Resources/)?Public/(?P<Path>[^"]+)!';
 
 	/**
 	 * The default package key to use when rendering resource links without a
@@ -107,7 +105,7 @@ class Resource implements InterceptorInterface {
 		if (strpos($node->getText(), 'Public/') === FALSE) {
 			return $node;
 		}
-		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_DELIM_CAPTURE);
+		$textParts = preg_split(self::PATTERN_SPLIT_AT_RESOURCE_URIS, $node->getText(), -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 		$node = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
 		foreach ($textParts as $part) {
 			$matches = array();
