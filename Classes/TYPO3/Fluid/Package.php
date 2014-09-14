@@ -45,10 +45,12 @@ class Package extends BasePackage {
 							continue;
 						}
 
-						$templatesPath = $package->getResourcesPath() . 'Private/Templates';
+						foreach (array('Templates', 'Partials', 'Layouts') as $path) {
+							$templatesPath = $package->getResourcesPath() . 'Private/' . $path;
 
-						if (is_dir($templatesPath)) {
-							$templateFileMonitor->monitorDirectory($templatesPath);
+							if (is_dir($templatesPath)) {
+								$templateFileMonitor->monitorDirectory($templatesPath);
+							}
 						}
 					}
 
