@@ -34,14 +34,14 @@ use TYPO3\Fluid\Core\ViewHelper\Exception as ViewHelperException;
  * </output>
  *
  * <code title="Inline notation">
- * {f:translate(id: 'some.label.id', default: 'fallback result')}
+ * {f:translate(id: 'some.label.id', value: 'fallback result')}
  * </code>
  * <output>
  * translation of label with the id "some.label.id" and a fallback to "fallback result"
  * </output>
  *
  * <code title="Custom source and locale">
- * <f:translate id="some.label.id" somesource="SomeLabelsCatalog" locale="de_DE"/>
+ * <f:translate id="some.label.id" source="LabelsCatalog" locale="de_DE"/>
  * </code>
  * <output>
  * translation from custom source "SomeLabelsCatalog" for locale "de_DE"
