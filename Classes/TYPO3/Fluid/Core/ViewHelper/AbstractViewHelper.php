@@ -14,7 +14,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Log\SystemLoggerInterface;
 use TYPO3\Flow\Object\ObjectManagerInterface;
-use TYPO3\Flow\Reflection\ReflectionService;
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3\Fluid\Core\Parser;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
@@ -96,12 +95,6 @@ abstract class AbstractViewHelper {
 	protected $viewHelperVariableContainer;
 
 	/**
-	 * Reflection service
-	 * @var ReflectionService
-	 */
-	protected $reflectionService;
-
-	/**
 	 * @var ObjectManagerInterface
 	 */
 	protected $objectManager;
@@ -153,14 +146,6 @@ abstract class AbstractViewHelper {
 			$this->controllerContext = $renderingContext->getControllerContext();
 		}
 		$this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
-	}
-
-	/**
-	 * Inject a Reflection service
-	 * @param ReflectionService $reflectionService Reflection service
-	 */
-	public function injectReflectionService(ReflectionService $reflectionService) {
-		$this->reflectionService = $reflectionService;
 	}
 
 	/**
@@ -346,13 +331,13 @@ abstract class AbstractViewHelper {
 	 * @throws Parser\Exception
 	 */
 	private function registerRenderMethodArguments() {
-		$methodParameters = $this->reflectionService->getMethodParameters(get_class($this), 'render');
+		$methodParameters = static::getRenderMethodParameters($this->objectManager);
 		if (count($methodParameters) === 0) {
 			return;
 		}
 
 		if (Fluid::$debugMode) {
-			$methodTags = $this->reflectionService->getMethodTagsValues(get_class($this), 'render');
+			$methodTags = static::getRenderMethodTagsValues($this->objectManager);
 
 			$paramAnnotations = array();
 			if (isset($methodTags['param'])) {
@@ -386,6 +371,40 @@ abstract class AbstractViewHelper {
 			$this->argumentDefinitions[$parameterName] = new ArgumentDefinition($parameterName, $dataType, $description, ($parameterInfo['optional'] === FALSE), $defaultValue, TRUE);
 			$i++;
 		}
+	}
+
+	/**
+	 * Returns a map of render method parameters.
+	 *
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
+	 * @return array Array of render method parameters
+	 * @Flow\CompileStatic
+	 */
+	static public function getRenderMethodParameters($objectManager) {
+		$className = get_called_class();
+		if (!is_callable(array($className, 'render'))) {
+			return array();
+		}
+
+		$reflectionService = $objectManager->get('TYPO3\Flow\Reflection\ReflectionService');
+		return $reflectionService->getMethodParameters($className, 'render');
+	}
+
+	/**
+	 * Returns a map of render method tag values.
+	 *
+	 * @param \TYPO3\Flow\Object\ObjectManagerInterface $objectManager
+	 * @return array An array of tags and their values or an empty array if no tags were found
+	 * @Flow\CompileStatic
+	 */
+	static public function getRenderMethodTagsValues($objectManager) {
+		$className = get_called_class();
+		if (!is_callable(array($className, 'render'))) {
+			return array();
+		}
+
+		$reflectionService = $objectManager->get('TYPO3\Flow\Reflection\ReflectionService');
+		return $reflectionService->getMethodTagsValues($className, 'render');
 	}
 
 	/**
