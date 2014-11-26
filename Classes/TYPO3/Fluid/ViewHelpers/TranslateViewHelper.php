@@ -17,6 +17,7 @@ use TYPO3\Flow\I18n\Locale;
 use TYPO3\Flow\I18n\Translator;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 
 /**
  * Returns translated message using source message or key ID.
@@ -78,7 +79,7 @@ class TranslateViewHelper extends AbstractViewHelper {
 
 	/**
 	 * Renders the translated label.
-	 *
+
 	 * Replaces all placeholders with corresponding values if they exist in the
 	 * translated label.
 	 *
@@ -90,7 +91,7 @@ class TranslateViewHelper extends AbstractViewHelper {
 	 * @param mixed $quantity A number to find plural form for (float or int), NULL to not use plural forms
 	 * @param string $locale An identifier of locale to use (NULL for use the default locale)
 	 * @return string Translated label or source label / ID key
-	 * @throws ViewHelper\Exception
+	 * @throws ViewHelperException
 	 */
 	public function render($id = NULL, $value = NULL, array $arguments = array(), $source = 'Main', $package = NULL, $quantity = NULL, $locale = NULL) {
 		$localeObject = NULL;
@@ -98,11 +99,14 @@ class TranslateViewHelper extends AbstractViewHelper {
 			try {
 				$localeObject = new Locale($locale);
 			} catch (InvalidLocaleIdentifierException $e) {
-				throw new ViewHelper\Exception('"' . $locale . '" is not a valid locale identifier.', 1279815885);
+				throw new ViewHelperException(sprintf('"%s" is not a valid locale identifier.', $locale), 1279815885);
 			}
 		}
 		if ($package === NULL) {
 			$package = $this->controllerContext->getRequest()->getControllerPackageKey();
+			if ($package === NULL) {
+				throw new ViewHelperException('The current package key can\'t be resolved. Make sure to initialize the Fluid view with a proper ActionRequest and/or specify the "package" argument when using the f:translate ViewHelper', 1416832309);
+			}
 		}
 		$originalLabel = $value === NULL ? $this->renderChildren() : $value;
 
