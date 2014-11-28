@@ -43,6 +43,14 @@ use TYPO3\Flow\Resource\Resource;
  * <input type="file" name="formObject[attachments][0][originalResource]">
  * </output>
  *
+ * <code title="Specifying the resource collection for the new resource">
+ * <f:form.upload name="file" collection="invoices"/>
+ * </code>
+ * <output>
+ * <input type="file" name="yourInvoice" />
+ * <input type="hidden" name="yourInvoice[__collectionName]" value="invoices" />
+ * </output>
+ *
  * @api
  */
 class UploadViewHelper extends AbstractFormFieldViewHelper {
@@ -66,6 +74,7 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 		parent::initializeArguments();
 		$this->registerTagAttribute('disabled', 'string', 'Specifies that the input element should be disabled when the page loads');
 		$this->registerArgument('errorClass', 'string', 'CSS class to set if there are errors for this view helper', FALSE, 'f3-form-error');
+		$this->registerArgument('collection', 'string', 'Name of the resource collection this file should be uploaded to', FALSE, '');
 		$this->registerUniversalTagAttributes();
 	}
 
@@ -87,6 +96,10 @@ class UploadViewHelper extends AbstractFormFieldViewHelper {
 				$resourceIdentityAttribute = ' id="' . htmlspecialchars($this->arguments['id']) . '-resource-identity"';
 			}
 			$output .= '<input type="hidden" name="'. $this->getName() . '[originallySubmittedResource][__identity]" value="' . $this->persistenceManager->getIdentifierByObject($resource) . '"' . $resourceIdentityAttribute . ' />';
+		}
+
+		if ($this->hasArgument('collection') && $this->arguments['collection'] !== FALSE && $this->arguments['collection'] !== '') {
+			$output .= '<input type="hidden" name="'. $this->getName() . '[__collectionName]" value="' . $this->arguments['collection'] . '" />';
 		}
 
 		$this->tag->addAttribute('type', 'file');
