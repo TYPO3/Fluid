@@ -13,6 +13,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService;
+use TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface;
 use TYPO3\Flow\Security\Context;
 use TYPO3\Flow\Security\Cryptography\HashService;
 use TYPO3\Fluid\Core\ViewHelper;
@@ -81,6 +82,12 @@ class FormViewHelper extends AbstractFormViewHelper {
 	 * @var MvcPropertyMappingConfigurationService
 	 */
 	protected $mvcPropertyMappingConfigurationService;
+
+	/**
+	 * @Flow\Inject
+	 * @var AuthenticationManagerInterface
+	 */
+	protected $authenticationManager;
 
 	/**
 	 * @var string
@@ -157,9 +164,7 @@ class FormViewHelper extends AbstractFormViewHelper {
 		$content .= $this->renderEmptyHiddenFields();
 		// Render the trusted list of all properties after everything else has been rendered
 		$content .= $this->renderTrustedPropertiesField();
-		if (strtolower($this->arguments['method']) !== 'get') {
-			$content .= $this->renderCsrfTokenField();
-		}
+		$content .= $this->renderCsrfTokenField();
 		$content .= chr(10) . '</div>' . chr(10);
 		$content .= $formContent;
 
@@ -496,7 +501,10 @@ class FormViewHelper extends AbstractFormViewHelper {
 	 * @return string the CSRF token field
 	 */
 	protected function renderCsrfTokenField() {
-		if (!$this->securityContext->isInitialized()) {
+		if (strtolower($this->arguments['method']) === 'get') {
+			return '';
+		}
+		if (!$this->securityContext->isInitialized() || !$this->authenticationManager->isAuthenticated()) {
 			return '';
 		}
 		$csrfToken = $this->securityContext->getCsrfProtectionToken();

@@ -11,6 +11,12 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Mvc\Controller\MvcPropertyMappingConfigurationService;
+use TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface;
+use TYPO3\Flow\Security\Context;
+use TYPO3\Flow\Security\Cryptography\HashService;
+use TYPO3\Fluid\ViewHelpers\FormViewHelper;
+
 require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 
 /**
@@ -19,14 +25,24 @@ require_once(__DIR__ . '/ViewHelperBaseTestcase.php');
 class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\Flow\Security\Cryptography\HashService
+	 * @var HashService|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected $hashService;
 
 	/**
-	 * @var \TYPO3\Flow\Security\Context
+	 * @var Context|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected $securityContext;
+
+	/**
+	 * @var AuthenticationManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $mockAuthenticationManager;
+
+	/**
+	 * @var MvcPropertyMappingConfigurationService|\PHPUnit_Framework_MockObject_MockObject
+	 */
+	protected $mvcPropertyMappingConfigurationService;
 
 	/**
 	 * Set up test dependencies
@@ -59,6 +75,8 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 		$this->inject($viewHelper, 'mvcPropertyMappingConfigurationService', $this->mvcPropertyMappingConfigurationService);
 		$this->securityContext = $this->getMock('TYPO3\Flow\Security\Context');
 		$this->inject($viewHelper, 'securityContext', $this->securityContext);
+		$this->mockAuthenticationManager = $this->getMock('TYPO3\Flow\Security\Authentication\AuthenticationManagerInterface');
+		$this->inject($viewHelper, 'authenticationManager', $this->mockAuthenticationManager);
 		parent::injectDependenciesIntoViewHelper($viewHelper);
 	}
 
@@ -487,6 +505,63 @@ class FormViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase
 
 		$this->injectDependenciesIntoViewHelper($viewHelper);
 		$viewHelper->_call('getFormActionUri');
+	}
+
+	/**
+	 * @test
+	 */
+	public function csrfTokenFieldIsNotRenderedIfFormMethodIsSafe() {
+		$this->arguments['method'] = 'get';
+
+		/** @var FormViewHelper|\PHPUnit_Framework_MockObject_MockObject $viewHelper */
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', NULL, array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$this->securityContext->expects($this->never())->method('getCsrfProtectionToken');
+
+		$this->assertEquals('', $viewHelper->_call('renderCsrfTokenField'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function csrfTokenFieldIsNotRenderedIfSecurityContextIsNotInitialized() {
+		/** @var FormViewHelper|\PHPUnit_Framework_MockObject_MockObject $viewHelper */
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', NULL, array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$this->securityContext->expects($this->atLeastOnce())->method('isInitialized')->will($this->returnValue(FALSE));
+		$this->mockAuthenticationManager->expects($this->any())->method('isAuthenticated')->will($this->returnValue(TRUE));
+		$this->securityContext->expects($this->never())->method('getCsrfProtectionToken');
+
+		$this->assertEquals('', $viewHelper->_call('renderCsrfTokenField'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function csrfTokenFieldIsNotRenderedIfNoAccountIsAuthenticated() {
+		/** @var FormViewHelper|\PHPUnit_Framework_MockObject_MockObject $viewHelper */
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', NULL, array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(TRUE));
+		$this->mockAuthenticationManager->expects($this->atLeastOnce())->method('isAuthenticated')->will($this->returnValue(FALSE));
+		$this->securityContext->expects($this->never())->method('getCsrfProtectionToken');
+
+		$this->assertEquals('', $viewHelper->_call('renderCsrfTokenField'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function csrfTokenFieldIsRenderedForUnsafeRequests() {
+		/** @var FormViewHelper|\PHPUnit_Framework_MockObject_MockObject $viewHelper */
+		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\FormViewHelper', NULL, array(), '', FALSE);
+		$this->injectDependenciesIntoViewHelper($viewHelper);
+		$this->securityContext->expects($this->any())->method('isInitialized')->will($this->returnValue(TRUE));
+		$this->mockAuthenticationManager->expects($this->any())->method('isAuthenticated')->will($this->returnValue(TRUE));
+
+		$this->securityContext->expects($this->atLeastOnce())->method('getCsrfProtectionToken')->will($this->returnValue('CSRFTOKEN'));
+
+		$this->assertEquals('<input type="hidden" name="__csrfToken" value="CSRFTOKEN" />' . chr(10), $viewHelper->_call('renderCsrfTokenField'));
 	}
 
 }
