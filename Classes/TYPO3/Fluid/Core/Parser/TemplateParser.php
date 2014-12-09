@@ -500,7 +500,21 @@ class TemplateParser {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			throw new Exception('Namespace could not be resolved. This exception should never be thrown!', 1224254792);
 		}
-		$viewHelper = $this->objectManager->get($this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier));
+		$resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
+		$actualViewHelperClassName = $this->objectManager->getCaseSensitiveObjectName($resolvedViewHelperClassName);
+		if ($actualViewHelperClassName === FALSE) {
+			throw new Exception(sprintf(
+				'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
+				'Based on your spelling, the system would load the class "%s", however this class does not exist.',
+				$namespaceIdentifier, $methodIdentifier, $resolvedViewHelperClassName), 1407060572);
+		} elseif ($actualViewHelperClassName !== $resolvedViewHelperClassName) {
+			throw new Exception(sprintf(
+				'The ViewHelper "<%s:%s>" inside your template is not written correctly upper/lowercased.' . chr(10) .
+				'Based on your spelling, the system would load the (non-existant) class "%s", however the real class name is "%s".' . chr(10) .
+				'This error can be fixed by making sure the ViewHelper is written in the correct upper/lowercase form.',
+				$namespaceIdentifier, $methodIdentifier, $resolvedViewHelperClassName, $actualViewHelperClassName), 1407060573);
+		}
+		$viewHelper = $this->objectManager->get($actualViewHelperClassName);
 
 		// The following three checks are only done *in an uncached template*, and not needed anymore in the cached version
 		$expectedViewHelperArguments = $viewHelper->prepareArguments();
