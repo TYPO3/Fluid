@@ -41,9 +41,12 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 class StripTagsViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
+	 * Disable the escaping interceptor because otherwise the child nodes would be escaped before this view helper
+	 * can decode the text's entities.
+	 *
 	 * @var boolean
 	 */
-	protected $escapeChildren = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Escapes special characters with their escaped counterparts as needed using PHPs strip_tags() function.

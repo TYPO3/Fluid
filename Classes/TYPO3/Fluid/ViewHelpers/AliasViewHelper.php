@@ -47,11 +47,6 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class AliasViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * Renders alias
 	 *
 	 * @param array $map array that specifies which variables should be mapped to which alias

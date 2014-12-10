@@ -41,11 +41,6 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 class Nl2brViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * Replaces newline characters by HTML line breaks.
 	 *
 	 * @param string $value string to format

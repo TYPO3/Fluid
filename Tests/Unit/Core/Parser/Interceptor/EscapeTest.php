@@ -11,91 +11,82 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\Interceptor;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use TYPO3\Flow\Tests\UnitTestCase;
-use TYPO3\Fluid\Core\Parser\Interceptor\Escape;
-use TYPO3\Fluid\Core\Parser\InterceptorInterface;
-use TYPO3\Fluid\Core\Parser\ParsingState;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
-
 /**
  * Testcase for Interceptor\Escape
  */
-class EscapeTest extends UnitTestCase {
+class EscapeTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
-	 * @var Escape|\PHPUnit_Framework_MockObject_MockObject
+	 * @var \TYPO3\Fluid\Core\Parser\Interceptor\Escape
 	 */
 	protected $escapeInterceptor;
 
 	/**
-	 * @var AbstractViewHelper|\PHPUnit_Framework_MockObject_MockObject
+	 * @var \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper
 	 */
 	protected $mockViewHelper;
 
 	/**
-	 * @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject
+	 * @var \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 	 */
 	protected $mockNode;
 
 	/**
-	 * @var ParsingState|\PHPUnit_Framework_MockObject_MockObject
+	 * @var \TYPO3\Fluid\Core\Parser\ParsingState
 	 */
 	protected $mockParsingState;
 
 	public function setUp() {
 		$this->escapeInterceptor = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\Interceptor\Escape', array('dummy'));
-		$this->mockViewHelper = $this->getMockBuilder('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper')->disableOriginalConstructor()->getMock();
-		$this->mockNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
-		$this->mockParsingState = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\ParsingState')->disableOriginalConstructor()->getMock();
+		$this->mockViewHelper = $this->getMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper');
+		$this->mockNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
+		$this->mockParsingState = $this->getMock('TYPO3\Fluid\Core\Parser\ParsingState');
 	}
 
 	/**
 	 * @test
 	 */
 	public function processDoesNotDisableEscapingInterceptorByDefault() {
-		$interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
-		$this->mockViewHelper->expects($this->once())->method('isChildrenEscapingEnabled')->will($this->returnValue(TRUE));
+		$interceptorPosition = \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
+		$this->mockViewHelper->expects($this->once())->method('isEscapingInterceptorEnabled')->will($this->returnValue(TRUE));
 		$this->mockNode->expects($this->once())->method('getUninitializedViewHelper')->will($this->returnValue($this->mockViewHelper));
 
-		$this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+		$this->assertTrue($this->escapeInterceptor->_get('interceptorEnabled'));
 		$this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-		$this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+		$this->assertTrue($this->escapeInterceptor->_get('interceptorEnabled'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function processDisablesEscapingInterceptorIfViewHelperDisablesIt() {
-		$interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
-		$this->mockViewHelper->expects($this->once())->method('isChildrenEscapingEnabled')->will($this->returnValue(FALSE));
+		$interceptorPosition = \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
+		$this->mockViewHelper->expects($this->once())->method('isEscapingInterceptorEnabled')->will($this->returnValue(FALSE));
 		$this->mockNode->expects($this->once())->method('getUninitializedViewHelper')->will($this->returnValue($this->mockViewHelper));
 
-		$this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+		$this->assertTrue($this->escapeInterceptor->_get('interceptorEnabled'));
 		$this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-		$this->assertFalse($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+		$this->assertFalse($this->escapeInterceptor->_get('interceptorEnabled'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore() {
-		$interceptorPosition = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
-		$this->mockViewHelper->expects($this->any())->method('isOutputEscapingEnabled')->will($this->returnValue(FALSE));
-		$this->mockNode->expects($this->any())->method('getUninitializedViewHelper')->will($this->returnValue($this->mockViewHelper));
+		$interceptorPosition = \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
 
-		$this->escapeInterceptor->_set('childrenEscapingEnabled', FALSE);
+		$this->escapeInterceptor->_set('interceptorEnabled', FALSE);
 		$this->escapeInterceptor->_set('viewHelperNodesWhichDisableTheInterceptor', array($this->mockNode));
 
 		$this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-		$this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+		$this->assertTrue($this->escapeInterceptor->_get('interceptorEnabled'));
 	}
 
 	/**
 	 * @test
 	 */
 	public function processWrapsCurrentViewHelperInHtmlspecialcharsViewHelperOnObjectAccessor() {
-		$interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
+		$interceptorPosition = \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
 		$mockNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
 		$mockEscapeViewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
 		$mockObjectManager = $this->getMock('TYPO3\Flow\Object\ObjectManagerInterface');

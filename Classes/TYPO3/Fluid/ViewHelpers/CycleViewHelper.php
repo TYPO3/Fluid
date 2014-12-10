@@ -53,11 +53,6 @@ use TYPO3\Fluid\Core\ViewHelper;
 class CycleViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * The values to be iterated through
 	 *
 	 * @var array|\SplObjectStorage

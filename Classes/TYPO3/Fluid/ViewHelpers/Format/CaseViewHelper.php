@@ -68,11 +68,6 @@ use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
 class CaseViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
-
-	/**
 	 * Directs the input string being converted to "lowercase"
 	 */
 	const CASE_LOWER = 'lower';

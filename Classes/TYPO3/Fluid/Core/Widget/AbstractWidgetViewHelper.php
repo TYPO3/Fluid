@@ -30,11 +30,6 @@ use TYPO3\Fluid\Core\Widget\Exception\MissingControllerException;
 abstract class AbstractWidgetViewHelper extends AbstractViewHelper implements ChildNodeAccessInterface {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * The Controller associated to this widget.
 	 * This needs to be filled by the individual subclass using
 	 * property injection.

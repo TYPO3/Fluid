@@ -31,9 +31,8 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\PostParseInterface;
  */
 class TemplateParser {
 
-	static public $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/';
-	static public $SCAN_PATTERN_XMLNSDECLARATION = '/\sxmlns:(?P<identifier>.*?)="(?P<xmlNamespace>.*?)"/';
-	static public $SCAN_PATTERN_ESCAPINGMODIFIER = '/{escapingEnabled\s*=\s*(?P<enabled>true|false)\s*}/i';
+	static public $SCAN_PATTERN_NAMESPACEDECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/m';
+	static public $SCAN_PATTERN_XMLNSDECLARATION = '/\sxmlns:(?P<identifier>.*?)="(?P<xmlNamespace>.*?)"/m';
 
 	/**
 	 * The following two constants are used for tracking whether we are currently
@@ -270,13 +269,6 @@ class TemplateParser {
 	static public $SCAN_PATTERN_DEFAULT_XML_NAMESPACE = '/^http\:\/\/typo3\.org\/ns\/(?P<PhpNamespace>.+)$/s';
 
 	/**
-	 * Whether or not the escaping interceptors are active
-	 *
-	 * @var boolean
-	 */
-	protected $escapingEnabled = TRUE;
-
-	/**
 	 * Namespace identifiers and their component name prefix (Associative array).
 	 *
 	 * @var array
@@ -355,7 +347,6 @@ class TemplateParser {
 
 		$this->reset();
 
-		$templateString = $this->extractEscapingModifier($templateString);
 		$templateString = $this->extractNamespaceDefinitions($templateString);
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
@@ -398,7 +389,6 @@ class TemplateParser {
 	 * @return void
 	 */
 	protected function reset() {
-		$this->escapingEnabled = TRUE;
 		$this->ignoredNamespaceIdentifierPatterns = array();
 		$this->namespaces = array(
 			'f' => 'TYPO3\Fluid\ViewHelpers'
@@ -407,7 +397,8 @@ class TemplateParser {
 	}
 
 	/**
-	 * Extracts namespace definitions out of the given template string and sets $this->namespaces.
+	 * Extracts namespace definitions out of the given template string and sets
+	 * $this->namespaces.
 	 *
 	 * @param string $templateString Template string to extract the namespaces from
 	 * @return string The updated template string without namespace declarations inside
@@ -450,30 +441,6 @@ class TemplateParser {
 		if ($matches !== array()) {
 			$templateString = preg_replace(self::$SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
 		}
-
-		return $templateString;
-	}
-
-	/**
-	 * Extracts escaping modifiers ({escapingEnabled=true/false}) out of the given template and sets $this->escapingEnabled accordingly
-	 *
-	 * @param string $templateString Template string to extract the {escaping = ..} definitions from
-	 * @return string The updated template string without escaping declarations inside
-	 * @throws Exception if there is more than one modifier
-	 */
-	protected function extractEscapingModifier($templateString) {
-		$matches = array();
-		preg_match_all(self::$SCAN_PATTERN_ESCAPINGMODIFIER, $templateString, $matches, PREG_SET_ORDER);
-		if ($matches === array()) {
-			return $templateString;
-		}
-		if (count($matches) > 1) {
-			throw new Exception('There is more than one escaping modifier defined. There can only be one {escapingEnabled=...} per template.', 1407331080);
-		}
-		if (strtolower($matches[0]['enabled']) === 'false') {
-			$this->escapingEnabled = FALSE;
-		}
-		$templateString = preg_replace(self::$SCAN_PATTERN_ESCAPINGMODIFIER, '', $templateString);
 
 		return $templateString;
 	}
@@ -550,8 +517,6 @@ class TemplateParser {
 		if ($viewHelperWasOpened === TRUE && $selfclosing === TRUE) {
 			$node = $state->popNodeFromStack();
 			$this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
-			// This needs to be called here because closingViewHelperTagHandler() is not triggered for self-closing tags
-			$state->getNodeFromStack()->addChildNode($node);
 		}
 
 		return $viewHelperWasOpened;
@@ -596,7 +561,7 @@ class TemplateParser {
 
 		/** @var $currentViewHelperNode ViewHelperNode */
 		$currentViewHelperNode = $this->objectManager->get('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $viewHelper, $argumentsObjectTree);
-		$this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
+		$state->getNodeFromStack()->addChildNode($currentViewHelperNode);
 
 		if ($viewHelper instanceof ChildNodeAccessInterface && !($viewHelper instanceof CompilableInterface)) {
 			$state->setCompilable(FALSE);
@@ -609,6 +574,7 @@ class TemplateParser {
 			call_user_func(array($viewHelper, 'postParseEvent'), $currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
 		}
 
+		$this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
 
 		$state->pushNodeToStack($currentViewHelperNode);
 
@@ -713,7 +679,6 @@ class TemplateParser {
 			throw new Exception('Templating tags not properly nested. Expected: ' . $lastStackElement->getViewHelperClassName() . '; Actual: ' . $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier), 1224485398);
 		}
 		$this->callInterceptor($lastStackElement, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
-		$state->getNodeFromStack()->addChildNode($lastStackElement);
 
 		return TRUE;
 	}
@@ -773,7 +738,6 @@ class TemplateParser {
 		for ($i = 0; $i < $numberOfViewHelpers; $i++) {
 			$node = $state->popNodeFromStack();
 			$this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
-			$state->getNodeFromStack()->addChildNode($node);
 		}
 	}
 
@@ -786,19 +750,18 @@ class TemplateParser {
 	 * @return void
 	 */
 	protected function callInterceptor(NodeInterface &$node, $interceptionPoint, ParsingState $state) {
-		if ($this->configuration === NULL) {
-			return;
-		}
-		if ($this->escapingEnabled) {
-			/** @var $interceptor InterceptorInterface */
-			foreach ($this->configuration->getEscapingInterceptors($interceptionPoint) as $interceptor) {
-				$node = $interceptor->process($node, $interceptionPoint, $state);
+		if ($this->configuration !== NULL) {
+			// $this->configuration is UNSET inside the arguments of a ViewHelper.
+			// That's why the interceptors are only called if the object accesor is not inside a ViewHelper Argument
+			// This could be a problem if We have a ViewHelper as an argument to another ViewHelper, and an ObjectAccessor nested inside there.
+			// TODO: Clean up this.
+			$interceptors = $this->configuration->getInterceptors($interceptionPoint);
+			if (count($interceptors) > 0) {
+				/** @var $interceptor InterceptorInterface */
+				foreach ($interceptors as $interceptor) {
+					$node = $interceptor->process($node, $interceptionPoint, $state);
+				}
 			}
-		}
-
-		/** @var $interceptor InterceptorInterface */
-		foreach ($this->configuration->getInterceptors($interceptionPoint) as $interceptor) {
-			$node = $interceptor->process($node, $interceptionPoint, $state);
 		}
 	}
 
@@ -808,7 +771,7 @@ class TemplateParser {
 	 *
 	 * @param array $arguments The arguments to be processed
 	 * @return array the processed array
-	 * @todo This method should become superfluous once the rest has been refactored, so that this code is not needed.
+	 * @todo This method should become superflous once the rest has been refactored, so that this code is not needed.
 	 */
 	protected function postProcessArgumentsForObjectAccessor(array $arguments) {
 		foreach ($arguments as $argumentName => $argumentValue) {
@@ -832,14 +795,14 @@ class TemplateParser {
 		$argumentsObjectTree = array();
 		$matches = array();
 		if (preg_match_all(self::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
-			$escapingEnabledBackup = $this->escapingEnabled;
-			$this->escapingEnabled = FALSE;
+			$configurationBackup = $this->configuration;
+			$this->configuration = NULL;
 			foreach ($matches as $singleMatch) {
 				$argument = $singleMatch['Argument'];
 				$value = $this->unquoteString($singleMatch['ValueQuoted']);
 				$argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
 			}
-			$this->escapingEnabled = $escapingEnabledBackup;
+			$this->configuration = $configurationBackup;
 		}
 		return $argumentsObjectTree;
 	}

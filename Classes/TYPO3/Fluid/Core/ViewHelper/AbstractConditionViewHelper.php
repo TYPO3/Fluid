@@ -41,11 +41,6 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 abstract class AbstractConditionViewHelper extends AbstractViewHelper implements ChildNodeAccessInterface, CompilableInterface {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * An array containing child nodes
 	 *
 	 * @var array<\TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode>

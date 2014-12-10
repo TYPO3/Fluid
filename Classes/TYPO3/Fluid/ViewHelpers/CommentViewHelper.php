@@ -53,12 +53,7 @@ class CommentViewHelper extends AbstractViewHelper {
 	/**
 	 * @var boolean
 	 */
-	protected $escapeChildren = FALSE;
-
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Comments out the tag content

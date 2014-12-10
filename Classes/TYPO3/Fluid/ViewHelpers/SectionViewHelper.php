@@ -65,11 +65,6 @@ use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 class SectionViewHelper extends AbstractViewHelper implements PostParseInterface, CompilableInterface {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * Initialize the arguments.
 	 *
 	 * @return void
