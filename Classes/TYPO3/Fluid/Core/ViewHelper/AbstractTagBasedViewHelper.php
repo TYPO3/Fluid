@@ -21,13 +21,6 @@ namespace TYPO3\Fluid\Core\ViewHelper;
 abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 
 	/**
-	 * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
-	 *
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * Names of all registered tag attributes
 	 *
 	 * @var array

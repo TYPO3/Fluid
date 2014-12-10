@@ -93,7 +93,7 @@ class DateViewHelper extends AbstractLocaleAwareViewHelper {
 	/**
 	 * @var boolean
 	 */
-	protected $escapeChildren = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * @Flow\Inject

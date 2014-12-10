@@ -40,12 +40,7 @@ class CountViewHelper extends AbstractViewHelper {
 	/**
 	 * @var boolean
 	 */
-	protected $escapeChildren = FALSE;
-
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Counts the items of a given property.

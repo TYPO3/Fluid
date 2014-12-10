@@ -48,15 +48,15 @@ use TYPO3\Fluid\Core\ViewHelper;
 class IdentifierViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
-
-	/**
 	 * @Flow\Inject
 	 * @var PersistenceManagerInterface
 	 */
 	protected $persistenceManager;
+
+	/**
+	 * @var boolean
+	 */
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Outputs the identifier of the specified object

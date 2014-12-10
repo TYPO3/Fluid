@@ -49,7 +49,7 @@ class JsonViewHelper extends AbstractViewHelper implements CompilableInterface {
 	/**
 	 * @var boolean
 	 */
-	protected $escapeChildren = FALSE;
+	protected $escapingInterceptorEnabled = FALSE;
 
 	/**
 	 * Outputs content with its JSON representation. To prevent issues in HTML context, occurrences

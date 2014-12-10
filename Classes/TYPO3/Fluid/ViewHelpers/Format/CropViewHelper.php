@@ -50,11 +50,6 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
 class CropViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
-
-	/**
 	 * Render the cropped text
 	 *
 	 * @param integer $maxCharacters Place where to truncate the string
@@ -81,7 +76,8 @@ class CropViewHelper extends AbstractViewHelper implements CompilableInterface {
 
 		if (UnicodeUtilityFunctions::strlen($value) > $arguments['maxCharacters']) {
 			return UnicodeUtilityFunctions::substr($value, 0, $arguments['maxCharacters']) . $arguments['append'];
+		} else {
+			return $value;
 		}
-		return $value;
 	}
 }

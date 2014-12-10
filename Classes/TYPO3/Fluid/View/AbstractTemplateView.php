@@ -15,8 +15,6 @@ use TYPO3\Flow\Mvc\Controller\ControllerContext;
 use TYPO3\Flow\Mvc\View\AbstractView;
 use TYPO3\Flow\Object\ObjectManagerInterface;
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser\Configuration;
-use TYPO3\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Parser\TemplateParser;
@@ -414,15 +412,10 @@ abstract class AbstractTemplateView extends AbstractView {
 	 * @return \TYPO3\Fluid\Core\Parser\Configuration
 	 */
 	protected function buildParserConfiguration() {
-		/** @var Configuration $parserConfiguration */
 		$parserConfiguration = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Configuration');
-		/** @var Escape $escapeInterceptor */
-		$escapeInterceptor = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape');
-		$parserConfiguration->addEscapingInterceptor($escapeInterceptor);
 		if (in_array($this->controllerContext->getRequest()->getFormat(), array('html', NULL))) {
-			/** @var \TYPO3\Fluid\Core\Parser\Interceptor\Resource $resourceInterceptor */
-			$resourceInterceptor = $this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource');
-			$parserConfiguration->addInterceptor($resourceInterceptor);
+			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Escape'));
+			$parserConfiguration->addInterceptor($this->objectManager->get('TYPO3\Fluid\Core\Parser\Interceptor\Resource'));
 		}
 		return $parserConfiguration;
 	}

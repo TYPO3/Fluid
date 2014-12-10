@@ -74,11 +74,6 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 class RenderViewHelper extends AbstractViewHelper {
 
 	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
-
-	/**
 	 * Renders the content.
 	 *
 	 * @param string $section Name of section to render. If used in a layout, renders a section of the main content file. If used inside a standard template, renders a section of the same file.
