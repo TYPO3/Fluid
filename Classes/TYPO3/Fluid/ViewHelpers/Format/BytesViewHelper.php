@@ -11,6 +11,7 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Utility\Files;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
@@ -39,11 +40,6 @@ use TYPO3\Fluid\Core\ViewHelper\Facets\CompilableInterface;
  * @api
  */
 class BytesViewHelper extends AbstractViewHelper implements CompilableInterface {
-
-	/**
-	 * @var array
-	 */
-	static protected $units = array('B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
 
 	/**
 	 * Render the supplied byte count as a human readable string.
@@ -79,15 +75,6 @@ class BytesViewHelper extends AbstractViewHelper implements CompilableInterface 
 				$value = 0;
 			}
 		}
-		$bytes = max($value, 0);
-		$pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-		$pow = min($pow, count(self::$units) - 1);
-		$bytes /= pow(2, (10 * $pow));
-
-		return sprintf(
-			'%s %s',
-			number_format(round($bytes, 4 * $arguments['decimals']), $arguments['decimals'], $arguments['decimalSeparator'], $arguments['thousandsSeparator']),
-			self::$units[$pow]
-		);
+		return Files::bytesToSizeString($value, $arguments['decimals'], $arguments['decimalSeparator'], $arguments['thousandsSeparator']);
 	}
 }
