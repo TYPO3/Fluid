@@ -377,7 +377,7 @@ class TemplateParser {
 	 * @throws Exception if the specified identifier is already registered
 	 */
 	public function registerNamespace($identifier, $phpNamespace) {
-		if (array_key_exists($identifier, $this->namespaces)) {
+		if (array_key_exists($identifier, $this->namespaces) && $this->namespaces[$identifier] !== $phpNamespace) {
 			throw new Exception(sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $identifier), 1224241246);
 		}
 		$this->namespaces[$identifier] = $phpNamespace;

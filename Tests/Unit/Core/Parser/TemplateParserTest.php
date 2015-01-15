@@ -11,6 +11,9 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Flow\Tests\UnitTestCase;
+use TYPO3\Fluid\Core\Parser\TemplateParser;
+
 require_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
 
 /**
@@ -19,14 +22,14 @@ require_once(__DIR__ . '/Fixtures/PostParseFacetViewHelper.php');
  * This is to at least half a system test, as it compares rendered results to
  * expectations, and does not strictly check the parsing...
  */
-class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
+class TemplateParserTest extends UnitTestCase {
 
 	/**
 	 * @test
 	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
 	 */
 	public function parseThrowsExceptionWhenStringArgumentMissing() {
-		$templateParser = new \TYPO3\Fluid\Core\Parser\TemplateParser();
+		$templateParser = new TemplateParser();
 		$templateParser->parse(123);
 	}
 
@@ -151,6 +154,25 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 */
+	public function registerNamespaceThrowsExceptionIfOneAliasIsRegisteredWithDifferentPhpNamespaces() {
+		$templateParser = new TemplateParser();
+		$templateParser->registerNamespace('foo', 'Some\Namespace');
+		$templateParser->registerNamespace('foo', 'Some\Other\Namespace');
+	}
+
+	/**
+	 * @test
+	 */
+	public function registerNamespaceDoesNotThrowAnExceptionIfTheAliasExistAlreadyAndPointsToTheSamePhpNamespace() {
+		$templateParser = new TemplateParser();
+		$templateParser->registerNamespace('foo', 'Some\Namespace');
+		$templateParser->registerNamespace('foo', 'Some\Namespace');
+	}
+
+	/**
+	 * @test
 	 */
 	public function viewHelperNameWithMultipleLevelsCanBeResolvedByResolveViewHelperName() {
 		$mockTemplateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'), array(), '', FALSE);
@@ -230,7 +252,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 		$templateParser->injectObjectManager($mockObjectManager);
 
-		$templateParser->_call('buildObjectTree', array(), \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+		$templateParser->_call('buildObjectTree', array(), TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
@@ -250,7 +272,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\TemplateParser', array('dummy'));
 		$templateParser->injectObjectManager($mockObjectManager);
 
-		$templateParser->_call('buildObjectTree', array(), \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+		$templateParser->_call('buildObjectTree', array(), TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
@@ -274,7 +296,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser->expects($this->at(5))->method('textAndShorthandSyntaxHandler')->with($mockState, 'and here goes some {text} that could have {shorthand}');
 
 		$splitTemplate = $templateParser->_call('splitTemplateAtDynamicTags', 'The first part is simple<![CDATA[<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>]]><f:format.printf arguments="{number : 362525200}">%.3e</f:format.printf>and here goes some {text} that could have {shorthand}');
-		$templateParser->_call('buildObjectTree', $splitTemplate, \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+		$templateParser->_call('buildObjectTree', $splitTemplate, TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
@@ -636,7 +658,7 @@ class TemplateParserTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$templateParser->expects($this->at(2))->method('arrayHandler')->with($mockState, 'on: "here"');
 
 		$text = '{someThing.absolutely} "fishy" is \'going\' {on: "here"}';
-		$templateParser->_call('textAndShorthandSyntaxHandler', $mockState, $text, \TYPO3\Fluid\Core\Parser\TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
+		$templateParser->_call('textAndShorthandSyntaxHandler', $mockState, $text, TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS);
 	}
 
 	/**
