@@ -170,6 +170,9 @@ class TemplateParserTest extends UnitTestCase {
 		$templateParser = new TemplateParser();
 		$templateParser->registerNamespace('foo', 'Some\Namespace');
 		$templateParser->registerNamespace('foo', 'Some\Namespace');
+
+		// dummy assertion to avoid "risky test" warning
+		$this->assertTrue(TRUE);
 	}
 
 	/**

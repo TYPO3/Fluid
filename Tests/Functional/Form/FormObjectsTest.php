@@ -313,7 +313,7 @@ class FormObjectsTest extends \TYPO3\Flow\Tests\FunctionalTestCase {
 		$form['post']['private']->setValue(FALSE);
 
 		$this->browser->submit($form);
-		$this->assertNull($this->browser->getCrawler()->filterXPath('//input[@id="private"]')->attr('checked'));
+		$this->assertEmpty($this->browser->getCrawler()->filterXPath('//input[@id="private"]')->attr('checked'));
 
 		$form['post']['private']->setValue(TRUE);
 		$this->browser->submit($form);
