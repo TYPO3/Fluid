@@ -80,7 +80,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper implements
 		if ($this->hasArgument('__thenClosure')) {
 			$thenClosure = $this->arguments['__thenClosure'];
 			return $thenClosure();
-		} elseif ($this->hasArgument('__elseClosure') || $this->hasArgument('else')) {
+		} elseif ($this->hasArgument('__elseClosure')) {
 			return '';
 		}
 
