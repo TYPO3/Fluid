@@ -11,22 +11,20 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase;
+
 require_once(__DIR__ . '/../../ViewHelpers/ViewHelperBaseTestcase.php');
 
 /**
  * Testcase for Condition ViewHelper
  */
-class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelperBaseTestcase {
+class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\Fluid\Core\ViewHelper\AbstractConditionViewHelper
+	 * @var AbstractConditionViewHelper|\PHPUnit_Framework_MockObject_MockObject
 	 */
 	protected $viewHelper;
-
-	/**
-	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
-	 */
-	protected $mockArguments;
 
 	public function setUp() {
 		parent::setUp();
@@ -61,28 +59,7 @@ class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 	/**
 	 * @test
 	 */
-	public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndNoElseViewHelperChildExists() {
-		$actualResult = $this->viewHelper->_call('renderElseChild');
-		$this->assertEquals('', $actualResult);
-	}
-
-	/**
-	 * @test
-	 */
-	public function renderElseChildRendersElseViewHelperChildIfConditionIsFalseAndNoThenViewHelperChildExists() {
-		$mockElseViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
-		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\ElseViewHelper'));
-		$mockElseViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ElseViewHelperResults'));
-
-		$this->viewHelper->setChildNodes(array($mockElseViewHelperNode));
-		$actualResult = $this->viewHelper->_call('renderElseChild');
-		$this->assertEquals('ElseViewHelperResults', $actualResult);
-	}
-
-	/**
-	 * @test
-	 */
-	public function renderThenChildReturnsValueOfThenArgumentIfConditionIsTrue() {
+	public function renderThenChildReturnsValueOfThenArgumentIfItIsSpecified() {
 		$this->viewHelper->expects($this->atLeastOnce())->method('hasArgument')->with('then')->will($this->returnValue(TRUE));
 		$this->arguments['then'] = 'ThenArgument';
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -102,6 +79,27 @@ class AbstractConditionViewHelperTest extends \TYPO3\Fluid\ViewHelpers\ViewHelpe
 
 		$actualResult = $this->viewHelper->_call('renderThenChild');
 		$this->assertEquals('', $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndNoElseViewHelperChildExists() {
+		$actualResult = $this->viewHelper->_call('renderElseChild');
+		$this->assertEquals('', $actualResult);
+	}
+
+	/**
+	 * @test
+	 */
+	public function renderElseChildRendersElseViewHelperChildIfConditionIsFalseAndNoThenViewHelperChildExists() {
+		$mockElseViewHelperNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('getViewHelperClassName', 'evaluate', 'setRenderingContext'), array(), '', FALSE);
+		$mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue('TYPO3\Fluid\ViewHelpers\ElseViewHelper'));
+		$mockElseViewHelperNode->expects($this->at(1))->method('evaluate')->with($this->renderingContext)->will($this->returnValue('ElseViewHelperResults'));
+
+		$this->viewHelper->setChildNodes(array($mockElseViewHelperNode));
+		$actualResult = $this->viewHelper->_call('renderElseChild');
+		$this->assertEquals('ElseViewHelperResults', $actualResult);
 	}
 
 	/**
