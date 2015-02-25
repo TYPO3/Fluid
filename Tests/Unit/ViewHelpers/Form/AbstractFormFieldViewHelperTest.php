@@ -303,7 +303,12 @@ class AbstractFormFieldViewHelperTest extends FormFieldViewHelperBaseTestcase {
 		$this->injectDependenciesIntoViewHelper($formViewHelper);
 		$formViewHelper->expects($this->once())->method('isObjectAccessorMode')->will($this->returnValue(TRUE));
 		$formViewHelper->_set('arguments', array('property' => 'bar'));
-		$this->viewHelperVariableContainer->expects($this->any())->method('get')->with('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')->will($this->returnValue(NULL));
+
+		$this->viewHelperVariableContainerData = array(
+			'TYPO3\Fluid\ViewHelpers\FormViewHelper' => array(
+				'formObjectName' => NULL,
+			)
+		);
 
 		$expectedResult = $this->getMock('TYPO3\Flow\Error\Result');
 
