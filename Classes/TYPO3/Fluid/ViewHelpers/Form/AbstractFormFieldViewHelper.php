@@ -143,13 +143,11 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 * @return mixed
 	 */
 	protected function getLastSubmittedFormData() {
-		$value = NULL;
 		$submittedArguments = $this->getRequest()->getInternalArgument('__submittedArguments');
-		if ($submittedArguments !== NULL) {
-			$propertyPath = rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
-			$value = ObjectAccess::getPropertyPath($submittedArguments, $propertyPath);
+		if ($submittedArguments === NULL) {
+			return;
 		}
-		return $value;
+		return ObjectAccess::getPropertyPath($submittedArguments, $this->getPropertyPath());
 	}
 
 	/**
@@ -198,6 +196,21 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	}
 
 	/**
+	 * Returns the "absolute" property path of the property bound to this ViewHelper.
+	 * For <f:form... property="foo.bar" /> this will be "<formObjectName>.foo.bar"
+	 * For <f:form... name="foo[bar][baz]" /> this will be "foo.bar.baz"
+	 *
+	 * @return string
+	 */
+	protected function getPropertyPath() {
+		if ($this->isObjectAccessorMode()) {
+			$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
+			return $formObjectName . '.' . $this->arguments['property'];
+		}
+		return rtrim(preg_replace('/(\]\[|\[|\])/', '.', $this->getNameWithoutPrefix()), '.');
+	}
+
+	/**
 	 * Internal method which checks if we should evaluate a domain object or just output arguments['name'] and arguments['value']
 	 *
 	 * @return boolean TRUE if we should evaluate the domain object, FALSE otherwise.
@@ -235,16 +248,12 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 * @return Result
 	 */
 	protected function getMappingResultsForProperty() {
-		if (!$this->isObjectAccessorMode()) {
-			return new Result();
-		}
 		/** @var $validationResults Result */
 		$validationResults = $this->getRequest()->getInternalArgument('__submittedArgumentValidationResults');
 		if ($validationResults === NULL) {
 			return new Result();
 		}
-		$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
-		return $validationResults->forProperty($formObjectName)->forProperty($this->arguments['property']);
+		return $validationResults->forProperty($this->getPropertyPath());
 	}
 
 	/**
