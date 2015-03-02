@@ -125,14 +125,13 @@ abstract class AbstractFormFieldViewHelper extends AbstractFormViewHelper {
 	 * * Else the bound property is returned (only in objectAccessor-mode)
 	 * * As fallback the "value" argument of this ViewHelper is used
 	 *
-	 * Note: This method should *not* be used for form elements that must not change the value attribute, e.g. (radio) buttons and checkboxes.
-	 *
+	 * @param boolean $ignoreSubmittedFormData By default the submitted form value has precedence over value/property argument upon re-display. With this flag set the submitted data is not evaluated (e.g. for checkbox and hidden fields where the value attribute should not be changed)
 	 * @return mixed Value
 	 */
-	protected function getValueAttribute() {
+	protected function getValueAttribute($ignoreSubmittedFormData = FALSE) {
 		$value = NULL;
 		$submittedFormData = NULL;
-		if ($this->hasMappingErrorOccurred()) {
+		if (!$ignoreSubmittedFormData && $this->hasMappingErrorOccurred()) {
 			$submittedFormData = $this->getLastSubmittedFormData();
 		}
 		if ($submittedFormData !== NULL) {

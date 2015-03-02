@@ -75,7 +75,7 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 		$this->tag->addAttribute('type', 'radio');
 
 		$nameAttribute = $this->getName();
-		$valueAttribute = $this->getValueAttribute();
+		$valueAttribute = $this->getValueAttribute(TRUE);
 
 		$propertyValue = NULL;
 		if ($this->hasMappingErrorOccurred()) {
@@ -101,21 +101,5 @@ class RadioViewHelper extends AbstractFormFieldViewHelper {
 		$this->setErrorClassAttribute();
 
 		return $this->tag->render();
-	}
-
-	/**
-	 * Overrides AbstractFormFieldViewHelper::getValueAttribute() as the value attribute of this ViewHelper must not take previously submitted form data into account
-	 *
-	 * @return mixed Value
-	 */
-	protected function getValueAttribute() {
-		$value = NULL;
-		if ($this->hasArgument('value')) {
-			$value = $this->arguments['value'];
-		}
-		if (is_object($value)) {
-			$value = $this->persistenceManager->getIdentifierByObject($value);
-		}
-		return $value;
 	}
 }
