@@ -24,6 +24,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '{namespace acme=Acme.MyPackage\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
 		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '{namespace acme=Acme.MyPackage\Bla\Blubb }'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (2).');
 		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '    {namespace foo = Foo\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (3).');
+		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '    {namespace foo.bar  = Foo\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (4).');
 		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, ' \{namespace fblubb = TYPO3.Fluid\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (1)');
 		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '\{namespace typo3 = TYPO3.TYPO3\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (2)');
 	}
@@ -66,6 +67,14 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$source = '<f:a.testing data-bar="foo"> <f:a.testing>';
 		$expected = array('<f:a.testing data-bar="foo">', ' ', '<f:a.testing>');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with data- attribute.');
+
+		$source = '<foo:a.testing someArgument="bar"> <f:a.testing>';
+		$expected = array('<foo:a.testing someArgument="bar">', ' ', '<f:a.testing>');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with custom namespace identifier.');
+
+		$source = '<foo.bar:a.testing someArgument="baz"> <f:a.testing>';
+		$expected = array('<foo.bar:a.testing someArgument="baz">', ' ', '<f:a.testing>');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_DYNAMICTAGS pattern did not split the input string correctly with custom multi-part namespace identifier.');
 	}
 
 	/**
@@ -203,6 +212,22 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$source = 'abc {f:for(param:"abc\"abc")} def';
 		$expected = array('abc ', '{f:for(param:"abc\"abc")}', ' def');
 		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with an escaped example.(6)');
+
+		$source = 'abc {foo:for(arg1: post)} def';
+		$expected = array('abc ', '{foo:for(arg1: post)}', ' def');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a custom namespace identifier.(7)');
+
+		$source = 'abc {bla.blubb->foo:for(param:42)} def';
+		$expected = array('abc ', '{bla.blubb->foo:for(param:42)}', ' def');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a custom namespace identifier.(8)');
+
+		$source = 'abc {foo.bar:for(arg1: post)} def';
+		$expected = array('abc ', '{foo.bar:for(arg1: post)}', ' def');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a custom multi-part namespace identifier.(9)');
+
+		$source = 'abc {bla.blubb->foo.bar:for(param:42)} def';
+		$expected = array('abc ', '{bla.blubb->foo.bar:for(param:42)}', ' def');
+		$this->assertEquals(preg_split($pattern, $source, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY), $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX pattern did not split the input string correctly with a custom multi-part namespace identifier.(10)');
 	}
 
 	/**
@@ -226,7 +251,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
 		$this->assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
 
-		$source = 'f:for(each: bla)->g:bla(a:"b\"->(f:a()", cd: {a:b})';
+		$source = 'f:for(each: bla)->foo.bar:bla(a:"b\"->(f:a()", cd: {a:b})';
 		$expected = array(
 			0 => array(
 				0 => 'f:for(each: bla)',
@@ -238,9 +263,9 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 				'ViewHelperArguments' => 'each: bla'
 			),
 			1 => array(
-				0 => 'g:bla(a:"b\"->(f:a()", cd: {a:b})',
-				1 => 'g',
-				'NamespaceIdentifier' => 'g',
+				0 => 'foo.bar:bla(a:"b\"->(f:a()", cd: {a:b})',
+				1 => 'foo.bar',
+				'NamespaceIdentifier' => 'foo.bar',
 				2 => 'bla',
 				'MethodIdentifier' => 'bla',
 				3 => 'a:"b\"->(f:a()", cd: {a:b}',
@@ -265,6 +290,7 @@ class TemplateParserPatternTest extends \TYPO3\Flow\Tests\UnitTestCase {
 		$this->assertEquals(preg_match($pattern, '{abc->f:for()}'), 1, 'Object accessor not identified if there is a ViewHelper inside!');
 		$this->assertEquals(preg_match($pattern, '{bla-blubb.recursive_value->f:for()->f:for()}'), 1, 'Object accessor not identified if there is a recursive ViewHelper inside!');
 		$this->assertEquals(preg_match($pattern, '{f:for(arg1:arg1value, arg2: "bla\"blubb")}'), 1, 'Object accessor not identified if there is an argument inside!');
+		$this->assertEquals(preg_match($pattern, '{foo.bar:for(arg1:arg1value)}'), 1, 'Object accessor not identified multi-part namespace identifier!');
 		$this->assertEquals(preg_match($pattern, '{dash:value}'), 0, 'Object accessor identified, but was array!');
 		// $this->assertEquals(preg_match($pattern, '{}'), 0, 'Object accessor identified, and it was empty!');
 	}

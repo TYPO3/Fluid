@@ -51,9 +51,9 @@ class TemplateParser {
 	static public $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
 		(
 			(?: <\/?                                      # Start dynamic tags
-					(?:(?:[a-z0-9\\.]*):[a-zA-Z0-9\\.]+)     # A tag consists of the namespace prefix and word characters
+					(?:(?:[a-z0-9\\.]*):[a-zA-Z0-9\\.]+)  # A tag consists of the namespace prefix and word characters
 					(?:                                   # Begin tag arguments
-						\s*[a-zA-Z0-9:-]+                  # Argument Keys
+						\s*[a-zA-Z0-9:-]+                 # Argument Keys
 						=                                 # =
 						(?>                               # either... If we have found an argument, we will not back-track (That does the Atomic Bracket)
 							"(?:\\\"|[^"])*"              # a double-quoted string
@@ -74,14 +74,14 @@ class TemplateParser {
 	 */
 	static public $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/
 		^<                                                # A Tag begins with <
-		(?P<NamespaceIdentifier>[a-z0-9\\.]*):               # Then comes the Namespace prefix followed by a :
+		(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):         # Then comes the Namespace prefix followed by a :
 		(?P<MethodIdentifier>                             # Now comes the Name of the ViewHelper
 			[a-zA-Z0-9\\.]+
 		)
 		(?P<Attributes>                                   # Begin Tag Attributes
 			(?:                                           # A tag might have multiple attributes
 				\s*
-				[a-zA-Z0-9:-]+                             # The attribute name
+				[a-zA-Z0-9:-]+                            # The attribute name
 				=                                         # =
 				(?>                                       # either... # If we have found an argument, we will not back-track (That does the Atomic Bracket)
 					"(?:\\\"|[^"])*"                      # a double-quoted string
@@ -99,7 +99,7 @@ class TemplateParser {
 	 * tag.
 	 *
 	 */
-	static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>[a-z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+	static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 
 	/**
 	 * This regular expression splits the tag arguments into its parts
@@ -109,7 +109,7 @@ class TemplateParser {
 		(?:                                              #
 			\s*                                          #
 			(?P<Argument>                                # The attribute name
-				[a-zA-Z0-9:-]+                            #
+				[a-zA-Z0-9:-]+                           #
 			)                                            #
 			=                                            # =
 			(?>                                          # If we have found an argument, we will not back-track (That does the Atomic Bracket)
@@ -150,33 +150,33 @@ class TemplateParser {
 	 * Pattern which detects the object accessor syntax:
 	 * {object.some.value}, additionally it detects ViewHelpers like
 	 * {f:for(param1:bla)} and chaining like
-	 * {object.some.value->f:bla.blubb()->f:bla.blubb2()}
+	 * {object.some.value -> f:bla.blubb() -> f:bla.blubb2()}
 	 *
 	 * THIS IS ALMOST THE SAME AS IN $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
 	 *
 	 */
 	static public $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
-		^{                                                      # Start of shorthand syntax
+		^{                                                  # Start of shorthand syntax
 			                                                # A shorthand syntax is either...
-			(?P<Object>[a-zA-Z0-9\-_.]*)                                     # ... an object accessor
+			(?P<Object>[a-zA-Z0-9\-_.]*)                    # ... an object accessor
 			\s*(?P<Delimiter>(?:->)?)\s*
 
 			(?P<ViewHelper>                                 # ... a ViewHelper
-				[a-zA-Z0-9]+                                # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
+				[a-zA-Z0-9\\.]+                             # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
 				:
 				[a-zA-Z0-9\\.]+                             # Method Identifier (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
 				\(                                          # Opening parameter brackets of ViewHelper
 					(?P<ViewHelperArguments>                # Start submatch for ViewHelper arguments. This is taken from $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
 						(?:
-							\s*[a-zA-Z0-9\-_]+                  # The keys of the array
-							\s*:\s*                             # Key|Value delimiter :
-							(?:                                 # Possible value options:
-								"(?:\\\"|[^"])*"                # Double qouoted string
-								|\'(?:\\\\\'|[^\'])*\'          # Single quoted string
-								|[a-zA-Z0-9\-_.]+               # variable identifiers
-								|{(?P>ViewHelperArguments)}     # Another sub-array
-							)                                   # END possible value options
-							\s*,?                               # There might be a , to seperate different parts of the array
+							\s*[a-zA-Z0-9\-_]+              # The keys of the array
+							\s*:\s*                         # Key|Value delimiter :
+							(?:                             # Possible value options:
+								"(?:\\\"|[^"])*"            # Double qouoted string
+								|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
+								|[a-zA-Z0-9\-_.]+           # variable identifiers
+								|{(?P>ViewHelperArguments)} # Another sub-array
+							)                               # END possible value options
+							\s*,?                           # There might be a , to seperate different parts of the array
 						)*                                  # The above cycle is repeated for all array elements
 					)                                       # End ViewHelper Arguments submatch
 				\)                                          # Closing parameter brackets of ViewHelper
@@ -195,21 +195,21 @@ class TemplateParser {
 	 */
 	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
 
-		(?P<NamespaceIdentifier>[a-zA-Z0-9]+)       # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
+		(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]+)    # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
 		:
 		(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)
 		\(                                          # Opening parameter brackets of ViewHelper
 			(?P<ViewHelperArguments>                # Start submatch for ViewHelper arguments. This is taken from $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
 				(?:
-					\s*[a-zA-Z0-9\-_]+                  # The keys of the array
-					\s*:\s*                             # Key|Value delimiter :
-					(?:                                 # Possible value options:
-						"(?:\\\"|[^"])*"                # Double qouoted string
-						|\'(?:\\\\\'|[^\'])*\'          # Single quoted string
-						|[a-zA-Z0-9\-_.]+               # variable identifiers
-						|{(?P>ViewHelperArguments)}     # Another sub-array
-					)                                   # END possible value options
-					\s*,?                               # There might be a , to seperate different parts of the array
+					\s*[a-zA-Z0-9\-_]+              # The keys of the array
+					\s*:\s*                         # Key|Value delimiter :
+					(?:                             # Possible value options:
+						"(?:\\\"|[^"])*"            # Double qouoted string
+						|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
+						|[a-zA-Z0-9\-_.]+           # variable identifiers
+						|{(?P>ViewHelperArguments)} # Another sub-array
+					)                               # END possible value options
+					\s*,?                           # There might be a , to seperate different parts of the array
 				)*                                  # The above cycle is repeated for all array elements
 			)                                       # End ViewHelper Arguments submatch
 		\)                                          # Closing parameter brackets of ViewHelper
@@ -250,16 +250,16 @@ class TemplateParser {
 	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
 		(?P<ArrayPart>                                             # Start sub-match
 			(?P<Key>[a-zA-Z0-9\-_]+)                               # The keys of the array
-			\s*:\s*                                                   # Key|Value delimiter :
-			(?:                                                       # Possible value options:
-				(?P<QuotedString>                                     # Quoted string
+			\s*:\s*                                                # Key|Value delimiter :
+			(?:                                                    # Possible value options:
+				(?P<QuotedString>                                  # Quoted string
 					(?:"(?:\\\"|[^"])*")
 					|(?:\'(?:\\\\\'|[^\'])*\')
 				)
-				|(?P<VariableIdentifier>[a-zA-Z][a-zA-Z0-9\-_.]*)    # variable identifiers have to start with a letter
-				|(?P<Number>[0-9.]+)                                  # Number
-				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*}              # Another sub-array
-			)                                                         # END possible value options
+				|(?P<VariableIdentifier>[a-zA-Z][a-zA-Z0-9\-_.]*)  # variable identifiers have to start with a letter
+				|(?P<Number>[0-9.]+)                               # Number
+				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*} # Another sub-array
+			)                                                      # END possible value options
 		)                                                          # End array part sub-match
 	/x';
 
