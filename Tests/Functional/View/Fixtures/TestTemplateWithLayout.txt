@@ -1,3 +1,0 @@
-<f:layout name="Foo" />
-
-<f:section name="inner">HEY HO</f:section>

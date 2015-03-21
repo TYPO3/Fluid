@@ -1,0 +1,87 @@
+<?php
+namespace TYPO3\Fluid\ViewHelpers\Format;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
+
+/**
+ * A view helper for formatting values with printf. Either supply an array for
+ * the arguments or a single value.
+ * See http://www.php.net/manual/en/function.sprintf.php
+ *
+ * = Examples =
+ *
+ * <code title="Scientific notation">
+ * <f:format.printf arguments="{number: 362525200}">%.3e</f:format.printf>
+ * </code>
+ * <output>
+ * 3.625e+8
+ * </output>
+ *
+ * <code title="Argument swapping">
+ * <f:format.printf arguments="{0: 3, 1: 'Kasper'}">%2$s is great, TYPO%1$d too. Yes, TYPO%1$d is great and so is %2$s!</f:format.printf>
+ * </code>
+ * <output>
+ * Kasper is great, TYPO3 too. Yes, TYPO3 is great and so is Kasper!
+ * </output>
+ *
+ * <code title="Single argument">
+ * <f:format.printf arguments="{1: 'TYPO3'}">We love %s</f:format.printf>
+ * </code>
+ * <output>
+ * We love TYPO3
+ * </output>
+ *
+ * <code title="Inline notation">
+ * {someText -> f:format.printf(arguments: {1: 'TYPO3'})}
+ * </code>
+ * <output>
+ * We love TYPO3
+ * </output>
+ *
+ * @api
+ */
+class PrintfViewHelper extends AbstractViewHelper implements CompilableInterface {
+
+	/**
+	 * @return void
+	 */
+	public function initializeArguments() {
+		parent::initializeArguments();
+		$this->registerArgument('arguments', 'array', 'The arguments for vsprintf', FALSE, array());
+		$this->registerArgument('value', 'string', 'String to format', FALSE, FALSE);
+	}
+
+	/**
+	 * Format the arguments with the given printf format string.
+	 *
+	 * @return string The formatted value
+	 * @api
+	 */
+	public function render() {
+		return self::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * Applies vsprintf() on the specified value.
+	 *
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$value = $arguments['value'];
+		if ($value === NULL) {
+			$value = $renderChildrenClosure();
+		}
+
+		return vsprintf($value, $arguments['arguments']);
+	}
+}

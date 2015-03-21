@@ -1,9 +1,0 @@
-<f:comment>NOTE: This widget is just a simplified example. You should try to avoid inline scripts and use unobstrusive approach instead!</f:comment>
-<script type="text/javascript">
-jQuery(function() {
-	jQuery("#{id}").autocomplete(<![CDATA[{]]>
-		source: {f:widget.uri(action:'autocomplete', ajax: true) -> f:format.json() -> f:format.raw()},
-		minLength: 2
-	});
-});
-</script>

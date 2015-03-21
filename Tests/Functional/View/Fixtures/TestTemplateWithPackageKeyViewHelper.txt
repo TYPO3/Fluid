@@ -1,1 +1,0 @@
-<typo3.fluid:format.raw>foobar</typo3.fluid:format.raw>

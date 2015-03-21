@@ -1,14 +1,15 @@
 {
-	"name": "typo3/fluid",
-	"type": "typo3-flow-framework",
-	"description": "Next-Generation Templating Framework for TYPO3 Flow and TYPO3 Neos, also backported to TYPO3 CMS",
-	"license": ["LGPL-3.0+"],
-	"require": {
-		"typo3/flow": "*"
+	"name": "namelesscoder/fluid",
+	"description": "The TYPO3 Fluid template rendering engine",
+	"license": ["MIT"],
+	"require-dev": {
+		"phpunit/phpunit": "4.3.*",
+		"mikey179/vfsStream": "~1.3.0",
+		"satooshi/php-coveralls": "*"
 	},
 	"autoload": {
-		"psr-0": {
-			"TYPO3\\Fluid": "Classes"
+		"psr-4": {
+			"TYPO3\\Fluid\\": "src/"
 		}
 	}
 }

@@ -1,0 +1,111 @@
+<f:layout name="Default" />
+
+<f:section name="Main">
+Structures template from Singles.
+
+Fluid allows a handful of structures to render
+dynamic parts of templates. Each method is
+uniquely suited for precise use cases:
+
+* Loop
+
+You can loop through arrays in two ways; as standard
+arrays and using a grouping by key to create "chunks":
+
+	<f:for each="{array}" as="item">{item} </f:for>
+	<f:groupedFor each="{group}" as="subArray" groupBy="property" groupKey="myGroupKey">{myGroupKey}:
+		<f:for each="{subArray}" as="item">{item.property} </f:for>
+	</f:groupedFor>
+
+* Optional sections
+
+There are two main ways to get this behavior:
+
+	This section exists and is rendered: <f:render section="ValidSection" />
+	Expects no output because section name is invalid: <f:render section="InvalidSection" optional="1" />
+
+And:
+
+	Dynamic section name: <f:render section="Section{dynamicSection}" />
+	Bad dynamic section name, expects fallback: <f:render section="Section{invalidVariable}" />
+
+The same works for partials:
+
+	This section exists and is rendered: <f:render partial="Structures" section="ValidSection" />
+	Expects no output because section name is invalid: <f:render partial="Structures" section="InvalidSection" optional="1" />
+
+And:
+
+	Dynamic section name: <f:render partial="Structures" section="Section{dynamicSection}" />
+	Bad dynamic section name, expects fallback: <f:render partial="Structures" section="Section{invalidVariable}" />
+
+* Inline render with condition
+
+Render statements can be written as inline
+expressions and conditioned by a clause:
+
+	Will render: {f:render(section: 'Section') -> f:if(condition: '1 = 1')}
+	Will render, clause reversed: {f:render(section: 'Section') -> f:else() -> f:if(condition: '1 = 0')}
+	Will not render: {f:render(section: 'Section') -> f:if(condition: '1 = 0')}
+
+* Else-if
+
+Fluid allows the `f:else` ViewHelper to also include
+a condition clause that must be true for that `f:else`
+to be rendered. Multiple `f:else` can then exist. The
+else-if approach only works when using full tag mode.
+
+	<f:if condition="{notTrue}">
+		<f:then>Is not rendered</f:then>
+		<f:else if="{notTrueEither}">Not rendered either</f:else>
+		<f:else if="{butTrue}">This `f:else` was rendered</f:else>
+		<f:else>Rendered only if no other `f:else` was matched</f:else>
+	</f:if>
+
+* Switch
+
+Although Fluid allows both if-then-elseif-else as well
+as dynamic section names which in practice should mean
+you can completely avoid a `switch`-like control. But,
+when you do need a switch, one can be implemented as:
+
+	- Matched switch
+
+	<f:switch expression="{switchValue}">
+		<f:case break="1" value="1">The value was "1"</f:case>
+		<f:case break="1" value="2">The value was "2"</f:case>
+		<f:case break="1" value="3">The value was "3"</f:case>
+		<f:defaultCase>This text must not be shown</f:defaultCase>
+	</f:switch>
+
+	- Unmatched switch
+
+	<f:switch expression="{switchValue}">
+		<f:case break="1" value="a">The value was "1"</f:case>
+		<f:case break="1" value="b">The value was "2"</f:case>
+		<f:case break="1" value="c">The value was "3"</f:case>
+		<f:defaultCase>The unmatched value case triggered</f:defaultCase>
+	</f:switch>
+
+	- Nested switch
+
+	<f:switch expression="{switchValue}">
+		<f:case break="1" value="1">The value was "1"</f:case>
+		<f:case break="1" value="2">The value was "2"</f:case>
+		<f:case break="1" value="3">The value was "3"
+			<f:switch expression="{secondSwitchValue}">
+				<f:case break="0" value="a">The value was "1"</f:case>
+				<f:case break="1" value="b">The "b" nested switch case was triggered</f:case>
+				<f:case break="1" value="c">The "c" nested switch case was triggered</f:case>
+				<f:defaultCase>This text must not be shown</f:defaultCase>
+			</f:switch>
+		</f:case>
+		<f:defaultCase>This text must not be shown</f:defaultCase>
+	</f:switch>
+
+</f:section>
+
+<f:section name="SectionDynamic">Dynamically suffixed section</f:section>
+<f:section name="Section">Just a section</f:section>
+<f:section name="ValidSection">Valid section</f:section>
+<f:section name="ThisNameIsNeverReferenced">Invalid section, output not shown</f:section>

@@ -1,3 +1,0 @@
-Fluid_TemplateCache:
-  frontend: TYPO3\Flow\Cache\Frontend\PhpFrontend
-  backend: TYPO3\Flow\Cache\Backend\FileBackend

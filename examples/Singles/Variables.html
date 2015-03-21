@@ -1,0 +1,44 @@
+<f:layout name="Default" />
+
+<f:section name="Main">
+Variables template from Singles.
+
+<!-- Simple variable accessing -->
+Simple variable: {foobar}
+Simple variable in array, numeric: {array.numeric.0}
+Simple variable in array, associative: {array.fixed}
+
+<!-- Casting variables to certain types -->
+A string with numbers in it: {types.aStringWithNumbers as integer}
+Ditto, with type name stored in variable: {types.aStringWithNumbers as types.typeNameInteger}
+A comma-separated value iterated as array:
+<f:for each="{types.csv as array}" as="arrayMember">	- {arrayMember}
+</f:for>
+<!-- Dynamic string: changing "dynanic1" to "dynamic2" reads other string -->
+String variable name with dynamic1 part: {stringwith{dynamic1}part}.
+String variable name with dynamic2 part: {stringwith{dynamic2}part}.
+
+<!-- Dynamic array: changing "dynanic1" to "dynamic2" reads other array member -->
+Array member in $array[$dynamic1]: {array.{dynamic1}}
+Array member in $array[$dynamic2]: {array.{dynamic2}}
+
+<!-- Passing arguments to sections/partials -->
+<f:render section="Secondary" arguments="{
+	myVariable: 'Nice string',
+	array: {
+		baz: 42,
+		foobar: 'Escaped string',
+		xyz: '{
+			foobar: \'Escaped sub-string\'
+		}'
+	}
+}"/>
+
+</f:section>
+
+<f:section name="Secondary">
+Received $array.foobar with value {array.foobar}
+Received $array.baz with value {array.baz}
+Received $array.xyz.foobar with value {array.xyz.foobar}
+Received $myVariable with value {myVariable}
+</f:section>
