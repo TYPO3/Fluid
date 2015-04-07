@@ -20,16 +20,16 @@ In Fluid's default ViewHelperResolver, the following code is responsible for ret
  * @var string
  */
 protected $expressionNodeTypes = array(
-	'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
-	'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
-	'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
+    'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+    'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
+    'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
 );
 
 /**
  * @return string
  */
 public function getExpressionNodeTypes() {
-	return $this->expressionNodeTypes;
+    return $this->expressionNodeTypes;
 }
 ```
 
@@ -47,7 +47,7 @@ ExpressionNode from Fluid itself which detects the `{a ? b : c}` syntax and eval
 renders `c`. To get this behavior, we need a (relatively simple) regular expression and one method to evaluate the expression
 while being aware of the rendering context (which stores all variables, controller name, action name etc).
 
-```
+```php
 <?php
 namespace TYPO3\Fluid\Core\Parser\SyntaxTree\Expression;
 
@@ -60,41 +60,41 @@ use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TernaryExpressionNode extends AbstractExpressionNode {
 
-	/**
-	 * Pattern which detects ternary conditions written in shorthand
-	 * syntax, e.g. {checkvar ? thenvar : elsevar}.
-	 */
-	public static $detectionExpression = '/
-		(
-			{                                # Start of shorthand syntax
-				(?:                          # Math expression is composed of...
-					[a-zA-Z0-9.]+          # Check variable side
-					[\s]+\?[\s]+
-					[a-zA-Z0-9.\s]+          # Then variable side
-					[\s]+:[\s]+
-					[a-zA-Z0-9.\s]+          # Else variable side
-				)
-			}                                # End of shorthand syntax
-		)/x';
+    /**
+     * Pattern which detects ternary conditions written in shorthand
+     * syntax, e.g. {checkvar ? thenvar : elsevar}.
+     */
+    public static $detectionExpression = '/
+        (
+            {                                # Start of shorthand syntax
+                (?:                          # Math expression is composed of...
+                    [a-zA-Z0-9.]+            # Check variable side
+                    [\s]+\?[\s]+
+                    [a-zA-Z0-9.\s]+          # Then variable side
+                    [\s]+:[\s]+
+                    [a-zA-Z0-9.\s]+          # Else variable side
+                )
+            }                                # End of shorthand syntax
+        )/x';
 
-	/**
-	 * @param RenderingContextInterface $renderingContext
-	 * @param string $expression
-	 * @return mixed
-	 */
-	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression) {
-		$parts = preg_split('/([\?:])/s', $expression); // split our expression on "?" and ":" characters
-		$parts = array_map(array(__CLASS__, 'trimPart'), $parts); // parent::trimPart() is a utility method to trim
-		list ($check, $then, $else) = $parts; // we expect *exactly* three parts, nothing more, nothing less
-		// we evaluate the "check this" side of the expression as boolean...
-		$checkResult = Parser\SyntaxTree\BooleanNode::convertToBoolean(parent::getTemplateVariableOrValueItself($check, $renderingContext));
-		// ...then render the appropriate variable reference or string output depending on that decision.
-		if ($checkResult) {
-			return parent::getTemplateVariableOrValueItself($then, $renderingContext);
-		} else {
-			return parent::getTemplateVariableOrValueItself($else, $renderingContext);
-		}
-	}
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @param string $expression
+     * @return mixed
+     */
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression) {
+        $parts = preg_split('/([\?:])/s', $expression); // split our expression on "?" and ":" characters
+        $parts = array_map(array(__CLASS__, 'trimPart'), $parts); // parent::trimPart() is a utility method to trim
+        list ($check, $then, $else) = $parts; // we expect *exactly* three parts, nothing more, nothing less
+        // we evaluate the "check this" side of the expression as boolean...
+        $checkResult = Parser\SyntaxTree\BooleanNode::convertToBoolean(parent::getTemplateVariableOrValueItself($check, $renderingContext));
+        // ...then render the appropriate variable reference or string output depending on that decision.
+        if ($checkResult) {
+            return parent::getTemplateVariableOrValueItself($then, $renderingContext);
+        } else {
+            return parent::getTemplateVariableOrValueItself($else, $renderingContext);
+        }
+    }
 
 }
 ```
