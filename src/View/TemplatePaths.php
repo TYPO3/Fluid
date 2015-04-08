@@ -483,7 +483,7 @@ class TemplatePaths {
 	 */
 	public function getTemplateSource($controllerName = 'Default', $actionName = 'Default') {
 		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
-		if (!file_exists($templatePathAndFilename)) {
+		if (!file_exists($templatePathAndFilename) && $templatePathAndFilename !== 'php://stdin') {
 			throw new InvalidTemplateResourceException(
 				'"' . $templatePathAndFilename . '" is not a valid template resource URI.',
 				1257246929
@@ -502,7 +502,7 @@ class TemplatePaths {
 	 * @return string
 	 */
 	protected function createIdentifierForFile($pathAndFilename, $prefix) {
-		$templateModifiedTimestamp = filemtime($pathAndFilename);
+		$templateModifiedTimestamp = $pathAndFilename !== 'php://stdin' ? filemtime($pathAndFilename) : 0;
 		$templateIdentifier = sprintf('%s_%s', $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
 		return $templateIdentifier;
 	}
