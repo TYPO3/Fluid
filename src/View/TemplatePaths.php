@@ -41,14 +41,10 @@ class TemplatePaths {
 	const DEFAULT_TEMPLATES_DIRECTORY = 'Resources/Private/Templates/';
 	const DEFAULT_LAYOUTS_DIRECTORY = 'Resources/Private/Layouts/';
 	const DEFAULT_PARTIALS_DIRECTORY = 'Resources/Private/Partials/';
-	const CONFIG_TEMPLATEROOTPATH = 'templateRootPath';
 	const CONFIG_TEMPLATEROOTPATHS = 'templateRootPaths';
-	const CONFIG_LAYOUTROOTPATH = 'layoutRootPath';
 	const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
-	const CONFIG_PARTIALROOTPATH = 'partialRootPath';
 	const CONFIG_PARTIALROOTPATHS = 'partialRootPaths';
 	const CONFIG_FORMAT = 'format';
-	const CONFIG_OVERLAYS = 'overlays';
 
 	/**
 	 * @var array
