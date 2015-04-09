@@ -45,6 +45,14 @@ class RenderingContext implements RenderingContextInterface {
 	protected $format = TemplatePaths::DEFAULT_FORMAT;
 
 	/**
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->templateVariableContainer = new TemplateVariableContainer();
+		$this->viewHelperVariableContainer = new ViewHelperVariableContainer();
+	}
+
+	/**
 	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
 	 *
