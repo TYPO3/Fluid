@@ -1,0 +1,250 @@
+#!/usr/bin/env php
+<?php
+
+if (file_exists(__DIR__ . '/../autoload.php')) {
+	require_once __DIR__ . '/../autoload.php';
+} elseif (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+	require_once __DIR__ . '/../vendor/autoload.php';
+}
+
+$handler = new FluidCommandLine();
+try {
+	echo $handler->handleCommand($argv);
+} catch (InvalidArgumentException $error) {
+	echo $error->getMessage() . PHP_EOL;
+	echo $handler->dumpSupportedParameters();
+	echo $handler->dumpusageExample();
+}
+
+/**
+ * Class FluidCommandLine
+ *
+ * Wrapper that creates a Fluid view and renders
+ * designated templates according to input arguments.
+ *
+ * Can be operated in the following ways:
+ *
+ * - given parameter `socket` will create and listen
+ *   to the designated socket in daemon mode.
+ * - given parameter `template` will render a specific
+ *   template file.
+ * - given parameter `controller` and `action` will
+ *   render the controller action template.
+ * - given no parameter will await template input from
+ *   STDIN terminated by ctrl+d.
+ * - given STDIN through pipe will render the STDIN
+ *   content as a fluid template.
+ */
+class FluidCommandLine {
+
+	const ARGUMENT_HELP = 'help';
+	const ARGUMENT_SOCKET = 'socket';
+	const ARGUMENT_TEMPLATEFILE = 'template';
+	const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
+	const ARGUMENT_VARIABLES = 'variables';
+	const ARGUMENT_CONTROLLERNAME = 'controller';
+	const ARGUMENT_CONTROLLERACTION = 'action';
+	const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
+	const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
+	const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
+
+	/**
+	 * @param array $arguments
+	 * @return string
+	 */
+	public function handleCommand(array $arguments) {
+		$arguments = $this->parseAndValidateInputArguments($arguments);
+		if (isset($arguments[self::ARGUMENT_HELP])) {
+			return $this->dumpHelpHeader() .
+				$this->dumpSupportedParameters() .
+				$this->dumpusageExample();
+		}
+		$paths = new \TYPO3\Fluid\View\TemplatePaths($arguments);
+		$context = new \TYPO3\Fluid\Core\Rendering\RenderingContext();
+		if (isset($arguments[self::ARGUMENT_TEMPLATEFILE])) {
+			$paths->setTemplatePathAndFilename($arguments[self::ARGUMENT_TEMPLATEFILE]);
+		} elseif (isset($arguments[self::ARGUMENT_CONTROLLERNAME])) {
+			$context->setControllerName($arguments[self::ARGUMENT_CONTROLLERNAME]);
+		} else {
+			$paths->setTemplatePathAndFilename('php://stdin');
+		}
+		if (isset($arguments[self::ARGUMENT_CACHEDIRECTORY])) {
+			$cache = new \TYPO3\Fluid\Core\Cache\SimpleFileCache($arguments[self::ARGUMENT_CACHEDIRECTORY]);
+		} else {
+			$cache = NULL;
+		}
+		$view = new \TYPO3\Fluid\View\TemplateView($paths, $context, $cache);
+		if (isset($arguments[self::ARGUMENT_SOCKET])) {
+			$this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
+		} else {
+			$action = isset($arguments[self::ARGUMENT_CONTROLLERACTION]) ? $arguments[self::ARGUMENT_CONTROLLERACTION] : NULL;
+			return $view->render($action);
+		}
+	}
+
+	/**
+	 * @param string $socketPathAndFilename
+	 * @param ViewInterface $view
+	 * @return void
+	 */
+	protected function listenIndefinitelyOnSocket($socketPathAndFilename, \TYPO3\Fluid\View\ViewInterface $view) {
+		if (file_exists($socketPathAndFilename)) {
+			unlink($socketPathAndFilename);
+		}
+		umask(0);
+		$socketServer = stream_socket_server('unix://' . $socketPathAndFilename);
+		while ($socket = stream_socket_accept($socketServer, -1)) {
+			$input = stream_socket_recvfrom($socket, 1024);
+			$lines = explode("\000", $input);
+			$parameters = array();
+			while ($name = array_shift($lines)) {
+				$parameters[$name] = array_shift($lines);
+			}
+			$templatePathAndFilename = $parameters['DOCUMENT_ROOT'] . $parameters['REQUEST_URI'];
+			try {
+				$rendered = $this->renderSocketRequest($templatePathAndFilename, $view);
+			} catch (\TYPO3\Fluid\Exception $error) {
+				$rendered = $error->getMessage();
+			}
+			stream_socket_sendto($socket, $this->createResponse($rendered));
+			stream_socket_sendto($socket, "\x0B");
+			stream_socket_shutdown($socket, STREAM_SHUT_WR);
+		}
+	}
+
+	/**
+	 * @param string $response
+	 * @return string
+	 */
+	protected function createResponse($response) {
+		$headers = array(
+			'Cache-Control:no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+			'Connection:keep-alive',
+			'Content-Type:text/html;charset=utf-8',
+			'Content-Length:' . strlen($response),
+			'Pragma:no-cache'
+		);
+		return implode("\n", $headers) . "\n\n" . $response;
+	}
+
+	/**
+	 * @param $templatePathAndFilename
+	 * @param \TYPO3\Fluid\View\ViewInterface $view
+	 * @return string
+	 */
+	protected function renderSocketRequest($templatePathAndFilename, \TYPO3\Fluid\View\ViewInterface $view) {
+		$view->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
+		return $view->render();
+	}
+
+	/**
+	 * @param array $arguments
+	 * @return array
+	 */
+	protected function parseAndValidateInputArguments(array $arguments) {
+		$allowed = $this->getAllowedParameterNames();
+		$argumentPointer = FALSE;
+		$parsed = array();
+		foreach ($arguments as $argument) {
+			if (substr($argument, 0, 2) === '--') {
+				$argument = substr($argument, 2);
+				if (!in_array($argument, $allowed)) {
+					throw new InvalidArgumentException('Unsupported argument: ' . $argument);
+				}
+				$parsed[$argument] = FALSE;
+				$argumentPointer = &$parsed[$argument];
+			} else {
+				if ($argumentPointer === FALSE) {
+					$argumentPointer = $argument;
+				} elseif (is_array($argumentPointer)) {
+					$argumentPointer[] = $argument;
+				} else {
+					$argumentPointer = array($argumentPointer);
+					$argumentPointer[] = $argument;
+				}
+			}
+		}
+		if (isset($parsed[self::ARGUMENT_TEMPLATEROOTPATHS])) {
+			$parsed[self::ARGUMENT_TEMPLATEROOTPATHS] = (array) $parsed[self::ARGUMENT_TEMPLATEROOTPATHS];
+		}
+		if (isset($parsed[self::ARGUMENT_LAYOUTROOTPATHS])) {
+			$parsed[self::ARGUMENT_LAYOUTROOTPATHS] = (array) $parsed[self::ARGUMENT_LAYOUTROOTPATHS];
+		}
+		if (isset($parsed[self::ARGUMENT_PARTIALROOTPATHS])) {
+			$parsed[self::ARGUMENT_PARTIALROOTPATHS] = (array) $parsed[self::ARGUMENT_PARTIALROOTPATHS];
+		}
+		return $parsed;
+	}
+
+	/**
+	 * @return array
+	 */
+	protected function getAllowedParameterNames() {
+		$reflection = new ReflectionClass($this);
+		return array_values($reflection->getConstants());
+	}
+
+	/**
+	 * @return string
+	 */
+	public function dumpHelpHeader() {
+		return PHP_EOL .
+			'----------------------------------------------------------------------------------------------' . PHP_EOL .
+			'				TYPO3 Fluid CLI: Help text' . PHP_EOL .
+			'----------------------------------------------------------------------------------------------' .
+			PHP_EOL . PHP_EOL;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function dumpSupportedParameters() {
+		$parameters = $this->getAllowedParameterNames();
+		$parameterString = 'Supported parameters:' . PHP_EOL . PHP_EOL;
+		foreach ($parameters as $parameter) {
+			$parameterString .= "\t" . '--' . $parameter . PHP_EOL;
+		}
+		return $parameterString . PHP_EOL;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function dumpusageExample() {
+		return <<< HELP
+Use the CLI utility in the following modes:
+
+Interactive mode:
+
+	./bin/fluid
+	(enter fluid template, then enter key, then ctrl+d to send the input)
+
+Or using STDIN:
+
+	cat mytemplatefile.html | ./bin/fluid
+
+Or using parameters:
+
+	./bin/fluid --template mytemplatefile.html
+
+To specify multiple values, for example for the templateRootPaths argument:
+
+	./bin/fluid --templateRootPaths /path/to/first/ /path/to/second/ "/path/with spaces/"
+
+An additional SocketServer mode is available. When started in SocketServer mode,
+the CLI utility can be used as upstream (SCGI currently) in Nginx:
+
+	sudo ./bin/fluid --socket /var/run/fluid.sock
+
+Example SCGI config for Nginx:
+
+	location ~ \.html$ {
+		scgi_pass unix:/var/run/fluid.sock;
+		include scgi_params;
+	}
+
+End of help text for FLuid CLI.
+HELP;
+	}
+
+}

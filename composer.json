@@ -11,5 +11,8 @@
 		"psr-4": {
 			"TYPO3\\Fluid\\": "src/"
 		}
-	}
+	},
+	"bin": [
+		"bin/fluid"
+	]
 }
