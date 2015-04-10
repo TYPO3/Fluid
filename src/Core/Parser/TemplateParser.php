@@ -21,10 +21,6 @@ use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
  */
 class TemplateParser {
 
-	static public $SCAN_PATTERN_NAMESPACEDECLARATION =
-		'/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/';
-	static public $SCAN_PATTERN_XMLNSDECLARATION = '/\sxmlns:(?P<identifier>.*?)="(?P<xmlNamespace>.*?)"/';
-
 	/**
 	 * The following two constants are used for tracking whether we are currently
 	 * parsing ViewHelper arguments or not. This is used to parse arrays only as
@@ -32,232 +28,6 @@ class TemplateParser {
 	 */
 	const CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS = 1;
 	const CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS = 2;
-
-	/**
-	 * This regular expression splits the input string at all dynamic tags, AND
-	 * on all <![CDATA[...]]> sections.
-	 *
-	 */
-	static public $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
-		(
-			(?: <\/?                                      # Start dynamic tags
-					(?:(?:[a-z0-9\\.]*):[a-zA-Z0-9\\.]+)  # A tag consists of the namespace prefix and word characters
-					(?:                                   # Begin tag arguments
-						\s*[a-zA-Z0-9:-]+                 # Argument Keys
-						=                                 # =
-						(?>                               # either... If we have found an argument, we will not back-track (That does the Atomic Bracket)
-							"(?:\\\"|[^"])*"              # a double-quoted string
-							|\'(?:\\\\\'|[^\'])*\'        # or a single quoted string
-						)\s*                              #
-					)*                                    # Tag arguments can be replaced many times.
-				\s*
-				\/?>                                      # Closing tag
-			)
-			|(?:                                          # Start match CDATA section
-				<!\[CDATA\[.*?\]\]>
-			)
-		)/xs';
-
-	/**
-	 * This regular expression scans if the input string is a ViewHelper tag
-	 *
-	 */
-	static public $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/
-		^<                                                # A Tag begins with <
-		(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):         # Then comes the Namespace prefix followed by a :
-		(?P<MethodIdentifier>                             # Now comes the Name of the ViewHelper
-			[a-zA-Z0-9\\.]+
-		)
-		(?P<Attributes>                                   # Begin Tag Attributes
-			(?:                                           # A tag might have multiple attributes
-				\s*
-				[a-zA-Z0-9:-]+                            # The attribute name
-				=                                         # =
-				(?>                                       # either... # If we have found an argument, we will not back-track (That does the Atomic Bracket)
-					"(?:\\\"|[^"])*"                      # a double-quoted string
-					|\'(?:\\\\\'|[^\'])*\'                # or a single quoted string
-				)                                         #
-				\s*
-			)*                                            # A tag might have multiple attributes
-		)                                                 # End Tag Attributes
-		\s*
-		(?P<Selfclosing>\/?)                              # A tag might be selfclosing
-		>$/x';
-
-	/**
-	 * This regular expression scans if the input string is a closing ViewHelper
-	 * tag.
-	 *
-	 */
-	static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG = '/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
-
-	/**
-	 * This regular expression splits the tag arguments into its parts
-	 *
-	 */
-	static public $SPLIT_PATTERN_TAGARGUMENTS = '/
-		(?:                                              #
-			\s*                                          #
-			(?P<Argument>                                # The attribute name
-				[a-zA-Z0-9:-]+                           #
-			)                                            #
-			=                                            # =
-			(?>                                          # If we have found an argument, we will not back-track (That does the Atomic Bracket)
-				(?P<ValueQuoted>                         # either...
-					(?:"(?:\\\"|[^"])*")                 # a double-quoted string
-					|(?:\'(?:\\\\\'|[^\'])*\')           # or a single quoted string
-				)
-			)\s*
-		)
-		/xs';
-
-	/**
-	 * This pattern detects CDATA sections and outputs the text between opening
-	 * and closing CDATA.
-	 *
-	 */
-	static public $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
-
-	/**
-	 * Pattern which splits the shorthand syntax into different tokens. The
-	 * "shorthand syntax" is everything like {...}
-	 *
-	 */
-	static public $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
-		(
-			{                                 # Start of shorthand syntax
-				(?:                           # Shorthand syntax is either composed of...
-					[a-zA-Z0-9\->_:,.()*+\^\/\%] # Various characters including math operations
-					|"(?:\\\"|[^"])*"         # Double-quoted strings
-					|\'(?:\\\\\'|[^\'])*\'    # Single-quoted strings
-					|(?R)                     # Other shorthand syntaxes inside, albeit not in a quoted string
-					|\s+                      # Spaces
-				)+
-			}                                 # End of shorthand syntax
-		)/x';
-
-	/**
-	 * Pattern which detects the object accessor syntax:
-	 * {object.some.value}, additionally it detects ViewHelpers like
-	 * {f:for(param1:bla)} and chaining like
-	 * {object.some.value -> f:bla.blubb() -> f:bla.blubb2()}
-	 *
-	 * THIS IS ALMOST THE SAME AS IN $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
-	 *
-	 */
-	static public $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
-		^{                                                  # Start of shorthand syntax
-			                                                # A shorthand syntax is either...
-			(?P<Object>[a-zA-Z0-9_\-\.\{\}]*)                 # ... an object accessor
-			\s*(?P<Delimiter>(?:->)?)\s*
-
-			(?P<ViewHelper>                                 # ... a ViewHelper
-				[a-zA-Z0-9\\.]+                             # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
-				:
-				[a-zA-Z0-9\\.]+                             # Method Identifier (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
-				\(                                          # Opening parameter brackets of ViewHelper
-					(?P<ViewHelperArguments>                # Start submatch for ViewHelper arguments. This is taken from $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
-						(?:
-							\s*[a-zA-Z0-9\-_]+              # The keys of the array
-							\s*:\s*                         # Key|Value delimiter :
-							(?:                             # Possible value options:
-								"(?:\\\"|[^"])*"            # Double qouoted string
-								|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
-								|[a-zA-Z0-9\-_.]+           # variable identifiers
-								|{(?P>ViewHelperArguments)} # Another sub-array
-							)                               # END possible value options
-							\s*,?                           # There might be a , to seperate different parts of the array
-						)*                                  # The above cycle is repeated for all array elements
-					)                                       # End ViewHelper Arguments submatch
-				\)                                          # Closing parameter brackets of ViewHelper
-			)?
-			(?P<AdditionalViewHelpers>                      # There can be more than one ViewHelper chained, by adding more -> and the ViewHelper (recursively)
-				(?:
-					\s*->\s*
-					(?P>ViewHelper)
-				)*
-			)
-		}$/x';
-
-	/**
-	 * THIS IS ALMOST THE SAME AS $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-	 *
-	 */
-	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
-
-		(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]+)    # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
-		:
-		(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)
-		\(                                          # Opening parameter brackets of ViewHelper
-			(?P<ViewHelperArguments>                # Start submatch for ViewHelper arguments. This is taken from $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
-				(?:
-					\s*[a-zA-Z0-9\-_]+              # The keys of the array
-					\s*:\s*                         # Key|Value delimiter :
-					(?:                             # Possible value options:
-						"(?:\\\"|[^"])*"            # Double qouoted string
-						|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
-						|[a-zA-Z0-9\-_.]+           # variable identifiers
-						|{(?P>ViewHelperArguments)} # Another sub-array
-					)                               # END possible value options
-					\s*,?                           # There might be a , to seperate different parts of the array
-				)*                                  # The above cycle is repeated for all array elements
-			)                                       # End ViewHelper Arguments submatch
-		\)                                          # Closing parameter brackets of ViewHelper
-		/x';
-
-	/**
-	 * Pattern which detects the array/object syntax like in JavaScript, so it
-	 * detects strings like:
-	 * {object: value, object2: {nested: array}, object3: "Some string"}
-	 *
-	 * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-	 *
-	 */
-	static public $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
-		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
-			{                                           # Each array needs to start with {
-				(?P<Array>                              # Start sub-match
-					(?:
-						\s*[a-zA-Z0-9\-_]+              # The keys of the array
-						\s*:\s*                         # Key|Value delimiter :
-						(?:                             # Possible value options:
-							"(?:\\\"|[^"])*"            # Double quoted string
-							|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
-							|[a-zA-Z0-9\-_.]+           # variable identifiers
-							|(?P>Recursion)             # Another sub-array
-						)                               # END possible value options
-						\s*,?                           # There might be a , to separate different parts of the array
-					)*                                  # The above cycle is repeated for all array elements
-				)                                       # End array sub-match
-			}                                           # Each array ends with }
-		)$/x';
-
-	/**
-	 * This pattern splits an array into its parts. It is quite similar to the
-	 * pattern above.
-	 *
-	 */
-	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
-		(?P<ArrayPart>                                             # Start sub-match
-			(?P<Key>[a-zA-Z0-9\-_]+)                               # The keys of the array
-			\s*:\s*                                                # Key|Value delimiter :
-			(?:                                                    # Possible value options:
-				(?P<QuotedString>                                  # Quoted string
-					(?:"(?:\\\"|[^"])*")
-					|(?:\'(?:\\\\\'|[^\'])*\')
-				)
-				|(?P<VariableIdentifier>[a-zA-Z][a-zA-Z0-9\-_.]*)  # variable identifiers have to start with a letter
-				|(?P<Number>[0-9.]+)                               # Number
-				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*} # Another sub-array
-			)                                                      # END possible value options
-		)                                                          # End array part sub-match
-	/x';
-
-	/**
-	 * This pattern detects the default xml namespace
-	 *
-	 */
-	static public $SCAN_PATTERN_DEFAULT_XML_NAMESPACE = '/^http\:\/\/typo3\.org\/ns\/(?P<PhpNamespace>.+)$/s';
 
 	/**
 	 * Whether or not the escaping interceptors are active
@@ -328,7 +98,6 @@ class TemplateParser {
 
 		$this->reset();
 
-		$templateString = $this->extractNamespaceDefinitions($templateString);
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 
@@ -350,57 +119,13 @@ class TemplateParser {
 	}
 
 	/**
-	 * Extracts namespace definitions out of the given template string and sets $this->namespaces.
-	 *
-	 * @param string $templateString Template string to extract the namespaces from
-	 * @return string The updated template string without namespace declarations inside
-	 * @throws Exception if a namespace can't be resolved or has been declared already
-	 */
-	protected function extractNamespaceDefinitions($templateString) {
-		$matches = array();
-		preg_match_all(self::$SCAN_PATTERN_XMLNSDECLARATION, $templateString, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match) {
-			// skip reserved "f" namespace identifier
-			if ($match['identifier'] === 'f') {
-				continue;
-			}
-
-			$matchedPhpNamespace = array();
-			if (preg_match(self::$SCAN_PATTERN_DEFAULT_XML_NAMESPACE, $match['xmlNamespace'], $matchedPhpNamespace) === 0) {
-				continue;
-			}
-			$phpNamespace = str_replace('/', '\\', $matchedPhpNamespace['PhpNamespace']);
-			$this->viewHelperResolver->registerNamespace($match['identifier'], $phpNamespace);
-		}
-
-		$matches = array();
-		preg_match_all(self::$SCAN_PATTERN_NAMESPACEDECLARATION, $templateString, $matches, PREG_SET_ORDER);
-		foreach ($matches as $match) {
-			if (isset($match['phpNamespace'])) {
-				if (strpos($match['identifier'], '*') !== FALSE) {
-					throw new Exception(sprintf('Only ignored namespace declarations may contain the placeholder "*". Remove the PHP namespace from "%s" or fix the identifier.', $match[0]), 1382528528);
-				}
-				$this->viewHelperResolver->registerNamespace($match['identifier'], $match['phpNamespace']);
-			} else {
-				$this->viewHelperResolver->ignoreNamespace('/^' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $match['identifier']) . '$/');
-			}
-		}
-
-		if ($matches !== array()) {
-			$templateString = preg_replace(self::$SCAN_PATTERN_NAMESPACEDECLARATION, '', $templateString);
-		}
-
-		return $templateString;
-	}
-
-	/**
 	 * Splits the template string on all dynamic tags found.
 	 *
 	 * @param string $templateString Template string to split.
 	 * @return array Splitted template
 	 */
 	protected function splitTemplateAtDynamicTags($templateString) {
-		return preg_split(self::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		return preg_split(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 	}
 
 	/**
@@ -416,10 +141,19 @@ class TemplateParser {
 
 		foreach ($splitTemplate as $templateElement) {
 			$matchedVariables = array();
-			if (preg_match(self::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
+			if (preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateElement, $matchedVariables, PREG_SET_ORDER) > 0) {
+				foreach ($matchedVariables as $namespaceMatch) {
+					$viewHelperNamespace = $this->unquoteString($namespaceMatch[2]);
+					$phpNamespace = $this->viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
+					$this->viewHelperResolver->registerNamespace($namespaceMatch[1], $phpNamespace);
+				}
+				continue;
+			} elseif (trim($templateElement) === '</f:fluid>') {
+				continue;
+			} elseif (preg_match(Patterns::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->textHandler($state, $matchedVariables[1]);
 				continue;
-			} elseif (preg_match(self::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
+			} elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
 				$viewHelperWasOpened = $this->openingViewHelperTagHandler(
 					$state,
 					$matchedVariables['NamespaceIdentifier'],
@@ -430,7 +164,7 @@ class TemplateParser {
 				if ($viewHelperWasOpened === TRUE) {
 					continue;
 				}
-			} elseif (preg_match(self::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
+			} elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
 				$viewHelperWasClosed = $this->closingViewHelperTagHandler(
 					$state,
 					$matchedVariables['NamespaceIdentifier'],
@@ -572,7 +306,7 @@ class TemplateParser {
 
 		// ViewHelpers
 		$matches = array();
-		if (strlen($viewHelperString) > 0 && preg_match_all(self::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
+		if (strlen($viewHelperString) > 0 && preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
 			// The last ViewHelper has to be added first for correct chaining.
 			foreach (array_reverse($matches) as $singleMatch) {
 				if (strlen($singleMatch['ViewHelperArguments']) > 0) {
@@ -641,7 +375,7 @@ class TemplateParser {
 	protected function parseArguments($argumentsString) {
 		$argumentsObjectTree = array();
 		$matches = array();
-		if (preg_match_all(self::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
+		if (preg_match_all(Patterns::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
 			$escapingEnabledBackup = $this->escapingEnabled;
 			$this->escapingEnabled = FALSE;
 			foreach ($matches as $singleMatch) {
@@ -703,11 +437,11 @@ class TemplateParser {
 	 * @return void
 	 */
 	protected function textAndShorthandSyntaxHandler(ParsingState $state, $text, $context) {
-		$sections = preg_split(self::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		$sections = preg_split(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($sections as $section) {
 			$matchedVariables = array();
 			$expressionNode = NULL;
-			if (preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
+			if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 				$this->objectAccessorHandler(
 					$state,
 					$matchedVariables['Object'],
@@ -717,7 +451,7 @@ class TemplateParser {
 				);
 			} elseif (
 				$context === self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS
-				&& preg_match(self::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0
+				&& preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0
 			) {
 				// We only match arrays if we are INSIDE viewhelper arguments
 				$this->arrayHandler($state, $this->recursiveArrayHandler($matchedVariables['Array']));
@@ -771,7 +505,7 @@ class TemplateParser {
 	 */
 	protected function recursiveArrayHandler($arrayText) {
 		$matches = array();
-		preg_match_all(self::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER);
+		preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER);
 		$arrayToBuild = array();
 		foreach ($matches as $singleMatch) {
 			$arrayKey = $singleMatch['Key'];

@@ -6,6 +6,7 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3\Fluid\Core\Parser\Patterns;
 use TYPO3\Fluid\Core\ViewHelper\Exception;
 
 /**
@@ -30,17 +31,6 @@ class ViewHelperResolver {
 	protected $namespaces = array(
 		'f' => 'TYPO3\\Fluid\\ViewHelpers'
 	);
-
-	/**
-	 * Filled by calling ignoreNamespace($namespace) any
-	 * number of times from the outside. Makes various
-	 * functions inside this class error out if the
-	 * namespaces which were ignored are referenced by
-	 * for example a ViewHelper tag.
-	 *
-	 * @var array
-	 */
-	protected $ignoredNamespaces = array();
 
 	/**
 	 * List of class names implementing ExpressionNodeInterface
@@ -82,20 +72,19 @@ class ViewHelperResolver {
 	}
 
 	/**
-	 * Mark a namespace as ignored. Attempting to access
-	 * namespaces that are ignored will result in errors.
+	 * Resolves the PHP namespace based on the Fluid xmlns namespace.
 	 *
-	 * Filled by the template parser to exclude namespaces,
-	 * for example the ones extracted from `xmlns` definitions
-	 * but which don't refer to a ViewHelper package.
-	 *
-	 * @param string $namespace
-	 * @return void
+	 * @param string $fluidNamespace
+	 * @return string
 	 */
-	public function ignoreNamespace($namespace) {
-		if (!in_array($namespace, $this->ignoredNamespaces)) {
-			$this->ignoredNamespaces[] = $namespace;
+	public function resolvePhpNamespaceFromFluidNamespace($fluidNamespace) {
+		$namespace = $fluidNamespace;
+		if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && substr($fluidNamespace, 0 - strlen(Patterns::NAMESPACESUFFIX))) {
+			// convention assumed: URL starts with prefix and ends with suffix
+			$namespaceSegments = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
+			$namespace = str_replace('/', '\\', $namespaceSegments);
 		}
+		return $namespace;
 	}
 
 	/**
@@ -116,24 +105,17 @@ class ViewHelperResolver {
 	 * @throws Exception if the given namespace can't be resolved and is not ignored
 	 */
 	public function isNamespaceValid($namespaceIdentifier, $methodIdentifier) {
-		if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			return TRUE;
+		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
+			throw new Exception(sprintf('Error while resolving a ViewHelper
+				The namespace of ViewHelper notation "<%1$s:%2$s.../>" could not be resolved.
+
+				Possible reasons are:
+				* you have a spelling error in the viewHelper namespace
+				* you forgot to import the namespace using "{namespace %1$s=Some\Package\ViewHelpers}"
+				* you\'re trying to use a non-fluid xml namespace, in which case you can use "{namespace %1$s}" to ignore this
+				  namespace for fluid rendering', $namespaceIdentifier, $methodIdentifier), 1402521855);
 		}
-
-		foreach ($this->ignoredNamespaces as $namespaceIdentifierPattern) {
-			if (preg_match($namespaceIdentifierPattern, $namespaceIdentifier) === 1) {
-				return FALSE;
-			}
-		}
-
-		throw new Exception(sprintf('Error while resolving a ViewHelper
-			The namespace of ViewHelper notation "<%1$s:%2$s.../>" could not be resolved.
-
-			Possible reasons are:
-			* you have a spelling error in the viewHelper namespace
-			* you forgot to import the namespace using "{namespace %1$s=Some\Package\ViewHelpers}"
-			* you\'re trying to use a non-fluid xml namespace, in which case you can use "{namespace %1$s}" to ignore this
-			  namespace for fluid rendering', $namespaceIdentifier, $methodIdentifier), 1402521855);
+		return TRUE;
 	}
 
 	/**

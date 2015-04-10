@@ -45,26 +45,6 @@ class ViewHelperResolverTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testIgnoreNamespaceRecordsNamespace() {
-		$resolver = new ViewHelperResolver();
-		$resolver->ignoreNamespace('t');
-		$this->assertAttributeEquals(array('t'), 'ignoredNamespaces', $resolver);
-	}
-
-	/**
-	 * @test
-	 */
-	public function testIsNamespaceReturnsFalseOnIgnoredNamespace() {
-		$resolver = new ViewHelperResolver();
-		$resolver->ignoreNamespace('/test/i');
-		$resolver->ignoreNamespace('/test2/i');
-		$result = $resolver->isNamespaceValid('test2', 'test');
-		$this->assertFalse($result);
-	}
-
-	/**
-	 * @test
-	 */
 	public function testIsNamespaceThrowsExceptionIfNamespaceNeitherValidNorIgnored() {
 		$resolver = new ViewHelperResolver();
 		$this->setExpectedException('TYPO3\\Fluid\\Core\\ViewHelper\\Exception');

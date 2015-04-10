@@ -115,6 +115,12 @@ class ExamplesTest extends BaseTestCase {
 					'Value of "foobar": MVC template.'
 				)
 			),
+			'example_namespaces.php' => array(
+				'example_namespaces.php',
+				array(
+					'Namespaces template'
+				)
+			),
 			'example_single.php' => array(
 				'example_single.php',
 				array(

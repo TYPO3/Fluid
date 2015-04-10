@@ -6,6 +6,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3\Fluid\Core\Parser\Patterns;
 use TYPO3\Fluid\Core\Parser\TemplateParser;
 use TYPO3\Fluid\Tests\UnitTestCase;
 
@@ -17,20 +18,8 @@ class TemplateParserPatternTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testSCAN_PATTERN_NAMESPACEDECLARATION() {
-		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '{namespace acme=Acme.MyPackage\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
-		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '{namespace acme=Acme.MyPackage\Bla\Blubb }'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (2).');
-		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '    {namespace foo = Foo\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (3).');
-		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '    {namespace foo.bar  = Foo\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (4).');
-		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, ' \{namespace fblubb = TYPO3.Fluid\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (1)');
-		$this->assertEquals(preg_match(TemplateParser::$SCAN_PATTERN_NAMESPACEDECLARATION, '\{namespace typo3 = TYPO3.TYPO3\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (2)');
-	}
-
-	/**
-	 * @test
-	 */
 	public function testSPLIT_PATTERN_DYNAMICTAGS() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('typo3', 't3', 'f'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, array('typo3', 't3', 'f'));
 
 		$source = '<html><head> <f:a.testing /> <f:blablubb> {testing}</f4:blz> </t3:hi.jo>';
 		$expected = array('<html><head> ','<f:a.testing />', ' ', '<f:blablubb>', ' {testing}', '</f4:blz>', ' ', '</t3:hi.jo>');
@@ -78,7 +67,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSCAN_PATTERN_DYNAMICTAG() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
 		$source = '<f:crop attribute="Hallo">';
 		$expected = array(
 			0 => '<f:crop attribute="Hallo">',
@@ -94,7 +83,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 		preg_match($pattern, $source, $matches);
 		$this->assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly.');
 
-		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, array('f'));
 		$source = '<f:crop data-attribute="Hallo">';
 		$expected = array(
 			0 => '<f:crop data-attribute="Hallo">',
@@ -160,7 +149,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSCAN_PATTERN_CLOSINGDYNAMICTAG() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, array('f'));
 		$this->assertEquals(preg_match($pattern, '</f:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
 		$this->assertEquals(preg_match($pattern, '</f:bla.a    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
 		$this->assertEquals(preg_match($pattern, '</t:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a unknown namespace tag it should match.');
@@ -170,7 +159,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSPLIT_PATTERN_TAGARGUMENTS() {
-		$pattern = TemplateParser::$SPLIT_PATTERN_TAGARGUMENTS;
+		$pattern = Patterns::$SPLIT_PATTERN_TAGARGUMENTS;
 		$source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\' data-foo="bar"';
 		$this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 4, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
 		$this->assertEquals('data-foo', $matches[3]['Argument']);
@@ -180,7 +169,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX() {
-		$pattern = $this->insertNamespaceIntoRegularExpression(TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f'));
+		$pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, array('f'));
 
 		$source = 'some string{Object.bla}here as well';
 		$expected = array('some string', '{Object.bla}', 'here as well');
@@ -231,7 +220,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER() {
-		$pattern = TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER;
+		$pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER;
 
 		$source = 'f:for(each: bla)';
 		$expected = array(
@@ -277,7 +266,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS() {
-		$pattern = TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
+		$pattern = Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
 		$this->assertEquals(preg_match($pattern, '{object}'), 1, 'Object accessor not identified!');
 		$this->assertEquals(preg_match($pattern, '{oBject1}'), 1, 'Object accessor not identified if there is a number and capitals inside!');
 		$this->assertEquals(preg_match($pattern, '{object.recursive}'), 1, 'Object accessor not identified if there is a dot inside!');
@@ -296,7 +285,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
-		$pattern = TemplateParser::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
+		$pattern = Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
 		$this->assertEquals(preg_match($pattern, '{a:b}'), 1, 'Array syntax not identified!');
 		$this->assertEquals(preg_match($pattern, '{a:b, c :   d}'), 1, 'Array syntax not identified in case there are multiple properties!');
 		$this->assertEquals(preg_match($pattern, '{a : 123}'), 1, 'Array syntax not identified when a number is passed as argument!');
@@ -316,7 +305,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS() {
-		$pattern = TemplateParser::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
+		$pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
 
 		$source = '{a: b, e: {c:d, e:f}}';
 		preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
@@ -358,7 +347,7 @@ class TemplateParserPatternTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSCAN_PATTERN_CDATA() {
-		$pattern = TemplateParser::$SCAN_PATTERN_CDATA;
+		$pattern = Patterns::$SCAN_PATTERN_CDATA;
 		$this->assertEquals(preg_match($pattern, '<!-- Test -->'), 0, 'The SCAN_PATTERN_CDATA matches a comment, but it should not.');
 		$this->assertEquals(preg_match($pattern, '<![CDATA[This is some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a simple CDATA string.');
 		$this->assertEquals(preg_match($pattern, '<![CDATA[This is<bla:test> some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a CDATA string with tags inside..');
