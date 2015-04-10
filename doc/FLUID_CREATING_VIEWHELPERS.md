@@ -11,13 +11,14 @@ ViewHelper to be usable in inline syntax - for example as value of the `each` ar
 And finally, we would like to be able to specify the "values" array also in the special inline syntax for tag content:
 
 ```xml
-{namespace mypkg=Vendor\Package\ViewHelpers}
+<f:fluid xmlns:mypkg="Vendor\Package\ViewHelpers">
 <dl>
     <f:for each="{myValuesArray -> mypkg:combine(keys: myKeysArray)}" as="item" key="key">
         <dt>{key}</dt>
         <dd>{item}</dd>
     </f:for>
 <dl>
+</f:fluid>
 ```
 
 To enable this usage we must then create a ViewHelper class:
@@ -65,9 +66,10 @@ And that's all this class requires to work in the described way.
 Note that in this example the ViewHelper's `render()` method returns an array which means you can't use it in tag mode:
 
 ```xml
-{namespace mypkg=Vendor\Package\ViewHelpers}
+<f:fluid xmlns:mypkg="Vendor\Package\ViewHelpers">
 <!-- BAD USAGE. Will output string value "Array" -->
 <mypkg:combine keys="{myKeysArray}">{myValuesArray}</mypkg:combine>
+</f:fluid>
 ```
 
 Naturally this implies that any ViewHelper which returns a string compatible value (including numbers and objects which have a

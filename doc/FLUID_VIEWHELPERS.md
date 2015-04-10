@@ -23,22 +23,23 @@ Beware though: once imported globally, an imported namespace can no longer be ov
 And the latter method which can be used in each template file that requires the ViewHelpers:
 
 ```xml
-{namespace foo=Vendor\Foo\ViewHelpers}
+<f:fluid xmlns:foo="Vendor\Foo\ViewHelpers">
 <f:layout name="Default" />
 <f:section name="Main">
     <!-- ... --->
 </f:section>
+</f:fluid>
 ```
 
 Or using the alternative `xmlns` approach:
 
 ```xml
+<f:fluid xmlns:foo="http://typo3.org/ns/Vendor/Foo/ViewHelpers">
 <f:layout name="Default" />
-<div xmlns:foo="http://typo3.org/ns/Vendor/Foo/ViewHelpers">
     <f:section name="Main">
         <!-- ... --->
     </f:section>
-</div>
+</f:fluid>
 ```
 
 Once you have registered/imported the ViewHelper collection (we call it a collection here even if it contains only one class) you
@@ -62,7 +63,7 @@ the class that corresponds to a ViewHelper. Such classes are usually placed in t
 * `v:format.raw` becomes PHP class `TYPO3\Fluid\ViewHelpers\Format\RawViewHelper`
 * `v:render` becomes PHP class `TYPO3\Fluid\ViewHelpers\RenderViewHelper`
 * `mypkg:custom.specialFormat` becomes PHP class `My\Package\ViewHelpers\Custom\SpecialFormatViewHelper` assuming you added
-  `{namespace mpkg=My\Package\ViewHelpers}` or alternative namespace registration (see above).
+  `xmlns:mpkg="My\Package\ViewHelpers"` or alternative namespace registration (see above).
 
 And so on.
 

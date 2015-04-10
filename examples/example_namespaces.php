@@ -1,15 +1,13 @@
 <?php
 
 /*
- * EXAMPLE: Single file rendering
+ * EXAMPLE: Namespaces in Fluid templates
  *
- * This example shows how to render a single Fluid
- * template and illustrates how the use of Layouts
- * and Partials in directly rendered files still is
- * subject to the paths resolving.
+ * How to import and use namespaces in Fluid.
  *
- * The alternative to this approach is MVC - see
- * other example for that.
+ * This example also shows how to import and alias
+ * namespaces in a manner suited for XSD-based
+ * autocompletion.
  */
 
 require __DIR__ . '/include/view_init.php';
