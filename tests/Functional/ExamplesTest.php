@@ -118,7 +118,8 @@ class ExamplesTest extends BaseTestCase {
 			'example_namespaces.php' => array(
 				'example_namespaces.php',
 				array(
-					'Namespaces template'
+					'Namespaces template',
+					'<invalid:vh>This tag will be shown</invalid:vh>'
 				)
 			),
 			'example_single.php' => array(

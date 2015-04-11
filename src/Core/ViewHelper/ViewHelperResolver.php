@@ -64,7 +64,10 @@ class ViewHelperResolver {
 	public function registerNamespace($identifier, $phpNamespace) {
 		if (array_key_exists($identifier, $this->namespaces) && $this->namespaces[$identifier] !== $phpNamespace) {
 			throw new Exception(
-				sprintf('Namespace identifier "%s" is already registered. Do not re-declare namespaces!', $identifier),
+				sprintf(
+					'Namespace "%s" is already registered with another target PHP namespace. Do not re-declare namespaces!',
+					$identifier
+				),
 				1224241246
 			);
 		}
@@ -79,7 +82,8 @@ class ViewHelperResolver {
 	 */
 	public function resolvePhpNamespaceFromFluidNamespace($fluidNamespace) {
 		$namespace = $fluidNamespace;
-		if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && substr($fluidNamespace, 0 - strlen(Patterns::NAMESPACESUFFIX))) {
+		$extractedSuffix = substr($fluidNamespace, 0 - strlen(Patterns::NAMESPACESUFFIX));
+		if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && $extractedSuffix === Patterns::NAMESPACESUFFIX) {
 			// convention assumed: URL starts with prefix and ends with suffix
 			$namespaceSegments = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
 			$namespace = str_replace('/', '\\', $namespaceSegments);
@@ -96,26 +100,16 @@ class ViewHelperResolver {
 	}
 
 	/**
-	 * Validates the given namespaceIdentifier and throws an exception
-	 * if the namespace is unknown and not ignored
+	 * Validates the given namespaceIdentifier and returns FALSE
+	 * if the namespace is unknown, causing the tag to be rendered
+	 * without processing.
 	 *
 	 * @param string $namespaceIdentifier
 	 * @param string $methodIdentifier
 	 * @return boolean TRUE if the given namespace is valid, otherwise FALSE
-	 * @throws Exception if the given namespace can't be resolved and is not ignored
 	 */
 	public function isNamespaceValid($namespaceIdentifier, $methodIdentifier) {
-		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
-			throw new Exception(sprintf('Error while resolving a ViewHelper
-				The namespace of ViewHelper notation "<%1$s:%2$s.../>" could not be resolved.
-
-				Possible reasons are:
-				* you have a spelling error in the viewHelper namespace
-				* you forgot to import the namespace using "{namespace %1$s=Some\Package\ViewHelpers}"
-				* you\'re trying to use a non-fluid xml namespace, in which case you can use "{namespace %1$s}" to ignore this
-				  namespace for fluid rendering', $namespaceIdentifier, $methodIdentifier), 1402521855);
-		}
-		return TRUE;
+		return array_key_exists($namespaceIdentifier, $this->namespaces);
 	}
 
 	/**

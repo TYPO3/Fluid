@@ -45,10 +45,10 @@ class ViewHelperResolverTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testIsNamespaceThrowsExceptionIfNamespaceNeitherValidNorIgnored() {
+	public function testIsNamespaceReturnsFalseIfNamespaceNotValid() {
 		$resolver = new ViewHelperResolver();
-		$this->setExpectedException('TYPO3\\Fluid\\Core\\ViewHelper\\Exception');
 		$result = $resolver->isNamespaceValid('test2', 'test');
+		$this->assertFalse($result);
 	}
 
 	/**
