@@ -33,13 +33,4 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
 		);
 	}
 
-	/**
-	 * @param string $identifier
-	 * @return mixed
-	 */
-	public function get($identifier) {
-		$all = $this->getAll();
-		return $all[$identifier];
-	}
-
 }
