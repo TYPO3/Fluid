@@ -73,6 +73,21 @@ class FluidCommandLine {
 		} else {
 			$cache = NULL;
 		}
+		if (isset($arguments[self::ARGUMENT_VARIABLES])) {
+			$variablesReference = trim($arguments[self::ARGUMENT_VARIABLES]);
+			if (!preg_match('/[^a-z0-9\\\]+/i', $variablesReference) && class_exists($variablesReference)) {
+				$variableProvider = new $variablesReference();
+			} elseif (($variablesReference{0} === '{' && substr($variablesReference, -1) === '}')
+				|| file_exists($variablesReference)
+				|| strpos($variablesReference, ':/') !== FALSE
+			) {
+				$variableProvider = new \TYPO3\Fluid\Core\Variables\JSONVariableProvider();
+				$variableProvider->setSource($variablesReference);
+			} else {
+				$variableProvider = new \TYPO3\Fluid\Core\Variables\StandardVariableProvider();
+			}
+			$context->setVariableProvider($variableProvider);
+		}
 		$view = new \TYPO3\Fluid\View\TemplateView($paths, $context, $cache);
 		if (isset($arguments[self::ARGUMENT_SOCKET])) {
 			$this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
@@ -230,6 +245,19 @@ Or using parameters:
 To specify multiple values, for example for the templateRootPaths argument:
 
 	./bin/fluid --templateRootPaths /path/to/first/ /path/to/second/ "/path/with spaces/"
+
+To specify variables, use any JSON source - string of JSON, local file or URI, or
+class name of a PHP class implementing DataProviderInterface:
+
+	./bin/fluid --variables /path/to/fluidvariables.json
+
+	./bin/fluid --variables unix:/path/to/unixpipe
+
+	./bin/fluid --variables http://offsite.com/variables.json
+
+	./bin/fluid --variables `cat /path/to/fluidvariables.json`
+
+	./bin/fluid --variables "TYPO3\\Fluid\\Core\\Variables\\StandardVariableProvider"
 
 An additional SocketServer mode is available. When started in SocketServer mode,
 the CLI utility can be used as upstream (SCGI currently) in Nginx:

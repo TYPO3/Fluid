@@ -159,6 +159,15 @@ class ExamplesTest extends BaseTestCase {
 					'Received $array.xyz.foobar with value Escaped sub-string',
 					'Received $myVariable with value Nice string'
 				)
+			),
+			'example_variableprovider.php' => array(
+				'example_variableprovider.php',
+				array(
+					'VariableProvider template from Singles.',
+					'Incrementing variable, 1: 1',
+					'Incrementing variable, 2: 2',
+					'Random: random',
+				)
 			)
 		);
 	}
