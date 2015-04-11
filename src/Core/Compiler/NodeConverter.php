@@ -16,7 +16,6 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
-use TYPO3\Fluid\Exception;
 
 /**
  * Class NodeConverter

@@ -6,8 +6,6 @@ namespace TYPO3\Fluid\Core\Variables;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
-
 /**
  * Class StandardVariableProvider
  */
@@ -47,7 +45,6 @@ class StandardVariableProvider implements VariableProviderInterface {
 	 * @param string $identifier Identifier of the variable to add
 	 * @param mixed $value The variable's value
 	 * @return void
-	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function add($identifier, $value) {
@@ -63,7 +60,6 @@ class StandardVariableProvider implements VariableProviderInterface {
 	 *
 	 * @param string $identifier
 	 * @return mixed The variable value identified by $identifier
-	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function get($identifier) {
@@ -75,7 +71,6 @@ class StandardVariableProvider implements VariableProviderInterface {
 	 *
 	 * @param string $identifier The identifier to remove
 	 * @return void
-	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function remove($identifier) {
