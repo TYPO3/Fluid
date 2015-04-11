@@ -15,11 +15,6 @@ namespace TYPO3\Fluid\Core\Variables;
 class JSONVariableProvider extends StandardVariableProvider implements VariableProviderInterface {
 
 	/**
-	 * @var array
-	 */
-	protected $loadedDataSource = array();
-
-	/**
 	 * @var integer
 	 */
 	protected $lastLoaded = 0;
@@ -88,13 +83,15 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
 	 * @return void
 	 */
 	protected function load() {
-		if (!$this->isJSON($this->source) && time() > ($this->lastLoaded + $this->ttl)) {
-			$source = file_get_contents($this->source);
-		} else {
-			$source = $this->source;
+		if (time() > ($this->lastLoaded + $this->ttl)) {
+			if (!$this->isJSON($this->source)) {
+				$source = file_get_contents($this->source);
+			} else {
+				$source = $this->source;
+			}
+			$this->variables = json_decode($source, JSON_OBJECT_AS_ARRAY);
+			$this->lastLoaded = time();
 		}
-		$this->loadedDataSource = $this->variables = json_decode($source, JSON_OBJECT_AS_ARRAY);
-		$this->lastLoaded = time();
 	}
 
 	/**

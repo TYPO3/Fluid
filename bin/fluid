@@ -75,8 +75,16 @@ class FluidCommandLine {
 		}
 		if (isset($arguments[self::ARGUMENT_VARIABLES])) {
 			$variablesReference = trim($arguments[self::ARGUMENT_VARIABLES]);
-			if (!preg_match('/[^a-z0-9\\\]+/i', $variablesReference) && class_exists($variablesReference)) {
-				$variableProvider = new $variablesReference();
+			if (!preg_match('/[^a-z0-9\\\:\/\.\s]+/i', $variablesReference)) {
+				if (strpos($variablesReference, ':') !== FALSE) {
+					list ($variableProviderClassName, $source) = explode(':', $variablesReference, 2);
+				} else {
+					$variableProviderClassName = $variablesReference;
+					$source = NULL;
+				}
+				/** @var \TYPO3\Fluid\Core\Variables\VariableProviderInterface $variableProvider */
+				$variableProvider = new $variableProviderClassName();
+				$variableProvider->setSource($source);
 			} elseif (($variablesReference{0} === '{' && substr($variablesReference, -1) === '}')
 				|| file_exists($variablesReference)
 				|| strpos($variablesReference, ':/') !== FALSE
@@ -257,7 +265,14 @@ class name of a PHP class implementing DataProviderInterface:
 
 	./bin/fluid --variables `cat /path/to/fluidvariables.json`
 
-	./bin/fluid --variables "TYPO3\\Fluid\\Core\\Variables\\StandardVariableProvider"
+	./bin/fluid --variables "TYPO3\Fluid\Core\Variables\StandardVariableProvider"
+
+	./bin/fluid --variables "TYPO3\Fluid\Core\Variables\JSONVariableProvider:/path/to/file.json"
+
+When specifying a VariableProvider class name it is possible to additionally add a
+simple string value which gets passed to the VariableProvider through ->setSource()
+upon instantiation. If working with custom VariableProviders, check the documentation
+for each VariableProvider to know which source types are supported.
 
 An additional SocketServer mode is available. When started in SocketServer mode,
 the CLI utility can be used as upstream (SCGI currently) in Nginx:

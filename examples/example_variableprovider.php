@@ -10,7 +10,7 @@
  */
 
 require __DIR__ . '/include/view_init.php';
-require __DIR__ . '/include/class_customvariableprovider.php';
+require_once __DIR__ . '/include/class_customvariableprovider.php';
 
 // Assigning View variables: we assign variables that will be used by the
 // expressions we build in this example.

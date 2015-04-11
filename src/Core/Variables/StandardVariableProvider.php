@@ -29,6 +29,25 @@ class StandardVariableProvider implements VariableProviderInterface {
 	}
 
 	/**
+	 * Set the source data used by this VariableProvider. The
+	 * source can be any type, but the type must of course be
+	 * supported by the VariableProvider itself.
+	 *
+	 * @param mixed $source
+	 * @return void
+	 */
+	public function setSource($source) {
+		$this->variables = $source;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSource() {
+		return $this->variables;
+	}
+
+	/**
 	 * Get every variable provisioned by the VariableProvider
 	 * implementing the interface. Must return an array or
 	 * ArrayAccess instance!

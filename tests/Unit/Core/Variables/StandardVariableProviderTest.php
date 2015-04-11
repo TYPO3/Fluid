@@ -32,6 +32,32 @@ class StandardVariableProviderTest extends UnitTestCase {
 	}
 
 	/**
+	 * @dataProvider getOperabilityTestValues
+	 * @param string $input
+	 * @param array $expected
+	 */
+	public function testOperability($input, array $expected) {
+		$provider = new StandardVariableProvider();
+		$provider->setSource($input);
+		$this->assertEquals($input, $provider->getSource());
+		$this->assertEquals($expected, $provider->getAll());
+		$this->assertEquals(array_keys($expected), $provider->getAllIdentifiers());
+		foreach ($expected as $key => $value) {
+			$this->assertEquals($value, $provider->get($key));
+		}
+	}
+
+	/**
+	 * @test
+	 */
+	public function getOperabilityTestValues() {
+		return array(
+			array(array(), array()),
+			array(array('foo' => 'bar'), array('foo' => 'bar'))
+		);
+	}
+
+	/**
 	 * @test
 	 */
 	public function testUnsetAsArrayAccess() {
