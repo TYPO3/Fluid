@@ -16,7 +16,7 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Tests\UnitTestCase;
 
@@ -107,8 +107,8 @@ class TemplateCompilerTest extends UnitTestCase {
 		$foo = new TextNode('foo');
 		$bar = new TextNode('bar');
 		$parsingState = new ParsingState();
-		$container = new TemplateVariableContainer(array('sections' => array($foo, $bar)));
-		$parsingState->injectVariableContainer($container);
+		$container = new StandardVariableProvider(array('sections' => array($foo, $bar)));
+		$parsingState->setVariableProvider($container);
 		$nodeConverter = $this->getMock(
 			'TYPO3\\Fluid\\Core\\Compiler\\NodeConverter',
 			array('convertListOfSubNodes'),

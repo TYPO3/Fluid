@@ -8,7 +8,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Tests\UnitTestCase;
 
 /**
@@ -24,7 +24,7 @@ class MathExpressionNodeTest extends UnitTestCase {
 	 */
 	public function testEvaluateExpression($expression, array $variables, $expected) {
 		$renderingContext = new RenderingContext();
-		$renderingContext->injectTemplateVariableContainer(new TemplateVariableContainer($variables));
+		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
 		$result = MathExpressionNode::evaluateExpression($renderingContext, $expression);
 		$this->assertEquals($expected, $result);
 	}

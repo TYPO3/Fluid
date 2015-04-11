@@ -66,7 +66,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	 * @return mixed
 	 */
 	protected static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext) {
-		$variables = $renderingContext->getTemplateVariableContainer()->getAll();
+		$variables = $renderingContext->getVariableProvider()->getAll();
 		$suspect = Parser\SyntaxTree\ObjectAccessorNode::getPropertyPath($variables, $candidate, $renderingContext);
 		if (NULL === $suspect) {
 			return $candidate;

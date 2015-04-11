@@ -6,6 +6,7 @@ namespace TYPO3\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3\Fluid\View\AbstractTemplateView;
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
@@ -44,13 +45,21 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer', array('exists', 'remove', 'add'));
+		$this->templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\Variables\StandardVariableProvider', array('exists', 'remove', 'add'));
 		$this->viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
-		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getTemplateVariableContainer'));
+		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getVariableProvider'));
 		$this->renderingContext->expects($this->any())->method('getViewHelperVariableContainer')->will($this->returnValue($this->viewHelperVariableContainer));
-		$this->renderingContext->expects($this->any())->method('getTemplateVariableContainer')->will($this->returnValue($this->templateVariableContainer));
+		$this->renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($this->templateVariableContainer));
 		$this->view = $this->getMockForAbstractClass('TYPO3\Fluid\View\AbstractTemplateView', array(new TemplatePaths()));
 		$this->view->setRenderingContext($this->renderingContext);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetRenderingContextReturnsExpectedRenderingContext() {
+		$result = $this->view->getRenderingContext();
+		$this->assertSame($this->renderingContext, $result);
 	}
 
 	/**
@@ -144,7 +153,7 @@ class AbstractTemplateViewTest extends UnitTestCase {
 			array('isCompiled', 'getVariableContainer')
 		);
 		$parsedTemplate->expects($this->once())->method('isCompiled')->willReturn($compiled);
-		$parsedTemplate->expects($this->any())->method('getVariableContainer')->willReturn(new TemplateVariableContainer(
+		$parsedTemplate->expects($this->any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(
 			array('sections' => array())
 		));
 		$view = $this->getMockForAbstractClass(

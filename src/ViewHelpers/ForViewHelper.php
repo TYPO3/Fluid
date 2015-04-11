@@ -100,7 +100,7 @@ class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
 	 * @throws ViewHelper\Exception
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		$templateVariableContainer = $renderingContext->getTemplateVariableContainer();
+		$templateVariableContainer = $renderingContext->getVariableProvider();
 		if ($arguments['each'] === NULL) {
 			return '';
 		}

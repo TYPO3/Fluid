@@ -37,9 +37,9 @@ class RenderingContextTest extends UnitTestCase {
 	 * @test
 	 */
 	public function templateVariableContainerCanBeReadCorrectly() {
-		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
-		$this->renderingContext->injectTemplateVariableContainer($templateVariableContainer);
-		$this->assertSame($this->renderingContext->getTemplateVariableContainer(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
+		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\Variables\StandardVariableProvider');
+		$this->renderingContext->setVariableProvider($templateVariableContainer);
+		$this->assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
 	}
 
 	/**

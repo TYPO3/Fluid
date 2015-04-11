@@ -29,7 +29,7 @@ class ObjectAccessorNode extends AbstractNode {
 	 * Constructor. Takes an object path as input.
 	 *
 	 * The first part of the object path has to be a variable in the
-	 * TemplateVariableContainer.
+	 * VariableProvider.
 	 *
 	 * @param string $objectPath An Object Path, like object1.object2.object3
 	 */
@@ -56,13 +56,13 @@ class ObjectAccessorNode extends AbstractNode {
 	 * - fail
 	 *
 	 * The first part of the object path has to be a variable in the
-	 * TemplateVariableContainer.
+	 * VariableProvider.
 	 *
 	 * @param RenderingContextInterface $renderingContext
 	 * @return object The evaluated object, can be any object type.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		self::$variables = $renderingContext->getTemplateVariableContainer()->getAll();
+		self::$variables = $renderingContext->getVariableProvider()->getAll();
 		switch (strtolower($this->objectPath)) {
 			case '_all':
 				return self::$variables;

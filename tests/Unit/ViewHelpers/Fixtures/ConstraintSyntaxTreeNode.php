@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
@@ -16,7 +17,7 @@ use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 class ConstraintSyntaxTreeNode extends ViewHelperNode {
 	public $callProtocol = array();
 
-	public function __construct(TemplateVariableContainer $variableContainer) {
+	public function __construct(VariableProviderInterface $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 

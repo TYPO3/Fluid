@@ -44,7 +44,7 @@ class MathExpressionNode extends AbstractExpressionNode {
 		// Like the BooleanNode, we dumb down the processing logic to not apply
 		// any special precedence on the priority of operators. We simply process
 		// them in order.
-		$variables = $renderingContext->getTemplateVariableContainer()->getAll();
+		$variables = $renderingContext->getVariableProvider()->getAll();
 		$result = array_shift($matches[0]);
 		$result = parent::getTemplateVariableOrValueItself($result, $renderingContext);
 		$operator = NULL;

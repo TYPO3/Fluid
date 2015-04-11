@@ -58,7 +58,7 @@ interface CompilableInterface {
 	 * It returns the rendered child nodes, so you can simply do $renderChildrenClosure() to execute
 	 * it. It does not take any parameters.
 	 *
-	 * $renderingContext contains references to the TemplateVariableContainer and the
+	 * $renderingContext contains references to the VariableProvider and the
 	 * ViewHelperVariableContainer.
 	 *
 	 * @param array $arguments

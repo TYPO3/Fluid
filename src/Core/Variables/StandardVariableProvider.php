@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Core\ViewHelper;
+namespace TYPO3\Fluid\Core\Variables;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -9,22 +9,9 @@ namespace TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
 
 /**
- * VariableContainer which stores template variables.
- * Is used in two contexts:
- *
- * 1) Holds the current variables in the template
- * 2) Holds variables being set during Parsing (set in view helpers implementing the PostParse facet)
- *
- * @api
+ * Class StandardVariableProvider
  */
-class TemplateVariableContainer implements \ArrayAccess {
-
-	/**
-	 * List of reserved words that can't be used as variable identifiers in Fluid templates
-	 *
-	 * @var array
-	 */
-	static protected $reservedVariableNames = array('true', 'false', 'on', 'off', 'yes', 'no', '_all');
+class StandardVariableProvider implements VariableProviderInterface {
 
 	/**
 	 * Variables stored in context
@@ -34,13 +21,24 @@ class TemplateVariableContainer implements \ArrayAccess {
 	protected $variables = array();
 
 	/**
-	 * Constructor. Can take an array, and initializes the variables with it.
+	 * Variables, if any, with which to initialize this
+	 * VariableProvider.
 	 *
-	 * @param array $variableArray
-	 * @api
+	 * @param array $variables
 	 */
-	public function __construct(array $variableArray = array()) {
-		$this->variables = $variableArray;
+	public function __construct(array $variables = array()) {
+		$this->variables = $variables;
+	}
+
+	/**
+	 * Get every variable provisioned by the VariableProvider
+	 * implementing the interface. Must return an array or
+	 * ArrayAccess instance!
+	 *
+	 * @return array|\ArrayAccess
+	 */
+	public function getAll() {
+		return $this->variables;
 	}
 
 	/**
@@ -53,12 +51,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function add($identifier, $value) {
-		if (array_key_exists($identifier, $this->variables)) {
-			throw new InvalidVariableException('Duplicate variable declaration, "' . $identifier . '" already set!', 1224479063);
-		}
-		if (in_array(strtolower($identifier), self::$reservedVariableNames)) {
-			throw new InvalidVariableException('"' . $identifier . '" is a reserved variable name and cannot be used as variable identifier.', 1256730379);
-		}
 		$this->variables[$identifier] = $value;
 	}
 
@@ -75,10 +67,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function get($identifier) {
-		if (!array_key_exists($identifier, $this->variables)) {
-			throw new InvalidVariableException('Tried to get a variable "' . $identifier . '" which is not stored in the context!', 1224479370);
-		}
-		return $this->variables[$identifier];
+		return isset($this->variables[$identifier]) ? $this->variables[$identifier] : NULL;
 	}
 
 	/**
@@ -90,10 +79,9 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function remove($identifier) {
-		if (!array_key_exists($identifier, $this->variables)) {
-			throw new InvalidVariableException('Tried to remove a variable "' . $identifier . '" which is not stored in the context!', 1224479372);
+		if (array_key_exists($identifier, $this->variables)) {
+			unset($this->variables[$identifier]);
 		}
-		unset($this->variables[$identifier]);
 	}
 
 	/**
@@ -106,15 +94,6 @@ class TemplateVariableContainer implements \ArrayAccess {
 	}
 
 	/**
-	 * Returns the variables array.
-	 *
-	 * @return array Identifiers and values of all variables
-	 */
-	public function getAll() {
-		return $this->variables;
-	}
-
-	/**
 	 * Checks if this property exists in the VariableContainer.
 	 *
 	 * @param string $identifier
@@ -122,7 +101,7 @@ class TemplateVariableContainer implements \ArrayAccess {
 	 * @api
 	 */
 	public function exists($identifier) {
-		return (in_array($identifier, self::$reservedVariableNames, TRUE) || array_key_exists($identifier, $this->variables));
+		return array_key_exists($identifier, $this->variables);
 	}
 
 	/**
@@ -174,4 +153,5 @@ class TemplateVariableContainer implements \ArrayAccess {
 	public function offsetGet($identifier) {
 		return $this->get($identifier);
 	}
+
 }

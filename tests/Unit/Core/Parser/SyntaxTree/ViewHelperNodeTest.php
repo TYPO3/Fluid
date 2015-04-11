@@ -15,7 +15,6 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
@@ -44,8 +43,9 @@ class ViewHelperNodeTest extends UnitTestCase {
 	public function setUp() {
 		$this->renderingContext = new RenderingContext();
 
-		$this->templateVariableContainer = $this->getMockBuilder('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer')->disableOriginalConstructor()->getMock();
-		$this->inject($this->renderingContext, 'templateVariableContainer', $this->templateVariableContainer);
+		$this->templateVariableContainer = $this->getMockBuilder('TYPO3\Fluid\Core\Variables\StandardVariableProvider')
+			->disableOriginalConstructor()->getMock();
+		$this->inject($this->renderingContext, 'variableProvider', $this->templateVariableContainer);
 
 		$this->mockViewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->inject($this->renderingContext, 'viewHelperVariableContainer', $this->mockViewHelperVariableContainer);
@@ -59,7 +59,11 @@ class ViewHelperNodeTest extends UnitTestCase {
 		$arguments = array('foo' => 'bar');
 		$resolver = new ViewHelperResolver();
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
-		$viewHelperNode = $this->getAccessibleMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array($resolver, 'f', 'if', $arguments, new ParsingState()));
+		$viewHelperNode = $this->getAccessibleMock(
+			'TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+			array('dummy'),
+			array($resolver, 'f', 'if', $arguments, new ParsingState())
+		);
 
 		$this->assertEquals($arguments, $viewHelperNode->_get('arguments'));
 	}

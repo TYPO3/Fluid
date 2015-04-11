@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\ViewHelpers;
 
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\PostParseInterface;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
@@ -46,7 +47,11 @@ class LayoutViewHelper extends AbstractViewHelper {
 	 * @param TemplateVariableContainer $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, TemplateVariableContainer $variableContainer) {
+	static public function postParseEvent(
+		ViewHelperNode $syntaxTreeNode,
+		array $viewHelperArguments,
+		VariableProviderInterface $variableContainer
+	) {
 		if (isset($viewHelperArguments['name'])) {
 			$layoutNameNode = $viewHelperArguments['name'];
 		} else {

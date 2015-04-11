@@ -10,7 +10,7 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\View;
 
@@ -39,7 +39,7 @@ class ParsingState implements ParsedTemplateInterface {
 	 * Variable container where ViewHelpers implementing the PostParseFacet can
 	 * store things in.
 	 *
-	 * @var TemplateVariableContainer
+	 * @var VariableProviderInterface
 	 */
 	protected $variableContainer;
 
@@ -79,10 +79,10 @@ class ParsingState implements ParsedTemplateInterface {
 	 * Injects a variable container. ViewHelpers implementing the PostParse
 	 * Facet can store information inside this variableContainer.
 	 *
-	 * @param TemplateVariableContainer $variableContainer
+	 * @param VariableProviderInterface $variableContainer
 	 * @return void
 	 */
-	public function injectVariableContainer(TemplateVariableContainer $variableContainer) {
+	public function setVariableProvider(VariableProviderInterface $variableContainer) {
 		$this->variableContainer = $variableContainer;
 	}
 
@@ -156,7 +156,7 @@ class ParsingState implements ParsedTemplateInterface {
 	/**
 	 * Returns a variable container which will be then passed to the postParseFacet.
 	 *
-	 * @return TemplateVariableContainer The variable container or NULL if none has been set yet
+	 * @return VariableProviderInterface The variable container or NULL if none has been set yet
 	 */
 	public function getVariableContainer() {
 		return $this->variableContainer;

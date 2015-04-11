@@ -6,7 +6,7 @@ namespace TYPO3\Fluid\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
@@ -18,9 +18,9 @@ interface RenderingContextInterface {
 	 * Injects the template variable container containing all variables available through ObjectAccessors
 	 * in the template
 	 *
-	 * @param TemplateVariableContainer $templateVariableContainer The template variable container to set
+	 * @param VariableProviderInterface $variableProvider The template variable container to set
 	 */
-	public function injectTemplateVariableContainer(TemplateVariableContainer $templateVariableContainer);
+	public function setVariableProvider(VariableProviderInterface $variableProvider);
 
 	/**
 	 * @param ViewHelperVariableContainer $viewHelperVariableContainer
@@ -30,9 +30,9 @@ interface RenderingContextInterface {
 	/**
 	 * Get the template variable container
 	 *
-	 * @return TemplateVariableContainer The Template Variable Container
+	 * @return VariableProviderInterface The Template Variable Container
 	 */
-	public function getTemplateVariableContainer();
+	public function getVariableProvider();
 
 	/**
 	 * Get the ViewHelperVariableContainer

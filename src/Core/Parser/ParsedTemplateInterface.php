@@ -7,6 +7,7 @@ namespace TYPO3\Fluid\Core\Parser;
  */
 
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -32,8 +33,7 @@ interface ParsedTemplateInterface {
 	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
-	 * @return \TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer
-	 * @todo remove
+	 * @return VariableProviderInterface
 	 */
 	public function getVariableContainer();
 

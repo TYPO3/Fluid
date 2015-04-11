@@ -202,11 +202,11 @@ class AbstractViewHelperTest extends UnitTestCase {
 	 * @test
 	 */
 	public function setRenderingContextShouldSetInnerVariables() {
-		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer');
+		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\Variables\StandardVariableProvider');
 		$viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 
 		$renderingContext = new RenderingContext();
-		$renderingContext->injectTemplateVariableContainer($templateVariableContainer);
+		$renderingContext->setVariableProvider($templateVariableContainer);
 		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('render', 'prepareArguments'), array(), '', FALSE);

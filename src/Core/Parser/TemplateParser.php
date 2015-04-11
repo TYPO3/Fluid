@@ -12,8 +12,8 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -542,7 +542,7 @@ class TemplateParser {
 	protected function getParsingState() {
 		$rootNode = new RootNode();
 		$state = new ParsingState();
-		$state->injectVariableContainer(new TemplateVariableContainer());
+		$state->setVariableProvider(new StandardVariableProvider());
 		$state->setViewHelperResolver($this->viewHelperResolver);
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);

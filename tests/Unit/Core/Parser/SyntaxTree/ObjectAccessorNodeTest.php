@@ -6,7 +6,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3\Fluid\Tests\UnitTestCase;
 
@@ -25,8 +25,8 @@ class ObjectAccessorNodeTest extends UnitTestCase {
 	public function testEvaluateGetsExpectedValue(array $variables, $path, $expected) {
 		$node = new ObjectAccessorNode($path);
 		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
-		$variableContainer = new TemplateVariableContainer($variables);
-		$renderingContext->expects($this->any())->method('getTemplateVariableContainer')->will($this->returnValue($variableContainer));
+		$variableContainer = new StandardVariableProvider($variables);
+		$renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
 		$value = $node->evaluate($renderingContext);
 		$this->assertEquals($expected, $value);
 	}

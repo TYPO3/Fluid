@@ -9,6 +9,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 use TYPO3\Fluid\Core\Parser\ParsingState;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
@@ -45,7 +46,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function testPostParseEvent(array $arguments, $expectedLayoutName) {
 		$instance = new LayoutViewHelper();
-		$variableContainer = new TemplateVariableContainer(array());
+		$variableContainer = new StandardVariableProvider();
 		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'layout', $arguments, new ParsingState());
 		$result = LayoutViewHelper::postParseEvent($node, $arguments, $variableContainer);
 		$this->assertNull($result);

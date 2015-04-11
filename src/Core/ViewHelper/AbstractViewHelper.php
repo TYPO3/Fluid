@@ -11,6 +11,7 @@ use TYPO3\Fluid\Core\Parser;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
  * The abstract base class for all view helpers.
@@ -21,7 +22,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 
 	/**
 	 * Stores all \TYPO3\Fluid\ArgumentDefinition instances
-	 * @var array
+	 * @var ArgumentDefinition[]
 	 */
 	protected $argumentDefinitions = array();
 
@@ -57,7 +58,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 
 	/**
 	 * Current variable container reference.
-	 * @var TemplateVariableContainer
+	 * @var VariableProviderInterface
 	 * @api
 	 */
 	protected $templateVariableContainer;
@@ -113,7 +114,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 */
 	public function setRenderingContext(RenderingContextInterface $renderingContext) {
 		$this->renderingContext = $renderingContext;
-		$this->templateVariableContainer = $renderingContext->getTemplateVariableContainer();
+		$this->templateVariableContainer = $renderingContext->getVariableProvider();
 		$this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
 	}
 

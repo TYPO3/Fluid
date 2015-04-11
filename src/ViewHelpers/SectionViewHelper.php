@@ -10,6 +10,7 @@ use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 use TYPO3\Fluid\Core\ViewHelper\PostParseInterface;
@@ -79,11 +80,15 @@ class SectionViewHelper extends AbstractViewHelper implements CompilableInterfac
 	 * called directly after the ViewHelper was built.
 	 *
 	 * @param ViewHelperNode $syntaxTreeNode
-	 * @param array $viewHelperArguments<TextNode>
-	 * @param TemplateVariableContainer $variableContainer
+	 * @param TextNode[] $viewHelperArguments
+	 * @param VariableProviderInterface $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(ViewHelperNode $syntaxTreeNode, array $viewHelperArguments, TemplateVariableContainer $variableContainer) {
+	static public function postParseEvent(
+		ViewHelperNode $syntaxTreeNode,
+		array $viewHelperArguments,
+		VariableProviderInterface $variableContainer
+	) {
 		/** @var $nameArgument TextNode */
 		$nameArgument = $viewHelperArguments['name'];
 		$sectionName = $nameArgument->getText();

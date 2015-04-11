@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Tests\UnitTestCase;
@@ -30,7 +31,7 @@ class SectionViewHelperTest extends UnitTestCase {
 			'name' => new TextNode('sectionName')
 		);
 
-		$variableContainer = new TemplateVariableContainer();
+		$variableContainer = new StandardVariableProvider();
 
 		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 

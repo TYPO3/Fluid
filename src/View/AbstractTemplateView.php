@@ -16,7 +16,7 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Parser\TemplateParser;
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3\Fluid\View\Exception\InvalidSectionException;
@@ -93,7 +93,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$context = new RenderingContext();
 			$context->setControllerName('Default');
 			$context->setControllerAction('Default');
-			$context->injectTemplateVariableContainer(new TemplateVariableContainer($this->variables));
+			$context->setVariableProvider(new StandardVariableProvider($this->variables));
 			$context->injectViewHelperVariableContainer(new ViewHelperVariableContainer());
 		}
 		$this->templatePaths = $paths;
@@ -101,6 +101,13 @@ abstract class AbstractTemplateView extends AbstractView {
 		$this->setRenderingContext($context);
 		$this->setTemplateCompiler(new TemplateCompiler($this->viewHelperResolver));
 		$this->setTemplateParser(new TemplateParser($this->viewHelperResolver));
+	}
+
+	/**
+	 * @return RenderingContextInterface
+	 */
+	public function getRenderingContext() {
+		return $this->baseRenderingContext;
 	}
 
 	/**
@@ -164,11 +171,11 @@ abstract class AbstractTemplateView extends AbstractView {
 	 *
 	 * @param string $key The key of a view variable to set
 	 * @param mixed $value The value of the view variable
-	 * @return \TYPO3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
+	 * @return $this
 	 * @api
 	 */
 	public function assign($key, $value) {
-		$templateVariableContainer = $this->baseRenderingContext->getTemplateVariableContainer();
+		$templateVariableContainer = $this->baseRenderingContext->getVariableProvider();
 		if ($templateVariableContainer->exists($key)) {
 			$templateVariableContainer->remove($key);
 		}
@@ -181,11 +188,11 @@ abstract class AbstractTemplateView extends AbstractView {
 	 * However, only the key "value" is accepted.
 	 *
 	 * @param array $values Keys and values - only a value with key "value" is considered
-	 * @return \TYPO3\Fluid\View\AbstractTemplateView the instance of this view to allow chaining
+	 * @return $this
 	 * @api
 	 */
 	public function assignMultiple(array $values) {
-		$templateVariableContainer = $this->baseRenderingContext->getTemplateVariableContainer();
+		$templateVariableContainer = $this->baseRenderingContext->getVariableProvider();
 		foreach ($values as $key => $value) {
 			if ($templateVariableContainer->exists($key)) {
 				$templateVariableContainer->remove($key);
@@ -275,7 +282,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
 		} else {
 			$renderingContext = clone $renderingContext;
-			$renderingContext->injectTemplateVariableContainer(new TemplateVariableContainer($variables));
+			$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
 			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
 		}
 
@@ -338,9 +345,9 @@ abstract class AbstractTemplateView extends AbstractView {
 				return $paths->getPartialSource($partialName);
 			}
 		);
-		$variableContainer = new TemplateVariableContainer($variables);
+		$variableContainer = new StandardVariableProvider($variables);
 		$renderingContext = clone $this->getCurrentRenderingContext();
-		$renderingContext->injectTemplateVariableContainer($variableContainer);
+		$renderingContext->setVariableProvider($variableContainer);
 		$this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
 		if ($sectionName !== NULL) {
 			$output = $this->renderSection($sectionName, $variables, $ignoreUnknown);

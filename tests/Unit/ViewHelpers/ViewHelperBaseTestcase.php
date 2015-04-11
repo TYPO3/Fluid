@@ -7,6 +7,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\TagBuilder;
@@ -59,9 +60,9 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase {
 	 */
 	public function setUp() {
 		$this->viewHelperVariableContainer = new ViewHelperVariableContainer();
-		$this->templateVariableContainer = new TemplateVariableContainer();
+		$this->templateVariableContainer = new StandardVariableProvider();
 		$this->renderingContext = new RenderingContext();
-		$this->renderingContext->injectTemplateVariableContainer($this->templateVariableContainer);
+		$this->renderingContext->setVariableProvider($this->templateVariableContainer);
 		$this->renderingContext->injectViewHelperVariableContainer($this->viewHelperVariableContainer);
 	}
 

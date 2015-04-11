@@ -218,7 +218,7 @@ class NodeConverter {
 			'initialization' => '',
 			'execution' => sprintf(
 				'\TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode::getPropertyPath(
-					$renderingContext->getTemplateVariableContainer(),
+					$renderingContext->getVariableProvider(),
 					\'%s\',
 					$renderingContext
 				)',
