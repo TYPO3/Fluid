@@ -106,33 +106,91 @@ class FluidCommandLine {
 	}
 
 	/**
-	 * @param string $socketPathAndFilename
+	 * @param string $socketIdentifier
 	 * @param ViewInterface $view
 	 * @return void
 	 */
-	protected function listenIndefinitelyOnSocket($socketPathAndFilename, \TYPO3\Fluid\View\ViewInterface $view) {
-		if (file_exists($socketPathAndFilename)) {
-			unlink($socketPathAndFilename);
+	protected function listenIndefinitelyOnSocket($socketIdentifier, \TYPO3\Fluid\View\ViewInterface $view) {
+		if (file_exists($socketIdentifier)) {
+			unlink($socketIdentifier);
 		}
 		umask(0);
-		$socketServer = stream_socket_server('unix://' . $socketPathAndFilename);
+		if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{1,5}/', $socketIdentifier)) {
+			$socketServer = stream_socket_server('tcp://' . $socketIdentifier);
+		} else {
+			$socketServer = stream_socket_server('unix://' . $socketIdentifier);
+		}
 		while ($socket = stream_socket_accept($socketServer, -1)) {
 			$input = stream_socket_recvfrom($socket, 1024);
-			$lines = explode("\000", $input);
-			$parameters = array();
-			while ($name = array_shift($lines)) {
-				$parameters[$name] = array_shift($lines);
+			$templatePathAndFilename = $this->parseTemplatePathAndFilenameFromHeaders($input, $view->getTemplatePaths());
+			if (!file_exists($templatePathAndFilename)) {
+				$response = $this->createErrorResponse('Not Found', 404);
+			} else {
+				try {
+					$rendered = $this->renderSocketRequest($templatePathAndFilename, $view);
+					$response = $this->createResponse($rendered);
+				} catch (\TYPO3\Fluid\Exception $error) {
+					$response = $this->createErrorResponse($error->getMessage(), 500);
+				}
 			}
-			$templatePathAndFilename = $parameters['DOCUMENT_ROOT'] . $parameters['REQUEST_URI'];
-			try {
-				$rendered = $this->renderSocketRequest($templatePathAndFilename, $view);
-			} catch (\TYPO3\Fluid\Exception $error) {
-				$rendered = $error->getMessage();
-			}
-			stream_socket_sendto($socket, $this->createResponse($rendered));
+			stream_socket_sendto($socket, $response);
 			stream_socket_sendto($socket, "\x0B");
 			stream_socket_shutdown($socket, STREAM_SHUT_WR);
 		}
+	}
+
+	/**
+	 * @param string $input
+	 * @param \TYPO3\Fluid\View\TemplatePaths $paths
+	 * @return string
+	 */
+	protected function parseTemplatePathAndFilenameFromHeaders($input, \TYPO3\Fluid\View\TemplatePaths $paths) {
+		if (strpos($input, "\000") !== FALSE) {
+			return $this->parseTemplatePathAndFilenameFromScgiHeaders($input);
+		} else {
+			return $this->parseTemplatePathAndFilenameFromProcessedHeaders($input, $paths);
+		}
+	}
+
+	/**
+	 * @param string $input
+	 * @param \TYPO3\Fluid\View\TemplatePaths $paths
+	 * @return string
+	 */
+	protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, \TYPO3\Fluid\View\TemplatePaths $paths) {
+		$matches = array();
+		preg_match('/^GET ([^\s]+)/', $input, $matches);
+		$uri = $matches[1];
+		if (substr($uri, -1) === '/') {
+			$uri .= 'index.html';
+		}
+		$templateRootPath = reset($paths->getTemplateRootPaths());
+		$templateRootPath = rtrim($templateRootPath, '/');
+		return $templateRootPath . $uri;
+	}
+
+	/**
+	 * @param string $input
+	 * @return string
+	 */
+	protected function parseTemplatePathAndFilenameFromScgiHeaders($input) {
+		$lines = explode("\000", $input);
+		$parameters = array();
+		while ($name = array_shift($lines)) {
+			$parameters[$name] = array_shift($lines);
+		}
+		return $parameters['DOCUMENT_ROOT'] . $parameters['REQUEST_URI'];
+	}
+
+	/**
+	 * @param string $response
+	 * @param integer $code
+	 */
+	protected function createErrorResponse($response, $code) {
+		$headers = array(
+			'HTTP/1.1 ' . $code . ' ' . $response
+		);
+		return implode("\n", $headers) . "\n\n" . $response;
 	}
 
 	/**
@@ -141,6 +199,7 @@ class FluidCommandLine {
 	 */
 	protected function createResponse($response) {
 		$headers = array(
+			'HTTP/1.1 200 OK',
 			'Cache-Control:no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
 			'Connection:keep-alive',
 			'Content-Type:text/html;charset=utf-8',
@@ -273,6 +332,21 @@ When specifying a VariableProvider class name it is possible to additionally add
 simple string value which gets passed to the VariableProvider through ->setSource()
 upon instantiation. If working with custom VariableProviders, check the documentation
 for each VariableProvider to know which source types are supported.
+
+A WebSocket mode is available. When starting the CLI utility in WebSocket mode,
+very basic HTTP requests are rendered directly by listening on an IP:PORT combination:
+
+	sudo ./bin/fluid --socket 0.0.0.0:8080 --templateRootPaths /path/to/files/
+
+Pointing your browser to http://localhost:8080 should then render the requested
+file from the given path, defaulting to `index.html` when URI ends in `/`.
+
+Note that when started this way, there is no DOCUMENT_ROOT except for the root
+path you define as templateRootPaths. In this mode, the *FIRST* templateRootPath
+gets used as if it were the DOCUMENT_ROOT.
+
+Note also that this mode does not provide any $_SERVER or other variables of use
+as would be done through for example Apache or Nginx.
 
 An additional SocketServer mode is available. When started in SocketServer mode,
 the CLI utility can be used as upstream (SCGI currently) in Nginx:
