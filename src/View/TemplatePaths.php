@@ -47,6 +47,28 @@ class TemplatePaths {
 	const CONFIG_FORMAT = 'format';
 
 	/**
+	 * Holds already resolved identifiers for template files
+	 *
+	 * @var array
+	 */
+	protected static $resolvedIdentifiers = array(
+		'templates' => array(),
+		'layouts' => array(),
+		'partials' => array()
+	);
+
+	/**
+	 * Holds already resolved identifiers for template files
+	 *
+	 * @var array
+	 */
+	protected static $resolvedFiles = array(
+		'templates' => array(),
+		'layouts' => array(),
+		'partials' => array()
+	);
+
+	/**
 	 * @var array
 	 */
 	protected $templateRootPaths = array();
@@ -197,14 +219,17 @@ class TemplatePaths {
 			return $this->templatePathAndFilename;
 		}
 		$action = ucfirst($action);
-		foreach ($this->getTemplateRootPaths() as $templateRootPath) {
-			$candidate = $templateRootPath . $controller . '/' . $action . '.' . $format;
-			$candidate = $this->ensureAbsolutePath($candidate);
-			if (file_exists($candidate)) {
-				return $candidate;
+		$identifier = $controller . '/' . $action . '.' . $format;
+		if (!array_key_exists($identifier, self::$resolvedFiles['templates'])) {
+			foreach ($this->getTemplateRootPaths() as $templateRootPath) {
+				$candidate = $templateRootPath . $identifier;
+				$candidate = $this->ensureAbsolutePath($candidate);
+				if (file_exists($candidate)) {
+					return self::$resolvedFiles['templates'][$identifier] = $candidate;
+				}
 			}
 		}
-		return NULL;
+		return isset(self::$resolvedFiles['templates'][$identifier]) ? self::$resolvedFiles['templates'][$identifier] : NULL;
 	}
 
 	/**
@@ -431,9 +456,12 @@ class TemplatePaths {
 	 * @return string layout identifier
 	 */
 	public function getLayoutIdentifier($layoutName = 'Default') {
-		$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-		$prefix = 'layout_' . $layoutName;
-		return $this->createIdentifierForFile($filePathAndFilename, $prefix);
+		if (!array_key_exists($layoutName, self::$resolvedIdentifiers['layouts'])) {
+			$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
+			$prefix = 'layout_' . $layoutName;
+			self::$resolvedIdentifiers['layouts'][$layoutName] = $this->createIdentifierForFile($filePathAndFilename, $prefix);
+		}
+		return self::$resolvedIdentifiers['layouts'][$layoutName];
 	}
 
 	/**
@@ -459,7 +487,6 @@ class TemplatePaths {
 	 *
 	 * @param string $controllerName
 	 * @param string $actionName Name of the action. If NULL, will be taken from request.
-	 * @param string $templatePathAndFilename
 	 * @return string template identifier
 	 */
 	public function getTemplateIdentifier($controllerName = 'Default', $actionName = 'Default') {
@@ -523,9 +550,14 @@ class TemplatePaths {
 	 * @throws Exception\InvalidTemplateResourceException
 	 */
 	public function getLayoutPathAndFilename($layoutName = 'Default') {
-		$paths = $this->getLayoutRootPaths();
-		$layoutName = ucfirst($layoutName);
-		return $this->resolveFileInPaths($paths, $layoutName, $this->getFormat());
+		$format = $this->getFormat();
+		$layoutKey = $layoutName . '.' . $format;
+		if (!array_key_exists($layoutKey, self::$resolvedFiles['layouts'])) {
+			$paths = $this->getLayoutRootPaths();
+			$layoutName = ucfirst($layoutName);
+			self::$resolvedFiles['layouts'][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName, $format);
+		}
+		return self::$resolvedFiles['layouts'][$layoutKey];
 	}
 
 	/**
@@ -536,9 +568,13 @@ class TemplatePaths {
 	 * @return string partial identifier
 	 */
 	public function getPartialIdentifier($partialName) {
-		$partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
-		$prefix = 'partial_' . $partialName;
-		return $this->createIdentifierForFile($partialPathAndFilename, $prefix);
+		$partialKey = $partialName . '.' . $this->getFormat();
+		if (!array_key_exists($partialKey, self::$resolvedIdentifiers['partials'])) {
+			$partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
+			$prefix = 'partial_' . $partialName;
+			self::$resolvedIdentifiers['partials'][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
+		}
+		return self::$resolvedIdentifiers['partials'][$partialKey];
 	}
 
 	/**
@@ -561,9 +597,14 @@ class TemplatePaths {
 	 * @throws InvalidTemplateResourceException
 	 */
 	protected function getPartialPathAndFilename($partialName) {
-		$paths = $this->getPartialRootPaths();
-		$partialName = ucfirst($partialName);
-		return $this->resolveFileInPaths($paths, $partialName, $this->getFormat());
+		$format = $this->getFormat();
+		$partialKey = $partialName . '.' . $format;
+		if (!array_key_exists($partialKey, self::$resolvedFiles['partials'])) {
+			$paths = $this->getPartialRootPaths();
+			$partialName = ucfirst($partialName);
+			self::$resolvedFiles['partials'][$partialKey] = $this->resolveFileInPaths($paths, $partialName, $format);
+		}
+		return self::$resolvedFiles['partials'][$partialKey];
 	}
 
 	/**
