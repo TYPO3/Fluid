@@ -5,7 +5,8 @@
 	"require-dev": {
 		"phpunit/phpunit": "4.3.*",
 		"mikey179/vfsStream": "~1.3.0",
-		"satooshi/php-coveralls": "*"
+		"satooshi/php-coveralls": "*",
+		"namelesscoder/fluid-schema-generator": "*"
 	},
 	"autoload": {
 		"psr-4": {

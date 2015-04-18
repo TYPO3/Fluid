@@ -148,7 +148,7 @@ class TemplateParser {
 					$this->viewHelperResolver->registerNamespace($namespaceMatch[1], $phpNamespace);
 				}
 				continue;
-			} elseif (trim($templateElement) === '</f:fluid>') {
+			} elseif (trim($templateElement) === '</f:fluid>' || trim($templateElement) === '</fluid>') {
 				continue;
 			} elseif (preg_match(Patterns::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
 				$this->textHandler($state, $matchedVariables[1]);
