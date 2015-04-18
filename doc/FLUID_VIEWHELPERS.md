@@ -98,6 +98,11 @@ What the argument does is then decided by the ViewHelper.
 ViewHelper Schema
 -----------------
 
+Fluid supports autocompletion of the special Fluid tags via the use of an XSD schema - a standard feature of the XML toolchain
+which allows defining required attributes, expected attribute types and more. Some IDEs support the mapping of such XSD schemas
+to namespace URLs which you can include in Fluid templates. See [namespaces example file](../examples/Singles/Namespaces.html) for
+details about how to define namespaces in Fluid templates - and see your IDE's documentation for that part of the task).
+
 When installed with development dependencies, `TYPO3.Fluid` includes a CLI command that can generate XSD schema files for both the
 native ViewHelpers and any inside your own packages. To use this command:
 
