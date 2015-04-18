@@ -62,8 +62,12 @@ class SimpleFileCache implements FluidCacheInterface {
 	 * @param string $name
 	 * @param mixed $value
 	 * @return void
+	 * @throws \RuntimeException
 	 */
 	public function set($name, $value) {
+		if (!file_exists(rtrim($this->directory, '/'))) {
+			throw new \RuntimeException(sprintf('Invalid Fluid cache directory - %s does not exist!', $this->directory));
+		}
 		file_put_contents($this->getCachedFilePathAndFilename($name), $value);
 	}
 

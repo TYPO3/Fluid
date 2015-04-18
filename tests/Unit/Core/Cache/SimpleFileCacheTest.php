@@ -98,4 +98,13 @@ class SimpleFileCacheTest extends UnitTestCase {
 		$this->assertFileNotExists(vfsStream::url('cache/test.php'));
 	}
 
+	/**
+	 * @test
+	 */
+	public function testSetThrowsRuntimeExceptionOnInvalidDirectory() {
+		$cache = new SimpleFileCache('/does/not/exist');
+		$this->setExpectedException('RuntimeException');
+		$cache->set('foo', 'bar');
+	}
+
 }
