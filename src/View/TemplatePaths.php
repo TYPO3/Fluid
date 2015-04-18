@@ -481,7 +481,14 @@ class TemplatePaths {
 		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
 		if (!file_exists($templatePathAndFilename) && $templatePathAndFilename !== 'php://stdin') {
 			throw new InvalidTemplateResourceException(
-				'"' . $templatePathAndFilename . '" is not a valid template resource URI.',
+				sprintf(
+					'"%s" was not found or was incorrectly referenced. Tried resolving template for controller action %s->%s. ' .
+					'The following paths were checked but none of them contained the expected template file: %s',
+					$templatePathAndFilename,
+					$controllerName,
+					$actionName,
+					implode(',', $this->getTemplateRootPaths())
+				),
 				1257246929
 			);
 		}
