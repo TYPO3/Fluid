@@ -66,7 +66,7 @@ class TemplateCompiler {
 	 * @param FluidCacheInterface $templateCache
 	 * @return void
 	 */
-	public function setTemplateCache(FluidCacheInterface $templateCache) {
+	public function setTemplateCache(FluidCacheInterface $templateCache = NULL) {
 		$this->templateCache = $templateCache;
 	}
 

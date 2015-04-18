@@ -101,6 +101,7 @@ abstract class AbstractTemplateView extends AbstractView {
 		$this->setRenderingContext($context);
 		$this->setTemplateCompiler(new TemplateCompiler($this->viewHelperResolver));
 		$this->setTemplateParser(new TemplateParser($this->viewHelperResolver));
+		$this->templateCompiler->setTemplateCache($cache);
 	}
 
 	/**
