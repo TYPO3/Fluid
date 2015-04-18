@@ -95,15 +95,24 @@ The ViewHelper itself would then - assuming the class was named as our example a
 
 What the argument does is then decided by the ViewHelper.
 
-ViewHelper docs and schema for IDE autocompletion
--------------------------------------------------
+ViewHelper Schema
+-----------------
 
-The original and framework-coupled version of Fluid had a few assistance utilities which allowed generating a special XSD schema
-which was useful both for an IDE to allow autocompletion (by leveraging standard XML schema functions) and for online
-documentation rendering.
+When installed with development dependencies, `TYPO3.Fluid` includes a CLI command that can generate XSD schema files for both the
+native ViewHelpers and any inside your own packages. To use this command:
 
-Unfortunately, at the time of writing this (April 2015) these tools have still not been decoupled and can therefore not at this
-time generate the required schema files for this package and any third party package which provides ViewHelpers for this package.
+```bash
+./vendor/bin/generateschema TYPO3\\Fluid\\ViewHelpers src/ViewHelpers > schema.xsd
+```
 
-Porting will of course be done and the necessary documentation placed online - but until it is complete, your only option is to
-inspect the PHP class files as documented above.
+Replace the first and second parameters with your own PHP namespace prefix and path to your ViewHelper class files, respectively,
+to generate a schema file for your own ViewHelpers.
+
+If you installed `TYPO3.Fluid` as dependency or prevented installing development dependencies you will need to manually install
+the schema generating utility:
+
+```bash
+composer require namelesscoder/fluid-schema-generator
+```
+
+After which you can use the command like the examples illustrate.
