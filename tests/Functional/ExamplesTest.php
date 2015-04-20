@@ -117,6 +117,16 @@ class ExamplesTest extends BaseTestCase {
 					'Expression: 10 ^ $numberten = 10000000000'
 				)
 			),
+			'example_multiplepaths.php' => array(
+				'example_multiplepaths.php',
+				array(
+					'Rendered via overridden Layout, section "Main":',
+					'Overridden Default template.',
+					'Value of "foobar": This is foobar.',
+					'Contents of FirstPartial.html',
+					'Overridden contents of SecondPartial.html',
+				)
+			),
 			'example_mvc.php' => array(
 				'example_mvc.php',
 				array(

@@ -1,0 +1,12 @@
+<f:layout name="Default" />
+
+<f:section name="Main">
+Overridden Default template.
+Value of "foobar": {foobar}.
+
+Rendering of partial, original:
+<f:render partial="FirstPartial" arguments="{baz: foobar}" />
+
+Rendering of partial, overridden:
+<f:render partial="SecondPartial" arguments="{baz: foobar}" />
+</f:section>
