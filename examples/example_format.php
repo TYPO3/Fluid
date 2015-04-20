@@ -13,9 +13,9 @@ require __DIR__ . '/include/view_init.php';
 // resolving normally done by the TemplatePaths and directly renders this file.
 $view->getTemplatePaths()->setFormat('json');
 
-// Rendering the View: we don't specify the optional `$action` parameter for the
-// `render()` method - and internally, the View doesn't try to resolve an action
-// name because an action is irrelevant when rendering a file directly.
+// Rendering the View: we use the $action argument for the render() method in
+// order to let the internal TemplatePaths object resolve our file paths while
+// respecting the special format we defined.
 $view->assign('foobar', 'Variable foobar');
 $output = $view->render('OtherFormat');
 
