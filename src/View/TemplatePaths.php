@@ -138,6 +138,7 @@ class TemplatePaths {
 	 */
 	public function setTemplateRootPaths(array $templateRootPaths) {
 		$this->templateRootPaths = $templateRootPaths;
+		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
 	/**
@@ -153,6 +154,7 @@ class TemplatePaths {
 	 */
 	public function setLayoutRootPaths(array $layoutRootPaths) {
 		$this->layoutRootPaths = $layoutRootPaths;
+		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
 	/**
@@ -168,6 +170,7 @@ class TemplatePaths {
 	 */
 	public function setPartialRootPaths(array $partialRootPaths) {
 		$this->partialRootPaths = $partialRootPaths;
+		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
 	/**
@@ -320,6 +323,7 @@ class TemplatePaths {
 	 * @api
 	 */
 	public function fillFromConfigurationArray(array $paths) {
+		$this->clearResolvedIdentifiersAndTemplates();
 		list ($templateRootPaths, $layoutRootPaths, $partialRootPaths, $format) = $this->extractPathArrays($paths);
 		$this->setTemplateRootPaths($templateRootPaths);
 		$this->setLayoutRootPaths($layoutRootPaths);
@@ -339,6 +343,7 @@ class TemplatePaths {
 	 * @api
 	 */
 	public function fillDefaultsByPackageName($packageName) {
+		$this->clearResolvedIdentifiersAndTemplates();
 		$path = $this->getPackagePath($packageName);
 		$this->setTemplateRootPaths(array($path . self::DEFAULT_TEMPLATES_DIRECTORY));
 		$this->setLayoutRootPaths(array($path . self::DEFAULT_LAYOUTS_DIRECTORY));
@@ -626,6 +631,17 @@ class TemplatePaths {
 		throw new InvalidTemplateResourceException(
 			'The Fluid template files "' . implode('", "', $tried) . '" could not be loaded.',
 			1225709595
+		);
+	}
+
+	/**
+	 * @return void
+	 */
+	protected function clearResolvedIdentifiersAndTemplates() {
+		self::$resolvedIdentifiers = self::$resolvedFiles = array(
+			'templates' => array(),
+			'layouts' => array(),
+			'partials' => array()
 		);
 	}
 
