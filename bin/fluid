@@ -299,7 +299,7 @@ Use the CLI utility in the following modes:
 Interactive mode:
 
 	./bin/fluid
-	(enter fluid template, then enter key, then ctrl+d to send the input)
+	(enter fluid template code, then enter key, then ctrl+d to send the input)
 
 Or using STDIN:
 
@@ -345,7 +345,7 @@ Note that when started this way, there is no DOCUMENT_ROOT except for the root
 path you define as templateRootPaths. In this mode, the *FIRST* templateRootPath
 gets used as if it were the DOCUMENT_ROOT.
 
-Note also that this mode does not provide any $_SERVER or other variables of use
+Note also that this mode does not provide any \$_SERVER or other variables of use
 as would be done through for example Apache or Nginx.
 
 An additional SocketServer mode is available. When started in SocketServer mode,
