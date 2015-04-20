@@ -456,12 +456,13 @@ class TemplatePaths {
 	 * @return string layout identifier
 	 */
 	public function getLayoutIdentifier($layoutName = 'Default') {
-		if (!array_key_exists($layoutName, self::$resolvedIdentifiers['layouts'])) {
+		$key = $layoutName . '_' . $this->getFormat();
+		if (!array_key_exists($key, self::$resolvedIdentifiers['layouts'])) {
 			$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
 			$prefix = 'layout_' . $layoutName;
-			self::$resolvedIdentifiers['layouts'][$layoutName] = $this->createIdentifierForFile($filePathAndFilename, $prefix);
+			self::$resolvedIdentifiers['layouts'][$key] = $this->createIdentifierForFile($filePathAndFilename, $prefix);
 		}
-		return self::$resolvedIdentifiers['layouts'][$layoutName];
+		return self::$resolvedIdentifiers['layouts'][$key];
 	}
 
 	/**
@@ -485,13 +486,14 @@ class TemplatePaths {
 	 * Returns a unique identifier for the resolved template file
 	 * This identifier is based on the template path and last modification date
 	 *
-	 * @param string $controllerName
-	 * @param string $actionName Name of the action. If NULL, will be taken from request.
+	 * @param string $controller
+	 * @param string $action Name of the action. If NULL, will be taken from request.
 	 * @return string template identifier
 	 */
-	public function getTemplateIdentifier($controllerName = 'Default', $actionName = 'Default') {
-		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
-		$prefix = $controllerName . '_action_' . $actionName;
+	public function getTemplateIdentifier($controller = 'Default', $action = 'Default') {
+		$format = $this->getFormat();
+		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, $format);
+		$prefix = $controller . '_action_' . $action;
 		return $this->createIdentifierForFile($templatePathAndFilename, $prefix);
 	}
 
@@ -499,21 +501,22 @@ class TemplatePaths {
 	 * Resolve the template path and filename for the given action. If $actionName
 	 * is NULL, looks into the current request.
 	 *
-	 * @param string $controllerName
-	 * @param string $actionName Name of the action. If NULL, will be taken from request.
+	 * @param string $controller
+	 * @param string $action Name of the action. If NULL, will be taken from request.
 	 * @return string Full path to template
 	 * @throws InvalidTemplateResourceException
 	 */
-	public function getTemplateSource($controllerName = 'Default', $actionName = 'Default') {
-		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
+	public function getTemplateSource($controller = 'Default', $action = 'Default') {
+		$format = $this->getFormat();
+		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, $format);
 		if (!file_exists($templatePathAndFilename) && $templatePathAndFilename !== 'php://stdin') {
 			throw new InvalidTemplateResourceException(
 				sprintf(
 					'"%s" was not found or was incorrectly referenced. Tried resolving template for controller action %s->%s. ' .
 					'The following paths were checked but none of them contained the expected template file: %s',
 					$templatePathAndFilename,
-					$controllerName,
-					$actionName,
+					$controller,
+					$action,
 					implode(',', $this->getTemplateRootPaths())
 				),
 				1257246929
@@ -533,8 +536,7 @@ class TemplatePaths {
 	 */
 	protected function createIdentifierForFile($pathAndFilename, $prefix) {
 		$templateModifiedTimestamp = $pathAndFilename !== 'php://stdin' ? filemtime($pathAndFilename) : 0;
-		$templateIdentifier = sprintf('%s_%s', $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
-		return $templateIdentifier;
+		return sprintf('%s_%s', $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
 	}
 
 	/**
@@ -551,10 +553,10 @@ class TemplatePaths {
 	 */
 	public function getLayoutPathAndFilename($layoutName = 'Default') {
 		$format = $this->getFormat();
+		$layoutName = ucfirst($layoutName);
 		$layoutKey = $layoutName . '.' . $format;
 		if (!array_key_exists($layoutKey, self::$resolvedFiles['layouts'])) {
 			$paths = $this->getLayoutRootPaths();
-			$layoutName = ucfirst($layoutName);
 			self::$resolvedFiles['layouts'][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName, $format);
 		}
 		return self::$resolvedFiles['layouts'][$layoutKey];

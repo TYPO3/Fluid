@@ -36,8 +36,9 @@ class ExamplesTest extends BaseTestCase {
 	 * @param array $expectedOutputs
 	 */
 	public function testExampleScriptFileWithCache($script, array $expectedOutputs) {
-		$this->runExampleScriptTest($script, $expectedOutputs, vfsStream::url('fakecache/'));
-		$this->runExampleScriptTest($script, $expectedOutputs, vfsStream::url('fakecache/'));
+		$cache = vfsStream::url('fakecache/');
+		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
+		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**
@@ -53,6 +54,7 @@ class ExamplesTest extends BaseTestCase {
 		foreach ($expectedOutputs as $expectedOutput) {
 			$this->assertContains($expectedOutput, $result);
 		}
+		unset($FLUID_CACHE_DIRECTORY);
 	}
 
 	/**
@@ -89,6 +91,13 @@ class ExamplesTest extends BaseTestCase {
 				array(
 					var_export(array('foo' => 'bar'), TRUE),
 					var_export(array('bar' => 'foo'), TRUE),
+				)
+			),
+			'example_format.php' => array(
+				'example_format.php',
+				array(
+					'"layout": "Default.json",',
+					'"foobar": "Variable foobar"'
 				)
 			),
 			'example_layoutless.php' => array(
