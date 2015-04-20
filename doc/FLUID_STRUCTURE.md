@@ -54,7 +54,7 @@ you can have Fluid automatically resolve the paths of template files associated 
 Templates may or may not use a Layout (indicated by the use of `<f:layout name="LayoutName" />` in the template source). Fluid
 will behave slightly different when a Template uses a Layout and when it does not:
 
-* When no Layout is used, _the template is rendered directly and will output everything not contained in an `<f:section>`
+* When no Layout is used, _the template is rendered directly_ and will output everything not contained in an `<f:section>`
 * When a Layout is used, _the Template itself is not rendered directly_. Instead, the Template defines any number of `<f:section>`
   which contain the pieces that will be rendered from the Layout using `<f:render>`
 
