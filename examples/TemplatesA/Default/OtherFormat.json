@@ -1,0 +1,6 @@
+<f:layout name="Default" />
+<f:section name="Main">
+  <![CDATA[{]]>
+    "foobar": "{foobar}"
+  <![CDATA[}]]>
+</f:section>

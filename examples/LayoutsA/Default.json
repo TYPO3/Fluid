@@ -1,0 +1,4 @@
+{
+  "layout": "Default.json",
+  "output": <f:render section="Main" />
+}
