@@ -61,9 +61,9 @@ will behave slightly different when a Template uses a Layout and when it does no
 You can choose freely between using a Layout and not using one - even when rendering templates in an MVC context, some Templates
 might use Layouts and others might not. Whether or not you use Layouts of course depends on the design you are trying to convey.
 
-* [An example Template without a Layout](../examples/Singles/LayoutLess.html)
-* [An example Template with a Layout](../examples/TemplatesA/Default/Default.html) and the
-  [Layout used by that Template](../examples/LayoutsA/Default.html)
+* [An example Template without a Layout](../examples/Resources/Private/Singles/LayoutLess.html)
+* [An example Template with a Layout](../examples/Resources/Private/Templates/Default/Default.html) and the
+  [Layout used by that Template](../examples/Resources/Private/Layouts/Default.html)
 
 Layouts
 -------
@@ -76,7 +76,8 @@ The Template in this case defines a number of `<f:section>` containers which the
 terms, the rendering engine switches to the Layout when it detects one and renders it while preserving the Template's context of
 controller name and action name.
 
-* [An example Layout](../examples/LayoutsA/Default.html) and [Template which uses it](../examples/TemplatesA/Default/Default.html)
+* [An example Layout](../examples/Resources/Private/Layouts/Default.html) and
+[Template which uses it](../examples/Resources/Private/Templates/Default/Default.html)
 
 Partials
 --------
@@ -103,5 +104,5 @@ A Partial may or may not contain `<f:section>`. If it does contain `<f:section>`
 can be rendered anywhere, including inside the Partial itself, by `<f:render partial="NameOfPartial" section="NameOfSection" />`.
 Partials without sections can be rendered by just `<f:render partial="NameOfPartial" />` (with or without `arguments`).
 
-* [An example of a Partial template without sections](../examples/PartialsA/FirstPartial.html)
-* [An example of a Partial template with sections](../examples/PartialsA/Structures.html)
+* [An example of a Partial template without sections](../examples/Resources/Private/Partials/FirstPartial.html)
+* [An example of a Partial template with sections](../examples/Resources/Private/Partials/Structures.html)

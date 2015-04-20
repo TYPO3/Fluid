@@ -12,7 +12,7 @@ require __DIR__ . '/include/view_init.php';
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Singles/Structures.html');
+$view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Structures.html');
 
 $view->assign('dynamicSection', 'Dynamic');
 $view->assign('notTrue', FALSE);

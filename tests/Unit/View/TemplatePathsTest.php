@@ -125,8 +125,14 @@ class TemplatePathsTest extends BaseTestCase {
 		$instance = new TemplatePaths();
 		$method = new \ReflectionMethod($instance, 'resolveFilesInFolders');
 		$method->setAccessible(TRUE);
-		$result = $method->invokeArgs($instance, array(array('examples/LayoutsA/', 'examples/TemplatesA/Default/'), 'html'));
-		$this->assertEquals(array('examples/LayoutsA/Default.html', 'examples/TemplatesA/Default/Default.html'), $result);
+		$result = $method->invokeArgs(
+			$instance,
+			array(array('examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'), 'html')
+		);
+		$this->assertEquals(
+			array('examples/Resources/Private/Layouts/Default.html', 'examples/Resources/Private/Templates/Default/Default.html'),
+			$result
+		);
 	}
 
 	/**

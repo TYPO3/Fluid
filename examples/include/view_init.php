@@ -17,16 +17,13 @@ $paths = new \TYPO3\Fluid\View\TemplatePaths();
 // rendering the file located in `TemplatesB` becase this folder was last
 // and is checked first (think of these paths as prioritised fallbacks).
 $paths->setTemplateRootPaths(array(
-	__DIR__ . '/../TemplatesA/',
-	__DIR__ . '/../TemplatesB/'
+	__DIR__ . '/../Resources/Private/Templates/'
 ));
 $paths->setLayoutRootPaths(array(
-	__DIR__ . '/../LayoutsA/',
-	__DIR__ . '/../LayoutsB/'
+	__DIR__ . '/../Resources/Private/Layouts/'
 ));
 $paths->setPartialRootPaths(array(
-	__DIR__ . '/../PartialsA/',
-	__DIR__ . '/../PartialsB/'
+	__DIR__ . '/../Resources/Private/Partials/'
 ));
 
 // Initializing the View: rendering in Fluid takes place through a View instance

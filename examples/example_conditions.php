@@ -23,7 +23,7 @@ $view->assign('ternaryFalse', 'The ternary expression is FALSE');
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Singles/Conditions.html');
+$view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Conditions.html');
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();
