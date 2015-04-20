@@ -63,14 +63,4 @@ interface RenderingContextInterface {
 	 */
 	public function setControllerAction($action);
 
-	/**
-	 * @return string
-	 */
-	public function getFormat();
-
-	/**
-	 * @param string $format
-	 * @return void
-	 */
-	public function setFormat($format);
 }

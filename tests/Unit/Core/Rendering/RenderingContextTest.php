@@ -28,14 +28,6 @@ class RenderingContextTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function templateFormatBeReadCorrectly() {
-		$this->renderingContext->setFormat('test');
-		$this->assertEquals('test', $this->renderingContext->getFormat());
-	}
-
-	/**
-	 * @test
-	 */
 	public function templateVariableContainerCanBeReadCorrectly() {
 		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\Variables\StandardVariableProvider');
 		$this->renderingContext->setVariableProvider($templateVariableContainer);

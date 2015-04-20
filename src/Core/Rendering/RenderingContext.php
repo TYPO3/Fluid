@@ -41,11 +41,6 @@ class RenderingContext implements RenderingContextInterface {
 	protected $controllerAction;
 
 	/**
-	 * @var string
-	 */
-	protected $format = TemplatePaths::DEFAULT_FORMAT;
-
-	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -119,21 +114,6 @@ class RenderingContext implements RenderingContextInterface {
 	 */
 	public function setControllerAction($action) {
 		$this->controllerAction = $action;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getFormat() {
-		return $this->format;
-	}
-
-	/**
-	 * @param string $format
-	 * @return void
-	 */
-	public function setFormat($format) {
-		$this->format = $format;
 	}
 
 }
