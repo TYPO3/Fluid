@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\Core\Compiler;
 
 use TYPO3\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 
@@ -22,6 +23,15 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 	 * @var ViewHelperResolver
 	 */
 	protected $viewHelperResolver;
+
+	/**
+	 * Returns a variable container used in the PostParse Facet.
+	 *
+	 * @return VariableProviderInterface
+	 */
+	public function getVariableContainer() {
+		return new StandardVariableProvider();
+	}
 
 	/**
 	 * Render the parsed template with rendering context
@@ -57,6 +67,21 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 	 */
 	public function isCompiled() {
 		return TRUE;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function hasLayout() {
+		return FALSE;
+	}
+
+	/**
+	 * @param RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	public function getLayoutName(RenderingContextInterface $renderingContext) {
+		return '';
 	}
 
 }

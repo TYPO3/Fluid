@@ -19,10 +19,37 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testParentGetVariableContainerMethodReturnsStandardVariableProvider() {
+		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
+		$result = $instance->getVariableContainer(new RenderingContext());
+		$this->assertInstanceOf('TYPO3\\Fluid\\Core\\Variables\\StandardVariableProvider', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testParentRenderMethodReturnsEmptyString() {
 		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
 		$result = $instance->render(new RenderingContext());
 		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testParentGetLayoutNameMethodReturnsEmptyString() {
+		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
+		$result = $instance->getLayoutName(new RenderingContext());
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testParentHasLayoutMethodReturnsFalse() {
+		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
+		$result = $instance->hasLayout();
+		$this->assertEquals(FALSE, $result);
 	}
 
 	/**
