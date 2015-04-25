@@ -17,8 +17,7 @@ matrix:
 install: composer install
 
 script:
-  - mkdir -p build/logs
-  - phpunit --coverage-clover=build/logs/clover.xml
+  - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
 after_script:
   - vendor/bin/coveralls
