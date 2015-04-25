@@ -14,6 +14,7 @@ use TYPO3\Fluid\Core\Parser\Interceptor\Resource;
 use TYPO3\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Parser\TemplateParser;
+use TYPO3\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
@@ -158,13 +159,24 @@ abstract class AbstractTemplateView extends AbstractView {
 	}
 
 	/**
-	 * Set the cache used by this View.
+	 * Delegation: Set the cache used by this View's compiler
 	 *
 	 * @param FluidCacheInterface $cache
 	 * @return void
 	 */
 	public function setCache(FluidCacheInterface $cache) {
 		$this->templateCompiler->setTemplateCache($cache);
+	}
+
+	/**
+	 * Delegation: Set TemplateProcessor instances in the parser
+	 * through a public API.
+	 *
+	 * @param TemplateProcessorInterface[] $templateProcessors
+	 * @return void
+	 */
+	public function setTemplateProcessors(array $templateProcessors) {
+		$this->templateParser->setTemplateProcessors($templateProcessors);
 	}
 
 	/**

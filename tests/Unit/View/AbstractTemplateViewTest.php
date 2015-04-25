@@ -180,6 +180,17 @@ class AbstractTemplateViewTest extends UnitTestCase {
 
 	/**
 	 * @test
+	 */
+	public function testSetTemplateProcessorsDelegatesToTemplateParser() {
+		$view = $this->getMockForAbstractClass('TYPO3\Fluid\View\AbstractTemplateView', array(), '', FALSE, FALSE, TRUE);
+		$parser = $this->getMock('TYPO3\\Fluid\\Core\\Parser\\TemplateParser');
+		$view->setTemplateParser($parser);
+		$parser->expects($this->once())->method('setTemplateProcessors')->with(array());
+		$view->setTemplateProcessors(array());
+	}
+
+	/**
+	 * @test
 	 * @dataProvider getRenderSectionCompiledTestValues
 	 * @param boolean $exists
 	 * @test

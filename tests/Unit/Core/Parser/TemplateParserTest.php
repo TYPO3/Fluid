@@ -9,6 +9,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
 use TYPO3\Fluid\Core\Parser\ParsingState;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Tests\UnitTestCase;
 use TYPO3\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3\Fluid\Core\Parser\TemplateParser;
@@ -57,6 +58,28 @@ class TemplateParserTest extends UnitTestCase {
 		$method = new \ReflectionMethod($templateParser, 'buildObjectTree');
 		$method->setAccessible(TRUE);
 		$method->invokeArgs($templateParser, array(array('<f:render>'), TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS));
+	}
+
+	/**
+	 * @test
+	 */
+	public function testParseCallsPreProcessOnTemplateProcessors() {
+		$resolver = new ViewHelperResolver();
+		$templateParser = new TemplateParser($resolver);
+		$processor1 = $this->getMockForAbstractClass(
+			'TYPO3\\Fluid\\Core\\Parser\\TemplateProcessorInterface',
+			array(), '', FALSE, FALSE, TRUE,
+			array('setTemplateParser', 'setViewHelperResolver', 'preProcessSource')
+		);
+		$processor2 = clone $processor1;
+		$processor1->expects($this->once())->method('setTemplateParser')->with($templateParser);
+		$processor1->expects($this->once())->method('setViewHelperResolver')->with($resolver);
+		$processor1->expects($this->once())->method('preProcessSource')->with('source1')->willReturn('source2');
+		$processor2->expects($this->once())->method('setTemplateParser')->with($templateParser);
+		$processor2->expects($this->once())->method('setViewHelperResolver')->with($resolver);
+		$processor2->expects($this->once())->method('preProcesssource')->with('source2')->willReturn('final');
+		$templateParser->setTemplateProcessors(array($processor1, $processor2));
+		$templateParser->parse('source1');
 	}
 
 	/**

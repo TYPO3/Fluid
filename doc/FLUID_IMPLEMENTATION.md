@@ -83,6 +83,45 @@ Should you need to store the compiled templates in other ways you can implement 
 Whether you use your own cache class or the default, the `FluidCache` *must be passed as third parameter for the View* or it
 *must be assigned using `$view->setCache($cacheInstance)` before calling `$view->render()`*.
 
+TemplateProcessor
+-----------------
+
+While custom `TemplatePaths` also allows sources of template files to be modified before they are given to the TemplateParser,
+a custom `TemplatePaths` implementation is sometimes overkill - and has the drawback of completely overruling the reading of
+template file sources and making it up to the custom class how exactly this processing happens.
+
+In order to allow a more readily accessible and flexible way of pre-processing template sources and affect key aspects of the
+parsing process, a `TemplateProcessorInterface` is provided. Implementing this interface and the methods it designates allows your
+class to be passed to the `TemplateView` and be triggered every time a template source is parsed, right before parsing starts:
+
+```php
+$myTemplateProcessor = new MyTemplateProcessor();
+$myTemplateProcessor->setDoMyMagicThing(TRUE);
+$templateView->setTemplateProcessors(array(
+    $myTemplateProcessor
+));
+```
+
+The registration method requires an array - this is to let you define multiple processors without needing to wrap them in a single
+class as well as reuse validation/manipulation across frameworks and only replace the parts that need to be replaced.
+
+This makes the method `preProcessSource($templateSource)` be called on this class every time the TemplateParser is asked to parse
+a Fluid template. Modifying the source and returning it makes that new template source be used. Inside the TemplateProcessor
+method you have access to the TemplateParser and ViewHelperResolver instances which the View uses.
+
+The result is that TemplateProcessor instances are able to, for example:
+
+* Validate template sources and implement reporting/logging of errors in for example a framework.
+* Fix things like character encoding issues in template sources.
+* Process Fluid code from potentially untrusted sources, for example doing XSS removals before parsing.
+* Extract legacy namespace definitions and assign those to the ViewHelperResolver for active use.
+* Extract legacy escaping instruction headers and assign those to the TemplateParser's Configuration instance.
+* Enable the use of custom template code in file's header, extracted and used by a framework.
+
+Note again: these same behaviors are possible using a custom `TemplatePaths` implementation - but even with such a custom
+implementation this TemplateProcessor pattern can still be used to manipulate/validate the sources coming from `TemplatePaths`,
+providing a nice way to decouple paths resolving from template source processing.
+
 ViewHelperInvoker
 -----------------
 

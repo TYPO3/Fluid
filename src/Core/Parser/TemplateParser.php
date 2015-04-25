@@ -52,6 +52,11 @@ class TemplateParser {
 	protected $viewHelperResolver;
 
 	/**
+	 * @var TemplateProcessorInterface[]
+	 */
+	protected $templateProcessors = array();
+
+	/**
 	 * Constructor
 	 */
 	public function __construct(ViewHelperResolver $viewHelperResolver = NULL) {
@@ -67,6 +72,14 @@ class TemplateParser {
 	 */
 	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
 		$this->viewHelperResolver = $viewHelperResolver;
+	}
+
+	/**
+	 * @param TemplateProcessorInterface[] $templateProcessors
+	 * @return void
+	 */
+	public function setTemplateProcessors(array $templateProcessors) {
+		$this->templateProcessors = $templateProcessors;
 	}
 
 	/**
@@ -97,6 +110,7 @@ class TemplateParser {
 		}
 
 		$this->reset();
+		$templateString = $this->preProcessTemplateSource($templateString);
 
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
@@ -107,6 +121,23 @@ class TemplateParser {
 		}
 
 		return $parsingState;
+	}
+
+	/**
+	 * Pre-process the template source, making all registered TemplateProcessors
+	 * do what they need to do with the template source before it is parsed.
+	 *
+	 * @param string $templateSource
+	 * @param string $method
+	 * @return string
+	 */
+	protected function preProcessTemplateSource($templateSource) {
+		foreach ($this->templateProcessors as $templateProcessor) {
+			$templateProcessor->setTemplateParser($this);
+			$templateProcessor->setViewHelperResolver($this->viewHelperResolver);
+			$templateSource = $templateProcessor->preProcessSource($templateSource);
+		}
+		return $templateSource;
 	}
 
 	/**
