@@ -20,6 +20,15 @@ class AbstractViewViewTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testParentRenderMethodReturnsEmptyString() {
+		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\View\\AbstractView');
+		$result = $instance->render();
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testAssignsVariableAndReturnsSelf() {
 		$mock = $this->getMockForAbstractClass('TYPO3\\Fluid\\View\\AbstractView');
 		$mock->assign('test', 'foobar');

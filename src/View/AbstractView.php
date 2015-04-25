@@ -21,6 +21,16 @@ abstract class AbstractView implements ViewInterface {
 	protected $variables = array();
 
 	/**
+	 * Renders the view
+	 *
+	 * @return string The rendered view
+	 * @api
+	 */
+	public function render() {
+		return '';
+	}
+
+	/**
 	 * Add a variable to $this->variables.
 	 * Can be chained, so $this->view->assign(..., ...)->assign(..., ...); is possible
 	 *
