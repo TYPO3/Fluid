@@ -159,7 +159,20 @@ class ViewHelperResolver {
 	 */
 	public function createViewHelperInstance($namespace, $viewHelperShortName) {
 		$className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
-		return new $className();
+		return $this->createViewHelperInstanceFromClassName($className);
+	}
+
+	/**
+	 * Wrapper to create a ViewHelper instance by class name. This is
+	 * the final method called when creating ViewHelper classes -
+	 * overriding this method allows custom constructors, dependency
+	 * injections etc. to be performed on the ViewHelper instance.
+	 *
+	 * @param string $viewHelperClassName
+	 * @return ViewHelperInterface
+	 */
+	public function createViewHelperInstanceFromClassName($viewHelperClassName) {
+		return new $viewHelperClassName();
 	}
 
 	/**

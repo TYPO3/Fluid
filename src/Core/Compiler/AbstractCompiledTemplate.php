@@ -24,6 +24,16 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 	protected $viewHelperResolver;
 
 	/**
+	 * Render the parsed template with rendering context
+	 *
+	 * @param RenderingContextInterface $renderingContext The rendering context to use
+	 * @return string Rendered string
+	 */
+	public function render(RenderingContextInterface $renderingContext) {
+		return '';
+	}
+
+	/**
 	 * Public such that it is callable from within closures
 	 *
 	 * @param integer $uniqueCounter
@@ -32,7 +42,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 	 * @return AbstractViewHelper
 	 */
 	public function getViewHelper($uniqueCounter, RenderingContextInterface $renderingContext, $viewHelperName) {
-		return new $viewHelperName();
+		return $renderingContext->getViewHelperResolver()->createViewHelperInstanceFromClassName($viewHelperName);
 	}
 
 	/**
@@ -47,14 +57,6 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 	 */
 	public function isCompiled() {
 		return TRUE;
-	}
-
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
 	}
 
 }

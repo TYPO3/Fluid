@@ -25,12 +25,6 @@ interface ParsedTemplateInterface {
 	public function render(RenderingContextInterface $renderingContext);
 
 	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver);
-
-	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
 	 * @return VariableProviderInterface

@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\Tests\Unit\Core\Compiler;
 
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3\Fluid\Tests\UnitTestCase;
 
 /**
@@ -18,10 +19,27 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testParentRenderMethodReturnsEmptyString() {
+		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
+		$result = $instance->render(new RenderingContext());
+		$this->assertEquals('', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testGetViewHelperReturnsInstanceOfClassName() {
 		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
-		$result = $instance->getViewHelper(1, new RenderingContext(), 'TYPO3\\Fluid\\Tests\\Unit\\Core\\Fixtures\\TestViewHelper');
-		$this->assertInstanceOf('TYPO3\\Fluid\\Tests\\Unit\\Core\\Fixtures\\TestViewHelper', $result);
+		$viewHelper = new TestViewHelper();
+		$resolver = $this->getMock(
+			'TYPO3\\Fluid\\Core\\ViewHelper\\ViewHelperResolver',
+			array('createViewHelperInstanceFromClassName')
+		);
+		$resolver->expects($this->once())->method('createViewHelperInstanceFromClassName')->willReturn($viewHelper);
+		$renderingContext = new RenderingContext();
+		$renderingContext->setViewHelperResolver($resolver);
+		$result = $instance->getViewHelper(1, $renderingContext, 'TYPO3\\Fluid\\Tests\\Unit\\Core\\Fixtures\\TestViewHelper');
+		$this->assertSame($viewHelper, $result);
 	}
 
 	/**
@@ -40,16 +58,6 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
 		$result = $instance->isCompiled();
 		$this->assertTrue($result);
-	}
-
-	/**
-	 * @test
-	 */
-	public function testSetViewHelperResolverSetsProperty() {
-		$resolver = new ViewHelperResolver();
-		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
-		$instance->setViewHelperResolver($resolver);
-		$this->assertAttributeSame($resolver, 'viewHelperResolver', $instance);
 	}
 
 }

@@ -7,6 +7,7 @@ namespace TYPO3\Fluid\Core\Rendering;
  */
 
 use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
@@ -62,5 +63,16 @@ interface RenderingContextInterface {
 	 * @return void
 	 */
 	public function setControllerAction($action);
+
+	/**
+	 * @return ViewHelperResolver
+	 */
+	public function getViewHelperResolver();
+
+	/**
+	 * @param ViewHelperResolver $viewHelperResolver
+	 * @return void
+	 */
+	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver);
 
 }

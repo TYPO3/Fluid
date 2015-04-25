@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\Core\Rendering;
 
 use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3\Fluid\View\TemplatePaths;
 
@@ -31,6 +32,11 @@ class RenderingContext implements RenderingContextInterface {
 	protected $viewHelperVariableContainer;
 
 	/**
+	 * @var ViewHelperResolver
+	 */
+	protected $viewHelperResolver;
+
+	/**
 	 * @var string
 	 */
 	protected $controllerName;
@@ -46,6 +52,7 @@ class RenderingContext implements RenderingContextInterface {
 	public function __construct() {
 		$this->variableProvider = new StandardVariableProvider();
 		$this->viewHelperVariableContainer = new ViewHelperVariableContainer();
+		$this->viewHelperResolver = new ViewHelperResolver();
 	}
 
 	/**
@@ -65,6 +72,21 @@ class RenderingContext implements RenderingContextInterface {
 	 */
 	public function getVariableProvider() {
 		return $this->variableProvider;
+	}
+
+	/**
+	 * @return ViewHelperResolver
+	 */
+	public function getViewHelperResolver() {
+		return $this->viewHelperResolver;
+	}
+
+	/**
+	 * @param ViewHelperResolver $viewHelperResolver
+	 * @return void
+	 */
+	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
+		$this->viewHelperResolver = $viewHelperResolver;
 	}
 
 	/**
