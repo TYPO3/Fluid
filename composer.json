@@ -6,7 +6,8 @@
 		"phpunit/phpunit": "*",
 		"mikey179/vfsStream": "*",
 		"satooshi/php-coveralls": "*",
-		"namelesscoder/fluid-schema-generator": "*"
+		"namelesscoder/fluid-schema-generator": "*",
+		"namelesscoder/fluid-lint": "*"
 	},
 	"autoload": {
 		"psr-4": {
