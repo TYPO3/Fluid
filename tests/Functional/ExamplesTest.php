@@ -130,7 +130,9 @@ class ExamplesTest extends BaseTestCase {
 			'example_mvc.php' => array(
 				'example_mvc.php',
 				array(
-					'Default template from set A',
+					'I am the template belonging to the "Default" controller, action "Default".',
+					'I am the template belonging to the "Other" controller, action "Default".',
+					'I am the template belonging to the "Other" controller, action "List".',
 					'Value of "foobar": MVC template.'
 				)
 			),

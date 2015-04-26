@@ -25,10 +25,29 @@ $view->assign('foobar', 'MVC template');
 // To customise the context, instantiate \TYPO3\Fluid\Core\Rendering\RenderingContext
 // and set your context settings (controller name, action, etc) and then override
 // the context using `$view->setRenderingContext($context)`.
-// The resulting file we reference is `./Templates(A|B)/Default/Default.html`
-// depending on which of the `TemplatesA` or `TemplatesB` folders contains the
-// expected file.
 $output = $view->render('Default');
 
-// Output using helper from view_init.php
+// Output of Controller "Default" action "Default" using helper from view_init.php
 example_output($output);
+
+// We now illustrate how to change the Controller name that gets used when templates
+// are resolved - making the controller name "Other". We are still rendering the
+// action "Default":
+$view->getRenderingContext()->setControllerName('Other');
+$output = $view->render('Default');
+
+// Output of Controller "Other" action "Default" using helper from view_init.php
+example_output($output);
+
+// Finally, we illustrate how to change the action that gets rendered:
+$output = $view->render('List');
+
+// Output of Controller "Other" action "List" using helper from view_init.php
+example_output($output);
+
+// NB: in a normal MVC context you usually would not be reusing the same View
+// instance for all these renderings - normally, you would be creating a fresh
+// View for each controller or each controller action, depending on your needs.
+// However, the View does support rendering multiple controllers and actions through
+// the same instance - internally, reusing every TemplatePaths, ViewHelperResolver
+// and other classes involved in rendering the View.
