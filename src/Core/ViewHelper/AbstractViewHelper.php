@@ -322,7 +322,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 						throw $errorException;
 					} elseif (class_exists($type) && $value !== NULL && !$value instanceof $type) {
 						throw $errorException;
-					} elseif (is_object($value)) {
+					} elseif (is_object($value) && !is_a($value, $type, TRUE)) {
 						throw $errorException;
 					}
 				}
