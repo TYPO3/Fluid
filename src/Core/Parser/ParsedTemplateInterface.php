@@ -8,7 +8,6 @@ namespace TYPO3\Fluid\Core\Parser;
 
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * This interface is returned by \TYPO3\Fluid\Core\Parser\TemplateParser->parse()

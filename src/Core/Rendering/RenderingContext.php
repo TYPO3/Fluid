@@ -10,7 +10,6 @@ use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use TYPO3\Fluid\View\TemplatePaths;
 
 /**
  * The rendering context that contains useful information during rendering time of a Fluid template
