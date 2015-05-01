@@ -9,6 +9,7 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree\Expression;
 use TYPO3\Fluid\Core\Parser;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\Variables\VariableExtractor;
 
 /**
  * Base class for nodes based on (shorthand) expressions.
@@ -67,7 +68,8 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	 */
 	protected static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext) {
 		$variables = $renderingContext->getVariableProvider()->getAll();
-		$suspect = Parser\SyntaxTree\ObjectAccessorNode::getPropertyPath($variables, $candidate, $renderingContext);
+		$extractor = new VariableExtractor();
+		$suspect = $extractor->getByPath($variables, $candidate);
 		if (NULL === $suspect) {
 			return $candidate;
 		}

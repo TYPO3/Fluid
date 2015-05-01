@@ -7,6 +7,7 @@ namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3\Fluid\Core\Variables\VariableExtractor;
 
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
@@ -77,42 +78,8 @@ class ObjectAccessorNode extends AbstractNode {
 			case 'no':
 				return FALSE;
 			default:
-				return self::getPropertyPath(self::$variables, $this->objectPath, $renderingContext);
+				return VariableExtractor::extract(self::$variables, $this->objectPath);
 		}
 	}
 
-	/**
-	 * Gets a property path from a given object or array.
-	 *
-	 * If propertyPath is "bla.blubb", then we first call getProperty($object, 'bla'),
-	 * and on the resulting object we call getProperty(..., 'blubb').
-	 *
-	 * For arrays the keys are checked likewise.
-	 *
-	 * @param mixed $subject An object or array
-	 * @param string $propertyPath
-	 * @param RenderingContextInterface $renderingContext
-	 * @return mixed Value of the property
-	 */
-	static public function getPropertyPath($subject, $propertyPath, RenderingContextInterface $renderingContext) {
-		$propertyPathSegments = explode('.', $propertyPath);
-		foreach ($propertyPathSegments as $pathSegment) {
-			$start = strpos($pathSegment, '{');
-			$end = strrpos($pathSegment, '}');
-			if ($start === 0 && $end === strlen($pathSegment) - 1) {
-				$pathSegment = self::getPropertyPath(self::$variables, substr($pathSegment, 1, -1), $renderingContext);
-			} elseif ($start !== FALSE && $end !== FALSE) {
-				$subValue = self::getPropertyPath(self::$variables, substr($pathSegment, $start + 1, $end - $start - 1), $renderingContext);
-				$pathSegment = substr($pathSegment, 0, $start) . $subValue . substr($pathSegment, $end + 1);
-			}
-			$subject = is_object($subject) && isset($subject->$pathSegment) || is_array($subject) && isset($subject[$pathSegment])
-				? (is_array($subject) || $subject instanceof \ArrayAccess ? $subject[$pathSegment] : $subject->$pathSegment)
-				: NULL;
-
-			if ($subject === NULL) {
-				break;
-			}
-		}
-		return $subject;
-	}
 }

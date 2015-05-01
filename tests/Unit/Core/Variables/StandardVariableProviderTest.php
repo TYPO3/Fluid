@@ -60,6 +60,16 @@ class StandardVariableProviderTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testSupportsDottedPath() {
+		$provider = new StandardVariableProvider();
+		$provider->setSource(array('foo' => array('bar' => 'baz')));
+		$result = $provider->getByPath('foo.bar');
+		$this->assertEquals('baz', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testUnsetAsArrayAccess() {
 		$this->variableProvider->add('variable', 'test');
 		unset($this->variableProvider['variable']);

@@ -86,6 +86,17 @@ class StandardVariableProvider implements VariableProviderInterface {
 	}
 
 	/**
+	 * Get a variable by dotted path expression, retrieving the
+	 * variable from nested arrays/objects one segment at a time.
+	 *
+	 * @param string $path
+	 * @return mixed
+	 */
+	public function getByPath($path) {
+		return VariableExtractor::extract($this->variables, $path);
+	}
+
+	/**
 	 * Remove a variable from context. Throws exception if variable is not found in context.
 	 *
 	 * @param string $identifier The identifier to remove

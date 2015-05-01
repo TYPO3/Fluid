@@ -63,25 +63,28 @@ interface VariableProviderInterface extends \ArrayAccess {
 	public function add($identifier, $value);
 
 	/**
-	 * Get a variable from the context. Throws exception if variable is not found in context.
-	 *
-	 * If "_all" is given as identifier, all variables are returned in an array,
-	 * if one of the other reserved variables are given, their appropriate value
-	 * they're representing is returned.
+	 * Get a variable from the context.
 	 *
 	 * @param string $identifier
 	 * @return mixed The variable value identified by $identifier
-	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function get($identifier);
 
 	/**
-	 * Remove a variable from context. Throws exception if variable is not found in context.
+	 * Get a variable by dotted path expression, retrieving the
+	 * variable from nested arrays/objects one segment at a time.
+	 *
+	 * @param string $path
+	 * @return mixed
+	 */
+	public function getByPath($path);
+
+	/**
+	 * Remove a variable from context.
 	 *
 	 * @param string $identifier The identifier to remove
 	 * @return void
-	 * @throws Exception\InvalidVariableException
 	 * @api
 	 */
 	public function remove($identifier);
@@ -112,7 +115,7 @@ interface VariableProviderInterface extends \ArrayAccess {
 	public function offsetSet($identifier, $value);
 
 	/**
-	 * Remove a variable from context. Throws exception if variable is not found in context.
+	 * Remove a variable from context.
 	 *
 	 * @param string $identifier The identifier to remove
 	 * @return void
@@ -128,7 +131,7 @@ interface VariableProviderInterface extends \ArrayAccess {
 	public function offsetExists($identifier);
 
 	/**
-	 * Get a variable from the context. Throws exception if variable is not found in context.
+	 * Get a variable from the context.
 	 *
 	 * @param string $identifier
 	 * @return mixed The variable identified by $identifier

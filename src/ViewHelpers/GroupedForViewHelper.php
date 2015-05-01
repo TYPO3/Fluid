@@ -6,7 +6,7 @@ namespace TYPO3\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3\Fluid\Core\Variables\VariableExtractor;
 use TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -133,12 +133,13 @@ class GroupedForViewHelper extends AbstractViewHelper {
 	 * @throws ViewHelper\Exception
 	 */
 	protected function groupElements(array $elements, $groupBy) {
+		$extractor = new VariableExtractor();
 		$groups = array('keys' => array(), 'values' => array());
 		foreach ($elements as $key => $value) {
 			if (is_array($value)) {
 				$currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : NULL;
 			} elseif (is_object($value)) {
-				$currentGroupIndex = ObjectAccessorNode::getPropertyPath($value, $groupBy, $this->renderingContext);
+				$currentGroupIndex = $extractor->getByPath($value, $groupBy);
 			} else {
 				throw new ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
 			}
