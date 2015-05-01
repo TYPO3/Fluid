@@ -42,6 +42,7 @@ class ObjectAccessorNodeTest extends UnitTestCase {
 			array(array(), 'off', FALSE),
 			array(array(), 'no', FALSE),
 			array(array(), 'false', FALSE),
+			array(array('foo' => 'bar'), 'foo.notaproperty', NULL),
 			array(array('foo' => 'bar'), '_all', array('foo' => 'bar')),
 			array(array('foo' => 'bar'), 'foo', 'bar'),
 			array(array('foo' => array('bar' => 'test')), 'foo.bar', 'test'),

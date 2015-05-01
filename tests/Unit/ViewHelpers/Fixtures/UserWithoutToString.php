@@ -29,4 +29,11 @@ class UserWithoutToString {
 	public function getName() {
 		return $this->name;
 	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isNamed() {
+		return !empty($this->name);
+	}
 }

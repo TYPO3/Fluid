@@ -69,13 +69,40 @@ class VariableExtractor {
 	 * Extracts a single value from an array or object.
 	 *
 	 * @param mixed $subject
-	 * @param string $propertyPath
+	 * @param string $propertyName
 	 */
-	protected function extractSingleValue($subject, $propertyPath) {
-		$value = is_object($subject) && isset($subject->$propertyPath) || is_array($subject) && isset($subject[$propertyPath])
-			? (is_array($subject) || $subject instanceof \ArrayAccess ? $subject[$propertyPath] : $subject->$propertyPath)
-			: NULL;
-		return $value;
+	protected function extractSingleValue($subject, $propertyName) {
+		if (is_object($subject) && !$subject instanceof \ArrayAccess) {
+			return $this->extractSingleValueFromObject($subject, $propertyName);
+		} elseif (is_array($subject) || $subject instanceof \ArrayAccess) {
+			return array_key_exists($propertyName, $subject) ? $subject[$propertyName] : NULL;
+		}
+		return NULL;
+	}
+
+	/**
+	 * Extracts a single value from an object using getters
+	 * or public property access. Returns NULL if for any
+	 * reason a value could not be extracted.
+	 *
+	 * @param object $subject
+	 * @param string $propertyName
+	 * @return mixed
+	 */
+	protected function extractSingleValueFromObject($subject, $propertyName) {
+		$upperCasePropertyName = ucfirst($propertyName);
+		$getter = 'get' . $upperCasePropertyName;
+		$asserter = 'is' . $upperCasePropertyName;
+		if (method_exists($subject, $getter)) {
+			return $subject->$getter();
+		}
+		if (method_exists($subject, $asserter)) {
+			return $subject->$asserter();
+		}
+		if (property_exists($subject, $propertyName)) {
+			return $subject->$propertyName;
+		}
+		return NULL;
 	}
 
 }
