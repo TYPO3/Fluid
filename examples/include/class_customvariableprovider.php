@@ -24,13 +24,25 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
 	protected $incrementer = 0;
 
 	/**
-	 * @return array
+	 * @param string $identifier
+	 * @return mixed
 	 */
-	public function getAll() {
-		return array(
-			'incrementer' => ++ $this->incrementer,
-			'random' => 'random' . sha1(rand(0, 99999999999999))
-		);
+	public function get($identifier) {
+		if ($identifier === 'random') {
+			return 'random' . sha1(rand(0, 999999999999));
+		} elseif ($identifier === 'incrementer') {
+			return ++ $this->incrementer;
+		} else {
+			return parent::get($identifier);
+		}
+	}
+
+	/**
+	 * @param string $identifier
+	 * @return boolean
+	 */
+	public function exists($identifier) {
+		return ($identifier === 'incrementer' || $identifier === 'random' || parent::exists($identifier));
 	}
 
 }

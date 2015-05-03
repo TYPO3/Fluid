@@ -92,13 +92,9 @@ class SectionViewHelper extends AbstractViewHelper implements CompilableInterfac
 		/** @var $nameArgument TextNode */
 		$nameArgument = $viewHelperArguments['name'];
 		$sectionName = $nameArgument->getText();
-		if (!$variableContainer->exists('sections')) {
-			$variableContainer->add('sections', array());
-		}
-		$sections = $variableContainer->get('sections');
+		$sections = $variableContainer['sections'] ? $variableContainer['sections'] : array();
 		$sections[$sectionName] = $syntaxTreeNode;
-		$variableContainer->remove('sections');
-		$variableContainer->add('sections', $sections);
+		$variableContainer['sections'] = $sections;
 	}
 
 	/**

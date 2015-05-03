@@ -22,6 +22,13 @@ class ObjectAccessorNode extends AbstractNode {
 	protected $objectPath;
 
 	/**
+	 * Accessor names, one per segment in the object path. Use constants from VariableExtractor
+	 *
+	 * @var array
+	 */
+	protected $accessors = array();
+
+	/**
 	 * @var array
 	 */
 	protected static $variables = array();
@@ -34,8 +41,9 @@ class ObjectAccessorNode extends AbstractNode {
 	 *
 	 * @param string $objectPath An Object Path, like object1.object2.object3
 	 */
-	public function __construct($objectPath) {
+	public function __construct($objectPath, array $accessors = array()) {
 		$this->objectPath = $objectPath;
+		$this->accessors = $accessors;
 	}
 
 
@@ -46,6 +54,13 @@ class ObjectAccessorNode extends AbstractNode {
 	 */
 	public function getObjectPath() {
 		return $this->objectPath;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAccessors() {
+		return $this->accessors;
 	}
 
 	/**
@@ -63,22 +78,20 @@ class ObjectAccessorNode extends AbstractNode {
 	 * @return object The evaluated object, can be any object type.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		self::$variables = $renderingContext->getVariableProvider()->getAll();
+		$variableProvider = $renderingContext->getVariableProvider();
 		switch (strtolower($this->objectPath)) {
 			case '_all':
-				return self::$variables;
-
+				return $variableProvider;
 			case 'true':
 			case 'on':
 			case 'yes':
 				return TRUE;
-
 			case 'false':
 			case 'off':
 			case 'no':
 				return FALSE;
 			default:
-				return VariableExtractor::extract(self::$variables, $this->objectPath);
+				return VariableExtractor::extract($variableProvider, $this->objectPath, $this->accessors);
 		}
 	}
 

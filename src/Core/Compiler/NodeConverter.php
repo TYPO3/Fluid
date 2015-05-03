@@ -153,6 +153,10 @@ class NodeConverter {
 				$this->templateCompiler->wrapChildNodesInClosure($node)
 			) . chr(10);
 
+		$initializationArray = array(
+			'initialization' => '',
+			'execution' => '\'\''
+		);
 		if ($node->getUninitializedViewHelper() instanceof CompilableInterface) {
 			// ViewHelper is compilable
 			$viewHelperInitializationPhpCode = '';
@@ -213,14 +217,14 @@ class NodeConverter {
 	 * @see convert()
 	 */
 	protected function convertObjectAccessorNode(ObjectAccessorNode $node) {
+		$arrayVariableName = $this->variableName('array');
+		$accessors = var_export($node->getAccessors(), TRUE);
 		return array(
-			'initialization' => '',
+			'initialization' => sprintf('%s = %s;', $arrayVariableName, $accessors),
 			'execution' => sprintf(
-				'\TYPO3\Fluid\Core\Variables\VariableExtractor::extract(
-					$renderingContext->getVariableProvider(),
-					\'%s\'
-				)',
-				$node->getObjectPath()
+				'$renderingContext->getVariableProvider()->getByPath(\'%s\', %s)',
+				$node->getObjectPath(),
+				$arrayVariableName
 			)
 		);
 	}

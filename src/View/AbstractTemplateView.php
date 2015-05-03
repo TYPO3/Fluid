@@ -225,6 +225,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	 */
 	public function render($actionName = NULL) {
 		$this->templateParser->setConfiguration($this->buildParserConfiguration());
+		$this->templateParser->setVariableProvider($this->baseRenderingContext->getVariableProvider());
 		$controllerName = $this->baseRenderingContext->getControllerName();
 		if (!$actionName) {
 			$actionName = $this->baseRenderingContext->getControllerAction();
@@ -295,7 +296,8 @@ abstract class AbstractTemplateView extends AbstractView {
 			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
 		} else {
 			$renderingContext = clone $renderingContext;
-			$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
+			$inherited = $renderingContext->getVariableProvider();
+			$renderingContext->setVariableProvider($variables ? new StandardVariableProvider($variables) : $inherited);
 			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
 		}
 

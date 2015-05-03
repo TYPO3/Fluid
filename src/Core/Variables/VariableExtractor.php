@@ -14,16 +14,36 @@ namespace TYPO3\Fluid\Core\Variables;
  */
 class VariableExtractor {
 
+	const ACCESSOR_ARRAY = 'array';
+	const ACCESSOR_GETTER = 'getter';
+	const ACCESSOR_ASSERTER = 'asserter';
+	const ACCESSOR_PUBLICPROPERTY = 'public';
+
 	/**
 	 * Static interface for instanciating and extracting
 	 * in a single operation. Delegates to getByPath.
 	 *
 	 * @param mixed $subject
 	 * @param string $propertyPath
+	 * @param array $accessors
+	 * @return mixed
 	 */
-	public static function extract($subject, $propertyPath) {
+	public static function extract($subject, $propertyPath, array $accessors = array()) {
 		$extractor = new self();
-		return $extractor->getByPath($subject, $propertyPath);
+		return $extractor->getByPath($subject, $propertyPath, $accessors);
+	}
+
+	/**
+	 * Static interface for instanciating and extracting
+	 * accessors for each segment of the path.
+	 *
+	 * @param mixed $subject
+	 * @param string $propertyPath
+	 * @return mixed
+	 */
+	public static function extractAccessors($subject, $propertyPath) {
+		$extractor = new self();
+		return $extractor->getAccessorsForPath($subject, $propertyPath);
 	}
 
 	/**
@@ -42,22 +62,14 @@ class VariableExtractor {
 	 *
 	 * @param mixed $subject
 	 * @param string $propertyPath
+	 * @param array $accessors
 	 * @return mixed
 	 */
-	public function getByPath($subject, $propertyPath) {
-		$original = $subject;
+	public function getByPath($subject, $propertyPath, array $accessors = array()) {
 		$propertyPathSegments = explode('.', $propertyPath);
-		foreach ($propertyPathSegments as $pathSegment) {
-			$start = strpos($pathSegment, '{');
-			$end = strrpos($pathSegment, '}');
-			if ($start === 0 && $end === strlen($pathSegment) - 1) {
-				$pathSegment = $this->extractSingleValue($original, substr($pathSegment, 1, -1));
-			} elseif ($start !== FALSE && $end !== FALSE) {
-				$subValue = $this->extractSingleValue($original, substr($pathSegment, $start + 1, $end - $start - 1));
-				$pathSegment = substr($pathSegment, 0, $start) . $subValue . substr($pathSegment, $end + 1);
-			}
-			$subject = $this->extractSingleValue($subject, $pathSegment);
-
+		$propertyPathSegments = $this->resolveSubVariableReferences($subject, $propertyPathSegments);
+		foreach ($propertyPathSegments as $index => $pathSegment) {
+			$subject = $this->extractSingleValue($subject, $pathSegment, isset($accessors[$index]) ? $accessors[$index] : NULL);
 			if ($subject === NULL) {
 				break;
 			}
@@ -66,43 +78,109 @@ class VariableExtractor {
 	}
 
 	/**
+	 * @param mixed $subject
+	 * @param string $propertyPath
+	 * @return array
+	 */
+	public function getAccessorsForPath($subject, $propertyPath) {
+		$accessors = array();
+		$propertyPathSegments = explode('.', $propertyPath);
+		$propertyPathSegments = $this->resolveSubVariableReferences($subject, $propertyPathSegments);
+		foreach ($propertyPathSegments as $index => $pathSegment) {
+			$accessors[] = $this->detectAccessor($subject, $pathSegment);
+			$subject = $this->extractSingleValue($subject, $pathSegment);
+			if ($subject === NULL) {
+				break;
+			}
+		}
+		return $accessors;
+	}
+
+	/**
+	 * @param mixed $subject
+	 * @param array $segments
+	 * @return array
+	 */
+	protected function resolveSubVariableReferences($subject, array $segments) {
+		foreach ($segments as $index => $pathSegment) {
+			$start = strpos($pathSegment, '{');
+			$end = strrpos($pathSegment, '}');
+			if ($start === 0 && $end === strlen($pathSegment) - 1) {
+				$pathSegment = $this->extractSingleValue($subject, substr($pathSegment, 1, -1));
+			} elseif ($start !== FALSE && $end !== FALSE) {
+				$subValue = $this->extractSingleValue($subject, substr($pathSegment, $start + 1, $end - $start - 1));
+				$pathSegment = substr($pathSegment, 0, $start) . $subValue . substr($pathSegment, $end + 1);
+			}
+			$segments[$index] = $pathSegment;
+		}
+		return $segments;
+	}
+
+	/**
 	 * Extracts a single value from an array or object.
 	 *
 	 * @param mixed $subject
 	 * @param string $propertyName
+	 * @param string $accessor
+	 * @return mixed
 	 */
-	protected function extractSingleValue($subject, $propertyName) {
-		if (is_object($subject) && !$subject instanceof \ArrayAccess) {
-			return $this->extractSingleValueFromObject($subject, $propertyName);
-		} elseif (is_array($subject) || $subject instanceof \ArrayAccess) {
-			return array_key_exists($propertyName, $subject) ? $subject[$propertyName] : NULL;
+	protected function extractSingleValue($subject, $propertyName, $accessor = NULL) {
+		if (!$accessor) {
+			$accessor = $this->detectAccessor($subject, $propertyName);
+		}
+		if (!$accessor) {
+			return NULL;
+		}
+		return $this->extractWithAccessor($subject, $propertyName, $accessor);
+	}
+
+	/**
+	 * @param mixed $subject
+	 * @param string $propertyName
+	 * @param string $accessor
+	 * @return mixed
+	 */
+	protected function extractWithAccessor($subject, $propertyName, $accessor) {
+		if ($accessor === self::ACCESSOR_ARRAY
+			&& (array_key_exists($propertyName, $subject) || (is_object($subject) && $subject->exists($propertyName)))
+		) {
+			return $subject[$propertyName];
+		} elseif ($accessor === self::ACCESSOR_GETTER) {
+			return call_user_func_array(array($subject, 'get' . ucfirst($propertyName)), array());
+		} elseif ($accessor === self::ACCESSOR_ASSERTER) {
+			return call_user_func_array(array($subject, 'is' . ucfirst($propertyName)), array());
+		} elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
+			return $subject->$propertyName;
 		}
 		return NULL;
 	}
 
 	/**
-	 * Extracts a single value from an object using getters
-	 * or public property access. Returns NULL if for any
-	 * reason a value could not be extracted.
+	 * Detect which type of accessor to use when extracting
+	 * $propertyName from $subject.
 	 *
-	 * @param object $subject
+	 * @param mixed $subject
 	 * @param string $propertyName
-	 * @return mixed
+	 * @return string
 	 */
-	protected function extractSingleValueFromObject($subject, $propertyName) {
-		$upperCasePropertyName = ucfirst($propertyName);
-		$getter = 'get' . $upperCasePropertyName;
-		$asserter = 'is' . $upperCasePropertyName;
-		if (method_exists($subject, $getter)) {
-			return $subject->$getter();
+	protected function detectAccessor($subject, $propertyName) {
+		if (is_array($subject) || $subject instanceof \ArrayAccess) {
+			return self::ACCESSOR_ARRAY;
+		} elseif (is_object($subject)) {
+			$upperCasePropertyName = ucfirst($propertyName);
+			$getter = 'get' . $upperCasePropertyName;
+			$asserter = 'is' . $upperCasePropertyName;
+			if (method_exists($subject, $getter)) {
+				return self::ACCESSOR_GETTER;
+			}
+			if (method_exists($subject, $asserter)) {
+				return self::ACCESSOR_ASSERTER;
+			}
+			if (property_exists($subject, $propertyName)) {
+				return self::ACCESSOR_PUBLICPROPERTY;
+			}
+			return NULL;
 		}
-		if (method_exists($subject, $asserter)) {
-			return $subject->$asserter();
-		}
-		if (property_exists($subject, $propertyName)) {
-			return $subject->$propertyName;
-		}
-		return NULL;
 	}
 
 }

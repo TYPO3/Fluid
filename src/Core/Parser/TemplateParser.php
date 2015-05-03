@@ -13,6 +13,8 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3\Fluid\Core\Variables\VariableExtractor;
+use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 
@@ -52,6 +54,11 @@ class TemplateParser {
 	protected $viewHelperResolver;
 
 	/**
+	 * @var VariableProviderInterface
+	 */
+	protected $variableProvider;
+
+	/**
 	 * @var TemplateProcessorInterface[]
 	 */
 	protected $templateProcessors = array();
@@ -64,6 +71,7 @@ class TemplateParser {
 			$viewHelperResolver = new ViewHelperResolver();
 		}
 		$this->viewHelperResolver = $viewHelperResolver;
+		$this->variableProvider = new StandardVariableProvider();
 	}
 
 	/**
@@ -72,6 +80,14 @@ class TemplateParser {
 	 */
 	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
 		$this->viewHelperResolver = $viewHelperResolver;
+	}
+
+	/**
+	 * @param VariableProviderInterface $variableProvider
+	 * @return void
+	 */
+	public function setVariableProvider(VariableProviderInterface $variableProvider) {
+		$this->variableProvider = $variableProvider;
 	}
 
 	/**
@@ -354,10 +370,13 @@ class TemplateParser {
 
 		// Object Accessor
 		if (strlen($objectAccessorString) > 0) {
-
-			$node = new ObjectAccessorNode($objectAccessorString);
+			if ($state->isCompilable() && !$state->isCompiled()) {
+				$accessors = VariableExtractor::extractAccessors($state->getVariableContainer(), $objectAccessorString);
+			} else {
+				$accessors = array();
+			}
+			$node = new ObjectAccessorNode($objectAccessorString, $accessors);
 			$this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $state);
-
 			$state->getNodeFromStack()->addChildNode($node);
 		}
 
@@ -573,10 +592,11 @@ class TemplateParser {
 	protected function getParsingState() {
 		$rootNode = new RootNode();
 		$state = new ParsingState();
-		$state->setVariableProvider(new StandardVariableProvider());
+		$state->setVariableProvider($this->variableProvider);
 		$state->setViewHelperResolver($this->viewHelperResolver);
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
+		$this->parsingState = $state;
 		return $state;
 	}
 
