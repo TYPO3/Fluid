@@ -15,6 +15,7 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3\Fluid\Core\Variables\VariableExtractor;
 use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 
 /**
@@ -218,11 +219,27 @@ class NodeConverter {
 	 */
 	protected function convertObjectAccessorNode(ObjectAccessorNode $node) {
 		$arrayVariableName = $this->variableName('array');
-		$accessors = var_export($node->getAccessors(), TRUE);
+		$accessors = $node->getAccessors();
+		$providerReference = '$renderingContext->getVariableProvider()';
+		if (1 === count(array_unique($accessors)) && reset($accessors) === VariableExtractor::ACCESSOR_ARRAY) {
+			// every extractor used in this path is a straight-forward arrayaccess.
+			// Create the compiled code as a plain old variable assignment:
+			return array(
+				'initialization' => '',
+				'execution' => sprintf(
+					'%s[\'%s\']',
+					$providerReference,
+					str_replace('.', "']['", $node->getObjectPath())
+				)
+			);
+		}
+		$accessorsVariable = var_export($accessors, TRUE);
+		$initialization = sprintf('%s = %s;', $arrayVariableName, $accessorsVariable);
 		return array(
-			'initialization' => sprintf('%s = %s;', $arrayVariableName, $accessors),
+			'initialization' => $initialization,
 			'execution' => sprintf(
-				'$renderingContext->getVariableProvider()->getByPath(\'%s\', %s)',
+				'%s->getByPath(\'%s\', %s)',
+				$providerReference,
 				$node->getObjectPath(),
 				$arrayVariableName
 			)
