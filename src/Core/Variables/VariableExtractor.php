@@ -125,13 +125,34 @@ class VariableExtractor {
 	 * @return mixed
 	 */
 	protected function extractSingleValue($subject, $propertyName, $accessor = NULL) {
-		if (!$accessor) {
+		if (!$this->canExtractWithAccessor($subject, $propertyName, $accessor)) {
 			$accessor = $this->detectAccessor($subject, $propertyName);
 		}
-		if (!$accessor) {
-			return NULL;
-		}
 		return $this->extractWithAccessor($subject, $propertyName, $accessor);
+	}
+
+	/**
+	 * Returns TRUE if the data type of $subject is potentially compatible
+	 * with the $accessor.
+	 *
+	 * @param mixed $subject
+	 * @param string $propertyName
+	 * @param string $accessor
+	 */
+	protected function canExtractWithAccessor($subject, $propertyName, $accessor) {
+		$class = is_object($subject) ? get_class($subject) : FALSE;
+		if ($accessor === NULL) {
+			return FALSE;
+		} if ($accessor === self::ACCESSOR_ARRAY) {
+			return (is_array($subject) || $subject instanceof \ArrayAccess);
+		} elseif ($accessor === self::ACCESSOR_GETTER) {
+			return ($class && method_exists($subject, 'get' . ucfirst($propertyName)));
+		} elseif ($accessor === self::ACCESSOR_ASSERTER) {
+			return ($class && method_exists($subject, 'is' . ucfirst($propertyName)));
+		} elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
+			return ($class && property_exists($subject, $propertyName));
+		}
+		return FALSE;
 	}
 
 	/**
@@ -141,8 +162,8 @@ class VariableExtractor {
 	 * @return mixed
 	 */
 	protected function extractWithAccessor($subject, $propertyName, $accessor) {
-		if ($accessor === self::ACCESSOR_ARRAY
-			&& (array_key_exists($propertyName, $subject) || (is_object($subject) && $subject->exists($propertyName)))
+		if (($accessor === self::ACCESSOR_ARRAY && is_array($subject) && (array_key_exists($propertyName, $subject))
+			|| (is_object($subject) && method_exists($subject, 'exists') && $subject->exists($propertyName)))
 		) {
 			return $subject[$propertyName];
 		} elseif ($accessor === self::ACCESSOR_GETTER) {

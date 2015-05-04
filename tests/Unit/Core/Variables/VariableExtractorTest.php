@@ -78,4 +78,32 @@ class VariableExtractorTest extends UnitTestCase {
 		);
 	}
 
+	/**
+	 * @param mixed $subject
+	 * @param string $path
+	 * @param string $accessor
+	 * @param mixed $expected
+	 * @test
+	 * @dataProvider getExtractRedectAccessorTestValues
+	 */
+	public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected) {
+		$result = VariableExtractor::extract($subject, 'test', array($accessor));
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getExtractRedectAccessorTestValues() {
+		return array(
+			array(array('test' => 'test'), 'test', NULL, 'test'),
+			array(array('test' => 'test'), 'test', 'garbageextractionname', 'test'),
+			array(array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_PUBLICPROPERTY, 'test'),
+			array(array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_GETTER, 'test'),
+			array(array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_ASSERTER, 'test'),
+			array((object) array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'),
+			array((object) array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'),
+		);
+	}
+
 }

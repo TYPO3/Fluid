@@ -123,13 +123,12 @@ class TemplateCompiler {
 			'render',
 			'Main Render function'
 		);
-
-		$convertedLayoutNameNode = $parsingState->hasLayout()
-			? $this->nodeConverter->convert($parsingState->getLayoutNameNode())
-			: array(
-				'initialization' => '',
-				'execution' => 'NULL'
-			);
+		$emptyInitialization = array(
+			'initialization' => '',
+			'execution' => 'NULL'
+		);
+		$layoutNode = $parsingState->getLayoutNameNode();
+		$convertedLayoutNameNode = $layoutNode ? $this->nodeConverter->convert($layoutNode) : $emptyInitialization;
 
 		$classDefinition = 'class ' . $identifier . ' extends \TYPO3\Fluid\Core\Compiler\AbstractCompiledTemplate';
 
