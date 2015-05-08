@@ -20,11 +20,6 @@ use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 
 	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
-
-	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
 	 * @return VariableProviderInterface

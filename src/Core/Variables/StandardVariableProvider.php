@@ -82,7 +82,7 @@ class StandardVariableProvider implements VariableProviderInterface {
 	 * @api
 	 */
 	public function get($identifier) {
-		return isset($this->variables[$identifier]) ? $this->variables[$identifier] : NULL;
+		return $this->getByPath($identifier);
 	}
 
 	/**

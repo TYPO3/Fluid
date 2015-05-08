@@ -8,8 +8,8 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 
 /**
  * Applies htmlspecialchars() escaping to a value
@@ -34,7 +34,7 @@ use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
  *
  * @api
  */
-class HtmlspecialcharsViewHelper extends AbstractViewHelper implements CompilableInterface {
+class HtmlspecialcharsViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -90,11 +90,11 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper implements Compilabl
 	 * @param string $argumentsName
 	 * @param string $closureName
 	 * @param string $initializationPhpCode
-	 * @param NodeInterface $node
+	 * @param ViewHelperNode $node
 	 * @param TemplateCompiler $compiler
 	 * @return string
 	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, NodeInterface $node, TemplateCompiler $compiler) {
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		$valueVariableName = $compiler->variableName('value');
 		$initializationPhpCode .= sprintf('%1$s = (%2$s[\'value\'] !== NULL ? %2$s[\'value\'] : %3$s());', $valueVariableName, $argumentsName, $closureName) . chr(10);
 

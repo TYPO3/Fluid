@@ -42,18 +42,18 @@ class LayoutViewHelper extends AbstractViewHelper {
 	/**
 	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
 	 *
-	 * @param ViewHelperNode $syntaxTreeNode
-	 * @param array $viewHelperArguments
+	 * @param ViewHelperNode $node
+	 * @param array $arguments
 	 * @param TemplateVariableContainer $variableContainer
 	 * @return void
 	 */
 	static public function postParseEvent(
-		ViewHelperNode $syntaxTreeNode,
-		array $viewHelperArguments,
+		ViewHelperNode $node,
+		array $arguments,
 		VariableProviderInterface $variableContainer
 	) {
-		if (isset($viewHelperArguments['name'])) {
-			$layoutNameNode = $viewHelperArguments['name'];
+		if (isset($arguments['name'])) {
+			$layoutNameNode = $arguments['name'];
 		} else {
 			$layoutNameNode = new TextNode('Default');
 		}

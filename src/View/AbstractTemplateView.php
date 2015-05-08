@@ -226,6 +226,8 @@ abstract class AbstractTemplateView extends AbstractView {
 	public function render($actionName = NULL) {
 		$this->templateParser->setConfiguration($this->buildParserConfiguration());
 		$this->templateParser->setVariableProvider($this->baseRenderingContext->getVariableProvider());
+		$this->templateParser->setViewHelperResolver($this->viewHelperResolver);
+		$this->baseRenderingContext->setViewHelperResolver($this->viewHelperResolver);
 		$controllerName = $this->baseRenderingContext->getControllerName();
 		if (!$actionName) {
 			$actionName = $this->baseRenderingContext->getControllerAction();
@@ -329,7 +331,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$renderingContext->getViewHelperVariableContainer()->add(
 				'TYPO3\Fluid\ViewHelpers\SectionViewHelper',
 				'isCurrentlyRenderingSection',
-				'TRUE'
+				TRUE
 			);
 
 			$this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);

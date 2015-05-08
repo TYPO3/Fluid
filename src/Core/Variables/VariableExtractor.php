@@ -69,7 +69,8 @@ class VariableExtractor {
 		$propertyPathSegments = explode('.', $propertyPath);
 		$propertyPathSegments = $this->resolveSubVariableReferences($subject, $propertyPathSegments);
 		foreach ($propertyPathSegments as $index => $pathSegment) {
-			$subject = $this->extractSingleValue($subject, $pathSegment, isset($accessors[$index]) ? $accessors[$index] : NULL);
+			$accessor = isset($accessors[$index]) ? $accessors[$index] : NULL;
+			$subject = $this->extractSingleValue($subject, $pathSegment, $accessor);
 			if ($subject === NULL) {
 				break;
 			}
@@ -85,13 +86,17 @@ class VariableExtractor {
 	public function getAccessorsForPath($subject, $propertyPath) {
 		$accessors = array();
 		$propertyPathSegments = explode('.', $propertyPath);
-		$propertyPathSegments = $this->resolveSubVariableReferences($subject, $propertyPathSegments);
 		foreach ($propertyPathSegments as $index => $pathSegment) {
-			$accessors[] = $this->detectAccessor($subject, $pathSegment);
-			$subject = $this->extractSingleValue($subject, $pathSegment);
-			if ($subject === NULL) {
+			$accessor = $this->detectAccessor($subject, $pathSegment);
+			if ($accessor === NULL) {
+				// Note: this may include cases of sub-variable references. When such
+				// a reference is encountered the accessor chain is stopped and new
+				// accessors will be detected for the sub-variable and all following
+				// path segments since the variable is now fully dynamic.
 				break;
 			}
+			$accessors[] = $accessor;
+			$subject = $this->extractSingleValue($subject, $pathSegment);
 		}
 		return $accessors;
 	}
@@ -125,7 +130,7 @@ class VariableExtractor {
 	 * @return mixed
 	 */
 	protected function extractSingleValue($subject, $propertyName, $accessor = NULL) {
-		if (!$this->canExtractWithAccessor($subject, $propertyName, $accessor)) {
+		if (!$accessor || !$this->canExtractWithAccessor($subject, $propertyName, $accessor)) {
 			$accessor = $this->detectAccessor($subject, $propertyName);
 		}
 		return $this->extractWithAccessor($subject, $propertyName, $accessor);
@@ -138,12 +143,11 @@ class VariableExtractor {
 	 * @param mixed $subject
 	 * @param string $propertyName
 	 * @param string $accessor
+	 * @return boolean
 	 */
 	protected function canExtractWithAccessor($subject, $propertyName, $accessor) {
 		$class = is_object($subject) ? get_class($subject) : FALSE;
-		if ($accessor === NULL) {
-			return FALSE;
-		} if ($accessor === self::ACCESSOR_ARRAY) {
+		if ($accessor === self::ACCESSOR_ARRAY) {
 			return (is_array($subject) || $subject instanceof \ArrayAccess);
 		} elseif ($accessor === self::ACCESSOR_GETTER) {
 			return ($class && method_exists($subject, 'get' . ucfirst($propertyName)));
@@ -166,12 +170,14 @@ class VariableExtractor {
 			|| (is_object($subject) && method_exists($subject, 'exists') && $subject->exists($propertyName)))
 		) {
 			return $subject[$propertyName];
-		} elseif ($accessor === self::ACCESSOR_GETTER) {
-			return call_user_func_array(array($subject, 'get' . ucfirst($propertyName)), array());
-		} elseif ($accessor === self::ACCESSOR_ASSERTER) {
-			return call_user_func_array(array($subject, 'is' . ucfirst($propertyName)), array());
-		} elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
-			return $subject->$propertyName;
+		} elseif (is_object($subject)) {
+			if ($accessor === self::ACCESSOR_GETTER) {
+				return call_user_func_array(array($subject, 'get' . ucfirst($propertyName)), array());
+			} elseif ($accessor === self::ACCESSOR_ASSERTER) {
+				return call_user_func_array(array($subject, 'is' . ucfirst($propertyName)), array());
+			} elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
+				return $subject->$propertyName;
+			}
 		}
 		return NULL;
 	}
@@ -182,7 +188,7 @@ class VariableExtractor {
 	 *
 	 * @param mixed $subject
 	 * @param string $propertyName
-	 * @return string
+	 * @return string|NULL
 	 */
 	protected function detectAccessor($subject, $propertyName) {
 		if (is_array($subject) || $subject instanceof \ArrayAccess) {
@@ -202,6 +208,7 @@ class VariableExtractor {
 			}
 			return NULL;
 		}
+		return NULL;
 	}
 
 }

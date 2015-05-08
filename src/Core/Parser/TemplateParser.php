@@ -15,7 +15,6 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3\Fluid\Core\Variables\VariableExtractor;
 use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -280,15 +279,7 @@ class TemplateParser {
 		$viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
 
 		$this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
-
-		if ($viewHelper instanceof CompilableInterface) {
-			$state->setCompilable(FALSE);
-		}
-
-		if (method_exists($viewHelper, 'postParseEvent')) {
-			$viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
-		}
-
+		$viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
 		$state->pushNodeToStack($currentViewHelperNode);
 
 		return TRUE;

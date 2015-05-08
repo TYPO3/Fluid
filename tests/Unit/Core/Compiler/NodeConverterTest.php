@@ -53,15 +53,15 @@ class NodeConverterTest extends UnitTestCase {
 		return array(
 			array(
 				new BooleanNode(new TextNode('TRUE')),
-				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $stack0)'
+				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
 				new BooleanNode(new TextNode('1 = 1')),
-				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $stack0)'
+				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
 				$treeBoolean,
-				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $stack0)'
+				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
 				new TernaryExpressionNode('1 ? 2 : 3'),

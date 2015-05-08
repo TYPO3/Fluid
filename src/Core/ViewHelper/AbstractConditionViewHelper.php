@@ -30,7 +30,7 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  *
  * @api
  */
-abstract class AbstractConditionViewHelper extends AbstractViewHelper implements CompilableInterface {
+abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -149,11 +149,11 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper implements
 	 * @param string $argumentsName
 	 * @param string $closureName
 	 * @param string $initializationPhpCode
-	 * @param NodeInterface $node
+	 * @param ViewHelperNode $node
 	 * @param TemplateCompiler $compiler
 	 * @return string
 	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, NodeInterface $node, TemplateCompiler $compiler) {
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		foreach ($node->getChildNodes() as $childNode) {
 			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ThenViewHelper') {
 				$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
@@ -170,6 +170,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper implements
 				}
 			}
 		}
-		return TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION;
+		return '\'\'';
 	}
 }

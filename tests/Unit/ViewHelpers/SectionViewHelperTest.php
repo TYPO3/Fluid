@@ -46,7 +46,8 @@ class SectionViewHelperTest extends UnitTestCase {
 	public function testCompileReturnsEmptyString() {
 		$section = new SectionViewHelper();
 		$init = '';
-		$result = $section->compile('fake', 'fake', $init, new TextNode('test'), new TemplateCompiler(new ViewHelperResolver()));
+		$viewHelperNodeMock = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
+		$result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
 		$this->assertEquals('\'\'', $result);
 	}
 

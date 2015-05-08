@@ -8,6 +8,7 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
 
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 use TYPO3\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
@@ -153,8 +154,8 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 * @dataProvider dataProvider
 	 */
 	public function compileTests($value, array $options, $expectedResult) {
-		/** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode')->disableOriginalConstructor()->getMock();
+		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
 		$mockTemplateCompiler = $this->getMockBuilder('TYPO3\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();
@@ -180,8 +181,8 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 * @dataProvider dataProvider
 	 */
 	public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult) {
-		/** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode')->disableOriginalConstructor()->getMock();
+		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
 		$mockTemplateCompiler = $this->getMockBuilder('TYPO3\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();
@@ -245,8 +246,8 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function compileDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString() {
-		/** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode')->disableOriginalConstructor()->getMock();
+		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
 		$mockTemplateCompiler = $this->getMockBuilder('TYPO3\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();

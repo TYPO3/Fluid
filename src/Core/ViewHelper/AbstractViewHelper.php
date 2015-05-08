@@ -378,9 +378,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	}
 
 	/**
-	 * Default implementation for CompilableInterface. By default,
-	 * inserts a renderStatic() call to itself.
-	 *
 	 * You only should override this method *when you absolutely know what you
 	 * are doing*, and really want to influence the generated PHP code during
 	 * template compilation directly.
@@ -388,28 +385,48 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @param string $argumentsName
 	 * @param string $closureName
 	 * @param string $initializationPhpCode
-	 * @param NodeInterface $node
+	 * @param ViewHelperNode $node
 	 * @param TemplateCompiler $compiler
 	 * @return string
-	 * @see \TYPO3\Fluid\Core\ViewHelper\CompilableInterface
 	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, NodeInterface $node, TemplateCompiler $compiler) {
-		return sprintf('%s::renderStatic(%s, %s, $renderingContext)',
-			get_class($this), $argumentsName, $closureName);
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
+		$viewHelperVariableName = $compiler->variableName('viewHelper');
+		$initializationPhpCode .= sprintf(
+			'%s = unserialize(\'%s\');',
+			$viewHelperVariableName,
+			serialize($node)
+		);
+
+		return sprintf(
+			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(%s, $renderingContext);',
+			get_class($this),
+			$viewHelperVariableName
+		);
 	}
 
 	/**
-	 * Default implementation for CompilableInterface. See CompilableInterface
-	 * for a detailed description of this method.
+	 * Default implementation of static rendering; useful if your ViewHelper
+	 * when compiled is able to render itself statically to increase performance.
 	 *
 	 * @param array $arguments
 	 * @param \Closure $renderChildrenClosure
 	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed
-	 * @see \TYPO3\Fluid\Core\ViewHelper\CompilableInterface
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		return NULL;
+	}
+
+	/**
+	 * Save the associated ViewHelper node in a static public class variable.
+	 * called directly after the ViewHelper was built.
+	 *
+	 * @param ViewHelperNode $node
+	 * @param TextNode[] $arguments
+	 * @param VariableProviderInterface $variableContainer
+	 * @return void
+	 */
+	static public function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {
 	}
 
 	/**

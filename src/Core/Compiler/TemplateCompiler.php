@@ -137,10 +137,6 @@ class TemplateCompiler {
 
 %s {
 
-public function getVariableContainer() {
-	// TODO
-	return new \TYPO3\Fluid\Core\Variables\StandardVariableProvider();
-}
 public function getLayoutName(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
 \$self = \$this;
 %s

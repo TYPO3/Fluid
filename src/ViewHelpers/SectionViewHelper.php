@@ -12,8 +12,6 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
-use TYPO3\Fluid\Core\ViewHelper\PostParseInterface;
 use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
@@ -58,7 +56,7 @@ use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
  *
  * @api
  */
-class SectionViewHelper extends AbstractViewHelper implements CompilableInterface {
+class SectionViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -79,21 +77,17 @@ class SectionViewHelper extends AbstractViewHelper implements CompilableInterfac
 	 * Save the associated ViewHelper node in a static public class variable.
 	 * called directly after the ViewHelper was built.
 	 *
-	 * @param ViewHelperNode $syntaxTreeNode
-	 * @param TextNode[] $viewHelperArguments
+	 * @param ViewHelperNode $node
+	 * @param TextNode[] $arguments
 	 * @param VariableProviderInterface $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(
-		ViewHelperNode $syntaxTreeNode,
-		array $viewHelperArguments,
-		VariableProviderInterface $variableContainer
-	) {
+	static public function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {
 		/** @var $nameArgument TextNode */
-		$nameArgument = $viewHelperArguments['name'];
+		$nameArgument = $arguments['name'];
 		$sectionName = $nameArgument->getText();
 		$sections = $variableContainer['sections'] ? $variableContainer['sections'] : array();
-		$sections[$sectionName] = $syntaxTreeNode;
+		$sections[$sectionName] = $node;
 		$variableContainer['sections'] = $sections;
 	}
 
@@ -118,11 +112,11 @@ class SectionViewHelper extends AbstractViewHelper implements CompilableInterfac
 	 * @param string $argumentsName
 	 * @param string $closureName
 	 * @param string $initializationPhpCode
-	 * @param NodeInterface $node
+	 * @param ViewHelperNode $node
 	 * @param TemplateCompiler $compiler
 	 * @return string
 	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, NodeInterface $node, TemplateCompiler $compiler) {
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		return '\'\'';
 	}
 }

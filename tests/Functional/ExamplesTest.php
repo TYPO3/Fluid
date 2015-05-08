@@ -38,7 +38,6 @@ class ExamplesTest extends BaseTestCase {
 	public function testExampleScriptFileWithCache($script, array $expectedOutputs) {
 		$cache = vfsStream::url('fakecache/');
 		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
-		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**
@@ -185,8 +184,8 @@ class ExamplesTest extends BaseTestCase {
 				'example_variableprovider.php',
 				array(
 					'VariableProvider template from Singles.',
-					'Incrementing variable, 1: 1',
-					'Incrementing variable, 2: 2',
+					'Incrementing variable, 1: 3',
+					'Incrementing variable, 2: 4',
 					'Random: random',
 				)
 			)

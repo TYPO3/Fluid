@@ -16,7 +16,6 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Variables\VariableExtractor;
-use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 
 /**
  * Class NodeConverter
@@ -154,61 +153,19 @@ class NodeConverter {
 				$this->templateCompiler->wrapChildNodesInClosure($node)
 			) . chr(10);
 
-		$initializationArray = array(
-			'initialization' => '',
-			'execution' => '\'\''
+		$viewHelperInitializationPhpCode = '';
+		$convertedViewHelperExecutionCode = $node->getUninitializedViewHelper()->compile(
+			$argumentsVariableName,
+			$renderChildrenClosureVariableName,
+			$viewHelperInitializationPhpCode,
+			$node,
+			$this->templateCompiler
 		);
-		if ($node->getUninitializedViewHelper() instanceof CompilableInterface) {
-			// ViewHelper is compilable
-			$viewHelperInitializationPhpCode = '';
-			$convertedViewHelperExecutionCode = $node->getUninitializedViewHelper()->compile(
-				$argumentsVariableName,
-				$renderChildrenClosureVariableName,
-				$viewHelperInitializationPhpCode,
-				$node,
-				$this->templateCompiler
-			);
-			$initializationPhpCode .= $viewHelperInitializationPhpCode;
-			if ($convertedViewHelperExecutionCode !== TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION) {
-				$initializationArray = array(
-					'initialization' => $initializationPhpCode,
-					'execution' => $convertedViewHelperExecutionCode
-				);
-			}
-		} else {
-			// ViewHelper is not compilable, so we need to instanciate it directly and render it.
-			$viewHelperVariableName = $this->variableName('viewHelper');
-
-			$initializationPhpCode .= sprintf(
-					'%s = $self->getViewHelper(\'%s\', $renderingContext, \'%s\');',
-					$viewHelperVariableName,
-					$viewHelperVariableName,
-					$node->getViewHelperClassName()
-				) . chr(10);
-			$initializationPhpCode .= sprintf(
-					'%s->setArguments(%s);',
-					$viewHelperVariableName,
-					$argumentsVariableName
-				) . chr(10);
-			$initializationPhpCode .= sprintf(
-					'%s->setRenderingContext($renderingContext);',
-					$viewHelperVariableName
-				) . chr(10);
-
-			$initializationPhpCode .= sprintf(
-					'%s->setRenderChildrenClosure(%s);',
-					$viewHelperVariableName,
-					$renderChildrenClosureVariableName
-				) . chr(10);
-
-			$initializationPhpCode .= '// End of ViewHelper ' . $node->getViewHelperClassName() . chr(10);
-
-			$initializationArray = array(
-				'initialization' => $initializationPhpCode,
-				'execution' => sprintf('%s->initializeArgumentsAndRender()', $viewHelperVariableName)
-			);
-
-		}
+		$initializationPhpCode .= $viewHelperInitializationPhpCode;
+		$initializationArray = array(
+			'initialization' => $initializationPhpCode,
+			'execution' => $convertedViewHelperExecutionCode
+		);
 		return $initializationArray;
 	}
 
@@ -221,7 +178,14 @@ class NodeConverter {
 		$arrayVariableName = $this->variableName('array');
 		$accessors = $node->getAccessors();
 		$providerReference = '$renderingContext->getVariableProvider()';
-		if (1 === count(array_unique($accessors)) && reset($accessors) === VariableExtractor::ACCESSOR_ARRAY) {
+		$path = $node->getObjectPath();
+		$pathSegments = explode('.', $path);
+		if (
+			1 === count(array_unique($accessors))
+			&& reset($accessors) === VariableExtractor::ACCESSOR_ARRAY
+			&& count($accessors) === count($pathSegments)
+			&& FALSE === strpos($path, '{')
+		) {
 			// every extractor used in this path is a straight-forward arrayaccess.
 			// Create the compiled code as a plain old variable assignment:
 			return array(
@@ -229,7 +193,7 @@ class NodeConverter {
 				'execution' => sprintf(
 					'%s[\'%s\']',
 					$providerReference,
-					str_replace('.', "']['", $node->getObjectPath())
+					str_replace('.', '\'][\'', $path)
 				)
 			);
 		}
@@ -240,7 +204,7 @@ class NodeConverter {
 			'execution' => sprintf(
 				'%s->getByPath(\'%s\', %s)',
 				$providerReference,
-				$node->getObjectPath(),
+				$path,
 				$arrayVariableName
 			)
 		);
@@ -349,15 +313,14 @@ class NodeConverter {
 	 * @see convert()
 	 */
 	protected function convertBooleanNode(BooleanNode $node) {
-		$stack = serialize($node->getStack());
-		$stackVariable = $this->variableName('stack');
+		$stack = $this->convertArrayNode(new ArrayNode($node->getStack()));
 		$initializationPhpCode = '// Rendering Boolean node' . chr(10);
-		$initializationPhpCode .= sprintf('%s = unserialize(\'%s\');', $stackVariable, $stack) . chr(10);
+		$initializationPhpCode = $stack['initialization'] . chr(10);
 		return array(
 			'initialization' => $initializationPhpCode,
 			'execution' => sprintf(
 				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s)',
-				$stackVariable
+				$stack['execution']
 			)
 		);
 	}

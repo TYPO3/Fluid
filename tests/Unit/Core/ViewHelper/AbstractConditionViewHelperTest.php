@@ -42,7 +42,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 	 * @param $expected
 	 */
 	public function testCompileReturnsAndAssignsExpectedVariables(array $childNodes, $expected) {
-		$node = new RootNode();
+		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'if', array(), new ParsingState());
 		foreach ($childNodes as $childNode) {
 			$node->addChildNode($childNode);
 		}

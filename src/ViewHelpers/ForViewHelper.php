@@ -6,10 +6,11 @@ namespace TYPO3\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 
 /**
  * Loop view helper which can be used to iterate over arrays.
@@ -58,7 +59,7 @@ use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
  *
  * @api
  */
-class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
+class ForViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @var boolean
@@ -90,6 +91,18 @@ class ForViewHelper extends AbstractViewHelper implements CompilableInterface {
 	 */
 	public function render() {
 		return self::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
+	}
+
+	/**
+	 * @param string $argumentsName
+	 * @param string $closureName
+	 * @param string $initializationPhpCode
+	 * @param ViewHelperNode $node
+	 * @param TemplateCompiler $compiler
+	 * @return string
+	 */
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
+		return sprintf('%s::renderStatic(%s, %s, $renderingContext)', get_class($this), $argumentsName, $closureName);
 	}
 
 	/**

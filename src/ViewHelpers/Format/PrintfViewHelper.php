@@ -8,7 +8,6 @@ namespace TYPO3\Fluid\ViewHelpers\Format;
 
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
 
 /**
  * A view helper for formatting values with printf. Either supply an array for
@@ -47,7 +46,7 @@ use TYPO3\Fluid\Core\ViewHelper\CompilableInterface;
  *
  * @api
  */
-class PrintfViewHelper extends AbstractViewHelper implements CompilableInterface {
+class PrintfViewHelper extends AbstractViewHelper {
 
 	/**
 	 * @return void

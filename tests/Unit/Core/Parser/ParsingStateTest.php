@@ -72,4 +72,12 @@ class ParsingStateTest extends UnitTestCase {
 		$this->parsingState->getLayoutName(new RenderingContext());
 	}
 
+	/**
+	 * @test
+	 */
+	public function testSetCompilableSetsProperty() {
+		$this->parsingState->setCompilable(FALSE);
+		$this->assertAttributeEquals(FALSE, 'compilable', $this->parsingState);
+	}
+
 }

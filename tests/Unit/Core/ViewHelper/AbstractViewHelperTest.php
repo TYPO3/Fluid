@@ -7,10 +7,13 @@ namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
  */
 
 use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3\Fluid\Core\Parser\ParsingState;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContext;
 use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper2;
 use TYPO3\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
@@ -309,12 +312,13 @@ class AbstractViewHelperTest extends UnitTestCase {
 	 */
 	public function testCompileReturnsAndAssignsExpectedPhpCode() {
 		$viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper', array('dummy'), array(), '', FALSE);
-		$node = new TextNode('test');
+		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'section', array(), new ParsingState());
 		$init = '';
 		$compiler = new TemplateCompiler();
 		$result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
-		$this->assertEquals('', $init);
-		$this->assertEquals(get_class($viewHelper) . '::renderStatic(foobar, baz, $renderingContext)', $result);
+		$this->assertNotEmpty($init);
+		$this->assertEquals('$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'' . get_class($viewHelper) .
+			'\')->invoke($viewHelper0, $renderingContext);', $result);
 	}
 
 	/**

@@ -70,7 +70,7 @@ class VariableExtractorTest extends UnitTestCase {
 		$asGetter = VariableExtractor::ACCESSOR_GETTER;
 		$asPublic = VariableExtractor::ACCESSOR_PUBLICPROPERTY;
 		return array(
-			array(NULL, '', array(NULL)),
+			array(NULL, '', array()),
 			array(array('inArray' => $inArray), 'inArray.user', array($asArray, $asArray)),
 			array(array('inArray' => $inArray), 'inArray.user.name', array($asArray, $asArray, $asGetter)),
 			array(array('inArrayAccess' => $inArrayAccess), 'inArrayAccess.user.name', array($asArray, $asArray, $asGetter)),
