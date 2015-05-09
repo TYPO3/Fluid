@@ -309,7 +309,13 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 				$value = $this->arguments[$argumentName];
 				$type = $registeredArgument->getType();
 				if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
-					$errorException = $this->createInvalidArgumentException($argumentName, $type, $value);
+					$value = $this->arguments[$argumentName];
+					$givenType = is_object($value) ? get_class($value) : gettype($value);
+					$errorException = new \InvalidArgumentException(
+						'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
+						$givenType . '" in view helper "' . get_class($this) . '".',
+						1256475113
+					);
 					if ($type === 'array' && !is_array($value)) {
 						if (!$value instanceof \ArrayAccess && !$value instanceof \Traversable) {
 							throw $errorException;
@@ -328,22 +334,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 				}
 			}
 		}
-	}
-
-	/**
-	 * @param string $argumentName
-	 * @param string $type
-	 * @param mixed $value
-	 * @throws \InvalidArgumentException
-	 */
-	private function createInvalidArgumentException($argumentName, $type, $value) {
-		$value = $this->arguments[$argumentName];
-		$givenType = is_object($value) ? get_class($value) : gettype($value);
-		return new \InvalidArgumentException(
-			'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
-			$givenType . '" in view helper "' . get_class($this) . '".',
-			1256475113
-		);
 	}
 
 	/**
