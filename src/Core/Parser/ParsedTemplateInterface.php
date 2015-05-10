@@ -41,6 +41,15 @@ interface ParsedTemplateInterface {
 	public function getLayoutName(RenderingContextInterface $renderingContext);
 
 	/**
+	 * Method generated on compiled templates to add ViewHelper namespaces which were defined in-template
+	 * and add those to the ones already defined in the ViewHelperResolver.
+	 *
+	 * @param RenderingContextInterface $renderingContext
+	 * @return void
+	 */
+	public function addCompiledNamespaces(RenderingContextInterface $renderingContext);
+
+	/**
 	 * Returns TRUE if the current template has a template defined via <f:layout name="..." />
 	 *
 	 * @return boolean

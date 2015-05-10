@@ -242,6 +242,7 @@ abstract class AbstractTemplateView extends AbstractView {
 				return $paths->getTemplateSource($controllerName, $actionName);
 			}
 		);
+		$parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
 
 		if (!$parsedTemplate->getVariableContainer()->exists('layoutName')) {
 			$this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);

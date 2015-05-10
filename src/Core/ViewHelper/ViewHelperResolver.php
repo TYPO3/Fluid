@@ -53,6 +53,13 @@ class ViewHelperResolver {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function getNamespaces() {
+		return $this->namespaces;
+	}
+
+	/**
 	 * Registers the given identifier/namespace mapping so that
 	 * ViewHelper class names can be properly resolved while parsing
 	 *

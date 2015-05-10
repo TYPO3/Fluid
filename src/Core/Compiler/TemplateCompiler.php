@@ -137,16 +137,25 @@ return %s;
 public function hasLayout() {
 return %s;
 }
+public function addCompiledNamespaces(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+\$namespaces = %s;
+\$resolver = \$renderingContext->getViewHelperResolver();
+foreach (\$namespaces as \$namespace => \$phpNamespace) {
+\$resolver->registerNamespace(\$namespace, \$phpNamespace);
+}
+}
 
 %s
 
 }
 EOD;
-		$templateCode = sprintf($templateCode,
-				$classDefinition,
-				'$renderingContext->getVariableProvider()->get(\'layoutName\');',
-				($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
-				$generatedRenderFunctions);
+		$templateCode = sprintf(
+			$templateCode,
+			$classDefinition,
+			'$renderingContext->getVariableProvider()->get(\'layoutName\');',
+			($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
+			var_export($parsingState->getViewHelperResolver()->getNamespaces(), TRUE),
+			$generatedRenderFunctions);
 		$this->templateCache->set($identifier, $templateCode);
 	}
 
