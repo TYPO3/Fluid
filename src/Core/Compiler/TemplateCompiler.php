@@ -123,12 +123,6 @@ class TemplateCompiler {
 			'render',
 			'Main Render function'
 		);
-		$emptyInitialization = array(
-			'initialization' => '',
-			'execution' => 'NULL'
-		);
-		$layoutNode = $parsingState->getLayoutNameNode();
-		$convertedLayoutNameNode = $layoutNode ? $this->nodeConverter->convert($layoutNode) : $emptyInitialization;
 
 		$classDefinition = 'class ' . $identifier . ' extends \TYPO3\Fluid\Core\Compiler\AbstractCompiledTemplate';
 
@@ -138,8 +132,6 @@ class TemplateCompiler {
 %s {
 
 public function getLayoutName(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$self = \$this;
-%s
 return %s;
 }
 public function hasLayout() {
@@ -152,8 +144,7 @@ return %s;
 EOD;
 		$templateCode = sprintf($templateCode,
 				$classDefinition,
-				$convertedLayoutNameNode['initialization'],
-				$convertedLayoutNameNode['execution'],
+				'$renderingContext->getVariableProvider()->get(\'layoutName\');',
 				($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
 				$generatedRenderFunctions);
 		$this->templateCache->set($identifier, $templateCode);

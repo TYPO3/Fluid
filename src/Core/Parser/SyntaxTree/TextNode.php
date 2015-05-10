@@ -42,7 +42,7 @@ class TextNode extends AbstractNode {
 	 * @return string the text stored in this node/subtree.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		return $this->text . $this->evaluateChildNodes($renderingContext);
+		return $this->text;
 	}
 
 	/**
@@ -53,4 +53,12 @@ class TextNode extends AbstractNode {
 	public function getText() {
 		return $this->text;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return $this->getText();
+	}
+
 }

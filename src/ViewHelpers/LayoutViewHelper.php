@@ -55,7 +55,7 @@ class LayoutViewHelper extends AbstractViewHelper {
 		if (isset($arguments['name'])) {
 			$layoutNameNode = $arguments['name'];
 		} else {
-			$layoutNameNode = new TextNode('Default');
+			$layoutNameNode = 'Default';
 		}
 
 		$variableContainer->add('layoutName', $layoutNameNode);

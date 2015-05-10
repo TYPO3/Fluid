@@ -163,28 +163,12 @@ class ParsingState implements ParsedTemplateInterface {
 	}
 
 	/**
-	 * @param NodeInterface $layoutNameNode name of the layout that is defined in this template via <f:layout name="..." />
-	 * @return void
-	 */
-	public function setLayoutNameNode(NodeInterface $layoutNameNode) {
-		$this->layoutNameNode = $layoutNameNode;
-	}
-
-	/**
-	 * @return NodeInterface
-	 */
-	public function getLayoutNameNode() {
-		return $this->layoutNameNode;
-	}
-
-	/**
 	 * Returns TRUE if the current template has a template defined via <f:layout name="..." />
-	 * @see getLayoutName()
 	 *
 	 * @return boolean
 	 */
 	public function hasLayout() {
-		return $this->layoutNameNode !== NULL;
+		return $this->variableContainer->exists('layoutName');
 	}
 
 	/**
@@ -197,14 +181,7 @@ class ParsingState implements ParsedTemplateInterface {
 	 * @throws View\Exception
 	 */
 	public function getLayoutName(RenderingContextInterface $renderingContext) {
-		$layoutName = NULL;
-		if ($this->hasLayout()) {
-			$layoutName = $this->layoutNameNode->evaluate($renderingContext);
-			if (empty($layoutName)) {
-				throw new View\Exception('The layout name must be a non-empty string', 1296805368);
-			}
-		}
-		return $layoutName;
+		return $renderingContext->getVariableProvider()->get('layoutName');
 	}
 
 	/**

@@ -43,7 +43,6 @@ interface ParsedTemplateInterface {
 	/**
 	 * Returns TRUE if the current template has a template defined via <f:layout name="..." />
 	 *
-	 * @see getLayoutName()
 	 * @return boolean
 	 */
 	public function hasLayout();

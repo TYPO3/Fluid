@@ -130,11 +130,6 @@ class TemplateParser {
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 
-		$variableContainer = $parsingState->getVariableContainer();
-		if ($variableContainer !== NULL && $variableContainer->exists('layoutName')) {
-			$parsingState->setLayoutNameNode($variableContainer->get('layoutName'));
-		}
-
 		return $parsingState;
 	}
 
@@ -587,7 +582,6 @@ class TemplateParser {
 		$state->setViewHelperResolver($this->viewHelperResolver);
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
-		$this->parsingState = $state;
 		return $state;
 	}
 

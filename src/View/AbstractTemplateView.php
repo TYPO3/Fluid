@@ -243,12 +243,12 @@ abstract class AbstractTemplateView extends AbstractView {
 			}
 		);
 
-		if (!$parsedTemplate->hasLayout()) {
+		if (!$parsedTemplate->getVariableContainer()->exists('layoutName')) {
 			$this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
 			$output = $parsedTemplate->render($this->baseRenderingContext);
 			$this->stopRendering();
 		} else {
-			$layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
+			$layoutName = $parsedTemplate->getVariableContainer()->get('layoutName');
 			$layoutIdentifier = $this->templatePaths->getLayoutIdentifier($layoutName);
 			$parsedLayout = $this->getOrParseAndStoreTemplate(
 				$layoutIdentifier,

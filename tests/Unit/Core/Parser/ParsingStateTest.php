@@ -66,10 +66,11 @@ class ParsingStateTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testGetLayoutNameThrowsExceptionIfResolvedLayoutNameIsEmpty() {
-		$this->parsingState->setLayoutNameNode(new TextNode(''));
-		$this->setExpectedException('TYPO3\\Fluid\\View\\Exception');
-		$this->parsingState->getLayoutName(new RenderingContext());
+	public function testGetLayoutName() {
+		$context = new RenderingContext();
+		$context->getVariableProvider()->add('layoutName', 'test');
+		$result = $this->parsingState->getLayoutName($context);
+		$this->assertEquals('test', $result);
 	}
 
 	/**
