@@ -87,4 +87,16 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 		$this->assertTrue($result);
 	}
 
+	/**
+	 * @test
+	 */
+	public function testAddCompiledNamespacesDoesNothing() {
+		$instance = $this->getMockForAbstractClass('TYPO3\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate');
+		$context = new RenderingContext();
+		$before = $context->getViewHelperResolver()->getNamespaces();
+		$instance->addCompiledNamespaces($context);
+		$after = $context->getViewHelperResolver()->getNamespaces();
+		$this->assertEquals($before, $after);
+	}
+
 }
