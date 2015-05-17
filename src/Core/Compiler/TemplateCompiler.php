@@ -132,7 +132,11 @@ class TemplateCompiler {
 %s {
 
 public function getLayoutName(\TYPO3\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-return %s;
+\$layout = %s;
+if (!\$layout) {
+\$layout = '%s';
+}
+return \$layout;
 }
 public function hasLayout() {
 return %s;
@@ -152,7 +156,8 @@ EOD;
 		$templateCode = sprintf(
 			$templateCode,
 			$classDefinition,
-			'$renderingContext->getVariableProvider()->get(\'layoutName\');',
+			'$renderingContext->getVariableProvider()->get(\'layoutName\')',
+			$parsingState->getVariableContainer()->get('layoutName'),
 			($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
 			var_export($parsingState->getViewHelperResolver()->getNamespaces(), TRUE),
 			$generatedRenderFunctions);
