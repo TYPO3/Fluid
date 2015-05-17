@@ -9,6 +9,7 @@ namespace TYPO3\Fluid\Tests\Example;
 use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3\FluidExample\ViewHelpers\CustomViewHelper;
 
 /**
  * Class MyCustomViewHelperResolver
@@ -30,7 +31,7 @@ class CustomViewHelperResolver extends ViewHelperResolver {
 	 */
 	public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier) {
 		if ($namespaceIdentifier === 'f' && $methodIdentifier === 'myLink') {
-			return 'TYPO3\\Fluid\\Tests\\Example\\CustomViewHelper';
+			return 'TYPO3\\FluidExample\\ViewHelpers\\CustomViewHelper';
 		}
 		return parent::resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
 	}

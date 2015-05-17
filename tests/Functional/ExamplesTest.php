@@ -142,6 +142,14 @@ class ExamplesTest extends BaseTestCase {
 					'<invalid:vh>This tag will be shown</invalid:vh>'
 				)
 			),
+			'example_namespaceresolving.php' => array(
+				'example_namespaceresolving.php',
+				array(
+					'NamespaceResolving template from Singles.',
+					'Argument passed to CustomViewHelper:',
+					'\'123\''
+				)
+			),
 			'example_single.php' => array(
 				'example_single.php',
 				array(

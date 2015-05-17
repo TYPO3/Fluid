@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Tests\Example;
+namespace TYPO3\FluidExample\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
