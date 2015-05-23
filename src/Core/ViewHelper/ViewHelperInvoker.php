@@ -6,6 +6,7 @@ namespace TYPO3\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3\Fluid\Core\ViewHelper\Exception;
@@ -62,9 +63,13 @@ class ViewHelperInvoker {
 		$evaluatedArguments = array();
 		foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
 			if (isset($arguments[$argumentName])) {
-				/** @var NodeInterface $argumentValue */
+				/** @var NodeInterface|mixed $argumentValue */
 				$argumentValue = $arguments[$argumentName];
-				$evaluatedArguments[$argumentName] = $argumentValue->evaluate($renderingContext);
+				if ($argumentValue instanceof NodeInterface) {
+					$evaluatedArguments[$argumentName] = $argumentValue->evaluate($renderingContext);
+				} else {
+					$evaluatedArguments[$argumentName] = $argumentValue;
+				}
 			} else {
 				$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 			}

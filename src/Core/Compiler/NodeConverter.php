@@ -122,14 +122,21 @@ class NodeConverter {
 
 		$alreadyBuiltArguments = array();
 		foreach ($node->getArguments() as $argumentName => $argumentValue) {
-			$converted = $this->convert($argumentValue);
+			if ($argumentValue instanceof NodeInterface) {
+				$converted = $this->convert($argumentValue);
+			} else {
+				$converted = array(
+					'initialization' => '',
+					'execution' => $argumentValue
+				);
+			}
 			$initializationPhpCode .= $converted['initialization'];
 			$initializationPhpCode .= sprintf(
-					'%s[\'%s\'] = %s;',
-					$argumentsVariableName,
-					$argumentName,
-					$converted['execution']
-				) . chr(10);
+				'%s[\'%s\'] = %s;',
+				$argumentsVariableName,
+				$argumentName,
+				$converted['execution']
+			) . chr(10);
 			$alreadyBuiltArguments[$argumentName] = TRUE;
 		}
 
