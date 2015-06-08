@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
-use TYPO3\Fluid\ViewHelpers\CycleViewHelper;
+use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use NamelessCoder\Fluid\ViewHelpers\CycleViewHelper;
 
 /**
  * Testcase for CycleViewHelper
@@ -21,7 +21,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\CycleViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\CycleViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}
@@ -37,7 +37,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @expectedException \TYPO3\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToValuesThatAreNotTraversable() {
 		$object = new \stdClass();

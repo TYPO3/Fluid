@@ -1,17 +1,17 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser\Interceptor;
+namespace NamelessCoder\Fluid\Core\Parser\Interceptor;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\InterceptorInterface;
-use TYPO3\Fluid\Core\Parser\ParsingState;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Core\Parser\InterceptorInterface;
+use NamelessCoder\Fluid\Core\Parser\ParsingState;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * An interceptor adding the "Htmlspecialchars" viewhelper to the suitable places.

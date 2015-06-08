@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\Tests\Example;
+namespace NamelessCoder\Fluid\Tests\Example;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperInterface;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3\FluidExample\ViewHelpers\CustomViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper\ArgumentDefinition;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\FluidExample\ViewHelpers\CustomViewHelper;
 
 /**
  * Class MyCustomViewHelperResolver
@@ -31,7 +31,7 @@ class CustomViewHelperResolver extends ViewHelperResolver {
 	 */
 	public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier) {
 		if ($namespaceIdentifier === 'f' && $methodIdentifier === 'myLink') {
-			return 'TYPO3\\FluidExample\\ViewHelpers\\CustomViewHelper';
+			return 'NamelessCoder\\FluidExample\\ViewHelpers\\CustomViewHelper';
 		}
 		return parent::resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
 	}

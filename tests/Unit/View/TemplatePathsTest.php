@@ -1,15 +1,15 @@
 <?php
-namespace FluidTYPO3\Flux\Tests\Unit\View;
+namespace FluidNamelessCoder\Flux\Tests\Unit\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\View\TemplatePaths;
-use TYPO3\Fluid\Tests\BaseTestCase;
-use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use NamelessCoder\Fluid\View\TemplatePaths;
+use NamelessCoder\Fluid\Tests\BaseTestCase;
+use NamelessCoder\CMS\Core\Utility\ExtensionManagementUtility;
+use NamelessCoder\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TemplatePathsTest
@@ -84,7 +84,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @param string $method
 	 */
 	public function testResolveFilesMethodCallsResolveFilesInFolders($method, $pathsMethod) {
-		$instance = $this->getMock('TYPO3\\Fluid\\View\\TemplatePaths', array('resolveFilesInFolders'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('resolveFilesInFolders'));
 		$instance->$pathsMethod(array('foo'));
 		$instance->expects($this->once())->method('resolveFilesInFolders')->with($this->anything(), 'format');
 		$instance->$method('format', 'format');
@@ -140,7 +140,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 */
 	public function testGetTemplateSourceThrowsExceptionIfFileNotFound() {
 		$instance = new TemplatePaths();
-		$this->setExpectedException('TYPO3\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
+		$this->setExpectedException('NamelessCoder\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
 		$instance->getTemplateSource();
 	}
 
@@ -151,7 +151,7 @@ class TemplatePathsTest extends BaseTestCase {
 		$instance = new TemplatePaths();
 		$method = new \ReflectionMethod($instance, 'resolveFileInPaths');
 		$method->setAccessible(TRUE);
-		$this->setExpectedException('TYPO3\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
+		$this->setExpectedException('NamelessCoder\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
 		$method->invokeArgs($instance, array(array('/not/', '/found/'), 'notfound.html'));
 	}
 

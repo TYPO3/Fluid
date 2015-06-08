@@ -24,7 +24,7 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 // Assigning a custom VariableProvider which will return two variables:
 // $incrementer and $random; the former automatically increments every
 // time it is accessed and the latter generating a random checksum string.
-$view->getRenderingContext()->setVariableProvider(new \TYPO3\Fluid\Tests\Example\CustomVariableProvider());
+$view->getRenderingContext()->setVariableProvider(new \NamelessCoder\Fluid\Tests\Example\CustomVariableProvider());
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();

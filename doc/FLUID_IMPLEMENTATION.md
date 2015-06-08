@@ -211,8 +211,8 @@ You should create your own `ExpressionNodes` if:
 
 To create a new type of `ExpressionNode` - perhaps one that fits your framework:
 
-1. Make sure you subclass `TYPO3\Fluid\Core\Parser\SyntaxTree\Expression\AbstractExpressionNode` and implement
-   `TYPO3\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface` in your class.
+1. Make sure you subclass `NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\AbstractExpressionNode` and implement
+   `NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface` in your class.
 2. Make sure your class pass `public static $detectionExpression = '%s';` where `%s` is a perl regular expression which returns
    at least one match if the expression can be handled by your `ExpressionNode` class.
 3. Make sure your class implements a `public static evaluateExpression(RenderingContextInterface $renderingContext, $expression)`

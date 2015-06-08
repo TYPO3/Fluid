@@ -1,19 +1,19 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper\TagBuilder;
+use NamelessCoder\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Base test class for testing view helpers

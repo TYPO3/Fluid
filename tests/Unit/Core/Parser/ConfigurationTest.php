@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\Configuration;
-use TYPO3\Fluid\Core\Parser\Interceptor\Escape;
-use TYPO3\Fluid\Core\Parser\InterceptorInterface;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Parser\Configuration;
+use NamelessCoder\Fluid\Core\Parser\Interceptor\Escape;
+use NamelessCoder\Fluid\Core\Parser\InterceptorInterface;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Class ConfigurationTest

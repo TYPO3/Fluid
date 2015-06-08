@@ -1,18 +1,18 @@
 <?php
-namespace TYPO3\Fluid\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 
 /**
  * This view helper is an abstract ViewHelper which implements an if/else condition.
- * @see TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
+ * @see NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
  *
  * = Usage =
  *
@@ -25,7 +25,7 @@ use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  * <[aConditionViewHelperName] .... then="condition true" else="condition false" />,
  * or as well use the "then" and "else" child nodes.
  *
- * @see TYPO3\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
+ * @see NamelessCoder\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
  * Make sure to NOT OVERRIDE the constructor.
  *
  * @api
@@ -83,12 +83,12 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 		$elseViewHelperEncountered = FALSE;
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ThenViewHelper') {
+				&& $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ThenViewHelper') {
 				$data = $childNode->evaluate($this->renderingContext);
 				return $data;
 			}
 			if ($childNode instanceof ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
+				&& $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ElseViewHelper') {
 				$elseViewHelperEncountered = TRUE;
 			}
 		}
@@ -129,7 +129,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 		$elseNode = NULL;
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
+				&& $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ElseViewHelper') {
 				$arguments = $childNode->getArguments();
 				if (isset($arguments['if']) && $arguments['if']->evaluate($this->renderingContext)) {
 					return $childNode->evaluate($this->renderingContext);
@@ -155,11 +155,11 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		foreach ($node->getChildNodes() as $childNode) {
-			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ThenViewHelper') {
+			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ThenViewHelper') {
 				$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
 				$initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
 			}
-			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'TYPO3\Fluid\ViewHelpers\ElseViewHelper') {
+			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ElseViewHelper') {
 				$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
 				if ($childNode->getArguments()) {
 					$nodeEvaluationAsClosure = $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if');

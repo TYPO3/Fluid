@@ -1,12 +1,12 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for TagBasedViewHelper
@@ -14,7 +14,7 @@ use TYPO3\Fluid\Tests\UnitTestCase;
 class AbstractTagBasedViewHelperTest extends UnitTestCase {
 
 	public function setUp() {
-		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper', array('dummy'), array(), '', FALSE);
+		$this->viewHelper = $this->getAccessibleMock('NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper', array('dummy'), array(), '', FALSE);
 	}
 
 	/**
@@ -22,7 +22,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	 */
 	public function testConstructorRegistersExpectedArguments() {
 		$viewHelper = $this->getAccessibleMock(
-			'TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
+			'NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
 			array('registerArgument'),
 			array(), '', FALSE
 		);
@@ -35,7 +35,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	 * @test
 	 */
 	public function initializeResetsUnderlyingTagBuilder() {
-		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('reset'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\TagBuilder', array('reset'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('reset');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
@@ -46,7 +46,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	 * @test
 	 */
 	public function oneTagAttributeIsRenderedCorrectly() {
-		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
@@ -60,7 +60,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	 * @test
 	 */
 	public function additionalTagAttributesAreRenderedCorrectly() {
-		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
 
@@ -74,7 +74,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	 * @test
 	 */
 	public function dataAttributesAreRenderedCorrectly() {
-		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('data-foo', 'bar');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('data-baz', 'foos');
 		$this->viewHelper->injectTagBuilder($mockTagBuilder);
@@ -88,7 +88,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	 * @test
 	 */
 	public function standardTagAttributesAreRegistered() {
-		$mockTagBuilder = $this->getMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
+		$mockTagBuilder = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');
 		$mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('dir', 'dirAttribute');
 		$mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('id', 'idAttribute');

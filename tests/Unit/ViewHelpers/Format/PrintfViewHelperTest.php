@@ -1,26 +1,26 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 
 /**
- * Test for \TYPO3\Fluid\ViewHelpers\Format\PrintfViewHelper
+ * Test for \NamelessCoder\Fluid\ViewHelpers\Format\PrintfViewHelper
  */
 class PrintfViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\Fluid\ViewHelpers\Format\PrintfViewHelper
+	 * @var \NamelessCoder\Fluid\ViewHelpers\Format\PrintfViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\Format\PrintfViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\Format\PrintfViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 

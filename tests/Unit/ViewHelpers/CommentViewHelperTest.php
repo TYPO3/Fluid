@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
-use TYPO3\Fluid\ViewHelpers\CommentViewHelper;
+use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use NamelessCoder\Fluid\ViewHelpers\CommentViewHelper;
 
 /**
  * Testcase for CommentViewHelper

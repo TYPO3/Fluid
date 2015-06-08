@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\ViewHelper\Exception;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\Exception;
 
 /**
  * Class ViewHelperInvoker
@@ -93,7 +93,7 @@ class ViewHelperInvoker {
 	 * Throw an exception if there are arguments which were not registered
 	 * before.
 	 *
-	 * @param array $expectedArguments Array of \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
+	 * @param array $expectedArguments Array of \NamelessCoder\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
 	 * @param array $actualArguments Actual arguments
 	 * @throws Exception
 	 */

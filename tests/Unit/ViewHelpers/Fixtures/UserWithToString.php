@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers\Fixtures;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

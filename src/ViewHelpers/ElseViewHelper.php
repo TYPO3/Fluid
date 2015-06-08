@@ -1,12 +1,12 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers;
+namespace NamelessCoder\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
@@ -25,7 +25,7 @@ use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Otherwise nothing is outputted in this example.
  * </output>
  *
- * @see TYPO3\Fluid\ViewHelpers\IfViewHelper
+ * @see NamelessCoder\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
 class ElseViewHelper extends AbstractViewHelper {

@@ -1,16 +1,16 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers;
+namespace NamelessCoder\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\ViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\ViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Loop view helper which can be used to iterate over arrays.

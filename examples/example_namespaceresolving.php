@@ -17,8 +17,8 @@ require __DIR__ . '/include/view_init.php';
 require_once __DIR__ . '/include/class_customviewhelper.php';
 
 // We alias our only ViewHelper so we can access it using multiple names.
-if (!class_exists('TYPO3\\FluidExample\\ViewHelpers\\Nested\\CustomViewHelper')) {
-	class_alias('TYPO3\\FluidExample\\ViewHelpers\\CustomViewHelper', 'TYPO3\\FluidExample\\ViewHelpers\\Nested\\CustomViewHelper');
+if (!class_exists('NamelessCoder\\FluidExample\\ViewHelpers\\Nested\\CustomViewHelper')) {
+	class_alias('NamelessCoder\\FluidExample\\ViewHelpers\\CustomViewHelper', 'NamelessCoder\\FluidExample\\ViewHelpers\\Nested\\CustomViewHelper');
 }
 
 // Assigning the template path and filename to be rendered. Doing this overrides

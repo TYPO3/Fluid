@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -12,18 +12,18 @@ namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
 class IfViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3\Fluid\ViewHelpers\IfViewHelper
+	 * @var \NamelessCoder\Fluid\ViewHelpers\IfViewHelper
 	 */
 	protected $viewHelper;
 
 	/**
-	 * @var \TYPO3\Fluid\Core\ViewHelper\Arguments
+	 * @var \NamelessCoder\Fluid\Core\ViewHelper\Arguments
 	 */
 	protected $mockArguments;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('TYPO3\Fluid\ViewHelpers\IfViewHelper', array('renderThenChild', 'renderElseChild'));
+		$this->viewHelper = $this->getAccessibleMock('NamelessCoder\Fluid\ViewHelpers\IfViewHelper', array('renderThenChild', 'renderElseChild'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

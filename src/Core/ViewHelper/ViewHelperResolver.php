@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\Patterns;
-use TYPO3\Fluid\Core\ViewHelper\Exception;
+use NamelessCoder\Fluid\Core\Parser\Patterns;
+use NamelessCoder\Fluid\Core\ViewHelper\Exception;
 
 /**
  * Class ViewHelperResolver
@@ -29,7 +29,7 @@ class ViewHelperResolver {
 	 * @var array
 	 */
 	protected $namespaces = array(
-		'f' => 'TYPO3\\Fluid\\ViewHelpers'
+		'f' => 'NamelessCoder\\Fluid\\ViewHelpers'
 	);
 
 	/**
@@ -40,9 +40,9 @@ class ViewHelperResolver {
 	 * @var string
 	 */
 	protected $expressionNodeTypes = array(
-		'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
-		'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
-		'TYPO3\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
+		'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+		'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
+		'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
 	);
 
 	/**

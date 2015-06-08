@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers\Format;
+namespace NamelessCoder\Fluid\ViewHelpers\Format;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Applies htmlspecialchars() escaping to a value

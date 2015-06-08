@@ -1,17 +1,17 @@
 <?php
-namespace TYPO3\Fluid\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
  * The abstract base class for all view helpers.
@@ -21,7 +21,7 @@ use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
 abstract class AbstractViewHelper implements ViewHelperInterface {
 
 	/**
-	 * Stores all \TYPO3\Fluid\ArgumentDefinition instances
+	 * Stores all \NamelessCoder\Fluid\ArgumentDefinition instances
 	 * @var ArgumentDefinition[]
 	 */
 	protected $argumentDefinitions = array();
@@ -149,7 +149,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @param string $description Description of the argument
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @param mixed $defaultValue Default value of argument
-	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+	 * @return \NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
 	 * @throws Exception
 	 * @api
 	 */
@@ -171,7 +171,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @param string $description Description of the argument
 	 * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
 	 * @param mixed $defaultValue Default value of argument
-	 * @return \TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+	 * @return \NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
 	 * @throws Exception
 	 * @api
 	 */

@@ -23,12 +23,12 @@ the `TemplateView`:
 
 ```php
 // set up paths object with arrays of paths with files
-$paths = new \TYPO3\Fluid\View\TemplatePaths();
+$paths = new \NamelessCoder\Fluid\View\TemplatePaths();
 $paths->setTemplateRootPaths(array('/path/to/templates/'));
 $paths->setLayoutRootPaths(array('/path/to/layouts/'));
 $paths->setPartialRootPaths(array('/path/to/partials/'));
 // pass the constructed TemplatePaths instance to the View
-$view = new \TYPO3\Fluid\View\TemplateView($paths);
+$view = new \NamelessCoder\Fluid\View\TemplateView($paths);
 ```
 
 Note that paths are _always defined as arrays_. In the default `TemplatePaths` implementation, Fluid supports lookups in multiple

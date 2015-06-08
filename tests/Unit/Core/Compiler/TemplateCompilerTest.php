@@ -1,24 +1,24 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Compiler;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Compiler;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser\ParsingState;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Cache\SimpleFileCache;
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser\ParsingState;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Class TemplateCompilerTest
@@ -30,7 +30,7 @@ class TemplateCompilerTest extends UnitTestCase {
 	 */
 	public function testConstructorCreatesViewHelperResolver() {
 		$instance = new TemplateCompiler();
-		$this->assertAttributeInstanceOf('TYPO3\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', 'viewHelperResolver', $instance);
+		$this->assertAttributeInstanceOf('NamelessCoder\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', 'viewHelperResolver', $instance);
 	}
 
 	/**
@@ -66,7 +66,7 @@ class TemplateCompilerTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testHasReturnsFalseWithoutCache() {
-		$instance = $this->getMock('TYPO3\\Fluid\\Core\\Compiler\\TemplateCompiler', array('sanitizeIdentifier'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\Core\\Compiler\\TemplateCompiler', array('sanitizeIdentifier'));
 		$instance->expects($this->never())->method('sanitizeIdentifier');
 		$result = $instance->has('test');
 		$this->assertFalse($result);
@@ -76,9 +76,9 @@ class TemplateCompilerTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testHasReturnsFalseAsksCache() {
-		$instance = $this->getMock('TYPO3\\Fluid\\Core\\Compiler\\TemplateCompiler', array('sanitizeIdentifier'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\Core\\Compiler\\TemplateCompiler', array('sanitizeIdentifier'));
 		$instance->expects($this->once())->method('sanitizeIdentifier')->with('test')->willReturn('foobar');
-		$cache = $this->getMock('TYPO3\\Fluid\\Core\\Cache\\SimpleFileCache', array('get'));
+		$cache = $this->getMock('NamelessCoder\\Fluid\\Core\\Cache\\SimpleFileCache', array('get'));
 		$cache->expects($this->once())->method('get')->with('foobar')->willReturn(TRUE);
 		$instance->setTemplateCache($cache);
 		$result = $instance->has('test');
@@ -110,13 +110,13 @@ class TemplateCompilerTest extends UnitTestCase {
 		$container = new StandardVariableProvider(array('sections' => array($foo, $bar)));
 		$parsingState->setVariableProvider($container);
 		$nodeConverter = $this->getMock(
-			'TYPO3\\Fluid\\Core\\Compiler\\NodeConverter',
+			'NamelessCoder\\Fluid\\Core\\Compiler\\NodeConverter',
 			array('convertListOfSubNodes'),
 			array(), '', FALSE
 		);
 		$nodeConverter->expects($this->at(0))->method('convertListOfSubNodes')->with($foo)->willReturn(array());
 		$nodeConverter->expects($this->at(1))->method('convertListOfSubNodes')->with($bar)->willReturn(array());
-		$instance = $this->getMock('TYPO3\\Fluid\\Core\\Compiler\\TemplateCompiler', array('generateCodeForSection'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\Core\\Compiler\\TemplateCompiler', array('generateCodeForSection'));
 		$instance->expects($this->at(0))->method('generateCodeForSection')->with($this->anything())->willReturn('FOO');
 		$instance->expects($this->at(1))->method('generateCodeForSection')->with($this->anything())->willReturn('BAR');
 		$instance->setNodeConverter($nodeConverter);
@@ -130,7 +130,7 @@ class TemplateCompilerTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testStoreReturnsEarlyIfNoCompilerSet() {
-		$instance = $this->getMock('TYPO3\\Fluid\\Core\\Compiler\\TemplateCompiler', array('sanitizeIdentifier'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\Core\\Compiler\\TemplateCompiler', array('sanitizeIdentifier'));
 		$instance->expects($this->never())->method('sanitizeIdentifier');
 		$instance->store('foobar', new ParsingState());
 	}

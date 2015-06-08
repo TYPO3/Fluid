@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Class MathExpressionNodeTest

@@ -1,21 +1,21 @@
 <?php
-namespace TYPO3\Fluid\Core\Compiler;
+namespace NamelessCoder\Fluid\Core\Compiler;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Variables\VariableExtractor;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Variables\VariableExtractor;
 
 /**
  * Class NodeConverter
@@ -326,7 +326,7 @@ class NodeConverter {
 		return array(
 			'initialization' => $initializationPhpCode,
 			'execution' => sprintf(
-				'\TYPO3\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s)',
+				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s)',
 				$stack['execution']
 			)
 		);

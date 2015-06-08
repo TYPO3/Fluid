@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -15,7 +15,7 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderRendersChildren() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\ThenViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\ThenViewHelper', array('renderChildren'));
 
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
 		$actualResult = $viewHelper->render();

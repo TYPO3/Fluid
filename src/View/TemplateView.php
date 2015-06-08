@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\View;
+namespace NamelessCoder\Fluid\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

@@ -1,18 +1,18 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser;
+namespace NamelessCoder\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3\Fluid\View;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\View;
 
 /**
  * Stores all information relevant for one parsing pass - that is, the root node,
