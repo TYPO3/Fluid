@@ -1,12 +1,12 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser;
+namespace NamelessCoder\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Interface TemplateProcessorInterface

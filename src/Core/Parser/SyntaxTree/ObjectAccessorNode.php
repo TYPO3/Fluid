@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
+namespace NamelessCoder\Fluid\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\Variables\VariableExtractor;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Variables\VariableExtractor;
 
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}

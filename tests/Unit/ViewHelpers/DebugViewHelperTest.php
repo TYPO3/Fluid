@@ -1,12 +1,12 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\ViewHelpers\DebugViewHelper;
+use NamelessCoder\Fluid\ViewHelpers\DebugViewHelper;
 
 /**
  * Testcase for DebugViewHelper
@@ -17,7 +17,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3\\Fluid\\ViewHelpers\\DebugViewHelper', array('registerArgument'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\ViewHelpers\\DebugViewHelper', array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('typeOnly', 'boolean', $this->anything(), FALSE, FALSE);
 		$instance->initializeArguments();
 	}
@@ -29,7 +29,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 	 * @param string $expected
 	 */
 	public function testRender($value, array $arguments, $expected) {
-		$instance = $this->getMock('TYPO3\\Fluid\\ViewHelpers\\DebugViewHelper', array('renderChildren'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\ViewHelpers\\DebugViewHelper', array('renderChildren'));
 		$instance->expects($this->once())->method('renderChildren')->willReturn($value);
 		$instance->setArguments($arguments);
 		$result = $instance->render();

@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Core\Cache;
+namespace NamelessCoder\Fluid\Core\Cache;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

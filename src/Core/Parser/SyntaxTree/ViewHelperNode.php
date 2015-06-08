@@ -1,16 +1,16 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
+namespace NamelessCoder\Fluid\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\ParsingState;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperInterface;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Core\Parser\ParsingState;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\ArgumentDefinition;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Node which will call a ViewHelper associated with this node.
@@ -126,7 +126,7 @@ class ViewHelperNode extends AbstractNode {
 	 *
 	 * First, it evaluates the arguments of the view helper.
 	 *
-	 * If the view helper implements \TYPO3\Fluid\Core\ViewHelper\ChildNodeAccessInterface,
+	 * If the view helper implements \NamelessCoder\Fluid\Core\ViewHelper\ChildNodeAccessInterface,
 	 * it calls setChildNodes(array childNodes) on the view helper.
 	 *
 	 * Afterwards, checks that the view helper did not leave a variable lying around.

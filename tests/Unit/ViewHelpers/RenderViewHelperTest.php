@@ -1,14 +1,14 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\ViewHelpers\RenderViewHelper;
-use TYPO3\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use NamelessCoder\Fluid\ViewHelpers\RenderViewHelper;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
  * Testcase for RenderViewHelper
@@ -19,7 +19,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3\\Fluid\\ViewHelpers\\RenderViewHelper', array('registerArgument'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\ViewHelpers\\RenderViewHelper', array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything(), FALSE, NULL);
 		$instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything(), FALSE, NULL);
 		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, array());
@@ -42,7 +42,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 		$instance = new RenderViewHelper();
 		$renderingContext = new RenderingContext();
 		$viewHelperVariableContainer = new ViewHelperVariableContainer();
-		$view = $this->getMock('TYPO3\\Fluid\\View\\TemplateView', $methods, array(), '', FALSE);
+		$view = $this->getMock('NamelessCoder\\Fluid\\View\\TemplateView', $methods, array(), '', FALSE);
 		$viewHelperVariableContainer->setView($view);
 		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 		$instance->setArguments($arguments);

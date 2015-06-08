@@ -60,8 +60,8 @@ To know which arguments a ViewHelper supports and what does arguments do, the mo
 the class that corresponds to a ViewHelper. Such classes are usually placed in the `Vendor\Package\ViewHelpers` PHP namespace
 (where `Vendor` and `Package` are obviously placeholders for actual values) and follow the following naming convention:
 
-* `v:format.raw` becomes PHP class `TYPO3\Fluid\ViewHelpers\Format\RawViewHelper`
-* `v:render` becomes PHP class `TYPO3\Fluid\ViewHelpers\RenderViewHelper`
+* `v:format.raw` becomes PHP class `NamelessCoder\Fluid\ViewHelpers\Format\RawViewHelper`
+* `v:render` becomes PHP class `NamelessCoder\Fluid\ViewHelpers\RenderViewHelper`
 * `mypkg:custom.specialFormat` becomes PHP class `My\Package\ViewHelpers\Custom\SpecialFormatViewHelper` assuming you added
   `xmlns:mpkg="My\Package\ViewHelpers"` or alternative namespace registration (see above).
 
@@ -107,7 +107,7 @@ When installed with development dependencies, `TYPO3.Fluid` includes a CLI comma
 native ViewHelpers and any inside your own packages. To use this command:
 
 ```bash
-./vendor/bin/generateschema TYPO3\\Fluid\\ViewHelpers src/ViewHelpers > schema.xsd
+./vendor/bin/generateschema NamelessCoder\\Fluid\\ViewHelpers src/ViewHelpers > schema.xsd
 ```
 
 Replace the first and second parameters with your own PHP namespace prefix and path to your ViewHelper class files, respectively,

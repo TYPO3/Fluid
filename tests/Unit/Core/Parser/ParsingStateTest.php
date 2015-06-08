@@ -1,16 +1,16 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\ParsingState;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContext;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Parser\ParsingState;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for ParsingState
@@ -55,8 +55,8 @@ class ParsingStateTest extends UnitTestCase {
 	 * @test
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
-		$renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContextInterface');
-		$rootNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$renderingContext = $this->getMock('NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface');
+		$rootNode = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode');
 		$rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
 		$this->parsingState->setRootNode($rootNode);
 		$renderedValue = $this->parsingState->render($renderingContext);

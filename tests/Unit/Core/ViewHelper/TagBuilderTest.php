@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\ViewHelper\TagBuilder;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for TagBuilder
@@ -173,7 +173,7 @@ class TagBuilderTest extends UnitTestCase {
 	 * @test
 	 */
 	public function resetResetsTagBuilder() {
-		$tagBuilder = $this->getAccessibleMock('TYPO3\Fluid\Core\ViewHelper\TagBuilder', array('dummy'));
+		$tagBuilder = $this->getAccessibleMock('NamelessCoder\Fluid\Core\ViewHelper\TagBuilder', array('dummy'));
 		$tagBuilder->setTagName('tagName');
 		$tagBuilder->setContent('some content');
 		$tagBuilder->forceClosingTag(TRUE);

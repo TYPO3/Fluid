@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for NumericNode
@@ -21,7 +21,7 @@ class NumericNodeTest extends UnitTestCase {
 	public function renderReturnsProperIntegerGivenInConstructor() {
 		$string = '1';
 		$node = new NumericNode($string);
-		$this->assertEquals($node->evaluate($this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext')), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+		$this->assertEquals($node->evaluate($this->getMock('NamelessCoder\Fluid\Core\Rendering\RenderingContext')), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
 	}
 
 	/**
@@ -30,12 +30,12 @@ class NumericNodeTest extends UnitTestCase {
 	public function renderReturnsProperFloatGivenInConstructor() {
 		$string = '1.1';
 		$node = new NumericNode($string);
-		$this->assertEquals($node->evaluate($this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext')), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+		$this->assertEquals($node->evaluate($this->getMock('NamelessCoder\Fluid\Core\Rendering\RenderingContext')), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
 	}
 
 	/**
 	 * @test
-	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 * @expectedException \NamelessCoder\Fluid\Core\Parser\Exception
 	 */
 	public function constructorThrowsExceptionIfNoNumericGiven() {
 		new NumericNode('foo');
@@ -43,7 +43,7 @@ class NumericNodeTest extends UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \TYPO3\Fluid\Core\Parser\Exception
+	 * @expectedException \NamelessCoder\Fluid\Core\Parser\Exception
 	 */
 	public function addChildNodeThrowsException() {
 		$node = new NumericNode('1');

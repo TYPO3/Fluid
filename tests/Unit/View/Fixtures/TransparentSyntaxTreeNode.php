@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\View\Fixture;
+namespace NamelessCoder\Fluid\View\Fixture;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * [Enter description here]

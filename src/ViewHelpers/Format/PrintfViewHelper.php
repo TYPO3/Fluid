@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers\Format;
+namespace NamelessCoder\Fluid\ViewHelpers\Format;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * A view helper for formatting values with printf. Either supply an array for
@@ -72,7 +72,7 @@ class PrintfViewHelper extends AbstractViewHelper {
 	 *
 	 * @param array $arguments
 	 * @param \Closure $renderChildrenClosure
-	 * @param \TYPO3\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+	 * @param \NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {

@@ -1,17 +1,17 @@
 <?php
-namespace TYPO3\Fluid\ViewHelpers;
+namespace NamelessCoder\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper;
-use TYPO3\Fluid\Core\ViewHelper\AbstractViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper;
+use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Case view helper that is only usable within the SwitchViewHelper.
- * @see \TYPO3\Fluid\ViewHelpers\SwitchViewHelper
+ * @see \NamelessCoder\Fluid\ViewHelpers\SwitchViewHelper
  *
  * @api
  */
@@ -38,14 +38,14 @@ class CaseViewHelper extends AbstractViewHelper {
 	public function render() {
 		$value = $this->arguments['value'];
 		$viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
-		if (!$viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')) {
+		if (!$viewHelperVariableContainer->exists('NamelessCoder\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')) {
 			throw new ViewHelper\Exception('The "case" View helper can only be used within a switch View helper', 1368112037);
 		}
-		$switchExpression = $viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression');
+		$switchExpression = $viewHelperVariableContainer->get('NamelessCoder\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression');
 
 		// non-type-safe comparison by intention
 		if ($switchExpression == $value) {
-			$viewHelperVariableContainer->addOrUpdate('TYPO3\Fluid\ViewHelpers\SwitchViewHelper', 'break', TRUE);
+			$viewHelperVariableContainer->addOrUpdate('NamelessCoder\Fluid\ViewHelpers\SwitchViewHelper', 'break', TRUE);
 			return $this->renderChildren();
 		}
 		return '';

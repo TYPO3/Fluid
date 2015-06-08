@@ -1,14 +1,14 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Parser;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\Patterns;
-use TYPO3\Fluid\Core\Parser\TemplateParser;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Parser\Patterns;
+use NamelessCoder\Fluid\Core\Parser\TemplateParser;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for Regular expressions in parser

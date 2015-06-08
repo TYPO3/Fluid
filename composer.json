@@ -11,7 +11,8 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"TYPO3\\Fluid\\": "src/"
+			"NamelessCoder\\Fluid\\": "src/",
+			"NamelessCoder\\PHPUnitPerformance\\": "vendor/namelesscoder/phpunit-performance/src/"
 		}
 	},
 	"bin": [

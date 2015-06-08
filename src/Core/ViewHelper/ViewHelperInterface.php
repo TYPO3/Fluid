@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Interface ViewHelperInterface
@@ -120,7 +120,7 @@ interface ViewHelperInterface {
 	 * Return Value
 	 * ============
 	 * Besides returning a single string, it can also return the constant
-	 * \TYPO3\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION
+	 * \NamelessCoder\Fluid\Core\Compiler\TemplateCompiler::SHOULD_GENERATE_VIEWHELPER_INVOCATION
 	 * which means that after the $initializationPhpCode, the ViewHelper invocation
 	 * is built as normal. This is especially needed if you want to build new arguments
 	 * at run-time, as it is done for the AbstractConditionViewHelper.

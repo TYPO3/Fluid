@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\ViewHelpers\DebugViewHelper;
-use TYPO3\Fluid\ViewHelpers\DefaultCaseViewHelper;
+use NamelessCoder\Fluid\ViewHelpers\DebugViewHelper;
+use NamelessCoder\Fluid\ViewHelpers\DefaultCaseViewHelper;
 
 /**
  * Testcase for DefaultCaseViewHelper
@@ -20,7 +20,7 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase {
 	public function testThrowsExceptionIfUsedOutsideSwitch() {
 		$viewHelper = new DefaultCaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->setExpectedException('TYPO3\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\ViewHelper\\Exception');
 		$viewHelper->render();
 	}
 

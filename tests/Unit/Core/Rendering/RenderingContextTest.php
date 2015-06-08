@@ -1,14 +1,14 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Rendering;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Rendering;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3\Fluid\Tests\UnitTestCase;
-use TYPO3\Fluid\Core\Rendering\RenderingContext;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
 
 /**
  * Testcase for ParsingState
@@ -29,7 +29,7 @@ class RenderingContextTest extends UnitTestCase {
 	 * @test
 	 */
 	public function templateVariableContainerCanBeReadCorrectly() {
-		$templateVariableContainer = $this->getMock('TYPO3\Fluid\Core\Variables\StandardVariableProvider');
+		$templateVariableContainer = $this->getMock('NamelessCoder\Fluid\Core\Variables\StandardVariableProvider');
 		$this->renderingContext->setVariableProvider($templateVariableContainer);
 		$this->assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
 	}
@@ -38,7 +38,7 @@ class RenderingContextTest extends UnitTestCase {
 	 * @test
 	 */
 	public function viewHelperVariableContainerCanBeReadCorrectly() {
-		$viewHelperVariableContainer = $this->getMock('TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelperVariableContainer = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
 	}

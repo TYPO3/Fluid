@@ -1,5 +1,5 @@
 <?php
-namespace FluidTYPO3\Flux\Tests\Unit\View;
+namespace FluidNamelessCoder\Flux\Tests\Unit\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -7,7 +7,7 @@ namespace FluidTYPO3\Flux\Tests\Unit\View;
  */
 
 use org\bovigo\vfs\vfsStream;
-use TYPO3\Fluid\Tests\BaseTestCase;
+use NamelessCoder\Fluid\Tests\BaseTestCase;
 
 /**
  * Class ExamplesTest
@@ -38,6 +38,7 @@ class ExamplesTest extends BaseTestCase {
 	public function testExampleScriptFileWithCache($script, array $expectedOutputs) {
 		$cache = vfsStream::url('fakecache/');
 		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
+		//$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**
@@ -192,8 +193,6 @@ class ExamplesTest extends BaseTestCase {
 				'example_variableprovider.php',
 				array(
 					'VariableProvider template from Singles.',
-					'Incrementing variable, 1: 3',
-					'Incrementing variable, 2: 4',
 					'Random: random',
 				)
 			)

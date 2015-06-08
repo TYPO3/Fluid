@@ -1,15 +1,15 @@
 <?php
-namespace TYPO3\Fluid\Core\Rendering;
+namespace NamelessCoder\Fluid\Core\Rendering;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
  * The rendering context that contains useful information during rendering time of a Fluid template

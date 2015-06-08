@@ -1,16 +1,16 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\ViewHelper\ArgumentDefinition;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
- * Testcase for \TYPO3\Fluid\Core\ViewHelper\ArgumentDefinition
+ * Testcase for \NamelessCoder\Fluid\Core\ViewHelper\ArgumentDefinition
  */
 class ArgumentDefinitionTest extends UnitTestCase {
 

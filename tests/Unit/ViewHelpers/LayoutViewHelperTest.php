@@ -1,19 +1,19 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\ParsingState;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
-use TYPO3\Fluid\ViewHelpers\LayoutViewHelper;
+use NamelessCoder\Fluid\Core\Parser\ParsingState;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use NamelessCoder\Fluid\ViewHelpers\LayoutViewHelper;
 
 /**
  * Testcase for LayoutViewHelper
@@ -24,7 +24,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3\\Fluid\\ViewHelpers\\LayoutViewHelper', array('registerArgument'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\ViewHelpers\\LayoutViewHelper', array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
 		$instance->initializeArguments();
 	}

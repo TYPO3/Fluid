@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser\SyntaxTree\Expression;
+namespace NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Parser;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Ternary Condition Node - allows the shorthand version

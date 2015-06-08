@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser\SyntaxTree;
+namespace NamelessCoder\Fluid\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser;
-use TYPO3\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Parser;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Numeric Syntax Tree Node - is a container for numeric values.

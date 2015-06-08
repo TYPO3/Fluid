@@ -1,21 +1,21 @@
 <?php
-namespace TYPO3\Fluid\Core\Parser;
+namespace NamelessCoder\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3\Fluid\Core\Variables\VariableExtractor;
-use TYPO3\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Core\Variables\VariableExtractor;
+use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Template parser building up an object syntax tree
@@ -315,7 +315,7 @@ class TemplateParser {
 
 	/**
 	 * Handles the appearance of an object accessor (like {posts.author.email}).
-	 * Creates a new instance of \TYPO3\Fluid\ObjectAccessorNode.
+	 * Creates a new instance of \NamelessCoder\Fluid\ObjectAccessorNode.
 	 *
 	 * Handles ViewHelpers as well which are in the shorthand syntax.
 	 *
@@ -378,7 +378,7 @@ class TemplateParser {
 	 * Call all interceptors registered for a given interception point.
 	 *
 	 * @param NodeInterface $node The syntax tree node which can be modified by the interceptors.
-	 * @param integer $interceptionPoint the interception point. One of the \TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
+	 * @param integer $interceptionPoint the interception point. One of the \NamelessCoder\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
 	 * @param ParsingState $state the parsing state
 	 * @return void
 	 */

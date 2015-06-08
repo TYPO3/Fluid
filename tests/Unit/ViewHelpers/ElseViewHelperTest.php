@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\ViewHelpers;
+namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -15,7 +15,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3\\Fluid\\ViewHelpers\\ElseViewHelper', array('registerArgument'));
+		$instance = $this->getMock('NamelessCoder\\Fluid\\ViewHelpers\\ElseViewHelper', array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything(), FALSE, NULL);
 		$instance->initializeArguments();
 	}
@@ -24,7 +24,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderRendersChildren() {
-		$viewHelper = $this->getMock('TYPO3\Fluid\ViewHelpers\ElseViewHelper', array('renderChildren'));
+		$viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\ElseViewHelper', array('renderChildren'));
 
 		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
 		$actualResult = $viewHelper->render();

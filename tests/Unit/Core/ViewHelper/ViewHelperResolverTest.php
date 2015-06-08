@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\ViewHelper;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * Class ViewHelperResolverTest
@@ -29,7 +29,7 @@ class ViewHelperResolverTest extends UnitTestCase {
 	public function testRegisterNamespaceThrowsExceptionOnReRegistration() {
 		$resolver = new ViewHelperResolver();
 		$resolver->registerNamespace('t', 'test');
-		$this->setExpectedException('TYPO3\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\ViewHelper\\Exception');
 		$resolver->registerNamespace('t', 'test2');
 	}
 
@@ -55,9 +55,9 @@ class ViewHelperResolverTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testResolveViewHelperClassNameThrowsExceptionIfClassNotResolved() {
-		$resolver = $this->getMock('TYPO3\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('resolveViewHelperName'));
+		$resolver = $this->getMock('NamelessCoder\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('resolveViewHelperName'));
 		$resolver->expects($this->once())->method('resolveViewHelperName')->willReturn(FALSE);
-		$this->setExpectedException('TYPO3\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\ViewHelper\\Exception');
 		$resolver->resolveViewHelperClassName('f', 'invalid');
 	}
 

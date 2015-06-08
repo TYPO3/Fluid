@@ -22,7 +22,7 @@ $view->assign('foobar', 'MVC template');
 
 // Rendering the View: in this example we are explicitly rendering the "Default"
 // controller action on the "Default" controller (Fluid assumes you use MVC).
-// To customise the context, instantiate \TYPO3\Fluid\Core\Rendering\RenderingContext
+// To customise the context, instantiate \NamelessCoder\Fluid\Core\Rendering\RenderingContext
 // and set your context settings (controller name, action, etc) and then override
 // the context using `$view->setRenderingContext($context)`.
 $output = $view->render('Default');

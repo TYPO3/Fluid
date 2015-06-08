@@ -1,13 +1,13 @@
 <?php
-namespace TYPO3\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
-use TYPO3\Fluid\Tests\UnitTestCase;
+use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
+use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
  * An AbstractNode Test
@@ -21,11 +21,11 @@ class AbstractNodeTest extends UnitTestCase {
 	protected $childNode;
 
 	public function setUp() {
-		$this->renderingContext = $this->getMock('TYPO3\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
+		$this->renderingContext = $this->getMock('NamelessCoder\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
 
-		$this->abstractNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
+		$this->abstractNode = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
 
-		$this->childNode = $this->getMock('TYPO3\Fluid\Core\Parser\SyntaxTree\AbstractNode');
+		$this->childNode = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractNode');
 		$this->abstractNode->addChildNode($this->childNode);
 	}
 
@@ -44,7 +44,7 @@ class AbstractNodeTest extends UnitTestCase {
 		$this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext)->willReturn(new \DateTime('now'));
 		$method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
 		$method->setAccessible(TRUE);
-		$this->setExpectedException('TYPO3\\Fluid\\Core\\Parser\\Exception');
+		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\Parser\\Exception');
 		$method->invokeArgs($this->abstractNode, array($this->childNode, $this->renderingContext, TRUE));
 	}
 
