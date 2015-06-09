@@ -8,6 +8,7 @@ namespace NamelessCoder\Fluid\Core\ViewHelper;
 
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
 use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 use NamelessCoder\Fluid\Core\ViewHelper\Exception;
 
@@ -78,15 +79,26 @@ class ViewHelperInvoker {
 		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $evaluatedArguments);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $evaluatedArguments);
 
-		/** @var ViewHelperInterface $viewHelper */
-		$viewHelper = $this->viewHelperResolver->createViewHelperInstance($viewHelperNamespace, $viewHelperName);
-		$viewHelper->resetState();
-		$viewHelper->setArguments($evaluatedArguments);
+		$viewHelper = $this->getInitializedViewHelperInstance($viewHelperNamespace, $viewHelperName, $renderingContext);
 		$viewHelper->setViewHelperNode($node);
 		$viewHelper->setChildNodes($childNodes);
-		$viewHelper->setRenderingContext($renderingContext);
+		$viewHelper->setArguments($evaluatedArguments);
 
 		return $viewHelper->initializeArgumentsAndRender();
+	}
+
+	/**
+	 * @param string $namespace
+	 * @param string $name
+	 * @param RenderingContextInterface $renderingContext
+	 * @return ViewHelperInterface
+	 */
+	protected function getInitializedViewHelperInstance($namespace, $name, RenderingContextInterface $renderingContext) {
+		/** @var ViewHelperInterface $viewHelper */
+		$viewHelper = $this->viewHelperResolver->createViewHelperInstance($namespace, $name);
+		$viewHelper->resetState();
+		$viewHelper->setRenderingContext($renderingContext);
+		return $viewHelper;
 	}
 
 	/**
