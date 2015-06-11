@@ -622,11 +622,16 @@ class TemplatePaths {
 	protected function resolveFileInPaths(array $paths, $relativePathAndFilename, $format = self::DEFAULT_FORMAT) {
 		$tried = array();
 		foreach ($paths as $path) {
-			$pathAndFilename = $path . $relativePathAndFilename . '.' . $format;
+			$pathAndFilenameWithoutFormat = $path . $relativePathAndFilename;
+			$pathAndFilename = $pathAndFilenameWithoutFormat . '.' . $format;
 			if (is_file($pathAndFilename)) {
 				return $pathAndFilename;
 			}
 			$tried[] = $pathAndFilename;
+			if (is_file($pathAndFilenameWithoutFormat)) {
+				return $pathAndFilenameWithoutFormat;
+			}
+			$tried[] = $pathAndFilenameWithoutFormat;
 		}
 		throw new InvalidTemplateResourceException(
 			'The Fluid template files "' . implode('", "', $tried) . '" could not be loaded.',
