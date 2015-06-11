@@ -34,9 +34,10 @@ class MathExpressionNode extends AbstractExpressionNode {
 	/**
 	 * @param RenderingContextInterface $renderingContext
 	 * @param string $expression
+	 * @param array $matches
 	 * @return integer|float
 	 */
-	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression) {
+	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches) {
 		// Split the expression on all recognized operators
 		$matches = array();
 		preg_match_all('/([+\-*\^\/\%]|[a-z0-9\.]+)/s', $expression, $matches);

@@ -35,9 +35,10 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 	/**
 	 * @param RenderingContextInterface $renderingContext
 	 * @param string $expression
+	 * @param array $matches
 	 * @return mixed
 	 */
-	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression) {
+	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches) {
 		$parts = preg_split('/([\?:])/s', $expression);
 		$parts = array_map(array(__CLASS__, 'trimPart'), $parts);
 		list ($check, $then, $else) = $parts;
