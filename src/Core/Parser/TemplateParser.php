@@ -498,7 +498,7 @@ class TemplateParser {
 					$detetionExpression = $expressionNodeTypeClassName::$detectionExpression;
 					$matchedVariables = array();
 					if (preg_match($detetionExpression, $section, $matchedVariables) > 0) {
-						$expressionNode = new $expressionNodeTypeClassName($matchedVariables[0]);
+						$expressionNode = new $expressionNodeTypeClassName($matchedVariables[0], $matchedVariables, $state);
 						$state->getNodeFromStack()->addChildNode($expressionNode);
 						break;
 					}

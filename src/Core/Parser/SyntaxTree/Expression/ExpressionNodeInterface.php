@@ -30,9 +30,10 @@ interface ExpressionNodeInterface extends NodeInterface {
 	 *
 	 * @param RenderingContextInterface $renderingContext
 	 * @param string $expression
+	 * @param array $matches
 	 * @return mixed
 	 */
-	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression);
+	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches);
 
 	/**
 	 * Getter for returning the expression before parsing.
@@ -40,5 +41,10 @@ interface ExpressionNodeInterface extends NodeInterface {
 	 * @return string
 	 */
 	public function getExpression();
+
+	/**
+	 * @return array
+	 */
+	public function getMatches();
 
 }

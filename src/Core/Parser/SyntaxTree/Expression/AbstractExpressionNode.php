@@ -24,13 +24,21 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	protected $expression;
 
 	/**
+	 * @var array
+	 */
+	protected $matches = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $expression The original expression that created this node.
+	 * @param array $matches Matches extracted from expression
+	 * @param ParsingState $parsingState
 	 * @throws Parser\Exception
 	 */
-	public function __construct($expression) {
+	public function __construct($expression, array $matches, Parser\ParsingState $parsingState = NULL) {
 		$this->expression = trim($expression, " \t\n\r\0\x0b");
+		$this->matches = $matches;
 	}
 
 	/**
@@ -41,7 +49,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	 * @return string the text stored in this node/subtree.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		return call_user_func_array(array(get_called_class(), 'evaluateExpression'), array($renderingContext, $this->expression));
+		return call_user_func_array(array(get_called_class(), 'evaluateExpression'), array($renderingContext, $this->expression, $this->matches));
 	}
 
 	/**
@@ -51,6 +59,13 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	 */
 	public function getExpression() {
 		return $this->expression;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getMatches() {
+		return $this->matches;
 	}
 
 	/**

@@ -43,9 +43,10 @@ class CastingExpressionNode extends AbstractExpressionNode {
 	/**
 	 * @param RenderingContextInterface $renderingContext
 	 * @param string $expression
+	 * @param array $matches
 	 * @return integer|float
 	 */
-	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression) {
+	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches) {
 		$expression = trim($expression, '{}');
 		list ($variable, $type) = explode(' as ', $expression);
 		$variable = parent::getTemplateVariableOrValueItself($variable, $renderingContext);
