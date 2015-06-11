@@ -81,7 +81,7 @@ class ObjectAccessorNode extends AbstractNode {
 		$variableProvider = $renderingContext->getVariableProvider();
 		switch (strtolower($this->objectPath)) {
 			case '_all':
-				return $variableProvider;
+				return $variableProvider->getAll();
 			case 'true':
 			case 'on':
 			case 'yes':
