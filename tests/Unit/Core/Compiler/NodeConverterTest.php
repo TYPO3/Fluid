@@ -64,8 +64,8 @@ class NodeConverterTest extends UnitTestCase {
 				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
-				new TernaryExpressionNode('1 ? 2 : 3'),
-				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::evaluateExpression($renderingContext, $string0)'
+				new TernaryExpressionNode('1 ? 2 : 3', array(1, 2, 3)),
+				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::evaluateExpression($renderingContext, $string0, $array1)'
 			),
 			array($simpleRoot, '\'foobar\''),
 			array(new TextNode('test'), '\'test\''),

@@ -25,7 +25,7 @@ class TernaryExpressionNodeTest extends UnitTestCase {
 	public function testEvaluateExpression($expression, array $variables, $expected) {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-		$result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression);
+		$result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression, array());
 		$this->assertEquals($expected, $result);
 	}
 

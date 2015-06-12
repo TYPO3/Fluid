@@ -302,14 +302,17 @@ class NodeConverter {
 	protected function convertExpressionNode(ExpressionNodeInterface $node) {
 		$handlerClass = get_class($node);
 		$expressionVariable = $this->variableName('string');
+		$matchesVariable = $this->variableName('array');
 		$initializationPhpCode = sprintf('// Rendering %s node' . chr(10), $handlerClass);
-		$initializationPhpCode .= sprintf('%s = \'%s\';', $expressionVariable, $node->getExpression()) . chr(10);
+		$initializationPhpCode .= sprintf('%s = \'%s\';' , $expressionVariable, $node->getExpression()) . chr(10);
+		$initializationPhpCode .= sprintf('%s = %s;' , $matchesVariable, var_export($node->getMatches(), TRUE)) . chr(10);
 		return array(
 			'initialization' => $initializationPhpCode,
 			'execution' => sprintf(
-				'\%s::evaluateExpression($renderingContext, %s)',
+				'\%s::evaluateExpression($renderingContext, %s, %s)',
 				$handlerClass,
-				$expressionVariable
+				$expressionVariable,
+				$matchesVariable
 			)
 		);
 	}

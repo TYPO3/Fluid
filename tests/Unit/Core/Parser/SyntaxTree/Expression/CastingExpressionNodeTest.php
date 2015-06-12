@@ -24,7 +24,7 @@ class CastingExpressionNodeTest extends UnitTestCase {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider());
 		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\ViewHelper\\Exception');
-		$result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1');
+		$result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', array());
 	}
 
 	/**
@@ -36,7 +36,7 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	public function testEvaluateExpression($expression, array $variables, $expected) {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-		$result = CastingExpressionNode::evaluateExpression($renderingContext, $expression);
+		$result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, array());
 		$this->assertEquals($expected, $result);
 	}
 
