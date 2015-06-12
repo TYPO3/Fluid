@@ -25,7 +25,7 @@ class MathExpressionNodeTest extends UnitTestCase {
 	public function testEvaluateExpression($expression, array $variables, $expected) {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-		$result = MathExpressionNode::evaluateExpression($renderingContext, $expression);
+		$result = MathExpressionNode::evaluateExpression($renderingContext, $expression, array());
 		$this->assertEquals($expected, $result);
 	}
 

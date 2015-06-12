@@ -33,10 +33,9 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	 *
 	 * @param string $expression The original expression that created this node.
 	 * @param array $matches Matches extracted from expression
-	 * @param ParsingState $parsingState
 	 * @throws Parser\Exception
 	 */
-	public function __construct($expression, array $matches, Parser\ParsingState $parsingState = NULL) {
+	public function __construct($expression, array $matches) {
 		$this->expression = trim($expression, " \t\n\r\0\x0b");
 		$this->matches = $matches;
 	}
