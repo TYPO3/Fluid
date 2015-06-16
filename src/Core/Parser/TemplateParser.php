@@ -499,8 +499,16 @@ class TemplateParser {
 					$matchedVariables = array();
 					if (preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER) > 0) {
 						foreach ($matchedVariables as $matchedVariableSet) {
+							$expressionStartPosition = strpos($section, $matchedVariableSet[0]);
 							$expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
+							if ($expressionStartPosition > 0) {
+								$state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
+							}
 							$state->getNodeFromStack()->addChildNode($expressionNode);
+							$expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
+							if ($expressionEndPosition < strlen($section)) {
+								$state->getNodeFromStack()->addChildNode(new TextNode(substr($section, $expressionEndPosition)));
+							}
 						}
 						break;
 					}
