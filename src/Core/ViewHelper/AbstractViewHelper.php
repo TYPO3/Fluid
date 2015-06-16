@@ -383,17 +383,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @return string
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		$viewHelperVariableName = $compiler->variableName('viewHelper');
-		$initializationPhpCode .= sprintf(
-			'%s = unserialize(\'%s\');',
-			$viewHelperVariableName,
-			serialize($node)
-		);
-
 		return sprintf(
-			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(%s, $renderingContext);',
+			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(\'%s\', %s, $renderingContext, %s);',
 			get_class($this),
-			$viewHelperVariableName
+			get_class($this),
+			$argumentsName,
+			$closureName
 		);
 	}
 
@@ -407,7 +402,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @return mixed
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		return NULL;
+		$viewHelperClassName = get_called_class();
+		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($viewHelperClassName)
+			->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
 	}
 
 	/**

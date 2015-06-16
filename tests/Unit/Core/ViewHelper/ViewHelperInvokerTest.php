@@ -24,8 +24,7 @@ class ViewHelperInvokerTest extends UnitTestCase {
 		$resolver = new ViewHelperResolver();
 		$invoker = new ViewHelperInvoker($resolver);
 		$renderingContext = new RenderingContext();
-		$node = new ViewHelperNode($resolver, 'f', 'count', array('subject' => new ArrayNode(array(1))), new ParsingState());
-		$result = $invoker->invoke($node, $renderingContext);
+		$result = $invoker->invoke('NamelessCoder\\Fluid\\ViewHelpers\\CountViewHelper', array('subject' => array('foo')), $renderingContext);
 		$this->assertEquals(1, $result);
 	}
 

@@ -129,7 +129,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 		$elseNode = NULL;
 		foreach ($this->childNodes as $childNode) {
 			if ($childNode instanceof ViewHelperNode
-				&& $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ElseViewHelper') {
+				&& substr($childNode->getViewHelperClassName(), -14) === 'ElseViewHelper') {
 				$arguments = $childNode->getArguments();
 				if (isset($arguments['if']) && $arguments['if']->evaluate($this->renderingContext)) {
 					return $childNode->evaluate($this->renderingContext);
@@ -155,11 +155,11 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		foreach ($node->getChildNodes() as $childNode) {
-			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ThenViewHelper') {
+			if ($childNode instanceof ViewHelperNode && substr($childNode->getViewHelperClassName(), -14) === 'ThenViewHelper') {
 				$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
 				$initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
 			}
-			if ($childNode instanceof ViewHelperNode && $childNode->getViewHelperClassName() === 'NamelessCoder\Fluid\ViewHelpers\ElseViewHelper') {
+			if ($childNode instanceof ViewHelperNode && substr($childNode->getViewHelperClassName(), -14) === 'ElseViewHelper') {
 				$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
 				if ($childNode->getArguments()) {
 					$nodeEvaluationAsClosure = $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'if');

@@ -67,9 +67,8 @@ class ViewHelperNode extends AbstractNode {
 		$this->viewHelperName = $identifier;
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstance($namespace, $identifier);
-		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->arguments = $arguments;
-		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments, $state);
+		$this->rewriteBooleanNodesInArgumentsObjectTree($this->getArgumentDefinitions(), $this->arguments, $state);
 	}
 
 	/**
@@ -90,7 +89,7 @@ class ViewHelperNode extends AbstractNode {
 	 * @return ArgumentDefinition[]
 	 */
 	public function getArgumentDefinitions() {
-		return $this->argumentDefinitions;
+		return $this->uninitializedViewHelper->prepareArguments();
 	}
 
 	/**
@@ -135,8 +134,11 @@ class ViewHelperNode extends AbstractNode {
 	 * @return object evaluated node after the view helper has been called.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		$invoker = $this->viewHelperResolver->resolveViewHelperInvoker($this->viewHelperClassName);
-		return $invoker->invoke($this, $renderingContext);
+		$viewHelper = clone $this->getUninitializedViewHelper();
+		$viewHelper->setChildNodes($this->getChildNodes());
+		$viewHelper->setViewHelperNode($this);
+		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($this->getViewHelperClassName())
+			->invoke($viewHelper, $this->getArguments(), $renderingContext);
 	}
 
 	/**
@@ -155,20 +157,4 @@ class ViewHelperNode extends AbstractNode {
 		}
 	}
 
-	/**
-	 * Clean up for serializing.
-	 *
-	 * @return array
-	 */
-	public function __sleep() {
-		return array(
-			'viewHelperClassName',
-			'viewHelperNamespace',
-			'viewHelperName',
-			'argumentDefinitions',
-			'viewHelperResolver',
-			'arguments',
-			'childNodes'
-		);
-	}
 }

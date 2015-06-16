@@ -71,30 +71,15 @@ class ViewHelperNodeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testSleepReturnsExpectedProperties() {
-		$invoker = new ViewHelperNode(new ViewHelperResolver(), 'f', 'count', array(), new ParsingState());
-		$properties = $invoker->__sleep();
-		$this->assertEquals(array(
-			'viewHelperClassName',
-			'viewHelperNamespace',
-			'viewHelperName',
-			'argumentDefinitions',
-			'viewHelperResolver',
-			'arguments',
-			'childNodes'
-		), $properties);
-	}
-
-	/**
-	 * @test
-	 */
 	public function testEvaluateCallsInvoker() {
 		$resolver = $this->getMock('NamelessCoder\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('resolveViewHelperInvoker'));
 		$invoker = $this->getMock('NamelessCoder\\Fluid\\Core\\ViewHelper\\ViewHelperInvoker', array('invoke'), array($resolver));
 		$resolver->expects($this->once())->method('resolveViewHelperInvoker')->willReturn($invoker);
+		$invoker->expects($this->once())->method('invoke')->willReturn('test');
 		$node = new ViewHelperNode($resolver, 'f', 'count', array(), new ParsingState());
-		$invoker->expects($this->once())->method('invoke')->with($node)->willReturn('test');
-		$result = $node->evaluate(new RenderingContext());
+		$context = new RenderingContext();
+		$context->setViewHelperResolver($resolver);
+		$result = $node->evaluate($context);
 		$this->assertEquals('test', $result);
 	}
 

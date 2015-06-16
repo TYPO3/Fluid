@@ -14,6 +14,7 @@ use NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -51,6 +52,10 @@ class NodeConverterTest extends UnitTestCase {
 		$simpleRoot = new RootNode();
 		$simpleRoot->addChildNode(new TextNode('foobar'));
 		return array(
+			array(
+				new ObjectAccessorNode('_all'),
+				'$renderingContext->getVariableProvider()->getAll()'
+			),
 			array(
 				new BooleanNode(new TextNode('TRUE')),
 				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'

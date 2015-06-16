@@ -48,17 +48,19 @@ class ViewHelperInvoker {
 	 * Invoke the ViewHelper described by the ViewHelperNode, the properties
 	 * of which will already have been filled by the ViewHelperResolver.
 	 *
-	 * @param ViewHelperNode $node
+	 * @param string|ViewHelperInterface $viewHelperClassName
+	 * @param array $arguments
 	 * @param RenderingContextInterface $renderingContext
+	 * @param \Closure $renderChildrenClosure
 	 * @return mixed
 	 */
-	public function invoke(ViewHelperNode $node, RenderingContextInterface $renderingContext) {
-		$viewHelperNamespace = $node->getViewHelperNamespace();
-		$viewHelperName = $node->getViewHelperName();
-		$arguments = $node->getArguments();
-		$viewHelperClassName = $node->getViewHelperClassName();
-		$expectedViewHelperArguments = $node->getArgumentDefinitions();
-		$childNodes = $node->getChildNodes();
+	public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = NULL) {
+		if ($viewHelperClassNameOrInstance instanceof ViewHelperInterface) {
+			$viewHelper = $viewHelperClassNameOrInstance;
+		} else {
+			$viewHelper = $this->viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassNameOrInstance);
+		}
+		$expectedViewHelperArguments = $renderingContext->getViewHelperResolver()->getArgumentDefinitionsForViewHelper($viewHelper);
 
 		// Rendering process
 		$evaluatedArguments = array();
@@ -66,11 +68,7 @@ class ViewHelperInvoker {
 			if (isset($arguments[$argumentName])) {
 				/** @var NodeInterface|mixed $argumentValue */
 				$argumentValue = $arguments[$argumentName];
-				if ($argumentValue instanceof NodeInterface) {
-					$evaluatedArguments[$argumentName] = $argumentValue->evaluate($renderingContext);
-				} else {
-					$evaluatedArguments[$argumentName] = $argumentValue;
-				}
+				$evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
 			} else {
 				$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 			}
@@ -79,26 +77,12 @@ class ViewHelperInvoker {
 		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $evaluatedArguments);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $evaluatedArguments);
 
-		$viewHelper = $this->getInitializedViewHelperInstance($viewHelperNamespace, $viewHelperName, $renderingContext);
-		$viewHelper->setViewHelperNode($node);
-		$viewHelper->setChildNodes($childNodes);
 		$viewHelper->setArguments($evaluatedArguments);
-
-		return $viewHelper->initializeArgumentsAndRender();
-	}
-
-	/**
-	 * @param string $namespace
-	 * @param string $name
-	 * @param RenderingContextInterface $renderingContext
-	 * @return ViewHelperInterface
-	 */
-	protected function getInitializedViewHelperInstance($namespace, $name, RenderingContextInterface $renderingContext) {
-		/** @var ViewHelperInterface $viewHelper */
-		$viewHelper = $this->viewHelperResolver->createViewHelperInstance($namespace, $name);
-		$viewHelper->resetState();
 		$viewHelper->setRenderingContext($renderingContext);
-		return $viewHelper;
+		if ($renderChildrenClosure) {
+			$viewHelper->setRenderChildrenClosure($renderChildrenClosure);
+		}
+		return $viewHelper->initializeArgumentsAndRender();
 	}
 
 	/**
