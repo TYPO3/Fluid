@@ -24,6 +24,11 @@ class TemplateCompiler {
 	const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
 
 	/**
+	 * @var boolean
+	 */
+	protected $disabled = FALSE;
+
+	/**
 	 * @var FluidCacheInterface
 	 */
 	protected $templateCache = NULL;
@@ -52,6 +57,20 @@ class TemplateCompiler {
 		}
 		$this->viewHelperResolver = $viewHelperResolver;
 		$this->nodeConverter = new NodeConverter($this);
+	}
+
+	/**
+	 * @return void
+	 */
+	public function disable() {
+		$this->disabled = TRUE;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isDisabled() {
+		return $this->disabled;
 	}
 
 	/**
@@ -111,6 +130,10 @@ class TemplateCompiler {
 	 */
 	public function store($identifier, ParsingState $parsingState) {
 		if (!$this->templateCache instanceof FluidCacheInterface) {
+			return;
+		}
+		if ($this->disabled) {
+			$this->templateCache->flush($identifier);
 			return;
 		}
 
