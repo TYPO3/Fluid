@@ -135,8 +135,14 @@ class ViewHelperNode extends AbstractNode {
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
 		$viewHelper = clone $this->getUninitializedViewHelper();
-		$viewHelper->setChildNodes($this->getChildNodes());
+		// Note about the following three method calls: some ViewHelpers
+		// require a specific order of attribute setting. The logical
+		// order is to first provide a ViewHelperNode, second to provide
+		// the rendering context and finally to provide child nodes.
+		// DO NOT CHANGE THIS ORDER. You *will* cause damage.
 		$viewHelper->setViewHelperNode($this);
+		$viewHelper->setRenderingContext($renderingContext);
+		$viewHelper->setChildNodes($this->getChildNodes());
 		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($this->getViewHelperClassName())
 			->invoke($viewHelper, $this->getArguments(), $renderingContext);
 	}
