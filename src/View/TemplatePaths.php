@@ -221,6 +221,7 @@ class TemplatePaths {
 		if ($this->templatePathAndFilename !== NULL) {
 			return $this->templatePathAndFilename;
 		}
+		$controller = str_replace('\\', '/', $controller);
 		$action = ucfirst($action);
 		$identifier = $controller . '/' . $action . '.' . $format;
 		if (!array_key_exists($identifier, self::$resolvedFiles['templates'])) {
