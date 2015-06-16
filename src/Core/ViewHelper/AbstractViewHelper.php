@@ -309,14 +309,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 				$value = $this->arguments[$argumentName];
 				$type = $registeredArgument->getType();
 				if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
-					$value = $this->arguments[$argumentName];
 					$givenType = is_object($value) ? get_class($value) : gettype($value);
 					$errorException = new \InvalidArgumentException(
 						'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
 						$givenType . '" in view helper "' . get_class($this) . '".',
 						1256475113
 					);
-					if ($type === 'array' && !is_array($value)) {
+					if ($type === 'object') {
+						if (!is_object($value)) {
+							throw $errorException;
+						}
+					} elseif ($type === 'array' && !is_array($value)) {
 						if (!$value instanceof \ArrayAccess && !$value instanceof \Traversable) {
 							throw $errorException;
 						}
