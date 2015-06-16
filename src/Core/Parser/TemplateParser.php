@@ -497,9 +497,11 @@ class TemplateParser {
 				foreach ($this->viewHelperResolver->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
 					$detetionExpression = $expressionNodeTypeClassName::$detectionExpression;
 					$matchedVariables = array();
-					if (preg_match($detetionExpression, $section, $matchedVariables) > 0) {
-						$expressionNode = new $expressionNodeTypeClassName($matchedVariables[0], $matchedVariables);
-						$state->getNodeFromStack()->addChildNode($expressionNode);
+					if (preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER) > 0) {
+						foreach ($matchedVariables as $matchedVariableSet) {
+							$expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
+							$state->getNodeFromStack()->addChildNode($expressionNode);
+						}
 						break;
 					}
 				}
