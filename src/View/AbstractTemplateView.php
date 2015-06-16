@@ -127,6 +127,7 @@ abstract class AbstractTemplateView extends AbstractView {
 		$this->viewHelperResolver = $viewHelperResolver;
 		$this->templateParser->setViewHelperResolver($viewHelperResolver);
 		$this->templateCompiler->setViewHelperResolver($viewHelperResolver);
+		$this->baseRenderingContext->setViewHelperResolver($viewHelperResolver);
 	}
 
 	/**
