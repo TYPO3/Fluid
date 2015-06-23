@@ -15,6 +15,11 @@ use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 class BooleanNode extends AbstractNode {
 
 	/**
+	 * Characters trimmed from strings used in comparisons
+	 */
+	const TRIM_CHARACTERS = " \t\n\r\0\x0B'\"";
+
+	/**
 	 * List of comparators which are supported in the boolean expression language.
 	 *
 	 * Make sure that if one string is contained in one another, the longer
@@ -40,7 +45,7 @@ class BooleanNode extends AbstractNode {
 		^                       # Start with first input symbol
 		(?:                     # start repeat
 			&&|\|\|             # we allow groupers
-			|==|!=|%|>=|>|<=|<  # We allow all comparators
+			|===|==|!=|%|>=|>|<=|<  # We allow all comparators
 			|\s*                # Arbitrary spaces
 			|-?                 # Numbers, possibly with the "minus" symbol in front.
 				[0-9]+          # some digits
@@ -86,10 +91,10 @@ class BooleanNode extends AbstractNode {
 		// or ViewHelperNode so we get all text, numbers, comparators and
 		// groupers from the text parts of the expression. All other nodes
 		// we leave intact for later processing
-		if ($root instanceof TextNode) {
-			$this->stack = array($root);
-		} elseif ($root instanceof RootNode) {
+		if ($root instanceof RootNode) {
 			$this->stack = $root->getChildNodes();
+		} else {
+			$this->stack = array($root);
 		}
 	}
 
@@ -129,130 +134,88 @@ class BooleanNode extends AbstractNode {
 	 */
 	public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts) {
 
-		// ---------------- BEGIN STRUCTURING ---------------/
-
-		// Second, reciprocate through nodes to create new BooleanNodes from the
-		// inside out. Loop from back to front and repeat until the contents of
-		// all braces have been extracted into BooleanNodes:
-		$i = count($expressionParts);
-
-		while ($i > 0 && $i-- && ($node = $expressionParts[$i])) {
-			if (!$node instanceof TextNode) {
-				continue;
-			}
-			$expressionParts[$i] = $node->evaluate($renderingContext);
-			$node = $expressionParts[$i];
-			$node = trim($node);
-			if (strpos($node, '(') === FALSE) {
-				// Node is a plain, non-braced expression that we can evaluate.
-				$expressionParts = self::mergeArraysAtIndex($i, $expressionParts, self::splitExpression($node));
-				$i = count($expressionParts);
-				continue;
-			}
-
-			// We've found an opening brace and will now split the TextNode
-			// into two, replace the old expression part with the first part
-			// of the now separated text, create a new TextNode from the
-			// remaining text and start checking for a closing brace:
-			$parts = explode('(', $node, 2);
-			$parts = array_map('trim', $parts);
-			$newNode = new RootNode();
-
-			// Now, if $parts[1] also contains at least one closing brace,
-			// we split that as well and will then have our complete new
-			// child nodes for the expression. We only care about $parts[1]
-			// because caring about $node might yield a false positive when
-			// there is a closing brace before the opening brace.
-			$cut = strpos($parts[1], ')');
-			if ($cut !== FALSE) {
-				if (strlen($parts[0])) {
-					$newNode->addChildNode(new TextNode($parts[0]));
-				}
-				if ($cut === strlen($parts[1]) - 1) {
-					$newNode->addChildNode(new TextNode(substr($parts[1], 0, -1)));
-				} else {
-					$newNode->addChildNode(new TextNode(substr($parts[1], 0, $cut)));
-					$newNode->addChildNode(new TextNode(substr($parts[1], $cut + 1)));
-				}
-				$booleanNode = new BooleanNode($newNode);
-				$expressionParts = self::mergeArraysAtIndex(
-					$i, $expressionParts, self::createFromNodeAndEvaluate($newNode, $renderingContext)
-				);
-				// Then we *RESET* the iteration counter to the *NEW MAX* so
-				// the next iteration will begin this loop all over, thus
-				// reciprocating back/front multiple times until all brace
-				// groupings are gone, each replaced by simple TRUE/FALSE.
-				$i = count($expressionParts);
-			}
+		foreach ($expressionParts as $index => $part) {
+			$expressionParts[$index] = self::evaluateNodeIfNotAlreadyEvaluated($part, $renderingContext);
 		}
 
-		// ---------------- END STRUCTURING, BEGIN EVALUATION ---------------/
+		$i = count($expressionParts);
+
+		if ($i === 1) {
+			$expressionParts = self::splitExpression($expressionParts[0]);
+			$i = count($expressionParts);
+		}
+		if ($i === 1) {
+			return self::convertToBoolean(trim($expressionParts[0], self::TRIM_CHARACTERS . '()'));
+		} elseif (in_array('(', $expressionParts, TRUE) && in_array(')', $expressionParts, TRUE)) {
+
+			// We have a clearly defined grouping which means we can slice
+			// the expression parts and evaluate our groupings recursively.
+			$total = count($expressionParts);
+			$parenthesisStart = array_search('(', $expressionParts, TRUE) + 1;
+			$parenthesisEnd = $total - (array_search(')', array_reverse($expressionParts), TRUE) + 1);
+			$subExpressions = array_slice(
+				$expressionParts,
+				$parenthesisStart,
+				$total - $parenthesisEnd
+			);
+			$before = array_slice($expressionParts, 0, $parenthesisStart - 1);
+			$after = $parenthesisEnd < count($expressionParts) ? array_slice($expressionParts, $parenthesisEnd + 1) : array();
+			$expressionParts = array_merge($before, array(self::evaluateStack($renderingContext, $subExpressions)), $after);
+			$i = count($expressionParts);
+		}
 
 		// Now we dumb it down a bit and do not implement any special precedence
 		// of the && and || groupers. Instead, we simply loop and consider each
 		// part of the completely exploded (and recursively pre-evaluated) stack
-		// of values, comparators and groupers to create one final verdict. Start
-		// by picking off the first (and possibly only) element and turning that
-		// into a boolean value to use as the beginning verdict.
+		// of values, comparators and groupers to create one final verdict.
 
-		// First item is always left side.
-		$left = self::evaluateNodeIfNotAlreadyEvaluated(array_shift($expressionParts), $renderingContext);
-		// Initial verdict is always left side of expression.
-		$verdict = self::convertToBoolean($left);
-		// Grouping and comparator must always be NULL initially.
-		$grouping = $comparator = NULL;
+		// Loop variables are initially declared NULL for isset() to return FALSE.
+		$left = $right = $verdict = $grouping = $comparator = NULL;
 
 		foreach ($expressionParts as $index => $part) {
-
-			$part = self::evaluateNodeIfNotAlreadyEvaluated($part, $renderingContext);
 
 			// In this loop we consider if the $part is a grouping; if it is, we
 			// store that as the grouping to be used when comparing the next part.
 			// If the value is not a grouping we prepare to build one verdict that
 			// is either a comparison or a simple boolean cast of one value.
-			if (in_array($part, self::$groupers)) {
 
-				$grouping = $part;
+			if (in_array($part, self::$groupers, TRUE)) {
 
-			} elseif ($left && $comparator) {
-
-				// The condition cases below have through iteration built up the
-				// necessary parts for a comparison. The current part will be the
-				// right hand side of the expression - and we have enough to evaluate.
-				$newVerdict = self::evaluateComparator($comparator, $left, $part);
+				// The current part is a grouping instruction; evaluate what has
+				// been collected so far.
+				$newVerdict = $comparator ? self::evaluateComparator($comparator, $left, $right) : self::convertToBoolean($left);
 				// We let the following method do what must be done based on whether
 				// or not a grouping was provided and what that grouping is.
 				$verdict = self::modifyVerdictBasedOnGrouping($verdict, $grouping, $newVerdict);
 				// We reset the detected left, comparator AND grouping variables so
 				// the next loop starts clean by collecting a left expression.
-				$left = $comparator = $grouping = NULL;
+				$left = $comparator = $right = NULL;
+				$grouping = $part;
 
-			} elseif (!isset($expressionParts[$index + 1]) || in_array($expressionParts[$index + 1], self::$groupers)) {
+			} elseif (in_array($part, self::$comparators, TRUE)) {
 
-				// We've looked ahead and the next value either does not exist or is
-				// a grouping operator. In either case we must now evaluate our
-				// expression. We know that the expression is only a single value
-				// currently stored in the left hand side of the expression.
-				$newVerdict = $comparator ? self::evaluateComparator($comparator, $left, $part) : self::convertToBoolean($part);
-				$verdict = self::modifyVerdictBasedOnGrouping($verdict, $grouping, $newVerdict);
-				// We reset the left side of the expression but no other values.
-				$left = NULL;
-
-			} elseif (isset($expressionParts[$index + 1]) && in_array($expressionParts[$index + 1], self::$comparators)) {
-
-				// We've looked ahead and the next value exists and is a comparator.
-				// At this point we must modify our verdict either to create the
-				// final value or to prepare for a coming grouping.
-				$verdict = self::modifyVerdictBasedOnGrouping($verdict, $grouping, self::convertToBoolean($left));
-
-			} elseif (in_array($part, self::$comparators)) {
-				// The current part is a comparator. We store the comparator now
-				// and the next iteration will contain the right side of the
-				// expression (which will be matched by the first case of this "if".
 				$comparator = $part;
+
+			} elseif (isset($left)) {
+
+				// We have collected left side and comparator, now we collect the
+				// right side. Next iteration or finalising below will then evaluate.
+				$right = $part;
+
+			} else {
+
+				// Assign left part of our expression so the next iteration has it.
+				$left = $part;
 
 			}
 		}
+
+		if (isset($left) && isset($comparator) && isset($right)) {
+			$verdict = self::modifyVerdictBasedOnGrouping($verdict, $grouping, self::evaluateComparator($comparator, $left, $right));
+		} elseif (isset($left) && !isset($comparator) && !isset($right)) {
+			$verdict = self::modifyVerdictBasedOnGrouping($verdict, $grouping, self::convertToBoolean($left));
+		}
+
 		return $verdict;
 	}
 
@@ -270,7 +233,18 @@ class BooleanNode extends AbstractNode {
 		if ($node instanceof NodeInterface) {
 			$node = $node->evaluate($renderingContext);
 		}
+		if (is_string($node)) {
+			$node = self::trimQuotedString($node);
+		}
 		return $node;
+	}
+
+	/**
+	 * @param string $string
+	 * @return string
+	 */
+	public static function trimQuotedString($string) {
+		return trim($string, self::TRIM_CHARACTERS);
 	}
 
 	/**
@@ -287,11 +261,10 @@ class BooleanNode extends AbstractNode {
 	 * @return boolean
 	 */
 	protected static function modifyVerdictBasedOnGrouping($verdict, $grouping, $newVerdict) {
-		if (empty($grouping)) {
-			// There is no grouping - we change the verdict now because our
-			// previous verdict was a boolean cast of the left side and the
-			// new verdict is a proper comparison as indended.
-			return (boolean) $newVerdict;
+		if (!is_bool($verdict) || empty($grouping)) {
+			// There is no grouping or no existing verdict - we overrule the
+			// verdict now to respect only the new verdict.
+			return self::convertToBoolean($newVerdict);
 		}
 		// There is grouping - our new verdict MUST be created by taking
 		// the existing verdict and evaluate the expression that consists
@@ -333,9 +306,8 @@ class BooleanNode extends AbstractNode {
 	 */
 	protected static function splitExpression($expression) {
 		$matches = array();
-		preg_match_all('/\'[^\']+\'|\S+/', $expression, $matches);
-		$matches[0] = array_map('trim', $matches[0]);
-		return $matches[0];
+		preg_match_all('/\'[^\']+\'|\S+|\\)|\\(/', stripslashes($expression), $matches);
+		return array_map(array(self::class, 'trimQuotedString'), $matches[0]);
 	}
 
 	/**
@@ -359,13 +331,9 @@ class BooleanNode extends AbstractNode {
 	 * @throws Parser\Exception
 	 */
 	static public function evaluateComparator($comparator, $left, $right) {
-		if (is_string($left)) {
-			$left = trim($left, "\t\n\r\0\x0B'\"");
-		}
-		if (is_string($right)) {
-			$right = trim($right, "\t\n\r\0\x0B'\"");
-		}
-		if ($comparator === '==') {
+		if ($comparator === '===') {
+			return (boolean) ($left === $right);
+		} elseif ($comparator === '==') {
 			return (boolean) ((is_object($left) && is_object($right)) ? ($left === $right) : ($left == $right));
 		} elseif ($comparator === '!=') {
 			return (boolean) ((is_object($left) && is_object($right)) ? ($left !== $right) : ($left != $right));
@@ -418,11 +386,11 @@ class BooleanNode extends AbstractNode {
 			return $value;
 		}
 		if (is_numeric($value)) {
-			return $value > 0;
+			return (boolean) ((float) $value > 0);
 		}
 		if (is_string($value)) {
-			$value = trim($value, "\t\n\r\0\x0B'\"");
-			return (!empty($value) && strtolower($value) !== 'false');
+			$value = trim($value, self::TRIM_CHARACTERS);
+			return (strtolower($value) !== 'false' && !empty($value));
 		}
 		if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
 			return count($value) > 0;

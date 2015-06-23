@@ -53,14 +53,20 @@ class RawViewHelper extends AbstractViewHelper {
 	protected $escapeOutput = FALSE;
 
 	/**
-	 * @param mixed $value The value to output
+	 * @return void
+	 */
+	public function initializeArguments() {
+		$this->registerArgument('value', 'mixed', 'The value to output', FALSE, NULL);
+	}
+
+	/**
 	 * @return string
 	 */
-	public function render($value = NULL) {
-		if ($value === NULL) {
+	public function render() {
+		if (!$this->hasArgument('value')) {
 			return $this->renderChildren();
 		} else {
-			return $value;
+			return $this->arguments['value'];
 		}
 	}
 }

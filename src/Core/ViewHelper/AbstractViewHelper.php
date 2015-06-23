@@ -384,7 +384,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		return sprintf(
-			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(\'%s\', %s, $renderingContext, %s);',
+			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(\'%s\', %s, $renderingContext, %s)',
 			get_class($this),
 			get_class($this),
 			$argumentsName,

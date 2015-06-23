@@ -90,10 +90,10 @@ class TemplateCompilerTest extends UnitTestCase {
 	 */
 	public function testWrapViewHelperNodeArgumentEvaluationInClosure() {
 		$instance = new TemplateCompiler();
-		$arguments = array('then' => new TextNode('true'));
-		$viewHelperNode = new ViewHelperNode(new ViewHelperResolver(), 'f', 'then', $arguments, new ParsingState());
-		$result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'then');
-		$serialized = serialize($arguments['then']);
+		$arguments = array('value' => new TextNode('sometext'));
+		$viewHelperNode = new ViewHelperNode(new ViewHelperResolver(), 'f', 'format.raw', $arguments, new ParsingState());
+		$result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
+		$serialized = serialize($arguments['value']);
 		$expected = 'function() use ($renderingContext, $self) {' . chr(10);
 		$expected .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', $serialized);
 		$expected .= chr(10) . '}';

@@ -36,7 +36,8 @@ class RawViewHelperTest extends UnitTestCase {
 	public function renderReturnsUnmodifiedValueIfSpecified() {
 		$value = 'input value " & äöüß@';
 		$this->viewHelper->expects($this->never())->method('renderChildren');
-		$actualResult = $this->viewHelper->render($value);
+		$this->viewHelper->setArguments(array('value' => $value));
+		$actualResult = $this->viewHelper->render();
 		$this->assertEquals($value, $actualResult);
 	}
 

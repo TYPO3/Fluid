@@ -318,7 +318,7 @@ class AbstractViewHelperTest extends UnitTestCase {
 		$result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
 		$this->assertEmpty($init);
 		$this->assertEquals('$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'' . get_class($viewHelper) .
-			'\')->invoke(\'' . get_class($viewHelper) . '\', foobar, $renderingContext, baz);', $result);
+			'\')->invoke(\'' . get_class($viewHelper) . '\', foobar, $renderingContext, baz)', $result);
 	}
 
 }
