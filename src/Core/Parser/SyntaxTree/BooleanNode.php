@@ -307,7 +307,7 @@ class BooleanNode extends AbstractNode {
 	protected static function splitExpression($expression) {
 		$matches = array();
 		preg_match_all('/\'[^\']+\'|\S+|\\)|\\(/', stripslashes($expression), $matches);
-		return array_map(array(self::class, 'trimQuotedString'), $matches[0]);
+		return array_map(array(get_called_class(), 'trimQuotedString'), $matches[0]);
 	}
 
 	/**
