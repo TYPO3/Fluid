@@ -497,10 +497,19 @@ class TemplateParser {
 				foreach ($this->viewHelperResolver->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
 					$detetionExpression = $expressionNodeTypeClassName::$detectionExpression;
 					$matchedVariables = array();
-					if (preg_match($detetionExpression, $section, $matchedVariables) > 0) {
-						$expressionNode = new $expressionNodeTypeClassName($matchedVariables[0], $matchedVariables);
+					preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER);
+					foreach ($matchedVariables as $matchedVariableSet) {
+						$expressionStartPosition = strpos($section, $matchedVariableSet[0]);
+						$expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
+						if ($expressionStartPosition > 0) {
+							$state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
+						}
 						$state->getNodeFromStack()->addChildNode($expressionNode);
-						break;
+						$expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
+						if ($expressionEndPosition < strlen($section)) {
+							$this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
+							break;
+						}
 					}
 				}
 

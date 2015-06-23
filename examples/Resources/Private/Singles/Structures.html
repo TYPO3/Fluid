@@ -44,9 +44,9 @@ And:
 Render statements can be written as inline
 expressions and conditioned by a clause:
 
-	Will render: {f:render(section: 'Section') -> f:if(condition: '1 = 1')}
-	Will render, clause reversed: {f:render(section: 'Section') -> f:else() -> f:if(condition: '1 = 0')}
-	Will not render: {f:render(section: 'Section') -> f:if(condition: '1 = 0')}
+	Will render: {f:render(section: 'Section') -> f:if(condition: '1 == 1')}
+	Will render, clause reversed: {f:render(section: 'Section') -> f:else() -> f:if(condition: '1 == 0')}
+	Will not render: {f:render(section: 'Section') -> f:if(condition: '1 == 0')}
 
 * Else-if
 

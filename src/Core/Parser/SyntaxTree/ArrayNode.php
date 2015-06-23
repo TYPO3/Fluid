@@ -38,7 +38,7 @@ class ArrayNode extends AbstractNode {
 	public function evaluate(RenderingContextInterface $renderingContext) {
 		$arrayToBuild = array();
 		foreach ($this->internalArray as $key => $value) {
-			$arrayToBuild[$key] = $value instanceof AbstractNode ? $value->evaluate($renderingContext) : $value;
+			$arrayToBuild[$key] = $value instanceof NodeInterface ? $value->evaluate($renderingContext) : $value;
 		}
 		return $arrayToBuild;
 	}

@@ -71,7 +71,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 			),
 			array(
 				array(new ViewHelperNode($resolver, 'f', 'else', array(), $state)),
-				'foobar-args[\'__elseClosure\'] = closure;' . PHP_EOL
+				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
 			),
 			array(
 				array(
@@ -79,7 +79,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 					new ViewHelperNode($resolver, 'f', 'else', array(), $state)
 				),
 				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL .
-				'foobar-args[\'__elseClosure\'] = closure;' . PHP_EOL
+				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
 			),
 			array(
 				array(
@@ -90,7 +90,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL .
 				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL .
 				'foobar-args[\'__elseifClosures\'][] = arg-closure;' . PHP_EOL .
-				'foobar-args[\'__elseClosure\'] = closure;' . PHP_EOL
+				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
 			),
 		);
 	}
@@ -117,10 +117,10 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 		return array(
 			array(array('condition' => FALSE), NULL),
 			array(array('condition' => TRUE, '__thenClosure' => function() { return 'foobar'; }), 'foobar'),
-			array(array('condition' => TRUE, '__elseClosure' => function() { return 'foobar'; }), ''),
+			array(array('condition' => TRUE, '__elseClosures' => array(function() { return 'foobar'; })), ''),
 			array(array('condition' => TRUE), ''),
 			array(array('condition' => TRUE), NULL),
-			array(array('condition' => FALSE, '__elseClosure' => function() { return 'foobar'; }), 'foobar'),
+			array(array('condition' => FALSE, '__elseClosures' => array(function() { return 'foobar'; })), 'foobar'),
 			array(array('condition' => FALSE, '__elseifClosures' => array(
 				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return FALSE; },
 				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return TRUE; }
@@ -133,9 +133,9 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return FALSE; }
 			), '__elseClosures' => array(
 				function() { return 'baz'; },
-				function() { return 'foobar'; }
-			), '__elseClosure' => function() { return 'barbar'; }
-			), 'barbar'),
+				function() { return 'foobar'; },
+				function() { return 'barbar'; }
+			)), 'barbar'),
 			array(array('condition' => FALSE, '__thenClosure' => function() { return 'foobar'; }), ''),
 			array(array('condition' => FALSE), ''),
 		);

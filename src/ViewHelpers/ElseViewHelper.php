@@ -6,6 +6,8 @@ namespace NamelessCoder\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -39,7 +41,7 @@ class ElseViewHelper extends AbstractViewHelper {
 	 * @return void
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules', FALSE, FALSE);
+		$this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
 	}
 
 	/**
@@ -49,4 +51,17 @@ class ElseViewHelper extends AbstractViewHelper {
 	public function render() {
 		return $this->renderChildren();
 	}
+
+	/**
+	 * @param string $argumentsName
+	 * @param string $closureName
+	 * @param string $initializationPhpCode
+	 * @param ViewHelperNode $node
+	 * @param TemplateCompiler $compiler
+	 * @return string|NULL
+	 */
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
+		return '\'\'';
+	}
+
 }

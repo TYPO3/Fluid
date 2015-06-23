@@ -187,7 +187,12 @@ class NodeConverter {
 		$providerReference = '$renderingContext->getVariableProvider()';
 		$path = $node->getObjectPath();
 		$pathSegments = explode('.', $path);
-		if (
+		if ($path === '_all') {
+			return array(
+				'initialization' => '',
+				'execution' => sprintf('%s->getAll()', $providerReference)
+			);
+		} elseif (
 			1 === count(array_unique($accessors))
 			&& reset($accessors) === VariableExtractor::ACCESSOR_ARRAY
 			&& count($accessors) === count($pathSegments)

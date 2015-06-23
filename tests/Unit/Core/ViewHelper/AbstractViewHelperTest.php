@@ -316,17 +316,9 @@ class AbstractViewHelperTest extends UnitTestCase {
 		$init = '';
 		$compiler = new TemplateCompiler();
 		$result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
-		$this->assertNotEmpty($init);
+		$this->assertEmpty($init);
 		$this->assertEquals('$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'' . get_class($viewHelper) .
-			'\')->invoke($viewHelper0, $renderingContext);', $result);
-	}
-
-	/**
-	 * @test
-	 */
-	public function testRenderStaticReturnsNull() {
-		$result = AbstractViewHelper::renderStatic(array(), function() { return 'test'; }, new RenderingContext());
-		$this->assertNull($result);
+			'\')->invoke(\'' . get_class($viewHelper) . '\', foobar, $renderingContext, baz)', $result);
 	}
 
 }

@@ -10,6 +10,7 @@ use NamelessCoder\Fluid\Core\Cache\FluidCacheInterface;
 use NamelessCoder\Fluid\Core\Parser\ParsedTemplateInterface;
 use NamelessCoder\Fluid\Core\Parser\ParsingState;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractExpressionNode;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\MathExpressionNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TernaryExpressionNode;
@@ -22,6 +23,11 @@ use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
 class TemplateCompiler {
 
 	const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
+
+	/**
+	 * @var boolean
+	 */
+	protected $disabled = FALSE;
 
 	/**
 	 * @var FluidCacheInterface
@@ -55,6 +61,20 @@ class TemplateCompiler {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function disable() {
+		$this->disabled = TRUE;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isDisabled() {
+		return $this->disabled;
+	}
+
+	/**
 	 * @param ViewHelperResolver $viewHelperResolver
 	 * @return void
 	 */
@@ -76,6 +96,13 @@ class TemplateCompiler {
 	 */
 	public function setNodeConverter(NodeConverter $nodeConverter) {
 		$this->nodeConverter = $nodeConverter;
+	}
+
+	/**
+	 * @return NodeConverter
+	 */
+	public function getNodeConverter() {
+		return $this->nodeConverter;
 	}
 
 	/**
@@ -111,6 +138,10 @@ class TemplateCompiler {
 	 */
 	public function store($identifier, ParsingState $parsingState) {
 		if (!$this->templateCache instanceof FluidCacheInterface) {
+			return;
+		}
+		if ($this->disabled) {
+			$this->templateCache->flush($identifier);
 			return;
 		}
 
@@ -251,7 +282,17 @@ EOD;
 		$arguments = $node->getArguments();
 		$argument = $arguments[$argumentName];
 		$closure = 'function() use ($renderingContext, $self) {' . chr(10);
-		$closure .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', serialize($argument)) . chr(10);
+		if ($node->getArgumentDefinition($argumentName)->getType() === 'boolean') {
+			// We treat boolean nodes by compiling a closure to evaluate the stack of the boolean argument
+			$compiledIfArgumentStack = $this->nodeConverter->convert(new ArrayNode($argument->getStack()));
+			$closure .= $compiledIfArgumentStack['initialization'] . chr(10);
+			$closure .= sprintf(
+				'return \NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s);',
+				$compiledIfArgumentStack['execution']
+			) . chr(10);
+		} else {
+			$closure .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', serialize($argument)) . chr(10);
+		}
 		$closure .= '}';
 		return $closure;
 	}

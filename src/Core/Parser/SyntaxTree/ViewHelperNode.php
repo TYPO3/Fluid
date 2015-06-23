@@ -67,9 +67,9 @@ class ViewHelperNode extends AbstractNode {
 		$this->viewHelperName = $identifier;
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstance($namespace, $identifier);
-		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->arguments = $arguments;
-		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments, $state);
+		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
+		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
 	}
 
 	/**
@@ -90,7 +90,7 @@ class ViewHelperNode extends AbstractNode {
 	 * @return ArgumentDefinition[]
 	 */
 	public function getArgumentDefinitions() {
-		return $this->argumentDefinitions;
+		return $this->uninitializedViewHelper->prepareArguments();
 	}
 
 	/**
@@ -122,6 +122,16 @@ class ViewHelperNode extends AbstractNode {
 	}
 
 	/**
+	 * INTERNAL - only needed for compiling templates
+	 *
+	 * @param string $argumentName
+	 * @return ArgumentDefinition|NULL
+	 */
+	public function getArgumentDefinition($argumentName) {
+		return $this->argumentDefinitions[$argumentName];
+	}
+
+	/**
 	 * Call the view helper associated with this object.
 	 *
 	 * First, it evaluates the arguments of the view helper.
@@ -135,8 +145,17 @@ class ViewHelperNode extends AbstractNode {
 	 * @return object evaluated node after the view helper has been called.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		$invoker = $this->viewHelperResolver->resolveViewHelperInvoker($this->viewHelperClassName);
-		return $invoker->invoke($this, $renderingContext);
+		$viewHelper = clone $this->getUninitializedViewHelper();
+		// Note about the following three method calls: some ViewHelpers
+		// require a specific order of attribute setting. The logical
+		// order is to first provide a ViewHelperNode, second to provide
+		// the rendering context and finally to provide child nodes.
+		// DO NOT CHANGE THIS ORDER. You *will* cause damage.
+		$viewHelper->setViewHelperNode($this);
+		$viewHelper->setRenderingContext($renderingContext);
+		$viewHelper->setChildNodes($this->getChildNodes());
+		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($this->getViewHelperClassName())
+			->invoke($viewHelper, $this->getArguments(), $renderingContext);
 	}
 
 	/**
@@ -155,20 +174,4 @@ class ViewHelperNode extends AbstractNode {
 		}
 	}
 
-	/**
-	 * Clean up for serializing.
-	 *
-	 * @return array
-	 */
-	public function __sleep() {
-		return array(
-			'viewHelperClassName',
-			'viewHelperNamespace',
-			'viewHelperName',
-			'argumentDefinitions',
-			'viewHelperResolver',
-			'arguments',
-			'childNodes'
-		);
-	}
 }

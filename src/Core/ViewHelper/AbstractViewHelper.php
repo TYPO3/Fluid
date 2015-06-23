@@ -309,14 +309,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 				$value = $this->arguments[$argumentName];
 				$type = $registeredArgument->getType();
 				if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
-					$value = $this->arguments[$argumentName];
 					$givenType = is_object($value) ? get_class($value) : gettype($value);
 					$errorException = new \InvalidArgumentException(
 						'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
 						$givenType . '" in view helper "' . get_class($this) . '".',
 						1256475113
 					);
-					if ($type === 'array' && !is_array($value)) {
+					if ($type === 'object') {
+						if (!is_object($value)) {
+							throw $errorException;
+						}
+					} elseif ($type === 'array' && !is_array($value)) {
 						if (!$value instanceof \ArrayAccess && !$value instanceof \Traversable) {
 							throw $errorException;
 						}
@@ -380,17 +383,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @return string
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		$viewHelperVariableName = $compiler->variableName('viewHelper');
-		$initializationPhpCode .= sprintf(
-			'%s = unserialize(\'%s\');',
-			$viewHelperVariableName,
-			serialize($node)
-		);
-
 		return sprintf(
-			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(%s, $renderingContext);',
+			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(\'%s\', %s, $renderingContext, %s)',
 			get_class($this),
-			$viewHelperVariableName
+			get_class($this),
+			$argumentsName,
+			$closureName
 		);
 	}
 
@@ -404,7 +402,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @return mixed
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		return NULL;
+		$viewHelperClassName = get_called_class();
+		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($viewHelperClassName)
+			->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
 	}
 
 	/**
