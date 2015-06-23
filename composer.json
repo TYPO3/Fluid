@@ -1,7 +1,7 @@
 {
 	"name": "namelesscoder/fluid",
 	"description": "The TYPO3 Fluid template rendering engine",
-	"license": ["MIT"],
+	"license": ["GPL-3.0+"],
 	"require-dev": {
 		"phpunit/phpunit": "*",
 		"mikey179/vfsStream": "*",
