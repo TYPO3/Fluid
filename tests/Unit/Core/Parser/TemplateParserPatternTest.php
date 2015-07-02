@@ -13,7 +13,7 @@ use NamelessCoder\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for Regular expressions in parser
  */
-class TemplateParserPatternTest extends UnitTestCase {
+class PatternsTest extends UnitTestCase {
 
 	/**
 	 * @test
