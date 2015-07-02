@@ -13,7 +13,9 @@ use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
 use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
 use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use NamelessCoder\Fluid\Tests\UnitTestCase;
 
@@ -330,6 +332,74 @@ class BooleanNodeTest extends UnitTestCase {
 		$this->assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
 	}
 
+	/**
+	 * @param array $variables
+	 * @return RenderingContext
+	 */
+	protected function getDummyRenderingContextWithVariables(array $variables) {
+		$context = new RenderingContext();
+		$context->getVariableProvider()->setSource($variables);
+		return $context;
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingVariableWithMatchedQuotedString() {
+		$renderingContext = $this->getDummyRenderingContextWithVariables(array('test' => 'somevalue'));
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new ObjectAccessorNode('test'));
+		$rootNode->addChildNode(new TextNode(' == '));
+		$rootNode->addChildNode(new TextNode('\'somevalue\''));
+		$this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingVariableWithUnmatchedQuotedString() {
+		$renderingContext = $this->getDummyRenderingContextWithVariables(array('test' => 'somevalue'));
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new ObjectAccessorNode('test'));
+		$rootNode->addChildNode(new TextNode(' != '));
+		$rootNode->addChildNode(new TextNode('\'othervalue\''));
+		$this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingNotEqualsVariableWithMatchedQuotedString() {
+		$renderingContext = $this->getDummyRenderingContextWithVariables(array('test' => 'somevalue'));
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new ObjectAccessorNode('test'));
+		$rootNode->addChildNode(new TextNode(' != '));
+		$rootNode->addChildNode(new TextNode('\'somevalue\''));
+		$this->assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingNotEqualsVariableWithUnmatchedQuotedString() {
+		$renderingContext = $this->getDummyRenderingContextWithVariables(array('test' => 'somevalue'));
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new ObjectAccessorNode('test'));
+		$rootNode->addChildNode(new TextNode(' != '));
+		$rootNode->addChildNode(new TextNode('\'somevalue\''));
+		$this->assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingEqualsVariableWithMatchedQuotedStringInSingleTextNode() {
+		$renderingContext = $this->getDummyRenderingContextWithVariables(array('test' => 'somevalue'));
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new ObjectAccessorNode('test'));
+		$rootNode->addChildNode(new TextNode(' != \'somevalue\''));
+		$this->assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
+	}
 
 	/**
 	 * @test

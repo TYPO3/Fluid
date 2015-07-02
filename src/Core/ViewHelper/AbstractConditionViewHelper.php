@@ -10,6 +10,7 @@ use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
 use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -64,6 +65,46 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	}
 
 	/**
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
+	 */
+	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		if ($arguments['condition']) {
+			if (isset($arguments['then'])) {
+				return $arguments['then'];
+			}
+			if (isset($arguments['__thenClosure'])) {
+				return $arguments['__thenClosure']();
+			}
+		} elseif (!empty($arguments['__elseClosures'])) {
+			$elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : array();
+			return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $renderingContext);
+		}
+		return '';
+	}
+
+	/**
+	 * @param array $closures
+	 * @param array $conditionClosures
+	 * @param RenderingContextInterface $renderingContext
+	 * @return string
+	 */
+	private static function evaluateElseClosures(array $closures, array $conditionClosures, RenderingContextInterface $renderingContext) {
+		foreach ($closures as $elseNodeIndex => $elseNodeClosure) {
+			if (!isset($conditionClosures[$elseNodeIndex])) {
+				return $elseNodeClosure();
+			} else {
+				if ($conditionClosures[$elseNodeIndex]()) {
+					return $elseNodeClosure();
+				}
+			}
+		}
+		return '';
+	}
+
+	/**
 	 * Returns value of "then" attribute.
 	 * If then attribute is not set, iterates through child nodes and renders ThenViewHelper.
 	 * If then attribute is not set and no ThenViewHelper and no ElseViewHelper is found, all child nodes are rendered
@@ -113,20 +154,10 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 			return $this->arguments['else'];
 		}
 		if ($this->hasArgument('__elseClosures')) {
-			foreach ($this->arguments['__elseClosures'] as $elseNodeIndex => $elseNodeClosure) {
-				#var_dump($this->arguments['__elseifClosures'][$elseNodeIndex]);
-				if (!isset($this->arguments['__elseifClosures'][$elseNodeIndex])) {
-					return $this->arguments['__elseClosures'][$elseNodeIndex]();
-				} else {
-					if ($this->arguments['__elseifClosures'][$elseNodeIndex]($this->renderingContext, $this)) {
-						return $this->arguments['__elseClosures'][$elseNodeIndex]();
-					}
-				}
-			}
-			// Fallthrough caught; in the case where all "else"s are "elseif"s but none
-			// of them were fulfilled, we render nothing - an empty string.
-			return '';
+			$elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : array();
+			return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $this->renderingContext);
 		}
+
 		/** @var ViewHelperNode|NULL $elseNode */
 		$elseNode = NULL;
 		foreach ($this->childNodes as $childNode) {
@@ -156,12 +187,16 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 * @return string
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
+		$thenViewHelperEncountered = $elseViewHelperEncountered = FALSE;
 		foreach ($node->getChildNodes() as $childNode) {
 			if ($childNode instanceof ViewHelperNode) {
-				if (substr($childNode->getViewHelperClassName(), -14) === 'ThenViewHelper') {
+				$viewHelperClassName = $childNode->getViewHelperClassName();
+				if (substr($viewHelperClassName, -14) === 'ThenViewHelper') {
+					$thenViewHelperEncountered = TRUE;
 					$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
 					$initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
-				} elseif (substr($childNode->getViewHelperClassName(), -14) === 'ElseViewHelper') {
+				} elseif (substr($viewHelperClassName, -14) === 'ElseViewHelper') {
+					$elseViewHelperEncountered = TRUE;
 					$childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);
 					$initializationPhpCode .= sprintf('%s[\'__elseClosures\'][] = %s;', $argumentsName, $childNodesAsClosure) . chr(10);
 					$arguments = $childNode->getArguments();
@@ -174,6 +209,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 				}
 			}
 		}
-		return sprintf('%s::renderStatic(%s, %s, $renderingContext)', get_class($this), $argumentsName, $closureName);
+		if (!$thenViewHelperEncountered && !$elseViewHelperEncountered && !isset($node->getArguments()['then'])) {
+			$initializationPhpCode .= sprintf('%s[\'__thenClosure\'] = %s;', $argumentsName, $closureName) . chr(10);
+		}
+		return parent::compile($argumentsName, $closureName, $initializationPhpCode, $node, $compiler);
 	}
 }

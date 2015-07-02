@@ -46,13 +46,18 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 	protected $tagName = 'div';
 
 	/**
-	 * Inject a TagBuilder
-	 *
-	 * @param TagBuilder $tagBuilder Tag builder
+	 * Constructor
+	 */
+	public function __construct() {
+		$this->tag = new TagBuilder($this->tagName);
+	}
+
+	/**
+	 * @param TagBuilder $tag
 	 * @return void
 	 */
-	public function injectTagBuilder(TagBuilder $tagBuilder) {
-		$this->tag = $tagBuilder;
+	public function setTagBuilder(TagBuilder $tag) {
+		$this->tag = $tag;
 	}
 
 	/**
@@ -60,7 +65,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 	 *
 	 * @api
 	 */
-	public function __construct() {
+	public function initializeArguments() {
 		$this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', FALSE);
 		$this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', FALSE);
 	}
@@ -131,4 +136,12 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 		$this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
 		$this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
 	}
+
+	/**
+	 * @return string
+	 */
+	public function render() {
+		return $this->tag->render();
+	}
+
 }

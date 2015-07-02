@@ -384,8 +384,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
 		return sprintf(
-			'$renderingContext->getViewHelperResolver()->resolveViewHelperInvoker(\'%s\')->invoke(\'%s\', %s, $renderingContext, %s)',
-			get_class($this),
+			'%s::renderStatic(%s, %s, $renderingContext)',
 			get_class($this),
 			$argumentsName,
 			$closureName
@@ -393,8 +392,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	}
 
 	/**
-	 * Default implementation of static rendering; useful if your ViewHelper
-	 * when compiled is able to render itself statically to increase performance.
+	 * Default implementation of static rendering; useful API method if your ViewHelper
+	 * when compiled is able to render itself statically to increase performance. This
+	 * default implementation will simply delegate to the ViewHelperInvoker.
 	 *
 	 * @param array $arguments
 	 * @param \Closure $renderChildrenClosure

@@ -64,7 +64,10 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 		$resolver = new ViewHelperResolver();
 		$state = new ParsingState();
 		return array(
-			array(array(), ''),
+			array(
+				array(),
+				'foobar-args[\'__thenClosure\'] = foobar-closure;' . PHP_EOL
+			),
 			array(
 				array(new ViewHelperNode($resolver, 'f', 'then', array(), $state)),
 				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL
@@ -105,8 +108,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 		$viewHelper = $this->getAccessibleMock('NamelessCoder\Fluid\Core\ViewHelper\AbstractConditionViewHelper', array('dummy'));
 		$viewHelper->setArguments($arguments);
 		$viewHelper->setViewHelperNode(new ViewHelperNode(new ViewHelperResolver(), 'f', 'if', array(), new ParsingState()));
-		$viewHelper->setRenderingContext(new RenderingContext());
-		$result = $viewHelper->render();
+		$result = AbstractConditionViewHelper::renderStatic($arguments, function() { return ''; }, new RenderingContext());
 		$this->assertEquals($expected, $result);
 	}
 
@@ -122,15 +124,15 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 			array(array('condition' => TRUE), NULL),
 			array(array('condition' => FALSE, '__elseClosures' => array(function() { return 'foobar'; })), 'foobar'),
 			array(array('condition' => FALSE, '__elseifClosures' => array(
-				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return FALSE; },
-				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return TRUE; }
+				function() { return FALSE; },
+				function() { return TRUE; }
 			), '__elseClosures' => array(
 				function() { return 'baz'; },
 				function() { return 'foobar'; }
 			)), 'foobar'),
 			array(array('condition' => FALSE, '__elseifClosures' => array(
-				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return FALSE; },
-				function(RenderingContextInterface $renderingContext, ViewHelperInterface $viewHelper) { return FALSE; }
+				function() { return FALSE; },
+				function() { return FALSE; }
 			), '__elseClosures' => array(
 				function() { return 'baz'; },
 				function() { return 'foobar'; },

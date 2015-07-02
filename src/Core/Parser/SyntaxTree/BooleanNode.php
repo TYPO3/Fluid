@@ -28,7 +28,7 @@ class BooleanNode extends AbstractNode {
 	 *
 	 * @var array
 	 */
-	static protected $comparators = array('==', '!=', '%', '>=', '>', '<=', '<');
+	static protected $comparators = array('===', '==', '!=', '%', '>=', '>', '<=', '<');
 
 	/**
 	 * @var array
@@ -133,17 +133,22 @@ class BooleanNode extends AbstractNode {
 	 * @return boolean the boolean value
 	 */
 	public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts) {
+		$index = 0;
+		$part = reset($expressionParts);
+		$processedParts = array();
+		do {
+			if ($part instanceof TextNode || is_string($part)) {
+				$text = $part instanceof TextNode ? $part->getText() : $part;
+				$processedParts = array_merge($processedParts, self::splitExpression($text));
+			} else {
+				$processedParts[] = self::evaluateNodeIfNotAlreadyEvaluated($part, $renderingContext);
+			}
+		} while ($part = next($expressionParts));
 
-		foreach ($expressionParts as $index => $part) {
-			$expressionParts[$index] = self::evaluateNodeIfNotAlreadyEvaluated($part, $renderingContext);
-		}
+		$expressionParts = &$processedParts;
 
 		$i = count($expressionParts);
 
-		if ($i === 1) {
-			$expressionParts = self::splitExpression($expressionParts[0]);
-			$i = count($expressionParts);
-		}
 		if ($i === 1) {
 			return self::convertToBoolean(trim($expressionParts[0], self::TRIM_CHARACTERS . '()'));
 		} elseif (in_array('(', $expressionParts, TRUE) && in_array(')', $expressionParts, TRUE)) {
@@ -275,26 +280,6 @@ class BooleanNode extends AbstractNode {
 		} else {
 			return (boolean) ($verdict || $newVerdict);
 		}
-	}
-
-	/**
-	 * Merges $array2 into $array1 by splitting $array1 at $index
-	 * and merging the results in order $before + $array2 + $after.
-	 * The $array2 variable supports mixed; if the variable is not
-	 * an array, a single-item array is created from it.
-	 *
-	 * @param integer $index
-	 * @param array $array1
-	 * @param array $array2
-	 * @return array
-	 */
-	protected static function mergeArraysAtIndex($index, array $array1, $array2) {
-		if (!is_array($array2)) {
-			$array2 = array($array2);
-		}
-		$before = array_slice($array1, 0, $index);
-		$after = array_slice($array1, $index + 1);
-		return array_merge($before, $array2, $after);
 	}
 
 	/**
