@@ -135,4 +135,35 @@ class TemplateCompilerTest extends UnitTestCase {
 		$instance->store('foobar', new ParsingState());
 	}
 
+	/**
+	 * @test
+	 */
+	public function testSupportsDisablingCompiler() {
+		$instance = new TemplateCompiler();
+		$instance->disable();
+		$this->assertTrue($instance->isDisabled());
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetNodeConverterReturnsNodeConverterInstance() {
+		$instance = new TemplateCompiler();
+		$this->assertInstanceOf('NamelessCoder\\Fluid\\Core\\Compiler\\NodeConverter', $instance->getNodeConverter());
+	}
+
+	/**
+	 * @test
+	 */
+	public function testStoreWhenDisabledFlushesCache() {
+		$cache = $this->getMock('NamelessCoder\\Fluid\\Core\\Cache\\SimpleFileCache', array('flush', 'store'));
+		$cache->expects($this->never())->method('store');
+		$cache->expects($this->once())->method('flush')->with('fakeidentifier');
+		$state = new ParsingState();
+		$instance = new TemplateCompiler();
+		$instance->disable();
+		$instance->setTemplateCache($cache);
+		$instance->store('fakeidentifier', $state);
+	}
+
 }

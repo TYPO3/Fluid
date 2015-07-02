@@ -6,6 +6,7 @@ namespace NamelessCoder\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use NamelessCoder\Fluid\Core\ViewHelper\TagBuilder;
 use NamelessCoder\Fluid\Tests\UnitTestCase;
 
 /**
@@ -15,6 +16,47 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 
 	public function setUp() {
 		$this->viewHelper = $this->getAccessibleMock('NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper', array('dummy'), array(), '', FALSE);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testConstructorSetsTagBuilder() {
+		$viewHelper = $this->getAccessibleMock(
+			'NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
+			array('dummy'),
+			array(), '', TRUE
+		);
+		$this->assertAttributeInstanceOf('NamelessCoder\\Fluid\\Core\\ViewHelper\\TagBuilder', 'tag', $viewHelper);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testSetTagBuilderSetsTagBuilder() {
+		$viewHelper = $this->getAccessibleMock(
+			'NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
+			array('dummy'),
+			array(), '', FALSE
+		);
+		$tagBuilder = new TagBuilder('div');
+		$viewHelper->setTagBuilder($tagBuilder);
+		$this->assertAttributeSame($tagBuilder, 'tag', $viewHelper);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testRenderCallsRenderOnTagBuilder() {
+		$viewHelper = $this->getAccessibleMock(
+			'NamelessCoder\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
+			array('dummy'),
+			array(), '', FALSE
+		);
+		$tagBuilder = $this->getMock('NamelessCoder\\Fluid\\Core\\ViewHelper\\TagBuilder', array('render'));
+		$tagBuilder->expects($this->once())->method('render')->willReturn('foobar');
+		$viewHelper->setTagBuilder($tagBuilder);
+		$this->assertEquals('foobar', $viewHelper->render());
 	}
 
 	/**

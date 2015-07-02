@@ -9,6 +9,7 @@ namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
 use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -150,6 +151,32 @@ class BooleanNodeTest extends UnitTestCase {
 		$rootNode->addChildNode(new TextNode('5'));
 		$rootNode->addChildNode(new TextNode('=='));
 		$rootNode->addChildNode(new TextNode('3'));
+
+		$booleanNode = new BooleanNode($rootNode);
+		$this->assertFalse($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingEqualIdentityReturnsTrue() {
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new TextNode('5'));
+		$rootNode->addChildNode(new TextNode('==='));
+		$rootNode->addChildNode(new TextNode('5'));
+
+		$booleanNode = new BooleanNode($rootNode);
+		$this->assertTrue($booleanNode->evaluate($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function comparingUnequalIdentityReturnsFalse() {
+		$rootNode = new RootNode();
+		$rootNode->addChildNode(new TextNode('5'));
+		$rootNode->addChildNode(new TextNode('==='));
+		$rootNode->addChildNode(new NumericNode(5));
 
 		$booleanNode = new BooleanNode($rootNode);
 		$this->assertFalse($booleanNode->evaluate($this->renderingContext));
