@@ -20,16 +20,6 @@ class ViewHelperNode extends AbstractNode {
 	/**
 	 * @var string
 	 */
-	protected $viewHelperNamespace;
-
-	/**
-	 * @var string
-	 */
-	protected $viewHelperName;
-
-	/**
-	 * @var string
-	 */
 	protected $viewHelperClassName;
 
 	/**
@@ -63,27 +53,11 @@ class ViewHelperNode extends AbstractNode {
 	 */
 	public function __construct(ViewHelperResolver $resolver, $namespace, $identifier, array $arguments, ParsingState $state) {
 		$this->viewHelperResolver = $resolver;
-		$this->viewHelperNamespace = $namespace;
-		$this->viewHelperName = $identifier;
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstance($namespace, $identifier);
 		$this->arguments = $arguments;
 		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getViewHelperNamespace() {
-		return $this->viewHelperNamespace;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getViewHelperName() {
-		return $this->viewHelperName;
 	}
 
 	/**
