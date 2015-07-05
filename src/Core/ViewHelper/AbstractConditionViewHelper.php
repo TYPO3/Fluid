@@ -50,6 +50,19 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	}
 
 	/**
+	 * Static method which can be overridden by subclasses. If a subclass
+	 * requires a different (or faster) decision then this method is the one
+	 * to override and implement.
+	 *
+	 * @param array|NULL $arguments
+	 * @return boolean
+	 * @api
+	 */
+	protected static function evaluateCondition(array $arguments = NULL) {
+		return (boolean) $arguments['condition'];
+	}
+
+	/**
 	 * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
 	 *
 	 * @param boolean $condition View helper condition
@@ -57,7 +70,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 * @api
 	 */
 	public function render() {
-		if ($this->arguments['condition']) {
+		if ($this->evaluateCondition($this->arguments)) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();
@@ -71,7 +84,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 * @return mixed
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		if ($arguments['condition']) {
+		if (static::evaluateCondition($arguments)) {
 			if (isset($arguments['then'])) {
 				return $arguments['then'];
 			}
