@@ -74,11 +74,15 @@ interface VariableProviderInterface extends \ArrayAccess {
 	/**
 	 * Get a variable by dotted path expression, retrieving the
 	 * variable from nested arrays/objects one segment at a time.
+	 * If the second variable is passed, it is expected to contain
+	 * extraction method names (constants from VariableExtractor)
+	 * which indicate how each value is extracted.
 	 *
 	 * @param string $path
+	 * @param array $accessors
 	 * @return mixed
 	 */
-	public function getByPath($path);
+	public function getByPath($path, array $accessors = array());
 
 	/**
 	 * Remove a variable from context.
