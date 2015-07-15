@@ -25,7 +25,6 @@ class ViewHelperVariableContainer {
 	protected $objects = array();
 
 	/**
-	 *
 	 * @var AbstractTemplateView
 	 */
 	protected $view;
@@ -34,19 +33,13 @@ class ViewHelperVariableContainer {
 	 * Add a variable to the Variable Container. Make sure that $viewHelperName is ALWAYS set
 	 * to your fully qualified ViewHelper Class Name
 	 *
-	 * In case the value is already inside, an exception is thrown.
-	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @param mixed $value The value to store
 	 * @return void
-	 * @throws InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
 	public function add($viewHelperName, $key, $value) {
-		if ($this->exists($viewHelperName, $key)) {
-			throw new InvalidVariableException(sprintf('The key "%s->%s" was already stored and you cannot override it. Use addOrUpdate() instead if you want to replace existing values', $viewHelperName, $key), 1243352010);
-		}
 		$this->addOrUpdate($viewHelperName, $key, $value);
 	}
 
@@ -72,15 +65,15 @@ class ViewHelperVariableContainer {
 	 *
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
+	 * @param mixed $default Default value to use if no value is found.
 	 * @return mixed The object stored
-	 * @throws InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
-	public function get($viewHelperName, $key) {
-		if (!$this->exists($viewHelperName, $key)) {
-			throw new InvalidVariableException(sprintf('No value found for key "%s->%s"', $viewHelperName, $key), 1243325768);
+	public function get($viewHelperName, $key, $default = NULL) {
+		if ($this->exists($viewHelperName, $key)) {
+			return $this->objects[$viewHelperName][$key];
 		}
-		return $this->objects[$viewHelperName][$key];
+		return $default;
 	}
 
 	/**
@@ -101,14 +94,12 @@ class ViewHelperVariableContainer {
 	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data to remove
 	 * @return void
-	 * @throws InvalidVariableException if there was no key with the specified name
 	 * @api
 	 */
 	public function remove($viewHelperName, $key) {
-		if (!$this->exists($viewHelperName, $key)) {
-			throw new InvalidVariableException(sprintf('No value found for key "%s->%s", thus the key cannot be removed.', $viewHelperName, $key), 1243352249);
+		if ($this->exists($viewHelperName, $key)) {
+			unset($this->objects[$viewHelperName][$key]);
 		}
-		unset($this->objects[$viewHelperName][$key]);
 	}
 
 	/**

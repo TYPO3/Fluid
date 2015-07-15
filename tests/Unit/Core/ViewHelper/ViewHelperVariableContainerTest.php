@@ -38,23 +38,6 @@ class ViewHelperVariableContainerTest extends UnitTestCase {
 
 	/**
 	 * @test
-	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 */
-	public function gettingNonNonExistentValueThrowsException() {
-		$this->viewHelperVariableContainer->get('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
-	}
-
-	/**
-	 * @test
-	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 */
-	public function settingKeyWhichIsAlreadyStoredThrowsException() {
-		$this->viewHelperVariableContainer->add('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
-		$this->viewHelperVariableContainer->add('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value2');
-	}
-
-	/**
-	 * @test
 	 */
 	public function addOrUpdateSetsAKeyIfItDoesNotExistYet() {
 		$this->viewHelperVariableContainer->add('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
@@ -77,14 +60,6 @@ class ViewHelperVariableContainerTest extends UnitTestCase {
 		$this->viewHelperVariableContainer->add('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey', 'value1');
 		$this->viewHelperVariableContainer->remove('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
 		$this->assertFalse($this->viewHelperVariableContainer->exists('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey'));
-	}
-
-	/**
-	 * @test
-	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception\InvalidVariableException
-	 */
-	public function removingNonExistentKeyThrowsException() {
-		$this->viewHelperVariableContainer->remove('NamelessCoder\Fluid\ViewHelper\NonExistent', 'nonExistentKey');
 	}
 
 	/**
@@ -126,6 +101,14 @@ class ViewHelperVariableContainerTest extends UnitTestCase {
 		$subject = new ViewHelperVariableContainer();
 		$properties = $subject->__sleep();
 		$this->assertContains('objects', $properties);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetReturnsDefaultIfRequestedVariableDoesNotExist() {
+		$subject = new ViewHelperVariableContainer();
+		$this->assertEquals('test', $subject->get('foo', 'bar', 'test'));
 	}
 
 }
