@@ -171,7 +171,7 @@ class NodeConverter {
 		$initializationPhpCode .= $viewHelperInitializationPhpCode;
 		$initializationArray = array(
 			'initialization' => $initializationPhpCode,
-			'execution' => $convertedViewHelperExecutionCode
+			'execution' => $convertedViewHelperExecutionCode === NULL ? 'NULL' : $convertedViewHelperExecutionCode
 		);
 		return $initializationArray;
 	}
