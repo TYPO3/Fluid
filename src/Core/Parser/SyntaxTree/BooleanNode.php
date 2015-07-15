@@ -150,7 +150,7 @@ class BooleanNode extends AbstractNode {
 		$i = count($expressionParts);
 
 		if ($i === 1) {
-			return self::convertToBoolean(trim($expressionParts[0], self::TRIM_CHARACTERS . '()'));
+			return self::convertToBoolean($expressionParts[0]);
 		} elseif (in_array('(', $expressionParts, TRUE) && in_array(')', $expressionParts, TRUE)) {
 
 			// We have a clearly defined grouping which means we can slice
@@ -374,7 +374,7 @@ class BooleanNode extends AbstractNode {
 			return (boolean) ((float) $value > 0);
 		}
 		if (is_string($value)) {
-			$value = trim($value, self::TRIM_CHARACTERS);
+			$value = trim($value, self::TRIM_CHARACTERS . '()');
 			return (strtolower($value) !== 'false' && !empty($value));
 		}
 		if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
