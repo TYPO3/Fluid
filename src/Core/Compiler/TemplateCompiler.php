@@ -141,6 +141,7 @@ class TemplateCompiler {
 			return;
 		}
 		if ($this->disabled) {
+			$parsingState->setCompilable(FALSE);
 			$this->templateCache->flush($identifier);
 			return;
 		}
