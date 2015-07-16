@@ -319,8 +319,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 						if (!is_object($value)) {
 							throw $errorException;
 						}
-					} elseif ($type === 'array' && !is_array($value)) {
-						if (!$value instanceof \ArrayAccess && !$value instanceof \Traversable) {
+					} elseif ($type === 'array') {
+						if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
 							throw $errorException;
 						}
 					} elseif ($type === 'string') {
