@@ -20,7 +20,8 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @test
 	 */
 	public function setsLayoutPathAndFilename() {
-		$instance = new TemplatePaths();
+		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->setLayoutPathAndFilename('foobar');
 		$this->assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
 	}
@@ -29,7 +30,8 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @test
 	 */
 	public function setsTemplatePathAndFilename() {
-		$instance = new TemplatePaths();
+		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->setTemplatePathAndFilename('foobar');
 		$this->assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
 	}
@@ -42,7 +44,8 @@ class TemplatePathsTest extends BaseTestCase {
 	public function testGetterAndSetter($property, $value) {
 		$getter = 'get' . ucfirst($property);
 		$setter = 'set' . ucfirst($property);
-		$instance = new TemplatePaths();
+		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->$setter($value);
 		$this->assertEquals($value, $instance->$getter());
 	}
@@ -105,7 +108,8 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function testToArray() {
-		$instance = new TemplatePaths();
+		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->setTemplateRootPaths(array('1'));
 		$instance->setLayoutRootPaths(array('2'));
 		$instance->setPartialRootPaths(array('3'));

@@ -110,11 +110,41 @@ class TemplatePaths {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function toArray() {
+		return array(
+			self::CONFIG_TEMPLATEROOTPATHS => $this->sanitizePath($this->getTemplateRootPaths()),
+			self::CONFIG_LAYOUTROOTPATHS => $this->sanitizePath($this->getLayoutRootPaths()),
+			self::CONFIG_PARTIALROOTPATHS => $this->sanitizePath($this->getPartialRootPaths())
+		);
+	}
+
+	/**
+	 * @param string|array $path
+	 * @return string
+	 */
+	protected function sanitizePath($path) {
+		if (is_array($path)) {
+			$paths = array_map(array($this, 'sanitizePath'), $path);
+			return array_unique($paths);
+		}
+		if (substr($path, 0, 1) !== '/') {
+			$path = realpath($path);
+		}
+		$path = $this->ensureAbsolutePath($path);
+		if (is_dir($path)) {
+			$path = $this->ensureSuffixedPath($path);
+		}
+		return $path;
+	}
+
+	/**
 	 * @param string $templatePathAndFilename
 	 * @return void
 	 */
 	public function setTemplatePathAndFilename($templatePathAndFilename) {
-		$this->templatePathAndFilename = $templatePathAndFilename;
+		$this->templatePathAndFilename = $this->sanitizePath($templatePathAndFilename);
 	}
 
 	/**
@@ -137,7 +167,7 @@ class TemplatePaths {
 	 * @return void
 	 */
 	public function setTemplateRootPaths(array $templateRootPaths) {
-		$this->templateRootPaths = $templateRootPaths;
+		$this->templateRootPaths = array_map(array($this, 'sanitizePath'), $templateRootPaths);
 		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
@@ -153,7 +183,7 @@ class TemplatePaths {
 	 * @return void
 	 */
 	public function setLayoutRootPaths(array $layoutRootPaths) {
-		$this->layoutRootPaths = $layoutRootPaths;
+		$this->layoutRootPaths = array_map(array($this, 'sanitizePath'), $layoutRootPaths);
 		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
@@ -169,7 +199,7 @@ class TemplatePaths {
 	 * @return void
 	 */
 	public function setPartialRootPaths(array $partialRootPaths) {
-		$this->partialRootPaths = $partialRootPaths;
+		$this->partialRootPaths = array_map(array($this, 'sanitizePath'), $partialRootPaths);
 		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
@@ -349,17 +379,6 @@ class TemplatePaths {
 		$this->setTemplateRootPaths(array($path . self::DEFAULT_TEMPLATES_DIRECTORY));
 		$this->setLayoutRootPaths(array($path . self::DEFAULT_LAYOUTS_DIRECTORY));
 		$this->setPartialRootPaths(array($path . self::DEFAULT_PARTIALS_DIRECTORY));
-	}
-
-	/**
-	 * @return array
-	 */
-	public function toArray() {
-		return array(
-			self::CONFIG_TEMPLATEROOTPATHS => $this->getTemplateRootPaths(),
-			self::CONFIG_LAYOUTROOTPATHS => $this->getLayoutRootPaths(),
-			self::CONFIG_PARTIALROOTPATHS => $this->getPartialRootPaths()
-		);
 	}
 
 	/**
