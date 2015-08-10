@@ -65,6 +65,16 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testGetViewHelperResolverReturnsExpectedViewHelperResolver() {
+		$viewHelperResolver = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver');
+		$this->view->setViewHelperResolver($viewHelperResolver);
+		$result = $this->view->getViewHelperResolver();
+		$this->assertSame($viewHelperResolver, $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function viewIsPlacedInViewHelperVariableContainer() {
 		$this->viewHelperVariableContainer->expects($this->once())->method('setView')->with($this->view);
 		$this->view->setRenderingContext($this->renderingContext);

@@ -131,6 +131,13 @@ abstract class AbstractTemplateView extends AbstractView {
 	}
 
 	/**
+	 * @return ViewHelperResolver
+	 */
+	public function getViewHelperResolver() {
+		return $this->viewHelperResolver;
+	}
+
+	/**
 	 * Inject the Template Parser
 	 *
 	 * @param TemplateParser $templateParser The template parser
