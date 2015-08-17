@@ -1,26 +1,26 @@
 <?php
-namespace NamelessCoder\Fluid\View;
+namespace TYPO3Fluid\Fluid\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Cache\FluidCacheInterface;
-use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
-use NamelessCoder\Fluid\Core\Parser\Configuration;
-use NamelessCoder\Fluid\Core\Parser\Interceptor\Escape;
-use NamelessCoder\Fluid\Core\Parser\Interceptor\Resource;
-use NamelessCoder\Fluid\Core\Parser\ParsedTemplateInterface;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\Parser\TemplateParser;
-use NamelessCoder\Fluid\Core\Parser\TemplateProcessorInterface;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use NamelessCoder\Fluid\View\Exception\InvalidSectionException;
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\Configuration;
+use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
+use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Resource;
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
 /**
  * Abstract Fluid Template View.
@@ -337,7 +337,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$section = $sections[$sectionName];
 
 			$renderingContext->getViewHelperVariableContainer()->add(
-				'NamelessCoder\Fluid\ViewHelpers\SectionViewHelper',
+				'TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper',
 				'isCurrentlyRenderingSection',
 				TRUE
 			);

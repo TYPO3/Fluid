@@ -1,18 +1,18 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\Interceptor;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
-use NamelessCoder\Fluid\Core\Parser\Interceptor\Escape;
-use NamelessCoder\Fluid\Core\Parser\InterceptorInterface;
-use NamelessCoder\Fluid\Core\Parser\ParsingState;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
+use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Testcase for Interceptor\Escape
@@ -40,10 +40,10 @@ class EscapeTest extends UnitTestCase {
 	protected $mockParsingState;
 
 	public function setUp() {
-		$this->escapeInterceptor = $this->getAccessibleMock('NamelessCoder\Fluid\Core\Parser\Interceptor\Escape', array('dummy'));
-		$this->mockViewHelper = $this->getMockBuilder('NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper')->disableOriginalConstructor()->getMock();
-		$this->mockNode = $this->getMockBuilder('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
-		$this->mockParsingState = $this->getMockBuilder('NamelessCoder\Fluid\Core\Parser\ParsingState')
+		$this->escapeInterceptor = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape', array('dummy'));
+		$this->mockViewHelper = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper')->disableOriginalConstructor()->getMock();
+		$this->mockNode = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
+		$this->mockParsingState = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Parser\ParsingState')
 			->setMethods(array('getViewHelperResolver'))->disableOriginalConstructor()->getMock();
 		$this->mockParsingState->expects($this->once())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
 	}
@@ -94,9 +94,9 @@ class EscapeTest extends UnitTestCase {
 	 */
 	public function processWrapsCurrentViewHelperInHtmlspecialcharsViewHelperOnObjectAccessor() {
 		$interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
-		$mockNode = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
-		$mockEscapeViewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
+		$mockNode = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array(), array(), '', FALSE);
+		$mockEscapeViewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper');
 		$actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
-		$this->assertInstanceOf('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $actualResult);
+		$this->assertInstanceOf('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', $actualResult);
 	}
 }

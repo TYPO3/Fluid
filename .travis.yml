@@ -1,10 +1,6 @@
 language: php
 
-sudo: true
-
-env:
-  global:
-    secure: TMuGiQ2+whrUPO6q733aGbWGz04W6f7fmf8ikoKh0tOrDQRVkjhj153uA4z3iBbODvL2JTGm3g7QA2T5Vxy0DN1WDbedp8AMA4GhXAi3pUsXSP3yr2eUxYDXKp0F1ZqTNhOtE3W9bXoBlsDLWjgtlZmwlPua2qHbd1YdozyqdkM=
+sudo: false
 
 php:
   - "5.4"
@@ -20,15 +16,12 @@ matrix:
 
 before_install:
   - composer self-update
-  - echo "$NUMEROLOG_TOKEN" > .numerolog-token-90d266e4c7e3463a4266086282f608c1121c3d95
-  - sh -c 'if [ $(php -r "echo (int) defined(\"HHVM_VERSION\");") -eq 0 ]; then pecl install -f xhprof-beta; fi'
 
 install: composer install
 
 script:
   - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
   - vendor/bin/phpunit --coverage-clover=build/logs/clover-functional.xml -c phpunit-functional.xml.dist
-  - vendor/bin/phpunit -c phpunit-profiling.xml.dist
 
 after_script:
   - vendor/bin/coveralls

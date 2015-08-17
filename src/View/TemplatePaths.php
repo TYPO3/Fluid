@@ -1,11 +1,11 @@
 <?php
-namespace NamelessCoder\Fluid\View;
+namespace TYPO3Fluid\Fluid\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
-use NamelessCoder\Fluid\View\Exception\InvalidTemplateResourceException;
+use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
 /**
  * Template Paths Holder

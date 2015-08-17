@@ -1,16 +1,16 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Format;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Tests\UnitTestCase;
-use NamelessCoder\Fluid\ViewHelpers\Format\RawViewHelper;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 
 /**
- * Test for \NamelessCoder\Fluid\ViewHelpers\Format\RawViewHelper
+ * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper
  */
 class RawViewHelperTest extends UnitTestCase {
 
@@ -20,7 +20,7 @@ class RawViewHelperTest extends UnitTestCase {
 	protected $viewHelper;
 
 	public function setUp() {
-		$this->viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\Format\RawViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper', array('renderChildren'));
 	}
 
 	/**

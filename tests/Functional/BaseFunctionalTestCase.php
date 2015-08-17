@@ -1,15 +1,15 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Functional;
+namespace TYPO3Fluid\Fluid\Tests\Functional;
 
-use NamelessCoder\Fluid\Core\Cache\FluidCacheInterface;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
-use NamelessCoder\Fluid\View\TemplatePaths;
-use NamelessCoder\Fluid\View\TemplateView;
-use NamelessCoder\Fluid\View\ViewInterface;
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\View\TemplateView;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * Class BaseFunctionalTestCase

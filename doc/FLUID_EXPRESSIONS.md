@@ -20,9 +20,9 @@ In Fluid's default ViewHelperResolver, the following code is responsible for ret
  * @var string
  */
 protected $expressionNodeTypes = array(
-    'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
-    'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
-    'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
+    'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+    'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
+    'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
 );
 
 /**
@@ -49,10 +49,10 @@ while being aware of the rendering context (which stores all variables, controll
 
 ```php
 <?php
-namespace NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression;
+namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
-use NamelessCoder\Fluid\Core\Parser;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Parser;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Ternary Condition Node - allows the shorthand version

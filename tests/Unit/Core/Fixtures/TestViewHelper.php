@@ -1,12 +1,12 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Fixtures;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Class TestViewHelper

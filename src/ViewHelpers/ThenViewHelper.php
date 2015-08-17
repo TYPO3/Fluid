@@ -1,19 +1,19 @@
 <?php
-namespace NamelessCoder\Fluid\ViewHelpers;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * "THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
  *
- * @see \NamelessCoder\Fluid\ViewHelpers\IfViewHelper
+ * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
 class ThenViewHelper extends AbstractViewHelper {

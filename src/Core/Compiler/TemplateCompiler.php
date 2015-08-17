@@ -1,21 +1,21 @@
 <?php
-namespace NamelessCoder\Fluid\Core\Compiler;
+namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Cache\FluidCacheInterface;
-use NamelessCoder\Fluid\Core\Parser\ParsedTemplateInterface;
-use NamelessCoder\Fluid\Core\Parser\ParsingState;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractExpressionNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\MathExpressionNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TernaryExpressionNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\MathExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TernaryExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Class TemplateCompiler
@@ -156,14 +156,14 @@ class TemplateCompiler {
 			'Main Render function'
 		);
 
-		$classDefinition = 'class ' . $identifier . ' extends \NamelessCoder\Fluid\Core\Compiler\AbstractCompiledTemplate';
+		$classDefinition = 'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate';
 
 		$templateCode = <<<EOD
 <?php
 
 %s {
 
-public function getLayoutName(\NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
 \$layout = %s;
 if (!\$layout) {
 \$layout = '%s';
@@ -173,7 +173,7 @@ return \$layout;
 public function hasLayout() {
 return %s;
 }
-public function addCompiledNamespaces(\NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
 \$namespaces = %s;
 \$resolver = \$renderingContext->getViewHelperResolver();
 foreach (\$namespaces as \$namespace => \$phpNamespace) {
@@ -237,7 +237,7 @@ EOD;
 /**
  * %s
  */
-public function %s(\NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
 \$self = \$this;
 %s
 return %s;
@@ -288,7 +288,7 @@ EOD;
 			$compiledIfArgumentStack = $this->nodeConverter->convert(new ArrayNode($argument->getStack()));
 			$closure .= $compiledIfArgumentStack['initialization'] . chr(10);
 			$closure .= sprintf(
-				'return \NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s);',
+				'return \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s);',
 				$compiledIfArgumentStack['execution']
 			) . chr(10);
 		} else {

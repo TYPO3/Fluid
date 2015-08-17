@@ -1,5 +1,5 @@
 <?php
-namespace FluidNamelessCoder\Flux\Tests\Unit\View;
+namespace FluidTYPO3Fluid\Flux\Tests\Unit\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -7,7 +7,7 @@ namespace FluidNamelessCoder\Flux\Tests\Unit\View;
  */
 
 use org\bovigo\vfs\vfsStream;
-use NamelessCoder\Fluid\Tests\BaseTestCase;
+use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
 /**
  * Class ExamplesTest

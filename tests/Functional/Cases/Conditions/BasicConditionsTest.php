@@ -1,7 +1,7 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Functional\Cases\Conditions;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
-use NamelessCoder\Fluid\Tests\Functional\BaseFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
 /**
  * Class BasicConditionsTest

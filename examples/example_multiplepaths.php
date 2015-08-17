@@ -27,15 +27,15 @@ require __DIR__ . '/include/view_init.php';
 // Specifying this array can also be done as constructor argument for the
 // TemplatePaths class which can be passed to the View; see view_init.php.
 $view->getTemplatePaths()->fillFromConfigurationArray(array(
-	\NamelessCoder\Fluid\View\TemplatePaths::CONFIG_TEMPLATEROOTPATHS => array(
+	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_TEMPLATEROOTPATHS => array(
 		__DIR__ . '/Resources/Private/Templates/',
 		__DIR__ . '/ResourceOverrides/Private/Templates/',
 	),
-	\NamelessCoder\Fluid\View\TemplatePaths::CONFIG_LAYOUTROOTPATHS => array(
+	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_LAYOUTROOTPATHS => array(
 		__DIR__ . '/Resources/Private/Layouts/',
 		__DIR__ . '/ResourceOverrides/Private/Layouts/',
 	),
-	\NamelessCoder\Fluid\View\TemplatePaths::CONFIG_PARTIALROOTPATHS => array(
+	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_PARTIALROOTPATHS => array(
 		__DIR__ . '/Resources/Private/Partials/',
 		__DIR__ . '/ResourceOverrides/Private/Partials/',
 	)

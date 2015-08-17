@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\View;
+namespace TYPO3Fluid\Fluid\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -28,7 +28,7 @@ interface ViewInterface {
 	 * Add multiple variables to the view data collection
 	 *
 	 * @param array $values array in the format array(key1 => value1, key2 => value2)
-	 * @return \NamelessCoder\Flow\Mvc\View\ViewInterface an instance of $this, to enable chaining
+	 * @return \TYPO3Fluid\Flow\Mvc\View\ViewInterface an instance of $this, to enable chaining
 	 * @api
 	 */
 	public function assignMultiple(array $values);

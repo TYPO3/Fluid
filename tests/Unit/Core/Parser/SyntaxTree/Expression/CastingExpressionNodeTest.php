@@ -1,16 +1,16 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToArray;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToArray;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Class CastingExpressionNodeTest
@@ -22,7 +22,7 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	 */
 	public function testEvaluateDelegatesToEvaluteExpression() {
 		$subject = $this->getMock(
-			'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+			'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
 			array('dummy'),
 			array('{test as string}', array('test as string'))
 		);
@@ -38,7 +38,7 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	public function testEvaluateInvalidExpressionThrowsException() {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider());
-		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
 		$result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', array());
 	}
 

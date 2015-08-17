@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Core\Parser;
+namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -11,5 +11,5 @@ namespace NamelessCoder\Fluid\Core\Parser;
  *
  * @api
  */
-class Exception extends \NamelessCoder\Fluid\Core\Exception {
+class Exception extends \TYPO3Fluid\Fluid\Core\Exception {
 }

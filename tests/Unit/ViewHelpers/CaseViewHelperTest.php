@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -12,19 +12,19 @@ namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 class CaseViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \NamelessCoder\Fluid\ViewHelpers\CaseViewHelper
+	 * @var \TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\CaseViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 
 	/**
 	 * @test
-	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
 	 */
 	public function renderThrowsExceptionIfSwitchExpressionIsNotSetInViewHelperVariableContainer() {
 		$this->viewHelper->setArguments(array('value' => 'foo'));
@@ -35,7 +35,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderReturnsChildNodesIfTheSpecifiedValueIsEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->addOrUpdate('NamelessCoder\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', 'someValue');
+		$this->viewHelperVariableContainer->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', 'someValue');
 		$renderedChildNodes = 'ChildNodes';
 		$this->viewHelper->setArguments(array('value' => 'someValue'));
 		$this->viewHelper->expects($this->once())->method('renderChildren')->willReturn($renderedChildNodes);
@@ -46,7 +46,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderReturnsAnEmptyStringIfTheSpecifiedValueIsNotEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->addOrUpdate('NamelessCoder\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', 'someValue');
+		$this->viewHelperVariableContainer->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', 'someValue');
 		$this->viewHelper->setArguments(array('value' => 'someOtherValue'));
 		$this->assertSame('', $this->viewHelper->initializeArgumentsAndRender());
 	}
