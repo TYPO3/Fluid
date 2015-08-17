@@ -1,15 +1,15 @@
 <?php
-namespace FluidNamelessCoder\Flux\Tests\Unit\View;
+namespace FluidTYPO3Fluid\Flux\Tests\Unit\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\View\TemplatePaths;
-use NamelessCoder\Fluid\Tests\BaseTestCase;
-use NamelessCoder\CMS\Core\Utility\ExtensionManagementUtility;
-use NamelessCoder\CMS\Core\Utility\GeneralUtility;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\Tests\BaseTestCase;
+use TYPO3Fluid\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3Fluid\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class TemplatePathsTest
@@ -20,7 +20,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @test
 	 */
 	public function setsLayoutPathAndFilename() {
-		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
 		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->setLayoutPathAndFilename('foobar');
 		$this->assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
@@ -30,7 +30,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @test
 	 */
 	public function setsTemplatePathAndFilename() {
-		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
 		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->setTemplatePathAndFilename('foobar');
 		$this->assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
@@ -44,7 +44,7 @@ class TemplatePathsTest extends BaseTestCase {
 	public function testGetterAndSetter($property, $value) {
 		$getter = 'get' . ucfirst($property);
 		$setter = 'set' . ucfirst($property);
-		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
 		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->$setter($value);
 		$this->assertEquals($value, $instance->$getter());
@@ -87,7 +87,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @param string $method
 	 */
 	public function testResolveFilesMethodCallsResolveFilesInFolders($method, $pathsMethod) {
-		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('resolveFilesInFolders'));
+		$instance = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('resolveFilesInFolders'));
 		$instance->$pathsMethod(array('foo'));
 		$instance->expects($this->once())->method('resolveFilesInFolders')->with($this->anything(), 'format');
 		$instance->$method('format', 'format');
@@ -108,7 +108,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 * @return void
 	 */
 	public function testToArray() {
-		$instance = $this->getMock('NamelessCoder\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$instance = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
 		$instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$instance->setTemplateRootPaths(array('1'));
 		$instance->setLayoutRootPaths(array('2'));
@@ -144,7 +144,7 @@ class TemplatePathsTest extends BaseTestCase {
 	 */
 	public function testGetTemplateSourceThrowsExceptionIfFileNotFound() {
 		$instance = new TemplatePaths();
-		$this->setExpectedException('NamelessCoder\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
 		$instance->getTemplateSource();
 	}
 
@@ -155,7 +155,7 @@ class TemplatePathsTest extends BaseTestCase {
 		$instance = new TemplatePaths();
 		$method = new \ReflectionMethod($instance, 'resolveFileInPaths');
 		$method->setAccessible(TRUE);
-		$this->setExpectedException('NamelessCoder\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\View\\Exception\\InvalidTemplateResourceException');
 		$method->invokeArgs($instance, array(array('/not/', '/found/'), 'notfound.html'));
 	}
 

@@ -1,18 +1,18 @@
 <?php
-namespace NamelessCoder\Fluid\ViewHelpers;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
-use NamelessCoder\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
  * A ViewHelper to declare sections in templates for later use with e.g. the RenderViewHelper.
@@ -99,8 +99,8 @@ class SectionViewHelper extends AbstractViewHelper {
 	 */
 	public function render() {
 		$content = '';
-		if ($this->viewHelperVariableContainer->exists('NamelessCoder\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection')) {
-			$this->viewHelperVariableContainer->remove('NamelessCoder\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection');
+		if ($this->viewHelperVariableContainer->exists('TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection')) {
+			$this->viewHelperVariableContainer->remove('TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection');
 			$content = $this->renderChildren();
 		}
 		return $content;

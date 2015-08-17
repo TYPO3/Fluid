@@ -1,16 +1,16 @@
 <?php
-namespace NamelessCoder\Fluid\ViewHelpers;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  * This view helper implements an if/else condition.
- * Check \NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to see how boolean arguments are evaluated
+ * Check \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to see how boolean arguments are evaluated
  *
  * **Conditions:**
  *
@@ -78,7 +78,7 @@ use NamelessCoder\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * Otherwise, everything the value of the "else"-attribute is displayed.
  * </output>
  *
- * @see \NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
+ * @see \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
  * @api
  */
 class IfViewHelper extends AbstractConditionViewHelper {

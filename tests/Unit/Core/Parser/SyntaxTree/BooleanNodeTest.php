@@ -1,24 +1,24 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for ViewHelperNode's evaluateBooleanExpression()
@@ -39,14 +39,14 @@ class BooleanNodeTest extends UnitTestCase {
 	 * Setup fixture
 	 */
 	public function setUp() {
-		$this->renderingContext = $this->getMock('NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface');
+		$this->renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface');
 	}
 
 	/**
 	 * @test
 	 */
 	public function testEvaluateThrowsExceptionOnInvalidComparator() {
-		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\Parser\\Exception');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
 		BooleanNode::evaluateComparator('<>', 1, 2);
 	}
 
@@ -509,10 +509,10 @@ class BooleanNodeTest extends UnitTestCase {
 
 		$rootNode = new RootNode();
 
-		$object1Node = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
 
-		$object2Node = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
 
 		$rootNode->addChildNode($object1Node);
@@ -532,10 +532,10 @@ class BooleanNodeTest extends UnitTestCase {
 
 		$rootNode = new RootNode();
 
-		$object1Node = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
 
-		$object2Node = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
 		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
 
 		$rootNode->addChildNode($object1Node);

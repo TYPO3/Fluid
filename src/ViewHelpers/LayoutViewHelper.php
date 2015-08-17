@@ -1,17 +1,17 @@
 <?php
-namespace NamelessCoder\Fluid\ViewHelpers;
+namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
-use NamelessCoder\Fluid\Core\ViewHelper\PostParseInterface;
-use NamelessCoder\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\PostParseInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 
 /**
  * With this tag, you can select a layout to be used for the current template.

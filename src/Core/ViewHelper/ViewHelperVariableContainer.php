@@ -1,13 +1,13 @@
 <?php
-namespace NamelessCoder\Fluid\Core\ViewHelper;
+namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
-use NamelessCoder\Fluid\View\AbstractTemplateView;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception\InvalidVariableException;
+use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 
 /**
  * A key/value store that can be used by ViewHelpers to communicate between each other.
@@ -33,7 +33,7 @@ class ViewHelperVariableContainer {
 	 * Add a variable to the Variable Container. Make sure that $viewHelperName is ALWAYS set
 	 * to your fully qualified ViewHelper Class Name
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @param mixed $value The value to store
 	 * @return void
@@ -48,7 +48,7 @@ class ViewHelperVariableContainer {
 	 * to your fully qualified ViewHelper Class Name.
 	 * In case the value is already inside, it is silently overridden.
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @param mixed $value The value to store
 	 * @return void
@@ -63,7 +63,7 @@ class ViewHelperVariableContainer {
 	/**
 	 * Gets a variable which is stored
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @param mixed $default Default value to use if no value is found.
 	 * @return mixed The object stored
@@ -79,7 +79,7 @@ class ViewHelperVariableContainer {
 	/**
 	 * Determine whether there is a variable stored for the given key
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data
 	 * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
 	 * @api
@@ -91,7 +91,7 @@ class ViewHelperVariableContainer {
 	/**
 	 * Remove a value from the variable container
 	 *
-	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "NamelessCoder\Fluid\ViewHelpers\ForViewHelper")
+	 * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
 	 * @param string $key Key of the data to remove
 	 * @return void
 	 * @api

@@ -27,7 +27,7 @@ To enable this usage we must then create a ViewHelper class:
 <?php
 namespace Vendor\Package\ViewHelpers;
 
-use NamelessCoder\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * This ViewHelper takes two arrays and returns

@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Tests;
+namespace TYPO3Fluid\Fluid\Tests;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

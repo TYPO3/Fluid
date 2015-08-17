@@ -1,12 +1,12 @@
 <?php
-namespace NamelessCoder\Fluid\Core\Parser\SyntaxTree;
+namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Node in the syntax tree.
@@ -24,7 +24,7 @@ interface NodeInterface {
 	/**
 	 * Returns all child nodes for a given node.
 	 *
-	 * @return array<\NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
+	 * @return array<\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
 	 */
 	public function getChildNodes();
 

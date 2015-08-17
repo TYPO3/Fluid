@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	'{namespace foo=NamelessCoder\Fluid\ViewHelpers}',
+	'{namespace foo=TYPO3Fluid\Fluid\ViewHelpers}',
 	'<foo:format.nl2br>',
 	'<foo:format.number decimals="1">',
 	'{number}',

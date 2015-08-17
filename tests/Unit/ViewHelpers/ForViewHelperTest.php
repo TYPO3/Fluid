@@ -1,14 +1,14 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use NamelessCoder\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
-use NamelessCoder\Fluid\ViewHelpers\ForViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
+use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 
 /**
  * Testcase for ForViewHelper
@@ -425,7 +425,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase {
 		$viewHelper = new ForViewHelper();
 		$this->arguments['each'] = new \DateTime('now');
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->setExpectedException('NamelessCoder\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
 		$viewHelper->render();
 	}
 

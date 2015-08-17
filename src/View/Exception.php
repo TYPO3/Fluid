@@ -1,12 +1,12 @@
 <?php
-namespace NamelessCoder\Fluid\View;
+namespace TYPO3Fluid\Fluid\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid;
+use TYPO3Fluid\Fluid;
 
 /**
  * A generic Fluid View exception.

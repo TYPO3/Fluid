@@ -1,12 +1,12 @@
 <?php
-namespace NamelessCoder\Fluid\Core\Parser;
+namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 
 /**
  * An interceptor interface. Interceptors are used in the parsing stage to change

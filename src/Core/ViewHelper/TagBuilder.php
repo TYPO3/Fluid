@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Core\ViewHelper;
+namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

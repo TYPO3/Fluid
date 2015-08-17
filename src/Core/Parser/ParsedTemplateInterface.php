@@ -1,16 +1,16 @@
 <?php
-namespace NamelessCoder\Fluid\Core\Parser;
+namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
-use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
- * This interface is returned by \NamelessCoder\Fluid\Core\Parser\TemplateParser->parse()
+ * This interface is returned by \TYPO3Fluid\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
  */
 interface ParsedTemplateInterface {

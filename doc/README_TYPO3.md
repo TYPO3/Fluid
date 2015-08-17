@@ -73,8 +73,8 @@ Note about injecting functionality
 
 It is possible to restore almost all of the removed features by creating custom implementations of the following classes:
 
-* https://github.com/NamelessCoder/TYPO3.Fluid/blob/master/src/View/TemplatePaths.php to change how template files are resolved.
-* https://github.com/NamelessCoder/TYPO3.Fluid/blob/master/src/Core/ViewHelper/ViewHelperResolver.php to change how each
+* https://github.com/TYPO3Fluid/Fluid/blob/master/src/View/TemplatePaths.php to change how template files are resolved.
+* https://github.com/TYPO3Fluid/Fluid/blob/master/src/Core/ViewHelper/ViewHelperResolver.php to change how each
   ViewHelper is resolved, how its arguments are retrieved, which namespaces are available and expected class names of ViewHelpers.
 
 When combined in a package that implements `TYPO3.Fluid` in a framework, these two classes together make it possible to change

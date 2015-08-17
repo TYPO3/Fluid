@@ -1,25 +1,25 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Compiler;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Compiler\NodeConverter;
-use NamelessCoder\Fluid\Core\Compiler\TemplateCompiler;
-use NamelessCoder\Fluid\Core\Parser\ParsingState;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\RootNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\TextNode;
-use NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Core\Compiler\NodeConverter;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Class NodeConverterTest
@@ -79,19 +79,19 @@ class NodeConverterTest extends UnitTestCase {
 			),
 			array(
 				new BooleanNode(new TextNode('TRUE')),
-				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
+				'\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
 				new BooleanNode(new TextNode('1 = 1')),
-				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
+				'\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
 				$treeBoolean,
-				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
+				'\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, $array0)'
 			),
 			array(
 				new TernaryExpressionNode('1 ? 2 : 3', array(1, 2, 3)),
-				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::evaluateExpression($renderingContext, $string0, $array1)'
+				'\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::evaluateExpression($renderingContext, $string0, $array1)'
 			),
 			array(
 				new ViewHelperNode(

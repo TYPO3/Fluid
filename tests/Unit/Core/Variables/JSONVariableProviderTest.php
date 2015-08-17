@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Variables;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -8,8 +8,8 @@ namespace NamelessCoder\Fluid\Tests\Unit\Core\Variables;
 
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
-use NamelessCoder\Fluid\Core\Variables\JSONVariableProvider;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for JSONVariableProvider

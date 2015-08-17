@@ -1,12 +1,12 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\ViewHelpers\AliasViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\AliasViewHelper;
 
 /**
  * Testcase for AliasViewHelper
@@ -17,7 +17,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('NamelessCoder\\Fluid\\ViewHelpers\\AliasViewHelper', array('registerArgument'));
+		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\AliasViewHelper', array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('map', 'array', $this->anything(), TRUE);
 		$instance->initializeArguments();
 	}
@@ -29,7 +29,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase {
 		$viewHelper = new AliasViewHelper();
 
 		$mockViewHelperNode = $this->getMock(
-			'NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+			'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
 			array('evaluateChildNodes'),
 			array(), '', FALSE
 		);
@@ -48,7 +48,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase {
 		$viewHelper = new AliasViewHelper();
 
 		$mockViewHelperNode = $this->getMock(
-			'NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+			'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
 			array('evaluateChildNodes'),
 			array(), '', FALSE
 		);
@@ -67,7 +67,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase {
 		$viewHelper = new AliasViewHelper();
 
 		$mockViewHelperNode = $this->getMock(
-			'NamelessCoder\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+			'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
 			array('evaluateChildNodes'), array(), '',
 			FALSE
 		);

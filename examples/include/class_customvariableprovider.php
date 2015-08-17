@@ -1,13 +1,13 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Example;
+namespace TYPO3Fluid\Fluid\Tests\Example;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
  * Class CustomVariableProvider

@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -12,13 +12,13 @@ namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
 class GroupedForViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \NamelessCoder\Fluid\ViewHelpers\GroupedForViewHelper
+	 * @var \TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('NamelessCoder\Fluid\ViewHelpers\GroupedForViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper', array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 
@@ -40,7 +40,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
 	 */
 	public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable() {
 		$object = new \stdClass();
@@ -267,7 +267,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
 	 * @test
-	 * @expectedException \NamelessCoder\Fluid\Core\ViewHelper\Exception
+	 * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
 	 */
 	public function renderThrowsExceptionWhenPassingOneDimensionalArraysToEach() {
 		$values = array('some', 'simple', 'array');

@@ -6,7 +6,7 @@ $FLUID_CACHE_DIRECTORY = !isset($FLUID_CACHE_DIRECTORY) ? __DIR__ . '/../cache/'
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 // TemplatePaths object: a subclass can be used if custom resolving is wanted.
-$paths = new \NamelessCoder\Fluid\View\TemplatePaths();
+$paths = new \TYPO3Fluid\Fluid\View\TemplatePaths();
 
 // Configuring paths: explicit setters used in this example. Paths can also
 // be passed as a ["templateRootPaths" => ["path1/", "path2/"]] constructor
@@ -31,11 +31,11 @@ $paths->setPartialRootPaths(array(
 // for the rendering engine. As with TemplatePaths, custom implementations of
 // this View can be created to change the format from HTML to XML, assign some
 // default values, add additional ViewHelper namespaces, etc.
-$view = new \NamelessCoder\Fluid\View\TemplateView($paths);
+$view = new \TYPO3Fluid\Fluid\View\TemplateView($paths);
 
 if ($FLUID_CACHE_DIRECTORY) {
 	// Configure View's caching to use ./examples/cache/ as caching directory.
-	$view->setCache(new \NamelessCoder\Fluid\Core\Cache\SimpleFileCache($FLUID_CACHE_DIRECTORY));
+	$view->setCache(new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($FLUID_CACHE_DIRECTORY));
 }
 
 /**

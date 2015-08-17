@@ -1,15 +1,15 @@
 TYPO3.Fluid Rendering Engine
 ============================
 
-[![Build Status](https://img.shields.io/travis/NamelessCoder/TYPO3.Fluid.svg?style=flat-square)](https://travis-ci.org/NamelessCoder/TYPO3.Fluid)
-[![Coverage](https://img.shields.io/coveralls/NamelessCoder/TYPO3.Fluid.svg?style=flat-square)](https://coveralls.io/r/NamelessCoder/TYPO3.Fluid)
+[![Build Status](https://img.shields.io/travis/TYPO3Fluid/Fluid.svg?style=flat-square)](https://travis-ci.org/TYPO3Fluid/Fluid)
+[![Coverage](https://img.shields.io/coveralls/TYPO3Fluid/Fluid.svg?style=flat-square)](https://coveralls.io/r/TYPO3Fluid/Fluid)
 
 TYPO3 community template engine - composer-enabled, Flow/CMS dependency-free PSR-4 edition.
 
 Installation
 ------------
 
-1. Include as composer dependency using `composer require namelesscoder/fluid`
+1. Include as composer dependency using `composer require typo3fluid/fluid`
 2. Run `composer install` to generate the vendor class autoloader
 3. The classes from `TYPO3.Fluid` can now be used in your composer project
 

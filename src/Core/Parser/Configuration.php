@@ -1,5 +1,5 @@
 <?php
-namespace NamelessCoder\Fluid\Core\Parser;
+namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

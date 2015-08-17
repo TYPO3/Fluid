@@ -1,18 +1,18 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\View;
+namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use NamelessCoder\Fluid\View\AbstractTemplateView;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
-use NamelessCoder\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\View\AbstractTemplateView;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Testcase for the TemplateView
@@ -45,12 +45,12 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->templateVariableContainer = $this->getMock('NamelessCoder\Fluid\Core\Variables\StandardVariableProvider', array('exists', 'remove', 'add'));
-		$this->viewHelperVariableContainer = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
-		$this->renderingContext = $this->getMock('NamelessCoder\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getVariableProvider'));
+		$this->templateVariableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider', array('exists', 'remove', 'add'));
+		$this->viewHelperVariableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer', array('setView'));
+		$this->renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContext', array('getViewHelperVariableContainer', 'getVariableProvider'));
 		$this->renderingContext->expects($this->any())->method('getViewHelperVariableContainer')->will($this->returnValue($this->viewHelperVariableContainer));
 		$this->renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($this->templateVariableContainer));
-		$this->view = $this->getMockForAbstractClass('NamelessCoder\Fluid\View\AbstractTemplateView', array(new TemplatePaths()));
+		$this->view = $this->getMockForAbstractClass('TYPO3Fluid\Fluid\View\AbstractTemplateView', array(new TemplatePaths()));
 		$this->view->setRenderingContext($this->renderingContext);
 	}
 
@@ -66,7 +66,7 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testGetViewHelperResolverReturnsExpectedViewHelperResolver() {
-		$viewHelperResolver = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver');
+		$viewHelperResolver = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver');
 		$this->view->setViewHelperResolver($viewHelperResolver);
 		$result = $this->view->getViewHelperResolver();
 		$this->assertSame($viewHelperResolver, $result);
@@ -147,7 +147,7 @@ class AbstractTemplateViewTest extends UnitTestCase {
 		$method = new \ReflectionMethod($this->view, 'buildParserConfiguration');
 		$method->setAccessible(TRUE);
 		$result = $method->invoke($this->view);
-		$this->assertInstanceOf('NamelessCoder\Fluid\Core\Parser\Configuration', $result);
+		$this->assertInstanceOf('TYPO3Fluid\Fluid\Core\Parser\Configuration', $result);
 	}
 
 	/**
@@ -158,7 +158,7 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 */
 	public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown($compiled) {
 		$parsedTemplate = $this->getMockForAbstractClass(
-			'NamelessCoder\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate',
+			'TYPO3Fluid\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate',
 			array(), '', FALSE, FALSE, TRUE,
 			array('isCompiled', 'getVariableContainer')
 		);
@@ -167,14 +167,14 @@ class AbstractTemplateViewTest extends UnitTestCase {
 			array('sections' => array())
 		));
 		$view = $this->getMockForAbstractClass(
-			'NamelessCoder\Fluid\View\AbstractTemplateView',
+			'TYPO3Fluid\Fluid\View\AbstractTemplateView',
 			array(), '', FALSE, FALSE, TRUE,
 			array('getCurrentParsedTemplate', 'getCurrentRenderingType', 'getCurrentRenderingContext')
 		);
 		$view->expects($this->once())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
 		$view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
 		$view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-		$this->setExpectedException('NamelessCoder\\Fluid\\View\\Exception\\InvalidSectionException');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\View\\Exception\\InvalidSectionException');
 		$view->renderSection('Missing');
 	}
 
@@ -192,8 +192,8 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testSetTemplateProcessorsDelegatesToTemplateParser() {
-		$view = $this->getMockForAbstractClass('NamelessCoder\Fluid\View\AbstractTemplateView', array(), '', FALSE, FALSE, TRUE);
-		$parser = $this->getMock('NamelessCoder\\Fluid\\Core\\Parser\\TemplateParser');
+		$view = $this->getMockForAbstractClass('TYPO3Fluid\Fluid\View\AbstractTemplateView', array(), '', FALSE, FALSE, TRUE);
+		$parser = $this->getMock('TYPO3Fluid\\Fluid\\Core\\Parser\\TemplateParser');
 		$view->setTemplateParser($parser);
 		$parser->expects($this->once())->method('setTemplateProcessors')->with(array());
 		$view->setTemplateProcessors(array());
@@ -212,13 +212,13 @@ class AbstractTemplateViewTest extends UnitTestCase {
 			$sectionMethodName = 'test';
 		}
 		$parsedTemplate = $this->getMockForAbstractClass(
-			'NamelessCoder\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate',
+			'TYPO3Fluid\\Fluid\\Core\\Compiler\\AbstractCompiledTemplate',
 			array(), '', FALSE, FALSE, TRUE,
 			array('isCompiled', 'getVariableContainer', $sectionMethodName)
 		);
 		$parsedTemplate->expects($this->once())->method('isCompiled')->willReturn(TRUE);
 		$view = $this->getMockForAbstractClass(
-			'NamelessCoder\Fluid\View\AbstractTemplateView',
+			'TYPO3Fluid\Fluid\View\AbstractTemplateView',
 			array(), '', FALSE, FALSE, TRUE,
 			array('getCurrentParsedTemplate', 'getCurrentRenderingType', 'getCurrentRenderingContext')
 		);

@@ -1,17 +1,17 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\Core\Rendering;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
-use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
-use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use NamelessCoder\Fluid\Tests\UnitTestCase;
-use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 
 /**
  * Testcase for ParsingState
@@ -68,7 +68,7 @@ class RenderingContextTest extends UnitTestCase {
 	 * @test
 	 */
 	public function templateVariableContainerCanBeReadCorrectly() {
-		$templateVariableContainer = $this->getMock('NamelessCoder\Fluid\Core\Variables\StandardVariableProvider');
+		$templateVariableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider');
 		$this->renderingContext->setVariableProvider($templateVariableContainer);
 		$this->assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
 	}
@@ -77,7 +77,7 @@ class RenderingContextTest extends UnitTestCase {
 	 * @test
 	 */
 	public function viewHelperVariableContainerCanBeReadCorrectly() {
-		$viewHelperVariableContainer = $this->getMock('NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$viewHelperVariableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
 		$this->renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
 	}

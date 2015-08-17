@@ -1,12 +1,12 @@
 <?php
-namespace NamelessCoder\Fluid\Tests\Unit\ViewHelpers;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use NamelessCoder\Fluid\ViewHelpers\CountViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
 /**
  * Testcase for CountViewHelper
@@ -20,7 +20,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('NamelessCoder\Fluid\ViewHelpers\CountViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getAccessibleMock('TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper', array('renderChildren'));
 	}
 
 	/**
