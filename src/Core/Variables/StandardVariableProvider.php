@@ -29,6 +29,18 @@ class StandardVariableProvider implements VariableProviderInterface {
 	}
 
 	/**
+	 * @param array $variables
+	 * @return VariableProviderInterface
+	 */
+	public function getScopeCopy(array $variables) {
+		if (!array_key_exists('settings', $variables) && array_key_exists('settings', $this->variables)) {
+			$variables['settings'] = $this->variables['settings'];
+		}
+		$className = get_class($this);
+		return new $className($variables);
+	}
+
+	/**
 	 * Set the source data used by this VariableProvider. The
 	 * source can be any type, but the type must of course be
 	 * supported by the VariableProvider itself.
