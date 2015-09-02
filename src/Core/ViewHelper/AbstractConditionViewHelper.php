@@ -70,7 +70,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 * @api
 	 */
 	public function render() {
-		if ($this->evaluateCondition($this->arguments)) {
+		if (static::evaluateCondition($this->arguments)) {
 			return $this->renderThenChild();
 		} else {
 			return $this->renderElseChild();

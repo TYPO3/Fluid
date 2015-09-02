@@ -301,16 +301,6 @@ class AbstractViewHelperTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testRenderCallsAndReturnsRenderChildren() {
-		$viewHelper = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper', array('renderChildren'), array(), '', FALSE);
-		$viewHelper->expects($this->once())->method('renderChildren')->willReturn('foobar');
-		$result = $viewHelper->render();
-		$this->assertEquals('foobar', $result);
-	}
-
-	/**
-	 * @test
-	 */
 	public function testCompileReturnsAndAssignsExpectedPhpCode() {
 		$viewHelper = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper', array('dummy'), array(), '', FALSE);
 		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'section', array(), new ParsingState());

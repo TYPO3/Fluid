@@ -81,6 +81,15 @@ interface ViewHelperInterface {
 	 */
 	public function initializeArguments();
 
+//	/**
+//	 * Render method you need to implement for your custom view helper.
+//	 * Note: This method is commented out in order to avoid conflicts with different method signatures in the implementation
+//	 *
+//	 * @return mixed usually the rendered string, depending on the view helper
+//	 * @api
+//	 */
+//	public function render();
+
 	/**
 	 * Here follows a more detailed description of the arguments of this function:
 	 *

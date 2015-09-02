@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -236,7 +237,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @throws Exception
 	 */
 	protected function callRenderMethod() {
-		return $this->render();
+		return call_user_func(array($this, 'render'));
 	}
 
 	/**
@@ -347,16 +348,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @api
 	 */
 	public function initializeArguments() {
-	}
-
-	/**
-	 * Render method you need to implement for your custom view helper.
-	 *
-	 * @return string rendered string, view helper specific
-	 * @api
-	 */
-	public function render() {
-		return $this->renderChildren();
 	}
 
 	/**
