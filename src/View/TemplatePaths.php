@@ -94,6 +94,11 @@ class TemplatePaths {
 	protected $layoutPathAndFilename = NULL;
 
 	/**
+	 * @var string|NULL
+	 */
+	protected $templateSource = NULL;
+
+	/**
 	 * @var string
 	 */
 	protected $format = self::DEFAULT_FORMAT;
@@ -523,6 +528,13 @@ class TemplatePaths {
 	}
 
 	/**
+	 * @param mixed $source
+	 */
+	public function setTemplateSource($source) {
+		$this->templateSource = $source;
+	}
+
+	/**
 	 * Resolve the template path and filename for the given action. If $actionName
 	 * is NULL, looks into the current request.
 	 *
@@ -532,6 +544,11 @@ class TemplatePaths {
 	 * @throws InvalidTemplateResourceException
 	 */
 	public function getTemplateSource($controller = 'Default', $action = 'Default') {
+		if (is_resource($this->templateSource)) {
+			return $this->templateSource = stream_get_contents($this->templateSource);
+		} elseif (is_string($this->templateSource)) {
+			return $this->templateSource;
+		}
 		$format = $this->getFormat();
 		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, $format);
 		if (!file_exists($templatePathAndFilename) && $templatePathAndFilename !== 'php://stdin') {
