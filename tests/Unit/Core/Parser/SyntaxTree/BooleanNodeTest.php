@@ -67,20 +67,27 @@ class BooleanNodeTest extends UnitTestCase {
 	 * @return array
 	 */
 	public function getEvaluateComparatorTestValues() {
-		$user = new UserWithToString('foobar');
+		$user1 = new UserWithToString('foobar');
+		$user2 = new UserWithToString('foobar');
 		return array(
-			array('==', $user, $user, TRUE),
-			array('==', $user, new UserWithToString('foobar'), FALSE),
-			array('==', $user, 'foobar', TRUE),
-			array('==', 'foobar', new UserWithToString('foobar'), TRUE),
+			array('===', $user1, $user1, TRUE),
+			array('===', $user1, $user2, FALSE),
+			array('===', $user1, 'foobar', FALSE),
+
+			array('==', $user1, $user1, TRUE),
+			array('==', $user1, $user2, FALSE),
+			array('==', $user1, 'foobar', FALSE),
+			array('==', 'foobar', $user1, FALSE),
 			array('==', 1, 0, FALSE),
 			array('==', 1, 1, TRUE),
 			array('==', array('foobar'), array('foobar'), TRUE),
 			array('==', array('foobar'), array('baz'), FALSE),
+
 			array('>', 1, 0, TRUE),
-			array('<', 1, 0, FALSE),
 			array('>', 1, FALSE, FALSE),
 			array('>', FALSE, 0, FALSE),
+
+			array('<', 1, 0, FALSE),
 		);
 	}
 

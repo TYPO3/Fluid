@@ -133,7 +133,6 @@ class BooleanNode extends AbstractNode {
 	 * @return boolean the boolean value
 	 */
 	public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts) {
-		$index = 0;
 		$part = reset($expressionParts);
 		$processedParts = array();
 		do {
@@ -147,11 +146,15 @@ class BooleanNode extends AbstractNode {
 
 		$expressionParts = &$processedParts;
 
-		$i = count($expressionParts);
-
-		if ($i === 1) {
-			return self::convertToBoolean($expressionParts[0]);
-		} elseif (in_array('(', $expressionParts, TRUE) && in_array(')', $expressionParts, TRUE)) {
+		if (count($expressionParts) === 1) {
+			$expression = $expressionParts[0];
+			if (is_string($expression)) {
+				$expression = ltrim($expression, '(');
+				$expression = rtrim($expression, ')');
+			}
+			return self::convertToBoolean($expression);
+		}
+		if (in_array('(', $expressionParts, TRUE) && in_array(')', $expressionParts, TRUE)) {
 
 			// We have a clearly defined grouping which means we can slice
 			// the expression parts and evaluate our groupings recursively.
@@ -166,7 +169,6 @@ class BooleanNode extends AbstractNode {
 			$before = array_slice($expressionParts, 0, $parenthesisStart - 1);
 			$after = $parenthesisEnd < count($expressionParts) ? array_slice($expressionParts, $parenthesisEnd + 1) : array();
 			$expressionParts = array_merge($before, array(self::evaluateStack($renderingContext, $subExpressions)), $after);
-			$i = count($expressionParts);
 		}
 
 		// Now we dumb it down a bit and do not implement any special precedence
@@ -317,21 +319,21 @@ class BooleanNode extends AbstractNode {
 	 */
 	static public function evaluateComparator($comparator, $left, $right) {
 		if ($comparator === '===') {
-			return (boolean) ($left === $right);
+			return $left === $right;
 		} elseif ($comparator === '==') {
-			return (boolean) ((is_object($left) && is_object($right)) ? ($left === $right) : ($left == $right));
+			return (is_object($left) || is_object($right)) ? ($left === $right) : ($left == $right);
 		} elseif ($comparator === '!=') {
-			return (boolean) ((is_object($left) && is_object($right)) ? ($left !== $right) : ($left != $right));
+			return (is_object($left) || is_object($right)) ? ($left !== $right) : ($left != $right);
 		} elseif ($comparator === '%') {
 			return (boolean) (self::isComparable($left, $right) ? ((integer) $left % (integer) $right) : FALSE);
 		} elseif ($comparator === '>') {
-			return (boolean) (self::isComparable($left, $right) ? ($left > $right) : FALSE);
+			return self::isComparable($left, $right) ? ($left > $right) : FALSE;
 		} elseif ($comparator === '>=') {
-			return (boolean) (self::isComparable($left, $right) ? ($left >= $right) : FALSE);
+			return self::isComparable($left, $right) ? ($left >= $right) : FALSE;
 		} elseif ($comparator === '<') {
-			return (boolean) (self::isComparable($left, $right) ? ($left < $right) : FALSE);
+			return self::isComparable($left, $right) ? ($left < $right) : FALSE;
 		} elseif ($comparator === '<=') {
-			return (boolean) (self::isComparable($left, $right) ? ($left <= $right) : FALSE);
+			return self::isComparable($left, $right) ? ($left <= $right) : FALSE;
 		}
 		throw new Parser\Exception('Comparator "' . $comparator . '" is not implemented.', 1244234398);
 	}
