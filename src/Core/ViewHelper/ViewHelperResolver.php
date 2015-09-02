@@ -72,8 +72,10 @@ class ViewHelperResolver {
 		if (array_key_exists($identifier, $this->namespaces) && $this->namespaces[$identifier] !== $phpNamespace) {
 			throw new Exception(
 				sprintf(
-					'Namespace "%s" is already registered with another target PHP namespace. Do not re-declare namespaces!',
-					$identifier
+					'Namespace "%s" is already registered with another target PHP namespace (%s). Cannot redeclare as %s!',
+					$identifier,
+					$this->namespaces[$identifier],
+					$phpNamespace
 				),
 				1224241246
 			);
