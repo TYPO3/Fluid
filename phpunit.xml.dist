@@ -23,7 +23,6 @@
 		<filter>
 				<whitelist>
 						<directory>src/</directory>
-						<directory>examples/</directory>
 				</whitelist>
 		</filter>
 </phpunit>
