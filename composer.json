@@ -7,7 +7,8 @@
 		"mikey179/vfsStream": "*",
 		"satooshi/php-coveralls": "*",
 		"namelesscoder/fluid-schema-generator": "*",
-		"namelesscoder/fluid-lint": "*"
+		"namelesscoder/fluid-lint": "*",
+		"johnkary/phpunit-speedtrap": "~1.0@dev"
 	},
 	"autoload": {
 		"psr-4": {
