@@ -18,7 +18,9 @@ matrix:
     - php: "7"
     - php: "hhvm"
 
-before_install: echo "$NUMEROLOG_TOKEN" > .numerolog-token-da39a3ee5e6b4b0d3255bfef95601890afd80709
+before_install:
+  - composer self-update
+  - echo "$NUMEROLOG_TOKEN" > .numerolog-token-da39a3ee5e6b4b0d3255bfef95601890afd80709
 
 install: composer install
 
