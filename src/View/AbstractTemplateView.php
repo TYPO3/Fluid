@@ -307,8 +307,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
 		} else {
 			$renderingContext = clone $renderingContext;
-			$inherited = $renderingContext->getVariableProvider();
-			$renderingContext->setVariableProvider($variables ? new StandardVariableProvider($variables) : $inherited);
+			$renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
 			$renderingTypeOnNextLevel = $this->getCurrentRenderingType();
 		}
 
@@ -371,9 +370,8 @@ abstract class AbstractTemplateView extends AbstractView {
 				return $paths->getPartialSource($partialName);
 			}
 		);
-		$variableContainer = new StandardVariableProvider($variables);
 		$renderingContext = clone $this->getCurrentRenderingContext();
-		$renderingContext->setVariableProvider($variableContainer);
+		$renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
 		$this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
 		if ($sectionName !== NULL) {
 			$output = $this->renderSection($sectionName, $variables, $ignoreUnknown);

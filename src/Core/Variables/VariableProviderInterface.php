@@ -28,6 +28,20 @@ interface VariableProviderInterface extends \ArrayAccess {
 	public function __construct(array $variables = array());
 
 	/**
+	 * Gets a fresh instance of this type of VariableProvider
+	 * and fills it with the variables passed in $variables.
+	 *
+	 * Can be overridden to enable special instance creation
+	 * of the new VariableProvider as well as take care of any
+	 * automatically transferred variables (in the default
+	 * implementation the $settings variable is transferred).
+	 *
+	 * @param array $variables
+	 * @return VariableProviderInterface
+	 */
+	public function getScopeCopy(array $variables);
+
+	/**
 	 * Set the source data used by this VariableProvider. The
 	 * source can be any type, but the type must of course be
 	 * supported by the VariableProvider itself.
