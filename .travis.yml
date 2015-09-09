@@ -2,6 +2,10 @@ language: php
 
 sudo: false
 
+env:
+  global:
+    secure: TMuGiQ2+whrUPO6q733aGbWGz04W6f7fmf8ikoKh0tOrDQRVkjhj153uA4z3iBbODvL2JTGm3g7QA2T5Vxy0DN1WDbedp8AMA4GhXAi3pUsXSP3yr2eUxYDXKp0F1ZqTNhOtE3W9bXoBlsDLWjgtlZmwlPua2qHbd1YdozyqdkM=
+
 php:
   - "5.4"
   - "5.5"
@@ -13,6 +17,8 @@ matrix:
   allow_failures:
     - php: "7"
     - php: "hhvm"
+
+before_install: echo "$NUMEROLOG_TOKEN" > .numerolog-token-da39a3ee5e6b4b0d3255bfef95601890afd80709
 
 install: composer install
 

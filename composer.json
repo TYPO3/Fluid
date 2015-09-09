@@ -8,15 +8,18 @@
 		"satooshi/php-coveralls": "*",
 		"namelesscoder/fluid-schema-generator": "*",
 		"namelesscoder/fluid-lint": "*",
-		"johnkary/phpunit-speedtrap": "~1.0@dev"
+		"johnkary/phpunit-speedtrap": "~1.0@dev",
+		"namelesscoder/phpunit-xhprof": "^1.0@dev",
+		"namelesscoder/numerolog-phpunit": "dev-master"
 	},
 	"autoload": {
 		"psr-4": {
-			"NamelessCoder\\Fluid\\": "src/",
-			"NamelessCoder\\PHPUnitPerformance\\": "vendor/namelesscoder/phpunit-performance/src/"
+			"NamelessCoder\\Fluid\\": "src/"
 		}
 	},
 	"bin": [
 		"bin/fluid"
-	]
+	],
+	"minimum-stability": "dev",
+	"prefer-stable" : true
 }
