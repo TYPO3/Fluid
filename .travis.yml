@@ -21,6 +21,7 @@ matrix:
 before_install:
   - composer self-update
   - echo "$NUMEROLOG_TOKEN" > .numerolog-token-da39a3ee5e6b4b0d3255bfef95601890afd80709
+  - sh -c 'if [ $(php -r "echo (int) defined(\"HHVM_VERSION\");") -eq 0 ]; then pecl install -f xhprof-beta; fi'
 
 install: composer install
 
