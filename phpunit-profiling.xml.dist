@@ -13,8 +13,8 @@
         verbose="false">
 
         <testsuites>
-                <testsuite name="TYPO3.Fluid Unit">
-                        <directory>tests/Unit</directory>
+                <testsuite name="TYPO3.Fluid Profiling">
+                        <directory>tests/Profiling</directory>
                 </testsuite>
         </testsuites>
 		<filter>
@@ -22,7 +22,4 @@
 						<directory>src/</directory>
 				</whitelist>
 		</filter>
-        <listeners>
-                <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener"/>
-        </listeners>
 </phpunit>
