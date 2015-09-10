@@ -10,7 +10,7 @@
 		"namelesscoder/fluid-lint": "*",
 		"johnkary/phpunit-speedtrap": "~1.0@dev",
 		"namelesscoder/phpunit-xhprof": "^1.0@dev",
-		"namelesscoder/numerolog-phpunit": "dev-master"
+		"namelesscoder/numerolog-phpunit": "@stable"
 	},
 	"autoload": {
 		"psr-4": {

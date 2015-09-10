@@ -3,4 +3,4 @@ build
 composer.lock
 vendor
 examples/cache/*.php
-.numerolog-token-da39a3ee5e6b4b0d3255bfef95601890afd80709
+.numerolog-token-90d266e4c7e3463a4266086282f608c1121c3d95

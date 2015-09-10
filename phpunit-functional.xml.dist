@@ -13,8 +13,8 @@
         verbose="false">
 
         <testsuites>
-                <testsuite name="TYPO3.Fluid Unit">
-                        <directory>tests/Unit</directory>
+                <testsuite name="TYPO3.Fluid Functional">
+                        <directory>tests/Functional</directory>
                 </testsuite>
         </testsuites>
 		<filter>
@@ -23,14 +23,6 @@
 				</whitelist>
 		</filter>
         <listeners>
-                <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener">
-                        <arguments>
-                                <array>
-                                        <element key="slowThreshold">
-                                                <integer>1500</integer>
-                                        </element>
-                                </array>
-                        </arguments>
-                </listener>
+                <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
         </listeners>
 </phpunit>
