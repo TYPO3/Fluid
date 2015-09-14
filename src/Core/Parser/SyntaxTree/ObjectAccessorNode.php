@@ -40,6 +40,7 @@ class ObjectAccessorNode extends AbstractNode {
 	 * VariableProvider.
 	 *
 	 * @param string $objectPath An Object Path, like object1.object2.object3
+	 * @param array $accessors Optional list of accessor strategies; starting from beginning of dotted path. Incomplete allowed.
 	 */
 	public function __construct($objectPath, array $accessors = array()) {
 		$this->objectPath = $objectPath;
