@@ -49,9 +49,9 @@ class CastingExpressionNode extends AbstractExpressionNode {
 	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches) {
 		$expression = trim($expression, '{}');
 		list ($variable, $type) = explode(' as ', $expression);
-		$variable = parent::getTemplateVariableOrValueItself($variable, $renderingContext);
+		$variable = static::getTemplateVariableOrValueItself($variable, $renderingContext);
 		if (!in_array($type, self::$validTypes)) {
-			$type = parent::getTemplateVariableOrValueItself($type, $renderingContext);
+			$type = static::getTemplateVariableOrValueItself($type, $renderingContext);
 		}
 		if (!in_array($type, self::$validTypes)) {
 			throw new Exception(sprintf('Invalid target conversion type "%s" specified in casting expression', $type));

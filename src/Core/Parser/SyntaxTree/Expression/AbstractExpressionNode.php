@@ -41,14 +41,13 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	}
 
 	/**
-	 * Return the text associated to the syntax tree. Text from child nodes is
-	 * appended to the text in the node's own text.
+	 * Evaluates the expression stored in this node, in the context of $renderingcontext.
 	 *
 	 * @param RenderingContextInterface $renderingContext
 	 * @return string the text stored in this node/subtree.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		return call_user_func_array(array(get_called_class(), 'evaluateExpression'), array($renderingContext, $this->expression, $this->matches));
+		return static::evaluateExpression($renderingContext, $this->expression, $this->matches);
 	}
 
 	/**
