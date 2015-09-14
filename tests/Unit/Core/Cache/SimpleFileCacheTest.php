@@ -40,6 +40,15 @@ class SimpleFileCacheTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testGetReturnsTrueWhenFound() {
+		$cache = new SimpleFileCache(vfsStream::url('cache/'));
+		$result = $cache->get('DateTime');
+		$this->assertTrue($result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testAddToCacheCreatesFile() {
 		$cache = new SimpleFileCache(vfsStream::url('cache/'));
 		$cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);

@@ -28,6 +28,15 @@ class NodeConverterTest extends UnitTestCase {
 
 	/**
 	 * @test
+	 */
+	public function testSetVariableCounter() {
+		$instance = new NodeConverter(new TemplateCompiler());
+		$instance->setVariableCounter(10);
+		$this->assertAttributeEquals(10, 'variableCounter', $instance);
+	}
+
+	/**
+	 * @test
 	 * @dataProvider getConvertTestValues
 	 * @param NodeInterface $node
 	 * @param string $expected
@@ -51,10 +60,22 @@ class NodeConverterTest extends UnitTestCase {
 		$treeBoolean = new BooleanNode($treeBooleanRoot);
 		$simpleRoot = new RootNode();
 		$simpleRoot->addChildNode(new TextNode('foobar'));
+		$multiRoot = new RootNode();
+		$multiRoot->addChildNode(new TextNode('foo'));
+		$multiRoot->addChildNode(new TextNode('bar'));
+		$multiRoot->addChildNode(new TextNode('baz'));
 		return array(
 			array(
 				new ObjectAccessorNode('_all'),
 				'$renderingContext->getVariableProvider()->getAll()'
+			),
+			array(
+				new ObjectAccessorNode('foo.bar'),
+				'$renderingContext->getVariableProvider()->getByPath(\'foo.bar\', $array0)'
+			),
+			array(
+				new ObjectAccessorNode('foo.bar', array('array', 'array')),
+				'$renderingContext->getVariableProvider()[\'foo\'][\'bar\']'
 			),
 			array(
 				new BooleanNode(new TextNode('TRUE')),
@@ -72,12 +93,23 @@ class NodeConverterTest extends UnitTestCase {
 				new TernaryExpressionNode('1 ? 2 : 3', array(1, 2, 3)),
 				'\NamelessCoder\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::evaluateExpression($renderingContext, $string0, $array1)'
 			),
+			array(
+				new ViewHelperNode(
+					new ViewHelperResolver(),
+					'f',
+					'render',
+					array('section' => new TextNode('test'), 'partial' => 'test'),
+					new ParsingState()
+				),
+				'NamelessCoder\Fluid\ViewHelpers\RenderViewHelper::renderStatic($arguments0, $renderChildrenClosure1, $renderingContext)'
+			),
 			array($simpleRoot, '\'foobar\''),
+			array($multiRoot, '$output0'),
 			array(new TextNode('test'), '\'test\''),
 			array(new NumericNode('3'), '3'),
 			array(new NumericNode('4.5'), '4.5'),
 			array(new ArrayNode(array('foo', 'bar')), '$array0'),
-			array(new ArrayNode(array(0, new TextNode('test'), new ArrayNode(array('foo', 'bar')))), '$array0'),
+			array(new ArrayNode(array(0, new TextNode('test'), new ArrayNode(array('foo', 'bar')))), '$array0')
 		);
 	}
 

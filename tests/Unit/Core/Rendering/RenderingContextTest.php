@@ -7,6 +7,9 @@ namespace NamelessCoder\Fluid\Tests\Unit\Core\Rendering;
  */
 
 use NamelessCoder\Fluid\Core\Rendering\RenderingContextInterface;
+use NamelessCoder\Fluid\Core\Variables\StandardVariableProvider;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperResolver;
+use NamelessCoder\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use NamelessCoder\Fluid\Tests\UnitTestCase;
 use NamelessCoder\Fluid\Core\Rendering\RenderingContext;
 
@@ -23,6 +26,42 @@ class RenderingContextTest extends UnitTestCase {
 
 	public function setUp() {
 		$this->renderingContext = new RenderingContext();
+	}
+
+	/**
+	 * @param string $property
+	 * @param mixed $value
+	 * @dataProvider getPropertyNameTestValues
+	 */
+	public function testGetter($property, $value) {
+		$subject = $this->getAccessibleMock('NamelessCoder\\Fluid\\Core\\Rendering\\RenderingContext', array('dummy'));
+		$subject->_set($property, $value);
+		$getter = 'get' . ucfirst($property);
+		$this->assertSame($value, $subject->$getter());
+	}
+
+	/**
+	 * @param string $property
+	 * @param mixed $value
+	 * @dataProvider getPropertyNameTestValues
+	 */
+	public function testSetter($property, $value) {
+		$subject = new RenderingContext();
+		$setter = 'set' . ucfirst($property);
+		$subject->$setter($value);
+		$this->assertAttributeSame($value, $property, $subject);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getPropertyNameTestValues() {
+		return array(
+			array('variableProvider', new StandardVariableProvider(array('foo' => 'bar'))),
+			array('viewHelperResolver', new ViewHelperResolver()),
+			array('controllerName', 'foobar-controllerName'),
+			array('controllerAction', 'foobar-controllerAction'),
+		);
 	}
 
 	/**

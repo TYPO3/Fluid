@@ -63,6 +63,20 @@ class AbstractNodeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function evaluateChildNodesConcatenatesOutputs() {
+		$child2 = clone $this->childNode;
+		$child2->expects($this->once())->method('evaluate')->with($this->renderingContext)->willReturn('bar');
+		$this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext)->willReturn('foo');
+		$this->abstractNode->addChildNode($child2);
+		$method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNodes');
+		$method->setAccessible(TRUE);
+		$result = $method->invokeArgs($this->abstractNode, array($this->renderingContext, TRUE));
+		$this->assertEquals('foobar', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function childNodeCanBeReadOutAgain() {
 		$this->assertSame($this->abstractNode->getChildNodes(), array($this->childNode));
 	}

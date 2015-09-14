@@ -20,6 +20,21 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testEvaluateDelegatesToEvaluteExpression() {
+		$subject = $this->getMock(
+			'NamelessCoder\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+			array('dummy'),
+			array('{test as string}', array('test as string'))
+		);
+		$context = new RenderingContext();
+		$context->setVariableProvider(new StandardVariableProvider(array('test' => 10)));
+		$result = $subject->evaluate($context);
+		$this->assertSame('10', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testEvaluateInvalidExpressionThrowsException() {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider());
