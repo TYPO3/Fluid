@@ -40,6 +40,14 @@ class AbstractNodeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function evaluateChildNodesReturnsNullIfNoChildNodesExist() {
+		$abstractNode = $this->getMock('NamelessCoder\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
+		$this->assertNull($abstractNode->evaluateChildNodes($this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
 	public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString() {
 		$this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext)->willReturn(new \DateTime('now'));
 		$method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');

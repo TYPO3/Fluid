@@ -29,7 +29,11 @@ abstract class AbstractNode implements NodeInterface {
 	 * @throws Parser\Exception
 	 */
 	public function evaluateChildNodes(RenderingContextInterface $renderingContext) {
-		if (count($this->childNodes) === 1) {
+		$numberOfChildNodes = count($this->childNodes);
+		if ($numberOfChildNodes === 0) {
+			return NULL;
+		}
+		if ($numberOfChildNodes === 1) {
 			return $this->evaluateChildNode($this->childNodes[0], $renderingContext, FALSE);
 		}
 		$output = '';
