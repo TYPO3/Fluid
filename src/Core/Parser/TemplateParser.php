@@ -553,7 +553,7 @@ class TemplateParser {
 		preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER);
 		$arrayToBuild = array();
 		foreach ($matches as $singleMatch) {
-			$arrayKey = $singleMatch['Key'];
+			$arrayKey = $this->unquoteString($singleMatch['Key']);
 			if (!empty($singleMatch['VariableIdentifier'])) {
 				$arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
 			} elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0' )) {

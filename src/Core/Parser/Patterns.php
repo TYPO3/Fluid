@@ -194,22 +194,26 @@ abstract class Patterns {
 	 *
 	 */
 	static public $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
-		(?P<Recursion>                                  # Start the recursive part of the regular expression - describing the array syntax
-			{                                           # Each array needs to start with {
-				(?P<Array>                              # Start sub-match
+		(?P<Recursion>                                             # Start the recursive part of the regular expression - describing the array syntax
+			{                                                      # Each array needs to start with {
+				(?P<Array>                                         # Start sub-match
 					(?:
-						\s*[a-zA-Z0-9\-_]+              # The keys of the array
-						\s*:\s*                         # Key|Value delimiter :
-						(?:                             # Possible value options:
-							"(?:\\\"|[^"])*"            # Double quoted string
-							|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
-							|[a-zA-Z0-9\-_.]+           # variable identifiers
-							|(?P>Recursion)             # Another sub-array
-						)                               # END possible value options
-						\s*,?                           # There might be a , to separate different parts of the array
-					)*                                  # The above cycle is repeated for all array elements
-				)                                       # End array sub-match
-			}                                           # Each array ends with }
+						\s*(
+							[a-zA-Z0-9\\-_]+                       # Unquoted key
+							|"(?:\\\"|[^"])+"                      # Double quoted key, supporting more characters like dots and square brackets
+							|\'(?:\\\\\'|[^\'])+\'                 # Single quoted key, supporting more characters like dots and square brackets
+						)
+						\s*:\s*                                    # Key|Value delimiter :
+						(?:                                        # Possible value options:
+							"(?:\\\"|[^"])*"                       # Double quoted string
+							|\'(?:\\\\\'|[^\'])*\'                 # Single quoted string
+							|[a-zA-Z0-9\-_.]+                      # variable identifiers
+							|(?P>Recursion)                        # Another sub-array
+						)                                          # END possible value options
+						\s*,?                                      # There might be a , to separate different parts of the array
+					)*                                             # The above cycle is repeated for all array elements
+				)                                                  # End array sub-match
+			}                                                      # Each array ends with }
 		)$/x';
 
 	/**
@@ -219,7 +223,11 @@ abstract class Patterns {
 	 */
 	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
 		(?P<ArrayPart>                                             # Start sub-match
-			(?P<Key>[a-zA-Z0-9\-_]+)                               # The keys of the array
+			(?P<Key>                                               # The keys of the array
+				[a-zA-Z0-9\\-_]+                                   # Unquoted
+				|"(?:\\\"|[^"])+"                                  # Double quoted
+				|\'(?:\\\\\'|[^\'])+\'                             # Single quoted
+			)
 			\s*:\s*                                                # Key|Value delimiter :
 			(?:                                                    # Possible value options:
 				(?P<QuotedString>                                  # Quoted string

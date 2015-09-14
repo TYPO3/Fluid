@@ -282,23 +282,76 @@ class PatternsTest extends UnitTestCase {
 	}
 
 	/**
+	 * @return array
+	 */
+	public function dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
+		return array(
+			array('string' => '{a:b}'),
+			array('string' => '{a:b, c :   d}'),
+			array('string' => '{  a:b, c :   d }'),
+
+			// multiple lines
+			array('string' => '{' . chr(10) . ' foo: 1,' . chr(10) . ' bar: 2' . chr(10) . '}'),
+
+			// trailing comma
+			array('string' => '{a:b, c :   d,}'),
+			#array('string' => '{' . chr(10) . ' foo: 1,' . chr(10) . ' bar: 2,' . chr(10) . '}'),
+
+			array('string' => '{a : 123}'),
+			array('string' => '{a:"String"}'),
+			array('string' => '{a:\'String\'}'),
+
+			// empty string value
+			array('string' => '{a:""}'),
+			array('string' => '{a:\'\'}'),
+
+			// nested arrays
+			array('string' => '{a:{bla:{x:z}, b: a}}'),
+			array('string' => '{a:"{bla{{}"}'),
+
+			// quoted keys
+			array('string' => '{"foo": "bar"}'),
+			array('string' => '{"foo[bar]": "baz"}'),
+			array('string' => '{"foo.bar": "baz"}'),
+			array('string' => '{\'foo\': "bar"}'),
+			array('string' => '{  \'foo\'  : "bar" }'),
+			array('string' => '{"a":{bla:{x:z}, b: a}}'),
+			array('string' => '{a:{bla:{"x":z}, b: a}}'),
+			array('string' => '{"@a": "bar"}'),
+			array('string' => '{\'_b\': "bar"}')
+		);
+	}
+
+	/**
+	 * @param string $string
+	 * @dataProvider dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
 	 * @test
 	 */
-	public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
-		$pattern = Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS;
-		$this->assertEquals(preg_match($pattern, '{a:b}'), 1, 'Array syntax not identified!');
-		$this->assertEquals(preg_match($pattern, '{a:b, c :   d}'), 1, 'Array syntax not identified in case there are multiple properties!');
-		$this->assertEquals(preg_match($pattern, '{a : 123}'), 1, 'Array syntax not identified when a number is passed as argument!');
-		$this->assertEquals(preg_match($pattern, '{a:"String"}'), 1, 'Array syntax not identified in case of a double quoted string!');
-		$this->assertEquals(preg_match($pattern, '{a:\'String\'}'), 1, 'Array syntax not identified in case of a single quoted string!');
+	public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS($string) {
+		$success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
+		$this->assertTrue($success);
+		$this->assertSame($string, $matches[0]);
+	}
 
-		$expected = '{a:{bla:{x:z}, b: a}}';
-		preg_match($pattern, $expected, $match);
-		$this->assertEquals($match[0], $expected, 'If nested arrays appear, the string is not parsed correctly.');
+	/**
+	 * @return array
+	 */
+	public function dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS() {
+		return array(
+			array('string' => '{"foo\': "bar"}'),
+			array('string' => '{"": "bar"}'),
+			array('string' => '{\'\': "bar"}'),
+		);
+	}
 
-		$expected = '{a:"{bla{{}"}';
-		preg_match($pattern, $expected, $match);
-		$this->assertEquals($match[0], $expected, 'If nested strings with {} inside appear, the string is not parsed correctly.');
+	/**
+	 * @param string $string
+	 * @dataProvider dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
+	 * @test
+	 */
+	public function SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS_doesNotMatchInvalidSyntax($string) {
+		$success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
+		$this->assertFalse($success);
 	}
 
 	/**
@@ -307,8 +360,8 @@ class PatternsTest extends UnitTestCase {
 	public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS() {
 		$pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
 
-		$source = '{a: b, e: {c:d, e:f}}';
-		preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
+		$source = '{a: b, e: {c:d, "e#":f, \'g\': "h"}}';
+		$success = preg_match_all($pattern, $source, $matches, PREG_SET_ORDER) > 0;
 
 		$expected = array(
 			0 => array(
@@ -323,9 +376,9 @@ class PatternsTest extends UnitTestCase {
 				4 => 'b'
 			),
 			1 => array(
-				0 => 'e: {c:d, e:f}',
-				'ArrayPart' => 'e: {c:d, e:f}',
-				1 => 'e: {c:d, e:f}',
+				0 => 'e: {c:d, "e#":f, \'g\': "h"}',
+				'ArrayPart' => 'e: {c:d, "e#":f, \'g\': "h"}',
+				1 => 'e: {c:d, "e#":f, \'g\': "h"}',
 				'Key' => 'e',
 				2 => 'e',
 				'QuotedString' => '',
@@ -334,11 +387,71 @@ class PatternsTest extends UnitTestCase {
 				4 => '',
 				'Number' => '',
 				5 => '',
-				'Subarray' => 'c:d, e:f',
-				6 => 'c:d, e:f'
+				'Subarray' => 'c:d, "e#":f, \'g\': "h"',
+				6 => 'c:d, "e#":f, \'g\': "h"'
 			)
 		);
-		$this->assertEquals($matches, $expected, 'The regular expression splitting the array apart does not work!');
+		$this->assertTrue($success);
+		$this->assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
+	}
+
+	/**
+	 * @test
+	 */
+	public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesQuotedKeys() {
+		$pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
+
+		$source = '{"a": b, \'c\': d}';
+		$success = preg_match_all($pattern, $source, $matches, PREG_SET_ORDER) > 0;
+
+		$expected = array(
+			0 => array(
+				0 => '"a": b',
+				'ArrayPart' => '"a": b',
+				1 => '"a": b',
+				'Key' => '"a"',
+				2 => '"a"',
+				'QuotedString' => '',
+				3 => '',
+				'VariableIdentifier' => 'b',
+				4 => 'b'
+			),
+			1 => array(
+				0 => '\'c\': d',
+				'ArrayPart' => '\'c\': d',
+				1 => '\'c\': d',
+				'Key' => '\'c\'',
+				2 => '\'c\'',
+				'QuotedString' => '',
+				3 => '',
+				'VariableIdentifier' => 'd',
+				4 => 'd'
+			)
+		);
+		$this->assertTrue($success);
+		$this->assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
+	}
+
+	/**
+	 * @return array
+	 */
+	public function dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS() {
+		return array(
+			array('string' => '{"a\': b}'),
+			array('string' => '{"": "bar"}'),
+			array('string' => '{\'\': "bar"}'),
+		);
+	}
+
+	/**
+	 * @param string $string
+	 * @dataProvider dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS()
+	 * @test
+	 */
+	public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_doesNotMatchInvalidSyntax($string) {
+		$pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
+		$success = preg_match_all($pattern, $string, $matches, PREG_SET_ORDER) > 0;
+		$this->assertFalse($success);
 	}
 
 	/**
