@@ -32,7 +32,7 @@ class OrViewHelper extends AbstractViewHelper {
 		$alternative = $this->arguments['alternative'];
 		$arguments = (array) $this->arguments['arguments'];
 
-		if (0 === count($arguments)) {
+		if (empty($arguments)) {
 			$arguments = NULL;
 		}
 
