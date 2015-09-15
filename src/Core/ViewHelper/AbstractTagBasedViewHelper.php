@@ -110,11 +110,12 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
 	 * @param string $type Type of the tag attribute
 	 * @param string $description Description of tag attribute
 	 * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
+	 * @param mixed $defaultValue Optional, default value of attribute if one applies
 	 * @return void
 	 * @api
 	 */
-	protected function registerTagAttribute($name, $type, $description, $required = FALSE) {
-		$this->registerArgument($name, $type, $description, $required, NULL);
+	protected function registerTagAttribute($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
+		$this->registerArgument($name, $type, $description, $required, $defaultValue);
 		self::$tagAttributes[get_class($this)][$name] = $name;
 	}
 
