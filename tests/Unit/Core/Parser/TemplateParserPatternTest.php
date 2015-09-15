@@ -295,7 +295,6 @@ class PatternsTest extends UnitTestCase {
 
 			// trailing comma
 			array('string' => '{a:b, c :   d,}'),
-			#array('string' => '{' . chr(10) . ' foo: 1,' . chr(10) . ' bar: 2,' . chr(10) . '}'),
 
 			array('string' => '{a : 123}'),
 			array('string' => '{a:"String"}'),
