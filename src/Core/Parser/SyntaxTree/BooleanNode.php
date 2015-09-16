@@ -84,17 +84,19 @@ class BooleanNode extends AbstractNode {
 	protected $stack = array();
 
 	/**
-	 * @param NodeInterface $root
+	 * @param mixed $root NodeInterface, array (of nodes or expression parts) or a simple type that can be evaluated to boolean
 	 */
-	function __construct(NodeInterface $root) {
+	function __construct($input) {
 		// First, evaluate everything that is not an ObjectAccessorNode, ArrayNode
 		// or ViewHelperNode so we get all text, numbers, comparators and
 		// groupers from the text parts of the expression. All other nodes
 		// we leave intact for later processing
-		if ($root instanceof RootNode) {
-			$this->stack = $root->getChildNodes();
+		if ($input instanceof RootNode) {
+			$this->stack = $input->getChildNodes();
+		} elseif (is_array($input)) {
+			$this->stack = $input;
 		} else {
-			$this->stack = array($root);
+			$this->stack = array($input);
 		}
 	}
 
