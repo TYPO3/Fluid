@@ -21,7 +21,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
- * Testcase for ViewHelperNode's evaluateBooleanExpression()
+ * Testcase for BooleanNode
  */
 class BooleanNodeTest extends UnitTestCase {
 
@@ -614,5 +614,35 @@ class BooleanNodeTest extends UnitTestCase {
 		$this->assertFalse(BooleanNode::convertToBoolean(NULL));
 
 		$this->assertTrue(BooleanNode::convertToBoolean(new \stdClass()));
+	}
+
+	/**
+	 * @param mixed $input
+	 * @param boolean $expected
+	 * @test
+	 * @dataProvider getStandardInputTypes
+	 */
+	public function acceptsStandardTypesAsInput($input, $expected) {
+		$context = new RenderingContext();
+		$node = new BooleanNode($input);
+		$this->assertEquals($expected, $node->evaluate($context));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getStandardInputTypes() {
+		return array(
+			array(0, FALSE),
+			array(1, TRUE),
+			array(FALSE, FALSE),
+			array(TRUE, TRUE),
+			array(NULL, FALSE),
+			array('', FALSE),
+			array('0', FALSE),
+			array('1', TRUE),
+			array(array(1), TRUE),
+			array(array(0), FALSE),
+		);
 	}
 }
