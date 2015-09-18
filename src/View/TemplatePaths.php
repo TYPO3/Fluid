@@ -550,21 +550,22 @@ class TemplatePaths {
 			return $this->templateSource;
 		}
 		$format = $this->getFormat();
-		$templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, $format);
-		if (!file_exists($templatePathAndFilename) && $templatePathAndFilename !== 'php://stdin') {
+		$templateReference = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, $format);
+		if (!file_exists($templateReference) && $templateReference !== 'php://stdin') {
 			throw new InvalidTemplateResourceException(
 				sprintf(
-					'"%s" was not found or was incorrectly referenced. Tried resolving template for controller action %s->%s. ' .
-					'The following paths were checked but none of them contained the expected template file: %s',
-					$templatePathAndFilename,
+					'Tried resolving a template file for controller action "%s->%s" in format ".%s", but none of the paths ' .
+					'contained the expected template file (%s). The following paths were checked: %s',
 					$controller,
 					$action,
+					$format,
+					$templateReference === NULL ? $controller . '/' . ucfirst($action) . '.' . $format : $templateReference,
 					implode(',', $this->getTemplateRootPaths())
 				),
 				1257246929
 			);
 		}
-		return file_get_contents($templatePathAndFilename, FILE_TEXT);
+		return file_get_contents($templateReference, FILE_TEXT);
 	}
 
 	/**
