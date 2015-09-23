@@ -54,11 +54,19 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 * requires a different (or faster) decision then this method is the one
 	 * to override and implement.
 	 *
+	 * Note: method signature does not type-hint that an array is desired,
+	 * and as such, *appears* to accept any input type. There is no type hint
+	 * here for legacy reasons - the signature is kept compatible with third
+	 * party packages which depending on PHP version would error out if this
+	 * signature was not compatible with that of existing and in-production
+	 * subclasses that will be using this base class in the future. Let this
+	 * be a warning if someone considers changing this method signature!
+	 *
 	 * @param array|NULL $arguments
 	 * @return boolean
 	 * @api
 	 */
-	protected static function evaluateCondition(array $arguments = NULL) {
+	protected static function evaluateCondition($arguments = NULL) {
 		return (boolean) $arguments['condition'];
 	}
 
