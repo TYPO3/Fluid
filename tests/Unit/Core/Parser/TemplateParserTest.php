@@ -584,4 +584,38 @@ class TemplateParserTest extends UnitTestCase {
 
 		$templateParser->_call('textHandler', $mockState, 'string');
 	}
+
+	/**
+	 * @test
+	 */
+	public function testTemplateWithRegisteredNamespace() {
+		$resolver = new ViewHelperResolver();
+		$this->templateParser = new TemplateParser($resolver);
+		$this->templateParser->parse('<f:format.raw></f:format.raw>');
+		$this->templateParser->parse('{foo -> f:format.raw()}');
+		$this->templateParser->parse('{f:format.raw(value: foo)}');
+	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException
+	 */
+	public function testTemplateWithUnkownNamespace() {
+		$resolver = new ViewHelperResolver();
+		$this->templateParser = new TemplateParser($resolver);
+		$this->templateParser->parse('<foo:bar></foo:bar>');
+		$this->templateParser->parse('{foo -> foo:bar()}');
+		$this->templateParser->parse('{foo:bar(value: foo)}');
+	}
+
+	/**
+	 * @test
+	 */
+	public function testTemplateWithIgnoredNamespaces() {
+		$resolver = new ViewHelperResolver();
+		$this->templateParser = new TemplateParser($resolver);
+		$this->templateParser->parse('{namespace *} <foo:bar></foo:bar>');
+		$this->templateParser->parse('{namespace foo} {foo -> foo:bar()}');
+		$this->templateParser->parse('{namespace fo*} {foo:bar(value: foo)}');
+	}
 }
