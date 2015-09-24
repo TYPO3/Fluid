@@ -118,7 +118,40 @@ class ViewHelperResolver {
 	 * @return boolean TRUE if the given namespace is valid, otherwise FALSE
 	 */
 	public function isNamespaceValid($namespaceIdentifier, $methodIdentifier) {
-		return array_key_exists($namespaceIdentifier, $this->namespaces);
+		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
+			return FALSE;
+		}
+
+		return $this->namespaces[$namespaceIdentifier] !== NULL;
+	}
+
+	/**
+	 * Validates the given namespaceIdentifier and returns FALSE
+	 * if the namespace is unknown and not ignored
+	 *
+	 * @param string $namespaceIdentifier
+	 * @return boolean TRUE if the given namespace is valid, otherwise FALSE
+	 */
+	public function isNamespaceValidOrIgnored($namespaceIdentifier) {
+		if ($this->isNamespaceValid($namespaceIdentifier, '') === TRUE) {
+			return TRUE;
+		}
+
+		if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
+			return TRUE;
+		}
+
+		foreach (array_keys($this->namespaces) as $namespace) {
+			if (stristr($namespace, '*') === FALSE) {
+				continue;
+			}
+			$pattern = '/' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $namespace) . '/';
+			if (preg_match($pattern, $namespaceIdentifier) === 1) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
 	}
 
 	/**
