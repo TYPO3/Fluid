@@ -118,6 +118,35 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testHandleAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments() {
+		$viewHelper = $this->getAccessibleMock(
+			'TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
+			array('dummy'),
+			array(), '', FALSE
+		);
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$viewHelper->handleAdditionalArguments(array('foo' => 'bar'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function testHandleAdditionalArgumentsSetsTagAttributesForDataArguments() {
+		$viewHelper = $this->getAccessibleMock(
+			'TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
+			array('dummy'),
+			array(), '', FALSE
+		);
+		$tagBuilder = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'));
+		$tagBuilder->expects($this->at(0))->method('addAttribute')->with('data-foo', 'foo');
+		$tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-bar', 'bar');
+		$viewHelper->setTagBuilder($tagBuilder);
+		$viewHelper->handleAdditionalArguments(array('data-foo' => 'foo', 'data-bar' => 'bar'));
+	}
+
+	/**
+	 * @test
+	 */
 	public function standardTagAttributesAreRegistered() {
 		$mockTagBuilder = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder', array('addAttribute'), array(), '', FALSE);
 		$mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');
