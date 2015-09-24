@@ -63,6 +63,21 @@ class TemplateParser {
 	protected $templateProcessors = array();
 
 	/**
+	 * @var integer
+	 */
+	protected $pointerLineNumber = 1;
+
+	/**
+	 * @var integer
+	 */
+	protected $pointerLineCharacter = 1;
+
+	/**
+	 * @var string
+	 */
+	protected $pointerTemplateCode = NULL;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct(ViewHelperResolver $viewHelperResolver = NULL) {
@@ -71,6 +86,16 @@ class TemplateParser {
 		}
 		$this->viewHelperResolver = $viewHelperResolver;
 		$this->variableProvider = new StandardVariableProvider();
+	}
+
+	/**
+	 * Returns an array of current line number, character in line and reference template code;
+	 * for extraction when catching parser-related Exceptions during parsing.
+	 *
+	 * @return array
+	 */
+	public function getCurrentParsingPointers() {
+		return array($this->pointerLineNumber, $this->pointerLineCharacter, $this->pointerTemplateCode);
 	}
 
 	/**
@@ -157,6 +182,8 @@ class TemplateParser {
 	 */
 	protected function reset() {
 		$this->escapingEnabled = TRUE;
+		$this->pointerLineNumber = 1;
+		$this->pointerLineCharacter = 1;
 	}
 
 	/**
@@ -179,8 +206,18 @@ class TemplateParser {
 	 */
 	protected function buildObjectTree(array $splitTemplate, $context) {
 		$state = $this->getParsingState();
+		$previousBlock = '';
 
 		foreach ($splitTemplate as $templateElement) {
+			if ($context === self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS) {
+				// Store a neat reference to the outermost chunk of Fluid template code.
+				// Don't store the reference if parsing ViewHelper arguments object tree;
+				// we want the reference code to contain *all* of the ViewHelper call.
+				$this->pointerTemplateCode = $templateElement;
+			}
+			$this->pointerLineNumber += substr_count($templateElement, PHP_EOL);
+			$this->pointerLineCharacter = strlen(substr($previousBlock, strrpos($previousBlock, PHP_EOL))) + 1;
+			$previousBlock = $templateElement;
 			$matchedVariables = array();
 			if (preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateElement, $matchedVariables, PREG_SET_ORDER) > 0) {
 				foreach ($matchedVariables as $namespaceMatch) {

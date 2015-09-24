@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\View;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Resource;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
@@ -275,6 +276,7 @@ abstract class AbstractTemplateView extends AbstractView {
 
 	/**
 	 * @param string $templateIdentifier
+	 * @param string $templateFile
 	 * @param \Closure $templateSourceClosure Closure which returns the template source if needed
 	 * @return ParsedTemplateInterface
 	 */
@@ -282,7 +284,22 @@ abstract class AbstractTemplateView extends AbstractView {
 		if ($this->templateCompiler->has($templateIdentifier)) {
 			$parsedTemplate = $this->templateCompiler->get($templateIdentifier);
 		} else {
-			$parsedTemplate = $this->templateParser->parse($templateSourceClosure($this, $this->templatePaths));
+			try {
+				$parsedTemplate = $this->templateParser->parse($templateSourceClosure($this, $this->templatePaths));
+			} catch (\RuntimeException $error) {
+				list ($line, $character, $templateCode) = $this->templateParser->getCurrentParsingPointers();
+				throw new Exception(
+					sprintf(
+						'Fluid parse error in template %s, line %d at character %d. Error: %s (%d). Template code: %s',
+						$templateIdentifier,
+						$line,
+						$character,
+						$error->getMessage(),
+						$error->getCode(),
+						$templateCode
+					)
+				);
+			}
 			if ($parsedTemplate->isCompilable()) {
 				$this->templateCompiler->store($templateIdentifier, $parsedTemplate);
 			}
