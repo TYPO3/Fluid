@@ -72,31 +72,31 @@ when you do need a switch, one can be implemented as:
 	- Matched switch
 
 	<f:switch expression="{switchValue}">
-		<f:case break="1" value="1">The value was "1"</f:case>
-		<f:case break="1" value="2">The value was "2"</f:case>
-		<f:case break="1" value="3">The value was "3"</f:case>
+		<f:case value="1">The value was "1"</f:case>
+		<f:case value="2">The value was "2"</f:case>
+		<f:case value="3">The value was "3"</f:case>
 		<f:defaultCase>This text must not be shown</f:defaultCase>
 	</f:switch>
 
 	- Unmatched switch
 
 	<f:switch expression="{switchValue}">
-		<f:case break="1" value="a">The value was "1"</f:case>
-		<f:case break="1" value="b">The value was "2"</f:case>
-		<f:case break="1" value="c">The value was "3"</f:case>
+		<f:case value="a">The value was "1"</f:case>
+		<f:case value="b">The value was "2"</f:case>
+		<f:case value="c">The value was "3"</f:case>
 		<f:defaultCase>The unmatched value case triggered</f:defaultCase>
 	</f:switch>
 
 	- Nested switch
 
 	<f:switch expression="{switchValue}">
-		<f:case break="1" value="1">The value was "1"</f:case>
-		<f:case break="1" value="2">The value was "2"</f:case>
-		<f:case break="1" value="3">The value was "3"
+		<f:case value="1">The value was "1"</f:case>
+		<f:case value="2">The value was "2"</f:case>
+		<f:case value="3">The value was "3"
 			<f:switch expression="{secondSwitchValue}">
-				<f:case break="0" value="a">The value was "1"</f:case>
-				<f:case break="1" value="b">The "b" nested switch case was triggered</f:case>
-				<f:case break="1" value="c">The "c" nested switch case was triggered</f:case>
+				<f:case value="a">The value was "1"</f:case>
+				<f:case value="b">The "b" nested switch case was triggered</f:case>
+				<f:case value="c">The "c" nested switch case was triggered</f:case>
 				<f:defaultCase>This text must not be shown</f:defaultCase>
 			</f:switch>
 		</f:case>

@@ -362,6 +362,29 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	}
 
 	/**
+	 * Default implementation of "handling" additional, undeclared arguments.
+	 * In this implementation the behavior is to consistently throw an error
+	 * about NOT supporting any additional arguments. This method MUST be
+	 * overridden by any ViewHelper that desires this support and this inherited
+	 * method must not be called, obviously.
+	 *
+	 * @throws Exception
+	 * @param array $arguments
+	 * @return void
+	 */
+	public function handleAdditionalArguments(array $arguments) {
+		if (!empty($arguments)) {
+			throw new Exception(
+				sprintf(
+					'Undeclared arguments passed to VieWHelper %s: %s',
+					get_class($this),
+					implode(', ', array_keys($arguments))
+				)
+			);
+		}
+	}
+
+	/**
 	 * You only should override this method *when you absolutely know what you
 	 * are doing*, and really want to influence the generated PHP code during
 	 * template compilation directly.

@@ -32,38 +32,6 @@ class ViewHelperInvokerTest extends UnitTestCase {
 	 * @test
 	 * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
 	 */
-	public function abortIfUnregisteredArgumentsExistThrowsExceptionOnUnregisteredArguments() {
-		$expected = array(new ArgumentDefinition('firstArgument', 'string', '', FALSE));
-		$actual = array('firstArgument' => 'foo', 'secondArgument' => 'bar');
-
-		$templateParser = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker', array('dummy'), array(), '', FALSE);
-
-		$templateParser->_call('abortIfUnregisteredArgumentsExist', $expected, $actual);
-	}
-
-	/**
-	 * @test
-	 */
-	public function abortIfUnregisteredArgumentsExistDoesNotThrowExceptionIfEverythingIsOk() {
-		$expectedArguments = array(
-			new ArgumentDefinition('name1', 'string', 'desc', FALSE),
-			new ArgumentDefinition('name2', 'string', 'desc', TRUE)
-		);
-		$actualArguments = array(
-			'name1' => 'bla'
-		);
-
-		$mockTemplateParser = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker', array('dummy'), array(), '', FALSE);
-
-		$mockTemplateParser->_call('abortIfUnregisteredArgumentsExist', $expectedArguments, $actualArguments);
-		// dummy assertion to avoid "did not perform any assertions" error
-		$this->assertTrue(TRUE);
-	}
-
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
-	 */
 	public function abortIfRequiredArgumentsAreMissingThrowsException() {
 		$expected = array(
 			new ArgumentDefinition('firstArgument', 'string', '', FALSE),
