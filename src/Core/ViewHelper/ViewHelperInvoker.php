@@ -64,6 +64,7 @@ class ViewHelperInvoker {
 
 		// Rendering process
 		$evaluatedArguments = array();
+		$undeclaredArguments = array();
 		foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
 			if (isset($arguments[$argumentName])) {
 				/** @var NodeInterface|mixed $argumentValue */
@@ -73,38 +74,21 @@ class ViewHelperInvoker {
 				$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
 			}
 		}
+		foreach ($arguments as $argumentName => $argumentValue) {
+			if (!array_key_exists($argumentName, $evaluatedArguments)) {
+				$undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+			}
+		}
 
-		$this->abortIfUnregisteredArgumentsExist($expectedViewHelperArguments, $evaluatedArguments);
 		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $evaluatedArguments);
 
-		$viewHelper->setArguments($evaluatedArguments);
 		$viewHelper->setRenderingContext($renderingContext);
+		$viewHelper->setArguments($evaluatedArguments);
+		$viewHelper->handleAdditionalArguments($undeclaredArguments);
 		if ($renderChildrenClosure) {
 			$viewHelper->setRenderChildrenClosure($renderChildrenClosure);
 		}
 		return $viewHelper->initializeArgumentsAndRender();
-	}
-
-	/**
-	 * Throw an exception if there are arguments which were not registered
-	 * before.
-	 *
-	 * @param array $expectedArguments Array of \TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition of all expected arguments
-	 * @param array $actualArguments Actual arguments
-	 * @throws Exception
-	 */
-	protected function abortIfUnregisteredArgumentsExist($expectedArguments, $actualArguments) {
-		$expectedArgumentNames = array();
-		/** @var ArgumentDefinition $expectedArgument */
-		foreach ($expectedArguments as $expectedArgument) {
-			$expectedArgumentNames[] = $expectedArgument->getName();
-		}
-
-		foreach (array_keys($actualArguments) as $argumentName) {
-			if (!in_array($argumentName, $expectedArgumentNames)) {
-				throw new Exception('Argument "' . $argumentName . '" was not registered.', 1237823695);
-			}
-		}
 	}
 
 	/**

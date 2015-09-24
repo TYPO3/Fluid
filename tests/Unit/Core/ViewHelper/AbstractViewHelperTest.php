@@ -301,6 +301,19 @@ class AbstractViewHelperTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testHandleAdditionalArgumentsThrowsExceptionIfNotEmpty() {
+		$viewHelper = $this->getAccessibleMock(
+			'TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper',
+			array('dummy'),
+			array(), '', FALSE
+		);
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$viewHelper->handleAdditionalArguments(array('foo' => 'bar'));
+	}
+
+	/**
+	 * @test
+	 */
 	public function testCompileReturnsAndAssignsExpectedPhpCode() {
 		$viewHelper = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper', array('dummy'), array(), '', FALSE);
 		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'section', array(), new ParsingState());
