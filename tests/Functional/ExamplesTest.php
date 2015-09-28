@@ -25,8 +25,12 @@ class ExamplesTest extends BaseTestCase {
 	 * @dataProvider getExampleScriptTestValues
 	 * @param string $script
 	 * @param array $expectedOutputs
+	 * @param string $expectedException
 	 */
-	public function testExampleScriptFileWithoutCache($script, array $expectedOutputs) {
+	public function testExampleScriptFileWithoutCache($script, array $expectedOutputs, $expectedException = NULL) {
+		if ($expectedException !== NULL) {
+			$this->setExpectedException($expectedException);
+		}
 		$this->runExampleScriptTest($script, $expectedOutputs, FALSE);
 	}
 
@@ -34,11 +38,14 @@ class ExamplesTest extends BaseTestCase {
 	 * @dataProvider getExampleScriptTestValues
 	 * @param string $script
 	 * @param array $expectedOutputs
+	 * @param string $expectedException
 	 */
-	public function testExampleScriptFileWithCache($script, array $expectedOutputs) {
+	public function testExampleScriptFileWithCache($script, array $expectedOutputs, $expectedException = NULL) {
+		if ($expectedException !== NULL) {
+			$this->setExpectedException($expectedException);
+		}
 		$cache = vfsStream::url('fakecache/');
 		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
-		//$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**
@@ -141,7 +148,8 @@ class ExamplesTest extends BaseTestCase {
 				array(
 					'Namespaces template',
 					'<invalid:vh>This tag will be shown</invalid:vh>'
-				)
+				),
+				'\TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException'
 			),
 			'example_namespaceresolving.php' => array(
 				'example_namespaceresolving.php',
@@ -149,7 +157,8 @@ class ExamplesTest extends BaseTestCase {
 					'NamespaceResolving template from Singles.',
 					'Argument passed to CustomViewHelper:',
 					'\'123\''
-				)
+				),
+				'\TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException'
 			),
 			'example_single.php' => array(
 				'example_single.php',

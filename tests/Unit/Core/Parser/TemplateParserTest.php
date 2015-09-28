@@ -584,4 +584,70 @@ class TemplateParserTest extends UnitTestCase {
 
 		$templateParser->_call('textHandler', $mockState, 'string');
 	}
+
+	/**
+	 * @dataProvider getExampleScriptTestValues
+	 * @param string $templateCode
+	 * @param array $expectsIgnored
+	 * @param string $expectedException
+	 */
+	public function testNamespaceParsing($templateCode, $expectsIgnored = array(), $expectedException = NULL) {
+
+		$resolver = new ViewHelperResolver();
+		$this->templateParser = new TemplateParser($resolver);
+
+		if ($expectedException !== NULL) {
+			$this->setExpectedException($expectedException);
+		}
+		$this->templateParser->parse($templateCode);
+		foreach ($expectsIgnored as $namespace) {
+			$this->assertTrue($resolver->isNamespaceValidOrIgnored($namespace));
+		}
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getExampleScriptTestValues() {
+		return array(
+			array(
+				'<f:format.raw></f:format.raw>'
+			),
+			array(
+				'{foo -> f:format.raw()}'
+			),
+			array(
+				'{f:format.raw(value: foo)}'
+			),
+
+			array(
+				'<foo:bar></foo:bar>',
+				array(),
+				'\TYPO3Fluid\Fluid\Core\Parser\Exception'
+			),
+			array(
+				'{foo -> foo:bar()}',
+				array(),
+				'\TYPO3Fluid\Fluid\Core\Parser\Exception'
+			),
+			array(
+				'{foo:bar(value: foo)}',
+				array(),
+				'\TYPO3Fluid\Fluid\Core\Parser\Exception'
+			),
+
+			array(
+				'{namespace *} <foo:bar></foo:bar>',
+				array('foo')
+			),
+			array(
+				'{namespace foo} {foo -> foo:bar()}',
+				array('foo')
+			),
+			array(
+				'{namespace fo*} {foo:bar(value: foo)}',
+				array('foo')
+			),
+		);
+	}
 }
