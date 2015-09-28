@@ -288,7 +288,8 @@ abstract class AbstractTemplateView extends AbstractView {
 				$parsedTemplate = $this->templateParser->parse($templateSourceClosure($this, $this->templatePaths));
 			} catch (\RuntimeException $error) {
 				list ($line, $character, $templateCode) = $this->templateParser->getCurrentParsingPointers();
-				throw new Exception(
+				$exceptionClass = get_class($error);
+				throw new $exceptionClass(
 					sprintf(
 						'Fluid parse error in template %s, line %d at character %d. Error: %s (%d). Template code: %s',
 						$templateIdentifier,
@@ -297,7 +298,8 @@ abstract class AbstractTemplateView extends AbstractView {
 						$error->getMessage(),
 						$error->getCode(),
 						$templateCode
-					)
+					),
+					$error->getCode()
 				);
 			}
 			if ($parsedTemplate->isCompilable()) {
