@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
+use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
@@ -14,6 +15,31 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
  * Testcase for RenderViewHelper
  */
 class RenderViewHelperTest extends ViewHelperBaseTestcase {
+
+	/**
+	 * @var RenderViewHelper
+	 */
+	protected $subject;
+
+	/**
+	 * @var TemplateView
+	 */
+	protected $view;
+
+	/**
+	 * @return void
+	 */
+	public function setUp() {
+		$this->subject = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', array('renderChildren'));
+		$renderingContext = new RenderingContext();
+		$paths = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$paths->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
+		$viewHelperVariableContainer = new ViewHelperVariableContainer();
+		$this->view = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplateView', array('renderPartial', 'renderSection'), array($paths, $renderingContext));
+		$viewHelperVariableContainer->setView($this->view);
+		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
+		$this->subject->setRenderingContext($renderingContext);
+	}
 
 	/**
 	 * @test
@@ -24,7 +50,8 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 		$instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything(), FALSE, NULL);
 		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, array());
 		$instance->expects($this->at(3))->method('registerArgument')->with('optional', 'boolean', $this->anything(), FALSE, FALSE);
-		$instance->expects($this->at(4))->method('registerArgument')->with('default', 'mixed', $this->anything(), FALSE, FALSE);
+		$instance->expects($this->at(4))->method('registerArgument')->with('default', 'mixed', $this->anything(), FALSE, NULL);
+		$instance->expects($this->at(5))->method('registerArgument')->with('contentAs', 'string', $this->anything(), FALSE, NULL);
 		$instance->initializeArguments();
 	}
 
@@ -35,24 +62,12 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	 * @param string|NULL $expectedViewMethod
 	 */
 	public function testRender(array $arguments, $expectedViewMethod) {
-		if ($expectedViewMethod) {
-			$methods = array($expectedViewMethod);
-		} else {
-			$methods = array('renderPartial', 'renderSection');
+		if ($expectedViewMethod !== NULL) {
+			$this->view->expects($this->once())->method($expectedViewMethod)->willReturn('');
 		}
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', array('renderChildren'));
-		$instance->expects($this->any())->method('renderChildren')->willReturn(NULL);
-		$renderingContext = new RenderingContext();
-		$paths = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
-		$paths->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
-		$viewHelperVariableContainer = new ViewHelperVariableContainer();
-		$view = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplateView', $methods, array($paths, $renderingContext));
-		$viewHelperVariableContainer->setView($view);
-		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
-		$instance->setArguments($arguments);
-		$instance->setRenderingContext($renderingContext);
-		$instance->render();
-
+		$this->subject->expects($this->any())->method('renderChildren')->willReturn(NULL);
+		$this->subject->setArguments($arguments);
+		$this->subject->render();
 	}
 
 	/**
@@ -61,22 +76,65 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	public function getRenderTestValues() {
 		return array(
 			array(
-				array('partial' => NULL, 'section' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL),
+				array('partial' => NULL, 'section' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				NULL
 			),
 			array(
-				array('partial' => 'foo-partial', 'section' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL),
+				array('partial' => 'foo-partial', 'section' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				'renderPartial'
 			),
 			array(
-				array('partial' => 'foo-partial', 'section' => 'foo-section', 'arguments' => array(), 'optional' => FALSE, 'default' => NULL),
+				array('partial' => 'foo-partial', 'section' => 'foo-section', 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				'renderPartial'
 			),
 			array(
-				array('partial' => NULL, 'section' => 'foo-section', 'arguments' => array(), 'optional' => FALSE, 'default' => NULL),
+				array('partial' => NULL, 'section' => 'foo-section', 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				'renderSection'
 			),
 		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testRenderWithDefautReturnsDefaultIfContentEmpty() {
+		$this->view->expects($this->once())->method('renderPartial')->willReturn('');
+		$this->subject->expects($this->any())->method('renderChildren')->willReturn(NULL);
+		$this->subject->setArguments(
+			array(
+				'partial' => 'test',
+				'section' => NULL,
+				'arguments' => array(),
+				'optional' => TRUE,
+				'default' => 'default-foobar',
+				'contentAs' => NULL
+			)
+		);
+		$output = $this->subject->render();
+		$this->assertEquals('default-foobar', $output);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testRenderSupportsContentAs() {
+		$variables = array('foo' => 'bar', 'foobar' => 'tagcontent-foobar');
+		$this->view->expects($this->once())->method('renderPartial')->with('test1', 'test2', $variables, TRUE)->willReturn('baz');
+		$this->subject->expects($this->any())->method('renderChildren')->willReturn('tagcontent-foobar');
+		$this->subject->setArguments(
+			array(
+				'partial' => 'test1',
+				'section' => 'test2',
+				'arguments' => array(
+					'foo' => 'bar'
+				),
+				'optional' => TRUE,
+				'default' => NULL,
+				'contentAs' => 'foobar'
+			)
+		);
+		$output = $this->subject->render();
+		$this->assertEquals('baz', $output);
 	}
 
 }

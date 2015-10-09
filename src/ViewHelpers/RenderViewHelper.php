@@ -83,6 +83,7 @@ class RenderViewHelper extends AbstractViewHelper {
 		$this->registerArgument('arguments', 'array', 'Array of variables to be transferred. Use {_all} for all variables', FALSE, array());
 		$this->registerArgument('optional', 'boolean', 'If TRUE, considers the *section* optional. Partial never is.', FALSE, FALSE);
 		$this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist', FALSE, NULL);
+		$this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section', FALSE, NULL);
 	}
 
 	/**
@@ -96,6 +97,13 @@ class RenderViewHelper extends AbstractViewHelper {
 		$partial = $this->arguments['partial'];
 		$arguments = (array) $this->arguments['arguments'];
 		$optional = (boolean) $this->arguments['optional'];
+		$contentAs = $this->arguments['contentAs'];
+		$tagContent = $this->renderChildren();
+
+		if ($contentAs !== NULL) {
+			$arguments[$contentAs] = $tagContent;
+		}
+
 		$content = '';
 		if ($partial !== NULL) {
 			$content = $this->viewHelperVariableContainer->getView()->renderPartial($partial, $section, $arguments, $optional);
@@ -105,11 +113,8 @@ class RenderViewHelper extends AbstractViewHelper {
 		// Replace empty content with default value. If default is
 		// not set, NULL is returned and cast to a new, empty string
 		// outside of this ViewHelper.
-		if ('' === $content) {
-			$content = $this->arguments['default'];
-			if (NULL === $content) {
-				$content = $this->renderChildren();
-			}
+		if ($content === '') {
+			$content = isset($this->arguments['default']) ? $this->arguments['default'] : $tagContent;
 		}
 		return $content;
 	}
