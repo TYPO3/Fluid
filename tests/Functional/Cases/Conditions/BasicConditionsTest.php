@@ -49,6 +49,18 @@ class BasicConditionsTest extends BaseFunctionalTestCase {
 				array('yes'),
 				array('no')
 			),
+			'\'String containing word "false" in text\'' => array(
+				'<f:if condition="\'String containing word \"false\" in text\'" then="yes" else="no" />',
+				array(),
+				array('yes'),
+				array('no')
+			),
+			'\'  FALSE  \'' => array(
+				'<f:if condition="\'  FALSE  \'" then="yes" else="no" />',
+				array(),
+				array('yes'),
+				array('no')
+			),
 			'\'foo\' > 0' => array(
 				'<f:if condition="\'foo\' > 0" then="yes" else="no" />',
 				array(),
