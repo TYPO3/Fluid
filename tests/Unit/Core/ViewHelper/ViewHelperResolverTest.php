@@ -29,7 +29,7 @@ class ViewHelperResolverTest extends UnitTestCase {
 	public function testRegisterNamespaceThrowsExceptionOnReRegistration() {
 		$resolver = new ViewHelperResolver();
 		$resolver->registerNamespace('t', 'test');
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
 		$resolver->registerNamespace('t', 'test2');
 	}
 
@@ -57,7 +57,7 @@ class ViewHelperResolverTest extends UnitTestCase {
 	public function testResolveViewHelperClassNameThrowsExceptionIfClassNotResolved() {
 		$resolver = $this->getMock('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('resolveViewHelperName'));
 		$resolver->expects($this->once())->method('resolveViewHelperName')->willReturn(FALSE);
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
 		$resolver->resolveViewHelperClassName('f', 'invalid');
 	}
 
