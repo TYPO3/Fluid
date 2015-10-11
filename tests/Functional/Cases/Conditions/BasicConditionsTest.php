@@ -37,6 +37,24 @@ class BasicConditionsTest extends BaseFunctionalTestCase {
 				array('yes'),
 				array('no')
 			),
+			'\'foo\' == 0' => array(
+				'<f:if condition="\'foo\' == 0" then="yes" else="no" />',
+				array(),
+				array('yes'),
+				array('no')
+			),
+			'1.1 >= \'foo\'' => array(
+				'<f:if condition="1.1 >= \'foo\'" then="yes" else="no" />',
+				array(),
+				array('yes'),
+				array('no')
+			),
+			'\'foo\' > 0' => array(
+				'<f:if condition="\'foo\' > 0" then="yes" else="no" />',
+				array(),
+				array('no'),
+				array('yes')
+			),
 		);
 	}
 

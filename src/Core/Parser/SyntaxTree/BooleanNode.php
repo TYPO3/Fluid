@@ -253,7 +253,12 @@ class BooleanNode extends AbstractNode {
 	 * @return string
 	 */
 	public static function trimQuotedString($string) {
-		return trim($string, self::TRIM_CHARACTERS);
+		$string = trim($string, self::TRIM_CHARACTERS);
+		if (is_numeric($string)) {
+			// Rather than casting to integer or float we use PHP's type conversion via incrementing
+			$string += 0;
+		}
+		return $string;
 	}
 
 	/**
@@ -351,12 +356,8 @@ class BooleanNode extends AbstractNode {
 	 * @return boolean TRUE if the operands can be compared using arithmetic operators, FALSE otherwise.
 	 */
 	static protected function isComparable($a, $b) {
-		$stringA = is_string($a);
-		$stringB = is_string($b);
 		return (
-			(is_null($a) || $stringA) && $stringB)
-			|| (($stringA || is_resource($a) || is_numeric($a)) && ($stringB || is_resource($b) || is_numeric($b)))
-			|| (is_bool($a) || is_null($a))
+			(is_null($a) || is_scalar($a) || is_resource($a)) && (is_null($b) || is_scalar($b) || is_resource($b)))
 			|| (is_object($a) && is_object($b))
 			|| (is_array($a) && is_array($b)
 		);
