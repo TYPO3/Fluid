@@ -96,7 +96,7 @@ class BooleanNode extends AbstractNode {
 		} elseif (is_array($input)) {
 			$this->stack = $input;
 		} else {
-			$this->stack = array($input);
+			$this->stack = array(is_string($input) ? trim($input) : $input);
 		}
 	}
 
@@ -253,7 +253,7 @@ class BooleanNode extends AbstractNode {
 	 * @return string
 	 */
 	public static function trimQuotedString($string) {
-		$string = trim($string, self::TRIM_CHARACTERS);
+		$string = preg_match('/^[\'"].*[\'"]$/', $string) ? trim($string, $string{0}) : $string;
 		if (is_numeric($string)) {
 			// Rather than casting to integer or float we use PHP's type conversion via incrementing
 			$string += 0;
@@ -379,7 +379,7 @@ class BooleanNode extends AbstractNode {
 			return (boolean) ((float) $value > 0);
 		}
 		if (is_string($value)) {
-			$value = trim($value, self::TRIM_CHARACTERS . '()');
+			$value = self::trimQuotedString($value);
 			return (strtolower($value) !== 'false' && !empty($value));
 		}
 		if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
