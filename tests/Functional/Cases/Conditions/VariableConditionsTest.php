@@ -43,11 +43,23 @@ class VariableConditionsTest extends BaseFunctionalTestCase {
 				array('yes'),
 				array('no')
 			),
-			'"{test1} === {test2}" (test1=1, test2="1")' => array(
+			'"{test1} === {test2}" (test1=abc, test2=abc)' => array(
 				'<f:if condition="{test1} === {test2}" then="yes" else="no" />',
-				array('test1' => 1, 'test2' => '1'),
+				array('test1' => 'abc', 'test2' => 'abc'),
+				array('yes'),
+				array('no')
+			),
+			'"{test1} === {test2}" (test1=1, test2=TRUE)' => array(
+				'<f:if condition="{test1} === {test2}" then="yes" else="no" />',
+				array('test1' => 1, 'test2' => TRUE),
 				array('no'),
 				array('yes')
+			),
+			'"{test1} == {test2}" (test1=1, test2=TRUE)' => array(
+				'<f:if condition="{test1} == {test2}" then="yes" else="no" />',
+				array('test1' => 1, 'test2' => TRUE),
+				array('yes'),
+				array('no')
 			),
 		);
 	}

@@ -84,10 +84,16 @@ class BooleanNodeTest extends UnitTestCase {
 			array('==', array('foobar'), array('baz'), FALSE),
 
 			array('>', 1, 0, TRUE),
-			array('>', 1, FALSE, FALSE),
+			array('>', 1, FALSE, TRUE),
 			array('>', FALSE, 0, FALSE),
 
 			array('<', 1, 0, FALSE),
+
+			// edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
+			array('==', 'foo', 0, TRUE),
+			array('>=', 1.1, 'foo', TRUE),
+			array('>', 'foo', 0, FALSE),
+
 		);
 	}
 
@@ -181,9 +187,9 @@ class BooleanNodeTest extends UnitTestCase {
 	 */
 	public function comparingUnequalIdentityReturnsFalse() {
 		$rootNode = new RootNode();
-		$rootNode->addChildNode(new TextNode('5'));
+		$rootNode->addChildNode(new NumericNode('0'));
 		$rootNode->addChildNode(new TextNode('==='));
-		$rootNode->addChildNode(new NumericNode(5));
+		$rootNode->addChildNode(new BooleanNode(FALSE));
 
 		$booleanNode = new BooleanNode($rootNode);
 		$this->assertFalse($booleanNode->evaluate($this->renderingContext));
@@ -492,10 +498,10 @@ class BooleanNodeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function equalsReturnsFalseIfComparingStringWithZero() {
+	public function equalsReturnsTrueIfComparingStringWithZero() {
 		$rootNode = new RootNode();
 		$rootNode->addChildNode(new TextNode('\'stringA\' == 0'));
-		$this->assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
+		$this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
 	}
 
 	/**
