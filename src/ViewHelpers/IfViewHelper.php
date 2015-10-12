@@ -6,7 +6,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ConditionViewHelperTrait;
 
 /**
  * This view helper implements an if/else condition.
@@ -81,21 +82,27 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * @see \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
  * @api
  */
-class IfViewHelper extends AbstractConditionViewHelper {
+class IfViewHelper extends AbstractViewHelper {
+
+	use ConditionViewHelperTrait;
 
 	/**
-	 * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
+	 * @return void
+	 */
+	public function initializeArguments() {
+		$this->registerConditionArguments();
+		$this->registerArgument('condition', 'boolean', 'Condition expression conforming to Fluid boolean rules', FALSE, FALSE);
+	}
+
+	/**
+	 * The most basic possible condition evaluation: boolean cast of "condition" argument.
 	 *
-	 * @param boolean $condition View helper condition
-	 * @return string the rendered string
+	 * @param array|NULL $arguments
+	 * @return boolean
 	 * @api
 	 */
-	public function render() {
-		if ($this->arguments['condition']) {
-			return $this->renderThenChild();
-		} else {
-			return $this->renderElseChild();
-		}
+	protected static function evaluateCondition($arguments = NULL) {
+		return (boolean) $arguments['condition'];
 	}
 
 }
