@@ -106,6 +106,14 @@ abstract class Patterns {
 	static public $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
 
 	/**
+	 * This pattern detects any CDATA fields inside a string wihtout the limitation
+	 * that it has to be the start and end of that string. This is primarily
+	 * used by the TemplateParser to strip the TemplateSource from CDATA parts
+	 * to ignore namespace registrations inside a cdata tag
+	 */
+	static public $STRIP_PATTERN_CDATA = '/<!\[CDATA\[(.*?)\]\]>/s';
+
+	/**
 	 * Pattern which splits the shorthand syntax into different tokens. The
 	 * "shorthand syntax" is everything like {...}
 	 */

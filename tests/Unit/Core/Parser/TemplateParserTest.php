@@ -648,6 +648,27 @@ class TemplateParserTest extends UnitTestCase {
 				'{namespace fo*} {foo:bar(value: foo)}',
 				array('foo')
 			),
+
+			array(
+				'<![CDATA[{nonExistingNamespace:basr()}]]>',
+				array()
+			),
+
+			array(
+				'some line
+				<![CDATA[{nonExistingNamespace:bar()}]]>
+				',
+				array()
+			),
+
+			array(
+				'{namespace before}
+				<![CDATA[{nonExistingNamespace:bar()}]]>
+				{namespace between}
+				<![CDATA[{nonExistingNamespace:baz()}]]>
+				{namespace after}',
+				array('before', 'between', 'after')
+			)
 		);
 	}
 }
