@@ -60,9 +60,9 @@ class ViewHelperNode extends AbstractNode {
 	 */
 	public function __construct(ViewHelperResolver $resolver, $namespace, $identifier, array $arguments, ParsingState $state) {
 		$this->viewHelperResolver = $resolver;
-		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
-		$this->uninitializedViewHelper = $resolver->createViewHelperInstance($namespace, $identifier);
 		$this->arguments = $arguments;
+		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
+		$this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
 		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
 		$this->validateArguments($this->argumentDefinitions, $this->arguments);
@@ -72,7 +72,7 @@ class ViewHelperNode extends AbstractNode {
 	 * @return ArgumentDefinition[]
 	 */
 	public function getArgumentDefinitions() {
-		return $this->uninitializedViewHelper->prepareArguments();
+		return $this->argumentDefinitions;
 	}
 
 	/**
@@ -135,14 +135,13 @@ class ViewHelperNode extends AbstractNode {
 	 * @return object evaluated node after the view helper has been called.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		$viewHelper = clone $this->getUninitializedViewHelper();
+		$viewHelper = $this->getUninitializedViewHelper();
 		// Note about the following three method calls: some ViewHelpers
 		// require a specific order of attribute setting. The logical
 		// order is to first provide a ViewHelperNode, second to provide
-		// the rendering context and finally to provide child nodes.
+		// child nodes.
 		// DO NOT CHANGE THIS ORDER. You *will* cause damage.
 		$viewHelper->setViewHelperNode($this);
-		$viewHelper->setRenderingContext($renderingContext);
 		$viewHelper->setChildNodes($this->getChildNodes());
 		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($this->getViewHelperClassName())
 			->invoke($viewHelper, $this->getArguments(), $renderingContext);
