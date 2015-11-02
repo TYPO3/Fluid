@@ -153,8 +153,8 @@ class TemplateParser {
 		}
 
 		$this->reset();
-		$this->registerNamespacesFromTemplateSource($templateString);
 		$templateString = $this->preProcessTemplateSource($templateString);
+		$this->registerNamespacesFromTemplateSource($templateString);
 
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
