@@ -154,7 +154,6 @@ class TemplateParser {
 
 		$this->reset();
 		$templateString = $this->preProcessTemplateSource($templateString);
-		$this->registerNamespacesFromTemplateSource($templateString);
 
 		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
@@ -176,43 +175,6 @@ class TemplateParser {
 			$templateSource = $templateProcessor->preProcessSource($templateSource);
 		}
 		return $templateSource;
-	}
-
-	/**
-	 * Pre-process the template source before it is returned to the
-	 * TemplateParser or passed to the next TemplateProcessorInterface instance.
-	 *
-	 * @param string $templateSource
-	 * @return string
-	 */
-	protected function registerNamespacesFromTemplateSource($templateSource) {
-		preg_match_all(Patterns::$NAMESPACE_DECLARATION, $templateSource, $namespaces);
-		foreach ($namespaces['identifier'] as $key => $identifier) {
-			$namespace = $namespaces['phpNamespace'][$key];
-			if (strlen($namespace) === 0) {
-				$namespace = NULL;
-			}
-			$this->viewHelperResolver->registerNamespace($identifier, $namespace);
-		}
-
-		preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateSource, $splitParts);
-		if (isset($splitParts[0])) {
-			foreach ($splitParts[0] as $viewHelper) {
-				preg_match_all(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $viewHelper, $matches);
-				foreach ($matches['NamespaceIdentifier'] as $key => $namespace) {
-					if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($namespace)) {
-						throw new UnknownNamespaceException('Unkown Namespace: ' . htmlspecialchars($matches[0][$key]));
-					}
-				}
-			}
-		}
-
-		preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $templateSource, $shorthandViewHelpers);
-		foreach ($shorthandViewHelpers['NamespaceIdentifier'] as $key => $namespace) {
-			if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($namespace)) {
-				throw new UnknownNamespaceException('Unkown Namespace: ' . $shorthandViewHelpers[0][$key]);
-			}
-		}
 	}
 
 	/**
@@ -259,7 +221,16 @@ class TemplateParser {
 			$this->pointerLineCharacter = strlen(substr($previousBlock, strrpos($previousBlock, PHP_EOL))) + 1;
 			$previousBlock = $templateElement;
 			$matchedVariables = array();
-			if (preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateElement, $matchedVariables, PREG_SET_ORDER) > 0) {
+
+			if(preg_match_all(Patterns::$NAMESPACE_DECLARATION, $templateElement, $namespaces)) {
+				foreach ($namespaces['identifier'] as $key => $identifier) {
+					$namespace = $namespaces['phpNamespace'][$key];
+					if (strlen($namespace) === 0) {
+						$namespace = NULL;
+					}
+					$this->viewHelperResolver->registerNamespace($identifier, $namespace);
+				}
+			} else if (preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateElement, $matchedVariables, PREG_SET_ORDER) > 0) {
 				foreach ($matchedVariables as $namespaceMatch) {
 					$viewHelperNamespace = $this->unquoteString($namespaceMatch[2]);
 					$phpNamespace = $this->viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
@@ -272,6 +243,12 @@ class TemplateParser {
 				$this->textHandler($state, $matchedVariables[1]);
 				continue;
 			} elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
+				if (isset($matchedVariables['NamespaceIdentifier'])) {
+					if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($matchedVariables['NamespaceIdentifier'])) {
+						throw new UnknownNamespaceException('Unkown Namespace: ' . htmlspecialchars($matchedVariables[0]));
+					}
+				}
+
 				$viewHelperWasOpened = $this->openingViewHelperTagHandler(
 					$state,
 					$matchedVariables['NamespaceIdentifier'],
@@ -419,6 +396,12 @@ class TemplateParser {
 		if (strlen($viewHelperString) > 0 && preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
 			// The last ViewHelper has to be added first for correct chaining.
 			foreach (array_reverse($matches) as $singleMatch) {
+				if (isset($singleMatch['NamespaceIdentifier'])) {
+					if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($singleMatch['NamespaceIdentifier'])) {
+						throw new UnknownNamespaceException('Unkown Namespace: ' . $singleMatch[0]);
+					}
+				}
+
 				if (strlen($singleMatch['ViewHelperArguments']) > 0) {
 					$arguments = $this->recursiveArrayHandler($singleMatch['ViewHelperArguments']);
 				} else {
