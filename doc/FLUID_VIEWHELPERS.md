@@ -52,7 +52,7 @@ ViewHelpers work by accepting either one or both of tag content (which can be HT
 defined as tag attributes. How you write ViewHelper syntax is documented in the [chapter about syntax](FLUID_SYNTAX.md) - with a
 few examples.
 
-Which arguments a particular VieWHelper supports and which ViewHelpers are available is determined by the packages you have
+Which arguments a particular ViewHelper supports and which ViewHelpers are available is determined by the packages you have
 installed. If you only have Fluid installed, there are only the ViewHelpers in [src/ViewHelpers](../src/ViewHelpers/) which you
 can use. See also the documentation of any third-party packages you use; such documentation should also describe ViewHelpers.
 

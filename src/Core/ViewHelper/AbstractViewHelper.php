@@ -376,7 +376,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 		if (!empty($arguments)) {
 			throw new Exception(
 				sprintf(
-					'Undeclared arguments passed to VieWHelper %s: %s',
+					'Undeclared arguments passed to ViewHelper %s: %s',
 					get_class($this),
 					implode(', ', array_keys($arguments))
 				)
