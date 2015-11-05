@@ -50,4 +50,17 @@ class ObjectAccessorNodeTest extends UnitTestCase {
 		);
 	}
 
+	/**
+	 * @test
+	 */
+	public function testEvaluatedUsesVariableProviderGetByPath() {
+		$node = new ObjectAccessorNode('foo.bar');
+		$renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface');
+		$variableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider', array());
+		$variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', array())->will($this->returnValue('foo'));
+		$renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
+		$value = $node->evaluate($renderingContext);
+		$this->assertEquals('foo', $value);
+	}
+
 }

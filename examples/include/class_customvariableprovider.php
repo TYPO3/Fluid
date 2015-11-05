@@ -24,16 +24,22 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
 	protected $incrementer = 0;
 
 	/**
-	 * @param string $identifier
+	 * Get a variable by dotted path expression, retrieving the
+	 * variable from nested arrays/objects one segment at a time.
+	 * If the second variable is passed, it is expected to contain
+	 * extraction method names (constants from VariableExtractor)
+	 * which indicate how each value is extracted.
+	 *
+	 * @param string $path
 	 * @return mixed
 	 */
-	public function get($identifier) {
-		if ($identifier === 'random') {
+	public function getByPath($path, array $accessors = array()) {
+		if ($path === 'random') {
 			return 'random' . sha1(rand(0, 999999999999));
-		} elseif ($identifier === 'incrementer') {
+		} elseif ($path === 'incrementer') {
 			return ++ $this->incrementer;
 		} else {
-			return parent::get($identifier);
+			return parent::getByPath($path);
 		}
 	}
 
