@@ -73,7 +73,7 @@ class ForViewHelper extends AbstractViewHelper {
 		parent::initializeArguments();
 		$this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', TRUE);
 		$this->registerArgument('as', 'string', 'The name of the iteration variable', TRUE);
-		$this->registerArgument('key', 'string', 'Variable to assign array key to', TRUE);
+		$this->registerArgument('key', 'string', 'Variable to assign array key to', FALSE);
 		$this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', FALSE, FALSE);
 		$this->registerArgument('iteration', 'string', 'Name of iteration variable to assign', FALSE, NULL);
 	}

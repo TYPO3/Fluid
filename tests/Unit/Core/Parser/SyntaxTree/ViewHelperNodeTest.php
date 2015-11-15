@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper;
@@ -56,7 +57,7 @@ class ViewHelperNodeTest extends UnitTestCase {
 	 */
 	public function constructorSetsViewHelperAndArguments() {
 		$viewHelper = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper');
-		$arguments = array('foo' => 'bar');
+		$arguments = array('then' => 'test');
 		$resolver = new ViewHelperResolver();
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
 		$viewHelperNode = $this->getAccessibleMock(
