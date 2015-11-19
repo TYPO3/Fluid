@@ -91,6 +91,16 @@ interface ViewHelperInterface {
 	 */
 	public function handleAdditionalArguments(array $arguments);
 
+	/**
+	 * Method which can be implemented in any ViewHelper if that ViewHelper desires
+	 * the ability to allow additional, undeclared, dynamic etc. arguments for the
+	 * node in the template. Do not implement this unless you need it!
+	 *
+	 * @param array $arguments
+	 * @return void
+	 */
+	public function validateAdditionalArguments(array $arguments);
+
 //	/**
 //	 * Render method you need to implement for your custom view helper.
 //	 * Note: This method is commented out in order to avoid conflicts with different method signatures in the implementation

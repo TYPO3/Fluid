@@ -33,7 +33,7 @@ class TemplateParserTest extends UnitTestCase {
 		$method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
 		$method->setAccessible(TRUE);
 		$result = $method->invokeArgs($templateParser, array(new ParsingState(), 'f', 'render', array()));
-		$this->assertFalse($result);
+		$this->assertNull($result);
 	}
 
 	/**
@@ -176,7 +176,7 @@ class TemplateParserTest extends UnitTestCase {
 		$templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')
 			->with($mockState, 'namespaceIdentifier', 'methodIdentifier', array('parsedArguments'));
 
-		$templateParser->_call('openingViewHelperTagHandler', $mockState, 'namespaceIdentifier', 'methodIdentifier', array('arguments'), FALSE);
+		$templateParser->_call('openingViewHelperTagHandler', $mockState, 'namespaceIdentifier', 'methodIdentifier', array('arguments'), FALSE, '');
 	}
 
 	/**
@@ -191,9 +191,10 @@ class TemplateParserTest extends UnitTestCase {
 			'TYPO3Fluid\Fluid\Core\Parser\TemplateParser',
 			array('parseArguments', 'initializeViewHelperAndAddItToStack')
 		);
-		$templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue(TRUE));
+		$node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array('dummy'), array(), '', FALSE);
+		$templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue($node));
 
-		$templateParser->_call('openingViewHelperTagHandler', $mockState, '', '', array(), TRUE);
+		$templateParser->_call('openingViewHelperTagHandler', $mockState, '', '', array(), TRUE, '');
 	}
 
 	/**

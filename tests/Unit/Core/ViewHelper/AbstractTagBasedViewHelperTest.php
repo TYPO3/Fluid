@@ -118,14 +118,14 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testHandleAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments() {
+	public function testValidateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments() {
 		$viewHelper = $this->getAccessibleMock(
 			'TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper',
 			array('dummy'),
 			array(), '', FALSE
 		);
 		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
-		$viewHelper->handleAdditionalArguments(array('foo' => 'bar'));
+		$viewHelper->validateAdditionalArguments(array('foo' => 'bar'));
 	}
 
 	/**

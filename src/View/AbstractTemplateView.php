@@ -284,24 +284,7 @@ abstract class AbstractTemplateView extends AbstractView {
 		if ($this->templateCompiler->has($templateIdentifier)) {
 			$parsedTemplate = $this->templateCompiler->get($templateIdentifier);
 		} else {
-			try {
-				$parsedTemplate = $this->templateParser->parse($templateSourceClosure($this, $this->templatePaths));
-			} catch (\RuntimeException $error) {
-				list ($line, $character, $templateCode) = $this->templateParser->getCurrentParsingPointers();
-				$exceptionClass = get_class($error);
-				throw new $exceptionClass(
-					sprintf(
-						'Fluid parse error in template %s, line %d at character %d. Error: %s (%d). Template code: %s',
-						$templateIdentifier,
-						$line,
-						$character,
-						$error->getMessage(),
-						$error->getCode(),
-						$templateCode
-					),
-					$error->getCode()
-				);
-			}
+			$parsedTemplate = $this->templateParser->parse($templateSourceClosure($this, $this->templatePaths), $templateIdentifier);
 			if ($parsedTemplate->isCompilable()) {
 				$this->templateCompiler->store($templateIdentifier, $parsedTemplate);
 			}

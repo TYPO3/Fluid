@@ -144,22 +144,49 @@ class TemplateParser {
 	 * TemplateParser directly.
 	 *
 	 * @param string $templateString The template to parse as a string
+	 * @param string $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
 	 * @return ParsedTemplateInterface Parsed template
 	 * @throws Exception
 	 */
-	public function parse($templateString) {
+	public function parse($templateString, $templateIdentifier = NULL) {
 		if (!is_string($templateString)) {
 			throw new Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
 		}
 
-		$this->reset();
-		$templateString = $this->preProcessTemplateSource($templateString);
-		$this->registerNamespacesFromTemplateSource($templateString);
+		try {
+			$this->reset();
+			$templateString = $this->preProcessTemplateSource($templateString);
+			$this->registerNamespacesFromTemplateSource($templateString);
 
-		$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
-		$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+			$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
+			$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+		} catch (Exception $error) {
+			throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
+		}
 
 		return $parsingState;
+	}
+
+	/**
+	 * @param \Exception $error
+	 * @param string $templateIdentifier
+	 * @throws \Exception
+	 */
+	public function createParsingRelatedExceptionWithContext(\Exception $error, $templateIdentifier) {
+		list ($line, $character, $templateCode) = $this->getCurrentParsingPointers();
+		$exceptionClass = get_class($error);
+		return new $exceptionClass(
+			sprintf(
+				'Fluid parse error in template %s, line %d at character %d. Error: %s (error code %d). Template source chunk: %s',
+				$templateIdentifier,
+				$line,
+				$character,
+				$error->getMessage(),
+				$error->getCode(),
+				$templateCode
+			),
+			$error->getCode()
+		);
 	}
 
 	/**
@@ -272,27 +299,25 @@ class TemplateParser {
 				$this->textHandler($state, $matchedVariables[1]);
 				continue;
 			} elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
-				$viewHelperWasOpened = $this->openingViewHelperTagHandler(
+				if ($this->openingViewHelperTagHandler(
 					$state,
 					$matchedVariables['NamespaceIdentifier'],
 					$matchedVariables['MethodIdentifier'],
 					$matchedVariables['Attributes'],
-					($matchedVariables['Selfclosing'] === '' ? FALSE : TRUE)
-				);
-				if ($viewHelperWasOpened === TRUE) {
+					($matchedVariables['Selfclosing'] === '' ? FALSE : TRUE),
+					$templateElement
+				)) {
 					continue;
 				}
 			} elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
-				$viewHelperWasClosed = $this->closingViewHelperTagHandler(
+				if ($this->closingViewHelperTagHandler(
 					$state,
 					$matchedVariables['NamespaceIdentifier'],
 					$matchedVariables['MethodIdentifier']
-				);
-				if ($viewHelperWasClosed === TRUE) {
+				)) {
 					continue;
 				}
 			}
-
 			$this->textAndShorthandSyntaxHandler($state, $templateElement, $context);
 		}
 
@@ -300,8 +325,9 @@ class TemplateParser {
 			throw new Exception('Not all tags were closed!', 1238169398);
 		}
 		return $state;
-	}
 
+
+	}
 	/**
 	 * Handles an opening or self-closing view helper tag.
 	 *
@@ -310,20 +336,28 @@ class TemplateParser {
 	 * @param string $methodIdentifier Method identifier
 	 * @param string $arguments Arguments string, not yet parsed
 	 * @param boolean $selfclosing true, if the tag is a self-closing tag.
-	 * @return boolean
+	 * @param string $templateCode The template code containing the ViewHelper call
+	 * @return ViewHelperNode|NULL
 	 */
-	protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing) {
-		$argumentsObjectTree = $this->parseArguments($arguments);
-		$viewHelperWasOpened = $this->initializeViewHelperAndAddItToStack($state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree);
+	protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing, $templateElement) {
+		$viewHelperNode = $this->initializeViewHelperAndAddItToStack(
+			$state,
+			$namespaceIdentifier,
+			$methodIdentifier,
+			$this->parseArguments($arguments)
+		);
 
-		if ($viewHelperWasOpened === TRUE && $selfclosing === TRUE) {
-			$node = $state->popNodeFromStack();
-			$this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
-			// This needs to be called here because closingViewHelperTagHandler() is not triggered for self-closing tags
-			$state->getNodeFromStack()->addChildNode($node);
+		if ($viewHelperNode) {
+			$viewHelperNode->setPointerTemplateCode($templateElement);
+			if ($selfclosing === TRUE) {
+				$node = $state->popNodeFromStack();
+				$this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
+				// This needs to be called here because closingViewHelperTagHandler() is not triggered for self-closing tags
+				$state->getNodeFromStack()->addChildNode($node);
+			}
 		}
 
-		return $viewHelperWasOpened;
+		return $viewHelperNode;
 	}
 
 	/**
@@ -334,12 +368,12 @@ class TemplateParser {
 	 * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
 	 * @param string $methodIdentifier Method identifier
 	 * @param array $argumentsObjectTree Arguments object tree
-	 * @return boolean whether the viewHelper was found and added to the stack or not
+	 * @return ViewHelperNode|NULL An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
 	 * @throws Exception
 	 */
 	protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
 		if ($this->viewHelperResolver->isNamespaceValid($namespaceIdentifier, $methodIdentifier) === FALSE) {
-			return FALSE;
+			return NULL;
 		}
 		$currentViewHelperNode = new ViewHelperNode(
 			$this->viewHelperResolver,
@@ -348,13 +382,13 @@ class TemplateParser {
 			$argumentsObjectTree,
 			$state
 		);
-		$viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
 
 		$this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
+		$viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
 		$viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
 		$state->pushNodeToStack($currentViewHelperNode);
 
-		return TRUE;
+		return $currentViewHelperNode;
 	}
 
 	/**
@@ -424,8 +458,8 @@ class TemplateParser {
 				} else {
 					$arguments = array();
 				}
-				$viewHelperWasAdded = $this->initializeViewHelperAndAddItToStack($state, $singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier'], $arguments);
-				if ($viewHelperWasAdded === TRUE) {
+				$viewHelperNode = $this->initializeViewHelperAndAddItToStack($state, $singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier'], $arguments);
+				if ($viewHelperNode) {
 					$numberOfViewHelpers++;
 				}
 			}

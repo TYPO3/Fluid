@@ -6,7 +6,9 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
@@ -43,6 +45,11 @@ class ViewHelperNode extends AbstractNode {
 	protected $viewHelperResolver;
 
 	/**
+	 * @var string
+	 */
+	protected $pointerTemplateCode = NULL;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param ViewHelperResolver an instance or subclass of ViewHelperResolver
@@ -58,6 +65,7 @@ class ViewHelperNode extends AbstractNode {
 		$this->arguments = $arguments;
 		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
+		$this->validateArguments($this->argumentDefinitions, $this->arguments);
 	}
 
 	/**
@@ -106,6 +114,14 @@ class ViewHelperNode extends AbstractNode {
 	}
 
 	/**
+	 * @param string $pointerTemplateCode
+	 * @return void
+	 */
+	public function setPointerTemplateCode($pointerTemplateCode) {
+		$this->pointerTemplateCode = $pointerTemplateCode;
+	}
+
+	/**
 	 * Call the view helper associated with this object.
 	 *
 	 * First, it evaluates the arguments of the view helper.
@@ -146,6 +162,29 @@ class ViewHelperNode extends AbstractNode {
 				$argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
 			}
 		}
+	}
+
+	/**
+	 * @param array $argumentDefinitions
+	 * @param array $argumentsObjectTree
+	 * @throws Exception
+	 */
+	protected function validateArguments(array $argumentDefinitions, array $argumentsObjectTree) {
+		$additionalArguments = array();
+		foreach ($argumentsObjectTree as $argumentName => $value) {
+			if (!array_key_exists($argumentName, $argumentDefinitions)) {
+				$additionalArguments[$argumentName] = $value;
+			}
+		}
+		foreach ($argumentDefinitions as $argumentDefinition) {
+			if ($argumentDefinition->isRequired() && $argumentDefinition->getDefaultValue() === NULL) {
+				$name = $argumentDefinition->getName();
+				if (!array_key_exists($name, $argumentsObjectTree)) {
+					throw new Exception(sprintf('Required argument %s for ViewHelper %s was not provided', $name, $this->viewHelperClassName));
+				}
+			}
+		}
+		$this->uninitializedViewHelper->validateAdditionalArguments($additionalArguments);
 	}
 
 }

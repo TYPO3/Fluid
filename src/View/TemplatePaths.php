@@ -267,6 +267,12 @@ class TemplatePaths {
 					return self::$resolvedFiles['templates'][$identifier] = $candidate;
 				}
 			}
+			foreach ($this->getTemplateRootPaths() as $templateRootPath) {
+				$candidate = $this->ensureAbsolutePath($templateRootPath . $action . '.' . $format);
+				if (file_exists($candidate)) {
+					return self::$resolvedFiles['templates'][$identifier] = $candidate;
+				}
+			}
 		}
 		return isset(self::$resolvedFiles['templates'][$identifier]) ? self::$resolvedFiles['templates'][$identifier] : NULL;
 	}
