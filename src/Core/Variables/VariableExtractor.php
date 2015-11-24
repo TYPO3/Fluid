@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  * See LICENSE.txt that was shipped with this package.
  */
 
+ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+ 
 /**
  * Class VariableExtractor
  *
@@ -66,6 +68,10 @@ class VariableExtractor {
 	 * @return mixed
 	 */
 	public function getByPath($subject, $propertyPath, array $accessors = array()) {
+		if ($subject instanceof StandardVariableProvider) {
+			return $subject->getByPath($propertyPath, $accessors);
+		}
+
 		$propertyPathSegments = explode('.', $propertyPath);
 		$propertyPathSegments = $this->resolveSubVariableReferences($subject, $propertyPathSegments);
 		foreach ($propertyPathSegments as $index => $pathSegment) {
