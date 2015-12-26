@@ -62,4 +62,33 @@ class ViewHelperResolverTest extends UnitTestCase {
 		$resolver->resolveViewHelperClassName('f', 'invalid');
 	}
 
+	/**
+	 * @test
+	 */
+	public function testResolveViewHelperClassNameSupportsMultipleNamespaces() {
+		$resolver = $this->getAccessibleMock('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('dummy'));
+		$resolver->_set('namespaces', array(
+			'f' => array(
+				'FluidTYPO3\\Fluid\\ViewHelpers',
+				'Foo\\Bar'
+			)
+		));
+		$result = $resolver->_call('resolveViewHelperName', 'f', 'render');
+		$this->assertEquals('FluidTYPO3\\Fluid\\ViewHelpers\\RenderViewHelper', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testExtendNamespace() {
+		$resolver = $this->getMock('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('dummy'));
+		$resolver->extendNamespace('f', 'Foo\\Bar');
+		$this->assertAttributeEquals(array(
+			'f' => array(
+				'TYPO3Fluid\\Fluid\\ViewHelpers',
+				'Foo\\Bar'
+			)
+		), 'namespaces', $resolver);
+	}
+
 }

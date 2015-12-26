@@ -64,10 +64,13 @@ class ViewHelperResolver {
 
 	/**
 	 * Registers the given identifier/namespace mapping so that
-	 * ViewHelper class names can be properly resolved while parsing
+	 * ViewHelper class names can be properly resolved while parsing.
+	 * The namespace can be either a string of a single target PHP
+	 * namespace or an array of multiple namespaces (in which case
+	 * the resolver treats them with last one having highest priority).
 	 *
 	 * @param string $identifier
-	 * @param string $phpNamespace
+	 * @param string|array $phpNamespace
 	 * @return void
 	 * @throws Exception if the specified identifier is already registered
 	 */
@@ -84,6 +87,23 @@ class ViewHelperResolver {
 			);
 		}
 		$this->namespaces[$identifier] = $phpNamespace;
+	}
+
+	/**
+	 * Extend (by overriding) a namespace, making Fluid look in one
+	 * or more additional PHP namespaces *before* consulting the
+	 * originally registered PHP namespace. Can be used for two main
+	 * purposes: one, to add additional ViewHelpers that can also be
+	 * used under an existing namespace, and two, to override existing
+	 * ViewHelpers under an existing namespace (making Fluid use other
+	 * classes for built-in ViewHelpers).
+	 *
+	 * @param string $identifier
+	 * @param string $additionalPhpNamespace
+	 * @return void
+	 */
+	public function extendNamespace($identifier, $additionalPhpNamespace) {
+		$this->namespaces[$identifier] = array_merge((array) $this->namespaces[$identifier], array($additionalPhpNamespace));
 	}
 
 	/**
@@ -250,7 +270,14 @@ class ViewHelperResolver {
 		}
 		$className .= 'ViewHelper';
 
-		$name = $this->namespaces[$namespaceIdentifier] . '\\' . $className;
+		if (is_array($this->namespaces[$namespaceIdentifier])) {
+			$namespaces = $this->namespaces[$namespaceIdentifier];
+		} else {
+			$namespaces = array($this->namespaces[$namespaceIdentifier]);
+		}
+		do {
+			$name = array_pop($namespaces) . '\\' . $className;
+		} while (!class_exists($name) && count($namespaces));
 
 		return $name;
 	}
