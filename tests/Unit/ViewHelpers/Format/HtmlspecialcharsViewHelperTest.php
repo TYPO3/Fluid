@@ -70,15 +70,15 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 			array(
 				'value' => 'Some special characters: &©"\'',
 				'options' => array(),
-				'expectedResult' => 'Some special characters: &amp;©&quot;\''
+				'expectedResult' => 'Some special characters: &amp;©&quot;&#039;'
 			),
 			// render respects "keepQuotes" argument
 			array(
-				'value' => 'Some special characters: &©"\'',
+				'value' => 'Some special characters: &©"',
 				'options' => array(
 					'keepQuotes' => TRUE,
 				),
-				'expectedResult' => 'Some special characters: &amp;©"\''
+				'expectedResult' => 'Some special characters: &amp;©"'
 			),
 			// render respects "encoding" argument
 			array(
@@ -86,7 +86,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 				'options' => array(
 					'encoding' => 'ISO-8859-1',
 				),
-				'expectedResult' => 'Some special characters: &amp;&quot;\''
+				'expectedResult' => 'Some special characters: &amp;&quot;&#039;'
 			),
 			// render converts already converted entities by default
 			array(

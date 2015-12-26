@@ -78,7 +78,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper {
 		if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {
 			return $value;
 		}
-		$flags = $keepQuotes ? ENT_NOQUOTES : ENT_COMPAT;
+		$flags = $keepQuotes ? ENT_NOQUOTES : ENT_QUOTES;
 
 		return htmlspecialchars($value, $flags, $encoding, $doubleEncode);
 	}
