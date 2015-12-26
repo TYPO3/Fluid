@@ -203,7 +203,9 @@ class NodeConverter {
 			return array(
 				'initialization' => '',
 				'execution' => sprintf(
-					'%s[\'%s\']',
+					'isset(%s[\'%s\']) ? %s[\'%s\'] : NULL',
+					$providerReference,
+					str_replace('.', '\'][\'', $path),
 					$providerReference,
 					str_replace('.', '\'][\'', $path)
 				)

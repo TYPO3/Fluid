@@ -75,7 +75,7 @@ class NodeConverterTest extends UnitTestCase {
 			),
 			array(
 				new ObjectAccessorNode('foo.bar', array('array', 'array')),
-				'$renderingContext->getVariableProvider()[\'foo\'][\'bar\']'
+				'isset($renderingContext->getVariableProvider()[\'foo\'][\'bar\']) ? $renderingContext->getVariableProvider()[\'foo\'][\'bar\'] : NULL'
 			),
 			array(
 				new BooleanNode(new TextNode('TRUE')),
