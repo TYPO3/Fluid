@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 

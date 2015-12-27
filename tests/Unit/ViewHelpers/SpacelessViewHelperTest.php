@@ -6,8 +6,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\ViewHelpers\SpacelessViewHelper;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\ViewHelpers\SpacelessViewHelper;
 
 /**
  * Testcase for SpacelessViewHelper
@@ -23,7 +23,7 @@ class SpacelessViewHelperTest extends ViewHelperBaseTestcase {
 	public function testRender($input, $expected) {
 		$instance = new SpacelessViewHelper();
 		$instance->setRenderChildrenClosure(function() use ($input) { return $input; });
-		$instance->setRenderingContext($this->getMock('TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface'));
+		$instance->setRenderingContext($this->getMock(RenderingContextInterface::class));
 		$instance->setArguments(array());
 		$this->assertEquals($expected, $instance->render());
 	}
@@ -35,7 +35,7 @@ class SpacelessViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testRenderStatic($input, $expected) {
-		$context = $this->getMock('TYPO3Fluid\\Fluid\\Core\\Rendering\\RenderingContextInterface');
+		$context = $this->getMock(RenderingContextInterface::class);
 		$this->assertEquals($expected, SpacelessViewHelper::renderStatic(array(), function() use ($input) { return $input; }, $context));
 	}
 

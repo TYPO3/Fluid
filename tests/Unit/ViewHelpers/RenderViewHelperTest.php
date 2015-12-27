@@ -6,10 +6,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
-use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\View\TemplateView;
+use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
 /**
  * Testcase for RenderViewHelper
@@ -30,12 +31,12 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->subject = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', array('renderChildren'));
+		$this->subject = $this->getMock(RenderViewHelper::class, array('renderChildren'));
 		$renderingContext = new RenderingContext();
-		$paths = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplatePaths', array('sanitizePath'));
+		$paths = $this->getMock(TemplatePaths::class, array('sanitizePath'));
 		$paths->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
 		$viewHelperVariableContainer = new ViewHelperVariableContainer();
-		$this->view = $this->getMock('TYPO3Fluid\\Fluid\\View\\TemplateView', array('renderPartial', 'renderSection'), array($paths, $renderingContext));
+		$this->view = $this->getMock(TemplateView::class, array('renderPartial', 'renderSection'), array($paths, $renderingContext));
 		$viewHelperVariableContainer->setView($this->view);
 		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->subject->setRenderingContext($renderingContext);
@@ -45,7 +46,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\RenderViewHelper', array('registerArgument'));
+		$instance = $this->getMock(RenderViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything(), FALSE, NULL);
 		$instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything(), FALSE, NULL);
 		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, array());

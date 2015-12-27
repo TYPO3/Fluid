@@ -7,10 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**

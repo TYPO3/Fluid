@@ -6,10 +6,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Class SimpleFileCacheTest
@@ -70,7 +70,7 @@ class SimpleFileCacheTest extends UnitTestCase {
 	 */
 	public function testFlushAll() {
 		$cache = $this->getMock(
-			'TYPO3Fluid\\Fluid\\Core\\Cache\\SimpleFileCache',
+			SimpleFileCache::class,
 			array('getCachedFilenames', 'flushByFilename', 'flushByname'),
 			array(vfsStream::url('cache/'))
 		);
@@ -85,7 +85,7 @@ class SimpleFileCacheTest extends UnitTestCase {
 	 */
 	public function testFlushByName() {
 		$cache = $this->getMock(
-			'TYPO3Fluid\\Fluid\\Core\\Cache\\SimpleFileCache',
+			SimpleFileCache::class,
 			array('getCachedFilenames', 'flushByFilename', 'flushByname'),
 			array(vfsStream::url('cache/'))
 		);

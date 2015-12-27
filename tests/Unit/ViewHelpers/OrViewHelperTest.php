@@ -17,7 +17,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArguments() {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\OrViewHelper', array('registerArgument'));
+		$instance = $this->getMock(OrViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), FALSE, '');
 		$instance->expects($this->at(1))->method('registerArgument')->with('alternative', 'mixed', $this->anything(), FALSE, '');
 		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, NULL);
@@ -31,7 +31,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 	 * @param mixed $expected
 	 */
 	public function testRender($arguments, $expected) {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\OrViewHelper', array('renderChildren'));
+		$instance = $this->getMock(OrViewHelper::class, array('renderChildren'));
 		$instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
 		$instance->setArguments($arguments);
 		$result = $instance->render();
@@ -55,7 +55,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 	 * @param mixed $expected
 	 */
 	public function testRenderAlternative($arguments, $expected) {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\OrViewHelper', array('renderChildren'));
+		$instance = $this->getMock(OrViewHelper::class, array('renderChildren'));
 		$instance->expects($this->once())->method('renderChildren')->willReturn(NULL);
 		$arguments['content'] = NULL;
 		$instance->setArguments($arguments);

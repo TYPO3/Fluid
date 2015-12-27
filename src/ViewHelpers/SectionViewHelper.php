@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -99,8 +98,8 @@ class SectionViewHelper extends AbstractViewHelper {
 	 */
 	public function render() {
 		$content = '';
-		if ($this->viewHelperVariableContainer->exists('TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection')) {
-			$this->viewHelperVariableContainer->remove('TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper', 'isCurrentlyRenderingSection');
+		if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+			$this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
 			$content = $this->renderChildren();
 		}
 		return $content;

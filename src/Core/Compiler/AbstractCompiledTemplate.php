@@ -10,7 +10,6 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Abstract Fluid Compiled template.

@@ -5,6 +5,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+use TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper;
 
 /**
  * Testcase for GroupedForViewHelperTest
@@ -18,7 +19,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock(GroupedForViewHelper::class, array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 

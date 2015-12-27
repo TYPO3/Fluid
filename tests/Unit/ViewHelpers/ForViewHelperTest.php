@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
@@ -425,7 +426,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase {
 		$viewHelper = new ForViewHelper();
 		$this->arguments['each'] = new \DateTime('now');
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException(Exception::class);
 		$viewHelper->render();
 	}
 

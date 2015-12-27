@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**

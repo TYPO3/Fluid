@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\View;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Resource;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
@@ -22,6 +21,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
+use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Abstract Fluid Template View.
@@ -339,7 +339,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$section = $sections[$sectionName];
 
 			$renderingContext->getViewHelperVariableContainer()->add(
-				'TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper',
+				SectionViewHelper::class,
 				'isCurrentlyRenderingSection',
 				TRUE
 			);

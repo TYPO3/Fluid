@@ -17,7 +17,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\DebugViewHelper', array('registerArgument'));
+		$instance = $this->getMock(DebugViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('typeOnly', 'boolean', $this->anything(), FALSE, FALSE);
 		$instance->initializeArguments();
 	}
@@ -29,7 +29,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 	 * @param string $expected
 	 */
 	public function testRender($value, array $arguments, $expected) {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\DebugViewHelper', array('renderChildren'));
+		$instance = $this->getMock(DebugViewHelper::class, array('renderChildren'));
 		$instance->expects($this->once())->method('renderChildren')->willReturn($value);
 		$instance->setArguments($arguments);
 		$result = $instance->render();

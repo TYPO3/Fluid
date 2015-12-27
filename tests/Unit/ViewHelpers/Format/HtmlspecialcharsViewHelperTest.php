@@ -9,10 +9,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 
 /**
  * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper
@@ -26,7 +26,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock(HtmlspecialcharsViewHelper::class, array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 
@@ -155,10 +155,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function compileTests($value, array $options, $expectedResult) {
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
+		$mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-		$mockTemplateCompiler = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();
+		$mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
 		$mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
 
 		$arguments = array(
@@ -182,10 +182,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult) {
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
+		$mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-		$mockTemplateCompiler = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();
+		$mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
 		$mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
 
 		$renderChildrenClosureName = uniqid('renderChildren');
@@ -229,10 +229,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function compileConvertsObjectsToStrings() {
 		/** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode')->disableOriginalConstructor()->getMock();
+		$mockSyntaxTreeNode = $this->getMockBuilder(AbstractNode::class)->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-		$mockTemplateCompiler = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();
+		$mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
 		$mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
 
 		$initializationPhpCode = '$arguments = array("value" => new \TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString("Xaver <b>Cross-Site</b>"), "keepQuotes" => FALSE, "encoding" => "UTF-8", "doubleEncode" => TRUE);' . chr(10);
@@ -247,10 +247,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function compileDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString() {
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-		$mockSyntaxTreeNode = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode')->disableOriginalConstructor()->getMock();
+		$mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 
 		/** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-		$mockTemplateCompiler = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler')->disableOriginalConstructor()->getMock();
+		$mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
 		$mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
 
 		$initializationPhpCode = '$arguments = array("value" => new \TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString("Xaver <b>Cross-Site</b>"), "keepQuotes" => FALSE, "encoding" => "UTF-8", "doubleEncode" => TRUE);' . chr(10);

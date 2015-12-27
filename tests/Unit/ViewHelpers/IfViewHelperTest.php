@@ -5,6 +5,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
 
 /**
  * Testcase for IfViewHelper
@@ -23,7 +24,7 @@ class IfViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper', array('renderThenChild', 'renderElseChild'));
+		$this->viewHelper = $this->getAccessibleMock(IfViewHelper::class, array('renderThenChild', 'renderElseChild'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

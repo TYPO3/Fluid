@@ -20,7 +20,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock(SwitchViewHelper::class, array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 

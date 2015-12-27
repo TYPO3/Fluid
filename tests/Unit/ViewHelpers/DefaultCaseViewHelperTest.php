@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\ViewHelpers\DebugViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
 
 /**
@@ -20,7 +20,7 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase {
 	public function testThrowsExceptionIfUsedOutsideSwitch() {
 		$viewHelper = new DefaultCaseViewHelper();
 		$this->injectDependenciesIntoViewHelper($viewHelper);
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException(Exception::class);
 		$viewHelper->render();
 	}
 

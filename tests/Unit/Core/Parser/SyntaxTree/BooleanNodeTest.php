@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
@@ -16,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -39,14 +39,14 @@ class BooleanNodeTest extends UnitTestCase {
 	 * Setup fixture
 	 */
 	public function setUp() {
-		$this->renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface');
+		$this->renderingContext = $this->getMock(RenderingContextInterface::class);
 	}
 
 	/**
 	 * @test
 	 */
 	public function testEvaluateThrowsExceptionOnInvalidComparator() {
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
+		$this->setExpectedException(Exception::class);
 		BooleanNode::evaluateComparator('<>', 1, 2);
 	}
 
@@ -522,10 +522,10 @@ class BooleanNodeTest extends UnitTestCase {
 
 		$rootNode = new RootNode();
 
-		$object1Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node = $this->getMock(ObjectAccessorNode::class, array('evaluate'), array('foo'));
 		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
 
-		$object2Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node = $this->getMock(ObjectAccessorNode::class, array('evaluate'), array('foo'));
 		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
 
 		$rootNode->addChildNode($object1Node);
@@ -545,10 +545,10 @@ class BooleanNodeTest extends UnitTestCase {
 
 		$rootNode = new RootNode();
 
-		$object1Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object1Node = $this->getMock(ObjectAccessorNode::class, array('evaluate'), array('foo'));
 		$object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
 
-		$object2Node = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode', array('evaluate'), array('foo'));
+		$object2Node = $this->getMock(ObjectAccessorNode::class, array('evaluate'), array('foo'));
 		$object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
 
 		$rootNode->addChildNode($object1Node);
