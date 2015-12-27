@@ -599,8 +599,9 @@ class TemplateParserTest extends UnitTestCase {
 	 * @param string $templateCode
 	 * @param array $expectsIgnored
 	 * @param string $expectedException
+	 * @param string $expectedNamespaces
 	 */
-	public function testNamespaceParsing($templateCode, $expectsIgnored = array(), $expectedException = NULL) {
+	public function testNamespaceParsing($templateCode, $expectsIgnored = array(), $expectedException = NULL, $expectedNamespaces = NULL) {
 
 		$resolver = new ViewHelperResolver();
 		$this->templateParser = new TemplateParser($resolver);
@@ -611,6 +612,9 @@ class TemplateParserTest extends UnitTestCase {
 		$this->templateParser->parse($templateCode);
 		foreach ($expectsIgnored as $namespace) {
 			$this->assertTrue($resolver->isNamespaceValidOrIgnored($namespace));
+		}
+		if ($expectedNamespaces !== NULL) {
+			$this->assertEquals($expectedNamespaces, $resolver->getNamespaces());
 		}
 	}
 
@@ -657,6 +661,96 @@ class TemplateParserTest extends UnitTestCase {
 				'{namespace fo*} {foo:bar(value: foo)}',
 				array('foo')
 			),
+			array(
+				'
+				{namespace a=Foo\A\ViewHelpers}
+				<![CDATA[
+					{namespace b=Foo\B\ViewHelpers}
+					<![CDATA[
+						{namespace c=Foo\C\ViewHelpers}
+					]]>
+					{namespace d=Foo\D\ViewHelpers}
+				]]>
+				{namespace e=Foo\E\ViewHelpers}
+				',
+				array(),
+				NULL,
+				array(
+					'f' => 'TYPO3Fluid\Fluid\ViewHelpers',
+					'a' => 'Foo\A\ViewHelpers',
+					'e' => 'Foo\E\ViewHelpers'
+				)
+			),
+			array(
+				'<a href="javascript:window.location.reload()">reload</a>'
+			),
+
+			array(
+				'\{namespace f4=F7\Rocks} {namespace f4=TYPO3\Rocks\Really}',
+				array(),
+				NULL,
+				array(
+					'f' => 'TYPO3Fluid\Fluid\ViewHelpers',
+					'f4' => 'TYPO3\Rocks\Really'
+				)
+			),
+
+			// old test method: extractNamespaceDefinitionsResolveNamespacesWithDefaultPattern
+			array(
+				'<xml xmlns="http://www.w3.org/1999/xhtml" xmlns:xyz="http://typo3.org/ns/Some/Package/ViewHelpers" />',
+				array(),
+				NULL,
+				array(
+					'f' => 'TYPO3Fluid\Fluid\ViewHelpers',
+					'xyz' => 'Some\Package\ViewHelpers'
+				)
+			),
+
+			// old test method: extractNamespaceDefinitionsSilentlySkipsXmlNamespaceDeclarationForTheDefaultFluidNamespace
+			array(
+				'<foo xmlns="http://www.w3.org/1999/xhtml" xmlns:f="http://domain.tld/this/will/be/ignored" />',
+				array(),
+				NULL,
+				array(
+					'f' => 'TYPO3Fluid\Fluid\ViewHelpers'
+				)
+			),
+
+			// old test method: extractNamespaceDefinitionsThrowsExceptionIfNamespaceIsRedeclared
+			array(
+				'{namespace typo3=TYPO3\Fluid\Blablubb} {namespace typo3= TYPO3\Rocks\Blu}',
+				array(),
+				'\TYPO3Fluid\Fluid\Core\Parser\Exception'
+			),
+
+			// old test method: extractNamespaceDefinitionsThrowsExceptionIfFluidNamespaceIsRedeclaredAsXmlNamespace
+			array(
+				'{namespace typo3=TYPO3\Fluid\Blablubb} <foo xmlns="http://www.w3.org/1999/xhtml" xmlns:typo3="http://typo3.org/ns/Some/Package/ViewHelpers" />',
+				array(),
+				'\TYPO3Fluid\Fluid\Core\Parser\Exception'
+			),
 		);
 	}
+
+	/**
+	 * @test
+	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
+	 */
+	public function registerNamespaceThrowsExceptionIfOneAliasIsRegisteredWithDifferentPhpNamespaces() {
+		$resolver = new ViewHelperResolver();
+		$resolver->registerNamespace('foo', 'Some\Namespace');
+		$resolver->registerNamespace('foo', 'Some\Other\Namespace');
+	}
+
+	/**
+	 * @test
+	 */
+	public function registerNamespaceDoesNotThrowAnExceptionIfTheAliasExistAlreadyAndPointsToTheSamePhpNamespace() {
+		$resolver = new ViewHelperResolver();
+		$resolver->registerNamespace('foo', 'Some\Namespace');
+		$this->assertAttributeEquals(array('f' => 'TYPO3Fluid\Fluid\ViewHelpers', 'foo' => 'Some\Namespace'), 'namespaces', $resolver);
+		$resolver->registerNamespace('foo', 'Some\Namespace');
+		$this->assertAttributeEquals(array('f' => 'TYPO3Fluid\Fluid\ViewHelpers', 'foo' => 'Some\Namespace'), 'namespaces', $resolver);
+	}
+
 }

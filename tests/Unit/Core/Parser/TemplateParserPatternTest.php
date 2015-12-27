@@ -7,12 +7,25 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for Regular expressions in parser
  */
 class PatternsTest extends UnitTestCase {
+
+	/**
+	 * @test
+	 */
+	public function testSCAN_PATTERN_NAMESPACEDECLARATION() {
+		$this->assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '{namespace acme=Acme.MyPackage\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
+		$this->assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '{namespace acme=Acme.MyPackage\Bla\Blubb }'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (2).');
+		$this->assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '    {namespace foo = Foo\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (3).');
+		$this->assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '    {namespace foo.bar  = Foo\Bla3\Blubb }    '), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (4).');
+		$this->assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, ' \{namespace fblubb = TYPO3.Fluid\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (1)');
+		$this->assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '\{namespace typo3 = TYPO3.TYPO3\Bla3\Blubb }'), 0, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did match a namespace declaration even if it was escaped. (2)');
+	}
 
 	/**
 	 * @test
