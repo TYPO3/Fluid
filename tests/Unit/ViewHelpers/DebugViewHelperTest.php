@@ -41,7 +41,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function getRenderTestValues() {
 		return array(
-			array('test', array('typeOnly' => FALSE), 'string(4) "test"' . PHP_EOL),
+			array('test', array('typeOnly' => FALSE), "'test'"),
 			array('test', array('typeOnly' => TRUE), 'string'),
 		);
 	}
