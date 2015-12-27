@@ -70,10 +70,6 @@ class DebugViewHelper extends AbstractViewHelper {
 			return (is_object($expressionToExamine) ? get_class($expressionToExamine) : gettype($expressionToExamine));
 		}
 
-		ob_start();
-		var_dump($expressionToExamine);
-		$output = ob_get_contents();
-		ob_end_clean();
-		return $output;
+		return var_export($expressionToExamine, TRUE);
 	}
 }
