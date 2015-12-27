@@ -7,16 +7,15 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for \TYPO3Fluid\CMS\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
@@ -44,11 +43,11 @@ class ViewHelperNodeTest extends UnitTestCase {
 	public function setUp() {
 		$this->renderingContext = new RenderingContext();
 
-		$this->templateVariableContainer = $this->getMockBuilder('TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider')
+		$this->templateVariableContainer = $this->getMockBuilder(StandardVariableProvider::class)
 			->disableOriginalConstructor()->getMock();
 		$this->inject($this->renderingContext, 'variableProvider', $this->templateVariableContainer);
 
-		$this->mockViewHelperVariableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer');
+		$this->mockViewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
 		$this->inject($this->renderingContext, 'viewHelperVariableContainer', $this->mockViewHelperVariableContainer);
 	}
 
@@ -56,12 +55,12 @@ class ViewHelperNodeTest extends UnitTestCase {
 	 * @test
 	 */
 	public function constructorSetsViewHelperAndArguments() {
-		$viewHelper = $this->getMock('TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper');
+		$viewHelper = $this->getMock(AbstractViewHelper::class);
 		$arguments = array('then' => 'test');
 		$resolver = new ViewHelperResolver();
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
 		$viewHelperNode = $this->getAccessibleMock(
-			'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode',
+			ViewHelperNode::class,
 			array('dummy'),
 			array($resolver, 'f', 'if', $arguments, new ParsingState())
 		);
@@ -73,8 +72,8 @@ class ViewHelperNodeTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testEvaluateCallsInvoker() {
-		$resolver = $this->getMock('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('resolveViewHelperInvoker'));
-		$invoker = $this->getMock('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperInvoker', array('invoke'), array($resolver));
+		$resolver = $this->getMock(ViewHelperResolver::class, array('resolveViewHelperInvoker'));
+		$invoker = $this->getMock(ViewHelperInvoker::class, array('invoke'), array($resolver));
 		$resolver->expects($this->once())->method('resolveViewHelperInvoker')->willReturn($invoker);
 		$invoker->expects($this->once())->method('invoke')->willReturn('test');
 		$node = new ViewHelperNode($resolver, 'f', 'count', array(), new ParsingState());

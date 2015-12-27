@@ -20,7 +20,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock('TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getAccessibleMock(CountViewHelper::class, array('renderChildren'));
 	}
 
 	/**

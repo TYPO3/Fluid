@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
 /**

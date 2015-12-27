@@ -6,8 +6,11 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\Patterns;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 
 /**
  * Class ViewHelperResolver
@@ -40,9 +43,9 @@ class ViewHelperResolver {
 	 * @var string
 	 */
 	protected $expressionNodeTypes = array(
-		'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
-		'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
-		'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
+		CastingExpressionNode::class,
+		MathExpressionNode::class,
+		TernaryExpressionNode::class,
 	);
 
 	/**

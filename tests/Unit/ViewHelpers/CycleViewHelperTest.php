@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\CycleViewHelper;
 
 /**
@@ -21,7 +20,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\CycleViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock(CycleViewHelper::class, array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 		$this->viewHelper->initializeArguments();
 	}

@@ -6,9 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  * See LICENSE.txt that was shipped with this package.
  */
 
- use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
- 
-/**
+ /**
  * Class VariableExtractor
  *
  * Extracts variables from arrays/objects by use

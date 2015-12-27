@@ -5,6 +5,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper;
 
 /**
  * Testcase for CaseViewHelper
@@ -12,13 +14,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 class CaseViewHelperTest extends ViewHelperBaseTestcase {
 
 	/**
-	 * @var \TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper
+	 * @var CaseViewHelper
 	 */
 	protected $viewHelper;
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getMock('TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper', array('renderChildren'));
+		$this->viewHelper = $this->getMock(CaseViewHelper::class, array('renderChildren'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 
@@ -35,7 +37,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderReturnsChildNodesIfTheSpecifiedValueIsEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', 'someValue');
+		$this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
 		$renderedChildNodes = 'ChildNodes';
 		$this->viewHelper->setArguments(array('value' => 'someValue'));
 		$this->viewHelper->expects($this->once())->method('renderChildren')->willReturn($renderedChildNodes);
@@ -46,7 +48,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function renderReturnsAnEmptyStringIfTheSpecifiedValueIsNotEqualToTheSwitchExpression() {
-		$this->viewHelperVariableContainer->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', 'someValue');
+		$this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
 		$this->viewHelper->setArguments(array('value' => 'someOtherValue'));
 		$this->assertSame('', $this->viewHelper->initializeArgumentsAndRender());
 	}

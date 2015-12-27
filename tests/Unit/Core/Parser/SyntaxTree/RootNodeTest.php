@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -20,7 +20,7 @@ class RootNodeTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testEvaluateCallsEvaluateChildNodes() {
-		$subject = $this->getMock('TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\RootNode', array('evaluateChildNodes'));
+		$subject = $this->getMock(RootNode::class, array('evaluateChildNodes'));
 		$subject->expects($this->once())->method('evaluateChildNodes');
 		$subject->evaluate(new RenderingContext());
 	}

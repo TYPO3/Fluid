@@ -6,6 +6,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -21,11 +24,11 @@ class AbstractNodeTest extends UnitTestCase {
 	protected $childNode;
 
 	public function setUp() {
-		$this->renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContext', array(), array(), '', FALSE);
+		$this->renderingContext = $this->getMock(RenderingContext::class, array(), array(), '', FALSE);
 
-		$this->abstractNode = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
+		$this->abstractNode = $this->getMock(AbstractNode::class, array('evaluate'));
 
-		$this->childNode = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode');
+		$this->childNode = $this->getMock(AbstractNode::class);
 		$this->abstractNode->addChildNode($this->childNode);
 	}
 
@@ -41,7 +44,7 @@ class AbstractNodeTest extends UnitTestCase {
 	 * @test
 	 */
 	public function evaluateChildNodesReturnsNullIfNoChildNodesExist() {
-		$abstractNode = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode', array('evaluate'));
+		$abstractNode = $this->getMock(AbstractNode::class, array('evaluate'));
 		$this->assertNull($abstractNode->evaluateChildNodes($this->renderingContext));
 	}
 
@@ -52,7 +55,7 @@ class AbstractNodeTest extends UnitTestCase {
 		$this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext)->willReturn(new \DateTime('now'));
 		$method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
 		$method->setAccessible(TRUE);
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
+		$this->setExpectedException(Exception::class);
 		$method->invokeArgs($this->abstractNode, array($this->childNode, $this->renderingContext, TRUE));
 	}
 

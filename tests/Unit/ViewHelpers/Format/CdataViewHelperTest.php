@@ -7,8 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper;
 
 /**
  * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper

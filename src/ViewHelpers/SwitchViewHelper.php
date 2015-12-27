@@ -72,16 +72,16 @@ class SwitchViewHelper extends AbstractViewHelper {
 		$this->backupSwitchState();
 		$variableContainer = $this->renderingContext->getViewHelperVariableContainer();
 
-		$variableContainer->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', $expression);
-		$variableContainer->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break', FALSE);
+		$variableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $expression);
+		$variableContainer->addOrUpdate(SwitchViewHelper::class, 'break', FALSE);
 
 		$content = $this->retrieveContentFromChildNodes($this->childNodes);
 
-		if ($variableContainer->exists('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')) {
-			$variableContainer->remove('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression');
+		if ($variableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
+			$variableContainer->remove(SwitchViewHelper::class, 'switchExpression');
 		}
-		if ($variableContainer->exists('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break')) {
-			$variableContainer->remove('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break');
+		if ($variableContainer->exists(SwitchViewHelper::class, 'break')) {
+			$variableContainer->remove(SwitchViewHelper::class, 'break');
 		}
 
 		$this->restoreSwitchState();
@@ -103,7 +103,7 @@ class SwitchViewHelper extends AbstractViewHelper {
 				continue;
 			}
 			$content = $childNode->evaluate($this->renderingContext);
-			if ($this->viewHelperVariableContainer->get('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break') === TRUE) {
+			if ($this->viewHelperVariableContainer->get(SwitchViewHelper::class, 'break') === TRUE) {
 				$defaultCaseViewHelperNode = NULL;
 				break;
 			}
@@ -120,7 +120,7 @@ class SwitchViewHelper extends AbstractViewHelper {
 	 * @return boolean
 	 */
 	protected function isDefaultCaseNode(NodeInterface $node) {
-		return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === 'TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper');
+		return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class);
 	}
 
 	/**
@@ -128,7 +128,7 @@ class SwitchViewHelper extends AbstractViewHelper {
 	 * @return boolean
 	 */
 	protected function isCaseNode(NodeInterface $node) {
-		return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === 'TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper');
+		return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class);
 	}
 
 	/**
@@ -137,11 +137,11 @@ class SwitchViewHelper extends AbstractViewHelper {
 	 * @return void
 	 */
 	protected function backupSwitchState() {
-		if ($this->renderingContext->getViewHelperVariableContainer()->exists('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression')) {
-			$this->backupSwitchExpression = $this->renderingContext->getViewHelperVariableContainer()->get('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression');
+		if ($this->renderingContext->getViewHelperVariableContainer()->exists(SwitchViewHelper::class, 'switchExpression')) {
+			$this->backupSwitchExpression = $this->renderingContext->getViewHelperVariableContainer()->get(SwitchViewHelper::class, 'switchExpression');
 		}
-		if ($this->renderingContext->getViewHelperVariableContainer()->exists('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break')) {
-			$this->backupBreakState = $this->renderingContext->getViewHelperVariableContainer()->get('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break');
+		if ($this->renderingContext->getViewHelperVariableContainer()->exists(SwitchViewHelper::class, 'break')) {
+			$this->backupBreakState = $this->renderingContext->getViewHelperVariableContainer()->get(SwitchViewHelper::class, 'break');
 		}
 	}
 
@@ -152,10 +152,10 @@ class SwitchViewHelper extends AbstractViewHelper {
 	 */
 	protected function restoreSwitchState() {
 		if ($this->backupSwitchExpression !== NULL) {
-			$this->renderingContext->getViewHelperVariableContainer()->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'switchExpression', $this->backupSwitchExpression);
+			$this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $this->backupSwitchExpression);
 		}
 		if ($this->backupBreakState !== FALSE) {
-			$this->renderingContext->getViewHelperVariableContainer()->addOrUpdate('TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper', 'break', TRUE);
+			$this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', TRUE);
 		}
 	}
 }

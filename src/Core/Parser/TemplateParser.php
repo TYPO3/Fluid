@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\UnknownNamespaceDetectionTemplateProcessor;
-use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;

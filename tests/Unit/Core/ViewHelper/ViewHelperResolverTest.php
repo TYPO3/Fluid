@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -29,7 +30,7 @@ class ViewHelperResolverTest extends UnitTestCase {
 	public function testRegisterNamespaceThrowsExceptionOnReRegistration() {
 		$resolver = new ViewHelperResolver();
 		$resolver->registerNamespace('t', 'test');
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
+		$this->setExpectedException(Exception::class);
 		$resolver->registerNamespace('t', 'test2');
 	}
 
@@ -55,9 +56,9 @@ class ViewHelperResolverTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testResolveViewHelperClassNameThrowsExceptionIfClassNotResolved() {
-		$resolver = $this->getMock('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\ViewHelperResolver', array('resolveViewHelperName'));
+		$resolver = $this->getMock(ViewHelperResolver::class, array('resolveViewHelperName'));
 		$resolver->expects($this->once())->method('resolveViewHelperName')->willReturn(FALSE);
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\Parser\\Exception');
+		$this->setExpectedException(Exception::class);
 		$resolver->resolveViewHelperClassName('f', 'invalid');
 	}
 

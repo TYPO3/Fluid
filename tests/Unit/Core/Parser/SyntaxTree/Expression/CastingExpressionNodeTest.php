@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToArray;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -22,7 +23,7 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	 */
 	public function testEvaluateDelegatesToEvaluteExpression() {
 		$subject = $this->getMock(
-			'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
+			CastingExpressionNode::class,
 			array('dummy'),
 			array('{test as string}', array('test as string'))
 		);
@@ -38,7 +39,7 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	public function testEvaluateInvalidExpressionThrowsException() {
 		$renderingContext = new RenderingContext();
 		$renderingContext->setVariableProvider(new StandardVariableProvider());
-		$this->setExpectedException('TYPO3Fluid\\Fluid\\Core\\ViewHelper\\Exception');
+		$this->setExpectedException(Exception::class);
 		$result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', array());
 	}
 

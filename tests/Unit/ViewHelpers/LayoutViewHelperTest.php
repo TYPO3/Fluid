@@ -12,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
 
 /**
@@ -24,7 +23,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock('TYPO3Fluid\\Fluid\\ViewHelpers\\LayoutViewHelper', array('registerArgument'));
+		$instance = $this->getMock(LayoutViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
 		$instance->initializeArguments();
 	}

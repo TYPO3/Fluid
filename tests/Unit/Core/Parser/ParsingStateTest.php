@@ -8,8 +8,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -55,8 +55,8 @@ class ParsingStateTest extends UnitTestCase {
 	 * @test
 	 */
 	public function renderCallsTheRightMethodsOnTheRootNode() {
-		$renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface');
-		$rootNode = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode');
+		$renderingContext = $this->getMock(RenderingContextInterface::class);
+		$rootNode = $this->getMock(RootNode::class);
 		$rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
 		$this->parsingState->setRootNode($rootNode);
 		$renderedValue = $this->parsingState->render($renderingContext);

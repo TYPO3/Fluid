@@ -1,12 +1,10 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Profiling\Parser;
 
-use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\View\TemplatePaths;
-use TYPO3Fluid\Fluid\View\TemplateView;
 use NamelessCoder\NumerologPhpunit\StatisticalUnitTestTrait;
 use NamelessCoder\PhpunitXhprof\ProfilingTrait;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Class TemplateSourceParsingProfileStatisticsTest

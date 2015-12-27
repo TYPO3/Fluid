@@ -8,9 +8,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
@@ -26,7 +26,7 @@ class SectionViewHelperTest extends UnitTestCase {
 	public function sectionIsAddedToParseVariableContainer() {
 		$section = new SectionViewHelper();
 
-		$viewHelperNodeMock = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
+		$viewHelperNodeMock = $this->getMock(ViewHelperNode::class, array(), array(), '', FALSE);
 		$viewHelperArguments = array(
 			'name' => new TextNode('sectionName')
 		);
@@ -46,7 +46,7 @@ class SectionViewHelperTest extends UnitTestCase {
 	public function testCompileReturnsEmptyString() {
 		$section = new SectionViewHelper();
 		$init = '';
-		$viewHelperNodeMock = $this->getMock('TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode', array(), array(), '', FALSE);
+		$viewHelperNodeMock = $this->getMock(ViewHelperNode::class, array(), array(), '', FALSE);
 		$result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
 		$this->assertEquals('\'\'', $result);
 	}

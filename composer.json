@@ -2,6 +2,9 @@
 	"name": "typo3fluid/fluid",
 	"description": "The TYPO3 Fluid template rendering engine",
 	"license": ["LGPL-3.0+"],
+	"require": {
+		"php": ">=5.5.0"
+	},
 	"require-dev": {
 		"phpunit/phpunit": "*",
 		"mikey179/vfsStream": "*",

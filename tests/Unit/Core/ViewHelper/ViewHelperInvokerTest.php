@@ -6,14 +6,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
 /**
  * Class ViewHelperInvokerTest
@@ -24,7 +22,7 @@ class ViewHelperInvokerTest extends UnitTestCase {
 		$resolver = new ViewHelperResolver();
 		$invoker = new ViewHelperInvoker($resolver);
 		$renderingContext = new RenderingContext();
-		$result = $invoker->invoke('TYPO3Fluid\\Fluid\\ViewHelpers\\CountViewHelper', array('subject' => array('foo')), $renderingContext);
+		$result = $invoker->invoke(CountViewHelper::class, array('subject' => array('foo')), $renderingContext);
 		$this->assertEquals(1, $result);
 	}
 
@@ -38,7 +36,7 @@ class ViewHelperInvokerTest extends UnitTestCase {
 			new ArgumentDefinition('secondArgument', 'string', '', TRUE)
 		);
 
-		$templateParser = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker', array('dummy'), array(), '', FALSE);
+		$templateParser = $this->getAccessibleMock(ViewHelperInvoker::class, array('dummy'), array(), '', FALSE);
 
 		$templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, array());
 	}
@@ -55,7 +53,7 @@ class ViewHelperInvokerTest extends UnitTestCase {
 			'name2' => 'bla'
 		);
 
-		$mockTemplateParser = $this->getAccessibleMock('TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker', array('dummy'), array(), '', FALSE);
+		$mockTemplateParser = $this->getAccessibleMock(ViewHelperInvoker::class, array('dummy'), array(), '', FALSE);
 
 		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
 		// dummy assertion to avoid "did not perform any assertions" error

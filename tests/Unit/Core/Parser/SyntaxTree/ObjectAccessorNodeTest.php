@@ -6,8 +6,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -24,7 +25,7 @@ class ObjectAccessorNodeTest extends UnitTestCase {
 	 */
 	public function testEvaluateGetsExpectedValue(array $variables, $path, $expected) {
 		$node = new ObjectAccessorNode($path);
-		$renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface');
+		$renderingContext = $this->getMock(RenderingContextInterface::class);
 		$variableContainer = new StandardVariableProvider($variables);
 		$renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
 		$value = $node->evaluate($renderingContext);
@@ -55,8 +56,8 @@ class ObjectAccessorNodeTest extends UnitTestCase {
 	 */
 	public function testEvaluatedUsesVariableProviderGetByPath() {
 		$node = new ObjectAccessorNode('foo.bar');
-		$renderingContext = $this->getMock('TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface');
-		$variableContainer = $this->getMock('TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider', array());
+		$renderingContext = $this->getMock(RenderingContextInterface::class);
+		$variableContainer = $this->getMock(StandardVariableProvider::class, array());
 		$variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', array())->will($this->returnValue('foo'));
 		$renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
 		$value = $node->evaluate($renderingContext);
