@@ -212,6 +212,9 @@ class TemplateParser {
 	 * @return string
 	 */
 	protected function registerNamespacesFromTemplateSource($templateSource) {
+		// remove any CDATA parts
+		$templateSource = preg_replace(Patterns::$STRIP_PATTERN_CDATA, '', $templateSource);
+
 		preg_match_all(Patterns::$NAMESPACE_DECLARATION, $templateSource, $namespaces);
 		foreach ($namespaces['identifier'] as $key => $identifier) {
 			$namespace = $namespaces['phpNamespace'][$key];
