@@ -156,9 +156,8 @@ class ExamplesTest extends BaseTestCase {
 				array(
 					'NamespaceResolving template from Singles.',
 					'Argument passed to CustomViewHelper:',
-					'\'123\''
-				),
-				'\TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException'
+					'123'
+				)
 			),
 			'example_single.php' => array(
 				'example_single.php',

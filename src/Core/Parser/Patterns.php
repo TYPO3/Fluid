@@ -15,16 +15,6 @@ abstract class Patterns {
 	const NAMESPACESUFFIX = '/ViewHelpers';
 
 	/**
-	 * @var string
-	 */
-	static public $SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG = '/xmlns:([a-z0-9\.]+)=("[^"]+"|\'[^\']+\')*/xi';
-
-	/**
-	 * @var string
-	 */
-	static public $NAMESPACE_DECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/m';
-
-	/**
 	 * This regular expression splits the input string at all dynamic tags, AND
 	 * on all <![CDATA[...]]> sections.
 	 */

@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\UnknownNamespaceDetectionTemplateProcessor;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -88,6 +88,7 @@ class TemplateParser {
 		}
 		$this->viewHelperResolver = $viewHelperResolver;
 		$this->variableProvider = new StandardVariableProvider();
+		$this->templateProcessors[] = new NamespaceDetectionTemplateProcessor();
 	}
 
 	/**
@@ -155,7 +156,6 @@ class TemplateParser {
 		try {
 			$this->reset();
 			$templateString = $this->preProcessTemplateSource($templateString);
-			$this->registerNamespacesFromTemplateSource($templateString);
 
 			$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
 			$parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
@@ -205,43 +205,6 @@ class TemplateParser {
 	}
 
 	/**
-	 * Pre-process the template source before it is returned to the
-	 * TemplateParser or passed to the next TemplateProcessorInterface instance.
-	 *
-	 * @param string $templateSource
-	 * @return string
-	 */
-	protected function registerNamespacesFromTemplateSource($templateSource) {
-		preg_match_all(Patterns::$NAMESPACE_DECLARATION, $templateSource, $namespaces);
-		foreach ($namespaces['identifier'] as $key => $identifier) {
-			$namespace = $namespaces['phpNamespace'][$key];
-			if (strlen($namespace) === 0) {
-				$namespace = NULL;
-			}
-			$this->viewHelperResolver->registerNamespace($identifier, $namespace);
-		}
-
-		preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateSource, $splitParts);
-		if (isset($splitParts[0])) {
-			foreach ($splitParts[0] as $viewHelper) {
-				preg_match_all(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $viewHelper, $matches);
-				foreach ($matches['NamespaceIdentifier'] as $key => $namespace) {
-					if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($namespace)) {
-						throw new UnknownNamespaceException('Unkown Namespace: ' . htmlspecialchars($matches[0][$key]));
-					}
-				}
-			}
-		}
-
-		preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $templateSource, $shorthandViewHelpers);
-		foreach ($shorthandViewHelpers['NamespaceIdentifier'] as $key => $namespace) {
-			if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($namespace)) {
-				throw new UnknownNamespaceException('Unkown Namespace: ' . $shorthandViewHelpers[0][$key]);
-			}
-		}
-	}
-
-	/**
 	 * Resets the parser to its default values.
 	 *
 	 * @return void
@@ -285,19 +248,8 @@ class TemplateParser {
 			$this->pointerLineCharacter = strlen(substr($previousBlock, strrpos($previousBlock, PHP_EOL))) + 1;
 			$previousBlock = $templateElement;
 			$matchedVariables = array();
-			if (preg_match_all(Patterns::$SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateElement, $matchedVariables, PREG_SET_ORDER) > 0) {
-				foreach ($matchedVariables as $namespaceMatch) {
-					$viewHelperNamespace = $this->unquoteString($namespaceMatch[2]);
-					$phpNamespace = $this->viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
-					$this->viewHelperResolver->registerNamespace($namespaceMatch[1], $phpNamespace);
-				}
-				continue;
-			} elseif (trim($templateElement) === '</f:fluid>' || trim($templateElement) === '</fluid>') {
-				continue;
-			} elseif (preg_match(Patterns::$SCAN_PATTERN_CDATA, $templateElement, $matchedVariables) > 0) {
-				$this->textHandler($state, $matchedVariables[1]);
-				continue;
-			} elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
+
+			if (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
 				if ($this->openingViewHelperTagHandler(
 					$state,
 					$matchedVariables['NamespaceIdentifier'],
@@ -324,8 +276,6 @@ class TemplateParser {
 			throw new Exception('Not all tags were closed!', 1238169398);
 		}
 		return $state;
-
-
 	}
 	/**
 	 * Handles an opening or self-closing view helper tag.
