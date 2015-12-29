@@ -12,31 +12,31 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * Outputs an argument/value without any escaping and wraps it with CDATA tags.
  *
- * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
- * as the output is NOT SANITIZED!
+ * **PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+ * as the output is NOT SANITIZED!**
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="Child nodes">
+ * #### Child nodes
+ *
+ * ```html
  * <f:format.cdata>{string}</f:format.cdata>
- * </code>
- * <output>
- * <![CDATA[(Content of {string} without any conversion/escaping)]]>
- * </output>
+ * ```
+ * will output: ```<![CDATA[(Content of {string} without any conversion/escaping)]]>```
  *
- * <code title="Value attribute">
+ * #### Value attribute
+ *
+ * ```html
  * <f:format.cdata value="{string}" />
- * </code>
- * <output>
- * <![CDATA[(Content of {string} without any conversion/escaping)]]>
- * </output>
+ * ```
+ * will output ```<![CDATA[(Content of {string} without any conversion/escaping)]]>```
  *
- * <code title="Inline notation">
+ * #### Inline notation
+ *
+ * ```
  * {string -> f:format.cdata()}
- * </code>
- * <output>
- * <![CDATA[(Content of {string} without any conversion/escaping)]]>
- * </output>
+ * ```
+ * will output ```<![CDATA[(Content of {string} without any conversion/escaping)]]>```
  *
  * @api
  */

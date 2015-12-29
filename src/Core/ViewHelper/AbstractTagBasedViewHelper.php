@@ -9,7 +9,26 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 /**
  * Tag based view helper.
  * Should be used as the base class for all view helpers which output simple tags, as it provides some
- * convenience methods to register default attributes, ...
+ * convenience methods to register default attributes.
+ *
+ * ### Usage
+ *
+ * in order to create a new tag based viewhelper you need to create a new class
+ * that extends from this one. You can set the ```$tagName``` property to the tag
+ * name that should be used to render this viewhelper and add override the
+ * ```registerUniversalTagAttributes``` method to add additional tag attributes.
+ *
+ * #### Example
+ *
+ * ```php
+ * class BaseUrlViewHelper extends AbstractTagBasedViewHelper {
+ * 	protected $tagName = 'base';
+ *
+ *	protected function registerUniversalTagAttributes() {
+ *		$this->registerTagAttribute('href', 'string', 'base url');
+ *	}
+ * }
+ * ```
  *
  * @api
  */

@@ -12,23 +12,51 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * This view helper is an abstract ViewHelper which implements an if/else condition.
- * @see TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to find see how boolean arguments are evaluated
  *
- * = Usage =
+ * ### Usage
  *
- * To create a custom Condition ViewHelper, you need to subclass this class, and
- * implement your own render() method. Inside there, you should call $this->renderThenChild()
- * if the condition evaluated to TRUE, and $this->renderElseChild() if the condition evaluated
- * to FALSE.
+ * This class provides all the basic logic to implement various kinds of condition
+ * viewHelpers. To create a new condition viewHelper you need create a class that
+ * extends from this class and either override the static ```evaluateCondition``` method
+ * with the boolean logic or for more complex usecases override the ```renderStatic``` method.
  *
- * Every Condition ViewHelper has a "then" and "else" argument, so it can be used like:
- * <[aConditionViewHelperName] .... then="condition true" else="condition false" />,
- * or as well use the "then" and "else" child nodes.
+ * any conditionViewHelper can be used like the if viewHelper.
  *
- * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
+ * #### inline usage
+ *
+ * ```html
+ * {my:condition(..., then: 'condition is true', else: 'condition is false')}
+ * ```
+ *
+ * #### block usage with then/else arguments
+ *
+ * ```html
+ * <my:condition ... then="condition is true" else="condition is false" />
+ * ```
+ *
+ * #### block usage with then/else tags
+ *
+ * ```html
+ * <my:condition ... >
+ * 	<f:then>condition is true</f:then>
+ * 	<f:else>condition is false</f:else>
+ * </my:condition>
+ * ```
+ *
+ * #### block usage without then/else
+ *
+ * ```html
+ * <my:condition ... >
+ * 	condition is true
+ * </my:condition>
+ * ```
+ *
+ * > "..." in this example would be replaced by what arguments to evaluate a condition you
+ * > add to the extending viewHelper class
+ *
+ *
+ * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation.
  * Make sure to NOT OVERRIDE the constructor.
- *
- * @api
  */
 abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 

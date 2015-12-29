@@ -11,30 +11,28 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * View helper that outputs its child nodes with \TYPO3Fluid\Flow\var_dump()
  *
- * = Examples =
+ * ### Examples
  *
- * <code>
+ * ```html
  * <f:debug>{object}</f:debug>
- * </code>
- * <output>
- * all properties of {object} nicely highlighted
- * </output>
+ * ```
+ * will ouput all properties of {object} nicely highlighted
  *
- * <code title="inline notation and custom title">
+ * #### inline notation and custom title
+ *
+ * ```html
  * {object -> f:debug(title: 'Custom title')}
- * </code>
- * <output>
- * all properties of {object} nicely highlighted (with custom title)
- * </output>
+ * ```
+ * will output all properties of {object} nicely highlighted (with custom title)
  *
- * <code title="only output the type">
+ * #### only output the type
+ *
+ * ```
  * {object -> f:debug(typeOnly: true)}
- * </code>
- * <output>
- * the type or class name of {object}
- * </output>
+ * ```
+ * will output the type or class name of {object}
  *
- * Note: This view helper is only meant to be used during development
+ * > Note: This view helper is only meant to be used during development
  *
  * @api
  */

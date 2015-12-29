@@ -26,11 +26,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * - Object Accessor
  * - Array
  * - a ViewHelper
- * Note: Strings at XX/YY are NOT allowed, however, for the time being,
- * a string comparison can be achieved with comparing arrays (see example
- * below).
- * ::
  *
+ * > Note: Strings at XX/YY are NOT allowed, however, for the time being,
+ * > a string comparison can be achieved with comparing arrays (see example below).
+ *
+ * ```html
  *   <f:if condition="{rank} > 100">
  *     Will be shown if rank is > 100
  *   </f:if>
@@ -43,19 +43,23 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *   <f:if condition="{0: foo.bar} == {0: 'stringToCompare'}">
  *     Will result true if {foo.bar}'s represented value equals 'stringToCompare'.
  *   </f:if>
+ *```
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="Basic usage">
+ * **Basic usage**
+ *
+ * ```html
  * <f:if condition="somecondition">
  *   This is being shown in case the condition matches
  * </f:if>
- * </code>
- * <output>
+ * ```
  * Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
- * </output>
  *
- * <code title="If / then / else">
+ *
+ * **If / then / else**
+ *
+ * ```html
  * <f:if condition="somecondition">
  *   <f:then>
  *     This is being shown in case the condition matches.
@@ -64,19 +68,19 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *     This is being displayed in case the condition evaluates to FALSE.
  *   </f:else>
  * </f:if>
- * </code>
- * <output>
+ * ```
  * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
  * Otherwise, everything inside the "else"-tag is displayed.
- * </output>
  *
- * <code title="inline notation">
+ * **inline notation**
+ *
+ * ```html
  * {f:if(condition: someCondition, then: 'condition is met', else: 'condition is not met')}
- * </code>
- * <output>
+ * ```
+ *
  * The value of the "then" attribute is displayed if the condition evaluates to TRUE.
  * Otherwise, everything the value of the "else"-attribute is displayed.
- * </output>
+ *
  *
  * @see \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
  * @api
