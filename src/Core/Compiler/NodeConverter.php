@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
@@ -77,8 +78,20 @@ class NodeConverter {
 			$converted = $this->convertListOfSubNodes($node);
 		} elseif ($node instanceof BooleanNode) {
 			$converted = $this->convertBooleanNode($node);
+		} elseif ($node instanceof EscapingNode) {
+			$converted = $this->convertEscapingNode($node);
 		}
 		return $converted;
+	}
+
+	/**
+	 * @param EscapingNode $node
+	 * @return array
+	 */
+	protected function convertEscapingNode(EscapingNode $node) {
+		$configuration = $this->convert($node->getNode());
+		$configuration['execution'] = sprintf('htmlspecialchars(%s, ENT_QUOTES)', $configuration['execution']);
+		return $configuration;
 	}
 
 	/**
