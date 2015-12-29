@@ -39,11 +39,6 @@ class ViewHelperNode extends AbstractNode {
 	protected $argumentDefinitions = array();
 
 	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
-
-	/**
 	 * @var string
 	 */
 	protected $pointerTemplateCode = NULL;
@@ -51,14 +46,14 @@ class ViewHelperNode extends AbstractNode {
 	/**
 	 * Constructor.
 	 *
-	 * @param ViewHelperResolver an instance or subclass of ViewHelperResolver
+	 * @param RenderingContextInterface $renderingContext a RenderingContext, provided by invoker
 	 * @param string $namespace the namespace identifier of the ViewHelper.
 	 * @param string $identifier the name of the ViewHelper to render, inside the namespace provided.
 	 * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
 	 * @param ParsingState $state
 	 */
-	public function __construct(ViewHelperResolver $resolver, $namespace, $identifier, array $arguments, ParsingState $state) {
-		$this->viewHelperResolver = $resolver;
+	public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments, ParsingState $state) {
+		$resolver = $renderingContext->getViewHelperResolver();
 		$this->arguments = $arguments;
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
@@ -142,8 +137,7 @@ class ViewHelperNode extends AbstractNode {
 		// DO NOT CHANGE THIS ORDER. You *will* cause damage.
 		$viewHelper->setViewHelperNode($this);
 		$viewHelper->setChildNodes($this->getChildNodes());
-		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($this->getViewHelperClassName())
-			->invoke($viewHelper, $this->getArguments(), $renderingContext);
+		return $renderingContext->getViewHelperInvoker()->invoke($viewHelper, $this->arguments, $renderingContext);
 	}
 
 	/**

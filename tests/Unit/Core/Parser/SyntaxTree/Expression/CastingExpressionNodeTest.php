@@ -12,6 +12,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToArray;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class CastingExpressionNodeTest
@@ -27,7 +28,8 @@ class CastingExpressionNodeTest extends UnitTestCase {
 			array('dummy'),
 			array('{test as string}', array('test as string'))
 		);
-		$context = new RenderingContext();
+		$view = new TemplateView();
+		$context = new RenderingContext($view);
 		$context->setVariableProvider(new StandardVariableProvider(array('test' => 10)));
 		$result = $subject->evaluate($context);
 		$this->assertSame('10', $result);
@@ -37,7 +39,8 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testEvaluateInvalidExpressionThrowsException() {
-		$renderingContext = new RenderingContext();
+		$view = new TemplateView();
+		$renderingContext = new RenderingContext($view);
 		$renderingContext->setVariableProvider(new StandardVariableProvider());
 		$this->setExpectedException(Exception::class);
 		$result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', array());
@@ -50,7 +53,8 @@ class CastingExpressionNodeTest extends UnitTestCase {
 	 * @param mixed $expected
 	 */
 	public function testEvaluateExpression($expression, array $variables, $expected) {
-		$renderingContext = new RenderingContext();
+		$view = new TemplateView();
+		$renderingContext = new RenderingContext($view);
 		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
 		$result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, array());
 		$this->assertEquals($expected, $result);

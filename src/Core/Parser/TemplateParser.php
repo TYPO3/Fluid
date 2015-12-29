@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
@@ -13,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -50,19 +51,9 @@ class TemplateParser {
 	protected $settings;
 
 	/**
-	 * @var ViewHelperResolver
+	 * @var RenderingContextInterface
 	 */
-	protected $viewHelperResolver;
-
-	/**
-	 * @var VariableProviderInterface
-	 */
-	protected $variableProvider;
-
-	/**
-	 * @var TemplateProcessorInterface[]
-	 */
-	protected $templateProcessors = array();
+	protected $renderingContext;
 
 	/**
 	 * @var integer
@@ -80,15 +71,12 @@ class TemplateParser {
 	protected $pointerTemplateCode = NULL;
 
 	/**
-	 * Constructor
+	 * @param RenderingContextInterface $renderingContext
+	 * @return void
 	 */
-	public function __construct(ViewHelperResolver $viewHelperResolver = NULL) {
-		if (!$viewHelperResolver) {
-			$viewHelperResolver = new ViewHelperResolver();
-		}
-		$this->viewHelperResolver = $viewHelperResolver;
-		$this->variableProvider = new StandardVariableProvider();
-		$this->templateProcessors[] = new NamespaceDetectionTemplateProcessor();
+	public function setRenderingContext(RenderingContextInterface $renderingContext) {
+		$this->renderingContext = $renderingContext;
+		$this->configuration = $renderingContext->buildParserConfiguration();
 	}
 
 	/**
@@ -99,40 +87,6 @@ class TemplateParser {
 	 */
 	public function getCurrentParsingPointers() {
 		return array($this->pointerLineNumber, $this->pointerLineCharacter, $this->pointerTemplateCode);
-	}
-
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
-	}
-
-	/**
-	 * @param VariableProviderInterface $variableProvider
-	 * @return void
-	 */
-	public function setVariableProvider(VariableProviderInterface $variableProvider) {
-		$this->variableProvider = $variableProvider;
-	}
-
-	/**
-	 * @param TemplateProcessorInterface[] $templateProcessors
-	 * @return void
-	 */
-	public function setTemplateProcessors(array $templateProcessors) {
-		$this->templateProcessors = $templateProcessors;
-	}
-
-	/**
-	 * Set the configuration for the parser.
-	 *
-	 * @param Configuration $configuration
-	 * @return void
-	 */
-	public function setConfiguration(Configuration $configuration = NULL) {
-		$this->configuration = $configuration;
 	}
 
 	/**
@@ -189,6 +143,27 @@ class TemplateParser {
 	}
 
 	/**
+	 * @param string $templateIdentifier
+	 * @param string $templateFile
+	 * @param \Closure $templateSourceClosure Closure which returns the template source if needed
+	 * @return ParsedTemplateInterface
+	 */
+	public function getOrParseAndStoreTemplate($templateIdentifier, $templateSourceClosure) {
+		$compiler = $this->renderingContext->getTemplateCompiler();
+		if ($compiler->has($templateIdentifier)) {
+			$parsedTemplate = $compiler->get($templateIdentifier);
+		} else {
+			$parsedTemplate = $this->renderingContext->getTemplateParser()->parse(
+				$templateSourceClosure($this, $this->renderingContext->getTemplatePaths()), $templateIdentifier
+			);
+			if ($parsedTemplate->isCompilable()) {
+				$compiler->store($templateIdentifier, $parsedTemplate);
+			}
+		}
+		return $parsedTemplate;
+	}
+
+	/**
 	 * Pre-process the template source, making all registered TemplateProcessors
 	 * do what they need to do with the template source before it is parsed.
 	 *
@@ -196,9 +171,7 @@ class TemplateParser {
 	 * @return string
 	 */
 	protected function preProcessTemplateSource($templateSource) {
-		foreach ($this->templateProcessors as $templateProcessor) {
-			$templateProcessor->setTemplateParser($this);
-			$templateProcessor->setViewHelperResolver($this->viewHelperResolver);
+		foreach ($this->renderingContext->getTemplateProcessors() as $templateProcessor) {
 			$templateSource = $templateProcessor->preProcessSource($templateSource);
 		}
 		return $templateSource;
@@ -234,6 +207,7 @@ class TemplateParser {
 	 * @throws Exception
 	 */
 	protected function buildObjectTree(array $splitTemplate, $context) {
+		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
 		$state = $this->getParsingState();
 		$previousBlock = '';
 
@@ -321,11 +295,11 @@ class TemplateParser {
 	 * @throws Exception
 	 */
 	protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
-		if ($this->viewHelperResolver->isNamespaceValid($namespaceIdentifier, $methodIdentifier) === FALSE) {
+		if (!$this->renderingContext->getViewHelperResolver()->isNamespaceValid($namespaceIdentifier, $methodIdentifier)) {
 			return NULL;
 		}
 		$currentViewHelperNode = new ViewHelperNode(
-			$this->viewHelperResolver,
+			$this->renderingContext,
 			$namespaceIdentifier,
 			$methodIdentifier,
 			$argumentsObjectTree,
@@ -350,7 +324,8 @@ class TemplateParser {
 	 * @throws Exception
 	 */
 	protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
-		if ($this->viewHelperResolver->isNamespaceValid($namespaceIdentifier, $methodIdentifier) === FALSE) {
+		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
+		if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier, $methodIdentifier)) {
 			return FALSE;
 		}
 
@@ -358,7 +333,7 @@ class TemplateParser {
 		if (!($lastStackElement instanceof ViewHelperNode)) {
 			throw new Exception('You closed a templating tag which you never opened!', 1224485838);
 		}
-		$actualViewHelperClassName = $this->viewHelperResolver->resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
+		$actualViewHelperClassName = $viewHelperResolver->resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
 		$expectedViewHelperClassName = $lastStackElement->getViewHelperClassName();
 		if ($actualViewHelperClassName !== $expectedViewHelperClassName) {
 			throw new Exception(
@@ -557,7 +532,7 @@ class TemplateParser {
 			} else {
 				// We ask custom ExpressionNode instances from ViewHelperResolver
 				// if any match our expression:
-				foreach ($this->viewHelperResolver->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
+				foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
 					$detetionExpression = $expressionNodeTypeClassName::$detectionExpression;
 					$matchedVariables = array();
 					preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER);
@@ -649,11 +624,11 @@ class TemplateParser {
 	 */
 	protected function getParsingState() {
 		$rootNode = new RootNode();
+		$variableProvider = $this->renderingContext->getVariableProvider();
 		$state = new ParsingState();
-		$state->setVariableProvider($this->variableProvider);
-		$state->setViewHelperResolver($this->viewHelperResolver);
 		$state->setRootNode($rootNode);
 		$state->pushNodeToStack($rootNode);
+		$state->setVariableProvider($variableProvider->getScopeCopy($variableProvider->getAll()));
 		return $state;
 	}
 

@@ -17,8 +17,11 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for BooleanNode
@@ -39,7 +42,7 @@ class BooleanNodeTest extends UnitTestCase {
 	 * Setup fixture
 	 */
 	public function setUp() {
-		$this->renderingContext = $this->getMock(RenderingContextInterface::class);
+		$this->renderingContext = new RenderingContextFixture();
 	}
 
 	/**
@@ -377,7 +380,8 @@ class BooleanNodeTest extends UnitTestCase {
 	 * @return RenderingContext
 	 */
 	protected function getDummyRenderingContextWithVariables(array $variables) {
-		$context = new RenderingContext();
+		$context = $this->renderingContext;
+		$context->setVariableProvider(new StandardVariableProvider($variables));
 		$context->getVariableProvider()->setSource($variables);
 		return $context;
 	}
@@ -629,9 +633,8 @@ class BooleanNodeTest extends UnitTestCase {
 	 * @dataProvider getStandardInputTypes
 	 */
 	public function acceptsStandardTypesAsInput($input, $expected) {
-		$context = new RenderingContext();
 		$node = new BooleanNode($input);
-		$this->assertEquals($expected, $node->evaluate($context));
+		$this->assertEquals($expected, $node->evaluate($this->renderingContext));
 	}
 
 	/**

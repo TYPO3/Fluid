@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
@@ -31,15 +32,14 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	 * @return void
 	 */
 	public function setUp() {
+		parent::setUp();
 		$this->subject = $this->getMock(RenderViewHelper::class, array('renderChildren'));
-		$renderingContext = new RenderingContext();
-		$paths = $this->getMock(TemplatePaths::class, array('sanitizePath'));
-		$paths->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
-		$viewHelperVariableContainer = new ViewHelperVariableContainer();
-		$this->view = $this->getMock(TemplateView::class, array('renderPartial', 'renderSection'), array($paths, $renderingContext));
-		$viewHelperVariableContainer->setView($this->view);
-		$renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
-		$this->subject->setRenderingContext($renderingContext);
+		$this->view = $this->getMock(TemplateView::class, array('renderPartial', 'renderSection'));
+		$this->view->setRenderingContext($this->renderingContext);
+		$container = new ViewHelperVariableContainer();
+		$container->setView($this->view);
+		$this->renderingContext->setViewHelperVariableContainer($container);
+		$this->subject->setRenderingContext($this->renderingContext);
 	}
 
 	/**

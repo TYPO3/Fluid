@@ -91,7 +91,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase {
 	 * @test
 	 */
 	public function viewCanBeReadOutAgain() {
-		$view = $this->getMockForAbstractClass(AbstractTemplateView::class, array(new TemplatePaths()));
+		$view = $this->getMockForAbstractClass(AbstractTemplateView::class);
 		$this->viewHelperVariableContainer->setView($view);
 		$this->assertSame($view, $this->viewHelperVariableContainer->getView());
 	}

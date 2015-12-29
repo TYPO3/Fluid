@@ -22,7 +22,7 @@ class StandardVariableProviderTest extends UnitTestCase {
 	/**
 	 */
 	public function setUp() {
-		$this->variableProvider = new StandardVariableProvider();
+		$this->variableProvider = $this->getMock(StandardVariableProvider::class, array('dummy'));
 	}
 
 	/**

@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
@@ -30,19 +31,9 @@ class TemplateCompiler {
 	protected $disabled = FALSE;
 
 	/**
-	 * @var FluidCacheInterface
-	 */
-	protected $templateCache = NULL;
-
-	/**
 	 * @var array
 	 */
 	protected $syntaxTreeInstanceCache = array();
-
-	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
 
 	/**
 	 * @var NodeConverter
@@ -50,44 +41,30 @@ class TemplateCompiler {
 	protected $nodeConverter;
 
 	/**
+	 * @var RenderingContextInterface
+	 */
+	protected $renderingContext;
+
+	/**
 	 * Constructor
 	 */
-	public function __construct(ViewHelperResolver $viewHelperResolver = NULL) {
-		if (!$viewHelperResolver) {
-			$viewHelperResolver = new ViewHelperResolver();
-		}
-		$this->viewHelperResolver = $viewHelperResolver;
+	public function __construct() {
 		$this->nodeConverter = new NodeConverter($this);
 	}
 
 	/**
+	 * @param RenderingContextInterface $renderingContext
 	 * @return void
 	 */
-	public function disable() {
-		$this->disabled = TRUE;
+	public function setRenderingContext(RenderingContextInterface $renderingContext) {
+		$this->renderingContext = $renderingContext;
 	}
 
 	/**
-	 * @return boolean
+	 * @return RenderingContextInterface
 	 */
-	public function isDisabled() {
-		return $this->disabled;
-	}
-
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
-	}
-
-	/**
-	 * @param FluidCacheInterface $templateCache
-	 * @return void
-	 */
-	public function setTemplateCache($templateCache = NULL) {
-		$this->templateCache = $templateCache;
+	public function getRenderingContext() {
+		return $this->renderingContext;
 	}
 
 	/**
@@ -106,15 +83,29 @@ class TemplateCompiler {
 	}
 
 	/**
+	 * @return void
+	 */
+	public function disable() {
+		$this->disabled = TRUE;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function isDisabled() {
+		return $this->disabled;
+	}
+
+	/**
 	 * @param string $identifier
 	 * @return boolean
 	 */
 	public function has($identifier) {
-		if (!$this->templateCache instanceof FluidCacheInterface) {
+		if (!$this->renderingContext->isCacheEnabled() || $this->disabled) {
 			return FALSE;
 		}
 		$identifier = $this->sanitizeIdentifier($identifier);
-		return !empty($identifier) && $this->templateCache->get($identifier);
+		return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
 	}
 
 	/**
@@ -123,8 +114,9 @@ class TemplateCompiler {
 	 */
 	public function get($identifier) {
 		$identifier = $this->sanitizeIdentifier($identifier);
+
 		if (!isset($this->syntaxTreeInstanceCache[$identifier])) {
-			$this->templateCache->get($identifier);
+			$this->renderingContext->getCache()->get($identifier);
 			$this->syntaxTreeInstanceCache[$identifier] = new $identifier();
 		}
 
@@ -137,12 +129,8 @@ class TemplateCompiler {
 	 * @return void
 	 */
 	public function store($identifier, ParsingState $parsingState) {
-		if (!$this->templateCache instanceof FluidCacheInterface) {
-			return;
-		}
-		if ($this->disabled) {
+		if (!$this->renderingContext->isCacheEnabled() || $this->disabled) {
 			$parsingState->setCompilable(FALSE);
-			$this->templateCache->flush($identifier);
 			return;
 		}
 
@@ -191,9 +179,9 @@ EOD;
 			'$renderingContext->getVariableProvider()->get(\'layoutName\')',
 			$parsingState->getVariableContainer()->get('layoutName'),
 			($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
-			var_export($parsingState->getViewHelperResolver()->getNamespaces(), TRUE),
+			var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), TRUE),
 			$generatedRenderFunctions);
-		$this->templateCache->set($identifier, $templateCode);
+		$this->renderingContext->getCache()->set($identifier, $templateCode);
 	}
 
 	/**

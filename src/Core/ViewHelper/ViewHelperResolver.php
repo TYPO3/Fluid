@@ -36,26 +36,6 @@ class ViewHelperResolver {
 	);
 
 	/**
-	 * List of class names implementing ExpressionNodeInterface
-	 * which will be consulted when an expression does not match
-	 * any built-in parser expression types.
-	 *
-	 * @var string
-	 */
-	protected $expressionNodeTypes = array(
-		CastingExpressionNode::class,
-		MathExpressionNode::class,
-		TernaryExpressionNode::class,
-	);
-
-	/**
-	 * @return string
-	 */
-	public function getExpressionNodeTypes() {
-		return $this->expressionNodeTypes;
-	}
-
-	/**
 	 * @return array
 	 */
 	public function getNamespaces() {
@@ -175,26 +155,6 @@ class ViewHelperResolver {
 		}
 
 		return FALSE;
-	}
-
-	/**
-	 * Resolve an Invoker that will call the ViewHelper given as
-	 * argument to render it correctly.
-	 *
-	 * If any ViewHelper requires special execution to render
-	 * correctly, this is the method to override in a custom
-	 * ViewHelperResolver to return a different ViewHelperInvoker
-	 * for that class and others like it.
-	 *
-	 * Our default implementation returns the simplest possible
-	 * Invoker that only supports the default implementations of
-	 * ViewHelper arguments and render methods.
-	 *
-	 * @param string $viewHelperClassName
-	 * @return ViewHelperInvoker
-	 */
-	public function resolveViewHelperInvoker($viewHelperClassName) {
-		return new ViewHelperInvoker($this);
 	}
 
 	/**

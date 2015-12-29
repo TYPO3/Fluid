@@ -11,7 +11,7 @@ require __DIR__ . '/include/view_init.php';
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
-$view->getTemplatePaths()->setFormat('json');
+$paths->setFormat('json');
 
 // Rendering the View: we use the $action argument for the render() method in
 // order to let the internal TemplatePaths object resolve our file paths while

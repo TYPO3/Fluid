@@ -18,10 +18,14 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\PostParseFacetViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for TemplateParser.
@@ -37,7 +41,10 @@ class TemplateParserTest extends UnitTestCase {
 	public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceNotValid() {
 		$resolver = $this->getMock(ViewHelperResolver::class, array('isNamespaceValid'));
 		$resolver->expects($this->once())->method('isNamespaceValid')->willReturn(FALSE);
-		$templateParser = new TemplateParser($resolver);
+		$context = new RenderingContextFixture();
+		$context->setViewHelperResolver($resolver);
+		$templateParser = new TemplateParser();
+		$templateParser->setRenderingContext($context);
 		$method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
 		$method->setAccessible(TRUE);
 		$result = $method->invokeArgs($templateParser, array(new ParsingState(), 'f', 'render', array()));
@@ -50,7 +57,10 @@ class TemplateParserTest extends UnitTestCase {
 	public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceNotValid() {
 		$resolver = $this->getMock(ViewHelperResolver::class, array('isNamespaceValid'));
 		$resolver->expects($this->once())->method('isNamespaceValid')->willReturn(FALSE);
-		$templateParser = new TemplateParser($resolver);
+		$context = new RenderingContextFixture();
+		$context->setViewHelperResolver($resolver);
+		$templateParser = new TemplateParser();
+		$templateParser->setRenderingContext($context);
 		$method = new \ReflectionMethod($templateParser, 'closingViewHelperTagHandler');
 		$method->setAccessible(TRUE);
 		$result = $method->invokeArgs($templateParser, array(new ParsingState(), 'f', 'render'));
@@ -61,7 +71,10 @@ class TemplateParserTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testBuildObjectTreeThrowsExceptionOnUnclosedViewHelperTag() {
+		$renderingContext = new RenderingContextFixture();
+		$renderingContext->setVariableProvider(new StandardVariableProvider());
 		$templateParser = new TemplateParser();
+		$templateParser->setRenderingContext($renderingContext);
 		$this->setExpectedException(Exception::class);
 		$method = new \ReflectionMethod($templateParser, 'buildObjectTree');
 		$method->setAccessible(TRUE);
@@ -72,22 +85,21 @@ class TemplateParserTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testParseCallsPreProcessOnTemplateProcessors() {
-		$resolver = new ViewHelperResolver();
-		$templateParser = new TemplateParser($resolver);
+		$templateParser = new TemplateParser();
 		$processor1 = $this->getMockForAbstractClass(
 			TemplateProcessorInterface::class,
 			array(), '', FALSE, FALSE, TRUE,
-			array('setTemplateParser', 'setViewHelperResolver', 'preProcessSource')
+			array('preProcessSource')
 		);
 		$processor2 = clone $processor1;
-		$processor1->expects($this->once())->method('setTemplateParser')->with($templateParser);
-		$processor1->expects($this->once())->method('setViewHelperResolver')->with($resolver);
 		$processor1->expects($this->once())->method('preProcessSource')->with('source1')->willReturn('source2');
-		$processor2->expects($this->once())->method('setTemplateParser')->with($templateParser);
-		$processor2->expects($this->once())->method('setViewHelperResolver')->with($resolver);
 		$processor2->expects($this->once())->method('preProcesssource')->with('source2')->willReturn('final');
-		$templateParser->setTemplateProcessors(array($processor1, $processor2));
-		$templateParser->parse('source1');
+		$context = new RenderingContextFixture();
+		$context->setTemplateProcessors(array($processor1, $processor2));
+		$context->setVariableProvider(new StandardVariableProvider());
+		$templateParser->setRenderingContext($context);
+		$result = $templateParser->parse('source1')->render($context);
+		$this->assertEquals('final', $result);
 	}
 
 	/**
@@ -146,7 +158,10 @@ class TemplateParserTest extends UnitTestCase {
 	 * @test
 	 */
 	public function buildObjectTreeCreatesRootNodeAndSetsUpParsingState() {
+		$context = new RenderingContextFixture();
+		$context->setVariableProvider(new StandardVariableProvider());
 		$templateParser = $this->getAccessibleMock(TemplateParser::class, array('dummy'));
+		$templateParser->setRenderingContext($context);
 		$result = $templateParser->_call('buildObjectTree', array(), TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 		$this->assertInstanceOf(ParsingState::class, $result);
 	}
@@ -164,6 +179,9 @@ class TemplateParserTest extends UnitTestCase {
 				'textAndShorthandSyntaxHandler'
 			)
 		);
+		$context = new RenderingContextFixture();
+		$context->setVariableProvider(new StandardVariableProvider());
+		$templateParser->setRenderingContext($context);
 		$splitTemplate = $templateParser->_call('splitTemplateAtDynamicTags', 'The first part is simple<![CDATA[<f:for each="{a: {a: 0, b: 2, c: 4}}" as="array"><f:for each="{array}" as="value">{value} </f:for>]]><f:format.printf arguments="{number : 362525200}">%.3e</f:format.printf>and here goes some {text} that could have {shorthand}');
 		$result = $templateParser->_call('buildObjectTree', $splitTemplate, TemplateParser::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
 		$this->assertInstanceOf(ParsingState::class, $result);
@@ -179,6 +197,8 @@ class TemplateParserTest extends UnitTestCase {
 			TemplateParser::class,
 			array('parseArguments', 'initializeViewHelperAndAddItToStack')
 		);
+		$context = new RenderingContextFixture();
+		$templateParser->setRenderingContext($context);
 		$templateParser->expects($this->once())->method('parseArguments')
 			->with(array('arguments'))->will($this->returnValue(array('parsedArguments')));
 		$templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')
@@ -275,6 +295,7 @@ class TemplateParserTest extends UnitTestCase {
 		$mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
 
 		$templateParser = $this->getAccessibleMock(TemplateParser::class, array('dummy'));
+		$templateParser->_set('renderingContext', new RenderingContextFixture());
 
 		$templateParser->_call('closingViewHelperTagHandler', $mockState, 'f', 'render');
 	}
@@ -288,6 +309,7 @@ class TemplateParserTest extends UnitTestCase {
 		$mockState = $this->getMock(ParsingState::class);
 		$mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
 		$templateParser = $this->getAccessibleMock(TemplateParser::class, array('dummy'));
+		$templateParser->_set('renderingContext', new RenderingContextFixture());
 		$templateParser->_call('closingViewHelperTagHandler', $mockState, 'f', 'render');
 	}
 
@@ -466,12 +488,14 @@ class TemplateParserTest extends UnitTestCase {
 			TemplateParser::class,
 			array('objectAccessorHandler', 'arrayHandler', 'textHandler')
 		);
+		$context = new RenderingContextFixture();
+		$templateParser->setRenderingContext($context);
 		$templateParser->expects($this->at(0))->method('textHandler')->with($mockState, ' ');
 		$templateParser->expects($this->at(1))->method('objectAccessorHandler')->with($mockState, 'someThing.absolutely', '', '', '');
 		$templateParser->expects($this->at(2))->method('textHandler')->with($mockState, ' "fishy" is \'going\' ');
 		$templateParser->expects($this->at(3))->method('arrayHandler')->with($mockState, $this->anything());
 
-		$text = '{1+1} {someThing.absolutely} "fishy" is \'going\' {on: "here"}';
+		$text = ' {someThing.absolutely} "fishy" is \'going\' {on: "here"}';
 		$method = new \ReflectionMethod(TemplateParser::class, 'textAndShorthandSyntaxHandler');
 		$method->setAccessible(TRUE);
 		$method->invokeArgs($templateParser, array($mockState, $text, TemplateParser::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS));
@@ -595,30 +619,6 @@ class TemplateParserTest extends UnitTestCase {
 	}
 
 	/**
-	 * @dataProvider getExampleScriptTestValues
-	 * @param string $templateCode
-	 * @param array $expectsIgnored
-	 * @param string $expectedException
-	 * @param string $expectedNamespaces
-	 */
-	public function testNamespaceParsing($templateCode, $expectsIgnored = array(), $expectedException = NULL, $expectedNamespaces = NULL) {
-
-		$resolver = new ViewHelperResolver();
-		$this->templateParser = new TemplateParser($resolver);
-
-		if ($expectedException !== NULL) {
-			$this->setExpectedException($expectedException);
-		}
-		$this->templateParser->parse($templateCode);
-		foreach ($expectsIgnored as $namespace) {
-			$this->assertTrue($resolver->isNamespaceValidOrIgnored($namespace));
-		}
-		if ($expectedNamespaces !== NULL) {
-			$this->assertEquals($expectedNamespaces, $resolver->getNamespaces());
-		}
-	}
-
-	/**
 	 * @return array
 	 */
 	public function getExampleScriptTestValues() {
@@ -730,27 +730,6 @@ class TemplateParserTest extends UnitTestCase {
 				'\TYPO3Fluid\Fluid\Core\Parser\Exception'
 			),
 		);
-	}
-
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-	 */
-	public function registerNamespaceThrowsExceptionIfOneAliasIsRegisteredWithDifferentPhpNamespaces() {
-		$resolver = new ViewHelperResolver();
-		$resolver->registerNamespace('foo', 'Some\Namespace');
-		$resolver->registerNamespace('foo', 'Some\Other\Namespace');
-	}
-
-	/**
-	 * @test
-	 */
-	public function registerNamespaceDoesNotThrowAnExceptionIfTheAliasExistAlreadyAndPointsToTheSamePhpNamespace() {
-		$resolver = new ViewHelperResolver();
-		$resolver->registerNamespace('foo', 'Some\Namespace');
-		$this->assertAttributeEquals(array('f' => 'TYPO3Fluid\Fluid\ViewHelpers', 'foo' => 'Some\Namespace'), 'namespaces', $resolver);
-		$resolver->registerNamespace('foo', 'Some\Namespace');
-		$this->assertAttributeEquals(array('f' => 'TYPO3Fluid\Fluid\ViewHelpers', 'foo' => 'Some\Namespace'), 'namespaces', $resolver);
 	}
 
 }

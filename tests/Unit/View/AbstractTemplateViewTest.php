@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
@@ -50,12 +51,12 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @return void
 	 */
 	public function setUp() {
-		$this->templateVariableContainer = $this->getMock(StandardVariableProvider::class, array('exists', 'remove', 'add'));
+		$this->templateVariableContainer = $this->getMock(StandardVariableProvider::class);
 		$this->viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class, array('setView'));
-		$this->renderingContext = $this->getMock(RenderingContext::class, array('getViewHelperVariableContainer', 'getVariableProvider'));
-		$this->renderingContext->expects($this->any())->method('getViewHelperVariableContainer')->will($this->returnValue($this->viewHelperVariableContainer));
-		$this->renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($this->templateVariableContainer));
-		$this->view = $this->getMockForAbstractClass(AbstractTemplateView::class, array(new TemplatePaths()));
+		$this->renderingContext = new RenderingContextFixture();
+		$this->renderingContext->viewHelperVariableContainer = $this->viewHelperVariableContainer;
+		$this->renderingContext->variableProvider = $this->templateVariableContainer;
+		$this->view = $this->getMockForAbstractClass(AbstractTemplateView::class);
 		$this->view->setRenderingContext($this->renderingContext);
 	}
 
@@ -72,7 +73,7 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 */
 	public function testGetViewHelperResolverReturnsExpectedViewHelperResolver() {
 		$viewHelperResolver = $this->getMock(ViewHelperResolver::class);
-		$this->view->setViewHelperResolver($viewHelperResolver);
+		$this->renderingContext->setViewHelperResolver($viewHelperResolver);
 		$result = $this->view->getViewHelperResolver();
 		$this->assertSame($viewHelperResolver, $result);
 	}
@@ -80,19 +81,9 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function viewIsPlacedInViewHelperVariableContainer() {
-		$this->viewHelperVariableContainer->expects($this->once())->method('setView')->with($this->view);
-		$this->view->setRenderingContext($this->renderingContext);
-	}
-
-	/**
-	 * @test
-	 */
 	public function assignAddsValueToTemplateVariableContainer() {
-		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValue');
-		$this->templateVariableContainer->expects($this->at(2))->method('exists')->with('bar')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(3))->method('add')->with('bar', 'BarValue');
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
+		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('bar', 'BarValue');
 
 		$this->view
 			->assign('foo', 'FooValue')
@@ -103,11 +94,8 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @test
 	 */
 	public function assignCanOverridePreviouslyAssignedValues() {
-		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValue');
-		$this->templateVariableContainer->expects($this->at(2))->method('exists')->with('foo')->will($this->returnValue(TRUE));
-		$this->templateVariableContainer->expects($this->at(3))->method('remove')->with('foo');
-		$this->templateVariableContainer->expects($this->at(4))->method('add')->with('foo', 'FooValueOverridden');
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
+		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValueOverridden');
 
 		$this->view->assign('foo', 'FooValue');
 		$this->view->assign('foo', 'FooValueOverridden');
@@ -117,12 +105,9 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @test
 	 */
 	public function assignMultipleAddsValuesToTemplateVariableContainer() {
-		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValue');
-		$this->templateVariableContainer->expects($this->at(2))->method('exists')->with('bar')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(3))->method('add')->with('bar', 'BarValue');
-		$this->templateVariableContainer->expects($this->at(4))->method('exists')->with('baz')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(5))->method('add')->with('baz', 'BazValue');
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
+		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('bar', 'BarValue');
+		$this->templateVariableContainer->expects($this->at(2))->method('add')->with('baz', 'BazValue');
 
 		$this->view
 			->assignMultiple(array('foo' => 'FooValue', 'bar' => 'BarValue'))
@@ -133,26 +118,12 @@ class AbstractTemplateViewTest extends UnitTestCase {
 	 * @test
 	 */
 	public function assignMultipleCanOverridePreviouslyAssignedValues() {
-		$this->templateVariableContainer->expects($this->at(0))->method('exists')->with('foo')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValue');
-		$this->templateVariableContainer->expects($this->at(2))->method('exists')->with('foo')->will($this->returnValue(TRUE));
-		$this->templateVariableContainer->expects($this->at(3))->method('remove')->with('foo');
-		$this->templateVariableContainer->expects($this->at(4))->method('add')->with('foo', 'FooValueOverridden');
-		$this->templateVariableContainer->expects($this->at(5))->method('exists')->with('bar')->will($this->returnValue(FALSE));
-		$this->templateVariableContainer->expects($this->at(6))->method('add')->with('bar', 'BarValue');
+		$this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
+		$this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValueOverridden');
+		$this->templateVariableContainer->expects($this->at(2))->method('add')->with('bar', 'BarValue');
 
 		$this->view->assign('foo', 'FooValue');
 		$this->view->assignMultiple(array('foo' => 'FooValueOverridden', 'bar' => 'BarValue'));
-	}
-
-	/**
-	 * @test
-	 */
-	public function testBuildParserConfigurationReturnsParserConfiguration() {
-		$method = new \ReflectionMethod($this->view, 'buildParserConfiguration');
-		$method->setAccessible(TRUE);
-		$result = $method->invoke($this->view);
-		$this->assertInstanceOf(Configuration::class, $result);
 	}
 
 	/**
@@ -191,17 +162,6 @@ class AbstractTemplateViewTest extends UnitTestCase {
 			array(TRUE),
 			array(FALSE)
 		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function testSetTemplateProcessorsDelegatesToTemplateParser() {
-		$view = $this->getMockForAbstractClass(AbstractTemplateView::class, array(), '', FALSE, FALSE, TRUE);
-		$parser = $this->getMock(TemplateParser::class);
-		$view->setTemplateParser($parser);
-		$parser->expects($this->once())->method('setTemplateProcessors')->with(array());
-		$view->setTemplateProcessors(array());
 	}
 
 	/**

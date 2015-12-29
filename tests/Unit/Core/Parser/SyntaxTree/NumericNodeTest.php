@@ -8,7 +8,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for NumericNode
@@ -17,12 +19,21 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 class NumericNodeTest extends UnitTestCase {
 
 	/**
+	 * @var RenderingContext
+	 */
+	protected $renderingContext;
+
+	public function setUp() {
+		$this->renderingContext = new RenderingContextFixture();
+	}
+
+	/**
 	 * @test
 	 */
 	public function renderReturnsProperIntegerGivenInConstructor() {
 		$string = '1';
 		$node = new NumericNode($string);
-		$this->assertEquals($node->evaluate($this->getMock(RenderingContext::class)), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+		$this->assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
 	}
 
 	/**
@@ -31,7 +42,7 @@ class NumericNodeTest extends UnitTestCase {
 	public function renderReturnsProperFloatGivenInConstructor() {
 		$string = '1.1';
 		$node = new NumericNode($string);
-		$this->assertEquals($node->evaluate($this->getMock(RenderingContext::class)), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+		$this->assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
 	}
 
 	/**

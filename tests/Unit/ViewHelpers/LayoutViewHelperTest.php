@@ -12,6 +12,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
 
 /**
@@ -46,7 +47,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase {
 	public function testPostParseEvent(array $arguments, $expectedLayoutName) {
 		$instance = new LayoutViewHelper();
 		$variableContainer = new StandardVariableProvider();
-		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'layout', $arguments, new ParsingState());
+		$node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', $arguments, new ParsingState());
 		$result = LayoutViewHelper::postParseEvent($node, $arguments, $variableContainer);
 		$this->assertNull($result);
 		$this->assertEquals($expectedLayoutName, $variableContainer->get('layoutName'));

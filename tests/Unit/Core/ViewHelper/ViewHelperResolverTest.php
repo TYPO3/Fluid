@@ -91,4 +91,25 @@ class ViewHelperResolverTest extends UnitTestCase {
 		), 'namespaces', $resolver);
 	}
 
+	/**
+	 * @test
+	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
+	 */
+	public function registerNamespaceThrowsExceptionIfOneAliasIsRegisteredWithDifferentPhpNamespaces() {
+		$resolver = new ViewHelperResolver();
+		$resolver->registerNamespace('foo', 'Some\Namespace');
+		$resolver->registerNamespace('foo', 'Some\Other\Namespace');
+	}
+
+	/**
+	 * @test
+	 */
+	public function registerNamespaceDoesNotThrowAnExceptionIfTheAliasExistAlreadyAndPointsToTheSamePhpNamespace() {
+		$resolver = new ViewHelperResolver();
+		$resolver->registerNamespace('foo', 'Some\Namespace');
+		$this->assertAttributeEquals(array('f' => 'TYPO3Fluid\Fluid\ViewHelpers', 'foo' => 'Some\Namespace'), 'namespaces', $resolver);
+		$resolver->registerNamespace('foo', 'Some\Namespace');
+		$this->assertAttributeEquals(array('f' => 'TYPO3Fluid\Fluid\ViewHelpers', 'foo' => 'Some\Namespace'), 'namespaces', $resolver);
+	}
+
 }

@@ -12,9 +12,12 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class TemplateCompilerTest
@@ -24,38 +27,19 @@ class TemplateCompilerTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testConstructorCreatesViewHelperResolver() {
+	public function testConstructorCreatesNodeConverter() {
 		$instance = new TemplateCompiler();
-		$this->assertAttributeInstanceOf(ViewHelperResolver::class, 'viewHelperResolver', $instance);
+		$this->assertAttributeInstanceOf(NodeConverter::class, 'nodeConverter', $instance);
 	}
 
 	/**
 	 * @test
 	 */
-	public function testConstructorAcceptsViewHelperResolver() {
-		$resolver = new ViewHelperResolver();
-		$instance = new TemplateCompiler($resolver);
-		$this->assertAttributeSame($resolver, 'viewHelperResolver', $instance);
-	}
-
-	/**
-	 * @test
-	 */
-	public function testSetViewHelperResolverReplacesInstance() {
-		$resolver = new ViewHelperResolver();
-		$instance = new TemplateCompiler($resolver);
-		$instance->setViewHelperResolver(new ViewHelperResolver());
-		$this->assertAttributeNotSame($resolver, 'viewHelperResolver', $instance);
-	}
-
-	/**
-	 * @test
-	 */
-	public function testSetTemplateCache() {
-		$cache = new SimpleFileCache();
+	public function testSetRenderingContext() {
 		$instance = new TemplateCompiler();
-		$instance->setTemplateCache($cache);
-		$this->assertAttributeSame($cache, 'templateCache', $instance);
+		$renderingContext = new RenderingContextFixture();
+		$instance->setRenderingContext($renderingContext);
+		$this->assertAttributeSame($renderingContext, 'renderingContext', $instance);
 	}
 
 	/**
@@ -63,6 +47,9 @@ class TemplateCompilerTest extends UnitTestCase {
 	 */
 	public function testHasReturnsFalseWithoutCache() {
 		$instance = $this->getMock(TemplateCompiler::class, array('sanitizeIdentifier'));
+		$renderingContext = new RenderingContextFixture();
+		$renderingContext->cacheDisabled = TRUE;
+		$instance->setRenderingContext($renderingContext);
 		$instance->expects($this->never())->method('sanitizeIdentifier');
 		$result = $instance->has('test');
 		$this->assertFalse($result);
@@ -71,12 +58,14 @@ class TemplateCompilerTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testHasReturnsFalseAsksCache() {
-		$instance = $this->getMock(TemplateCompiler::class, array('sanitizeIdentifier'));
-		$instance->expects($this->once())->method('sanitizeIdentifier')->with('test')->willReturn('foobar');
+	public function testHasAsksCache() {
 		$cache = $this->getMock(SimpleFileCache::class, array('get'));
-		$cache->expects($this->once())->method('get')->with('foobar')->willReturn(TRUE);
-		$instance->setTemplateCache($cache);
+		$cache->expects($this->once())->method('get')->with('test')->willReturn(TRUE);
+		$renderingContext = new RenderingContextFixture();
+		$renderingContext->setCache($cache);
+		$instance = $this->getMock(TemplateCompiler::class, array('sanitizeIdentifier'));
+		$instance->expects($this->once())->method('sanitizeIdentifier')->willReturnArgument(0);
+		$instance->setRenderingContext($renderingContext);
 		$result = $instance->has('test');
 		$this->assertTrue($result);
 	}
@@ -87,7 +76,8 @@ class TemplateCompilerTest extends UnitTestCase {
 	public function testWrapViewHelperNodeArgumentEvaluationInClosure() {
 		$instance = new TemplateCompiler();
 		$arguments = array('value' => new TextNode('sometext'));
-		$viewHelperNode = new ViewHelperNode(new ViewHelperResolver(), 'f', 'format.raw', $arguments, new ParsingState());
+		$renderingContext = new RenderingContextFixture();
+		$viewHelperNode = new ViewHelperNode($renderingContext, 'f', 'format.raw', $arguments, new ParsingState());
 		$result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
 		$serialized = serialize($arguments['value']);
 		$expected = 'function() use ($renderingContext, $self) {' . chr(10);
@@ -125,8 +115,11 @@ class TemplateCompilerTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testStoreReturnsEarlyIfNoCompilerSet() {
+	public function testStoreReturnsEarlyIfDisabled() {
+		$renderingContext = new RenderingContextFixture();
+		$renderingContext->cacheDisabled = TRUE;
 		$instance = $this->getMock(TemplateCompiler::class, array('sanitizeIdentifier'));
+		$instance->setRenderingContext($renderingContext);
 		$instance->expects($this->never())->method('sanitizeIdentifier');
 		$instance->store('foobar', new ParsingState());
 	}
@@ -152,13 +145,11 @@ class TemplateCompilerTest extends UnitTestCase {
 	 * @test
 	 */
 	public function testStoreWhenDisabledFlushesCache() {
-		$cache = $this->getMock(SimpleFileCache::class, array('flush', 'store'));
-		$cache->expects($this->never())->method('store');
-		$cache->expects($this->once())->method('flush')->with('fakeidentifier');
+		$renderingContext = new RenderingContextFixture();
 		$state = new ParsingState();
 		$instance = new TemplateCompiler();
+		$instance->setRenderingContext($renderingContext);
 		$instance->disable();
-		$instance->setTemplateCache($cache);
 		$instance->store('fakeidentifier', $state);
 	}
 

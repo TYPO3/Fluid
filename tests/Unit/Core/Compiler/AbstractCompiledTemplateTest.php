@@ -11,7 +11,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class AbstractCompiledTemplateTest
@@ -23,7 +25,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	 */
 	public function testParentGetVariableContainerMethodReturnsStandardVariableProvider() {
 		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-		$result = $instance->getVariableContainer(new RenderingContext());
+		$result = $instance->getVariableContainer();
 		$this->assertInstanceOf(StandardVariableProvider::class, $result);
 	}
 
@@ -32,7 +34,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	 */
 	public function testParentRenderMethodReturnsEmptyString() {
 		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-		$result = $instance->render(new RenderingContext());
+		$result = $instance->render(new RenderingContextFixture());
 		$this->assertEquals('', $result);
 	}
 
@@ -41,7 +43,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	 */
 	public function testParentGetLayoutNameMethodReturnsEmptyString() {
 		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-		$result = $instance->getLayoutName(new RenderingContext());
+		$result = $instance->getLayoutName(new RenderingContextFixture());
 		$this->assertEquals('', $result);
 	}
 
@@ -65,7 +67,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 			array('createViewHelperInstanceFromClassName')
 		);
 		$resolver->expects($this->once())->method('createViewHelperInstanceFromClassName')->willReturn($viewHelper);
-		$renderingContext = new RenderingContext();
+		$renderingContext = new RenderingContextFixture();
 		$renderingContext->setViewHelperResolver($resolver);
 		$result = $instance->getViewHelper(1, $renderingContext, TestViewHelper::class);
 		$this->assertSame($viewHelper, $result);
@@ -94,7 +96,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	 */
 	public function testAddCompiledNamespacesDoesNothing() {
 		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-		$context = new RenderingContext();
+		$context = new RenderingContextFixture();
 		$before = $context->getViewHelperResolver()->getNamespaces();
 		$instance->addCompiledNamespaces($context);
 		$after = $context->getViewHelperResolver()->getNamespaces();
