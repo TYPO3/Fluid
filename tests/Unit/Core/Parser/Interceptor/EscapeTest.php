@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -46,8 +47,7 @@ class EscapeTest extends UnitTestCase {
 		$this->mockViewHelper = $this->getMockBuilder(AbstractViewHelper::class)->disableOriginalConstructor()->getMock();
 		$this->mockNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 		$this->mockParsingState = $this->getMockBuilder(ParsingState::class)
-			->setMethods(array('getViewHelperResolver'))->disableOriginalConstructor()->getMock();
-		$this->mockParsingState->expects($this->once())->method('getViewHelperResolver')->willReturn(new ViewHelperResolver());
+			->setMethods(array('dummy'))->disableOriginalConstructor()->getMock();
 	}
 
 	/**
@@ -94,11 +94,10 @@ class EscapeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function processWrapsCurrentViewHelperInHtmlspecialcharsViewHelperOnObjectAccessor() {
+	public function processWrapsCurrentViewHelperInEscapeNode() {
 		$interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
 		$mockNode = $this->getMock(ObjectAccessorNode::class, array(), array(), '', FALSE);
-		$mockEscapeViewHelper = $this->getMock(HtmlspecialcharsViewHelper::class);
 		$actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
-		$this->assertInstanceOf(ViewHelperNode::class, $actualResult);
+		$this->assertInstanceOf(EscapingNode::class, $actualResult);
 	}
 }
