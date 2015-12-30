@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\Interceptor;
 
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -43,7 +44,6 @@ class Escape implements InterceptorInterface {
 	 * @return NodeInterface
 	 */
 	public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState) {
-		$resolver = $parsingState->getViewHelperResolver();
 		if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
 			/** @var ViewHelperNode $node */
 			if (!$node->getUninitializedViewHelper()->isChildrenEscapingEnabled()) {
@@ -59,22 +59,12 @@ class Escape implements InterceptorInterface {
 			}
 			/** @var ViewHelperNode $node */
 			if ($this->childrenEscapingEnabled && $node->getUninitializedViewHelper()->isOutputEscapingEnabled()) {
-				$node = $this->wrapNode($node, $resolver, $parsingState);
+				$node = new EscapingNode($node);
 			}
 		} elseif ($this->childrenEscapingEnabled && $node instanceof ObjectAccessorNode) {
-			$node = $this->wrapNode($node, $resolver, $parsingState);
+			$node = new EscapingNode($node);
 		}
 		return $node;
-	}
-
-	/**
-	 * @param NodeInterface $node
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @param ParsingState $state
-	 * @return ViewHelperNode
-	 */
-	protected function wrapNode(NodeInterface $node, ViewHelperResolver $viewHelperResolver, ParsingState $state) {
-		return new ViewHelperNode($viewHelperResolver, 'f', 'format.htmlspecialchars', array('value' => $node), $state);
 	}
 
 	/**
