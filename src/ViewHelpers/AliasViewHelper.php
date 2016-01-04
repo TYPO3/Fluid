@@ -15,27 +15,27 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * The variables are only declared inside the <f:alias>...</f:alias>-tag. After the
  * closing tag, all declared variables are removed again.
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="Single alias">
+ * #### Single alias
+ *
+ * ```html
  * <f:alias map="{x: 'foo'}">{x}</f:alias>
- * </code>
- * <output>
- * foo
- * </output>
+ * ```
+ * will output: ```foo```
  *
- * <code title="Multiple mappings">
+ * #### Multiple mappings
+ *
+ * ```html
  * <f:alias map="{x: foo.bar.baz, y: foo.bar.baz.name}">
  *   {x.name} or {y}
  * </f:alias>
- * </code>
- * <output>
- * [name] or [name]
- * depending on {foo.bar.baz}
- * </output>
+ * ```
+ * will output ```max or max``` given ```{foo.bar.baz}``` contains and array/object with a key/property ```{name: 'max'}```
  *
- * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
- * you might want to fine-tune your "view model" (the data you assign to the view).
+ * > Note: Using this view helper can be a sign of weak architecture and can lead to unreadable
+ * > fluid templates. Instead of using this extensively you might want to fine-tune your
+ * > "view model" (the data you assign to the view).
  *
  * @api
  */

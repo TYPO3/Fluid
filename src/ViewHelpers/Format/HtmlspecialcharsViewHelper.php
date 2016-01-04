@@ -15,21 +15,23 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @see http://www.php.net/manual/function.htmlspecialchars.php
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="default notation">
+ * #### default notation
+ *
+ * ```html
  * <f:format.htmlspecialchars>{text}</f:format.htmlspecialchars>
- * </code>
- * <output>
- * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
- * </output>
+ * ```
  *
- * <code title="inline notation">
+ * will output the text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+ *
+ * #### inline notation
+ *
+ * ```html
  * {text -> f:format.htmlspecialchars(encoding: 'ISO-8859-1')}
- * </code>
- * <output>
- * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
- * </output>
+ * ```
+ *
+ * will output the text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
  *
  * @api
  */

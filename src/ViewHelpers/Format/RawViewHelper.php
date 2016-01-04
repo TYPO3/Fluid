@@ -12,31 +12,32 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Outputs an argument/value without any escaping. Is normally used to output
  * an ObjectAccessor which should not be escaped, but output as-is.
  *
- * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
- * as the output is NOT SANITIZED!
+ * **PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+ * as the output is NOT SANITIZED!**
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="Child nodes">
+ * #### Child nodes
+ *
+ * ```html
  * <f:format.raw>{string}</f:format.raw>
- * </code>
- * <output>
- * (Content of {string} without any conversion/escaping)
- * </output>
+ * ```
+ * Content of {string} without any conversion/escaping
  *
- * <code title="Value attribute">
+ *
+ * #### Value attribute
+ *
+ * ```html
  * <f:format.raw value="{string}" />
- * </code>
- * <output>
- * (Content of {string} without any conversion/escaping)
- * </output>
+ * ```
+ * Content of {string} without any conversion/escaping
  *
- * <code title="Inline notation">
+ * #### Inline notation
+ *
+ * ```html
  * {string -> f:format.raw()}
- * </code>
- * <output>
- * (Content of {string} without any conversion/escaping)
- * </output>
+ * ```
+ * Content of {string} without any conversion/escaping
  *
  * @api
  */

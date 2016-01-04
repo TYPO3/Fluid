@@ -12,21 +12,22 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * This ViewHelper counts elements of the specified array or countable object.
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="Count array elements">
+ * #### Count array elements
+ *
+ * ```html
  * <f:count subject="{0:1, 1:2, 2:3, 3:4}" />
- * </code>
- * <output>
- * 4
- * </output>
+ * ```
+ * will output ```4```
  *
- * <code title="inline notation">
+ * #### inline notation
+ *
+ * ```html
  * {objects -> f:count()}
- * </code>
- * <output>
- * 10 (depending on the number of items in {objects})
- * </output>
+ * ```
+ *
+ * will output ```10``` (depending on the number of items in {objects})
  *
  * @api
  */

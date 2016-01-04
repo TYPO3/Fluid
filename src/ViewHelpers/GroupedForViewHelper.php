@@ -16,20 +16,23 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * The groupBy argument also supports property paths.
  *
- * = Examples =
+ * ### Examples
  *
- * <code title="Simple">
+ * **Simple**
+ *
+ * ```html
  * <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color">
  *   <f:for each="{fruitsOfThisColor}" as="fruit">
  *     {fruit.name}
  *   </f:for>
  * </f:groupedFor>
- * </code>
- * <output>
- * apple cherry strawberry banana
- * </output>
+ * ```
+ * will output ```apple cherry strawberry banana```
  *
- * <code title="Two dimensional list">
+ *
+ * **Two dimensional list**
+ *
+ * ```html
  * <ul>
  *   <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color" groupKey="color">
  *     <li>
@@ -42,8 +45,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     </li>
  *   </f:groupedFor>
  * </ul>
- * </code>
- * <output>
+ * ```
+ *
+ * will output:
+ * ```html
  * <ul>
  *   <li>green fruits
  *     <ul>
@@ -64,10 +69,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *     </ul>
  *   </li>
  * </ul>
- * </output>
+ * ```
  *
- * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
- * you might want to fine-tune your "view model" (the data you assign to the view).
+ * > Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
+ * > you might want to fine-tune your "view model" (the data you assign to the view).
  *
  * @api
  */
