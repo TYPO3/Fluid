@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
@@ -56,7 +56,7 @@ class ViewHelperResolver {
 	 */
 	public function registerNamespace($identifier, $phpNamespace) {
 		if (array_key_exists($identifier, $this->namespaces) && $this->namespaces[$identifier] !== $phpNamespace) {
-			throw new Exception(
+			throw new ParserException(
 				sprintf(
 					'Namespace "%s" is already registered with another target PHP namespace (%s). Cannot redeclare as %s!',
 					$identifier,
@@ -166,7 +166,7 @@ class ViewHelperResolver {
 		$resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
 		$actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
 		if (FALSE === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === FALSE) {
-			throw new Exception(sprintf(
+			throw new ParserException(sprintf(
 				'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
 				'Based on your spelling, the system would load the class "%s", however this class does not exist.',
 				$namespaceIdentifier, $methodIdentifier, $resolvedViewHelperClassName), 1407060572);
