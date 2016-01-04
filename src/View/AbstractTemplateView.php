@@ -38,21 +38,6 @@ abstract class AbstractTemplateView extends AbstractView {
 	const RENDERING_LAYOUT = 3;
 
 	/**
-	 * @var TemplatePaths
-	 */
-	protected $templatePaths;
-
-	/**
-	 * @var TemplateParser
-	 */
-	protected $templateParser;
-
-	/**
-	 * @var TemplateCompiler
-	 */
-	protected $templateCompiler;
-
-	/**
 	 * The initial rendering context for this template view.
 	 * Due to the rendering stack, another rendering context might be active
 	 * at certain points while rendering the template.
@@ -79,81 +64,64 @@ abstract class AbstractTemplateView extends AbstractView {
 	protected $partialIdentifierCache = array();
 
 	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
-
-	/**
 	 * Constructor
 	 *
-	 * @param TemplatePaths $paths
-	 * @param RenderingContext $context
-	 * @param FluidCacheInterface $cache
+	 * @param RenderingContextInterface $context
 	 */
-	public function __construct(TemplatePaths $paths, RenderingContext $context = NULL, FluidCacheInterface $cache = NULL) {
+	public function __construct(RenderingContextInterface $context = NULL) {
 		if (!$context) {
-			$context = new RenderingContext();
+			$context = new RenderingContext($this);
 			$context->setControllerName('Default');
 			$context->setControllerAction('Default');
-			$context->setVariableProvider(new StandardVariableProvider($this->variables));
-			$context->injectViewHelperVariableContainer(new ViewHelperVariableContainer());
 		}
-		$this->templatePaths = $paths;
-		$this->viewHelperResolver = new ViewHelperResolver();
 		$this->setRenderingContext($context);
-		$this->setTemplateCompiler(new TemplateCompiler($this->viewHelperResolver));
-		$this->setTemplateParser(new TemplateParser($this->viewHelperResolver));
-		$this->templateCompiler->setTemplateCache($cache);
+		$this->initializeRenderingContext();
 	}
 
 	/**
+	 * Initialize the RenderingContext. This method can be overridden in your
+	 * View implementation to manipulate the rendering context *before* it is
+	 * passed during rendering.
+	 */
+	public function initializeRenderingContext() {
+		$this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
+	}
+
+	/**
+	 * Sets the cache to use in RenderingContext.
+	 *
+	 * @param FluidCacheInterface $cache
+	 * @return void
+	 */
+	public function setCache(FluidCacheInterface $cache) {
+		$this->baseRenderingContext->setCache($cache);
+	}
+
+	/**
+	 * Gets the TemplatePaths instance from RenderingContext
+	 *
+	 * @return TemplatePaths
+	 */
+	public function getTemplatePaths() {
+		return $this->baseRenderingContext->getTemplatePaths();
+	}
+
+	/**
+	 * Gets the ViewHelperResolver instance from RenderingContext
+	 *
+	 * @return ViewHelperResolver
+	 */
+	public function getViewHelperResolver() {
+		return $this->baseRenderingContext->getViewHelperResolver();
+	}
+
+	/**
+	 * Gets the RenderingContext used by the View
+	 *
 	 * @return RenderingContextInterface
 	 */
 	public function getRenderingContext() {
 		return $this->baseRenderingContext;
-	}
-
-	/**
-	 * @return TemplatePaths
-	 */
-	public function getTemplatePaths() {
-		return $this->templatePaths;
-	}
-
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
-		$this->templateParser->setViewHelperResolver($viewHelperResolver);
-		$this->templateCompiler->setViewHelperResolver($viewHelperResolver);
-		$this->baseRenderingContext->setViewHelperResolver($viewHelperResolver);
-	}
-
-	/**
-	 * @return ViewHelperResolver
-	 */
-	public function getViewHelperResolver() {
-		return $this->viewHelperResolver;
-	}
-
-	/**
-	 * Inject the Template Parser
-	 *
-	 * @param TemplateParser $templateParser The template parser
-	 * @return void
-	 */
-	public function setTemplateParser(TemplateParser $templateParser) {
-		$this->templateParser = $templateParser;
-	}
-
-	/**
-	 * @param TemplateCompiler $templateCompiler
-	 * @return void
-	 */
-	public function setTemplateCompiler(TemplateCompiler $templateCompiler) {
-		$this->templateCompiler = $templateCompiler;
 	}
 
 	/**
@@ -164,28 +132,6 @@ abstract class AbstractTemplateView extends AbstractView {
 	 */
 	public function setRenderingContext(RenderingContextInterface $renderingContext) {
 		$this->baseRenderingContext = $renderingContext;
-		$this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
-	}
-
-	/**
-	 * Delegation: Set the cache used by this View's compiler
-	 *
-	 * @param FluidCacheInterface $cache
-	 * @return void
-	 */
-	public function setCache(FluidCacheInterface $cache) {
-		$this->templateCompiler->setTemplateCache($cache);
-	}
-
-	/**
-	 * Delegation: Set TemplateProcessor instances in the parser
-	 * through a public API.
-	 *
-	 * @param TemplateProcessorInterface[] $templateProcessors
-	 * @return void
-	 */
-	public function setTemplateProcessors(array $templateProcessors) {
-		$this->templateParser->setTemplateProcessors($templateProcessors);
 	}
 
 	/**
@@ -197,11 +143,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	 * @api
 	 */
 	public function assign($key, $value) {
-		$templateVariableContainer = $this->baseRenderingContext->getVariableProvider();
-		if ($templateVariableContainer->exists($key)) {
-			$templateVariableContainer->remove($key);
-		}
-		$templateVariableContainer->add($key, $value);
+		$this->baseRenderingContext->getVariableProvider()->add($key, $value);
 		return $this;
 	}
 
@@ -216,9 +158,6 @@ abstract class AbstractTemplateView extends AbstractView {
 	public function assignMultiple(array $values) {
 		$templateVariableContainer = $this->baseRenderingContext->getVariableProvider();
 		foreach ($values as $key => $value) {
-			if ($templateVariableContainer->exists($key)) {
-				$templateVariableContainer->remove($key);
-			}
 			$templateVariableContainer->add($key, $value);
 		}
 		return $this;
@@ -233,19 +172,17 @@ abstract class AbstractTemplateView extends AbstractView {
 	 * @api
 	 */
 	public function render($actionName = NULL) {
-		$this->templateParser->setConfiguration($this->buildParserConfiguration());
-		$this->templateParser->setVariableProvider($this->baseRenderingContext->getVariableProvider());
-		$this->templateParser->setViewHelperResolver($this->viewHelperResolver);
-		$this->baseRenderingContext->setViewHelperResolver($this->viewHelperResolver);
 		$controllerName = $this->baseRenderingContext->getControllerName();
+		$templateParser = $this->baseRenderingContext->getTemplateParser();
+		$templatePaths = $this->baseRenderingContext->getTemplatePaths();
 		if (!$actionName) {
 			$actionName = $this->baseRenderingContext->getControllerAction();
 		}
 		$actionName = ucfirst($actionName);
 		if (empty($templateIdentifier)) {
-			$templateIdentifier = $this->templatePaths->getTemplateIdentifier($controllerName, $actionName);
+			$templateIdentifier = $templatePaths->getTemplateIdentifier($controllerName, $actionName);
 		}
-		$parsedTemplate = $this->getOrParseAndStoreTemplate(
+		$parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
 			$templateIdentifier,
 			function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
 				return $paths->getTemplateSource($controllerName, $actionName);
@@ -259,8 +196,8 @@ abstract class AbstractTemplateView extends AbstractView {
 			$this->stopRendering();
 		} else {
 			$layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
-			$layoutIdentifier = $this->templatePaths->getLayoutIdentifier($layoutName);
-			$parsedLayout = $this->getOrParseAndStoreTemplate(
+			$layoutIdentifier = $templatePaths->getLayoutIdentifier($layoutName);
+			$parsedLayout = $templateParser->getOrParseAndStoreTemplate(
 				$layoutIdentifier,
 				function($parent, TemplatePaths $paths) use ($layoutName) {
 					return $paths->getLayoutSource($layoutName);
@@ -272,24 +209,6 @@ abstract class AbstractTemplateView extends AbstractView {
 		}
 
 		return $output;
-	}
-
-	/**
-	 * @param string $templateIdentifier
-	 * @param string $templateFile
-	 * @param \Closure $templateSourceClosure Closure which returns the template source if needed
-	 * @return ParsedTemplateInterface
-	 */
-	protected function getOrParseAndStoreTemplate($templateIdentifier, $templateSourceClosure) {
-		if ($this->templateCompiler->has($templateIdentifier)) {
-			$parsedTemplate = $this->templateCompiler->get($templateIdentifier);
-		} else {
-			$parsedTemplate = $this->templateParser->parse($templateSourceClosure($this, $this->templatePaths), $templateIdentifier);
-			if ($parsedTemplate->isCompilable()) {
-				$this->templateCompiler->store($templateIdentifier, $parsedTemplate);
-			}
-		}
-		return $parsedTemplate;
 	}
 
 	/**
@@ -363,10 +282,10 @@ abstract class AbstractTemplateView extends AbstractView {
 	 */
 	public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = FALSE) {
 		if (!isset($this->partialIdentifierCache[$partialName])) {
-			$this->partialIdentifierCache[$partialName] = $this->templatePaths->getPartialIdentifier($partialName);
+			$this->partialIdentifierCache[$partialName] = $this->baseRenderingContext->getTemplatePaths()->getPartialIdentifier($partialName);
 		}
 		$partialIdentifier = $this->partialIdentifierCache[$partialName];
-		$parsedPartial = $this->getOrParseAndStoreTemplate(
+		$parsedPartial = $this->baseRenderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
 			$partialIdentifier,
 			function ($parent, TemplatePaths $paths) use ($partialName) {
 				return $paths->getPartialSource($partialName);
@@ -382,18 +301,6 @@ abstract class AbstractTemplateView extends AbstractView {
 		}
 		$this->stopRendering();
 		return $output;
-	}
-
-	/**
-	 * Build parser configuration
-	 *
-	 * @return Configuration
-	 */
-	protected function buildParserConfiguration() {
-		$parserConfiguration = new Configuration();
-		$escapeInterceptor = new Escape();
-		$parserConfiguration->addEscapingInterceptor($escapeInterceptor);
-		return $parserConfiguration;
 	}
 
 	/**

@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -27,14 +28,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 	const SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG = '/xmlns:([a-z0-9\.]+)=("[^"]+"|\'[^\']+\')*/xi';
 
 	/**
-	 * @var TemplateParser
+	 * @var RenderingContextInterface
 	 */
-	protected $templateParser;
-
-	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
+	protected $renderingContext;
 
 	/**
 	 * @var array()
@@ -42,26 +38,11 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 	protected $localNamespaces = array();
 
 	/**
-	 * Setter for passing the TemplateParser instance
-	 * that is currently processing the template.
-	 *
-	 * @param TemplateParser $templateParser
+	 * @param RenderingContextInterface $renderingContext
 	 * @return void
 	 */
-	public function setTemplateParser(TemplateParser $templateParser) {
-		$this->templateParser = $templateParser;
-	}
-
-	/**
-	 * Setter for passing the ViewHelperResolver instance
-	 * being used by the TemplateParser to resolve classes
-	 * and namespaces of ViewHelpers.
-	 *
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
+	public function setRenderingContext(RenderingContextInterface $renderingContext) {
+		$this->renderingContext = $renderingContext;
 	}
 
 	/**
@@ -113,12 +94,13 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 	 * @return void
 	 */
 	public function registerNamespacesFromTemplateSource($templateSource) {
+		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
 		if (preg_match_all(static::SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateSource, $matchedVariables, PREG_SET_ORDER) > 0) {
 			foreach ($matchedVariables as $namespaceMatch) {
 				$viewHelperNamespace = $this->unquoteString($namespaceMatch[2]);
-				$phpNamespace = $this->viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
+				$phpNamespace = $viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
 				if (stristr($phpNamespace, '/') === FALSE) {
-					$this->viewHelperResolver->registerNamespace($namespaceMatch[1], $phpNamespace);
+					$viewHelperResolver->registerNamespace($namespaceMatch[1], $phpNamespace);
 				}
 			}
 		}
@@ -129,7 +111,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 			if (strlen($namespace) === 0) {
 				$namespace = NULL;
 			}
-			$this->viewHelperResolver->registerNamespace($identifier, $namespace);
+			$viewHelperResolver->registerNamespace($identifier, $namespace);
 		}
 	}
 
@@ -141,10 +123,11 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 	 * @return void
 	 */
 	public function throwExceptionsForUnhandledNamespaces($templateSource) {
+		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
 		$splitTemplate = preg_split(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
 		foreach ($splitTemplate as $templateElement) {
 			if (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
-				if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($matchedVariables['NamespaceIdentifier'])) {
+				if (!$viewHelperResolver->isNamespaceValidOrIgnored($matchedVariables['NamespaceIdentifier'])) {
 					throw new UnknownNamespaceException('Unkown Namespace: ' . htmlspecialchars($matchedVariables[0]));
 				}
 				continue;
@@ -157,7 +140,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 				if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
 					preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $section, $shorthandViewHelpers, PREG_SET_ORDER);
 					foreach ($shorthandViewHelpers as $shorthandViewHelper) {
-						if (!$this->viewHelperResolver->isNamespaceValidOrIgnored($shorthandViewHelper['NamespaceIdentifier'])) {
+						if (!$viewHelperResolver->isNamespaceValidOrIgnored($shorthandViewHelper['NamespaceIdentifier'])) {
 							throw new UnknownNamespaceException('Unkown Namespace: ' . $shorthandViewHelper['NamespaceIdentifier']);
 						}
 					}

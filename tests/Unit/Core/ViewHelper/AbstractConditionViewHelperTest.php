@@ -12,9 +12,12 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 
@@ -30,8 +33,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 
 	public function setUp() {
 		parent::setUp();
-		$this->viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, array('getRenderingContext', 'renderChildren', 'hasArgument'));
-		$this->viewHelper->expects($this->any())->method('getRenderingContext')->will($this->returnValue($this->renderingContext));
+		$this->viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, array('renderChildren', 'hasArgument'));
 		$this->injectDependenciesIntoViewHelper($this->viewHelper);
 	}
 
@@ -39,10 +41,10 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 	 * @test
 	 * @dataProvider getCompileTestValues
 	 * @param array $childNodes
-	 * @param $expected
+	 * @param string $expected
 	 */
 	public function testCompileReturnsAndAssignsExpectedVariables(array $childNodes, $expected) {
-		$node = new ViewHelperNode(new ViewHelperResolver(), 'f', 'if', array(), new ParsingState());
+		$node = new ViewHelperNode($this->renderingContext, 'f', 'if', array(), new ParsingState());
 		foreach ($childNodes as $childNode) {
 			$node->addChildNode($childNode);
 		}
@@ -50,6 +52,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 			TemplateCompiler::class,
 			array('wrapChildNodesInClosure', 'wrapViewHelperNodeArgumentEvaluationInClosure')
 		);
+		$compiler->setRenderingContext($this->renderingContext);
 		$compiler->expects($this->any())->method('wrapChildNodesInClosure')->willReturn('closure');
 		$compiler->expects($this->any())->method('wrapViewHelperNodeArgumentEvaluationInClosure')->willReturn('arg-closure');
 		$init = '';
@@ -61,34 +64,34 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 	 * @return array
 	 */
 	public function getCompileTestValues() {
-		$resolver = new ViewHelperResolver();
 		$state = new ParsingState();
+		$context = new RenderingContextFixture();
 		return array(
 			array(
 				array(),
 				'foobar-args[\'__thenClosure\'] = foobar-closure;' . PHP_EOL
 			),
 			array(
-				array(new ViewHelperNode($resolver, 'f', 'then', array(), $state)),
+				array(new ViewHelperNode($context, 'f', 'then', array(), $state)),
 				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL
 			),
 			array(
-				array(new ViewHelperNode($resolver, 'f', 'else', array(), $state)),
+				array(new ViewHelperNode($context, 'f', 'else', array(), $state)),
 				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
 			),
 			array(
 				array(
-					new ViewHelperNode($resolver, 'f', 'then', array(), $state),
-					new ViewHelperNode($resolver, 'f', 'else', array(), $state)
+					new ViewHelperNode($context, 'f', 'then', array(), $state),
+					new ViewHelperNode($context, 'f', 'else', array(), $state)
 				),
 				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL .
 				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
 			),
 			array(
 				array(
-					new ViewHelperNode($resolver, 'f', 'then', array(), $state),
-					new ViewHelperNode($resolver, 'f', 'else', array('if' => new BooleanNode(new RootNode())), $state),
-					new ViewHelperNode($resolver, 'f', 'else', array(), $state)
+					new ViewHelperNode($context, 'f', 'then', array(), $state),
+					new ViewHelperNode($context, 'f', 'else', array('if' => new BooleanNode(new RootNode())), $state),
+					new ViewHelperNode($context, 'f', 'else', array(), $state)
 				),
 				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL .
 				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL .
@@ -107,8 +110,8 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 	public function testRenderFromArgumentsReturnsExpectedValue(array $arguments, $expected) {
 		$viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, array('dummy'));
 		$viewHelper->setArguments($arguments);
-		$viewHelper->setViewHelperNode(new ViewHelperNode(new ViewHelperResolver(), 'f', 'if', array(), new ParsingState()));
-		$result = AbstractConditionViewHelper::renderStatic($arguments, function() { return ''; }, new RenderingContext());
+		$viewHelper->setViewHelperNode(new ViewHelperNode($this->renderingContext, 'f', 'if', array(), new ParsingState()));
+		$result = AbstractConditionViewHelper::renderStatic($arguments, function() { return ''; }, $this->renderingContext);
 		$this->assertEquals($expected, $result);
 	}
 

@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -24,23 +25,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 interface TemplateProcessorInterface {
 
 	/**
-	 * Setter for passing the TemplateParser instance
-	 * that is currently processing the template.
-	 *
-	 * @param TemplateParser $templateParser
+	 * @param RenderingContextInterface $renderingContext
 	 * @return void
 	 */
-	public function setTemplateParser(TemplateParser $templateParser);
-
-	/**
-	 * Setter for passing the ViewHelperResolver instance
-	 * being used by the TemplateParser to resolve classes
-	 * and namespaces of ViewHelpers.
-	 *
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver);
+	public function setRenderingContext(RenderingContextInterface $renderingContext);
 
 	/**
 	 * Pre-process the template source before it is

@@ -431,8 +431,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 */
 	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$viewHelperClassName = get_called_class();
-		return $renderingContext->getViewHelperResolver()->resolveViewHelperInvoker($viewHelperClassName)
-			->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
+		return $renderingContext->getViewHelperInvoker()->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
 	}
 
 	/**

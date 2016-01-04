@@ -12,6 +12,7 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for ParsingState
@@ -25,7 +26,7 @@ class RenderingContextTest extends UnitTestCase {
 	protected $renderingContext;
 
 	public function setUp() {
-		$this->renderingContext = new RenderingContext();
+		$this->renderingContext = new RenderingContextFixture();
 	}
 
 	/**
@@ -34,7 +35,8 @@ class RenderingContextTest extends UnitTestCase {
 	 * @dataProvider getPropertyNameTestValues
 	 */
 	public function testGetter($property, $value) {
-		$subject = $this->getAccessibleMock(RenderingContext::class, array('dummy'));
+		$view = new TemplateView();
+		$subject = $this->getAccessibleMock(RenderingContext::class, array('dummy'), array($view));
 		$subject->_set($property, $value);
 		$getter = 'get' . ucfirst($property);
 		$this->assertSame($value, $subject->$getter());
@@ -46,7 +48,8 @@ class RenderingContextTest extends UnitTestCase {
 	 * @dataProvider getPropertyNameTestValues
 	 */
 	public function testSetter($property, $value) {
-		$subject = new RenderingContext();
+		$view = new TemplateView();
+		$subject = new RenderingContext($view);
 		$setter = 'set' . ucfirst($property);
 		$subject->$setter($value);
 		$this->assertAttributeSame($value, $property, $subject);
@@ -78,7 +81,8 @@ class RenderingContextTest extends UnitTestCase {
 	 */
 	public function viewHelperVariableContainerCanBeReadCorrectly() {
 		$viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
-		$this->renderingContext->injectViewHelperVariableContainer($viewHelperVariableContainer);
+		$this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
 		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
 	}
+
 }

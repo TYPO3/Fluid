@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class TernaryExpressionNodeTest
@@ -23,7 +24,8 @@ class TernaryExpressionNodeTest extends UnitTestCase {
 	 * @param mixed $expected
 	 */
 	public function testEvaluateExpression($expression, array $variables, $expected) {
-		$renderingContext = new RenderingContext();
+		$view = new TemplateView();
+		$renderingContext = new RenderingContext($view);
 		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
 		$result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression, array());
 		$this->assertEquals($expected, $result);

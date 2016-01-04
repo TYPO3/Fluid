@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
 /**
@@ -19,9 +20,10 @@ use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 class ViewHelperInvokerTest extends UnitTestCase {
 
 	public function testInvokeViewHelper() {
+		$view = new TemplateView();
 		$resolver = new ViewHelperResolver();
 		$invoker = new ViewHelperInvoker($resolver);
-		$renderingContext = new RenderingContext();
+		$renderingContext = new RenderingContext($view);
 		$result = $invoker->invoke(CountViewHelper::class, array('subject' => array('foo')), $renderingContext);
 		$this->assertEquals(1, $result);
 	}

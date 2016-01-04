@@ -13,7 +13,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Base test class for testing view helpers
@@ -61,9 +63,9 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase {
 	public function setUp() {
 		$this->viewHelperVariableContainer = new ViewHelperVariableContainer();
 		$this->templateVariableContainer = new StandardVariableProvider();
-		$this->renderingContext = new RenderingContext();
+		$this->renderingContext = new RenderingContextFixture();
 		$this->renderingContext->setVariableProvider($this->templateVariableContainer);
-		$this->renderingContext->injectViewHelperVariableContainer($this->viewHelperVariableContainer);
+		$this->renderingContext->setViewHelperVariableContainer($this->viewHelperVariableContainer);
 	}
 
 	/**

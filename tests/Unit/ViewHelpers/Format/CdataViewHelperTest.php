@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper;
 
@@ -25,7 +26,7 @@ class CdataViewHelperTest extends ViewHelperBaseTestcase {
 		$instance = new CdataViewHelper();
 		$instance->initializeArguments();
 		$instance->setArguments($arguments);
-		$instance->setRenderingContext(new RenderingContext());
+		$instance->setRenderingContext(new RenderingContextFixture());
 		$instance->setRenderChildrenClosure(function() use ($tagContent) { return $tagContent; });
 		$this->assertEquals($expected, $instance->render());
 	}

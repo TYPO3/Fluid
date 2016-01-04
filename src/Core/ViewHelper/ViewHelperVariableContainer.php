@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\View\AbstractTemplateView;
+use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * A key/value store that can be used by ViewHelpers to communicate between each other.
@@ -24,7 +24,7 @@ class ViewHelperVariableContainer {
 	protected $objects = array();
 
 	/**
-	 * @var AbstractTemplateView
+	 * @var ViewInterface
 	 */
 	protected $view;
 
@@ -104,10 +104,10 @@ class ViewHelperVariableContainer {
 	/**
 	 * Set the view to pass it to ViewHelpers.
 	 *
-	 * @param AbstractTemplateView $view View to set
+	 * @param ViewInterface $view View to set
 	 * @return void
 	 */
-	public function setView(AbstractTemplateView $view) {
+	public function setView(ViewInterface $view) {
 		$this->view = $view;
 	}
 
@@ -116,7 +116,7 @@ class ViewHelperVariableContainer {
 	 *
 	 * !!! This is NOT a public API and might still change!!!
 	 *
-	 * @return AbstractTemplateView The View
+	 * @return ViewInterface The View
 	 */
 	public function getView() {
 		return $this->view;

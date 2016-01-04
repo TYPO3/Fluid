@@ -19,6 +19,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -42,7 +43,8 @@ class NodeConverterTest extends UnitTestCase {
 	 * @param string $expected
 	 */
 	public function testConvert(NodeInterface $node, $expected) {
-		$instance = new NodeConverter(new TemplateCompiler());
+		$compiler = new TemplateCompiler();
+		$instance = $compiler->getNodeConverter();
 		$method = new \ReflectionMethod($instance, 'convert');
 		$method->setAccessible(TRUE);
 		$result = $method->invokeArgs($instance, array($node));
@@ -95,7 +97,7 @@ class NodeConverterTest extends UnitTestCase {
 			),
 			array(
 				new ViewHelperNode(
-					new ViewHelperResolver(),
+					new RenderingContextFixture(),
 					'f',
 					'render',
 					array('section' => new TextNode('test'), 'partial' => 'test'),

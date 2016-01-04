@@ -31,18 +31,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 class ViewHelperInvoker {
 
 	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
-
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 */
-	public function __construct(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
-	}
-
-	/**
 	 * Invoke the ViewHelper described by the ViewHelperNode, the properties
 	 * of which will already have been filled by the ViewHelperResolver.
 	 *
@@ -53,12 +41,13 @@ class ViewHelperInvoker {
 	 * @return mixed
 	 */
 	public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = NULL) {
+		$viewHelperResolver = $renderingContext->getViewHelperResolver();
 		if ($viewHelperClassNameOrInstance instanceof ViewHelperInterface) {
 			$viewHelper = $viewHelperClassNameOrInstance;
 		} else {
-			$viewHelper = $this->viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassNameOrInstance);
+			$viewHelper = $viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassNameOrInstance);
 		}
-		$expectedViewHelperArguments = $renderingContext->getViewHelperResolver()->getArgumentDefinitionsForViewHelper($viewHelper);
+		$expectedViewHelperArguments = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
 
 		// Rendering process
 		$evaluatedArguments = array();

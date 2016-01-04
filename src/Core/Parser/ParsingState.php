@@ -56,28 +56,7 @@ class ParsingState implements ParsedTemplateInterface {
 	protected $compilable = TRUE;
 
 	/**
-	 * @var ViewHelperResolver
-	 */
-	protected $viewHelperResolver;
-
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
-	}
-
-	/**
-	 * @return ViewHelperResolver
-	 */
-	public function getViewHelperResolver() {
-		return $this->viewHelperResolver;
-	}
-
-	/**
-	 * Injects a variable container. ViewHelpers implementing the PostParse
-	 * Facet can store information inside this variableContainer.
+	 * Injects a variable container to be used during parsing.
 	 *
 	 * @param VariableProviderInterface $variableContainer
 	 * @return void
@@ -87,7 +66,7 @@ class ParsingState implements ParsedTemplateInterface {
 	}
 
 	/**
-	 * Set root node of this parsing state
+	 * Set root node of this parsing state.
 	 *
 	 * @param NodeInterface $rootNode
 	 * @return void
@@ -181,7 +160,7 @@ class ParsingState implements ParsedTemplateInterface {
 	 * @throws View\Exception
 	 */
 	public function getLayoutName(RenderingContextInterface $renderingContext) {
-		return $renderingContext->getVariableProvider()->get('layoutName');
+		return $this->variableContainer->get('layoutName');
 	}
 
 	/**
