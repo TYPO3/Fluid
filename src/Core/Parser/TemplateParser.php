@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
@@ -538,6 +539,7 @@ class TemplateParser {
 					preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER);
 					foreach ($matchedVariables as $matchedVariableSet) {
 						$expressionStartPosition = strpos($section, $matchedVariableSet[0]);
+						/** @var ExpressionNodeInterface $expressionNode */
 						$expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
 						if ($expressionStartPosition > 0) {
 							$state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
@@ -551,8 +553,11 @@ class TemplateParser {
 					}
 				}
 
-				// As fallback we simply render the expression back as template content.
-				if (!$expressionNode) {
+				if ($expressionNode) {
+					// Trigger initial parse-time evaluation to allow the node to manipulate the rendering context.
+					$expressionNode->evaluate($this->renderingContext);
+				} else {
+					// As fallback we simply render the expression back as template content.
 					$this->textHandler($state, $section);
 				}
 			}
