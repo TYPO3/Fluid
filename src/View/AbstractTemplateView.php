@@ -75,7 +75,6 @@ abstract class AbstractTemplateView extends AbstractView {
 			$context->setControllerAction('Default');
 		}
 		$this->setRenderingContext($context);
-		$this->initializeRenderingContext();
 	}
 
 	/**
@@ -132,6 +131,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	 */
 	public function setRenderingContext(RenderingContextInterface $renderingContext) {
 		$this->baseRenderingContext = $renderingContext;
+		$this->initializeRenderingContext();
 	}
 
 	/**
