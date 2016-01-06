@@ -42,7 +42,9 @@ class VariableExtractorTest extends UnitTestCase {
 			array(array('user' => $unnamedUser), 'user.name', ''),
 			array(array('user' => $namedUser), 'user.named', TRUE),
 			array(array('user' => $unnamedUser), 'user.named', FALSE),
-			array(array('user' => $namedUser), 'user.invalid', NULL)
+			array(array('user' => $namedUser), 'user.invalid', NULL),
+			array(array('foodynamicbar' => 'test', 'dyn' => 'dynamic'), 'foo{dyn}bar', 'test'),
+			array(array('foo' => array('dynamic' => array('bar' => 'test')), 'dyn' => 'dynamic'), 'foo.{dyn}.bar', 'test'),
 		);
 	}
 

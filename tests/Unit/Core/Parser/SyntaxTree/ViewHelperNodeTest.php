@@ -7,14 +7,20 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ChildNodeAccessFacetViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -34,53 +40,53 @@ class ViewHelperNodeTest extends UnitTestCase {
 	protected $templateVariableContainer;
 
 	/**
-	 * @var ViewHelperVariableContainer|\PHPUnit_Framework_MockObject_MockObject
+	 * @var ViewHelperResolver|\PHPUnit_Framework_MockObject_MockObject
 	 */
-	protected $mockViewHelperVariableContainer;
+	protected $mockViewHelperResolver;
 
 	/**
 	 * Setup fixture
 	 */
 	public function setUp() {
-		$view = new TemplateView();
-		$this->renderingContext = new RenderingContext($view);
-
-		$this->templateVariableContainer = $this->getMockBuilder(StandardVariableProvider::class)
-			->disableOriginalConstructor()->getMock();
-		$this->inject($this->renderingContext, 'variableProvider', $this->templateVariableContainer);
-
-		$this->mockViewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
-		$this->inject($this->renderingContext, 'viewHelperVariableContainer', $this->mockViewHelperVariableContainer);
+		$this->renderingContext = new RenderingContextFixture();
+		$this->mockViewHelperResolver = $this->getMock(ViewHelperResolver::class, array('resolveViewHelperClassName', 'createViewHelperInstanceFromClassName', 'getArgumentDefinitionsForViewHelper'));
+		$this->mockViewHelperResolver->expects($this->once())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
+		$this->mockViewHelperResolver->expects($this->once())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
+		$this->mockViewHelperResolver->expects($this->once())->method('getArgumentDefinitionsForViewHelper')->willReturn(array(
+			'foo' => new ArgumentDefinition('foo', 'string', 'Dummy required argument', TRUE)
+		));
+		$this->renderingContext->setViewHelperResolver($this->mockViewHelperResolver);
 	}
 
 	/**
 	 * @test
 	 */
 	public function constructorSetsViewHelperAndArguments() {
-		$viewHelper = $this->getMock(AbstractViewHelper::class);
-		$arguments = array('then' => 'test');
+		$arguments = array('foo' => 'bar');
 		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
-		$viewHelperNode = $this->getAccessibleMock(
-			ViewHelperNode::class,
-			array('dummy'),
-			array($this->renderingContext, 'f', 'if', $arguments, new ParsingState())
-		);
+		$viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
 
-		$this->assertEquals($arguments, $viewHelperNode->_get('arguments'));
+		$this->assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
 	}
 
 	/**
 	 * @test
 	 */
 	public function testEvaluateCallsInvoker() {
-		$resolver = $this->getMock(ViewHelperResolver::class, array('resolveViewHelperInvoker'));
 		$invoker = $this->getMock(ViewHelperInvoker::class, array('invoke'));
 		$invoker->expects($this->once())->method('invoke')->willReturn('test');
-		$this->renderingContext->setViewHelperResolver($resolver);
 		$this->renderingContext->setViewHelperInvoker($invoker);
-		$node = new ViewHelperNode($this->renderingContext, 'f', 'count', array(), new ParsingState());
+		$node = new ViewHelperNode($this->renderingContext, 'f', 'vh', array('foo' => 'bar'), new ParsingState());
 		$result = $node->evaluate($this->renderingContext);
 		$this->assertEquals('test', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testThrowsExceptionOnMissingRequiredArgument() {
+		$this->setExpectedException(ParserException::class);
+		new ViewHelperNode($this->renderingContext, 'f', 'vh', array('notfoo' => FALSE), new ParsingState());
 	}
 
 }

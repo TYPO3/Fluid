@@ -11,6 +11,8 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
@@ -38,16 +40,42 @@ class NodeConverterTest extends UnitTestCase {
 
 	/**
 	 * @test
+	 * @dataProvider getConvertMethodCallTestValues
+	 * @param NodeInterface $node
+	 * @param string $expected
+	 */
+	public function testConvertCallsExpectedMethod(NodeInterface $node, $expected) {
+		$instance = $this->getMock(NodeConverter::class, array($expected), array(), '', FALSE);
+		$instance->expects($this->once())->method($expected);
+		$instance->convert($node);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getConvertMethodCallTestValues() {
+		return array(
+			array($this->getMock(TextNode::class, array(), array(), '', FALSE), 'convertTextNode'),
+			array($this->getMock(ExpressionNodeInterface::class), 'convertExpressionNode'),
+			array($this->getMock(NumericNode::class, array(), array(), '', FALSE), 'convertNumericNode'),
+			array($this->getMock(ViewHelperNode::class, array(), array(), '', FALSE), 'convertViewHelperNode'),
+			array($this->getMock(ObjectAccessorNode::class, array(), array(), '', FALSE), 'convertObjectAccessorNode'),
+			array($this->getMock(ArrayNode::class, array(), array(), '', FALSE), 'convertArrayNode'),
+			array($this->getMock(RootNode::class, array(), array(), '', FALSE), 'convertListOfSubNodes'),
+			array($this->getMock(BooleanNode::class, array(), array(), '', FALSE), 'convertBooleanNode'),
+			array($this->getMock(EscapingNode::class, array(), array(), '', FALSE), 'convertEscapingNode'),
+		);
+	}
+
+	/**
+	 * @test
 	 * @dataProvider getConvertTestValues
 	 * @param NodeInterface $node
 	 * @param string $expected
 	 */
 	public function testConvert(NodeInterface $node, $expected) {
-		$compiler = new TemplateCompiler();
-		$instance = $compiler->getNodeConverter();
-		$method = new \ReflectionMethod($instance, 'convert');
-		$method->setAccessible(TRUE);
-		$result = $method->invokeArgs($instance, array($node));
+		$instance = new NodeConverter(new TemplateCompiler());
+		$result = $instance->convert($node);
 		$this->assertEquals($expected, $result['execution']);
 	}
 
@@ -94,6 +122,10 @@ class NodeConverterTest extends UnitTestCase {
 			array(
 				new TernaryExpressionNode('1 ? 2 : 3', array(1, 2, 3)),
 				'\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::evaluateExpression($renderingContext, $string0, $array1)'
+			),
+			array(
+				new EscapingNode(new TextNode('foo')),
+				'htmlspecialchars(\'foo\', ENT_QUOTES)'
 			),
 			array(
 				new ViewHelperNode(

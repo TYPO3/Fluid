@@ -149,4 +149,13 @@ class StandardVariableProviderTest extends UnitTestCase {
 		$this->assertContains('variables', $properties);
 	}
 
+	/**
+	 * @test
+	 */
+	public function testGetScopeCopyReturnsCopyWithSettings() {
+		$subject = new StandardVariableProvider(array('foo' => 'bar', 'settings' => array('baz' => 'bam')));
+		$copy = $subject->getScopeCopy(array('bar' => 'foo'));
+		$this->assertAttributeEquals(array('settings' => array('baz' => 'bam'), 'bar' => 'foo'), 'variables', $copy);
+	}
+
 }
