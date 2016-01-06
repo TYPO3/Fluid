@@ -135,6 +135,7 @@ class ViewHelperNode extends AbstractNode {
 		// order is to first provide a ViewHelperNode, second to provide
 		// child nodes.
 		// DO NOT CHANGE THIS ORDER. You *will* cause damage.
+		$viewHelper->setRenderingContext($renderingContext);
 		$viewHelper->setViewHelperNode($this);
 		$viewHelper->setChildNodes($this->getChildNodes());
 		return $renderingContext->getViewHelperInvoker()->invoke($viewHelper, $this->arguments, $renderingContext);
