@@ -100,7 +100,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 				$viewHelperNamespace = $this->unquoteString($namespaceMatch[2]);
 				$phpNamespace = $viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
 				if (stristr($phpNamespace, '/') === FALSE) {
-					$viewHelperResolver->registerNamespace($namespaceMatch[1], $phpNamespace);
+					$viewHelperResolver->addNamespace($namespaceMatch[1], $phpNamespace);
 				}
 			}
 		}
@@ -111,7 +111,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 			if (strlen($namespace) === 0) {
 				$namespace = NULL;
 			}
-			$viewHelperResolver->registerNamespace($identifier, $namespace);
+			$viewHelperResolver->addNamespace($identifier, $namespace);
 		}
 	}
 
