@@ -1,8 +1,8 @@
 TYPO3.Fluid Rendering Engine
 ============================
 
-[![Build Status](https://img.shields.io/travis/TYPO3Fluid/Fluid.svg?style=flat-square)](https://travis-ci.org/TYPO3Fluid/Fluid)
-[![Coverage](https://img.shields.io/coveralls/TYPO3Fluid/Fluid.svg?style=flat-square)](https://coveralls.io/r/TYPO3Fluid/Fluid)
+[![Build Status](https://img.shields.io/travis/TYPO3Fluid/Fluid/master.svg?style=flat-square)](https://travis-ci.org/TYPO3Fluid/Fluid/branches)
+[![Coverage](https://img.shields.io/coveralls/TYPO3Fluid/Fluid/master.svg?style=flat-square)](https://coveralls.io/r/TYPO3Fluid/Fluid?branch=master)
 
 TYPO3 community template engine - composer-enabled, Flow/CMS dependency-free PSR-4 edition.
 
