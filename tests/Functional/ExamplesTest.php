@@ -147,9 +147,10 @@ class ExamplesTest extends BaseTestCase {
 				'example_namespaces.php',
 				array(
 					'Namespaces template',
-					'<invalid:vh>This tag will be shown</invalid:vh>'
-				),
-				'\TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException'
+					'<invalid:vh>This tag will be shown</invalid:vh>',
+					'<wildcard:tag>This tag will also be shown</wildcard:tag>',
+					'<wildthing:tag>This tag will also be shown</wildthing:tag>'
+				)
 			),
 			'example_namespaceresolving.php' => array(
 				'example_namespaceresolving.php',

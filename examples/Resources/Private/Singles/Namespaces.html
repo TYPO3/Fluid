@@ -1,3 +1,5 @@
+{namespace invalid}
+{namespace wi*}
 <fluid xmlns:f="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers"
        xmlns:alias="http://typo3.org/ns/TYPO3Fluid/Fluid/ViewHelpers"
        xmlns:phpalias="TYPO3Fluid\\Fluid\\ViewHelpers">
@@ -7,7 +9,19 @@
 <alias:section name="Main">
     Namespaces template
 
+	This template aliases "f:" so it can be used as "alias:",
+	and defines an additional PHP namespace directly. As such
+	it shows examples for using the URL based convention or
+	a manual PHP namespace.
+
+	In the top of the template two additional namespaces are
+	added, to be ignored (since they have no PHP namespace
+	associated with them). One is a direct exclusion, the
+	other is a wildcard which excludes by pattern.
+
     <invalid:vh>This tag will be shown</invalid:vh>
+	<wildcard:tag>This tag will also be shown</wildcard:tag>
+	<wildthing:tag>This tag will also be shown</wildthing:tag>
 </alias:section>
 
 </fluid>
