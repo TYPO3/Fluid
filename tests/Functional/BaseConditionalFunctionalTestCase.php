@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
 /**
  * Class BaseFunctionalTestCase
  */
-abstract class BaseFunctionalTestCase extends UnitTestCase {
+abstract class BaseConditionalFunctionalTestCase extends UnitTestCase {
 
 	/**
 	 * If your test case requires a cache, override this
@@ -52,8 +52,6 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	 *     array('code' => 'test'), // the variables that will be assigned
 	 *     array('template test', 'test piece'), // list of values that MUST all be present
 	 *     array('negative test', 'test bad') // list of values that MUST NOT be present
-	 *     $exceptionClass, // NULL or a class name of an exception that is expected when executing the snippet
-	 *     $withCache // TRUE or FALSE depending on whether or not you wish to test the snippet with caching
 	 * )
 	 *
 	 * Name your sets in order to improve the error reporting:
@@ -86,39 +84,24 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	 * that none of the $notExpected values are present.
 	 *
 	 * @param string|resource $source
+	 * @param boolean $expected
 	 * @param array $variables
-	 * @param array $expected
-	 * @param array $notExpected
-	 * @param string|NULL $expectedException
 	 * @param boolean $withCache
 	 * @test
 	 * @dataProvider getTemplateCodeFixturesAndExpectations
 	 */
-	public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, $expectedException = NULL, $withCache = FALSE) {
-		if (!empty($expectedException)) {
-			$this->setExpectedException($expectedException);
-		}
+	public function testTemplateCodeFixture($source, $expected, array $variables = array(), $withCache = FALSE) {
+		$source = '<f:if condition="' . $source . '" then="yes" else="no" />';
 		$view = $this->getView(FALSE);
 		$view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
 		$view->assignMultiple($variables);
 		$output = $view->render();
 		$this->assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
-		if (empty($expected) && empty($notExpected)) {
-			$this->fail('Test performs no assertions!');
-		}
-		foreach ($expected as $expectedValue) {
-			if (is_string($expectedValue) === TRUE) {
-				$this->assertContains($expectedValue, $output);
-			} else {
-				$this->assertEquals($expectedValue, $output);
-			}
-		}
-		foreach ($notExpected as $notExpectedValue) {
-			if (is_string($notExpectedValue) === TRUE) {
-				$this->assertNotContains($notExpectedValue, $output);
-			} else {
-				$this->assertNotEquals($notExpectedValue, $output);
-			}
+
+		if ($expected === TRUE) {
+			$this->assertEquals('yes', $output);
+		} else {
+			$this->assertEquals('no', $output);
 		}
 	}
 
@@ -133,16 +116,14 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	 * return a valid cache.
 	 *
 	 * @param string|resource $sourceOrStream
+	 * @param boolean $expected
 	 * @param array $variables
-	 * @param array $expected
-	 * @param array $notExpected
-	 * @param string|NULL $expectedException
 	 * @test
 	 * @dataProvider getTemplateCodeFixturesAndExpectations
 	 */
-	public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, $expectedException = NULL) {
+	public function testTemplateCodeFixtureWithCache($sourceOrStream, $expectation, array $variables = array()) {
 		if ($this->getCache()) {
-			$this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, TRUE);
+			$this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, TRUE);
 		}
 	}
 
