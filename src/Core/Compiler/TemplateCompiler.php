@@ -162,11 +162,7 @@ public function hasLayout() {
 return %s;
 }
 public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$namespaces = %s;
-\$resolver = \$renderingContext->getViewHelperResolver();
-foreach (\$namespaces as \$namespace => \$phpNamespace) {
-\$resolver->registerNamespace(\$namespace, \$phpNamespace);
-}
+\$renderingContext->getViewHelperResolver()->addNamespaces(%s);
 }
 
 %s

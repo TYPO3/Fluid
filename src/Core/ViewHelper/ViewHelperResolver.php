@@ -32,7 +32,7 @@ class ViewHelperResolver {
 	 * @var array
 	 */
 	protected $namespaces = array(
-		'f' => 'TYPO3Fluid\\Fluid\\ViewHelpers'
+		'f' => array('TYPO3Fluid\\Fluid\\ViewHelpers')
 	);
 
 	/**
@@ -43,72 +43,115 @@ class ViewHelperResolver {
 	}
 
 	/**
-	 * Registers the given identifier/namespace mapping so that
-	 * ViewHelper class names can be properly resolved while parsing.
-	 * The namespace can be either a string of a single target PHP
-	 * namespace or an array of multiple namespaces (in which case
-	 * the resolver treats them with last one having highest priority).
+	 * Add a PHP namespace where ViewHelpers can be found and give
+	 * it an alias/identifier.
+	 *
+	 * The provided namespace can be either a single namespace or
+	 * an array of namespaces, as strings. The identifier/alias is
+	 * always a single, alpha-numeric ASCII string.
+	 *
+	 * Calling this method multiple times with different PHP namespaces
+	 * for the same alias causes that namespace to be *extended*,
+	 * meaning that the PHP namespace you provide second, third etc.
+	 * are also used in lookups and are used *first*, so that if any
+	 * of the namespaces you add contains a class placed and named the
+	 * same way as one that exists in an earlier namespace, then your
+	 * class gets used instead of the earlier one.
+	 *
+	 * Example:
+	 *
+	 * $resolver->addNamespace('my', 'My\Package\ViewHelpers');
+	 * // Any ViewHelpers under this namespace can now be accessed using for example {my:example()}
+	 * // Now, assuming you also have an ExampleViewHelper class in a different
+	 * // namespace and wish to make that ExampleViewHelper override the other:
+	 * $resolver->addNamespace('my', 'My\OtherPackage\ViewHelpers');
+	 * // Now, since ExampleViewHelper exists in both places but the
+	 * // My\OtherPackage\ViewHelpers namespace was added *last*, Fluid
+	 * // will find and use My\OtherPackage\ViewHelpers\ExampleViewHelper.
+	 *
+	 * Alternatively, setNamespaces() can be used to reset and redefine
+	 * all previously added namespaces - which is great for cases where
+	 * you need to remove or replace previously added namespaces. Be aware
+	 * that setNamespaces() also removes the default "f" namespace, so
+	 * when you use this method you should always include the "f" namespace.
 	 *
 	 * @param string $identifier
 	 * @param string|array $phpNamespace
 	 * @return void
-	 * @throws Exception if the specified identifier is already registered
 	 */
-	public function registerNamespace($identifier, $phpNamespace) {
-		if (array_key_exists($identifier, $this->namespaces) && $this->namespaces[$identifier] !== $phpNamespace) {
-			throw new ParserException(
-				sprintf(
-					'Namespace "%s" is already registered with another target PHP namespace (%s). Cannot redeclare as %s!',
-					$identifier,
-					$this->namespaces[$identifier],
-					$phpNamespace
-				),
-				1224241246
-			);
+	public function addNamespace($identifier, $phpNamespace) {
+		if (!array_key_exists($identifier, $this->namespaces)) {
+			$this->namespaces[$identifier] = (array) $phpNamespace;
+		} elseif (is_array($phpNamespace)) {
+			$this->namespaces[$identifier] = array_unique(array_merge($this->namespaces[$identifier], $phpNamespace));
+		} elseif (!in_array($phpNamespace, $this->namespaces[$identifier])) {
+			$this->namespaces[$identifier][] = $phpNamespace;
 		}
-		$this->namespaces[$identifier] = $phpNamespace;
 	}
 
 	/**
-	 * Extend (by overriding) a namespace, making Fluid look in one
-	 * or more additional PHP namespaces *before* consulting the
-	 * originally registered PHP namespace. Can be used for two main
-	 * purposes: one, to add additional ViewHelpers that can also be
-	 * used under an existing namespace, and two, to override existing
-	 * ViewHelpers under an existing namespace (making Fluid use other
-	 * classes for built-in ViewHelpers).
+	 * Wrapper to allow adding namespaces in bulk *without* first
+	 * clearing the already added namespaces. Utility method mainly
+	 * used in compiled templates, where some namespaces can be added
+	 * from outside and some can be added from compiled values.
 	 *
-	 * @param string $identifier
-	 * @param string $additionalPhpNamespace
+	 * @param array $namespaces
 	 * @return void
 	 */
-	public function extendNamespace($identifier, $additionalPhpNamespace) {
-		$this->namespaces[$identifier] = array_merge((array) $this->namespaces[$identifier], array($additionalPhpNamespace));
+	public function addNamespaces(array $namespaces) {
+		foreach ($namespaces as $identifier => $namespaces) {
+			$this->addNamespace($identifier, $namespaces);
+		}
 	}
 
 	/**
-	 * Resolves the PHP namespace based on the Fluid xmlns namespace.
+	 * Resolves the PHP namespace based on the Fluid xmlns namespace,
+	 * which can be either a URL matching the Patterns::NAMESPACEPREFIX
+	 * and Patterns::NAMESPACESUFFIX rules, or a PHP namespace. When
+	 * namespace is a PHP namespace it is optional to suffix it with
+	 * the "\ViewHelpers" segment, e.g. "My\Package" is as valid to
+	 * use as "My\Package\ViewHelpers" is.
 	 *
 	 * @param string $fluidNamespace
 	 * @return string
 	 */
 	public function resolvePhpNamespaceFromFluidNamespace($fluidNamespace) {
 		$namespace = $fluidNamespace;
-		$extractedSuffix = substr($fluidNamespace, 0 - strlen(Patterns::NAMESPACESUFFIX));
+		$suffixLength = strlen(Patterns::NAMESPACESUFFIX);
+		$extractedSuffix = substr($fluidNamespace, 0 - $suffixLength);
 		if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && $extractedSuffix === Patterns::NAMESPACESUFFIX) {
 			// convention assumed: URL starts with prefix and ends with suffix
-			$namespaceSegments = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
-			$namespace = str_replace('/', '\\', $namespaceSegments);
+			$namespace = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
 		}
+		if (substr($namespace, 0 - $suffixLength) !== Patterns::NAMESPACESUFFIX) {
+			$namespace .= '/' . Patterns::NAMESPACESUFFIX . '/';
+		}
+		$namespace = str_replace('/', '\\', $namespace);
 		return $namespace;
 	}
 
 	/**
+	 * Set all namespaces as an array of ['identifier' => ['Php\Namespace1', 'Php\Namespace2']]
+	 * namespace definitions. For convenience and legacy support, a
+	 * format of ['identifier' => 'Only\Php\Namespace'] is allowed,
+	 * but will internally convert the namespace to an array and
+	 * allow it to be extended by addNamespace().
+	 *
+	 * Note that when using this method the default "f" namespace is
+	 * also removed and so must be included in $namespaces or added
+	 * after using addNamespace(). Or, add the PHP namespaces that
+	 * belonged to "f" as a new alias and use that in your templates.
+	 *
+	 * Use getNamespaces() to get an array of currently added namespaces.
+	 *
 	 * @param array $namespaces
 	 * @return void
 	 */
 	public function setNamespaces(array $namespaces) {
-		$this->namespaces = $namespaces;
+		$this->namespaces = array();
+		foreach ($namespaces as $identifier => $phpNamespace) {
+			$this->namespaces[$identifier] = (array) $phpNamespace;
+		}
 	}
 
 	/**
@@ -144,11 +187,11 @@ class ViewHelperResolver {
 			return TRUE;
 		}
 
-		foreach (array_keys($this->namespaces) as $namespace) {
-			if (stristr($namespace, '*') === FALSE) {
+		foreach (array_keys($this->namespaces) as $existingNamespaceIdentifier) {
+			if (stristr($existingNamespaceIdentifier, '*') === FALSE) {
 				continue;
 			}
-			$pattern = '/' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $namespace) . '/';
+			$pattern = '/' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $existingNamespaceIdentifier) . '/';
 			if (preg_match($pattern, $namespaceIdentifier) === 1) {
 				return TRUE;
 			}
@@ -158,9 +201,21 @@ class ViewHelperResolver {
 	}
 
 	/**
+	 * Resolves a ViewHelper class name by namespace alias and
+	 * Fluid-format identity, e.g. "f" and "format.htmlspecialchars".
+	 *
+	 * Looks in all PHP namespaces which have been added for the
+	 * provided alias, starting in the last added PHP namespace. If
+	 * a ViewHelper class exists in multiple PHP namespaces Fluid
+	 * will detect and use whichever one was added last.
+	 *
+	 * If no ViewHelper class can be detected in any of the added
+	 * PHP namespaces a Fluid Parser Exception is thrown.
+	 *
 	 * @param string $namespaceIdentifier
 	 * @param string $methodIdentifier
 	 * @return string|NULL
+	 * @throws ParserException
 	 */
 	public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier) {
 		$resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
@@ -230,11 +285,8 @@ class ViewHelperResolver {
 		}
 		$className .= 'ViewHelper';
 
-		if (is_array($this->namespaces[$namespaceIdentifier])) {
-			$namespaces = $this->namespaces[$namespaceIdentifier];
-		} else {
-			$namespaces = array($this->namespaces[$namespaceIdentifier]);
-		}
+		$namespaces = (array) $this->namespaces[$namespaceIdentifier];
+
 		do {
 			$name = array_pop($namespaces) . '\\' . $className;
 		} while (!class_exists($name) && count($namespaces));
