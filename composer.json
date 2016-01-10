@@ -8,10 +8,7 @@
 	"require-dev": {
 		"phpunit/phpunit": "*",
 		"mikey179/vfsStream": "*",
-		"satooshi/php-coveralls": "*",
-		"johnkary/phpunit-speedtrap": "~1.0@dev",
-		"namelesscoder/phpunit-xhprof": "^1.0@dev",
-		"namelesscoder/numerolog-phpunit": "@stable"
+		"satooshi/php-coveralls": "*"
 	},
 	"autoload": {
 		"psr-4": {

@@ -55,12 +55,13 @@ class ExamplesTest extends BaseTestCase {
 	 */
 	protected function runExampleScriptTest($script, array $expectedOutputs, $FLUID_CACHE_DIRECTORY) {
 		$scriptFile = __DIR__ . '/../../examples/' . $script;
-		ob_start();
+		$self = $this;
+		$this->setOutputCallback(function($output) use ($self, $expectedOutputs) {
+			foreach ($expectedOutputs as $expectedOutput) {
+				$self->assertContains($expectedOutput, $output);
+			}
+		});
 		include $scriptFile;
-		$result = ob_get_clean();
-		foreach ($expectedOutputs as $expectedOutput) {
-			$this->assertContains($expectedOutput, $result);
-		}
 		unset($FLUID_CACHE_DIRECTORY);
 	}
 
@@ -147,9 +148,7 @@ class ExamplesTest extends BaseTestCase {
 				'example_namespaces.php',
 				array(
 					'Namespaces template',
-					'<invalid:vh>This tag will be shown</invalid:vh>',
-					'<wildcard:tag>This tag will also be shown</wildcard:tag>',
-					'<wildthing:tag>This tag will also be shown</wildthing:tag>'
+					'<invalid:vh>This tag will be shown</invalid:vh>'
 				)
 			),
 			'example_namespaceresolving.php' => array(
