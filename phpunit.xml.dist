@@ -16,13 +16,13 @@
                 <testsuite name="TYPO3.Fluid Unit">
                         <directory>tests/Unit</directory>
                 </testsuite>
+                <testsuite name="TYPO3.Fluid Functional">
+                        <directory>tests/Functional</directory>
+                </testsuite>
         </testsuites>
 		<filter>
 				<whitelist>
 						<directory>src/</directory>
 				</whitelist>
 		</filter>
-        <listeners>
-                <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener"/>
-        </listeners>
 </phpunit>

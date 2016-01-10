@@ -15,7 +15,6 @@ install: composer install
 
 script:
   - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
-  - vendor/bin/phpunit --coverage-clover=build/logs/clover-functional.xml -c phpunit-functional.xml.dist
 
 after_script:
   - vendor/bin/coveralls
