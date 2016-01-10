@@ -95,7 +95,7 @@ class SwitchViewHelper extends AbstractViewHelper {
 	protected function retrieveContentFromChildNodes(array $childNodes) {
 		$content = NULL;
 		$defaultCaseViewHelperNode = NULL;
-		foreach ($this->childNodes as $childNode) {
+		foreach ($childNodes as $childNode) {
 			if ($this->isDefaultCaseNode($childNode)) {
 				$defaultCaseViewHelperNode = $childNode;
 			}
