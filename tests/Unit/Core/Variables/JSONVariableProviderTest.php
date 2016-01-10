@@ -12,9 +12,9 @@ use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
- * Testcase for JSONVariableProvider
+ * Testcase for JsonVariableProvider
  */
-class JSONVariableProviderTest extends UnitTestCase {
+class JsonVariableProviderTest extends UnitTestCase {
 
 	/**
 	 * @var vfsStreamFile
@@ -36,7 +36,7 @@ class JSONVariableProviderTest extends UnitTestCase {
 	 * @param array $expected
 	 */
 	public function testOperability($input, array $expected) {
-		$provider = new JSONVariableProvider();
+		$provider = new JsonVariableProvider();
 		$provider->setSource($input);
 		$this->assertEquals($input, $provider->getSource());
 		$this->assertEquals($expected, $provider->getAll());
