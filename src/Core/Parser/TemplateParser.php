@@ -296,7 +296,8 @@ class TemplateParser {
 	 * @throws Exception
 	 */
 	protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree) {
-		if (!$this->renderingContext->getViewHelperResolver()->isNamespaceValid($namespaceIdentifier, $methodIdentifier)) {
+		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
+		if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
 			return NULL;
 		}
 		$currentViewHelperNode = new ViewHelperNode(
@@ -326,10 +327,9 @@ class TemplateParser {
 	 */
 	protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier) {
 		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
-		if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier, $methodIdentifier)) {
+		if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
 			return FALSE;
 		}
-
 		$lastStackElement = $state->popNodeFromStack();
 		if (!($lastStackElement instanceof ViewHelperNode)) {
 			throw new Exception('You closed a templating tag which you never opened!', 1224485838);
