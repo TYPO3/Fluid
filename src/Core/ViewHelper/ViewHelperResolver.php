@@ -81,7 +81,7 @@ class ViewHelperResolver {
 	 */
 	public function addNamespace($identifier, $phpNamespace) {
 		if (!array_key_exists($identifier, $this->namespaces)) {
-			$this->namespaces[$identifier] = (array) $phpNamespace;
+			$this->namespaces[$identifier] = $phpNamespace === NULL ? NULL : (array) $phpNamespace;
 		} elseif (is_array($phpNamespace)) {
 			$this->namespaces[$identifier] = array_unique(array_merge($this->namespaces[$identifier], $phpNamespace));
 		} elseif (!in_array($phpNamespace, $this->namespaces[$identifier])) {
@@ -118,15 +118,16 @@ class ViewHelperResolver {
 	public function resolvePhpNamespaceFromFluidNamespace($fluidNamespace) {
 		$namespace = $fluidNamespace;
 		$suffixLength = strlen(Patterns::NAMESPACESUFFIX);
+		$phpNamespaceSuffix = str_replace('/', '\\', Patterns::NAMESPACESUFFIX);
 		$extractedSuffix = substr($fluidNamespace, 0 - $suffixLength);
 		if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && $extractedSuffix === Patterns::NAMESPACESUFFIX) {
 			// convention assumed: URL starts with prefix and ends with suffix
 			$namespace = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
 		}
-		if (substr($namespace, 0 - $suffixLength) !== Patterns::NAMESPACESUFFIX) {
-			$namespace .= '/' . Patterns::NAMESPACESUFFIX . '/';
-		}
 		$namespace = str_replace('/', '\\', $namespace);
+		if (substr($namespace, 0 - strlen($phpNamespaceSuffix)) !== $phpNamespaceSuffix) {
+			$namespace .= $phpNamespaceSuffix;
+		}
 		return $namespace;
 	}
 
@@ -150,7 +151,7 @@ class ViewHelperResolver {
 	public function setNamespaces(array $namespaces) {
 		$this->namespaces = array();
 		foreach ($namespaces as $identifier => $phpNamespace) {
-			$this->namespaces[$identifier] = (array) $phpNamespace;
+			$this->namespaces[$identifier] = $phpNamespace === NULL ? NULL : (array) $phpNamespace;
 		}
 	}
 
@@ -160,10 +161,9 @@ class ViewHelperResolver {
 	 * without processing.
 	 *
 	 * @param string $namespaceIdentifier
-	 * @param string $methodIdentifier
 	 * @return boolean TRUE if the given namespace is valid, otherwise FALSE
 	 */
-	public function isNamespaceValid($namespaceIdentifier, $methodIdentifier) {
+	public function isNamespaceValid($namespaceIdentifier) {
 		if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
 			return FALSE;
 		}
@@ -179,7 +179,7 @@ class ViewHelperResolver {
 	 * @return boolean TRUE if the given namespace is valid, otherwise FALSE
 	 */
 	public function isNamespaceValidOrIgnored($namespaceIdentifier) {
-		if ($this->isNamespaceValid($namespaceIdentifier, '') === TRUE) {
+		if ($this->isNamespaceValid($namespaceIdentifier) === TRUE) {
 			return TRUE;
 		}
 
@@ -187,6 +187,21 @@ class ViewHelperResolver {
 			return TRUE;
 		}
 
+		if ($this->isNamespaceIgnored($namespaceIdentifier)) {
+			return TRUE;
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * @param string $namespaceIdentifier
+	 * @return boolean
+	 */
+	public function isNamespaceIgnored($namespaceIdentifier) {
+		if (array_key_exists($namespaceIdentifier, $this->namespaces) && $this->namespaces[$namespaceIdentifier] === NULL) {
+			return TRUE;
+		}
 		foreach (array_keys($this->namespaces) as $existingNamespaceIdentifier) {
 			if (stristr($existingNamespaceIdentifier, '*') === FALSE) {
 				continue;
@@ -196,7 +211,6 @@ class ViewHelperResolver {
 				return TRUE;
 			}
 		}
-
 		return FALSE;
 	}
 

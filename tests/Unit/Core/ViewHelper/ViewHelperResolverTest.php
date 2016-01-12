@@ -56,7 +56,7 @@ class ViewHelperResolverTest extends UnitTestCase {
 	 */
 	public function testIsNamespaceReturnsFalseIfNamespaceNotValid() {
 		$resolver = new ViewHelperResolver();
-		$result = $resolver->isNamespaceValid('test2', 'test');
+		$result = $resolver->isNamespaceValid('test2');
 		$this->assertFalse($result);
 	}
 
