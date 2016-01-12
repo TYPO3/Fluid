@@ -52,6 +52,8 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	 *     array('code' => 'test'), // the variables that will be assigned
 	 *     array('template test', 'test piece'), // list of values that MUST all be present
 	 *     array('negative test', 'test bad') // list of values that MUST NOT be present
+	 *     $exceptionClass, // NULL or a class name of an exception that is expected when executing the snippet
+	 *     $withCache // TRUE or FALSE depending on whether or not you wish to test the snippet with caching
 	 * )
 	 *
 	 * Name your sets in order to improve the error reporting:
@@ -87,11 +89,15 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	 * @param array $variables
 	 * @param array $expected
 	 * @param array $notExpected
+	 * @param string|NULL $expectedException
 	 * @param boolean $withCache
 	 * @test
 	 * @dataProvider getTemplateCodeFixturesAndExpectations
 	 */
-	public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, $withCache = FALSE) {
+	public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, $expectedException = NULL, $withCache = FALSE) {
+		if (!empty($expectedException)) {
+			$this->setExpectedException($expectedException);
+		}
 		$view = $this->getView(FALSE);
 		$view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
 		$view->assignMultiple($variables);
@@ -122,12 +128,13 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	 * @param array $variables
 	 * @param array $expected
 	 * @param array $notExpected
+	 * @param string|NULL $expectedException
 	 * @test
 	 * @dataProvider getTemplateCodeFixturesAndExpectations
 	 */
-	public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected) {
+	public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, $expectedException = NULL) {
 		if ($this->getCache()) {
-			$this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, TRUE);
+			$this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, TRUE);
 		}
 	}
 
