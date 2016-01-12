@@ -261,14 +261,13 @@ class TemplatePaths {
 		$identifier = $controller . '/' . $action . '.' . $format;
 		if (!array_key_exists($identifier, self::$resolvedFiles['templates'])) {
 			foreach ($this->getTemplateRootPaths() as $templateRootPath) {
-				$candidate = $templateRootPath . $identifier;
-				$candidate = $this->ensureAbsolutePath($candidate);
+				$candidate = $this->ensureAbsolutePath($templateRootPath . $action . '.' . $format);
 				if (file_exists($candidate)) {
 					return self::$resolvedFiles['templates'][$identifier] = $candidate;
 				}
 			}
 			foreach ($this->getTemplateRootPaths() as $templateRootPath) {
-				$candidate = $this->ensureAbsolutePath($templateRootPath . $action . '.' . $format);
+				$candidate = $this->ensureAbsolutePath($templateRootPath . $identifier);
 				if (file_exists($candidate)) {
 					return self::$resolvedFiles['templates'][$identifier] = $candidate;
 				}
@@ -550,10 +549,11 @@ class TemplatePaths {
 	 * @throws InvalidTemplateResourceException
 	 */
 	public function getTemplateSource($controller = 'Default', $action = 'Default') {
-		if (is_resource($this->templateSource)) {
-			return $this->templateSource = stream_get_contents($this->templateSource);
-		} elseif (is_string($this->templateSource)) {
+		if (is_string($this->templateSource)) {
 			return $this->templateSource;
+		} elseif (is_resource($this->templateSource)) {
+			rewind($this->templateSource);
+			return $this->templateSource = stream_get_contents($this->templateSource);
 		}
 		$format = $this->getFormat();
 		$templateReference = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action, $format);
