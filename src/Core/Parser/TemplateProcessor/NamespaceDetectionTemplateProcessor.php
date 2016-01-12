@@ -97,7 +97,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
 		if (preg_match_all(static::SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateSource, $matchedVariables, PREG_SET_ORDER) > 0) {
 			foreach ($matchedVariables as $namespaceMatch) {
-				$viewHelperNamespace = $this->unquoteString($namespaceMatch[2]);
+				$viewHelperNamespace = $this->renderingContext->getTemplateParser()->unquoteString($namespaceMatch[2]);
 				$phpNamespace = $viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
 				if (stristr($phpNamespace, '/') === FALSE) {
 					$viewHelperResolver->addNamespace($namespaceMatch[1], $phpNamespace);
@@ -149,22 +149,4 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 		}
 	}
 
-	/**
-	 * Removes escapings from a given argument string and trims the outermost
-	 * quotes.
-	 *
-	 * This method is meant as a helper for regular expression results.
-	 *
-	 * @param string $quotedValue Value to unquote
-	 * @return string Unquoted value
-	 */
-	protected function unquoteString($quotedValue) {
-		$value = $quotedValue;
-		if ($quotedValue{0} === '"') {
-			$value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
-		} elseif ($quotedValue{0} === '\'') {
-			$value = str_replace("\\'", "'", preg_replace('/(^\'|\'$)/', '', $quotedValue));
-		}
-		return str_replace('\\\\', '\\', $value);
-	}
 }
