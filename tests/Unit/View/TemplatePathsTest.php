@@ -18,6 +18,30 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 class TemplatePathsTest extends BaseTestCase {
 
 	/**
+	 * @param string|array $input
+	 * @param string|array $expected
+	 * @test
+	 * @dataProvider getSanitizePathTestValues
+	 */
+	public function testSanitizePath($input, $expected) {
+		$instance = new TemplatePaths();
+		$method = new \ReflectionMethod($instance, 'sanitizePath');
+		$method->setAccessible(TRUE);
+		$output = $method->invokeArgs($instance, array($input));
+		$this->assertEquals($expected, $output);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSanitizePathTestValues() {
+		return array(
+			array(__FILE__, __FILE__),
+			array(array(__FILE__, __DIR__), array(__FILE__, __DIR__ . '/'))
+		);
+	}
+
+	/**
 	 * @test
 	 */
 	public function setsLayoutPathAndFilename() {
@@ -147,6 +171,18 @@ class TemplatePathsTest extends BaseTestCase {
 		$instance = new TemplatePaths();
 		$this->setExpectedException(InvalidTemplateResourceException::class);
 		$instance->getTemplateSource();
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetTemplateSourceReadsStreamWrappers() {
+		$fixture = __DIR__ . '/Fixtures/LayoutFixture.html';
+		$instance = new TemplatePaths();
+		$stream = fopen($fixture, 'r');
+		$instance->setTemplateSource($stream);
+		$this->assertEquals(stream_get_contents($stream), $instance->getTemplateSource());
+		fclose($stream);
 	}
 
 	/**
