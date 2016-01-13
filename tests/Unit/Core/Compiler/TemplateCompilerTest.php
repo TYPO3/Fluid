@@ -153,4 +153,25 @@ class TemplateCompilerTest extends UnitTestCase {
 		$instance->store('fakeidentifier', $state);
 	}
 
+	/**
+	 * @test
+	 */
+	public function testVariableNameDelegatesToNodeConverter() {
+		$instance = new TemplateCompiler();
+		$nodeConverter = $this->getMock(NodeConverter::class, array('variableName'), array($instance));
+		$nodeConverter->expects($this->once())->method('variableName')->willReturnArgument(0);
+		$instance->setNodeConverter($nodeConverter);
+		$this->assertEquals('foobar', $instance->variableName('foobar'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetRenderingContextGetsRenderingContext() {
+		$context = new RenderingContextFixture();
+		$instance = new TemplateCompiler();
+		$instance->setRenderingContext($context);
+		$this->assertSame($context, $instance->getRenderingContext());
+	}
+
 }
