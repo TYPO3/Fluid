@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -34,6 +35,22 @@ interface ExpressionNodeInterface extends NodeInterface {
 	 * @return mixed
 	 */
 	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches);
+
+	/**
+	 * Compiles the ExpressionNode, returning an array with
+	 * exactly two keys which contain strings:
+	 *
+	 * - "initialization" which contains variable initializations
+	 * - "execution" which contains the execution (that uses the variables)
+	 *
+	 * The expression and matches can be read from the local
+	 * instance - and the RenderingContext and other APIs
+	 * can be accessed via the TemplateCompiler.
+	 *
+	 * @param TemplateCompiler $templateCompiler
+	 * @return string
+	 */
+	public function compile(TemplateCompiler $templateCompiler);
 
 	/**
 	 * Getter for returning the expression before parsing.
