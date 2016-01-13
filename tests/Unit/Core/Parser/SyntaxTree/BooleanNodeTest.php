@@ -48,22 +48,64 @@ class BooleanNodeTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testEvaluateThrowsExceptionOnInvalidComparator() {
-		$this->setExpectedException(Exception::class);
-		BooleanNode::evaluateComparator('<>', 1, 2);
+	public function convertToBooleanProperlyConvertsValuesOfTypeBoolean() {
+		$this->assertFalse(BooleanNode::convertToBoolean(FALSE, $this->renderingContext));
+		$this->assertTrue(BooleanNode::convertToBoolean(TRUE, $this->renderingContext));
 	}
 
 	/**
 	 * @test
-	 * @dataProvider getEvaluateComparatorTestValues
-	 * @param string $comparator
-	 * @param mixed $left
-	 * @param mixed $right
-	 * @param boolean $expected
 	 */
-	public function testEvaluateComparator($comparator, $left, $right, $expected) {
-		$result = BooleanNode::evaluateComparator($comparator, $left, $right);
-		$this->assertEquals($expected, $result);
+	public function convertToBooleanProperlyConvertsValuesOfTypeString() {
+		$this->assertFalse(BooleanNode::convertToBoolean('', $this->renderingContext));
+		$this->assertFalse(BooleanNode::convertToBoolean('false', $this->renderingContext));
+		$this->assertFalse(BooleanNode::convertToBoolean('FALSE', $this->renderingContext));
+
+		$this->assertTrue(BooleanNode::convertToBoolean('true', $this->renderingContext));
+		$this->assertTrue(BooleanNode::convertToBoolean('TRUE', $this->renderingContext));
+	}
+
+	/**
+	 * @param float $number
+	 * @param boolean $expected
+	 * @test
+	 * @dataProvider getNumericBooleanTestValues
+	 */
+	public function convertToBooleanProperlyConvertsNumericValues($number, $expected) {
+		$this->assertEquals($expected, BooleanNode::convertToBoolean($number, $this->renderingContext));
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getNumericBooleanTestValues() {
+		return array(
+			array(0, FALSE),
+			array(-1, FALSE),
+			array('-1', FALSE),
+			array(-.5, FALSE),
+			array(1, TRUE),
+			array(.5, TRUE),
+		);
+	}
+
+	/**
+	 * @test
+	 */
+	public function convertToBooleanProperlyConvertsValuesOfTypeArray() {
+		$this->assertFalse(BooleanNode::convertToBoolean(array(), $this->renderingContext));
+
+		$this->assertTrue(BooleanNode::convertToBoolean(array('foo'), $this->renderingContext));
+		$this->assertTrue(BooleanNode::convertToBoolean(array('foo' => 'bar'), $this->renderingContext));
+	}
+
+	/**
+	 * @test
+	 */
+	public function convertToBooleanProperlyConvertsObjects() {
+		$this->assertFalse(BooleanNode::convertToBoolean(NULL, $this->renderingContext));
+
+		$this->assertTrue(BooleanNode::convertToBoolean(new \stdClass(), $this->renderingContext));
 	}
 
 	/**
@@ -125,7 +167,6 @@ class BooleanNodeTest extends UnitTestCase {
 			'1 < 4' => array(new TextNode('1 < 4'), TRUE),
 			'4 % 4' => array(new TextNode('4 % 4'), FALSE),
 			'\'yes\' % 2' => array(new TextNode('\'yes\' % 2'), FALSE),
-			'{0: 1, 1: 2} % 2' => array(new TextNode('{0: 1, 1: 2} % 2'), FALSE),
 			'2 % 4' => array(new TextNode('2 % 4'), TRUE),
 			'0 && 1' => array(new TextNode('0 && 1'), FALSE),
 		);
@@ -561,69 +602,6 @@ class BooleanNodeTest extends UnitTestCase {
 
 		$booleanNode = new BooleanNode($rootNode);
 		$this->assertTrue($booleanNode->evaluate($this->renderingContext));
-	}
-
-	/**
-	 * @test
-	 */
-	public function convertToBooleanProperlyConvertsValuesOfTypeBoolean() {
-		$this->assertFalse(BooleanNode::convertToBoolean(FALSE));
-		$this->assertTrue(BooleanNode::convertToBoolean(TRUE));
-	}
-
-	/**
-	 * @test
-	 */
-	public function convertToBooleanProperlyConvertsValuesOfTypeString() {
-		$this->assertFalse(BooleanNode::convertToBoolean(''));
-		$this->assertFalse(BooleanNode::convertToBoolean('false'));
-		$this->assertFalse(BooleanNode::convertToBoolean('FALSE'));
-
-		$this->assertTrue(BooleanNode::convertToBoolean('true'));
-		$this->assertTrue(BooleanNode::convertToBoolean('TRUE'));
-	}
-
-	/**
-	 * @param float $number
-	 * @param boolean $expected
-	 * @test
-	 * @dataProvider getNumericBooleanTestValues
-	 */
-	public function convertToBooleanProperlyConvertsNumericValues($number, $expected) {
-		$this->assertEquals($expected, BooleanNode::convertToBoolean($number));
-	}
-
-	/**
-	 * @return array
-	 */
-	public function getNumericBooleanTestValues() {
-		return array(
-			array(0, FALSE),
-			array(-1, FALSE),
-			array('-1', FALSE),
-			array(-.5, FALSE),
-			array(1, TRUE),
-			array(.5, TRUE),
-		);
-	}
-
-	/**
-	 * @test
-	 */
-	public function convertToBooleanProperlyConvertsValuesOfTypeArray() {
-		$this->assertFalse(BooleanNode::convertToBoolean(array()));
-
-		$this->assertTrue(BooleanNode::convertToBoolean(array('foo')));
-		$this->assertTrue(BooleanNode::convertToBoolean(array('foo' => 'bar')));
-	}
-
-	/**
-	 * @test
-	 */
-	public function convertToBooleanProperlyConvertsObjects() {
-		$this->assertFalse(BooleanNode::convertToBoolean(NULL));
-
-		$this->assertTrue(BooleanNode::convertToBoolean(new \stdClass()));
 	}
 
 	/**

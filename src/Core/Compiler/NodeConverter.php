@@ -16,6 +16,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 
 /**
@@ -331,11 +332,25 @@ class NodeConverter {
 	protected function convertBooleanNode(BooleanNode $node) {
 		$stack = $this->convertArrayNode(new ArrayNode($node->getStack()));
 		$initializationPhpCode = '// Rendering Boolean node' . chr(10);
-		$initializationPhpCode = $stack['initialization'] . chr(10);
+		$initializationPhpCode .= $stack['initialization'] . chr(10);
+
+		$parser = new BooleanParser();
+		$compiledExpression = $parser->compile(BooleanNode::reconcatenateExpression($node->getStack()));
+		$functionName = 'expression_' . md5($compiledExpression . $initializationPhpCode);
+		$initializationPhpCode .= 'function ' . $functionName . '($context) {return ' . $compiledExpression . ';}' . chr(10);
+
 		return array(
 			'initialization' => $initializationPhpCode,
 			'execution' => sprintf(
-				'\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s)',
+				'%s::convertToBoolean(
+					%s(
+						%s::gatherContext($renderingContext, %s)
+					),
+					$renderingContext
+				)',
+				BooleanNode::class,
+				$functionName,
+				BooleanNode::class,
 				$stack['execution']
 			)
 		);

@@ -18,6 +18,40 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 class TernaryExpressionNodeTest extends UnitTestCase {
 
 	/**
+	 * @dataProvider getTernaryExpressionDetection
+	 * @param string $expression
+	 * @param mixed $expected
+	 */
+	public function testTernaryExpressionDetection($expression, $expected) {
+		$result = preg_match_all(TernaryExpressionNode::$detectionExpression, $expression, $matches, PREG_SET_ORDER);
+		$this->assertEquals($expected, count($matches) > 0);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getTernaryExpressionDetection() {
+		return array(
+			array('{true ? foo : bar}', TRUE),
+			array('{true ? 1 : 0}', TRUE),
+			array('{true ? foo : \'no\'}', TRUE),
+			array('{(true) ? \'yes\' : \'no\'}', TRUE),
+			array('{!(true) ? \'yes\' : \'no\'}', TRUE),
+			array('{(true || false) ? \'yes\' : \'no\'}', TRUE),
+			array('{(true && 1) ? \'yes\' : \'no\'}', TRUE),
+			array('{(\'foo\' == \'foo\') ? \'yes\' : \'no\'}', TRUE),
+			array('{(1 > 0) ? \'yes\' : \'no\'}', TRUE),
+			array('{(1 < 0) ? \'yes\' : \'no\'}', TRUE),
+			array('{(1 >= 0) ? \'yes\' : \'no\'}', TRUE),
+			array('{(1 <= 0) ? \'yes\' : \'no\'}', TRUE),
+			array('{(1 % 0) ? \'yes\' : \'no\'}', TRUE),
+			array('{(true || (\'foo\' == \'bar\')) ? \'yes\' : \'no\'}', TRUE),
+			array('{(foo || 1 && 1 && !(false) || (1 % 2) || (1 > 0) || (\'foo\' == \'bar\')) ? \'yes\' : \'no\'}', TRUE),
+			array('{{f:if(condition: 1, then: 1, else: 0)} ? \'yes\' : \'no\'}', TRUE),
+		);
+	}
+
+	/**
 	 * @dataProvider getEvaluateExpressionTestValues
 	 * @param string $expression
 	 * @param array $variables

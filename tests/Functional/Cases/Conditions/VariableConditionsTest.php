@@ -1,78 +1,74 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
-use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 
 /**
  * Class VariableConditionsTest
  */
-class VariableConditionsTest extends BaseFunctionalTestCase {
+class VariableConditionsTest extends BaseConditionalFunctionalTestCase {
 
 	/**
 	 * @return array
 	 */
 	public function getTemplateCodeFixturesAndExpectations() {
+		$user1 = new UserWithToString('foobar');
+		$user2 = new UserWithToString('foobar');
+		$someObject = new \stdClass();
+		$someObject->someString = 'bar';
+		$someObject->someInt = 1337;
+		$someObject->someFloat = 13.37;
+		$someObject->someBoolean = TRUE;
+		$someArray = array(
+			'foo' => 'bar'
+		);
 		return array(
-			'"{test}" (test=1)' => array(
-				'<f:if condition="{test}" then="yes" else="no" />',
-				array('test' => 1),
-				array('yes'),
-				array('no')
-			),
-			'"{test}" (test="\'  FALSE  \'")' => array(
-				'<f:if condition="{test}" then="yes" else="no" />',
-				array('test' => '\'  FALSE  \''),
-				array('yes'),
-				array('no')
-			),
-			'"{test}" (test="\'  0  \'")' => array(
-				'<f:if condition="{test}" then="yes" else="no" />',
-				array('test' => '\'  0  \''),
-				array('yes'),
-				array('no')
-			),
-			'"{test}" (test=0)' => array(
-				'<f:if condition="{test}" then="yes" else="no" />',
-				array('test' => 0),
-				array('no'),
-				array('yes')
-			),
-			'"1 == {test}" (test=1)' => array(
-				'<f:if condition="1 == {test}" then="yes" else="no" />',
-				array('test' => 1),
-				array('yes'),
-				array('no')
-			),
-			'"1 != {test}" (test=2)' => array(
-				'<f:if condition="1 != {test}" then="yes" else="no" />',
-				array('test' => 2),
-				array('yes'),
-				array('no')
-			),
-			'"{test1} == {test2}" (test1=abc, test2=abc)' => array(
-				'<f:if condition="{test1} == {test2}" then="yes" else="no" />',
-				array('test1' => 'abc', 'test2' => 'abc'),
-				array('yes'),
-				array('no')
-			),
-			'"{test1} === {test2}" (test1=abc, test2=abc)' => array(
-				'<f:if condition="{test1} === {test2}" then="yes" else="no" />',
-				array('test1' => 'abc', 'test2' => 'abc'),
-				array('yes'),
-				array('no')
-			),
-			'"{test1} === {test2}" (test1=1, test2=TRUE)' => array(
-				'<f:if condition="{test1} === {test2}" then="yes" else="no" />',
-				array('test1' => 1, 'test2' => TRUE),
-				array('no'),
-				array('yes')
-			),
-			'"{test1} == {test2}" (test1=1, test2=TRUE)' => array(
-				'<f:if condition="{test1} == {test2}" then="yes" else="no" />',
-				array('test1' => 1, 'test2' => TRUE),
-				array('yes'),
-				array('no')
-			),
+			// simple assignments
+			array('{test}', TRUE, array('test' => 1)),
+			array('{test}', TRUE, array('test' => '\'  FALSE  \'')),
+			array('{test}', TRUE, array('test' => '\'  0  \'')),
+			array('{test}', FALSE, array('test' => 0)),
+			array('1 == {test}', TRUE, array('test' => 1)),
+			array('1 != {test}', TRUE, array('test' => 2)),
+			array('{test1} == {test2}', TRUE, array('test1' => 'abc', 'test2' => 'abc')),
+			array('{test1} === {test2}', TRUE, array('test1' => 'abc', 'test2' => 'abc')),
+			array('{test1} === {test2}', FALSE, array('test1' => 1, 'test2' => TRUE)),
+			array('{test1} == {test2}', TRUE, array('test1' => 1, 'test2' => TRUE)),
+
+			// conditions with objects
+			array('{user1} == {user1}', TRUE, array('user1' => $user1)),
+			array('{user1} === {user1}',TRUE, array('user1' => $user1)),
+			array('{user1} == {user2}', FALSE, array('user1' => $user1, 'user2' => $user2)),
+			array('{user1} === {user2}', FALSE, array('user1' => $user1, 'user2' => $user2)),
+
+			// condition with object properties
+			array('{someObject.someString} == \'bar\'', TRUE, array('someObject' => $someObject)),
+			array('{someObject.someString} === \'bar\'', TRUE, array('someObject' => $someObject)),
+
+			array('{someObject.someInt} == \'1337\'', TRUE, array('someObject' => $someObject)),
+			array('{someObject.someInt} === \'1337\'', FALSE, array('someObject' => $someObject)),
+			array('{someObject.someInt} === 1337', TRUE, array('someObject' => $someObject)),
+
+			array('{someObject.someFloat} == \'13.37\'', TRUE, array('someObject' => $someObject)),
+			array('{someObject.someFloat} === \'13.37\'', FALSE, array('someObject' => $someObject)),
+			array('{someObject.someFloat} === 13.37', TRUE, array('someObject' => $someObject)),
+
+			array('{someObject.someBoolean} == 1', TRUE, array('someObject' => $someObject)),
+			array('{someObject.someBoolean} === 1', FALSE, array('someObject' => $someObject)),
+			array('{someObject.someBoolean} == TRUE', TRUE, array('someObject' => $someObject)),
+			array('{someObject.someBoolean} === TRUE', TRUE, array('someObject' => $someObject)),
+
+			// array conditions
+			array('{someArray} == {foo: \'bar\'}', TRUE, array('someArray' => $someArray)),
+			array('{someArray} === {foo: \'bar\'}', TRUE, array('someArray' => $someArray)),
+			array('{someArray.foo} == \'bar\'', TRUE, array('someArray' => $someArray)),
+			array('({someArray.foo} == \'bar\') && (TRUE || 0)', TRUE, array('someArray' => $someArray)),
+			array('({foo.someArray.foo} == \'bar\') && (TRUE || 0)', TRUE, array('foo' => array('someArray' => $someArray))),
+
+			// inline viewHelpers
+			array('(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 1)', TRUE),
+			array('(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0)', FALSE)
 		);
 	}
 
