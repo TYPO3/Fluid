@@ -93,7 +93,7 @@ class TemplateCompiler {
 	 * @return boolean
 	 */
 	public function isDisabled() {
-		return $this->disabled;
+		return $this->disabled || !$this->renderingContext->isCacheEnabled();
 	}
 
 	/**
@@ -129,7 +129,11 @@ class TemplateCompiler {
 	 * @return void
 	 */
 	public function store($identifier, ParsingState $parsingState) {
-		if (!$this->renderingContext->isCacheEnabled() || $this->disabled) {
+		if ($this->isDisabled()) {
+			if ($this->renderingContext->isCacheEnabled()) {
+				// Compiler is disabled but cache is enabled. Flush cache to make sure.
+				$this->renderingContext->getCache()->flush($identifier);
+			}
 			$parsingState->setCompilable(FALSE);
 			return;
 		}
