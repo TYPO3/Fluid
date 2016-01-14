@@ -6,7 +6,7 @@ LGPL 3.0 license:
 
 --------------------------------------
 
-Copyright (C) 2015  The TYPO3 Project
+Copyright (C) 2016  The TYPO3 Project
 
 Everyone is permitted to copy and distribute verbatim copies of this license document, but changing it is not allowed.
 
