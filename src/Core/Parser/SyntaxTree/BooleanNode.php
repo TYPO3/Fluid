@@ -35,9 +35,9 @@ class BooleanNode extends AbstractNode {
 	protected $stack = array();
 
 	/**
-	 * @param mixed $root NodeInterface, array (of nodes or expression parts) or a simple type that can be evaluated to boolean
+	 * @param mixed $input NodeInterface, array (of nodes or expression parts) or a simple type that can be evaluated to boolean
 	 */
-	function __construct($input) {
+	public function __construct($input) {
 		// First, evaluate everything that is not an ObjectAccessorNode, ArrayNode
 		// or ViewHelperNode so we get all text, numbers, comparators and
 		// groupers from the text parts of the expression. All other nodes

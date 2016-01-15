@@ -45,16 +45,15 @@ class MathExpressionNode extends AbstractExpressionNode {
 		// Like the BooleanNode, we dumb down the processing logic to not apply
 		// any special precedence on the priority of operators. We simply process
 		// them in order.
-		$variables = $renderingContext->getVariableProvider()->getAll();
 		$result = array_shift($matches[0]);
-		$result = parent::getTemplateVariableOrValueItself($result, $renderingContext);
+		$result = static::getTemplateVariableOrValueItself($result, $renderingContext);
 		$operator = NULL;
 		$operators = array('*', '^', '-', '+', '/', '%');
 		foreach ($matches[0] as $part) {
 			if (in_array($part, $operators)) {
 				$operator = $part;
 			} else {
-				$part = parent::getTemplateVariableOrValueItself($part, $renderingContext);
+				$part = static::getTemplateVariableOrValueItself($part, $renderingContext);
 				$result = self::evaluateOperation($result, $operator, $part);
 			}
 		}

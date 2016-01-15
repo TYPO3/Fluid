@@ -104,7 +104,7 @@ class BooleanParser {
 	/**
 	 * Switch to enable compiling
 	 *
-	 * @var string
+	 * @var boolean
 	 */
 	protected $compileToCode = FALSE;
 
@@ -357,7 +357,7 @@ class BooleanParser {
 	 * Evaluate an "not" comparison
 	 *
 	 * @param mixed $x
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function evaluateNot($x) {
 		if ($this->compileToCode === TRUE) {
@@ -372,7 +372,7 @@ class BooleanParser {
 	 * @param mixed $x
 	 * @param mixed $y
 	 * @param string $y
-	 * @return boolean
+	 * @return mixed
 	 */
 	public function evaluateCompare($x, $y, $comparator) {
 		// enfore strong comparison for comparing two objects
