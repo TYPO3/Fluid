@@ -55,9 +55,9 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 		$parser = new BooleanParser();
 		$checkResult = $parser->evaluate($check, $context);
 		if ($checkResult) {
-			return parent::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
+			return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
 		} else {
-			return parent::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
+			return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
 		}
 	}
 
@@ -81,14 +81,14 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 	 * @param array $expressionParts
 	 * @return array
 	 */
-	public static function gatherContext($renderingContext, $expression) {
+	public static function gatherContext($renderingContext, $expressionParts) {
 		$context = array();
-		if (preg_match_all(static::$variableDetection, $expression, $matches) > 0) {
+		if (preg_match_all(static::$variableDetection, $expressionParts, $matches) > 0) {
 			foreach ($matches[1] as $variable) {
 				if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable) === TRUE) {
 					continue;
 				}
-				$context[$variable] = parent::getTemplateVariableOrValueItself($variable, $renderingContext);
+				$context[$variable] = static::getTemplateVariableOrValueItself($variable, $renderingContext);
 			}
 		}
 		return $context;

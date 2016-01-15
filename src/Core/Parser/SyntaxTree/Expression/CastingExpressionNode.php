@@ -84,7 +84,7 @@ class CastingExpressionNode extends AbstractExpressionNode {
 
 	/**
 	 * @param mixed $variable
-	 * @return \DateTime
+	 * @return \DateTime|false
 	 */
 	protected static function convertToDateTime($variable) {
 		if (preg_match_all('/[a-z]+/i', $variable)) {

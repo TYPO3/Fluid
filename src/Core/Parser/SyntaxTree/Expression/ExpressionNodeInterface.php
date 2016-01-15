@@ -48,7 +48,7 @@ interface ExpressionNodeInterface extends NodeInterface {
 	 * can be accessed via the TemplateCompiler.
 	 *
 	 * @param TemplateCompiler $templateCompiler
-	 * @return string
+	 * @return array
 	 */
 	public function compile(TemplateCompiler $templateCompiler);
 
