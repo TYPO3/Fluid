@@ -11,7 +11,6 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Node which will call a ViewHelper associated with this node.
@@ -101,7 +100,7 @@ class ViewHelperNode extends AbstractNode {
 	 * INTERNAL - only needed for compiling templates
 	 *
 	 * @param string $argumentName
-	 * @return ArgumentDefinition|NULL
+	 * @return ArgumentDefinition
 	 */
 	public function getArgumentDefinition($argumentName) {
 		return $this->argumentDefinitions[$argumentName];
@@ -144,8 +143,8 @@ class ViewHelperNode extends AbstractNode {
 	/**
 	 * Wraps the argument tree, if a node is boolean, into a Boolean syntax tree node
 	 *
-	 * @param array $argumentDefinitions the argument definitions, key is the argument name, value is the ArgumentDefinition object
-	 * @param array $argumentsObjectTree the arguments syntax tree, key is the argument name, value is an AbstractNode
+	 * @param ArgumentDefinition[] $argumentDefinitions the argument definitions, key is the argument name, value is the ArgumentDefinition object
+	 * @param NodeInterface[] $argumentsObjectTree the arguments syntax tree, key is the argument name, value is an AbstractNode
 	 * @return void
 	 */
 	protected function rewriteBooleanNodesInArgumentsObjectTree($argumentDefinitions, &$argumentsObjectTree) {
@@ -158,7 +157,7 @@ class ViewHelperNode extends AbstractNode {
 	}
 
 	/**
-	 * @param array $argumentDefinitions
+	 * @param ArgumentDefinition[] $argumentDefinitions
 	 * @param array $argumentsObjectTree
 	 * @throws Exception
 	 */

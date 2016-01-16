@@ -35,7 +35,6 @@ class BooleanNode extends AbstractNode {
 	protected $stack = array();
 
 	/**
-	 * @param mixed $root NodeInterface, array (of nodes or expression parts) or a simple type that can be evaluated to boolean
 	 */
 	function __construct($input) {
 		// First, evaluate everything that is not an ObjectAccessorNode, ArrayNode
@@ -139,7 +138,7 @@ class BooleanNode extends AbstractNode {
 	 *
 	 * Must be public and static as it is used from inside cached templates.
 	 *
-	 * @param mixed $value Value to be converted to boolean
+	 * @param boolean $value Value to be converted to boolean
 	 * @param RenderingContextInterface $renderingContext
 	 * @return boolean
 	 */

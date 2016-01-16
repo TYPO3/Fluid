@@ -78,7 +78,7 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 	 * Gather all context variables used in the expression
 	 *
 	 * @param RenderingContextInterface $renderingContext
-	 * @param array $expressionParts
+	 * @param string $expression
 	 * @return array
 	 */
 	public static function gatherContext($renderingContext, $expression) {
@@ -115,7 +115,7 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 
 		$matchesVariable = $templateCompiler->variableName('array');
 		$initializationPhpCode = '// Rendering TernaryExpression node' . chr(10);
-		$initializationPhpCode .= sprintf('%s = %s;' , $matchesVariable, var_export($this->getMatches(), TRUE)) . chr(10);
+		$initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), TRUE)) . chr(10);
 
 		$parser = new BooleanParser();
 		$compiledExpression = $parser->compile($check);

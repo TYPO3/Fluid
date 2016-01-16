@@ -317,7 +317,7 @@ class NodeConverter {
 
 	/**
 	 * @param ExpressionNodeInterface $node
-	 * @return array
+	 * @return string
 	 * @see convert()
 	 */
 	protected function convertExpressionNode(ExpressionNodeInterface $node) {

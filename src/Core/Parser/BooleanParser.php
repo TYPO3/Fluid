@@ -176,7 +176,7 @@ class BooleanParser {
 		if (strlen($string) === 0) {
 			return;
 		}
-		$this->cursor= strpos($this->expression, $string, $this->cursor) + strlen($string);
+		$this->cursor = strpos($this->expression, $string, $this->cursor) + strlen($string);
 	}
 
 	/**
@@ -289,10 +289,10 @@ class BooleanParser {
 			$this->consume($stringIdentifier);
 			while (trim($t = $this->peek(TRUE)) !== $stringIdentifier) {
 				$this->consume($t);
-				$string.= $t;
+				$string .= $t;
 			}
 			$this->consume($stringIdentifier);
-			$string.= $stringIdentifier;
+			$string .= $stringIdentifier;
 			if ($this->compileToCode === TRUE) {
 				return $string;
 			}
@@ -357,7 +357,7 @@ class BooleanParser {
 	 * Evaluate an "not" comparison
 	 *
 	 * @param mixed $x
-	 * @return boolean
+	 * @return string|boolean
 	 */
 	public function evaluateNot($x) {
 		if ($this->compileToCode === TRUE) {
@@ -372,6 +372,7 @@ class BooleanParser {
 	 * @param mixed $x
 	 * @param mixed $y
 	 * @param string $y
+	 * @param string $comparator
 	 * @return boolean
 	 */
 	public function evaluateCompare($x, $y, $comparator) {
@@ -445,7 +446,7 @@ class BooleanParser {
 	 * converting true/false keywords into boolean or trim the final string of
 	 * quotation marks
 	 *
-	 * @param mixed $x
+	 * @param string $x
 	 * @param array $context
 	 * @return mixed
 	 */
