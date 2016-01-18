@@ -75,7 +75,7 @@ class PrintfViewHelper extends AbstractViewHelper {
 	 * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
 	 * @return string
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$value = $arguments['value'];
 		if ($value === NULL) {
 			$value = $renderChildrenClosure();

@@ -56,9 +56,9 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 		$parser = new BooleanParser();
 		$checkResult = $parser->evaluate($check, $context);
 		if ($checkResult) {
-			return parent::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
+			return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
 		} else {
-			return parent::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
+			return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
 		}
 	}
 
@@ -79,7 +79,7 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 	 * Gather all context variables used in the expression
 	 *
 	 * @param RenderingContextInterface $renderingContext
-	 * @param array $expressionParts
+	 * @param string $expression
 	 * @return array
 	 */
 	public static function gatherContext($renderingContext, $expression) {
@@ -89,7 +89,7 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 				if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable) === TRUE) {
 					continue;
 				}
-				$context[$variable] = parent::getTemplateVariableOrValueItself($variable, $renderingContext);
+				$context[$variable] = static::getTemplateVariableOrValueItself($variable, $renderingContext);
 			}
 		}
 		return $context;
@@ -116,7 +116,7 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 
 		$matchesVariable = $templateCompiler->variableName('array');
 		$initializationPhpCode = '// Rendering TernaryExpression node' . chr(10);
-		$initializationPhpCode .= sprintf('%s = %s;' , $matchesVariable, var_export($this->getMatches(), TRUE)) . chr(10);
+		$initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), TRUE)) . chr(10);
 
 		$parser = new BooleanParser();
 		$compiledExpression = $parser->compile($check);

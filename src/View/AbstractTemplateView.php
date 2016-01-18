@@ -7,21 +7,13 @@ namespace TYPO3Fluid\Fluid\View;
  */
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\Configuration;
-use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
-use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Resource;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
+use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
 /**
  * Abstract Fluid Template View.
@@ -66,7 +58,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	/**
 	 * Constructor
 	 *
-	 * @param RenderingContextInterface $context
+	 * @param null|RenderingContextInterface $context
 	 */
 	public function __construct(RenderingContextInterface $context = NULL) {
 		if (!$context) {
@@ -167,7 +159,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	 * Loads the template source and render the template.
 	 * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
 	 *
-	 * @param string $actionName If set, this action's template will be rendered instead of the one defined in the context.
+	 * @param string|null $actionName If set, this action's template will be rendered instead of the one defined in the context.
 	 * @return string Rendered Template
 	 * @api
 	 */
@@ -175,16 +167,14 @@ abstract class AbstractTemplateView extends AbstractView {
 		$controllerName = $this->baseRenderingContext->getControllerName();
 		$templateParser = $this->baseRenderingContext->getTemplateParser();
 		$templatePaths = $this->baseRenderingContext->getTemplatePaths();
-		if (!$actionName) {
+		if ($actionName === NULL) {
 			$actionName = $this->baseRenderingContext->getControllerAction();
 		}
 		$actionName = ucfirst($actionName);
-		if (empty($templateIdentifier)) {
-			$templateIdentifier = $templatePaths->getTemplateIdentifier($controllerName, $actionName);
-		}
+		$templateIdentifier = $templatePaths->getTemplateIdentifier($controllerName, $actionName);
 		$parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
 			$templateIdentifier,
-			function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
+			function($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
 				return $paths->getTemplateSource($controllerName, $actionName);
 			}
 		);
@@ -220,7 +210,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	 * @return string rendered template for the section
 	 * @throws InvalidSectionException
 	 */
-	public function renderSection($sectionName, array $variables = NULL, $ignoreUnknown = FALSE) {
+	public function renderSection($sectionName, array $variables = array(), $ignoreUnknown = FALSE) {
 		$renderingContext = $this->getCurrentRenderingContext();
 
 		if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
@@ -287,7 +277,7 @@ abstract class AbstractTemplateView extends AbstractView {
 		$partialIdentifier = $this->partialIdentifierCache[$partialName];
 		$parsedPartial = $this->baseRenderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
 			$partialIdentifier,
-			function ($parent, TemplatePaths $paths) use ($partialName) {
+			function($parent, TemplatePaths $paths) use ($partialName) {
 				return $paths->getPartialSource($partialName);
 			}
 		);

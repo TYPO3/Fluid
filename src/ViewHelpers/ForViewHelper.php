@@ -75,17 +75,12 @@ class ForViewHelper extends AbstractViewHelper {
 		$this->registerArgument('as', 'string', 'The name of the iteration variable', TRUE);
 		$this->registerArgument('key', 'string', 'Variable to assign array key to', FALSE);
 		$this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', FALSE, FALSE);
-		$this->registerArgument('iteration', 'string', 'Name of iteration variable to assign', FALSE, NULL);
+		$this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)', FALSE, NULL);
 	}
 
 	/**
 	 * Iterates through elements of $each and renders child nodes
 	 *
-	 * @param array $each The array or \SplObjectStorage to iterated over
-	 * @param string $as The name of the iteration variable
-	 * @param string $key The name of the variable to store the current array key
-	 * @param boolean $reverse If enabled, the iterator will start with the last element and proceed reversely
-	 * @param string $iteration The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)
 	 * @return string Rendered string
 	 * @api
 	 */
@@ -112,7 +107,7 @@ class ForViewHelper extends AbstractViewHelper {
 	 * @return string
 	 * @throws ViewHelper\Exception
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$templateVariableContainer = $renderingContext->getVariableProvider();
 		if ($arguments['each'] === NULL) {
 			return '';

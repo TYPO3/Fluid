@@ -27,7 +27,7 @@ class CustomViewHelperResolver extends ViewHelperResolver {
 	 *
 	 * @param string $namespaceIdentifier
 	 * @param string $methodIdentifier
-	 * @return NULL|string
+	 * @return string
 	 */
 	public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier) {
 		if ($namespaceIdentifier === 'f' && $methodIdentifier === 'myLink') {

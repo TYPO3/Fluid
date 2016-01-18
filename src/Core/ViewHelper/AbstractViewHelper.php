@@ -429,7 +429,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		$viewHelperClassName = get_called_class();
 		return $renderingContext->getViewHelperInvoker()->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
 	}
@@ -443,7 +443,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @param VariableProviderInterface $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {
+	public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {
 	}
 
 	/**

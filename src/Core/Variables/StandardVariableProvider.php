@@ -14,7 +14,7 @@ class StandardVariableProvider implements VariableProviderInterface {
 	/**
 	 * Variables stored in context
 	 *
-	 * @var array
+	 * @var mixed
 	 */
 	protected $variables = array();
 
@@ -29,10 +29,10 @@ class StandardVariableProvider implements VariableProviderInterface {
 	}
 
 	/**
-	 * @param array $variables
+	 * @param array|\ArrayAccess $variables
 	 * @return VariableProviderInterface
 	 */
-	public function getScopeCopy(array $variables) {
+	public function getScopeCopy($variables) {
 		if (!array_key_exists('settings', $variables) && array_key_exists('settings', $this->variables)) {
 			$variables['settings'] = $this->variables['settings'];
 		}
@@ -147,7 +147,7 @@ class StandardVariableProvider implements VariableProviderInterface {
 	/**
 	 * Clean up for serializing.
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function __sleep() {
 		return array('variables');

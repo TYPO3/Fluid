@@ -68,7 +68,6 @@ class SwitchViewHelper extends AbstractViewHelper {
 	 */
 	public function render() {
 		$expression = $this->arguments['expression'];
-		$content = '';
 		$this->backupSwitchState();
 		$variableContainer = $this->renderingContext->getViewHelperVariableContainer();
 

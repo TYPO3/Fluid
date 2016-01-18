@@ -105,7 +105,7 @@ class TemplateParser {
 	 * TemplateParser directly.
 	 *
 	 * @param string $templateString The template to parse as a string
-	 * @param string $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
+	 * @param string|null $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
 	 * @return ParsedTemplateInterface Parsed template
 	 * @throws Exception
 	 */
@@ -150,7 +150,6 @@ class TemplateParser {
 
 	/**
 	 * @param string $templateIdentifier
-	 * @param string $templateFile
 	 * @param \Closure $templateSourceClosure Closure which returns the template source if needed
 	 * @return ParsedTemplateInterface
 	 */
@@ -221,7 +220,6 @@ class TemplateParser {
 	 * @throws Exception
 	 */
 	protected function buildObjectTree(array $splitTemplate, $context) {
-		$viewHelperResolver = $this->renderingContext->getViewHelperResolver();
 		$state = $this->getParsingState();
 		$previousBlock = '';
 
@@ -273,7 +271,7 @@ class TemplateParser {
 	 * @param string $methodIdentifier Method identifier
 	 * @param string $arguments Arguments string, not yet parsed
 	 * @param boolean $selfclosing true, if the tag is a self-closing tag.
-	 * @param string $templateCode The template code containing the ViewHelper call
+	 * @param string $templateElement The template code containing the ViewHelper call
 	 * @return ViewHelperNode|NULL
 	 */
 	protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing, $templateElement) {
@@ -550,18 +548,20 @@ class TemplateParser {
 					$detetionExpression = $expressionNodeTypeClassName::$detectionExpression;
 					$matchedVariables = array();
 					preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER);
-					foreach ($matchedVariables as $matchedVariableSet) {
-						$expressionStartPosition = strpos($section, $matchedVariableSet[0]);
-						/** @var ExpressionNodeInterface $expressionNode */
-						$expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
-						if ($expressionStartPosition > 0) {
-							$state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
-						}
-						$state->getNodeFromStack()->addChildNode($expressionNode);
-						$expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
-						if ($expressionEndPosition < strlen($section)) {
-							$this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
-							break;
+					if (is_array($matchedVariables) === TRUE) {
+						foreach ($matchedVariables as $matchedVariableSet) {
+							$expressionStartPosition = strpos($section, $matchedVariableSet[0]);
+							/** @var ExpressionNodeInterface $expressionNode */
+							$expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
+							if ($expressionStartPosition > 0) {
+								$state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
+							}
+							$state->getNodeFromStack()->addChildNode($expressionNode);
+							$expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
+							if ($expressionEndPosition < strlen($section)) {
+								$this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
+								break;
+							}
 						}
 					}
 				}
@@ -582,7 +582,7 @@ class TemplateParser {
 	 * adds it to the current node.
 	 *
 	 * @param ParsingState $state The current parsing state
-	 * @param string $arrayText The array as string.
+	 * @param array $arrayText The array as string.
 	 * @return void
 	 */
 	protected function arrayHandler(ParsingState $state, $arrayText) {
@@ -608,6 +608,9 @@ class TemplateParser {
 		$matches = array();
 		preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER);
 		$arrayToBuild = array();
+		if (is_array($matches) === FALSE) {
+			return $arrayToBuild;
+		}
 		foreach ($matches as $singleMatch) {
 			$arrayKey = $this->unquoteString($singleMatch['Key']);
 			if (!empty($singleMatch['VariableIdentifier'])) {

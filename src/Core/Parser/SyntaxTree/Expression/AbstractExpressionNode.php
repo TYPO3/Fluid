@@ -63,15 +63,15 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
 	 * can be accessed via the TemplateCompiler.
 	 *
 	 * @param TemplateCompiler $templateCompiler
-	 * @return string
+	 * @return array
 	 */
 	public function compile(TemplateCompiler $templateCompiler) {
 		$handlerClass = get_class($this);
 		$expressionVariable = $templateCompiler->variableName('string');
 		$matchesVariable = $templateCompiler->variableName('array');
 		$initializationPhpCode = sprintf('// Rendering %s node' . chr(10), $handlerClass);
-		$initializationPhpCode .= sprintf('%s = \'%s\';' , $expressionVariable, $this->getExpression()) . chr(10);
-		$initializationPhpCode .= sprintf('%s = %s;' , $matchesVariable, var_export($this->getMatches(), TRUE)) . chr(10);
+		$initializationPhpCode .= sprintf('%s = \'%s\';', $expressionVariable, $this->getExpression()) . chr(10);
+		$initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), TRUE)) . chr(10);
 		return array(
 			'initialization' => $initializationPhpCode,
 			'execution' => sprintf(

@@ -398,7 +398,7 @@ class TemplatePaths {
 	 * but cannot be a FAL resource identifier.
 	 *
 	 * @param mixed $reference
-	 * @return mixed
+	 * @return string
 	 */
 	protected function ensureAbsolutePath($reference) {
 		if (FALSE === is_array($reference)) {
@@ -439,37 +439,25 @@ class TemplatePaths {
 	 * @return array
 	 */
 	protected function extractPathArrays(array $paths) {
-		$templateRootPaths = array();
-		$layoutRootPaths = array();
-		$partialRootPaths = array();
 		$format = self::DEFAULT_FORMAT;
 		// pre-processing: if special parameters exist, extract them:
 		if (isset($paths[self::CONFIG_FORMAT])) {
 			$format = $paths[self::CONFIG_FORMAT];
 		}
-		if (isset($paths[self::CONFIG_TEMPLATEROOTPATHS]) && is_array($paths[self::CONFIG_TEMPLATEROOTPATHS])) {
-			krsort($paths[self::CONFIG_TEMPLATEROOTPATHS], SORT_NUMERIC);
-			$templateRootPaths = array_merge($templateRootPaths, array_values($paths[self::CONFIG_TEMPLATEROOTPATHS]));
+		$pathParts = array(
+			self::CONFIG_TEMPLATEROOTPATHS,
+			self::CONFIG_LAYOUTROOTPATHS,
+			self::CONFIG_PARTIALROOTPATHS
+		);
+		$pathCollections = array();
+		foreach ($pathParts as $pathPart) {
+			$partPaths = array();
+			if (isset($paths[$pathPart]) && is_array($paths[$pathPart])) {
+				krsort($paths[$pathPart], SORT_NUMERIC);
+				$partPaths = array_merge($partPaths, array_values($paths[$pathPart]));
+			}
+			$pathCollections[] = array_values(array_unique(array_map(array($this, 'ensureSuffixedPath'), $partPaths)));
 		}
-		if (isset($paths[self::CONFIG_LAYOUTROOTPATHS]) && is_array($paths[self::CONFIG_LAYOUTROOTPATHS])) {
-			krsort($paths[self::CONFIG_LAYOUTROOTPATHS], SORT_NUMERIC);
-			$layoutRootPaths = array_merge($layoutRootPaths, array_values($paths[self::CONFIG_LAYOUTROOTPATHS]));
-		}
-		if (isset($paths[self::CONFIG_PARTIALROOTPATHS]) && is_array($paths[self::CONFIG_PARTIALROOTPATHS])) {
-			krsort($paths[self::CONFIG_PARTIALROOTPATHS], SORT_NUMERIC);
-			$partialRootPaths = array_merge($partialRootPaths, array_values($paths[self::CONFIG_PARTIALROOTPATHS]));
-		}
-		// make sure every path is suffixed by a trailing slash:
-		$templateRootPaths = array_map(array($this, 'ensureSuffixedPath'), $templateRootPaths);
-		$layoutRootPaths = array_map(array($this, 'ensureSuffixedPath'), $layoutRootPaths);
-		$partialRootPaths = array_map(array($this, 'ensureSuffixedPath'), $partialRootPaths);
-		$templateRootPaths = array_unique($templateRootPaths);
-		$partialRootPaths = array_unique($partialRootPaths);
-		$layoutRootPaths = array_unique($layoutRootPaths);
-		$templateRootPaths = array_values($templateRootPaths);
-		$layoutRootPaths = array_values($layoutRootPaths);
-		$partialRootPaths = array_values($partialRootPaths);
-		$pathCollections = array($templateRootPaths, $layoutRootPaths, $partialRootPaths);
 		$pathCollections = $this->ensureAbsolutePath($pathCollections);
 		$pathCollections[] = $format;
 		return $pathCollections;

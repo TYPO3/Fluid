@@ -296,7 +296,10 @@ class NodeConverter {
 					'execution' => 'NULL'
 				);
 			case 1:
-				return $this->convert(current($node->getChildNodes()));
+				$childNode = current($node->getChildNodes());
+				if ($childNode instanceof NodeInterface) {
+					return $this->convert($childNode);
+				}
 			default:
 				$outputVariableName = $this->variableName('output');
 				$initializationPhpCode = sprintf('%s = \'\';', $outputVariableName) . chr(10);
