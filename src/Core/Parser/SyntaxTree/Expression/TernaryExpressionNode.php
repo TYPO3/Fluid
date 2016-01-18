@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 
 /**
@@ -119,15 +120,16 @@ class TernaryExpressionNode extends AbstractExpressionNode {
 
 		$parser = new BooleanParser();
 		$compiledExpression = $parser->compile($check);
-		$functionName = 'ternaryExpression_' . md5($compiledExpression . $initializationPhpCode);
-		$initializationPhpCode .= sprintf('function %s($context, $renderingContext) {
-	if ((' . $compiledExpression . ') === TRUE) {
-		return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-	} else {
-		return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-	}
-}' . chr(10),
+		$functionName = $templateCompiler->variableName('ternaryExpression');
+		$initializationPhpCode .= sprintf('%s = function($context, $renderingContext) {
+				if (%s::convertToBoolean(' . $compiledExpression . ', $renderingContext) === TRUE) {
+					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
+				} else {
+					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
+				}
+			};' . chr(10),
 			$functionName,
+			BooleanNode::class,
 			static::class,
 			var_export($then, TRUE),
 			static::class,

@@ -110,7 +110,7 @@ class NodeConverterTest extends UnitTestCase {
 			array(
 				new BooleanNode(new TextNode('TRUE')),
 				'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
-					expression_95749a4727530a4d6cff5a9e911c5e59(
+					$expression1(
 						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
 					),
 					$renderingContext
@@ -119,7 +119,7 @@ class NodeConverterTest extends UnitTestCase {
 			array(
 				new BooleanNode(new TextNode('1 = 1')),
 				'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
-					expression_9a8d61b5b0c2379e8ceecabe5c5dfb60(
+					$expression1(
 						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
 					),
 					$renderingContext
@@ -128,7 +128,7 @@ class NodeConverterTest extends UnitTestCase {
 			array(
 				$treeBoolean,
 				'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
-					expression_957b752c49624ee667155b996838c9ce(
+					$expression1(
 						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
 					),
 					$renderingContext
@@ -136,7 +136,7 @@ class NodeConverterTest extends UnitTestCase {
 			),
 			array(
 				new TernaryExpressionNode('1 ? 2 : 3', array(1, 2, 3)),
-				'ternaryExpression_505da9922ca51ac0601c25bf8122c69b(TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::gatherContext($renderingContext, $array0[1]), $renderingContext)'
+				'$ternaryExpression1(TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::gatherContext($renderingContext, $array0[1]), $renderingContext)'
 			),
 			array(
 				new EscapingNode(new TextNode('foo')),
