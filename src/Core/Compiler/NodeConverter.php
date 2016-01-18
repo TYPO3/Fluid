@@ -336,8 +336,8 @@ class NodeConverter {
 
 		$parser = new BooleanParser();
 		$compiledExpression = $parser->compile(BooleanNode::reconcatenateExpression($node->getStack()));
-		$functionName = 'expression_' . md5($compiledExpression . $initializationPhpCode);
-		$initializationPhpCode .= 'function ' . $functionName . '($context) {return ' . $compiledExpression . ';}' . chr(10);
+		$functionName = $this->variableName('expression');
+		$initializationPhpCode .= $functionName . ' = function($context) {return ' . $compiledExpression . ';};' . chr(10);
 
 		return array(
 			'initialization' => $initializationPhpCode,
