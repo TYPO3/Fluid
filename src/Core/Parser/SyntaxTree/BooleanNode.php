@@ -123,9 +123,7 @@ class BooleanNode extends AbstractNode {
 	public static function gatherContext($renderingContext, $expressionParts) {
 		$context = array();
 		foreach ($expressionParts as $key => $expressionPart) {
-			if ($expressionPart instanceof TextNode || is_string($expressionPart)) {
-				continue;
-			} else if ($expressionPart instanceof NodeInterface) {
+			if ($expressionPart instanceof NodeInterface) {
 				$context['node' . $key] = $expressionPart->evaluate($renderingContext);
 			} else {
 				$context['node' . $key] = $expressionPart;
