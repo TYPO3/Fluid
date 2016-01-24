@@ -110,8 +110,8 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 		$matchingCaseViewHelper->setRenderChildrenClosure(function() { return 'foo-childcontent'; });
 		$breakingMatchingCaseNode = $this->getAccessibleMock(ViewHelperNode::class, array('getViewHelperClassName', 'getUninitializedViewHelper'), array(), '', FALSE);
 		$breakingMatchingCaseNode->_set('arguments', array('value' => 'foo'));
+		$breakingMatchingCaseNode->_set('uninitializedViewHelper', $matchingCaseViewHelper);
 		$breakingMatchingCaseNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
-		$breakingMatchingCaseNode->method('getUninitializedViewHelper')->willReturn($matchingCaseViewHelper);
 		$defaultCaseNode = $this->getMock(ViewHelperNode::class, array('getViewHelperClassName', 'evaluate'), array(), '', FALSE);
 		$defaultCaseNode->method('getViewHelperClassName')->willReturn(DefaultCaseViewHelper::class);
 		$defaultCaseNode->expects($this->never())->method('evaluate');

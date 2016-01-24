@@ -26,11 +26,6 @@ class TemplateCompiler {
 	const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
 
 	/**
-	 * @var boolean
-	 */
-	protected $disabled = FALSE;
-
-	/**
 	 * @var array
 	 */
 	protected $syntaxTreeInstanceCache = array();
@@ -86,14 +81,14 @@ class TemplateCompiler {
 	 * @return void
 	 */
 	public function disable() {
-		$this->disabled = TRUE;
+		throw new StopCompilingException('Compiling stopped');
 	}
 
 	/**
 	 * @return boolean
 	 */
 	public function isDisabled() {
-		return $this->disabled || !$this->renderingContext->isCacheEnabled();
+		return !$this->renderingContext->isCacheEnabled();
 	}
 
 	/**
@@ -101,7 +96,10 @@ class TemplateCompiler {
 	 * @return boolean
 	 */
 	public function has($identifier) {
-		if (!$this->renderingContext->isCacheEnabled() || $this->disabled) {
+		if (isset($this->syntaxTreeInstanceCache[$identifier])) {
+			return TRUE;
+		}
+		if (!$this->renderingContext->isCacheEnabled()) {
 			return FALSE;
 		}
 		$identifier = $this->sanitizeIdentifier($identifier);

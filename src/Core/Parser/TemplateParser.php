@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
@@ -72,6 +73,11 @@ class TemplateParser {
 	protected $pointerTemplateCode = NULL;
 
 	/**
+	 * @var ParsedTemplateInterface[]
+	 */
+	protected $parsedTemplates = array();
+
+	/**
 	 * @param RenderingContextInterface $renderingContext
 	 * @return void
 	 */
@@ -107,7 +113,6 @@ class TemplateParser {
 		if (!is_string($templateString)) {
 			throw new Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
 		}
-
 		try {
 			$this->reset();
 			$templateString = $this->preProcessTemplateSource($templateString);
@@ -117,7 +122,7 @@ class TemplateParser {
 		} catch (Exception $error) {
 			throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
 		}
-
+		$this->parsedTemplates[$templateIdentifier] = $parsingState;
 		return $parsingState;
 	}
 
@@ -151,14 +156,22 @@ class TemplateParser {
 	 */
 	public function getOrParseAndStoreTemplate($templateIdentifier, $templateSourceClosure) {
 		$compiler = $this->renderingContext->getTemplateCompiler();
-		if ($compiler->has($templateIdentifier)) {
+		if (isset($this->parsedTemplates[$templateIdentifier])) {
+			$parsedTemplate = $this->parsedTemplates[$templateIdentifier];
+		} elseif ($compiler->has($templateIdentifier)) {
 			$parsedTemplate = $compiler->get($templateIdentifier);
 		} else {
-			$parsedTemplate = $this->renderingContext->getTemplateParser()->parse(
+			$parsedTemplate = $this->parse(
 				$templateSourceClosure($this, $this->renderingContext->getTemplatePaths()), $templateIdentifier
 			);
+			$this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
 			if ($parsedTemplate->isCompilable()) {
-				$compiler->store($templateIdentifier, $parsedTemplate);
+				try {
+					$compiler->store($templateIdentifier, $parsedTemplate);
+				} catch (StopCompilingException $stop) {
+					$parsedTemplate->setCompilable(FALSE);
+					return $parsedTemplate;
+				}
 			}
 		}
 		return $parsedTemplate;
