@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\NodeConverter;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -129,8 +130,8 @@ class TemplateCompilerTest extends UnitTestCase {
 	 */
 	public function testSupportsDisablingCompiler() {
 		$instance = new TemplateCompiler();
+		$this->setExpectedException(StopCompilingException::class);
 		$instance->disable();
-		$this->assertTrue($instance->isDisabled());
 	}
 
 	/**
@@ -147,9 +148,9 @@ class TemplateCompilerTest extends UnitTestCase {
 	public function testStoreWhenDisabledFlushesCache() {
 		$renderingContext = new RenderingContextFixture();
 		$state = new ParsingState();
-		$instance = new TemplateCompiler();
-		$instance->setRenderingContext($renderingContext);
-		$instance->disable();
+		$instance = $this->getAccessibleMock(TemplateCompiler::class);
+		$instance->_set('renderingContext', $renderingContext);
+		$instance->_set('disabled', TRUE);
 		$instance->store('fakeidentifier', $state);
 	}
 

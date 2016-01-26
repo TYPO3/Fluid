@@ -57,6 +57,8 @@ class ViewHelperNode extends AbstractNode {
 		$this->arguments = $arguments;
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
+		$this->uninitializedViewHelper->setRenderingContext($renderingContext);
+		$this->uninitializedViewHelper->setViewHelperNode($this);
 		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
 		$this->validateArguments($this->argumentDefinitions, $this->arguments);
@@ -108,6 +110,15 @@ class ViewHelperNode extends AbstractNode {
 	}
 
 	/**
+	 * @param NodeInterface $childNode
+	 * @return void
+	 */
+	public function addChildNode(NodeInterface $childNode) {
+		parent::addChildNode($childNode);
+		$this->uninitializedViewHelper->setChildNodes($this->childNodes);
+	}
+
+	/**
 	 * @param string $pointerTemplateCode
 	 * @return void
 	 */
@@ -129,16 +140,7 @@ class ViewHelperNode extends AbstractNode {
 	 * @return object evaluated node after the view helper has been called.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		$viewHelper = $this->getUninitializedViewHelper();
-		// Note about the following three method calls: some ViewHelpers
-		// require a specific order of attribute setting. The logical
-		// order is to first provide a ViewHelperNode, second to provide
-		// child nodes.
-		// DO NOT CHANGE THIS ORDER. You *will* cause damage.
-		$viewHelper->setRenderingContext($renderingContext);
-		$viewHelper->setViewHelperNode($this);
-		$viewHelper->setChildNodes($this->getChildNodes());
-		return $renderingContext->getViewHelperInvoker()->invoke($viewHelper, $this->arguments, $renderingContext);
+		return $renderingContext->getViewHelperInvoker()->invoke($this->uninitializedViewHelper, $this->arguments, $renderingContext);
 	}
 
 	/**
@@ -177,7 +179,24 @@ class ViewHelperNode extends AbstractNode {
 				}
 			}
 		}
+		$this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $argumentsObjectTree);
 		$this->uninitializedViewHelper->validateAdditionalArguments($additionalArguments);
+	}
+
+	/**
+	 * Throw an exception if required arguments are missing
+	 *
+	 * @param ArgumentDefinition[] $expectedArguments Array of all expected arguments
+	 * @param NodeInterface[] $actualArguments Actual arguments
+	 * @throws Exception
+	 */
+	protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments) {
+		$actualArgumentNames = array_keys($actualArguments);
+		foreach ($expectedArguments as $expectedArgument) {
+			if ($expectedArgument->isRequired() && !in_array($expectedArgument->getName(), $actualArgumentNames)) {
+				throw new Exception('Required argument "' . $expectedArgument->getName() . '" was not supplied.', 1237823699);
+			}
+		}
 	}
 
 }

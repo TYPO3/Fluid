@@ -28,38 +28,4 @@ class ViewHelperInvokerTest extends UnitTestCase {
 		$this->assertEquals(1, $result);
 	}
 
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
-	 */
-	public function abortIfRequiredArgumentsAreMissingThrowsException() {
-		$expected = array(
-			new ArgumentDefinition('firstArgument', 'string', '', FALSE),
-			new ArgumentDefinition('secondArgument', 'string', '', TRUE)
-		);
-
-		$templateParser = $this->getAccessibleMock(ViewHelperInvoker::class, array('dummy'), array(), '', FALSE);
-
-		$templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, array());
-	}
-
-	/**
-	 * @test
-	 */
-	public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists() {
-		$expectedArguments = array(
-			new ArgumentDefinition('name1', 'string', 'desc', FALSE),
-			new ArgumentDefinition('name2', 'string', 'desc', TRUE)
-		);
-		$actualArguments = array(
-			'name2' => 'bla'
-		);
-
-		$mockTemplateParser = $this->getAccessibleMock(ViewHelperInvoker::class, array('dummy'), array(), '', FALSE);
-
-		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
-		// dummy assertion to avoid "did not perform any assertions" error
-		$this->assertTrue(TRUE);
-	}
-
 }

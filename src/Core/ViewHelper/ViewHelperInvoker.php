@@ -67,31 +67,13 @@ class ViewHelperInvoker {
 			}
 		}
 
-		$this->abortIfRequiredArgumentsAreMissing($expectedViewHelperArguments, $evaluatedArguments);
-
-		$viewHelper->setRenderingContext($renderingContext);
-		$viewHelper->setArguments($evaluatedArguments);
-		$viewHelper->handleAdditionalArguments($undeclaredArguments);
 		if ($renderChildrenClosure) {
 			$viewHelper->setRenderChildrenClosure($renderChildrenClosure);
 		}
+		$viewHelper->setRenderingContext($renderingContext);
+		$viewHelper->setArguments($evaluatedArguments);
+		$viewHelper->handleAdditionalArguments($undeclaredArguments);
 		return $viewHelper->initializeArgumentsAndRender();
-	}
-
-	/**
-	 * Throw an exception if required arguments are missing
-	 *
-	 * @param ArgumentDefinition[] $expectedArguments Array of all expected arguments
-	 * @param NodeInterface[] $actualArguments Actual arguments
-	 * @throws Exception
-	 */
-	protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments) {
-		$actualArgumentNames = array_keys($actualArguments);
-		foreach ($expectedArguments as $expectedArgument) {
-			if ($expectedArgument->isRequired() && !in_array($expectedArgument->getName(), $actualArgumentNames)) {
-				throw new Exception('Required argument "' . $expectedArgument->getName() . '" was not supplied.', 1237823699);
-			}
-		}
 	}
 
 }
