@@ -88,6 +88,16 @@ class ViewHelperResolverTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testResolveViewHelperClassNameTrimsBackslashSuffixFromNamespace() {
+		$resolver = $this->getAccessibleMock(ViewHelperResolver::class, array('dummy'));
+		$resolver->_set('namespaces', array('f' => array('FluidTYPO3\\Fluid\\ViewHelpers\\')));
+		$result = $resolver->_call('resolveViewHelperName', 'f', 'render');
+		$this->assertEquals('FluidTYPO3\\Fluid\\ViewHelpers\\RenderViewHelper', $result);
+	}
+
+	/**
+	 * @test
+	 */
 	public function testAddNamespaceWithString() {
 		$resolver = $this->getMock(ViewHelperResolver::class, array('dummy'));
 		$resolver->addNamespace('f', 'Foo\\Bar');
