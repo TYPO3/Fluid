@@ -100,6 +100,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 		}
 		$view = $this->getView(FALSE);
 		$view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+		$view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
 		$view->assignMultiple($variables);
 		$output = $view->render();
 		$this->assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
