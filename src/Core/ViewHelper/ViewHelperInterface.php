@@ -129,7 +129,7 @@ interface ViewHelperInterface {
 	 * @param RenderingContextInterface $renderingContext
 	 * @return string the resulting string which is directly shown
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
 
 	/**
 	 * This method is called on compilation time.
@@ -163,4 +163,11 @@ interface ViewHelperInterface {
 	 */
 	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
 
+	/**
+	 * Called when being inside a cached template.
+	 *
+	 * @param \Closure $renderChildrenClosure
+	 * @return void
+	 */
+	public function setRenderChildrenClosure(\Closure $renderChildrenClosure);
 }

@@ -36,10 +36,10 @@ interface VariableProviderInterface extends \ArrayAccess {
 	 * automatically transferred variables (in the default
 	 * implementation the $settings variable is transferred).
 	 *
-	 * @param array $variables
+	 * @param array|\ArrayAccess $variables
 	 * @return VariableProviderInterface
 	 */
-	public function getScopeCopy(array $variables);
+	public function getScopeCopy($variables);
 
 	/**
 	 * Set the source data used by this VariableProvider. The

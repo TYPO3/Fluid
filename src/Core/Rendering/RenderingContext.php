@@ -98,7 +98,7 @@ class RenderingContext implements RenderingContextInterface {
 	 * which will be consulted when an expression does not match
 	 * any built-in parser expression types.
 	 *
-	 * @var string
+	 * @var array
 	 */
 	protected $expressionNodeTypes = array(
 		CastingExpressionNode::class,

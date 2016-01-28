@@ -6,12 +6,10 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\View;
 
 /**
@@ -71,7 +69,7 @@ class ParsingState implements ParsedTemplateInterface {
 	 * @param NodeInterface $rootNode
 	 * @return void
 	 */
-	public function setRootNode(AbstractNode $rootNode) {
+	public function setRootNode(RootNode $rootNode) {
 		$this->rootNode = $rootNode;
 	}
 
@@ -101,7 +99,7 @@ class ParsingState implements ParsedTemplateInterface {
 	 * @param NodeInterface $node Node to push to node stack
 	 * @return void
 	 */
-	public function pushNodeToStack(AbstractNode $node) {
+	public function pushNodeToStack(NodeInterface $node) {
 		array_push($this->nodeStack, $node);
 	}
 

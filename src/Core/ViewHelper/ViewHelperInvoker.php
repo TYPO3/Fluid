@@ -34,11 +34,11 @@ class ViewHelperInvoker {
 	 * Invoke the ViewHelper described by the ViewHelperNode, the properties
 	 * of which will already have been filled by the ViewHelperResolver.
 	 *
-	 * @param string|ViewHelperInterface $viewHelperClassName
+	 * @param string|ViewHelperInterface $viewHelperClassNameOrInstance
 	 * @param array $arguments
 	 * @param RenderingContextInterface $renderingContext
-	 * @param \Closure $renderChildrenClosure
-	 * @return mixed
+	 * @param null|\Closure $renderChildrenClosure
+	 * @return string
 	 */
 	public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = NULL) {
 		$viewHelperResolver = $renderingContext->getViewHelperResolver();

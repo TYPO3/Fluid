@@ -21,7 +21,7 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
 	protected $variableProviders = array();
 
 	/**
-	 * @param VariableProviderInterface $variableProviders
+	 * @param array $variableProviders
 	 */
 	public function __construct(array $variableProviders = array()) {
 		$this->variableProviders = $variableProviders;
@@ -86,10 +86,10 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
 	}
 
 	/**
-	 * @param array $variables
+	 * @param array|\ArrayAccess $variables
 	 * @return ChainedVariableProvider
 	 */
-	public function getScopeCopy(array $variables) {
+	public function getScopeCopy($variables) {
 		$clone = clone $this;
 		$clone->setSource($variables);
 		return $clone;

@@ -43,10 +43,10 @@ class LayoutViewHelper extends AbstractViewHelper {
 	 *
 	 * @param ViewHelperNode $node
 	 * @param array $arguments
-	 * @param TemplateVariableContainer $variableContainer
+	 * @param VariableProviderInterface $variableContainer
 	 * @return void
 	 */
-	static public function postParseEvent(
+	public static function postParseEvent(
 		ViewHelperNode $node,
 		array $arguments,
 		VariableProviderInterface $variableContainer

@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  * See LICENSE.txt that was shipped with this package.
  */
 
- /**
+/**
  * Class VariableExtractor
  *
  * Extracts variables from arrays/objects by use
@@ -37,7 +37,7 @@ class VariableExtractor {
 	 * Static interface for instanciating and extracting
 	 * accessors for each segment of the path.
 	 *
-	 * @param mixed $subject
+	 * @param VariableProviderInterface $subject
 	 * @param string $propertyPath
 	 * @return mixed
 	 */
@@ -130,7 +130,7 @@ class VariableExtractor {
 	 *
 	 * @param mixed $subject
 	 * @param string $propertyName
-	 * @param string $accessor
+	 * @param string|null $accessor
 	 * @return mixed
 	 */
 	protected function extractSingleValue($subject, $propertyName, $accessor = NULL) {
@@ -154,11 +154,11 @@ class VariableExtractor {
 		if ($accessor === self::ACCESSOR_ARRAY) {
 			return (is_array($subject) || $subject instanceof \ArrayAccess);
 		} elseif ($accessor === self::ACCESSOR_GETTER) {
-			return ($class && method_exists($subject, 'get' . ucfirst($propertyName)));
+			return ($class !== FALSE && method_exists($subject, 'get' . ucfirst($propertyName)));
 		} elseif ($accessor === self::ACCESSOR_ASSERTER) {
-			return ($class && method_exists($subject, 'is' . ucfirst($propertyName)));
+			return ($class !== FALSE && method_exists($subject, 'is' . ucfirst($propertyName)));
 		} elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
-			return ($class && property_exists($subject, $propertyName));
+			return ($class !== FALSE && property_exists($subject, $propertyName));
 		}
 		return FALSE;
 	}

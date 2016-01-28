@@ -73,7 +73,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 	 * @param RenderingContextInterface $renderingContext
 	 * @return mixed
 	 */
-	static public function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
 		if (static::evaluateCondition($arguments)) {
 			if (isset($arguments['then'])) {
 				return $arguments['then'];
@@ -157,8 +157,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 			return $this->arguments['else'];
 		}
 		if ($this->hasArgument('__elseClosures')) {
-			$elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : array();
-			return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $this->renderingContext);
+			$elseIfClosures = isset($this->arguments['__elseifClosures']) ? $this->arguments['__elseifClosures'] : array();
+			return static::evaluateElseClosures($this->arguments['__elseClosures'], $elseIfClosures, $this->renderingContext);
 		}
 
 		/** @var ViewHelperNode|NULL $elseNode */

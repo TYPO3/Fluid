@@ -41,4 +41,25 @@ interface ViewInterface {
 	 */
 	public function render();
 
+	/**
+	 * Renders a given section.
+	 *
+	 * @param string $sectionName Name of section to render
+	 * @param array $variables The variables to use
+	 * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+	 * @return string rendered template for the section
+	 * @throws InvalidSectionException
+	 */
+	public function renderSection($sectionName, array $variables = array(), $ignoreUnknown = FALSE);
+
+	/**
+	 * Renders a partial.
+	 *
+	 * @param string $partialName
+	 * @param string $sectionName
+	 * @param array $variables
+	 * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+	 * @return string
+	 */
+	public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = FALSE);
 }

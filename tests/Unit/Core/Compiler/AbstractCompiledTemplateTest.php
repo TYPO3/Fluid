@@ -59,23 +59,6 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function testGetViewHelperReturnsInstanceOfClassName() {
-		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-		$viewHelper = new TestViewHelper();
-		$resolver = $this->getMock(
-			ViewHelperResolver::class,
-			array('createViewHelperInstanceFromClassName')
-		);
-		$resolver->expects($this->once())->method('createViewHelperInstanceFromClassName')->willReturn($viewHelper);
-		$renderingContext = new RenderingContextFixture();
-		$renderingContext->setViewHelperResolver($resolver);
-		$result = $instance->getViewHelper(1, $renderingContext, TestViewHelper::class);
-		$this->assertSame($viewHelper, $result);
-	}
-
-	/**
-	 * @test
-	 */
 	public function testIsCompilableReturnsFalse() {
 		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
 		$result = $instance->isCompilable();

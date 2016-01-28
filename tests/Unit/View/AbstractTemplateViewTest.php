@@ -190,7 +190,7 @@ class AbstractTemplateViewTest extends UnitTestCase {
 		$view->expects($this->once())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
 		$view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
 		$view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-		$view->renderSection('Section', NULL, TRUE);
+		$view->renderSection('Section', array(), TRUE);
 	}
 
 	/**
