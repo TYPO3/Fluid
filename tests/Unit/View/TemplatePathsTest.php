@@ -196,4 +196,13 @@ class TemplatePathsTest extends BaseTestCase {
 		$method->invokeArgs($instance, array(array('/not/', '/found/'), 'notfound.html'));
 	}
 
+	/**
+	 * @test
+	 */
+	public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat() {
+		$instance = new TemplatePaths();
+		$instance->setTemplateSource('foobar');
+		$this->assertEquals('8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+	}
+
 }
