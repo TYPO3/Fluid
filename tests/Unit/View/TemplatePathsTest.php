@@ -36,8 +36,32 @@ class TemplatePathsTest extends BaseTestCase {
 	 */
 	public function getSanitizePathTestValues() {
 		return array(
-			array(__FILE__, __FILE__),
-			array(array(__FILE__, __DIR__), array(__FILE__, __DIR__ . '/'))
+			array(__FILE__, strtr(__FILE__, '\\', '/')),
+			array('C:' . __FILE__, 'C:' . strtr(__FILE__, '\\', '/')),
+		);
+	}
+
+	/**
+	 * @param string|array $input
+	 * @param string|array $expected
+	 * @test
+	 * @dataProvider getSanitizePathsTestValues
+	 */
+	public function testSanitizePaths($input, $expected) {
+		$instance = new TemplatePaths();
+		$method = new \ReflectionMethod($instance, 'sanitizePaths');
+		$method->setAccessible(TRUE);
+		$output = $method->invokeArgs($instance, array($input));
+		$this->assertEquals($expected, $output);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSanitizePathsTestValues() {
+		return array(
+			array(array('C:' . __FILE__), array('C:' . strtr(__FILE__, '\\', '/'))),
+			array(array(__FILE__, __DIR__), array(strtr(__FILE__, '\\', '/'), strtr(__DIR__, '\\', '/') . '/')),
 		);
 	}
 
