@@ -84,6 +84,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 		} elseif (!empty($arguments['__elseClosures'])) {
 			$elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : array();
 			return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $renderingContext);
+		} elseif (array_key_exists('else', $arguments)) {
+			return $arguments['else'];
 		}
 		return '';
 	}
