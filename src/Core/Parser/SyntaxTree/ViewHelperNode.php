@@ -56,7 +56,6 @@ class ViewHelperNode extends AbstractNode {
 		$this->arguments = $arguments;
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
-		$this->uninitializedViewHelper->setRenderingContext($renderingContext);
 		$this->uninitializedViewHelper->setViewHelperNode($this);
 		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);

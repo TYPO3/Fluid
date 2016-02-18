@@ -1,0 +1,12 @@
+<f:section name="Items">
+	<f:spaceless>
+		<f:for each="{items}" as="item">
+			Item: {item.id}.
+			<f:if condition="{item.items}">
+				<f:render section="Items" arguments="{items: item.items}" />
+			</f:if>
+		</f:for>
+	</f:spaceless>
+</f:section>
+
+<f:render section="Items" arguments="{items: items}" />
