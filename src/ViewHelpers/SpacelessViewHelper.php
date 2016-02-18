@@ -40,7 +40,7 @@ class SpacelessViewHelper extends AbstractViewHelper {
 	 * @return string
 	 */
 	public function render() {
-		return static::renderStatic($this->arguments, $this->renderChildrenClosure, $this->renderingContext);
+		return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
 	}
 
 	/**
