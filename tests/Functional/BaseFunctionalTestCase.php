@@ -2,6 +2,7 @@
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
+use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
