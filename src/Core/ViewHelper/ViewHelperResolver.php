@@ -26,6 +26,11 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 class ViewHelperResolver {
 
 	/**
+	 * @var array
+	 */
+	protected static $resolvedViewHelperClassNames = array();
+
+	/**
 	 * Namespaces requested by the template being rendered,
 	 * in [shortname => phpnamespace] format.
 	 *
@@ -232,15 +237,18 @@ class ViewHelperResolver {
 	 * @throws ParserException
 	 */
 	public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier) {
-		$resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
-		$actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
-		if (FALSE === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === FALSE) {
-			throw new ParserException(sprintf(
-				'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
-				'Based on your spelling, the system would load the class "%s", however this class does not exist.',
-				$namespaceIdentifier, $methodIdentifier, $resolvedViewHelperClassName), 1407060572);
+		if (!isset(static::$resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
+			$resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
+			$actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
+			if (FALSE === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === FALSE) {
+				throw new ParserException(sprintf(
+					'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
+					'Based on your spelling, the system would load the class "%s", however this class does not exist.',
+					$namespaceIdentifier, $methodIdentifier, $resolvedViewHelperClassName), 1407060572);
+			}
+			static::$resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $actualViewHelperClassName;
 		}
-		return $actualViewHelperClassName;
+		return static::$resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier];
 	}
 
 	/**
