@@ -134,7 +134,7 @@ class ForViewHelper extends AbstractViewHelper {
 		$output = '';
 		foreach ($arguments['each'] as $keyValue => $singleElement) {
 			$templateVariableContainer->add($arguments['as'], $singleElement);
-			if ($arguments['key'] !== '') {
+			if ($arguments['key'] !== NULL) {
 				$templateVariableContainer->add($arguments['key'], $keyValue);
 			}
 			if ($arguments['iteration'] !== NULL) {
@@ -148,7 +148,7 @@ class ForViewHelper extends AbstractViewHelper {
 			}
 			$output .= $renderChildrenClosure();
 			$templateVariableContainer->remove($arguments['as']);
-			if ($arguments['key'] !== '') {
+			if ($arguments['key'] !== NULL) {
 				$templateVariableContainer->remove($arguments['key']);
 			}
 			if ($arguments['iteration'] !== NULL) {

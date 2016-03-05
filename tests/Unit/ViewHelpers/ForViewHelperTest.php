@@ -21,7 +21,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase {
 
 
 		$this->arguments['reverse'] = NULL;
-		$this->arguments['key'] = '';
+		$this->arguments['key'] = NULL;
 		$this->arguments['iteration'] = NULL;
 	}
 
