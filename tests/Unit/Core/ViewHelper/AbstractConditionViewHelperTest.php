@@ -69,23 +69,23 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 		return array(
 			array(
 				array(),
-				'foobar-args[\'__thenClosure\'] = foobar-closure;' . PHP_EOL
+				'foobar-args[\'__thenClosure\'] = foobar-closure;' . chr(10)
 			),
 			array(
 				array(new ViewHelperNode($context, 'f', 'then', array(), $state)),
-				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL
+				'foobar-args[\'__thenClosure\'] = closure;' . chr(10)
 			),
 			array(
 				array(new ViewHelperNode($context, 'f', 'else', array(), $state)),
-				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
+				'foobar-args[\'__elseClosures\'][] = closure;' . chr(10)
 			),
 			array(
 				array(
 					new ViewHelperNode($context, 'f', 'then', array(), $state),
 					new ViewHelperNode($context, 'f', 'else', array(), $state)
 				),
-				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL .
-				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
+				'foobar-args[\'__thenClosure\'] = closure;' . chr(10) .
+				'foobar-args[\'__elseClosures\'][] = closure;' . chr(10)
 			),
 			array(
 				array(
@@ -93,10 +93,10 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 					new ViewHelperNode($context, 'f', 'else', array('if' => new BooleanNode(new RootNode())), $state),
 					new ViewHelperNode($context, 'f', 'else', array(), $state)
 				),
-				'foobar-args[\'__thenClosure\'] = closure;' . PHP_EOL .
-				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL .
-				'foobar-args[\'__elseifClosures\'][] = arg-closure;' . PHP_EOL .
-				'foobar-args[\'__elseClosures\'][] = closure;' . PHP_EOL
+				'foobar-args[\'__thenClosure\'] = closure;' . chr(10) .
+				'foobar-args[\'__elseClosures\'][] = closure;' . chr(10) .
+				'foobar-args[\'__elseifClosures\'][] = arg-closure;' . chr(10) .
+				'foobar-args[\'__elseClosures\'][] = closure;' . chr(10)
 			),
 		);
 	}

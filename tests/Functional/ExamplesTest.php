@@ -169,12 +169,12 @@ class ExamplesTest extends BaseTestCase {
 				'example_structures.php',
 				array(
 					'This section exists and is rendered: Valid section',
-					'Expects no output because section name is invalid: ' . PHP_EOL,
+					'Expects no output because section name is invalid: ' . "\n",
 					'Dynamic section name: Dynamically suffixed section',
 					'Bad dynamic section name, expects fallback: Just a section',
 					'Will render: Just a section',
 					'Will render, clause reversed: Just a section',
-					'Will not render: ' . PHP_EOL,
+					'Will not render: ' . "\n",
 					'This `f:else` was rendered',
 					'The value was "3"',
 					'The unmatched value case triggered',
@@ -186,7 +186,7 @@ class ExamplesTest extends BaseTestCase {
 				array(
 					'A string with numbers in it: 132',
 					'Ditto, with type name stored in variable: 132',
-					'A comma-separated value iterated as array:' . PHP_EOL . "\t- one" . PHP_EOL . "\t- two",
+					'A comma-separated value iterated as array:' . "\n\t- one\n\t- two",
 					'String variable name with dynamic1 part: String using $dynamic1.',
 					'String variable name with dynamic2 part: String using $dynamic2.',
 					'Array member in $array[$dynamic1]: Dynamic key in $array[$dynamic1]',
