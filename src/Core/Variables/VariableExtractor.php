@@ -170,8 +170,8 @@ class VariableExtractor {
 	 * @return mixed
 	 */
 	protected function extractWithAccessor($subject, $propertyName, $accessor) {
-		if (($accessor === self::ACCESSOR_ARRAY && is_array($subject) && (array_key_exists($propertyName, $subject))
-			|| (is_object($subject) && method_exists($subject, 'exists') && $subject->exists($propertyName)))
+		if ($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject)
+			|| $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
 		) {
 			return $subject[$propertyName];
 		} elseif (is_object($subject)) {

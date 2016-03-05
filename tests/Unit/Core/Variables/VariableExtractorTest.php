@@ -89,7 +89,7 @@ class VariableExtractorTest extends UnitTestCase {
 	 * @dataProvider getExtractRedectAccessorTestValues
 	 */
 	public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected) {
-		$result = VariableExtractor::extract($subject, 'test', array($accessor));
+		$result = VariableExtractor::extract($subject, $path, array($accessor));
 		$this->assertEquals($expected, $result);
 	}
 
@@ -105,6 +105,7 @@ class VariableExtractorTest extends UnitTestCase {
 			array(array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_ASSERTER, 'test'),
 			array((object) array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'),
 			array((object) array('test' => 'test'), 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'),
+			array(new \ArrayObject(array('testProperty' => 'testValue')), 'testProperty', NULL, 'testValue'),
 		);
 	}
 
