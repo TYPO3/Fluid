@@ -7,5 +7,5 @@ return array(
 	'{number}',
 	'</foo:format.number>',
 	'</foo:format.nl2br>',
-	PHP_EOL
+	"\n"
 );
