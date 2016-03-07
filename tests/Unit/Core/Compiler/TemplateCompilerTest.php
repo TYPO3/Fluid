@@ -94,7 +94,7 @@ class TemplateCompilerTest extends UnitTestCase {
 		$foo = new TextNode('foo');
 		$bar = new TextNode('bar');
 		$parsingState = new ParsingState();
-		$container = new StandardVariableProvider(array('sections' => array($foo, $bar)));
+		$container = new StandardVariableProvider(array('1457379500_sections' => array($foo, $bar)));
 		$parsingState->setVariableProvider($container);
 		$nodeConverter = $this->getMock(
 			NodeConverter::class,

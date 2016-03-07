@@ -183,8 +183,8 @@ EOD;
 	 */
 	protected function generateSectionCodeFromParsingState(ParsingState $parsingState) {
 		$generatedRenderFunctions = '';
-		if ($parsingState->getVariableContainer()->exists('sections')) {
-			$sections = $parsingState->getVariableContainer()->get('sections'); // TODO: refactor to $parsedTemplate->getSections()
+		if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
+			$sections = $parsingState->getVariableContainer()->get('1457379500_sections'); // TODO: refactor to $parsedTemplate->getSections()
 			foreach ($sections as $sectionName => $sectionRootNode) {
 				$generatedRenderFunctions .= $this->generateCodeForSection(
 					$this->nodeConverter->convertListOfSubNodes($sectionRootNode),

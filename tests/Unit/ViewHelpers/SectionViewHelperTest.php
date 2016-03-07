@@ -35,8 +35,8 @@ class SectionViewHelperTest extends UnitTestCase {
 
 		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 
-		$this->assertTrue($variableContainer->exists('sections'), 'Sections array was not created, albeit it should.');
-		$sections = $variableContainer->get('sections');
+		$this->assertTrue($variableContainer->exists('1457379500_sections'), 'Sections array was not created, albeit it should.');
+		$sections = $variableContainer->get('1457379500_sections');
 		$this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
 	}
 
