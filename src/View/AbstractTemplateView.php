@@ -237,7 +237,7 @@ abstract class AbstractTemplateView extends AbstractView {
 			$output = $parsedTemplate->$methodNameOfSection($renderingContext);
 			$this->stopRendering();
 		} else {
-			$sections = $parsedTemplate->getVariableContainer()->get('sections');
+			$sections = $parsedTemplate->getVariableContainer()->get('1457379500_sections');
 			if (!isset($sections[$sectionName])) {
 				if ($ignoreUnknown) {
 					return '';
