@@ -226,7 +226,7 @@ class TemplatePathsTest extends BaseTestCase {
 	public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat() {
 		$instance = new TemplatePaths();
 		$instance->setTemplateSource('foobar');
-		$this->assertEquals('8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+		$this->assertEquals('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
 	}
 
 }
