@@ -119,29 +119,10 @@ class TemplatePaths {
 	 */
 	public function toArray() {
 		return array(
-			self::CONFIG_TEMPLATEROOTPATHS => $this->sanitizePath($this->getTemplateRootPaths()),
-			self::CONFIG_LAYOUTROOTPATHS => $this->sanitizePath($this->getLayoutRootPaths()),
-			self::CONFIG_PARTIALROOTPATHS => $this->sanitizePath($this->getPartialRootPaths())
+			self::CONFIG_TEMPLATEROOTPATHS => $this->sanitizePaths($this->getTemplateRootPaths()),
+			self::CONFIG_LAYOUTROOTPATHS => $this->sanitizePaths($this->getLayoutRootPaths()),
+			self::CONFIG_PARTIALROOTPATHS => $this->sanitizePaths($this->getPartialRootPaths())
 		);
-	}
-
-	/**
-	 * @param string|array $path
-	 * @return string
-	 */
-	protected function sanitizePath($path) {
-		if (is_array($path)) {
-			$paths = array_map(array($this, 'sanitizePath'), $path);
-			return array_unique($paths);
-		}
-		if (substr($path, 0, 1) !== '/') {
-			$path = realpath($path);
-		}
-		$path = $this->ensureAbsolutePath($path);
-		if (is_dir($path)) {
-			$path = $this->ensureSuffixedPath($path);
-		}
-		return $path;
 	}
 
 	/**
@@ -172,7 +153,7 @@ class TemplatePaths {
 	 * @return void
 	 */
 	public function setTemplateRootPaths(array $templateRootPaths) {
-		$this->templateRootPaths = array_map(array($this, 'sanitizePath'), $templateRootPaths);
+		$this->templateRootPaths = $this->sanitizePaths($templateRootPaths);
 		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
@@ -188,7 +169,7 @@ class TemplatePaths {
 	 * @return void
 	 */
 	public function setLayoutRootPaths(array $layoutRootPaths) {
-		$this->layoutRootPaths = array_map(array($this, 'sanitizePath'), $layoutRootPaths);
+		$this->layoutRootPaths = $this->sanitizePaths($layoutRootPaths);
 		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
@@ -204,7 +185,7 @@ class TemplatePaths {
 	 * @return void
 	 */
 	public function setPartialRootPaths(array $partialRootPaths) {
-		$this->partialRootPaths = array_map(array($this, 'sanitizePath'), $partialRootPaths);
+		$this->partialRootPaths = $this->sanitizePaths($partialRootPaths);
 		$this->clearResolvedIdentifiersAndTemplates();
 	}
 
@@ -392,24 +373,53 @@ class TemplatePaths {
 	}
 
 	/**
-	 * Guarantees that $reference is turned into a
-	 * correct, absolute path. The input can be a
-	 * relative path or a FILE: or EXT: reference
-	 * but cannot be a FAL resource identifier.
+	 * Sanitize a path, ensuring it is absolute and
+	 * if a directory, suffixed by a trailing slash.
 	 *
-	 * @param mixed $reference
+	 * @param string|array $path
 	 * @return string
 	 */
-	protected function ensureAbsolutePath($reference) {
-		if (FALSE === is_array($reference)) {
-			$filename = ('/' !== $reference{0} ? realpath($reference) : $reference);
-		} else {
-			foreach ($reference as &$subValue) {
-				$subValue = $this->ensureAbsolutePath($subValue);
+	protected function sanitizePath($path) {
+		if (!empty($path)) {
+			$path = str_replace(array('\\', '//'), '/', $path);
+			$path = $this->ensureAbsolutePath($path);
+			if (is_dir($path)) {
+				$path = $this->ensureSuffixedPath($path);
 			}
-			return $reference;
 		}
-		return $filename;
+		return $path;
+	}
+
+	/**
+	 * Sanitize paths passing each through sanitizePath().
+	 *
+	 * @param array $paths
+	 * @return array
+	 */
+	protected function sanitizePaths(array $paths) {
+		return array_unique(array_map(array($this, 'sanitizePath'), $paths));
+	}
+
+	/**
+	 * Guarantees that $reference is turned into a
+	 * correct, absolute path.
+	 *
+	 * @param string $path
+	 * @return string
+	 */
+	protected function ensureAbsolutePath($path) {
+		return ((!empty($path) && $path{0} !== '/' && $path{1} !== ':') ? realpath($path) : $path);
+	}
+
+	/**
+	 * Guarantees that array $reference with paths
+	 * are turned into correct, absolute paths
+	 *
+	 * @param array $reference
+	 * @return array
+	 */
+	protected function ensureAbsolutePaths(array $reference) {
+		return array_map(array($this, 'ensureAbsolutePath'), $reference);
 	}
 
 	/**
@@ -458,7 +468,7 @@ class TemplatePaths {
 			}
 			$pathCollections[] = array_values(array_unique(array_map(array($this, 'ensureSuffixedPath'), $partPaths)));
 		}
-		$pathCollections = $this->ensureAbsolutePath($pathCollections);
+		$pathCollections = array_map(array($this, 'ensureAbsolutePaths'), $pathCollections);
 		$pathCollections[] = $format;
 		return $pathCollections;
 	}
