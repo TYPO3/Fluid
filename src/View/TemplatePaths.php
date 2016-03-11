@@ -408,7 +408,7 @@ class TemplatePaths {
 	 * @return string
 	 */
 	protected function ensureAbsolutePath($path) {
-		return ((!empty($path) && $path{0} !== '/' && $path{1} !== ':') ? realpath($path) : $path);
+		return ((!empty($path) && $path{0} !== '/' && $path{1} !== ':') ? $this->sanitizePath(realpath($path)) : $path);
 	}
 
 	/**

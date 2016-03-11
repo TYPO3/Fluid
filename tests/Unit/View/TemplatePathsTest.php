@@ -36,8 +36,12 @@ class TemplatePathsTest extends BaseTestCase {
 	 */
 	public function getSanitizePathTestValues() {
 		return array(
+			array('', ''),
+			array('/foo/bar/baz', '/foo/bar/baz'),
+			array('C:\\foo\\bar\baz', 'C:/foo/bar/baz'),
 			array(__FILE__, strtr(__FILE__, '\\', '/')),
-			array('C:' . __FILE__, 'C:' . strtr(__FILE__, '\\', '/')),
+			array(__DIR__, strtr(__DIR__, '\\', '/') . '/'),
+			array('composer.json', strtr(getcwd(), '\\', '/') . '/composer.json'),
 		);
 	}
 
@@ -60,8 +64,9 @@ class TemplatePathsTest extends BaseTestCase {
 	 */
 	public function getSanitizePathsTestValues() {
 		return array(
-			array(array('C:' . __FILE__), array('C:' . strtr(__FILE__, '\\', '/'))),
+			array(array('/foo/bar/baz', 'C:\\foo\\bar\\baz'), array('/foo/bar/baz', 'C:/foo/bar/baz')),
 			array(array(__FILE__, __DIR__), array(strtr(__FILE__, '\\', '/'), strtr(__DIR__, '\\', '/') . '/')),
+			array(array('', 'composer.json'), array('', strtr(getcwd(), '\\', '/') . '/composer.json')),
 		);
 	}
 
