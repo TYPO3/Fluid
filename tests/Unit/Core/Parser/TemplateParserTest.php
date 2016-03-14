@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
@@ -100,6 +102,24 @@ class TemplateParserTest extends UnitTestCase {
 		$templateParser->setRenderingContext($context);
 		$result = $templateParser->parse('source1')->render($context);
 		$this->assertEquals('final', $result);
+	}
+
+	/**
+	 * @test
+	 */
+	public function getOrParseAndStoreTemplateSetsCompilableStateAndReturnsOnStopComilingException() {
+		$parsedTemplate = $this->getMock(ParsingState::class, array('setCompilable'));
+		$parsedTemplate->expects($this->once())->method('setCompilable')->with(FALSE);
+		$templateParser = $this->getMock(TemplateParser::class, array('parse'));
+		$templateParser->expects($this->once())->method('parse')->willReturn($parsedTemplate);
+		$context = new RenderingContextFixture();
+		$compiler = $this->getMock(TemplateCompiler::class, array('store', 'has'));
+		$compiler->expects($this->once())->method('has')->willReturn(FALSE);
+		$compiler->expects($this->once())->method('store')->willThrowException(new StopCompilingException());
+		$context->setTemplateCompiler($compiler);
+		$context->setVariableProvider(new StandardVariableProvider());
+		$templateParser->setRenderingContext($context);
+		$parsedTemplate = $templateParser->getOrParseAndStoreTemplate('fake-foo-baz', function($a, $b) { return 'test'; });
 	}
 
 	/**

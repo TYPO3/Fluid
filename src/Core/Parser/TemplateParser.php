@@ -606,22 +606,20 @@ class TemplateParser {
 	 */
 	protected function recursiveArrayHandler($arrayText) {
 		$matches = array();
-		preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER);
 		$arrayToBuild = array();
-		if (is_array($matches) === FALSE) {
-			return $arrayToBuild;
-		}
-		foreach ($matches as $singleMatch) {
-			$arrayKey = $this->unquoteString($singleMatch['Key']);
-			if (!empty($singleMatch['VariableIdentifier'])) {
-				$arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
-			} elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0' )) {
-				$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
-			} elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
-				$argumentString = $this->unquoteString($singleMatch['QuotedString']);
-				$arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
-			} elseif (array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
-				$arrayToBuild[$arrayKey] = new ArrayNode($this->recursiveArrayHandler($singleMatch['Subarray']));
+		if (preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER)) {
+			foreach ($matches as $singleMatch) {
+				$arrayKey = $this->unquoteString($singleMatch['Key']);
+				if (!empty($singleMatch['VariableIdentifier'])) {
+					$arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
+				} elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0' )) {
+					$arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
+				} elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
+					$argumentString = $this->unquoteString($singleMatch['QuotedString']);
+					$arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
+				} elseif (array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
+					$arrayToBuild[$arrayKey] = new ArrayNode($this->recursiveArrayHandler($singleMatch['Subarray']));
+				}
 			}
 		}
 		return $arrayToBuild;
