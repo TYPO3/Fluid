@@ -6,8 +6,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper;
@@ -120,5 +124,71 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 		$method->setAccessible(TRUE);
 		$result = $method->invokeArgs($instance, array(array($breakingMatchingCaseNode, $defaultCaseNode)));
 		$this->assertEquals('foo-childcontent', $result);
+	}
+
+	/**
+	 * @param ViewHelperNode $node
+	 * @param string $expectedCode
+	 * @param string $expectedInitialization
+	 * @test
+	 * @dataProvider getCompileTestValues
+	 */
+	public function compileGeneratesExpectedPhpCode(ViewHelperNode $node, $expectedCode, $expectedInitialization) {
+		$viewHelper = new SwitchViewHelper();
+		$compiler = new TemplateCompiler();
+		$code = $viewHelper->compile('$arguments', 'closure', $initializationCode, $node, $compiler);
+		$this->assertEquals($expectedCode, $code);
+		$this->assertEquals($expectedInitialization, $initializationCode);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCompileTestValues() {
+		$renderingContext = new RenderingContext($this->getMock(TemplateView::class), array('dummy'), array(), '', FALSE);
+		$parsingState = new ParsingState();
+		$emptySwitchNode = new ViewHelperNode(
+			$renderingContext,
+			'f',
+			'switch',
+			array('expression' => new TextNode('test-expression')),
+			$parsingState
+		);
+		$withDefaultCaseOnly = clone $emptySwitchNode;
+		$withDefaultCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'defaultCase', array(), $parsingState));
+		$withSingleCaseOnly = clone $emptySwitchNode;
+		$withSingleCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'case', array('value' => 'foo'), $parsingState));
+		return array(
+			'Empty switch statement' => array(
+				$emptySwitchNode,
+				'call_user_func(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+				'switch ($arguments[\'expression\']) {' .
+				PHP_EOL . '}' . PHP_EOL .
+				'}, array($arguments))',
+				''
+			),
+			'With default case only' => array(
+				$withDefaultCaseOnly,
+				'call_user_func(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+				'switch ($arguments[\'expression\']) {' . PHP_EOL .
+				'default: return call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
+				'return NULL;' . PHP_EOL .
+				'});' . PHP_EOL .
+				'}' . PHP_EOL . '}, array($arguments))',
+				''
+			),
+			'With single case only' => array(
+				$withSingleCaseOnly,
+				'call_user_func(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+				'switch ($arguments[\'expression\']) {' . PHP_EOL .
+				'case call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
+				'$argument = unserialize(\'s:3:"foo";\'); return $argument->evaluate($renderingContext);' . PHP_EOL .
+				'}): return call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
+				'return NULL;' . PHP_EOL .
+				'});' . PHP_EOL .
+				'}' . PHP_EOL . '}, array($arguments))',
+				''
+			),
+		);
 	}
 }

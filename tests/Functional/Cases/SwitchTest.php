@@ -1,12 +1,23 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
+use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
 /**
  * Class SwitchTest
  */
 class SwitchTest extends BaseFunctionalTestCase {
+
+	/**
+	 * If your test case requires a cache, override this
+	 * method and return an instance.
+	 *
+	 * @return FluidCacheInterface
+	 */
+	protected function getCache() {
+		return new SimpleFileCache(sys_get_temp_dir());
+	}
 
 	/**
 	 * @return array
