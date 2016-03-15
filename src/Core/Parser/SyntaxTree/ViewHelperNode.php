@@ -57,6 +57,8 @@ class ViewHelperNode extends AbstractNode {
 		$this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
 		$this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
 		$this->uninitializedViewHelper->setViewHelperNode($this);
+		// Note: RenderingContext required here though replaced later. See https://github.com/TYPO3Fluid/Fluid/pull/93
+		$this->uninitializedViewHelper->setRenderingContext($renderingContext);
 		$this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
 		$this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
 		$this->validateArguments($this->argumentDefinitions, $this->arguments);
