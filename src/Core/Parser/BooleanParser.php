@@ -136,21 +136,6 @@ class BooleanParser {
 	}
 
 	/**
-	 * Trim a string while taking escaped quotes into consideration
-	 *
-	 * @param string $string
-	 * @return string
-	 */
-	public static function trimQuotedString($string) {
-		$string = preg_match('/^[\'"].*[\'"]$/', $string) ? trim($string, $string{0}) : $string;
-		if (is_numeric($string)) {
-			// Rather than casting to integer or float we use PHP's type conversion via incrementing
-			$string += 0;
-		}
-		return $string;
-	}
-
-	/**
 	 * The part of the expression we're currently focusing on based on the
 	 * tokenizing regex offset by the internally tracked cursor.
 	 *
@@ -425,19 +410,6 @@ class BooleanParser {
 				break;
 		}
 		return $x;
-	}
-
-	/**
-	 * Get the type of a variable
-	 *
-	 * @param mixed $value
-	 * @return string
-	 */
-	public function getType($value) {
-		if (is_numeric($value)) {
-			return 'numeric';
-		}
-		return gettype($value);
 	}
 
 	/**
