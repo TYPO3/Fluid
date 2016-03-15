@@ -262,4 +262,59 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 		$actualResult = $this->viewHelper->_call('renderElseChild');
 		$this->assertEquals('ElseArgument', $actualResult);
 	}
+
+	/**
+	 * @param array $arguments
+	 * @param mixed $expected
+	 * @test
+	 * @dataProvider getRenderStaticTestValues
+	 */
+	public function testRenderStatic(array $arguments, $expected) {
+		$this->viewHelper->setArguments($arguments);
+		$result = call_user_func_array(
+			array($this->viewHelper, 'renderStatic'),
+			array($arguments, function() { return ''; }, new RenderingContextFixture())
+		);
+		$this->assertEquals($expected, $result);
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getRenderStaticTestValues() {
+		return array(
+			'standard then argument' => array(array('condition' => TRUE, 'then' => 'yes'), 'yes'),
+			'then argument closure' => array(array('condition' => TRUE, '__thenClosure' => function() { return 'yes'; }), 'yes'),
+			'standard else argument' => array(array('condition' => FALSE, 'else' => 'no'), 'no'),
+			'single else argument closure' => array(array('condition' => FALSE, '__elseClosures' => array(function() { return 'no'; })), 'no'),
+			'else if closures first match true' => array(
+				array(
+					'condition' => FALSE,
+					'__elseClosures' => array(
+						function() { return 'first-else'; },
+						function() { return 'second-else'; }
+					),
+					'__elseifClosures' => array(
+						function() { return TRUE; },
+						function() { throw new \RuntimeException('Test called closure which must not be called'); }
+					)
+				),
+				'first-else'
+			),
+			'else if closures second match true' => array(
+				array(
+					'condition' => FALSE,
+					'__elseClosures' => array(
+						function() { return 'first-else'; },
+						function() { return 'second-else'; }
+					),
+					'__elseifClosures' => array(
+						function() { return FALSE; },
+						function() { return TRUE; }
+					)
+				),
+				'second-else'
+			),
+		);
+	}
 }
