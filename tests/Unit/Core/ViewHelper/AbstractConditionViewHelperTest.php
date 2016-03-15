@@ -315,6 +315,20 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase {
 				),
 				'second-else'
 			),
+			'else if closures none match' => array(
+				array(
+					'condition' => FALSE,
+					'__elseClosures' => array(
+						function() { return 'first-else'; },
+						function() { return 'second-else'; }
+					),
+					'__elseifClosures' => array(
+						function() { return FALSE; },
+						function() { return FALSE; }
+					)
+				),
+				''
+			),
 		);
 	}
 }

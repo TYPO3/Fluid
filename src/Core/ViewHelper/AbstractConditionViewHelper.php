@@ -121,9 +121,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 		if ($this->hasArgument('then')) {
 			return $this->arguments['then'];
 		}
-		if ($this->hasArgument('__thenClosure')) {
-			return $this->arguments['__thenClosure']();
-		}
 
 		$elseViewHelperEncountered = FALSE;
 		foreach ($this->childNodes as $childNode) {
@@ -157,10 +154,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper {
 
 		if ($this->hasArgument('else')) {
 			return $this->arguments['else'];
-		}
-		if ($this->hasArgument('__elseClosures')) {
-			$elseIfClosures = isset($this->arguments['__elseifClosures']) ? $this->arguments['__elseifClosures'] : array();
-			return static::evaluateElseClosures($this->arguments['__elseClosures'], $elseIfClosures, $this->renderingContext);
 		}
 
 		/** @var ViewHelperNode|NULL $elseNode */
