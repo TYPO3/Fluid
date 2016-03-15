@@ -41,4 +41,19 @@ class EscapingNodeTest extends UnitTestCase {
 		$this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
 	}
 
+	/**
+	 * @test
+	 */
+	public function nestedEscapeNodesAreOnlyEscapedOnce()
+	{
+		$string = '<strong>escape me & don\'t do "that" twice</strong>';
+		$node = new EscapingNode(new EscapingNode(new TextNode($string)));
+		$renderingContext = new RenderingContextFixture();
+
+		$this->assertEquals(
+			'&lt;strong&gt;escape me &amp; don&#039;t do &quot;that&quot; twice&lt;/strong&gt;',
+			$node->evaluate($renderingContext)
+		);
+	}
+
 }
