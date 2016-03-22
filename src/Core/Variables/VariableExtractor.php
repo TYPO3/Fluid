@@ -70,8 +70,8 @@ class VariableExtractor {
 			return $subject->getByPath($propertyPath, $accessors);
 		}
 
+		$propertyPath = $this->resolveSubVariableReferences($subject, $propertyPath);
 		$propertyPathSegments = explode('.', $propertyPath);
-		$propertyPathSegments = $this->resolveSubVariableReferences($subject, $propertyPathSegments);
 		foreach ($propertyPathSegments as $index => $pathSegment) {
 			$accessor = isset($accessors[$index]) ? $accessors[$index] : NULL;
 			$subject = $this->extractSingleValue($subject, $pathSegment, $accessor);
@@ -107,22 +107,18 @@ class VariableExtractor {
 
 	/**
 	 * @param mixed $subject
-	 * @param array $segments
+	 * @param string $propertyPath
 	 * @return array
 	 */
-	protected function resolveSubVariableReferences($subject, array $segments) {
-		foreach ($segments as $index => $pathSegment) {
-			$start = strpos($pathSegment, '{');
-			$end = strrpos($pathSegment, '}');
-			if ($start === 0 && $end === strlen($pathSegment) - 1) {
-				$pathSegment = $this->extractSingleValue($subject, substr($pathSegment, 1, -1));
-			} elseif ($start !== FALSE && $end !== FALSE) {
-				$subValue = $this->extractSingleValue($subject, substr($pathSegment, $start + 1, $end - $start - 1));
-				$pathSegment = substr($pathSegment, 0, $start) . $subValue . substr($pathSegment, $end + 1);
+	protected function resolveSubVariableReferences($subject, $propertyPath) {
+		if (stristr($propertyPath, '{')) {
+			preg_match_all('/(\{.*\})/', $propertyPath, $matches);
+			foreach ($matches[1] as $match) {
+				$subPropertyPath = substr($match, 1, -1);
+				$propertyPath = str_replace($match, $this->getByPath($subject, $subPropertyPath), $propertyPath);
 			}
-			$segments[$index] = $pathSegment;
 		}
-		return $segments;
+		return $propertyPath;
 	}
 
 	/**
