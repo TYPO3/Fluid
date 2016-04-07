@@ -10,7 +10,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
  * This view helper implements an if/else condition.
- * Check \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue() to see how boolean arguments are evaluated
  *
  * **Conditions:**
  *
@@ -78,7 +77,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * Otherwise, everything the value of the "else"-attribute is displayed.
  * </output>
  *
- * @see \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode::convertArgumentValue()
  * @api
  */
 class IfViewHelper extends AbstractConditionViewHelper {
