@@ -38,7 +38,7 @@ class EscapingNode extends AbstractNode {
 	 * @return number the value stored in this node/subtree.
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
-		return htmlspecialchars($this->node->evaluate($renderingContext), ENT_QUOTES, 'UTF-8', false);
+		return htmlspecialchars($this->node->evaluate($renderingContext), ENT_QUOTES);
 	}
 
 	/**
