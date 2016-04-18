@@ -18,6 +18,25 @@ class EscapingTest extends BaseFunctionalTestCase {
 	 */
 	public function getTemplateCodeFixturesAndExpectations() {
 		return array(
+			'escapeChildren can be disabled in template' => array(
+				'{escapingEnabled=false}<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',
+				$this->variables,
+				array('<strong>Bla</strong>'),
+				array('&lt;strong&gt;Bla&lt;/strong&gt;'),
+			),
+			'escapeOutput can be disabled in template' => array(
+				'{escapingEnabled=false}<test:escapeChildrenDisabledAndEscapeOutputEnabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputEnabled>',
+				$this->variables,
+				array('<strong>Bla</strong>'),
+				array('&lt;strong&gt;Bla&lt;/strong&gt;'),
+			),
+			'Disabling escaping twice in template throws parsing exception' => array(
+				'{escapingEnabled=false}<test:escapeChildrenDisabledAndEscapeOutputEnabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputEnabled>{escapingEnabled=false}',
+				array(),
+				array(),
+				array(),
+				'TYPO3Fluid\\Fluid\\Core\\Parser\\Exception'
+			),
 			'EscapeChildrenEnabledAndEscapeOutputDisabled: Tag syntax with children, properly encodes variable value' => array(
 				'<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',
 				$this->variables,

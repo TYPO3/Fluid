@@ -115,6 +115,8 @@ class TemplateParser {
 		}
 		try {
 			$this->reset();
+
+			$templateString = $this->extractEscapingModifier($templateString);
 			$templateString = $this->preProcessTemplateSource($templateString);
 
 			$splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
@@ -199,6 +201,30 @@ class TemplateParser {
 		$this->escapingEnabled = TRUE;
 		$this->pointerLineNumber = 1;
 		$this->pointerLineCharacter = 1;
+	}
+
+	/**
+	 * Extracts escaping modifiers ({escapingEnabled=true/false}) out of the given template and sets $this->escapingEnabled accordingly
+	 *
+	 * @param string $templateString Template string to extract the {escaping = ..} definitions from
+	 * @return string The updated template string without escaping declarations inside
+	 * @throws Exception if there is more than one modifier
+	 */
+	protected function extractEscapingModifier($templateString) {
+		$matches = array();
+		preg_match_all(Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER, $templateString, $matches, PREG_SET_ORDER);
+		if ($matches === array()) {
+			return $templateString;
+		}
+		if (count($matches) > 1) {
+			throw new Exception('There is more than one escaping modifier defined. There can only be one {escapingEnabled=...} per template.', 1461009874);
+		}
+		if (strtolower($matches[0]['enabled']) === 'false') {
+			$this->escapingEnabled = FALSE;
+		}
+		$templateString = preg_replace(Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER, '', $templateString);
+
+		return $templateString;
 	}
 
 	/**
