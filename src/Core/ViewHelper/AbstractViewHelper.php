@@ -127,7 +127,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 * @return boolean
 	 */
 	public function isChildrenEscapingEnabled() {
-		return $this->escapeChildren !== FALSE;
+		if ($this->escapeChildren === NULL) {
+			// Disable children escaping automatically, if output escaping is on anyway.
+			return !$this->isOutputEscapingEnabled();
+		}
+		return $this->escapeChildren;
 	}
 
 	/**
