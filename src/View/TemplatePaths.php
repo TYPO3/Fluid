@@ -145,6 +145,7 @@ class TemplatePaths {
 	 * @return array
 	 */
 	public function getTemplateRootPaths() {
+		krsort($this->templateRootPaths);
 		return $this->templateRootPaths;
 	}
 
@@ -161,6 +162,7 @@ class TemplatePaths {
 	 * @return array
 	 */
 	public function getLayoutRootPaths() {
+		krsort($this->layoutRootPaths);
 		return $this->layoutRootPaths;
 	}
 
@@ -177,6 +179,7 @@ class TemplatePaths {
 	 * @return array
 	 */
 	public function getPartialRootPaths() {
+		krsort($this->partialRootPaths);
 		return $this->partialRootPaths;
 	}
 
