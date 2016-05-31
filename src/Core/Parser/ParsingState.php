@@ -158,7 +158,8 @@ class ParsingState implements ParsedTemplateInterface {
 	 * @throws View\Exception
 	 */
 	public function getLayoutName(RenderingContextInterface $renderingContext) {
-		return $this->variableContainer->get('layoutName');
+		$layoutName = $this->variableContainer->get('layoutName');
+		return ($layoutName instanceof RootNode ? $layoutName->evaluate($renderingContext) : $layoutName);
 	}
 
 	/**

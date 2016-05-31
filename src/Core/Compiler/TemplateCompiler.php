@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -149,11 +150,7 @@ class TemplateCompiler {
 %s {
 
 public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$layout = %s;
-if (!\$layout) {
-\$layout = '%s';
-}
-return \$layout;
+%s;
 }
 public function hasLayout() {
 return %s;
@@ -166,15 +163,27 @@ public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\Rendering
 
 }
 EOD;
+		$storedLayoutName = $parsingState->getVariableContainer()->get('layoutName');
 		$templateCode = sprintf(
 			$templateCode,
 			$classDefinition,
-			'$renderingContext->getVariableProvider()->get(\'layoutName\')',
-			$parsingState->getVariableContainer()->get('layoutName'),
+			$this->generateCodeForLayoutName($storedLayoutName),
 			($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
 			var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), TRUE),
 			$generatedRenderFunctions);
 		$this->renderingContext->getCache()->set($identifier, $templateCode);
+	}
+
+	/**
+	 * @param RootNode|string $storedLayoutNameArgument
+	 * @return string
+	 */
+	protected function generateCodeForLayoutName($storedLayoutNameArgument) {
+		if ($storedLayoutNameArgument instanceof RootNode) {
+			list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
+			return $initialization . PHP_EOL . 'return ' . $execution;
+		}
+		return 'return $renderingContext->getVariableProvider()->get(\'layoutName\')';
 	}
 
 	/**
