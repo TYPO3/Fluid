@@ -241,17 +241,13 @@ class TemplatePaths {
 		$action = ucfirst($action);
 		$identifier = $controller . '/' . $action . '.' . $format;
 		if (!array_key_exists($identifier, self::$resolvedFiles['templates'])) {
-			foreach ($this->getTemplateRootPaths() as $templateRootPath) {
-				$candidate = $this->ensureAbsolutePath($templateRootPath . $action . '.' . $format);
-				if (file_exists($candidate)) {
-					return self::$resolvedFiles['templates'][$identifier] = $candidate;
-				}
-			}
-			foreach ($this->getTemplateRootPaths() as $templateRootPath) {
-				$candidate = $this->ensureAbsolutePath($templateRootPath . $identifier);
-				if (file_exists($candidate)) {
-					return self::$resolvedFiles['templates'][$identifier] = $candidate;
-				}
+			$templateRootPaths = $this->getTemplateRootPaths();
+			try {
+				return self::$resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $controller . '/' . $action, $format);
+			} catch (InvalidTemplateResourceException $error) {
+				return self::$resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $action, $format);
+			} catch (InvalidTemplateResourceException $error) {
+				return self::$resolvedFiles['templates'][$identifier] = NULL;
 			}
 		}
 		return isset(self::$resolvedFiles['templates'][$identifier]) ? self::$resolvedFiles['templates'][$identifier] : NULL;
@@ -439,10 +435,6 @@ class TemplatePaths {
 	 * the singular and plural entries with the singular
 	 * entries being recorded first and plurals second.
 	 *
-	 * Sorts the passed paths by index in array, in
-	 * reverse, so that the base View class will iterate
-	 * the array in the right order when resolving files.
-	 *
 	 * Adds legacy singular name as last option, if set.
 	 *
 	 * @param array $paths
@@ -463,7 +455,6 @@ class TemplatePaths {
 		foreach ($pathParts as $pathPart) {
 			$partPaths = array();
 			if (isset($paths[$pathPart]) && is_array($paths[$pathPart])) {
-				krsort($paths[$pathPart], SORT_NUMERIC);
 				$partPaths = array_merge($partPaths, array_values($paths[$pathPart]));
 			}
 			$pathCollections[] = array_values(array_unique(array_map(array($this, 'ensureSuffixedPath'), $partPaths)));
@@ -666,7 +657,10 @@ class TemplatePaths {
 	 */
 	protected function resolveFileInPaths(array $paths, $relativePathAndFilename, $format = self::DEFAULT_FORMAT) {
 		$tried = array();
-		foreach ($paths as $path) {
+		// Note about loop: iteration with while + array_pop causes paths to be checked in opposite
+		// order, which is intentional. Paths are considered overlays, e.g. adding a path to the
+		// array means you want that path checked first.
+		while ($path = array_pop($paths)) {
 			$pathAndFilenameWithoutFormat = $path . $relativePathAndFilename;
 			$pathAndFilename = $pathAndFilenameWithoutFormat . '.' . $format;
 			if (is_file($pathAndFilename)) {
