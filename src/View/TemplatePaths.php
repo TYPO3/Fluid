@@ -480,13 +480,9 @@ class TemplatePaths {
 	 * @return string layout identifier
 	 */
 	public function getLayoutIdentifier($layoutName = 'Default') {
-		$key = $layoutName . '_' . $this->getFormat();
-		if (!array_key_exists($key, self::$resolvedIdentifiers['layouts'])) {
-			$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-			$prefix = 'layout_' . $layoutName;
-			self::$resolvedIdentifiers['layouts'][$key] = $this->createIdentifierForFile($filePathAndFilename, $prefix);
-		}
-		return self::$resolvedIdentifiers['layouts'][$key];
+		$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
+		$prefix = 'layout_' . $layoutName;
+		return $this->createIdentifierForFile($filePathAndFilename, $prefix);
 	}
 
 	/**
