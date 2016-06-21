@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -182,6 +183,8 @@ EOD;
 		if ($storedLayoutNameArgument instanceof RootNode) {
 			list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
 			return $initialization . PHP_EOL . 'return ' . $execution;
+		} elseif ($storedLayoutNameArgument instanceof TextNode && !count($storedLayoutNameArgument->getChildNodes())) {
+			return sprintf('return \'%s\'', $storedLayoutNameArgument->getText());
 		}
 		return 'return $renderingContext->getVariableProvider()->get(\'layoutName\')';
 	}
