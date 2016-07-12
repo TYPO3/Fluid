@@ -7,12 +7,12 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 
 /**
- * Class JSONVariableProvider
+ * Class JsonVariableProvider
  *
  * VariableProvider capable of using JSON files
  * and streams as data source.
  */
-class JSONVariableProvider extends StandardVariableProvider implements VariableProviderInterface {
+class JsonVariableProvider extends StandardVariableProvider implements VariableProviderInterface {
 
 	/**
 	 * @var integer
