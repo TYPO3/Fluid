@@ -145,6 +145,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase {
 	public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, $expectedException = NULL) {
 		if ($this->getCache()) {
 			$this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, TRUE);
+			$this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, TRUE);
 		}
 	}
 

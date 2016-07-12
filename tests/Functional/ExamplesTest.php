@@ -46,6 +46,7 @@ class ExamplesTest extends BaseTestCase {
 		}
 		$cache = vfsStream::url('fakecache/');
 		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
+		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**

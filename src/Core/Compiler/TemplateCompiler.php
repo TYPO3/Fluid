@@ -150,6 +150,7 @@ class TemplateCompiler {
 %s {
 
 public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+\$self = \$this; 
 %s;
 }
 public function hasLayout() {
@@ -182,8 +183,9 @@ EOD;
 		if ($storedLayoutNameArgument instanceof RootNode) {
 			list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
 			return $initialization . PHP_EOL . 'return ' . $execution;
+		} else {
+			return 'return (string) \'' . $storedLayoutNameArgument . '\'';
 		}
-		return 'return $renderingContext->getVariableProvider()->get(\'layoutName\')';
 	}
 
 	/**
