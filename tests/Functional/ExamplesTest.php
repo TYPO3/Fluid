@@ -46,6 +46,8 @@ class ExamplesTest extends BaseTestCase {
 		}
 		$cache = vfsStream::url('fakecache/');
 		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
+		// Repeat the rendering, to test whether the cached templates work as well
+		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**
