@@ -46,6 +46,8 @@ class ExamplesTest extends BaseTestCase {
 		}
 		$cache = vfsStream::url('fakecache/');
 		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
+		// Repeat the rendering, to test whether the cached templates work as well
+		$this->runExampleScriptTest($script, $expectedOutputs, $cache);
 	}
 
 	/**
@@ -202,12 +204,6 @@ class ExamplesTest extends BaseTestCase {
 				array(
 					'VariableProvider template from Singles.',
 					'Random: random',
-				)
-			),
-			'example_dynamiclayout.php' => array(
-				'example_dynamiclayout.php',
-				array(
-					'Rendered via DynamicLayout, section "Main":',
 				)
 			)
 		);
