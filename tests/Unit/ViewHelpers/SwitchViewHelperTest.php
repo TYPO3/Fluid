@@ -161,7 +161,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 		return array(
 			'Empty switch statement' => array(
 				$emptySwitchNode,
-				'call_user_func(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+				'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
 				'switch ($arguments[\'expression\']) {' .
 				PHP_EOL . '}' . PHP_EOL .
 				'}, array($arguments))',
@@ -169,7 +169,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 			),
 			'With default case only' => array(
 				$withDefaultCaseOnly,
-				'call_user_func(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+				'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
 				'switch ($arguments[\'expression\']) {' . PHP_EOL .
 				'default: return call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
 				'return NULL;' . PHP_EOL .
@@ -179,7 +179,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase {
 			),
 			'With single case only' => array(
 				$withSingleCaseOnly,
-				'call_user_func(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+				'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
 				'switch ($arguments[\'expression\']) {' . PHP_EOL .
 				'case call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
 				'$argument = unserialize(\'s:3:"foo";\'); return $argument->evaluate($renderingContext);' . PHP_EOL .
