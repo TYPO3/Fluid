@@ -188,11 +188,7 @@ class TemplatePathsTest extends BaseTestCase {
 			array(array('examples/Resources/Private/Layouts/', 'examples/Resources/Private/Templates/Default/'), 'html')
 		);
 		$this->assertEquals(
-			array(
-				'examples/Resources/Private/Layouts/Default.html',
-				'examples/Resources/Private/Layouts/Dynamic.html',
-				'examples/Resources/Private/Templates/Default/Default.html',
-			),
+			array('examples/Resources/Private/Layouts/Default.html', 'examples/Resources/Private/Templates/Default/Default.html'),
 			$result
 		);
 	}

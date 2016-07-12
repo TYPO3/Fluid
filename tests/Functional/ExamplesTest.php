@@ -205,12 +205,6 @@ class ExamplesTest extends BaseTestCase {
 					'VariableProvider template from Singles.',
 					'Random: random',
 				)
-			),
-			'example_dynamiclayout.php' => array(
-				'example_dynamiclayout.php',
-				array(
-					'Rendered via DynamicLayout, section "Main":',
-				)
 			)
 		);
 	}
