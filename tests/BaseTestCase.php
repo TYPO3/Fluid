@@ -17,11 +17,6 @@ namespace TYPO3Fluid\Fluid\Tests;
 abstract class BaseTestCase extends \PHPUnit_Framework_TestCase {
 
 	/**
-	 * @var array
-	 */
-	protected $backupGlobalsBlacklist = array('GLOBALS', 'bootstrap', '__PHPUNIT_BOOTSTRAP');
-
-	/**
 	 * Enable or disable the backup and restoration of static attributes.
 	 * @var boolean
 	 */
