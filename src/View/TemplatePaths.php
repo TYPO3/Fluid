@@ -242,12 +242,12 @@ class TemplatePaths {
 		$identifier = $controller . '/' . $action . '.' . $format;
 		if (!array_key_exists($identifier, self::$resolvedFiles['templates'])) {
 			$templateRootPaths = $this->getTemplateRootPaths();
-			try {
-				return self::$resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $controller . '/' . $action, $format);
-			} catch (InvalidTemplateResourceException $error) {
-				return self::$resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $action, $format);
-			} catch (InvalidTemplateResourceException $error) {
-				return self::$resolvedFiles['templates'][$identifier] = NULL;
+			foreach ([$controller . '/' . $action, $action] as $possibleRelativePath) {
+				try {
+					return self::$resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $possibleRelativePath, $format);
+				} catch (InvalidTemplateResourceException $error) {
+					self::$resolvedFiles['templates'][$identifier] = NULL;
+				}
 			}
 		}
 		return isset(self::$resolvedFiles['templates'][$identifier]) ? self::$resolvedFiles['templates'][$identifier] : NULL;
@@ -654,6 +654,7 @@ class TemplatePaths {
 	 * @param array $paths
 	 * @param string $relativePathAndFilename
 	 * @return string
+	 * @throws \TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException
 	 */
 	protected function resolveFileInPaths(array $paths, $relativePathAndFilename, $format = self::DEFAULT_FORMAT) {
 		$tried = array();
@@ -688,5 +689,4 @@ class TemplatePaths {
 			'partials' => array()
 		);
 	}
-
 }
