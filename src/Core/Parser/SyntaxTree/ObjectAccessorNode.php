@@ -29,11 +29,6 @@ class ObjectAccessorNode extends AbstractNode {
 	protected $accessors = array();
 
 	/**
-	 * @var array
-	 */
-	protected static $variables = array();
-
-	/**
 	 * Constructor. Takes an object path as input.
 	 *
 	 * The first part of the object path has to be a variable in the
