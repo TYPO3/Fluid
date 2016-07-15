@@ -87,6 +87,10 @@ class BooleanParserTest extends UnitTestCase {
 			array('1 <= 1', TRUE),
 			array('1 >= 2', FALSE),
 			array('2 <= 1', FALSE),
+			array('-1 != -1', FALSE),
+			array('-1 == -1', TRUE),
+			array('-1 < 0', TRUE),
+			array('-1 > -2', TRUE),
 
 			array('1 > FALSE',  TRUE),
 			array('FALSE > 0',  FALSE),
