@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\OrViewHelper;
 
 /**
@@ -21,6 +22,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 		$instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), FALSE, '');
 		$instance->expects($this->at(1))->method('registerArgument')->with('alternative', 'mixed', $this->anything(), FALSE, '');
 		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything());
+		$instance->setRenderingContext(new RenderingContextFixture());
 		$instance->initializeArguments();
 	}
 
@@ -34,6 +36,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 		$instance = $this->getMock(OrViewHelper::class, array('renderChildren'));
 		$instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
 		$instance->setArguments($arguments);
+		$instance->setRenderingContext(new RenderingContextFixture());
 		$result = $instance->render();
 		$this->assertEquals($expected, $result);
 	}
@@ -59,6 +62,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 		$instance->expects($this->once())->method('renderChildren')->willReturn(NULL);
 		$arguments['content'] = NULL;
 		$instance->setArguments($arguments);
+		$instance->setRenderingContext(new RenderingContextFixture());
 		$result = $instance->render();
 		$this->assertEquals($expected, $result);
 	}

@@ -6,12 +6,16 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * If content is empty use alternative text
  */
 class OrViewHelper extends AbstractViewHelper {
+
+	use CompileWithContentArgumentAndRenderStatic;
 
 	/**
 	 * Initialize
@@ -19,26 +23,26 @@ class OrViewHelper extends AbstractViewHelper {
 	 * @return void
 	 */
 	public function initializeArguments() {
-		$this->registerArgument('content', 'mixed', 'Content to check if empty', FALSE);
-		$this->registerArgument('alternative', 'mixed', 'Alternative if content is empty', FALSE, '');
+		$this->registerArgument('content', 'mixed', 'Content to check if empty');
+		$this->registerArgument('alternative', 'mixed', 'Alternative if content is empty');
 		$this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
 	}
 
 	/**
-	 * @return string
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
 	 */
-	public function render() {
-		$content = $this->arguments['content'];
-		$alternative = $this->arguments['alternative'];
-		$arguments = (array) $this->arguments['arguments'];
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		$alternative = $arguments['alternative'];
+		$arguments = (array) $arguments['arguments'];
 
 		if (empty($arguments)) {
 			$arguments = NULL;
 		}
 
-		if (NULL === $content) {
-			$content = $this->renderChildren();
-		}
+		$content = $renderChildrenClosure();
 
 		if (NULL === $content) {
 			$content = $alternative;
@@ -50,5 +54,6 @@ class OrViewHelper extends AbstractViewHelper {
 
 		return $content;
 	}
+
 
 }

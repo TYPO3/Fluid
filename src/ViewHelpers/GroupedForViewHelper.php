@@ -6,9 +6,11 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Grouped loop view helper.
@@ -73,6 +75,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class GroupedForViewHelper extends AbstractViewHelper {
 
+	use CompileWithRenderStatic;
+
 	/**
 	 * @var boolean
 	 */
@@ -90,17 +94,17 @@ class GroupedForViewHelper extends AbstractViewHelper {
 	}
 
 	/**
-	 * Iterates through elements of $each and renders child nodes
-	 *
-	 * @return string Rendered string
-	 * @throws ViewHelper\Exception
-	 * @api
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
 	 */
-	public function render() {
-		$each = $this->arguments['each'];
-		$as = $this->arguments['as'];
-		$groupBy = $this->arguments['groupBy'];
-		$groupKey = $this->arguments['groupKey'];
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+	{
+		$each = $arguments['each'];
+		$as = $arguments['as'];
+		$groupBy = $arguments['groupBy'];
+		$groupKey = $arguments['groupKey'];
 		$output = '';
 		if ($each === NULL) {
 			return '';
@@ -112,17 +116,19 @@ class GroupedForViewHelper extends AbstractViewHelper {
 			$each = iterator_to_array($each);
 		}
 
-		$groups = $this->groupElements($each, $groupBy);
+		$groups = static::groupElements($each, $groupBy);
 
+		$templateVariableContainer = $renderingContext->getVariableProvider();
 		foreach ($groups['values'] as $currentGroupIndex => $group) {
-			$this->templateVariableContainer->add($groupKey, $groups['keys'][$currentGroupIndex]);
-			$this->templateVariableContainer->add($as, $group);
-			$output .= $this->renderChildren();
-			$this->templateVariableContainer->remove($groupKey);
-			$this->templateVariableContainer->remove($as);
+			$templateVariableContainer->add($groupKey, $groups['keys'][$currentGroupIndex]);
+			$templateVariableContainer->add($as, $group);
+			$output .= $renderChildrenClosure();
+			$templateVariableContainer->remove($groupKey);
+			$templateVariableContainer->remove($as);
 		}
 		return $output;
 	}
+
 
 	/**
 	 * Groups the given array by the specified groupBy property.
@@ -132,7 +138,7 @@ class GroupedForViewHelper extends AbstractViewHelper {
 	 * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
 	 * @throws ViewHelper\Exception
 	 */
-	protected function groupElements(array $elements, $groupBy) {
+	protected static function groupElements(array $elements, $groupBy) {
 		$extractor = new VariableExtractor();
 		$groups = array('keys' => array(), 'values' => array());
 		foreach ($elements as $key => $value) {

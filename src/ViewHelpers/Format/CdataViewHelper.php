@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * Outputs an argument/value without any escaping and wraps it with CDATA tags.
@@ -42,6 +43,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CdataViewHelper extends AbstractViewHelper {
 
+	use CompileWithContentArgumentAndRenderStatic;
+
 	/**
 	 * @var boolean
 	 */
@@ -58,12 +61,6 @@ class CdataViewHelper extends AbstractViewHelper {
 	public function initializeArguments() {
 		$this->registerArgument('value', 'mixed', 'The value to output');
 	}
-	/**
-	 * @return string
-	 */
-	public function render() {
-		return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
-	}
 
 	/**
 	 * @param array $arguments
@@ -76,7 +73,7 @@ class CdataViewHelper extends AbstractViewHelper {
 		\Closure $renderChildrenClosure,
 		RenderingContextInterface $renderingContext
 	) {
-		return sprintf('<![CDATA[%s]]>', isset($arguments['value']) ? $arguments['value'] : $renderChildrenClosure());
+		return sprintf('<![CDATA[%s]]>', $renderChildrenClosure());
 	}
 
 }

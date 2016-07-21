@@ -24,11 +24,10 @@ class CdataViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function testRender($arguments, $tagContent, $expected) {
 		$instance = new CdataViewHelper();
-		$instance->initializeArguments();
 		$instance->setArguments($arguments);
 		$instance->setRenderingContext(new RenderingContextFixture());
 		$instance->setRenderChildrenClosure(function() use ($tagContent) { return $tagContent; });
-		$this->assertEquals($expected, $instance->render());
+		$this->assertEquals($expected, $instance->initializeArgumentsAndRender());
 	}
 
 	/**

@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Loop view helper which can be used to iterate over arrays.
@@ -61,6 +62,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ForViewHelper extends AbstractViewHelper {
 
+	use CompileWithRenderStatic;
+	
 	/**
 	 * @var boolean
 	 */
@@ -76,28 +79,6 @@ class ForViewHelper extends AbstractViewHelper {
 		$this->registerArgument('key', 'string', 'Variable to assign array key to', FALSE);
 		$this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', FALSE, FALSE);
 		$this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
-	}
-
-	/**
-	 * Iterates through elements of $each and renders child nodes
-	 *
-	 * @return string Rendered string
-	 * @api
-	 */
-	public function render() {
-		return self::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
-	}
-
-	/**
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 * @return string
-	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		return sprintf('%s::renderStatic(%s, %s, $renderingContext)', get_class($this), $argumentsName, $closureName);
 	}
 
 	/**

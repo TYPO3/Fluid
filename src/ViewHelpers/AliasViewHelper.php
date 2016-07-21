@@ -6,7 +6,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Declares new variables which are aliases of other variables.
@@ -41,6 +43,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class AliasViewHelper extends AbstractViewHelper {
 
+	use CompileWithRenderStatic;
+
 	/**
 	 * @var boolean
 	 */
@@ -55,20 +59,23 @@ class AliasViewHelper extends AbstractViewHelper {
 	}
 
 	/**
-	 * Renders alias
-	 *
-	 * @return string Rendered string
-	 * @api
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
 	 */
-	public function render() {
-		$map = $this->arguments['map'];
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+	{
+		$templateVariableContainer = $renderingContext->getVariableProvider();
+		$map = $arguments['map'];
 		foreach ($map as $aliasName => $value) {
-			$this->templateVariableContainer->add($aliasName, $value);
+			$templateVariableContainer->add($aliasName, $value);
 		}
-		$output = $this->renderChildren();
+		$output = $renderChildrenClosure();
 		foreach ($map as $aliasName => $value) {
-			$this->templateVariableContainer->remove($aliasName);
+			$templateVariableContainer->remove($aliasName);
 		}
 		return $output;
 	}
+
 }
