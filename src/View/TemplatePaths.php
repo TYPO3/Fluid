@@ -45,6 +45,9 @@ class TemplatePaths {
 	const CONFIG_LAYOUTROOTPATHS = 'layoutRootPaths';
 	const CONFIG_PARTIALROOTPATHS = 'partialRootPaths';
 	const CONFIG_FORMAT = 'format';
+	const NAME_TEMPLATES = 'templates';
+	const NAME_LAYOUTS = 'layouts';
+	const NAME_PARTIALS = 'partials';
 
 	/**
 	 * Holds already resolved identifiers for template files
@@ -52,9 +55,9 @@ class TemplatePaths {
 	 * @var array
 	 */
 	protected static $resolvedIdentifiers = array(
-		'templates' => array(),
-		'layouts' => array(),
-		'partials' => array()
+		self::NAME_TEMPLATES => array(),
+		self::NAME_LAYOUTS => array(),
+		self::NAME_PARTIALS => array()
 	);
 
 	/**
@@ -63,9 +66,9 @@ class TemplatePaths {
 	 * @var array
 	 */
 	protected static $resolvedFiles = array(
-		'templates' => array(),
-		'layouts' => array(),
-		'partials' => array()
+		self::NAME_TEMPLATES => array(),
+		self::NAME_LAYOUTS => array(),
+		self::NAME_PARTIALS => array()
 	);
 
 	/**
@@ -107,6 +110,7 @@ class TemplatePaths {
 	 * @param string|NULL $packageNameOrArray
 	 */
 	public function __construct($packageNameOrArray = NULL) {
+		$this->clearResolvedIdentifiersAndTemplates();
 		if (is_array($packageNameOrArray)) {
 			$this->fillFromConfigurationArray($packageNameOrArray);
 		} elseif (!empty($packageNameOrArray)) {
@@ -154,7 +158,7 @@ class TemplatePaths {
 	 */
 	public function setTemplateRootPaths(array $templateRootPaths) {
 		$this->templateRootPaths = $this->sanitizePaths($templateRootPaths);
-		$this->clearResolvedIdentifiersAndTemplates();
+		$this->clearResolvedIdentifiersAndTemplates(self::NAME_TEMPLATES);
 	}
 
 	/**
@@ -170,7 +174,7 @@ class TemplatePaths {
 	 */
 	public function setLayoutRootPaths(array $layoutRootPaths) {
 		$this->layoutRootPaths = $this->sanitizePaths($layoutRootPaths);
-		$this->clearResolvedIdentifiersAndTemplates();
+		$this->clearResolvedIdentifiersAndTemplates(self::NAME_LAYOUTS);
 	}
 
 	/**
@@ -186,7 +190,7 @@ class TemplatePaths {
 	 */
 	public function setPartialRootPaths(array $partialRootPaths) {
 		$this->partialRootPaths = $this->sanitizePaths($partialRootPaths);
-		$this->clearResolvedIdentifiersAndTemplates();
+		$this->clearResolvedIdentifiersAndTemplates(self::NAME_PARTIALS);
 	}
 
 	/**
@@ -250,7 +254,7 @@ class TemplatePaths {
 				}
 			}
 		}
-		return isset(self::$resolvedFiles['templates'][$identifier]) ? self::$resolvedFiles['templates'][$identifier] : NULL;
+		return isset(self::$resolvedFiles[self::NAME_TEMPLATES][$identifier]) ? self::$resolvedFiles[self::NAME_TEMPLATES][$identifier] : NULL;
 	}
 
 	/**
@@ -341,7 +345,6 @@ class TemplatePaths {
 	 * @api
 	 */
 	public function fillFromConfigurationArray(array $paths) {
-		$this->clearResolvedIdentifiersAndTemplates();
 		list ($templateRootPaths, $layoutRootPaths, $partialRootPaths, $format) = $this->extractPathArrays($paths);
 		$this->setTemplateRootPaths($templateRootPaths);
 		$this->setLayoutRootPaths($layoutRootPaths);
@@ -361,7 +364,6 @@ class TemplatePaths {
 	 * @api
 	 */
 	public function fillDefaultsByPackageName($packageName) {
-		$this->clearResolvedIdentifiersAndTemplates();
 		$path = $this->getPackagePath($packageName);
 		$this->setTemplateRootPaths(array($path . self::DEFAULT_TEMPLATES_DIRECTORY));
 		$this->setLayoutRootPaths(array($path . self::DEFAULT_LAYOUTS_DIRECTORY));
@@ -592,11 +594,11 @@ class TemplatePaths {
 		$format = $this->getFormat();
 		$layoutName = ucfirst($layoutName);
 		$layoutKey = $layoutName . '.' . $format;
-		if (!array_key_exists($layoutKey, self::$resolvedFiles['layouts'])) {
+		if (!array_key_exists($layoutKey, self::$resolvedFiles[self::NAME_LAYOUTS])) {
 			$paths = $this->getLayoutRootPaths();
-			self::$resolvedFiles['layouts'][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName, $format);
+			self::$resolvedFiles[self::NAME_LAYOUTS][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName, $format);
 		}
-		return self::$resolvedFiles['layouts'][$layoutKey];
+		return self::$resolvedFiles[self::NAME_LAYOUTS][$layoutKey];
 	}
 
 	/**
@@ -608,12 +610,12 @@ class TemplatePaths {
 	 */
 	public function getPartialIdentifier($partialName) {
 		$partialKey = $partialName . '.' . $this->getFormat();
-		if (!array_key_exists($partialKey, self::$resolvedIdentifiers['partials'])) {
+		if (!array_key_exists($partialKey, self::$resolvedIdentifiers[self::NAME_PARTIALS])) {
 			$partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
 			$prefix = 'partial_' . $partialName;
-			self::$resolvedIdentifiers['partials'][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
+			self::$resolvedIdentifiers[self::NAME_PARTIALS][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
 		}
-		return self::$resolvedIdentifiers['partials'][$partialKey];
+		return self::$resolvedIdentifiers[self::NAME_PARTIALS][$partialKey];
 	}
 
 	/**
@@ -638,12 +640,12 @@ class TemplatePaths {
 	protected function getPartialPathAndFilename($partialName) {
 		$format = $this->getFormat();
 		$partialKey = $partialName . '.' . $format;
-		if (!array_key_exists($partialKey, self::$resolvedFiles['partials'])) {
+		if (!array_key_exists($partialKey, self::$resolvedFiles[self::NAME_PARTIALS])) {
 			$paths = $this->getPartialRootPaths();
 			$partialName = ucfirst($partialName);
-			self::$resolvedFiles['partials'][$partialKey] = $this->resolveFileInPaths($paths, $partialName, $format);
+			self::$resolvedFiles[self::NAME_PARTIALS][$partialKey] = $this->resolveFileInPaths($paths, $partialName, $format);
 		}
-		return self::$resolvedFiles['partials'][$partialKey];
+		return self::$resolvedFiles[self::NAME_PARTIALS][$partialKey];
 	}
 
 	/**
@@ -676,13 +678,18 @@ class TemplatePaths {
 	}
 
 	/**
+	 * @param string|NULL $type
 	 * @return void
 	 */
-	protected function clearResolvedIdentifiersAndTemplates() {
-		self::$resolvedIdentifiers = self::$resolvedFiles = array(
-			'templates' => array(),
-			'layouts' => array(),
-			'partials' => array()
-		);
+	protected function clearResolvedIdentifiersAndTemplates($type = NULL) {
+		if ($type) {
+			self::$resolvedIdentifiers[$type] = self::$resolvedFiles[$type] = array();
+		} else {
+			self::$resolvedIdentifiers = self::$resolvedFiles = array(
+				self::NAME_TEMPLATES => array(),
+				self::NAME_LAYOUTS => array(),
+				self::NAME_PARTIALS => array()
+			);
+		}
 	}
 }
