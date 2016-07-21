@@ -53,20 +53,6 @@ class CycleViewHelper extends AbstractViewHelper {
 	protected $escapeOutput = FALSE;
 
 	/**
-	 * The values to be iterated through
-	 *
-	 * @var array|\SplObjectStorage
-	 */
-	protected $values = NULL;
-
-	/**
-	 * Current values index
-	 *
-	 * @var integer
-	 */
-	protected $currentCycleIndex = NULL;
-
-	/**
 	 * @return void
 	 */
 	public function initializeArguments() {
@@ -84,42 +70,35 @@ class CycleViewHelper extends AbstractViewHelper {
 	public function render() {
 		$values = $this->arguments['values'];
 		$as = $this->arguments['as'];
+		$scope = get_class($this);
 		if ($values === NULL) {
 			return $this->renderChildren();
-		}
-		if ($this->values === NULL) {
-			$this->initializeValues($values);
-		}
-		if ($this->currentCycleIndex === NULL || $this->currentCycleIndex >= count($this->values)) {
-			$this->currentCycleIndex = 0;
+		} elseif (is_object($values)) {
+			if (!$values instanceof \Traversable) {
+				throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+			}
+			$values = iterator_to_array($values, FALSE);
+		} else {
+			$values = array_values($values);
 		}
 
-		$currentValue = isset($this->values[$this->currentCycleIndex]) ? $this->values[$this->currentCycleIndex] : NULL;
+		if (!$this->viewHelperVariableContainer->exists($scope, $as)) {
+			$currentIndex = 0;
+		} else {
+			$currentIndex = $this->viewHelperVariableContainer->get($scope, $as);
+			if (!array_key_exists($currentIndex, $values)) {
+				$currentIndex = 0;
+			}
+		}
+
+		$currentValue = isset($values[$currentIndex]) ? $values[$currentIndex] : NULL;
 		$this->templateVariableContainer->add($as, $currentValue);
 		$output = $this->renderChildren();
 		$this->templateVariableContainer->remove($as);
 
-		$this->currentCycleIndex++;
+		$this->viewHelperVariableContainer->addOrUpdate($scope, $as, $currentIndex + 1);
 
 		return $output;
 	}
 
-	/**
-	 * Sets this->values to the current values argument and resets $this->currentCycleIndex.
-	 *
-	 * @param array|\Traversable $values The array or \SplObjectStorage to be stored in $this->values
-	 * @return void
-	 * @throws ViewHelper\Exception
-	 */
-	protected function initializeValues($values) {
-		if (is_object($values)) {
-			if (!$values instanceof \Traversable) {
-				throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
-			}
-			$this->values = iterator_to_array($values, FALSE);
-		} else {
-			$this->values = array_values($values);
-		}
-		$this->currentCycleIndex = 0;
-	}
 }
