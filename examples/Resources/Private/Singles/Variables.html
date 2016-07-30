@@ -22,6 +22,10 @@ String variable name with dynamic2 part: {stringwith{dynamic2}part}.
 Array member in $array[$dynamic1]: {array.{dynamic1}}
 Array member in $array[$dynamic2]: {array.{dynamic2}}
 
+<!-- Numerically prefixed variables -->
+Direct access of numeric prefixed variable: {123numericprefix}
+<f:alias map="{mappedNumericPrefix: 123numericprefix}">Aliased access of numeric prefixed variable: {mappedNumericPrefix}</f:alias>
+
 <!-- Passing arguments to sections/partials -->
 <f:render section="Secondary" arguments="{
 	myVariable: 'Nice string',
