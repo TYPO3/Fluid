@@ -28,20 +28,6 @@ class ObjectAccessorNode extends AbstractNode {
 	 */
 	protected $accessors = array();
 
-    /**
-     * Reserved variables which have default, static values
-     *
-     * @var array
-     */
-    protected static $reserved = array(
-        'true' => TRUE,
-        'on' => TRUE,
-        'yes' => TRUE,
-        'false' => FALSE,
-        'off' => FALSE,
-        'no' => FALSE
-    );
-
 	/**
 	 * Constructor. Takes an object path as input.
 	 *
@@ -89,9 +75,6 @@ class ObjectAccessorNode extends AbstractNode {
 	 */
 	public function evaluate(RenderingContextInterface $renderingContext) {
         $objectPath = strtolower($this->objectPath);
-        if (isset(static::$reserved[$objectPath])) {
-            return static::$reserved[$objectPath];
-        }
         $variableProvider = $renderingContext->getVariableProvider();
         if ($objectPath === '_all') {
             return $variableProvider->getAll();

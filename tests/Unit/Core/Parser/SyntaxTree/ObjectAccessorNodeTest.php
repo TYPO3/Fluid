@@ -37,12 +37,6 @@ class ObjectAccessorNodeTest extends UnitTestCase {
 	 */
 	public function getEvaluateTestValues() {
 		return array(
-			array(array(), 'on', TRUE),
-			array(array(), 'yes', TRUE),
-			array(array(), 'true', TRUE),
-			array(array(), 'off', FALSE),
-			array(array(), 'no', FALSE),
-			array(array(), 'false', FALSE),
 			array(array('foo' => 'bar'), 'foo.notaproperty', NULL),
 			array(array('foo' => 'bar'), '_all', array('foo' => 'bar')),
 			array(array('foo' => 'bar'), 'foo', 'bar'),
