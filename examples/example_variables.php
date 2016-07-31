@@ -25,6 +25,7 @@ $view->assignMultiple(array(
 		'anArray' => array('one', 'two'),
 		'typeNameInteger' => 'integer'
 	),
+    'foobar' => 'string foo',
 	// The variables we will use as dynamic part names:
 	'dynamic1' => $dynamic1,
 	'dynamic2' => $dynamic2,
@@ -41,7 +42,8 @@ $view->assignMultiple(array(
 		),
 		$dynamic1 => 'Dynamic key in $array[$dynamic1]',
 		$dynamic2 => 'Dynamic key in $array[$dynamic2]',
-	)
+	),
+    '123numericprefix' => 'Numeric prefixed variable'
 ));
 
 // Assigning the template path and filename to be rendered. Doing this overrides

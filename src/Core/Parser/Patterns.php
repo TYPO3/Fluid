@@ -229,7 +229,7 @@ abstract class Patterns {
 					(?:"(?:\\\"|[^"])*")
 					|(?:\'(?:\\\\\'|[^\'])*\')
 				)
-				|(?P<VariableIdentifier>[a-zA-Z][a-zA-Z0-9\-_.]*)  # variable identifiers have to start with a letter
+				|(?P<VariableIdentifier>[a-zA-Z0-9\-_.]*[a-zA-Z]+)  # variable identifiers must contain letters (otherwise they are hardcoded numbers)
 				|(?P<Number>[0-9.]+)                               # Number
 				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*} # Another sub-array
 			)                                                      # END possible value options
