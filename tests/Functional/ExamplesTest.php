@@ -185,6 +185,7 @@ class ExamplesTest extends BaseTestCase {
 			'example_variables.php' => array(
 				'example_variables.php',
 				array(
+				    'Simple variable: string foo',
 					'A string with numbers in it: 132',
 					'Ditto, with type name stored in variable: 132',
 					'A comma-separated value iterated as array:' . "\n\t- one\n\t- two",
@@ -192,6 +193,8 @@ class ExamplesTest extends BaseTestCase {
 					'String variable name with dynamic2 part: String using $dynamic2.',
 					'Array member in $array[$dynamic1]: Dynamic key in $array[$dynamic1]',
 					'Array member in $array[$dynamic2]: Dynamic key in $array[$dynamic2]',
+                    'Direct access of numeric prefixed variable: Numeric prefixed variable',
+                    'Aliased access of numeric prefixed variable: Numeric prefixed variable',
 					'Received $array.foobar with value Escaped string',
 					'Received $array.baz with value 42',
 					'Received $array.xyz.foobar with value Escaped sub-string',
