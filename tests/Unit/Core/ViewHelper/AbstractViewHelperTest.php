@@ -264,6 +264,9 @@ class AbstractViewHelperTest extends UnitTestCase {
 			array(new ArgumentDefinition('test', 'string', '', TRUE), new UserWithToString('foobar')),
 			array(new ArgumentDefinition('test', 'array', '', TRUE), array('foobar')),
 			array(new ArgumentDefinition('test', 'mixed', '', TRUE), new \DateTime('now')),
+			array(new ArgumentDefinition('test', 'DateTime[]', '', TRUE), array(new \DateTime('now'), 'test')),
+			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array()),
+			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array('foobar')),
 		);
 	}
 
@@ -297,6 +300,8 @@ class AbstractViewHelperTest extends UnitTestCase {
 			array(new ArgumentDefinition('test', 'DateTime', '', TRUE), 'test'),
 			array(new ArgumentDefinition('test', 'integer', '', TRUE), new \ArrayIterator(array('bar'))),
 			array(new ArgumentDefinition('test', 'object', '', TRUE), 'test'),
+			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array(new \DateTime('now'),'test')),
+			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array(null)),
 		);
 	}
 
