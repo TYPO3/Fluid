@@ -320,28 +320,67 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 						$givenType . '" in view helper "' . get_class($this) . '".',
 						1256475113
 					);
-					if ($type === 'object') {
-						if (!is_object($value)) {
-							throw $errorException;
-						}
-					} elseif ($type === 'array') {
-						if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
-							throw $errorException;
-						}
-					} elseif ($type === 'string') {
-						if (is_object($value) && !method_exists($value, '__toString')) {
-							throw $errorException;
-						}
-					} elseif ($type === 'boolean' && !is_bool($value)) {
-						throw $errorException;
-					} elseif (class_exists($type) && $value !== NULL && !$value instanceof $type) {
-						throw $errorException;
-					} elseif (is_object($value) && !is_a($value, $type, TRUE)) {
+					if (!$this->isValidType($type, $value, $errorException)) {
 						throw $errorException;
 					}
 				}
 			}
 		}
+	}
+
+	/**
+	 * Check whether the defined type matches the value type
+	 *
+	 * @param string $type
+	 * @param mixed $value
+	 * @return boolean
+	 */
+	protected function isValidType($type, $value) {
+		if ($type === 'object') {
+			if (!is_object($value)) {
+				return FALSE;
+			}
+		} elseif ($type === 'array' || substr($type, -2) === '[]') {
+			if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
+				return FALSE;
+			} elseif (count($value) > 0 && substr($type, -2) === '[]') {
+				$firstElement = $this->getFirstElementOfNonEmpty($value);
+				if ($firstElement == NULL) {
+					return FALSE;
+				}
+				return $this->isValidType(substr($type, 0, -2), $firstElement);
+			}
+		} elseif ($type === 'string') {
+			if (is_object($value) && !method_exists($value, '__toString')) {
+				return FALSE;
+			}
+		} elseif ($type === 'boolean' && !is_bool($value)) {
+			return FALSE;
+		} elseif (class_exists($type) && $value !== NULL && !$value instanceof $type) {
+			return FALSE;
+		} elseif (is_object($value) && !is_a($value, $type, TRUE)) {
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Return the first element of the given array, ArrayAccess or Traversable
+	 * that is not empty
+	 *
+	 * @param mixed $value
+	 */
+	protected function getFirstElementOfNonEmpty($value)
+	{
+		if ($value instanceof \ArrayAccess || is_array($value)) {
+			reset($value);
+			return current($value);
+		} elseif ($value instanceof \Traversable) {
+			foreach ($value as $element) {
+				return $element;
+			}
+		}
+		return null;
 	}
 
 	/**
