@@ -659,7 +659,7 @@ class TemplatePaths {
 		// Note about loop: iteration with while + array_pop causes paths to be checked in opposite
 		// order, which is intentional. Paths are considered overlays, e.g. adding a path to the
 		// array means you want that path checked first.
-		while ($path = array_pop($paths)) {
+		while (null !== ($path = array_pop($paths))) {
 			$pathAndFilenameWithoutFormat = $path . $relativePathAndFilename;
 			$pathAndFilename = $pathAndFilenameWithoutFormat . '.' . $format;
 			if (is_file($pathAndFilename)) {
