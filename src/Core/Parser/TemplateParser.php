@@ -545,9 +545,9 @@ class TemplateParser {
 				// We ask custom ExpressionNode instances from ViewHelperResolver
 				// if any match our expression:
 				foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
-					$detetionExpression = $expressionNodeTypeClassName::$detectionExpression;
+					$detectionExpression = $expressionNodeTypeClassName::$detectionExpression;
 					$matchedVariables = array();
-					preg_match_all($detetionExpression, $section, $matchedVariables, PREG_SET_ORDER);
+					preg_match_all($detectionExpression, $section, $matchedVariables, PREG_SET_ORDER);
 					if (is_array($matchedVariables) === TRUE) {
 						foreach ($matchedVariables as $matchedVariableSet) {
 							$expressionStartPosition = strpos($section, $matchedVariableSet[0]);
