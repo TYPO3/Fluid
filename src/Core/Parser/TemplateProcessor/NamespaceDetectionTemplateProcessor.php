@@ -98,7 +98,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface 
 			foreach ($matchedVariables as $namespaceMatch) {
 				$viewHelperNamespace = $this->renderingContext->getTemplateParser()->unquoteString($namespaceMatch[2]);
 				$phpNamespace = $viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
-				if (stristr($phpNamespace, '/') === FALSE) {
+				if (strpos($phpNamespace, '/') === FALSE) {
 					$viewHelperResolver->addNamespace($namespaceMatch[1], $phpNamespace);
 				}
 			}

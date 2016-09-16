@@ -208,7 +208,7 @@ class ViewHelperResolver {
 			return TRUE;
 		}
 		foreach (array_keys($this->namespaces) as $existingNamespaceIdentifier) {
-			if (stristr($existingNamespaceIdentifier, '*') === FALSE) {
+			if (strpos($existingNamespaceIdentifier, '*') === FALSE) {
 				continue;
 			}
 			$pattern = '/' . str_replace(array('.', '*'), array('\\.', '[a-zA-Z0-9\.]*'), $existingNamespaceIdentifier) . '/';
