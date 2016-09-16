@@ -365,9 +365,18 @@ class TemplatePaths {
 	 */
 	public function fillDefaultsByPackageName($packageName) {
 		$path = $this->getPackagePath($packageName);
-		$this->setTemplateRootPaths(array($path . self::DEFAULT_TEMPLATES_DIRECTORY));
-		$this->setLayoutRootPaths(array($path . self::DEFAULT_LAYOUTS_DIRECTORY));
-		$this->setPartialRootPaths(array($path . self::DEFAULT_PARTIALS_DIRECTORY));
+		$this->setTemplateRootPaths(array_merge(
+			array(0 => $path . self::DEFAULT_TEMPLATES_DIRECTORY),
+			$this->getTemplateRootPaths())
+		);
+		$this->setLayoutRootPaths(array_merge(
+			array(0 => $path . self::DEFAULT_LAYOUTS_DIRECTORY),
+			$this->getLayoutRootPaths()
+		));
+		$this->setPartialRootPaths(array_merge(
+			array(0 => $path . self::DEFAULT_PARTIALS_DIRECTORY),
+			$this->getPartialRootPaths())
+		);
 	}
 
 	/**
