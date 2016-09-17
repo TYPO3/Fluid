@@ -101,8 +101,8 @@ class ViewHelperResolver {
 	 * @return void
 	 */
 	public function addNamespaces(array $namespaces) {
-		foreach ($namespaces as $identifier => $namespaces) {
-			$this->addNamespace($identifier, $namespaces);
+		foreach ($namespaces as $identifier => $namespace) {
+			$this->addNamespace($identifier, $namespace);
 		}
 	}
 
