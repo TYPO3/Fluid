@@ -422,7 +422,7 @@ class BooleanParser {
 	 * @return mixed
 	 */
 	public function evaluateTerm($x, $context) {
-		if (substr($x, 0, 1) === '{' && substr($x, -1) === '}') {
+		if (strpos($x, '{') === 0 && substr($x, -1) === '}') {
 			if ($this->compileToCode === TRUE) {
 				return '($context["' . trim($x, '{}') . '"])';
 			}
@@ -433,7 +433,7 @@ class BooleanParser {
 			if ($this->compileToCode === TRUE) {
 				return $x;
 			}
-			if (stristr($x, '.')) {
+			if (strpos($x, '.') !== FALSE) {
 				return floatval($x);
 			} else {
 				return intval($x);
