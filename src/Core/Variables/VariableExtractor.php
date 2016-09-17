@@ -111,7 +111,7 @@ class VariableExtractor {
 	 * @return array
 	 */
 	protected function resolveSubVariableReferences($subject, $propertyPath) {
-		if (stristr($propertyPath, '{')) {
+		if (strpos($propertyPath, '{') !== FALSE) {
 			preg_match_all('/(\{.*\})/', $propertyPath, $matches);
 			foreach ($matches[1] as $match) {
 				$subPropertyPath = substr($match, 1, -1);
