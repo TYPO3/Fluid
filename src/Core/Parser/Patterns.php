@@ -24,7 +24,9 @@ abstract class Patterns {
 					(?:(?:[a-z0-9\\.]*):[a-zA-Z0-9\\.]+)  # A tag consists of the namespace prefix and word characters
 					(?:                                   # Begin tag arguments
 						\s*[a-zA-Z0-9:-]+                 # Argument Keys
+						\s*
 						=                                 # =
+						\s*
 						(?>                               # either... If we have found an argument, we will not back-track (That does the Atomic Bracket)
 							"(?:\\\"|[^"])*"              # a double-quoted string
 							|\'(?:\\\\\'|[^\'])*\'        # or a single quoted string
@@ -51,13 +53,15 @@ abstract class Patterns {
 			(?:                                           # A tag might have multiple attributes
 				\s*
 				[a-zA-Z0-9:-]+                            # The attribute name
+				\s*
 				=                                         # =
+				\s*
 				(?>                                       # either... # If we have found an argument, we will not back-track (That does the Atomic Bracket)
 					"(?:\\\"|[^"])*"                      # a double-quoted string
 					|\'(?:\\\\\'|[^\'])*\'                # or a single quoted string
 				)                                         #
 				\s*
-			)*                                            # A tag might have multiple attributes
+			)*
 		)                                                 # End Tag Attributes
 		\s*
 		(?P<Selfclosing>\/?)                              # A tag might be selfclosing
@@ -79,7 +83,9 @@ abstract class Patterns {
 			(?P<Argument>                                # The attribute name
 				[a-zA-Z0-9:-]+                           #
 			)                                            #
+			\s*                                          #
 			=                                            # =
+			\s*                                          #
 			(?>                                          # If we have found an argument, we will not back-track (That does the Atomic Bracket)
 				(?P<ValueQuoted>                         # either...
 					(?:"(?:\\\"|[^"])*")                 # a double-quoted string
