@@ -78,12 +78,12 @@ class RenderViewHelper extends AbstractViewHelper {
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
-		$this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial', FALSE, NULL);
-		$this->registerArgument('partial', 'string', 'Partial to render, with or without section', FALSE, NULL);
+		$this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');
+		$this->registerArgument('partial', 'string', 'Partial to render, with or without section');
 		$this->registerArgument('arguments', 'array', 'Array of variables to be transferred. Use {_all} for all variables', FALSE, array());
 		$this->registerArgument('optional', 'boolean', 'If TRUE, considers the *section* optional. Partial never is.', FALSE, FALSE);
-		$this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist', FALSE, NULL);
-		$this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section', FALSE, NULL);
+		$this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist');
+		$this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
 	}
 
 	/**
