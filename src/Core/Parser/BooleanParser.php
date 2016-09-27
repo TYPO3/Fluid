@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
+
 /**
  * This BooleanParser helps to parse and evaluate boolean expressions.
  * it's basically a recursive decent parser that uses a tokenizing regex
@@ -142,7 +144,7 @@ class BooleanParser {
 	 * @param boolean $includeWhitespace return surrounding whitespace with token
 	 * @return string
 	 */
-	public function peek($includeWhitespace = FALSE) {
+	protected function peek($includeWhitespace = FALSE) {
 		preg_match(static::TOKENREGEX, substr($this->expression, $this->cursor), $matches);
 		if ($includeWhitespace === TRUE) {
 			return $matches[0];
@@ -157,7 +159,7 @@ class BooleanParser {
 	 * @param string $string
 	 * @return void
 	 */
-	public function consume($string) {
+	protected function consume($string) {
 		if (strlen($string) === 0) {
 			return;
 		}
@@ -170,7 +172,7 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseOrToken() {
+	protected function parseOrToken() {
 		$x = $this->parseAndToken();
 		while ($this->peek() === '||') {
 			$this->consume('||');
@@ -191,7 +193,7 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseAndToken() {
+	protected function parseAndToken() {
 		$x = $this->parseCompareToken();
 		while ($this->peek() === '&&') {
 			$this->consume('&&');
@@ -212,7 +214,7 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseCompareToken() {
+	protected function parseCompareToken() {
 		$x = $this->parseNotToken();
 		while (in_array($comparator = $this->peek(), explode(',', static::COMPARATORS))) {
 			$this->consume($comparator);
@@ -228,7 +230,7 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseNotToken() {
+	protected function parseNotToken() {
 		if ($this->peek() === '!') {
 			$this->consume('!');
 			$x = $this->parseNotToken();
@@ -248,7 +250,7 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseBracketToken() {
+	protected function parseBracketToken() {
 		$t = $this->peek();
 		if ($t === '(') {
 			$this->consume('(');
@@ -266,7 +268,7 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseStringToken() {
+	protected function parseStringToken() {
 		$t = $this->peek();
 		if ($t === '\'' || $t === '"') {
 			$stringIdentifier = $t;
@@ -294,13 +296,13 @@ class BooleanParser {
 	 *
 	 * @return mixed
 	 */
-	public function parseTermToken() {
+	protected function parseTermToken() {
 		$t = $this->peek();
 		if ($this->isTerm($t)) {
 			$this->consume($t);
 			return $this->evaluateTerm($t, $this->context);
 		}
-		throw \RuntimeException('end of line, you should never have reached this point.');
+		throw ParserException(sprintf('%t is not a valid expression term', $t));
 	}
 
 	/**
@@ -308,7 +310,7 @@ class BooleanParser {
 	 *
 	 * @param string $x
 	 */
-	public function isTerm($x) {
+	protected function isTerm($x) {
 		if (in_array($x, array('&&', '||', '!', '==', '\''))) {
 			return FALSE;
 		}
@@ -323,7 +325,7 @@ class BooleanParser {
 	 * @param mixed $y
 	 * @return boolean
 	 */
-	public function evaluateAnd($x, $y) {
+	protected function evaluateAnd($x, $y) {
 		return $x && $y;
 	}
 
@@ -334,7 +336,7 @@ class BooleanParser {
 	 * @param mixed $y
 	 * @return boolean
 	 */
-	public function evaluateOr($x, $y) {
+	protected function evaluateOr($x, $y) {
 		return $x || $y;
 	}
 
@@ -344,7 +346,7 @@ class BooleanParser {
 	 * @param mixed $x
 	 * @return boolean|string
 	 */
-	public function evaluateNot($x) {
+	protected function evaluateNot($x) {
 		if ($this->compileToCode === TRUE) {
 			return '!(' . $x . ')';
 		}
@@ -359,7 +361,7 @@ class BooleanParser {
 	 * @param string $comparator
 	 * @return boolean|string
 	 */
-	public function evaluateCompare($x, $y, $comparator) {
+	protected function evaluateCompare($x, $y, $comparator) {
 		// enfore strong comparison for comparing two objects
 		if ($comparator == '==' && is_object($x) && is_object($y)) {
 			$comparator = '===';
@@ -421,7 +423,7 @@ class BooleanParser {
 	 * @param array $context
 	 * @return mixed
 	 */
-	public function evaluateTerm($x, $context) {
+	protected function evaluateTerm($x, $context) {
 		if (strpos($x, '{') === 0 && substr($x, -1) === '}') {
 			if ($this->compileToCode === TRUE) {
 				return '($context["' . trim($x, '{}') . '"])';
