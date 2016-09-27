@@ -483,6 +483,7 @@ class TemplatePaths {
 	 */
 	public function getLayoutIdentifier($layoutName = 'Default') {
 		$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
+		$layoutName = str_replace('.', '_', $layoutName);
 		$prefix = 'layout_' . $layoutName;
 		return $this->createIdentifierForFile($filePathAndFilename, $prefix);
 	}
