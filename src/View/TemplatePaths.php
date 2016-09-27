@@ -378,7 +378,9 @@ class TemplatePaths {
 	 * @return string
 	 */
 	protected function sanitizePath($path) {
-		if (!empty($path)) {
+		if (strpos($path, 'php://') === 0) {
+			return $path;
+		} elseif (!empty($path)) {
 			$path = str_replace(array('\\', '//'), '/', $path);
 			$path = $this->ensureAbsolutePath($path);
 			if (is_dir($path)) {
