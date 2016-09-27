@@ -161,12 +161,11 @@ class BooleanNodeTest extends UnitTestCase {
 			'1 && 0' => array(new TextNode('1 && 0'), FALSE),
 			'(1 && 1) && 1' => array(new TextNode('(1 && 1) && 1'), TRUE),
 			'(1 && 0) || 1' => array(new TextNode('(1 && 0) || 1'), TRUE),
-			'(\'yes\' == \'yes\') || 1 >= 0' => array(new TextNode('(\'yes\' == \'yes\') || 1 >= 0'), TRUE),
+			'(\'text\' == \'text\') || 1 >= 0' => array(new TextNode('(\'text\' == \'text\') || 1 >= 0'), TRUE),
 			'1 <= 0' => array(new TextNode('1 <= 0'), FALSE),
 			'1 > 4' => array(new TextNode('1 > 4'), FALSE),
 			'1 < 4' => array(new TextNode('1 < 4'), TRUE),
 			'4 % 4' => array(new TextNode('4 % 4'), FALSE),
-			'\'yes\' % 2' => array(new TextNode('\'yes\' % 2'), FALSE),
 			'2 % 4' => array(new TextNode('2 % 4'), TRUE),
 			'0 && 1' => array(new TextNode('0 && 1'), FALSE),
 		);
@@ -183,7 +182,7 @@ class BooleanNodeTest extends UnitTestCase {
 		$rootNode->addChildNode(new ArrayNode(array('foo' => 'bar')));
 		$rootNode->addChildNode(new TextNode(')'));
 		$rootNode->addChildNode(new TextNode('&&'));
-		$rootNode->addChildNode(new ObjectAccessorNode('true'));
+		$rootNode->addChildNode(new TextNode('1'));
 		$this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
 	}
 
