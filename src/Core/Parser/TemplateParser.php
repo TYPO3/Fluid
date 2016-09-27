@@ -163,8 +163,10 @@ class TemplateParser {
 			$parsedTemplate = $compiler->get($templateIdentifier);
 		} else {
 			$parsedTemplate = $this->parse(
-				$templateSourceClosure($this, $this->renderingContext->getTemplatePaths()), $templateIdentifier
+				$templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
+				$templateIdentifier
 			);
+			$parsedTemplate->setIdentifier($templateIdentifier);
 			$this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
 			if ($parsedTemplate->isCompilable()) {
 				try {

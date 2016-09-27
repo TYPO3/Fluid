@@ -19,6 +19,21 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
 
 	/**
+	 * @param string $identifier
+	 * @return void
+	 */
+	public function setIdentifier($identifier) {
+		// void, ignored.
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getIdentifier() {
+		return static::class;
+	}
+
+	/**
 	 * Returns a variable container used in the PostParse Facet.
 	 *
 	 * @return VariableProviderInterface

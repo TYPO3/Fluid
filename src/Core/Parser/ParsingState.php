@@ -20,6 +20,11 @@ use TYPO3Fluid\Fluid\View;
 class ParsingState implements ParsedTemplateInterface {
 
 	/**
+	 * @var string
+	 */
+	protected $identifier;
+
+	/**
 	 * Root node reference
 	 *
 	 * @var RootNode
@@ -52,6 +57,21 @@ class ParsingState implements ParsedTemplateInterface {
 	 * @var boolean
 	 */
 	protected $compilable = TRUE;
+
+	/**
+	 * @param string $identifier
+	 * @return void
+	 */
+	public function setIdentifier($identifier) {
+		$this->identifier = $identifier;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getIdentifier() {
+		return $this->identifier;
+	}
 
 	/**
 	 * Injects a variable container to be used during parsing.

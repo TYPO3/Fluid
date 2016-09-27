@@ -35,6 +35,24 @@ class ParsingStateTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testSetIdentifierSetsProperty() {
+		$instance = $this->getMockForAbstractClass(ParsingState::class, array(), '', FALSE, array('dummy'));
+		$instance->setIdentifier('test');
+		$this->assertAttributeEquals('test', 'identifier', $instance);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetIdentifierReturnsProperty() {
+		$instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, array(), '', FALSE, array('dummy'));
+		$instance->_set('identifier', 'test');
+		$this->assertEquals('test', $instance->getIdentifier());
+	}
+
+	/**
+	 * @test
+	 */
 	public function setRootNodeCanBeReadOutAgain() {
 		$rootNode = new RootNode();
 		$this->parsingState->setRootNode($rootNode);

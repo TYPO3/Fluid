@@ -16,6 +16,17 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 interface ParsedTemplateInterface {
 
 	/**
+	 * @param string $identifier
+	 * @return void
+	 */
+	public function setIdentifier($identifier);
+
+	/**
+	 * @return string
+	 */
+	public function getIdentifier();
+
+	/**
 	 * Render the parsed template with rendering context
 	 *
 	 * @param RenderingContextInterface $renderingContext The rendering context to use
