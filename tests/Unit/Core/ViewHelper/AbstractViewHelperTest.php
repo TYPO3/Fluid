@@ -62,6 +62,27 @@ class AbstractViewHelperTest extends UnitTestCase {
 		)
 	);
 
+    /**
+     * @param mixed $input
+     * @param mixed $expected
+     * @dataProvider getFirstElementOfNonEmptyTestValues
+     */
+    public function testGetFirstElementOfNonEmpty($input, $expected) {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('dummy'));
+        $this->assertEquals($expected, $viewHelper->_call('getFirstElementOfNonEmpty', $input));
+    }
+
+    /**
+     * @return array
+     */
+    public function getFirstElementOfNonEmptyTestValues() {
+        return array(
+            'plain array' => array(array('foo', 'bar'), 'foo'),
+            'iterator w/o arrayaccess' => array(new \IteratorIterator(new \ArrayIterator(array('foo', 'bar'))), 'foo'),
+            'unsupported value' => array('unsupported value', NULL)
+        );
+    }
+
 	/**
 	 * @test
 	 */
