@@ -52,7 +52,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper {
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
-		$this->registerArgument('value', 'string', 'Value to format', FALSE, NULL);
+		$this->registerArgument('value', 'string', 'Value to format');
 		$this->registerArgument('keepQuotes', 'boolean', 'If TRUE quotes will not be replaced (ENT_NOQUOTES)', FALSE, FALSE);
 		$this->registerArgument('encoding', 'string', 'Encoding', FALSE, 'UTF-8');
 		$this->registerArgument('doubleEncode', 'boolean', 'If FALSE html entities will not be encoded', FALSE, TRUE);

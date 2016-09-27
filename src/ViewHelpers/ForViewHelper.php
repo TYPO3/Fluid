@@ -75,7 +75,7 @@ class ForViewHelper extends AbstractViewHelper {
 		$this->registerArgument('as', 'string', 'The name of the iteration variable', TRUE);
 		$this->registerArgument('key', 'string', 'Variable to assign array key to', FALSE);
 		$this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', FALSE, FALSE);
-		$this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)', FALSE, NULL);
+		$this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
 	}
 
 	/**
