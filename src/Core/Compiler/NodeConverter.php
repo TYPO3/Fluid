@@ -59,28 +59,39 @@ class NodeConverter {
 	 * @throws FluidException
 	 */
 	public function convert(NodeInterface $node) {
-		$converted = array(
-			'initialization' => '// Uncompilable/convertible node type: ' . get_class($node) . chr(10),
-			'execution' => ''
-		);
-		if ($node instanceof TextNode) {
-			$converted = $this->convertTextNode($node);
-		} elseif ($node instanceof ExpressionNodeInterface) {
-			$converted = $this->convertExpressionNode($node);
-		} elseif ($node instanceof NumericNode) {
-			$converted = $this->convertNumericNode($node);
-		} elseif ($node instanceof ViewHelperNode) {
-			$converted = $this->convertViewHelperNode($node);
-		} elseif ($node instanceof ObjectAccessorNode) {
-			$converted = $this->convertObjectAccessorNode($node);
-		} elseif ($node instanceof ArrayNode) {
-			$converted = $this->convertArrayNode($node);
-		} elseif ($node instanceof RootNode) {
-			$converted = $this->convertListOfSubNodes($node);
-		} elseif ($node instanceof BooleanNode) {
-			$converted = $this->convertBooleanNode($node);
-		} elseif ($node instanceof EscapingNode) {
-			$converted = $this->convertEscapingNode($node);
+		switch (TRUE) {
+			case $node instanceof TextNode:
+				$converted = $this->convertTextNode($node);
+				break;
+			case $node instanceof ExpressionNodeInterface:
+				$converted = $this->convertExpressionNode($node);
+				break;
+			case $node instanceof NumericNode:
+				$converted = $this->convertNumericNode($node);
+				break;
+			case $node instanceof ViewHelperNode:
+				$converted = $this->convertViewHelperNode($node);
+				break;
+			case $node instanceof ObjectAccessorNode:
+				$converted = $this->convertObjectAccessorNode($node);
+				break;
+			case $node instanceof ArrayNode:
+				$converted = $this->convertArrayNode($node);
+				break;
+			case $node instanceof RootNode:
+				$converted = $this->convertListOfSubNodes($node);
+				break;
+			case $node instanceof BooleanNode:
+				$converted = $this->convertBooleanNode($node);
+				break;
+			case $node instanceof EscapingNode:
+				$converted = $this->convertEscapingNode($node);
+				break;
+			default:
+				$converted = array(
+					'initialization' => '// Uncompilable/convertible node type: ' . get_class($node) . chr(10),
+					'execution' => ''
+				);
 		}
 		return $converted;
 	}
