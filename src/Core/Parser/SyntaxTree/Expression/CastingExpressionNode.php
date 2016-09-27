@@ -33,7 +33,7 @@ class CastingExpressionNode extends AbstractExpressionNode {
 		(
 			{                                # Start of shorthand syntax
 				(?:                          # Math expression is composed of...
-					[a-zA-Z0-9.]+            # Template variable object access path
+					[a-zA-Z0-9.\"\',\ ]+            # Template variable object access path
 					[\s]+as[\s]+             # A single space, then "as", then a single space
 					[a-zA-Z0-9.\s]+          # Casting-to-type side
 				)
@@ -49,7 +49,11 @@ class CastingExpressionNode extends AbstractExpressionNode {
 	public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches) {
 		$expression = trim($expression, '{}');
 		list ($variable, $type) = explode(' as ', $expression);
-		$variable = static::getTemplateVariableOrValueItself($variable, $renderingContext);
+		if (static::isEnclosedByQuotes($variable) === TRUE) {
+			$variable = static::cleanupOuterQuotes($variable);
+		} else {
+			$variable = static::getTemplateVariableOrValueItself($variable, $renderingContext);
+		}
 		if (!in_array($type, self::$validTypes)) {
 			$type = static::getTemplateVariableOrValueItself($type, $renderingContext);
 		}
@@ -57,6 +61,27 @@ class CastingExpressionNode extends AbstractExpressionNode {
 			throw new Exception(sprintf('Invalid target conversion type "%s" specified in casting expression', $type));
 		}
 		return self::convert($variable, $type);
+	}
+
+	/**
+	 * removes the outer quotes of a string
+	 *
+	 * @param string $variable
+	 * @return string
+	 */
+	protected static function cleanupOuterQuotes($variable) {
+		return trim($variable, substr($variable, 0, 1));
+	}
+
+	/**
+	 * checks if the variable is actually a string, which is determined, by the
+	 * fact, that stings are enclosed by single or double quotes
+	 *
+	 * @param string $variable
+	 * @return boolean
+	 */
+	protected static function isEnclosedByQuotes($variable) {
+		return substr($variable, 0, 1) == '\'' || substr($variable, 0, 1) == '"';
 	}
 
 	/**

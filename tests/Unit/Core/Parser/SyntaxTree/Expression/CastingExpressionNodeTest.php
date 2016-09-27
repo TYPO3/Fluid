@@ -85,6 +85,13 @@ class CastingExpressionNodeTest extends UnitTestCase {
 			array('myboolean as array', array('myboolean' => TRUE), array()),
 			array('myboolean as array', array('myboolean' => FALSE), array()),
 			array('myobject as array', array('myobject' => $toArrayObject), array('name' => 'foobar')),
+			array('"foo" as array', array(), array('foo')),
+			array('"foo,bar" as array', array(), array('foo', 'bar')),
+			array('"foo , bar" as array', array(), array('foo', 'bar')),
+			array('\'foo\' as array', array(), array('foo')),
+			array('\'foo,bar\' as array', array(), array('foo', 'bar')),
+			array('\'foo , bar\' as array', array(), array('foo', 'bar')),
+			array('"foo" as array', array('foo' => 'baz'), array('foo')),
 		);
 	}
 
