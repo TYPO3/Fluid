@@ -76,7 +76,7 @@ class MathExpressionNode extends AbstractExpressionNode {
 		} elseif ($operator === '*') {
 			return $left * $right;
 		} elseif ($operator === '/') {
-			return $left / $right;
+			return (integer) $right !== 0 ? $left / $right : 0;
 		} elseif ($operator === '^') {
 			return pow($left, $right);
 		}
