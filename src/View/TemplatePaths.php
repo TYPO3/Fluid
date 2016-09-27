@@ -504,7 +504,7 @@ class TemplatePaths {
 	 */
 	public function getLayoutSource($layoutName = 'Default') {
 		$layoutPathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-		return file_get_contents($layoutPathAndFilename);
+		return file_get_contents($layoutPathAndFilename, FILE_TEXT);
 	}
 
 	/**
