@@ -637,7 +637,7 @@ class TemplatePaths {
 	 * @return string the full path which should be used. The path definitely exists.
 	 * @throws InvalidTemplateResourceException
 	 */
-	protected function getPartialPathAndFilename($partialName) {
+	public function getPartialPathAndFilename($partialName) {
 		$format = $this->getFormat();
 		$partialKey = $partialName . '.' . $format;
 		if (!array_key_exists($partialKey, self::$resolvedFiles[self::NAME_PARTIALS])) {
