@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 
 /**
  * Type Casting Node - allows the shorthand version
@@ -54,7 +54,12 @@ class CastingExpressionNode extends AbstractExpressionNode {
 			$type = static::getTemplateVariableOrValueItself($type, $renderingContext);
 		}
 		if (!in_array($type, self::$validTypes)) {
-			throw new Exception(sprintf('Invalid target conversion type "%s" specified in casting expression', $type));
+			throw new ExpressionException(
+			    sprintf(
+			        'Invalid target conversion type "%s" specified in casting expression',
+                    $type
+                )
+            );
 		}
 		return self::convert($variable, $type);
 	}
