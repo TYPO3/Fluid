@@ -372,9 +372,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 	 */
 	protected function getFirstElementOfNonEmpty($value)
 	{
-		if ($value instanceof \ArrayAccess || is_array($value)) {
-			reset($value);
-			return current($value);
+		if (is_array($value)) {
+			return reset($value);
 		} elseif ($value instanceof \Traversable) {
 			foreach ($value as $element) {
 				return $element;
