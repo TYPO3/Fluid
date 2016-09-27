@@ -12,7 +12,7 @@ abstract class AbstractEscapingViewHelper extends AbstractViewHelper {
 	 * @return void
 	 */
     public function initializeArguments() {
-        $this->registerArgument('content', 'string', 'Content provided as argument', FALSE, NULL);
+        $this->registerArgument('content', 'string', 'Content provided as argument');
     }
 
     /**

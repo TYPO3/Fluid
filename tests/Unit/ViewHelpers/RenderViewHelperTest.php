@@ -47,12 +47,12 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
 		$instance = $this->getMock(RenderViewHelper::class, array('registerArgument'));
-		$instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything(), FALSE, NULL);
-		$instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything(), FALSE, NULL);
+		$instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything());
+		$instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything());
 		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, array());
 		$instance->expects($this->at(3))->method('registerArgument')->with('optional', 'boolean', $this->anything(), FALSE, FALSE);
-		$instance->expects($this->at(4))->method('registerArgument')->with('default', 'mixed', $this->anything(), FALSE, NULL);
-		$instance->expects($this->at(5))->method('registerArgument')->with('contentAs', 'string', $this->anything(), FALSE, NULL);
+		$instance->expects($this->at(4))->method('registerArgument')->with('default', 'mixed', $this->anything());
+		$instance->expects($this->at(5))->method('registerArgument')->with('contentAs', 'string', $this->anything());
 		$instance->initializeArguments();
 	}
 

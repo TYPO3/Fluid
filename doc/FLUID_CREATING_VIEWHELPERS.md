@@ -39,7 +39,7 @@ class CombineViewHelper extends AbstractViewHelper {
      * @return void
      */
     public function initializeArguments() {
-        $this->registerArgument('values', 'array', 'Values to use in array_combine', FALSE, NULL);
+        $this->registerArgument('values', 'array', 'Values to use in array_combine');
         $this->registerArgument('keys', 'array', 'Keys to use in array_combine', TRUE);
     }
 

@@ -19,7 +19,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
 		$instance = $this->getMock(ElseViewHelper::class, array('registerArgument'));
-		$instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything(), FALSE, NULL);
+		$instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything());
 		$instance->initializeArguments();
 	}
 
