@@ -7,8 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
-use TYPO3Fluid\Fluid\Core\Parser\Configuration;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
@@ -18,7 +16,6 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
-use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Testcase for the TemplateView
