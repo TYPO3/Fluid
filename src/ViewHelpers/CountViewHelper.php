@@ -6,8 +6,10 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * This ViewHelper counts elements of the specified array or countable object.
@@ -32,6 +34,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CountViewHelper extends AbstractViewHelper {
 
+	use CompileWithContentArgumentAndRenderStatic;
+
 	/**
 	 * @var boolean
 	 */
@@ -51,16 +55,14 @@ class CountViewHelper extends AbstractViewHelper {
 	}
 
 	/**
-	 * Counts the items of a given property.
-	 *
-	 * @return integer The number of elements
-	 * @api
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return integer
 	 */
-	public function render() {
-		$subject = $this->arguments['subject'];
-		if ($subject === NULL) {
-			$subject = $this->renderChildren();
-		}
-		return count($subject);
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+	{
+		return count($renderChildrenClosure());
 	}
+
 }

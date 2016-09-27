@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\DebugViewHelper;
 
 /**
@@ -20,6 +21,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 	public function testInitializeArgumentsRegistersExpectedArguments() {
 		$instance = $this->getMock(DebugViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('typeOnly', 'boolean', $this->anything(), FALSE, FALSE);
+		$instance->setRenderingContext(new RenderingContextFixture());
 		$instance->initializeArguments();
 	}
 
@@ -33,6 +35,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase {
 		$instance = $this->getMock(DebugViewHelper::class, array('renderChildren'));
 		$instance->expects($this->once())->method('renderChildren')->willReturn($value);
 		$instance->setArguments($arguments);
+		$instance->setRenderingContext(new RenderingContextFixture());
 		$result = $instance->render();
 		$this->assertEquals($expected, $result);
 	}

@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Space Removal ViewHelper
@@ -36,12 +37,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class SpacelessViewHelper extends AbstractViewHelper {
 
-	/**
-	 * @return string
-	 */
-	public function render() {
-		return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
-	}
+	use CompileWithRenderStatic;
 
 	/**
 	 * @param array $arguments

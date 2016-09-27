@@ -6,7 +6,11 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * Outputs an argument/value without any escaping. Is normally used to output
@@ -42,6 +46,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class RawViewHelper extends AbstractViewHelper {
 
+	use CompileWithContentArgumentAndRenderStatic;
+
 	/**
 	 * @var boolean
 	 */
@@ -60,13 +66,25 @@ class RawViewHelper extends AbstractViewHelper {
 	}
 
 	/**
-	 * @return string
+	 * @param array $arguments
+	 * @param \Closure $renderChildrenClosure
+	 * @param RenderingContextInterface $renderingContext
+	 * @return mixed
 	 */
-	public function render() {
-		if (!$this->hasArgument('value')) {
-			return $this->renderChildren();
-		} else {
-			return $this->arguments['value'];
-		}
+	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
+		return $renderChildrenClosure();
 	}
+
+	/**
+	 * @param string $argumentsName
+	 * @param string $closureName
+	 * @param string $initializationPhpCode
+	 * @param ViewHelperNode $node
+	 * @param TemplateCompiler $compiler
+	 * @return mixed
+	 */
+	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
+		return sprintf('%s()', $closureName);
+	}
+
 }

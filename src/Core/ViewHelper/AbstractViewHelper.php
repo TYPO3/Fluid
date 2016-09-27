@@ -395,13 +395,14 @@ abstract class AbstractViewHelper implements ViewHelperInterface {
 
 	/**
 	 * Tests if the given $argumentName is set, and not NULL.
+	 * The isset() test used fills both those requirements.
 	 *
 	 * @param string $argumentName
 	 * @return boolean TRUE if $argumentName is found, FALSE otherwise
 	 * @api
 	 */
 	protected function hasArgument($argumentName) {
-		return isset($this->arguments[$argumentName]) && $this->arguments[$argumentName] !== NULL;
+		return isset($this->arguments[$argumentName]);
 	}
 
 	/**

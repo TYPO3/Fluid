@@ -45,7 +45,6 @@ class ViewHelperInvokerTest extends UnitTestCase {
 	 */
 	public function getInvocationTestValues() {
 		return array(
-			array(CountViewHelper::class, array('subject' => array('foo')), 1, NULL),
 			array(TestViewHelper::class, array('param1' => 'foo', 'param2' => array('bar')), 'foo', NULL),
 			array(TestViewHelper::class, array('param1' => 'foo', 'param2' => array('bar'), 'add1' => 'baz', 'add2' => 'zap'), 'foo', NULL),
 		);
