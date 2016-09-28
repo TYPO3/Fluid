@@ -15,10 +15,8 @@ registered namespace available in _all template files_ without further importing
 
 ```php
 $view = new TemplateView();
-$view->getTemplatePaths()->registerNamespace('foo', 'Vendor\\Foo\\ViewHelpers');
+$view->getTemplatePaths()->addNamespace('foo', 'Vendor\\Foo\\ViewHelpers');
 ```
-
-Beware though: once imported globally, an imported namespace can no longer be overridden by `{namespace}` in template files.
 
 And the latter method which can be used in each template file that requires the ViewHelpers:
 
