@@ -258,14 +258,14 @@ class TemplatePaths {
 	}
 
 	/**
-	 * @param string $controllerName
+	 * @param string|NULL $controllerName
 	 * @param string $format
 	 * @return array
 	 */
 	public function resolveAvailableTemplateFiles($controllerName, $format = self::DEFAULT_FORMAT) {
 		$paths = $this->getTemplateRootPaths();
 		foreach ($paths as $index => $path) {
-			$paths[$index] = $path . $controllerName . '/';
+			$paths[$index] = rtrim($path . $controllerName, '/') . '/';
 		}
 		return $this->resolveFilesInFolders($paths, $format);
 	}
