@@ -19,6 +19,24 @@ class AbstractCompiledTemplateTest extends UnitTestCase {
 	/**
 	 * @test
 	 */
+	public function testSetIdentifierDoesNotChangeObject() {
+		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
+		$before = clone $instance;
+		$instance->setIdentifier('test');
+		$this->assertEquals($before, $instance);
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetIdentifierReturnsClassName() {
+		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
+		$this->assertEquals($instance->getIdentifier(), get_class($instance));
+	}
+
+	/**
+	 * @test
+	 */
 	public function testParentGetVariableContainerMethodReturnsStandardVariableProvider() {
 		$instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
 		$result = $instance->getVariableContainer();
