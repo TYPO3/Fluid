@@ -143,57 +143,67 @@ class NodeConverter {
 
 		// Build up $arguments array
 		$argumentsVariableName = $this->variableName('arguments');
-		$initializationPhpCode .= sprintf('%s = array();', $argumentsVariableName) . chr(10);
+		$renderChildrenClosureVariableName = $this->variableName('renderChildrenClosure');
+		$viewHelperInitializationPhpCode = '';
 
-		$alreadyBuiltArguments = array();
-		foreach ($node->getArguments() as $argumentName => $argumentValue) {
-			if ($argumentValue instanceof NodeInterface) {
-				$converted = $this->convert($argumentValue);
-			} else {
-				$converted = array(
-					'initialization' => '',
-					'execution' => $argumentValue
-				);
-			}
-			$initializationPhpCode .= $converted['initialization'];
-			$initializationPhpCode .= sprintf(
-				'%s[\'%s\'] = %s;',
+		try {
+
+			$convertedViewHelperExecutionCode = $node->getUninitializedViewHelper()->compile(
 				$argumentsVariableName,
-				$argumentName,
-				$converted['execution']
-			) . chr(10);
-			$alreadyBuiltArguments[$argumentName] = TRUE;
-		}
+				$renderChildrenClosureVariableName,
+				$viewHelperInitializationPhpCode,
+				$node,
+				$this->templateCompiler
+			);
 
-		$arguments = $node->getArgumentDefinitions();
-		foreach ($arguments  as $argumentName => $argumentDefinition) {
-			if (!isset($alreadyBuiltArguments[$argumentName])) {
-				$initializationPhpCode .= sprintf(
-						'%s[\'%s\'] = %s;',
+			$arguments = $node->getArgumentDefinitions();
+			$argumentInitializationCode = sprintf('%s = array();', $argumentsVariableName) . chr(10);
+			foreach ($arguments  as $argumentName => $argumentDefinition) {
+				if (!isset($alreadyBuiltArguments[$argumentName])) {
+					$argumentInitializationCode .= sprintf(
+						'%s[\'%s\'] = %s;%s',
 						$argumentsVariableName,
 						$argumentName,
-						var_export($argumentDefinition->getDefaultValue(), TRUE)
-					) . chr(10);
+						var_export($argumentDefinition->getDefaultValue(), TRUE),
+						chr(10)
+					);
+				}
 			}
+
+			$alreadyBuiltArguments = array();
+			foreach ($node->getArguments() as $argumentName => $argumentValue) {
+				if ($argumentValue instanceof NodeInterface) {
+					$converted = $this->convert($argumentValue);
+				} else {
+					$converted = array(
+						'initialization' => '',
+						'execution' => $argumentValue
+					);
+				}
+				$argumentInitializationCode .= $converted['initialization'];
+				$argumentInitializationCode .= sprintf(
+					'%s[\'%s\'] = %s;',
+					$argumentsVariableName,
+					$argumentName,
+					$converted['execution']
+				) . chr(10);
+				$alreadyBuiltArguments[$argumentName] = TRUE;
+			}
+
+			// Build up closure which renders the child nodes
+			$initializationPhpCode .= sprintf(
+					'%s = %s;',
+					$renderChildrenClosureVariableName,
+					$this->templateCompiler->wrapChildNodesInClosure($node)
+				) . chr(10);
+
+			$initializationPhpCode .= $argumentInitializationCode . $viewHelperInitializationPhpCode;
+
+		} catch (StopCompilingChildrenException $stopCompilingChildrenException) {
+
+			$convertedViewHelperExecutionCode = '\'' . $stopCompilingChildrenException->getReplacementString() . '\'';
+
 		}
-
-		// Build up closure which renders the child nodes
-		$renderChildrenClosureVariableName = $this->variableName('renderChildrenClosure');
-		$initializationPhpCode .= sprintf(
-				'%s = %s;',
-				$renderChildrenClosureVariableName,
-				$this->templateCompiler->wrapChildNodesInClosure($node)
-			) . chr(10);
-
-		$viewHelperInitializationPhpCode = '';
-		$convertedViewHelperExecutionCode = $node->getUninitializedViewHelper()->compile(
-			$argumentsVariableName,
-			$renderChildrenClosureVariableName,
-			$viewHelperInitializationPhpCode,
-			$node,
-			$this->templateCompiler
-		);
-		$initializationPhpCode .= $viewHelperInitializationPhpCode;
 		$initializationArray = array(
 			'initialization' => $initializationPhpCode,
 			'execution' => $convertedViewHelperExecutionCode === NULL ? 'NULL' : $convertedViewHelperExecutionCode
