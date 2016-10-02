@@ -9,8 +9,6 @@ if (file_exists(__DIR__ . '/../autoload.php')) {
 	require_once __DIR__ . '/../../../autoload.php';
 }
 
-require_once __DIR__ . '/../examples/include/class_customvariableprovider.php';
-
 $handler = new FluidCommandLine();
 try {
 	echo $handler->handleCommand($argv);
@@ -63,19 +61,20 @@ class FluidCommandLine {
 				$this->dumpSupportedParameters() .
 				$this->dumpusageExample();
 		}
-		$paths = new \TYPO3\Fluid\View\TemplatePaths($arguments);
-		$context = new \TYPO3\Fluid\Core\Rendering\RenderingContext();
+		$view = new \TYPO3Fluid\Fluid\View\TemplateView();
+		$context = $view->getRenderingContext();
+		if (isset($arguments[self::ARGUMENT_CACHEDIRECTORY])) {
+			$cache = new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($arguments[self::ARGUMENT_CACHEDIRECTORY]);
+			$context->setCache($cache);
+		}
+		$paths = $context->getTemplatePaths();
+		$paths->fillFromConfigurationArray($arguments);
 		if (isset($arguments[self::ARGUMENT_TEMPLATEFILE])) {
 			$paths->setTemplatePathAndFilename($arguments[self::ARGUMENT_TEMPLATEFILE]);
 		} elseif (isset($arguments[self::ARGUMENT_CONTROLLERNAME])) {
 			$context->setControllerName($arguments[self::ARGUMENT_CONTROLLERNAME]);
 		} else {
 			$paths->setTemplatePathAndFilename('php://stdin');
-		}
-		if (isset($arguments[self::ARGUMENT_CACHEDIRECTORY])) {
-			$cache = new \TYPO3\Fluid\Core\Cache\SimpleFileCache($arguments[self::ARGUMENT_CACHEDIRECTORY]);
-		} else {
-			$cache = NULL;
 		}
 		if (isset($arguments[self::ARGUMENT_VARIABLES])) {
 			$variablesReference = trim($arguments[self::ARGUMENT_VARIABLES]);
@@ -93,14 +92,13 @@ class FluidCommandLine {
 				|| file_exists($variablesReference)
 				|| strpos($variablesReference, ':/') !== FALSE
 			) {
-				$variableProvider = new \TYPO3\Fluid\Core\Variables\JSONVariableProvider();
+				$variableProvider = new \TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider();
 				$variableProvider->setSource($variablesReference);
 			} else {
-				$variableProvider = new \TYPO3\Fluid\Core\Variables\StandardVariableProvider();
+				$variableProvider = new \TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider();
 			}
 			$context->setVariableProvider($variableProvider);
 		}
-		$view = new \TYPO3\Fluid\View\TemplateView($paths, $context, $cache);
 		if (isset($arguments[self::ARGUMENT_SOCKET])) {
 			$this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
 		} else {
@@ -114,7 +112,7 @@ class FluidCommandLine {
 	 * @param ViewInterface $view
 	 * @return void
 	 */
-	protected function listenIndefinitelyOnSocket($socketIdentifier, \TYPO3\Fluid\View\ViewInterface $view) {
+	protected function listenIndefinitelyOnSocket($socketIdentifier, \TYPO3Fluid\Fluid\View\ViewInterface $view) {
 		if (file_exists($socketIdentifier)) {
 			unlink($socketIdentifier);
 		}
@@ -133,7 +131,7 @@ class FluidCommandLine {
 				try {
 					$rendered = $this->renderSocketRequest($templatePathAndFilename, $view);
 					$response = $this->createResponse($rendered);
-				} catch (\TYPO3\Fluid\Exception $error) {
+				} catch (\TYPO3Fluid\Fluid\Exception $error) {
 					$response = $this->createErrorResponse($error->getMessage(), 500);
 				}
 			}
@@ -148,7 +146,7 @@ class FluidCommandLine {
 	 * @param \TYPO3\Fluid\View\TemplatePaths $paths
 	 * @return string
 	 */
-	protected function parseTemplatePathAndFilenameFromHeaders($input, \TYPO3\Fluid\View\TemplatePaths $paths) {
+	protected function parseTemplatePathAndFilenameFromHeaders($input, \TYPO3Fluid\Fluid\View\TemplatePaths $paths) {
 		if (strpos($input, "\000") !== FALSE) {
 			return $this->parseTemplatePathAndFilenameFromScgiHeaders($input);
 		} else {
@@ -161,7 +159,7 @@ class FluidCommandLine {
 	 * @param \TYPO3\Fluid\View\TemplatePaths $paths
 	 * @return string
 	 */
-	protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, \TYPO3\Fluid\View\TemplatePaths $paths) {
+	protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, \TYPO3Fluid\Fluid\View\TemplatePaths $paths) {
 		$matches = array();
 		preg_match('/^GET ([^\s]+)/', $input, $matches);
 		$uri = $matches[1];
@@ -218,7 +216,7 @@ class FluidCommandLine {
 	 * @param \TYPO3\Fluid\View\ViewInterface $view
 	 * @return string
 	 */
-	protected function renderSocketRequest($templatePathAndFilename, \TYPO3\Fluid\View\ViewInterface $view) {
+	protected function renderSocketRequest($templatePathAndFilename, \TYPO3Fluid\Fluid\View\ViewInterface $view) {
 		$view->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
 		return $view->render();
 	}
@@ -328,9 +326,9 @@ class name of a PHP class implementing DataProviderInterface:
 
 	./bin/fluid --variables `cat /path/to/fluidvariables.json`
 
-	./bin/fluid --variables "TYPO3\Fluid\Core\Variables\StandardVariableProvider"
+	./bin/fluid --variables "TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider"
 
-	./bin/fluid --variables "TYPO3\Fluid\Core\Variables\JSONVariableProvider:/path/to/file.json"
+	./bin/fluid --variables "TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider:/path/to/file.json"
 
 When specifying a VariableProvider class name it is possible to additionally add a
 simple string value which gets passed to the VariableProvider through ->setSource()
