@@ -85,7 +85,7 @@ class FluidCommandLine {
 					$variableProviderClassName = $variablesReference;
 					$source = NULL;
 				}
-				/** @var \TYPO3\Fluid\Core\Variables\VariableProviderInterface $variableProvider */
+				/** @var \TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface $variableProvider */
 				$variableProvider = new $variableProviderClassName();
 				$variableProvider->setSource($source);
 			} elseif (($variablesReference{0} === '{' && substr($variablesReference, -1) === '}')
@@ -143,7 +143,7 @@ class FluidCommandLine {
 
 	/**
 	 * @param string $input
-	 * @param \TYPO3\Fluid\View\TemplatePaths $paths
+	 * @param \TYPO3Fluid\Fluid\View\TemplatePaths $paths
 	 * @return string
 	 */
 	protected function parseTemplatePathAndFilenameFromHeaders($input, \TYPO3Fluid\Fluid\View\TemplatePaths $paths) {
@@ -156,7 +156,7 @@ class FluidCommandLine {
 
 	/**
 	 * @param string $input
-	 * @param \TYPO3\Fluid\View\TemplatePaths $paths
+	 * @param \TYPO3Fluid\Fluid\View\TemplatePaths $paths
 	 * @return string
 	 */
 	protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, \TYPO3Fluid\Fluid\View\TemplatePaths $paths) {
@@ -213,7 +213,7 @@ class FluidCommandLine {
 
 	/**
 	 * @param $templatePathAndFilename
-	 * @param \TYPO3\Fluid\View\ViewInterface $view
+	 * @param \TYPO3Fluid\Fluid\View\ViewInterface $view
 	 * @return string
 	 */
 	protected function renderSocketRequest($templatePathAndFilename, \TYPO3Fluid\Fluid\View\ViewInterface $view) {
