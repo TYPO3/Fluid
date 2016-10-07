@@ -191,9 +191,10 @@ class VariableExtractor {
 	 * @return string|NULL
 	 */
 	protected function detectAccessor($subject, $propertyName) {
-		if (is_array($subject) || $subject instanceof \ArrayAccess) {
+		if (is_array($subject)) {
 			return self::ACCESSOR_ARRAY;
-		} elseif (is_object($subject)) {
+		}
+		if (is_object($subject)) {
 			$upperCasePropertyName = ucfirst($propertyName);
 			$getter = 'get' . $upperCasePropertyName;
 			$asserter = 'is' . $upperCasePropertyName;
@@ -206,9 +207,12 @@ class VariableExtractor {
 			if (property_exists($subject, $propertyName)) {
 				return self::ACCESSOR_PUBLICPROPERTY;
 			}
-			return NULL;
+			if ($subject instanceof \ArrayAccess) {
+				return self::ACCESSOR_ARRAY;
+			}
 		}
-		return NULL;
+
+		return null;
 	}
 
 }
