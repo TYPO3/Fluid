@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ParsedTemplateImplementationFixture;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
@@ -46,11 +48,66 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 		$instance = $this->getMock(RenderViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything());
 		$instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything());
-		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, array());
-		$instance->expects($this->at(3))->method('registerArgument')->with('optional', 'boolean', $this->anything(), FALSE, FALSE);
-		$instance->expects($this->at(4))->method('registerArgument')->with('default', 'mixed', $this->anything());
-		$instance->expects($this->at(5))->method('registerArgument')->with('contentAs', 'string', $this->anything());
+		$instance->expects($this->at(2))->method('registerArgument')->with('delegate', 'string', $this->anything());
+		$instance->expects($this->at(3))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, array());
+		$instance->expects($this->at(4))->method('registerArgument')->with('optional', 'boolean', $this->anything(), FALSE, FALSE);
+		$instance->expects($this->at(5))->method('registerArgument')->with('default', 'mixed', $this->anything());
+		$instance->expects($this->at(6))->method('registerArgument')->with('contentAs', 'string', $this->anything());
 		$instance->initializeArguments();
+	}
+
+	/**
+	 * @test
+	 */
+	public function testThrowsInvalidArgumentExceptionWhenNoTargetSpecifiedIfOptionalIsFalse() {
+		$this->subject->expects($this->any())->method('renderChildren')->willReturn(NULL);
+		$this->subject->setArguments(array(
+			'partial' => NULL,
+			'section' => NULL,
+			'delegate' => NULL,
+			'arguments' => array(),
+			'optional' => FALSE,
+			'default' => NULL,
+			'contentAs' => NULL
+		));
+		$this->setExpectedException(\InvalidArgumentException::class);
+		$this->subject->render();
+	}
+
+	/**
+	 * @test
+	 */
+	public function testThrowsInvalidArgumentExceptionOnInvalidDelegateType() {
+		$this->subject->expects($this->any())->method('renderChildren')->willReturn(NULL);
+		$this->subject->setArguments(array(
+			'partial' => NULL,
+			'section' => NULL,
+			'delegate' => RenderingContextFixture::class,
+			'arguments' => array(),
+			'optional' => FALSE,
+			'default' => NULL,
+			'contentAs' => NULL
+		));
+		$this->setExpectedException(\InvalidArgumentException::class);
+		$this->subject->render();
+	}
+
+	/**
+	 * @test
+	 */
+	public function testRenderWithDelegate() {
+		$this->subject->expects($this->any())->method('renderChildren')->willReturn(NULL);
+		$this->subject->setArguments(array(
+			'partial' => NULL,
+			'section' => NULL,
+			'delegate' => ParsedTemplateImplementationFixture::class,
+			'arguments' => array(),
+			'optional' => FALSE,
+			'default' => NULL,
+			'contentAs' => NULL
+		));
+		$result = $this->subject->render();
+		$this->assertEquals('rendered by fixture', $result);
 	}
 
 	/**
@@ -74,19 +131,19 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 	public function getRenderTestValues() {
 		return array(
 			array(
-				array('partial' => NULL, 'section' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
+				array('partial' => NULL, 'section' => 'foo-section', 'delegate' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				NULL
 			),
 			array(
-				array('partial' => 'foo-partial', 'section' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
+				array('partial' => 'foo-partial', 'section' => NULL, 'delegate' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				'renderPartial'
 			),
 			array(
-				array('partial' => 'foo-partial', 'section' => 'foo-section', 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
+				array('partial' => 'foo-partial', 'section' => 'foo-section', 'delegate' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				'renderPartial'
 			),
 			array(
-				array('partial' => NULL, 'section' => 'foo-section', 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
+				array('partial' => NULL, 'section' => 'foo-section', 'delegate' => NULL, 'arguments' => array(), 'optional' => FALSE, 'default' => NULL, 'contentAs' => NULL),
 				'renderSection'
 			),
 		);
@@ -102,6 +159,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 			array(
 				'partial' => 'test',
 				'section' => NULL,
+				'delegate' => NULL,
 				'arguments' => array(),
 				'optional' => TRUE,
 				'default' => 'default-foobar',
@@ -123,6 +181,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase {
 			array(
 				'partial' => 'test1',
 				'section' => 'test2',
+				'delegate' => NULL,
 				'arguments' => array(
 					'foo' => 'bar'
 				),
