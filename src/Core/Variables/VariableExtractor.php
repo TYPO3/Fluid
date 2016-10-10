@@ -148,7 +148,7 @@ class VariableExtractor {
 	protected function canExtractWithAccessor($subject, $propertyName, $accessor) {
 		$class = is_object($subject) ? get_class($subject) : FALSE;
 		if ($accessor === self::ACCESSOR_ARRAY) {
-			return (is_array($subject) || $subject instanceof \ArrayAccess);
+			return (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)));
 		} elseif ($accessor === self::ACCESSOR_GETTER) {
 			return ($class !== FALSE && method_exists($subject, 'get' . ucfirst($propertyName)));
 		} elseif ($accessor === self::ACCESSOR_ASSERTER) {
