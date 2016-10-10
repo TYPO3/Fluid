@@ -209,7 +209,7 @@ class VariableExtractor {
 			}
 		}
 
-		return null;
+		return NULL;
 	}
 
 }
