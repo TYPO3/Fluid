@@ -121,13 +121,13 @@ class ViewHelperCompiler {
         $argumentsName,
         $renderChildrenClosureName,
         $contentArgumentName,
-        $method = self::RENDER_STATIC,
-        $onClass = NULL
+        $method,
+        $onClass
     ) {
         return array(
             self::DEFAULT_INIT,
             sprintf(
-                '%s::%s(%s, %s[%s] ? function() { use %s; return %s[%s]; } : %s, $renderingContext)',
+                '%s::%s(%s, isset(%s[\'%s\']) ? function() use (%s) { return %s[\'%s\']; } : %s, $renderingContext)',
                 $onClass,
                 $method,
                 $argumentsName,

@@ -77,7 +77,9 @@ trait CompileWithContentArgumentAndRenderStatic {
             $this,
             $argumentsName,
             $closureName,
-            $contentArgumentName
+            $this->resolveContentArgumentName(),
+            ViewHelperCompiler::RENDER_STATIC,
+            static::class
         );
         $initializationPhpCode .= $initialization;
         return $execution;
@@ -91,7 +93,8 @@ trait CompileWithContentArgumentAndRenderStatic {
             $registeredArguments = call_user_func_array(array($this, 'prepareArguments'), array());
             foreach ($registeredArguments as $registeredArgument) {
                 if (!$registeredArgument->isRequired()) {
-                    return $registeredArgument->getName();
+                    $this->contentArgumentName = $registeredArgument->getName();
+                    return $this->contentArgumentName;
                 }
             }
             throw new Exception(
