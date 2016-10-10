@@ -20,6 +20,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 class TemplateCompiler {
 
 	const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
+	const MODE_NORMAL = 'normal';
+	const MODE_WARMUP = 'warmup';
 
 	/**
 	 * @var array
@@ -37,10 +39,46 @@ class TemplateCompiler {
 	protected $renderingContext;
 
 	/**
+	 * @var string
+	 */
+	protected $mode = self::MODE_NORMAL;
+
+	/**
+	 * @var ParsedTemplateInterface
+	 */
+	protected $currentlyProcessingState;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
 		$this->nodeConverter = new NodeConverter($this);
+	}
+
+	/**
+	 * Instruct the TemplateCompiler to enter warmup mode, assigning
+	 * additional context allowing cache-related implementations to
+	 * subsequently check the mode.
+	 *
+	 * Cannot be reversed once done - should only be used from within
+	 * FluidCacheWarmerInterface implementations!
+	 */
+	public function enterWarmupMode() {
+		$this->mode = static::MODE_WARMUP;
+	}
+
+	/**
+	 * Returns TRUE only if the TemplateCompiler is in warmup mode.
+	 */
+	public function isWarmupMode() {
+		return $this->mode === static::MODE_WARMUP;
+	}
+
+	/**
+	 * @return ParsedTemplateInterface|NULL
+	 */
+	public function getCurrentlyProcessingState() {
+		return $this->currentlyProcessingState;
 	}
 
 	/**
@@ -132,6 +170,7 @@ class TemplateCompiler {
 			return;
 		}
 
+		$this->currentlyProcessingState = $parsingState;
 		$identifier = $this->sanitizeIdentifier($identifier);
 		$this->nodeConverter->setVariableCounter(0);
 		$generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);

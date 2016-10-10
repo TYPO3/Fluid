@@ -41,6 +41,7 @@ class FluidCommandLine {
 
 	const ARGUMENT_HELP = 'help';
 	const ARGUMENT_SOCKET = 'socket';
+	const ARGUMENT_WARMUP = 'warmup';
 	const ARGUMENT_TEMPLATEFILE = 'template';
 	const ARGUMENT_CACHEDIRECTORY = 'cacheDirectory';
 	const ARGUMENT_VARIABLES = 'variables';
@@ -49,6 +50,7 @@ class FluidCommandLine {
 	const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
 	const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
 	const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
+	const ARGUMENT_RENDERINGCONTEXT = 'renderingContext';
 
 	/**
 	 * @param array $arguments
@@ -62,7 +64,12 @@ class FluidCommandLine {
 				$this->dumpusageExample();
 		}
 		$view = new \TYPO3Fluid\Fluid\View\TemplateView();
-		$context = $view->getRenderingContext();
+		if (isset($arguments[self::ARGUMENT_RENDERINGCONTEXT])) {
+			$context = new $arguments[self::ARGUMENT_RENDERINGCONTEXT]($view);
+			$view->setRenderingContext($context);
+		} else {
+			$context = $view->getRenderingContext();
+		}
 		if (isset($arguments[self::ARGUMENT_CACHEDIRECTORY])) {
 			$cache = new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($arguments[self::ARGUMENT_CACHEDIRECTORY]);
 			$context->setCache($cache);
@@ -99,12 +106,51 @@ class FluidCommandLine {
 			}
 			$context->setVariableProvider($variableProvider);
 		}
-		if (isset($arguments[self::ARGUMENT_SOCKET])) {
+		if (isset($arguments[self::ARGUMENT_WARMUP])) {
+			$result = $context->getCache()->getCacheWarmer()->warm($context);
+			return $this->renderWarmupResult($result);
+		} elseif (isset($arguments[self::ARGUMENT_SOCKET])) {
 			$this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
 		} else {
 			$action = isset($arguments[self::ARGUMENT_CONTROLLERACTION]) ? $arguments[self::ARGUMENT_CONTROLLERACTION] : NULL;
 			return $view->render($action);
 		}
+	}
+
+	/**
+	 * @param \TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult $result
+	 * @return string
+	 */
+	protected function renderWarmupResult(\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult $result) {
+		$string = PHP_EOL . 'Template cache warmup results' . PHP_EOL . PHP_EOL;
+		foreach ($result->getResults() as $templatePathAndFilename => $aspects) {
+			$string .= sprintf(
+				"%s\n    Compiled? %s\n    Has Layout? %s\n",
+				$templatePathAndFilename,
+				$aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_COMPILABLE] ? 'YES' : 'NO',
+				$aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_HASLAYOUT] ? 'YES' : 'NO'
+			);
+			if (isset($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_COMPILABLE])) {
+				$string .= sprintf(
+					"    Compiled as: %s\n",
+					$aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_COMPILEDCLASS]
+				);
+			}
+			if (isset($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_FAILURE])) {
+				$string .= sprintf(
+					"    Compilation failure reason: %s\n",
+					$aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_FAILURE]
+				);
+			}
+			if (isset($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_MITIGATIONS])) {
+				foreach ($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_MITIGATIONS] as $index => $mitigation) {
+					$string .= sprintf("    Suggested mitigation #%d: %s\n", $index + 1, $mitigation);
+				}
+			}
+			$string .= PHP_EOL;
+		}
+		$string .= PHP_EOL;
+		return $string;
 	}
 
 	/**
@@ -334,6 +380,15 @@ When specifying a VariableProvider class name it is possible to additionally add
 simple string value which gets passed to the VariableProvider through ->setSource()
 upon instantiation. If working with custom VariableProviders, check the documentation
 for each VariableProvider to know which source types are supported.
+
+Cache warmup can be triggered by calling:
+
+	./bin/fluid --warmup --cacheDirectory "/path/to/cache"
+	
+And should you require it you can pass the class name of a custom RenderingContext (which can return a
+custom FluidCacheWarmer instance!):
+
+	./bin/flud --warmup --renderingContext "My\Custom\RenderingContext"
 
 A WebSocket mode is available. When starting the CLI utility in WebSocket mode,
 very basic HTTP requests are rendered directly by listening on an IP:PORT combination:

@@ -214,6 +214,14 @@ class ExamplesTest extends BaseTestCase {
 				array(
 					'Rendered via DynamicLayout, section "Main":',
 				)
+			),
+			'example_cachestatic.php' => array(
+				'example_cachestatic.php',
+				array(
+					'Cached as static text 1',
+					'Cached as static text 2',
+					'Cached as static text 3',
+				)
 			)
 		);
 	}

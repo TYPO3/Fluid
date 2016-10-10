@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
+use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -26,6 +27,14 @@ class SimpleFileCacheTest extends UnitTestCase {
 	 */
 	public function setUp() {
 		$this->directory = vfsStream::setup('cache');
+	}
+
+	/**
+	 * @test
+	 */
+	public function testGetCacheWarmerReturnsStandardCacheWarmer() {
+		$cache = new SimpleFileCache(vfsStream::url('cache/'));
+		$this->assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
 	}
 
 	/**
