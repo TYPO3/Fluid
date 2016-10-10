@@ -76,6 +76,7 @@ class VariableExtractorTest extends UnitTestCase {
 			array(array('inArray' => $inArray), 'inArray.user', array($asArray, $asArray)),
 			array(array('inArray' => $inArray), 'inArray.user.name', array($asArray, $asArray, $asGetter)),
 			array(array('inArrayAccess' => $inArrayAccess), 'inArrayAccess.user.name', array($asArray, $asArray, $asGetter)),
+			array(array('inArrayAccessWithGetter' => $inArrayAccess), 'inArrayAccessWithGetter.allIdentifiers', array($asArray, $asGetter)),
 			array(array('inPublic' => $inPublic), 'inPublic.user.name', array($asArray, $asPublic, $asGetter))
 		);
 	}
