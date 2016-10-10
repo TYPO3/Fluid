@@ -191,7 +191,7 @@ class VariableExtractor {
 	 * @return string|NULL
 	 */
 	protected function detectAccessor($subject, $propertyName) {
-		if (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)) {
+		if (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))) {
 			return self::ACCESSOR_ARRAY;
 		}
 		if (is_object($subject)) {
