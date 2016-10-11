@@ -20,7 +20,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase {
 		$instance = $this->getMock(OrViewHelper::class, array('registerArgument'));
 		$instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), FALSE, '');
 		$instance->expects($this->at(1))->method('registerArgument')->with('alternative', 'mixed', $this->anything(), FALSE, '');
-		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything(), FALSE, NULL);
+		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything());
 		$instance->initializeArguments();
 	}
 

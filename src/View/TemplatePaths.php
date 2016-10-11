@@ -378,7 +378,9 @@ class TemplatePaths {
 	 * @return string
 	 */
 	protected function sanitizePath($path) {
-		if (!empty($path)) {
+		if (strpos($path, 'php://') === 0) {
+			return $path;
+		} elseif (!empty($path)) {
 			$path = str_replace(array('\\', '//'), '/', $path);
 			$path = $this->ensureAbsolutePath($path);
 			if (is_dir($path)) {
@@ -483,6 +485,7 @@ class TemplatePaths {
 	 */
 	public function getLayoutIdentifier($layoutName = 'Default') {
 		$filePathAndFilename = $this->getLayoutPathAndFilename($layoutName);
+		$layoutName = str_replace('.', '_', $layoutName);
 		$prefix = 'layout_' . $layoutName;
 		return $this->createIdentifierForFile($filePathAndFilename, $prefix);
 	}
@@ -501,7 +504,7 @@ class TemplatePaths {
 	 */
 	public function getLayoutSource($layoutName = 'Default') {
 		$layoutPathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-		return file_get_contents($layoutPathAndFilename);
+		return file_get_contents($layoutPathAndFilename, FILE_TEXT);
 	}
 
 	/**

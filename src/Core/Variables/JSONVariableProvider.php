@@ -83,7 +83,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
 	 * @return void
 	 */
 	protected function load() {
-		if (time() > ($this->lastLoaded + $this->ttl)) {
+		if ($this->source !== NULL && time() > ($this->lastLoaded + $this->ttl)) {
 			if (!$this->isJSON($this->source)) {
 				$source = file_get_contents($this->source);
 			} else {

@@ -52,7 +52,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper {
 	 */
 	public function initializeArguments() {
 		parent::initializeArguments();
-		$this->registerArgument('value', 'string', 'Value to format', FALSE, NULL);
+		$this->registerArgument('value', 'string', 'Value to format');
 		$this->registerArgument('keepQuotes', 'boolean', 'If TRUE quotes will not be replaced (ENT_NOQUOTES)', FALSE, FALSE);
 		$this->registerArgument('encoding', 'string', 'Encoding', FALSE, 'UTF-8');
 		$this->registerArgument('doubleEncode', 'boolean', 'If FALSE html entities will not be encoded', FALSE, TRUE);
@@ -97,7 +97,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper {
 		$valueVariableName = $compiler->variableName('value');
 		$initializationPhpCode .= sprintf('%1$s = (%2$s[\'value\'] !== NULL ? %2$s[\'value\'] : %3$s());', $valueVariableName, $argumentsName, $closureName) . chr(10);
 
-		return sprintf('!is_string(%1$s) && !(is_object(%1$s) && method_exists(%1$s, \'__toString\')) ? %1$s : htmlspecialchars(%1$s, (%2$s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_COMPAT), %2$s[\'encoding\'], %2$s[\'doubleEncode\'])',
+		return sprintf('!is_string(%1$s) && !(is_object(%1$s) && method_exists(%1$s, \'__toString\')) ? %1$s : htmlspecialchars(%1$s, (%2$s[\'keepQuotes\'] ? ENT_NOQUOTES : ENT_QUOTES), %2$s[\'encoding\'], %2$s[\'doubleEncode\'])',
 			$valueVariableName, $argumentsName);
 	}
 }

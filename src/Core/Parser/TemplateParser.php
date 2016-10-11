@@ -144,7 +144,8 @@ class TemplateParser {
 				$error->getCode(),
 				$templateCode
 			),
-			$error->getCode()
+			$error->getCode(),
+			$error
 		);
 	}
 

@@ -2,7 +2,6 @@
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 
 /**
  * Class VariableConditionsTest

@@ -6,8 +6,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 
 /**
  * Testcase for ElseViewHelper
@@ -19,7 +19,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase {
 	 */
 	public function testInitializeArgumentsRegistersExpectedArguments() {
 		$instance = $this->getMock(ElseViewHelper::class, array('registerArgument'));
-		$instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything(), FALSE, NULL);
+		$instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything());
 		$instance->initializeArguments();
 	}
 
