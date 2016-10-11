@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 class FluidCacheWarmupResult {
 
 	const RESULT_COMPILABLE = 'compilable';
-	const RESULT_COMPILED_= 'compiled';
+	const RESULT_COMPILED = 'compiled';
 	const RESULT_HASLAYOUT = 'hasLayout';
 	const RESULT_COMPILEDCLASS = 'compiledClassName';
 	const RESULT_FAILURE = 'failure';
@@ -55,7 +55,7 @@ class FluidCacheWarmupResult {
 		$class = get_class($state);
 		$this->results[$templatePathAndFilename] = array(
 			static::RESULT_COMPILABLE => $currentlyCompiled || $state->isCompilable(),
-			static::RESULT_COMPILED_ => $state->isCompiled(),
+			static::RESULT_COMPILED => $state->isCompiled(),
 			static::RESULT_HASLAYOUT => $state->hasLayout(),
 			static::RESULT_COMPILEDCLASS => $state->getIdentifier()
 		);

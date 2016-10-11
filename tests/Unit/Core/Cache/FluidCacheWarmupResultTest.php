@@ -91,7 +91,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase {
 				$subject1,
 				array(
 					FluidCacheWarmupResult::RESULT_COMPILABLE => TRUE,
-					FluidCacheWarmupResult::RESULT_COMPILED_ => FALSE,
+					FluidCacheWarmupResult::RESULT_COMPILED => FALSE,
 					FluidCacheWarmupResult::RESULT_HASLAYOUT => FALSE,
 					FluidCacheWarmupResult::RESULT_COMPILEDCLASS => 'subject1-identifier'
 				)
@@ -100,7 +100,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase {
 				$subject2,
 				array(
 					FluidCacheWarmupResult::RESULT_COMPILABLE => TRUE,
-					FluidCacheWarmupResult::RESULT_COMPILED_ => TRUE,
+					FluidCacheWarmupResult::RESULT_COMPILED => TRUE,
 					FluidCacheWarmupResult::RESULT_HASLAYOUT => TRUE,
 					FluidCacheWarmupResult::RESULT_COMPILEDCLASS => 'subject2-identifier',
 					FluidCacheWarmupResult::RESULT_FAILURE => 'failure-reason',
