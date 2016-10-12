@@ -42,9 +42,4 @@ interface FluidCacheInterface {
 	 */
 	public function flush($name = NULL);
 
-	/**
-	 * @return FluidCacheWarmerInterface
-	 */
-	public function getCacheWarmer();
-
 }
