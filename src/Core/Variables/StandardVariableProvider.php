@@ -57,7 +57,7 @@ class StandardVariableProvider implements VariableProviderInterface
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getSource()
     {

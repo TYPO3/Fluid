@@ -337,7 +337,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                         $givenType . '" in view helper "' . get_class($this) . '".',
                         1256475113
                     );
-                    if (!$this->isValidType($type, $value, $errorException)) {
+                    if (!$this->isValidType($type, $value)) {
                         throw $errorException;
                     }
                 }

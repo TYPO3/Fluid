@@ -138,7 +138,7 @@ class TemplatePaths
      */
     public function setTemplatePathAndFilename($templatePathAndFilename)
     {
-        $this->templatePathAndFilename = $this->sanitizePath($templatePathAndFilename);
+        $this->templatePathAndFilename = (string) $this->sanitizePath($templatePathAndFilename);
     }
 
     /**
@@ -164,7 +164,7 @@ class TemplatePaths
      */
     public function setTemplateRootPaths(array $templateRootPaths)
     {
-        $this->templateRootPaths = $this->sanitizePaths($templateRootPaths);
+        $this->templateRootPaths = (array) $this->sanitizePaths($templateRootPaths);
         $this->clearResolvedIdentifiersAndTemplates(self::NAME_TEMPLATES);
     }
 
@@ -182,7 +182,7 @@ class TemplatePaths
      */
     public function setLayoutRootPaths(array $layoutRootPaths)
     {
-        $this->layoutRootPaths = $this->sanitizePaths($layoutRootPaths);
+        $this->layoutRootPaths = (array) $this->sanitizePaths($layoutRootPaths);
         $this->clearResolvedIdentifiersAndTemplates(self::NAME_LAYOUTS);
     }
 
@@ -200,7 +200,7 @@ class TemplatePaths
      */
     public function setPartialRootPaths(array $partialRootPaths)
     {
-        $this->partialRootPaths = $this->sanitizePaths($partialRootPaths);
+        $this->partialRootPaths = (array) $this->sanitizePaths($partialRootPaths);
         $this->clearResolvedIdentifiersAndTemplates(self::NAME_PARTIALS);
     }
 
@@ -403,8 +403,8 @@ class TemplatePaths
         if (strpos($path, 'php://') === 0) {
             return $path;
         } elseif (!empty($path)) {
-            $path = str_replace(['\\', '//'], '/', $path);
-            $path = $this->ensureAbsolutePath($path);
+            $path = str_replace(['\\', '//'], '/', (string) $path);
+            $path = (string) $this->ensureAbsolutePath($path);
             if (is_dir($path)) {
                 $path = $this->ensureSuffixedPath($path);
             }
