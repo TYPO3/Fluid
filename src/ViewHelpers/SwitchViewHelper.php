@@ -184,7 +184,6 @@ class SwitchViewHelper extends AbstractViewHelper
     {
         $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
             'switch ($arguments[\'expression\']) {' . PHP_EOL;
-        $expressionEvaluationClosureName = $compiler->variableName('switchExpressionClosure');
         foreach ($node->getChildNodes() as $childNode) {
             if ($this->isDefaultCaseNode($childNode)) {
                 $childrenClosure = $compiler->wrapChildNodesInClosure($childNode);

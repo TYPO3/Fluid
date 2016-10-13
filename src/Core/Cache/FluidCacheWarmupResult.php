@@ -56,7 +56,6 @@ class FluidCacheWarmupResult
     public function add(ParsedTemplateInterface $state, $templatePathAndFilename)
     {
         $currentlyCompiled = $state->isCompiled();
-        $class = get_class($state);
         $this->results[$templatePathAndFilename] = [
             static::RESULT_COMPILABLE => $currentlyCompiled || $state->isCompilable(),
             static::RESULT_COMPILED => $state->isCompiled(),

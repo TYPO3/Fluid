@@ -725,7 +725,7 @@ class TemplatePaths
      */
     protected function clearResolvedIdentifiersAndTemplates($type = null)
     {
-        if ($type) {
+        if ($type !== null) {
             self::$resolvedIdentifiers[$type] = self::$resolvedFiles[$type] = [];
         } else {
             self::$resolvedIdentifiers = self::$resolvedFiles = [

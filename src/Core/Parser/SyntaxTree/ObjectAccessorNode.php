@@ -75,7 +75,7 @@ class ObjectAccessorNode extends AbstractNode
      * VariableProvider.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return object The evaluated object, can be any object type.
+     * @return mixed The evaluated object, can be any object type.
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {

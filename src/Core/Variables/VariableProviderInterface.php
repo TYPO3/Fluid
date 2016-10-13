@@ -53,7 +53,7 @@ interface VariableProviderInterface extends \ArrayAccess
     public function setSource($source);
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getSource();
 
