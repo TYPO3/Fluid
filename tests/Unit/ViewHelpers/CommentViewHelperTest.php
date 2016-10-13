@@ -11,15 +11,16 @@ use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 /**
  * Testcase for CommentViewHelper
  */
-class CommentViewHelperTest extends ViewHelperBaseTestcase {
+class CommentViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @test
-	 */
-	public function testRenderReturnsNull() {
-		$instance = new CommentViewHelper();
-		$result = $instance->render();
-		$this->assertNull($result);
-	}
-
+    /**
+     * @test
+     */
+    public function testRenderReturnsNull()
+    {
+        $instance = new CommentViewHelper();
+        $result = $instance->render();
+        $this->assertNull($result);
+    }
 }

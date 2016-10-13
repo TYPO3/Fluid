@@ -19,81 +19,86 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Base test class for testing view helpers
  */
-abstract class ViewHelperBaseTestcase extends UnitTestCase {
+abstract class ViewHelperBaseTestcase extends UnitTestCase
+{
 
-	/**
-	 * @var ViewHelperVariableContainer
-	 */
-	protected $viewHelperVariableContainer;
+    /**
+     * @var ViewHelperVariableContainer
+     */
+    protected $viewHelperVariableContainer;
 
-	/**
-	 * Mock contents of the $viewHelperVariableContainer in the format:
-	 * array(
-	 *  'Some\ViewHelper\Class' => array('key1' => 'value1', 'key2' => 'value2')
-	 * )
-	 *
-	 * @var array
-	 */
-	protected $viewHelperVariableContainerData = array();
+    /**
+     * Mock contents of the $viewHelperVariableContainer in the format:
+     * array(
+     *  'Some\ViewHelper\Class' => array('key1' => 'value1', 'key2' => 'value2')
+     * )
+     *
+     * @var array
+     */
+    protected $viewHelperVariableContainerData = [];
 
-	/**
-	 * @var TemplateVariableContainer
-	 */
-	protected $templateVariableContainer;
+    /**
+     * @var TemplateVariableContainer
+     */
+    protected $templateVariableContainer;
 
-	/**
-	 * @var TagBuilder
-	 */
-	protected $tagBuilder;
+    /**
+     * @var TagBuilder
+     */
+    protected $tagBuilder;
 
-	/**
-	 * @var array
-	 */
-	protected $arguments = array();
+    /**
+     * @var array
+     */
+    protected $arguments = [];
 
-	/**
-	 * @var RenderingContext
-	 */
-	protected $renderingContext;
+    /**
+     * @var RenderingContext
+     */
+    protected $renderingContext;
 
-	/**
-	 * @return void
-	 */
-	public function setUp() {
-		$this->viewHelperVariableContainer = new ViewHelperVariableContainer();
-		$this->templateVariableContainer = new StandardVariableProvider();
-		$this->renderingContext = new RenderingContextFixture();
-		$this->renderingContext->setVariableProvider($this->templateVariableContainer);
-		$this->renderingContext->setViewHelperVariableContainer($this->viewHelperVariableContainer);
-	}
+    /**
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $this->templateVariableContainer = new StandardVariableProvider();
+        $this->renderingContext = new RenderingContextFixture();
+        $this->renderingContext->setVariableProvider($this->templateVariableContainer);
+        $this->renderingContext->setViewHelperVariableContainer($this->viewHelperVariableContainer);
+    }
 
-	/**
-	 * @param string $viewHelperName
-	 * @param string $key
-	 * @return boolean
-	 */
-	public function viewHelperVariableContainerExistsCallback($viewHelperName, $key) {
-		return isset($this->viewHelperVariableContainerData[$viewHelperName][$key]);
-	}
+    /**
+     * @param string $viewHelperName
+     * @param string $key
+     * @return boolean
+     */
+    public function viewHelperVariableContainerExistsCallback($viewHelperName, $key)
+    {
+        return isset($this->viewHelperVariableContainerData[$viewHelperName][$key]);
+    }
 
-	/**
-	 * @param string $viewHelperName
-	 * @param string $key
-	 * @return boolean
-	 */
-	public function viewHelperVariableContainerGetCallback($viewHelperName, $key) {
-		return $this->viewHelperVariableContainerData[$viewHelperName][$key];
-	}
+    /**
+     * @param string $viewHelperName
+     * @param string $key
+     * @return boolean
+     */
+    public function viewHelperVariableContainerGetCallback($viewHelperName, $key)
+    {
+        return $this->viewHelperVariableContainerData[$viewHelperName][$key];
+    }
 
-	/**
-	 * @param AbstractViewHelper $viewHelper
-	 * @return void
-	 */
-	protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper) {
-		$viewHelper->setRenderingContext($this->renderingContext);
-		$viewHelper->setArguments($this->arguments);
-		if ($viewHelper instanceof AbstractTagBasedViewHelper) {
-			$viewHelper->injectTagBuilder($this->tagBuilder);
-		}
-	}
+    /**
+     * @param AbstractViewHelper $viewHelper
+     * @return void
+     */
+    protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper)
+    {
+        $viewHelper->setRenderingContext($this->renderingContext);
+        $viewHelper->setArguments($this->arguments);
+        if ($viewHelper instanceof AbstractTagBasedViewHelper) {
+            $viewHelper->injectTagBuilder($this->tagBuilder);
+        }
+    }
 }

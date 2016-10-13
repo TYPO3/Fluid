@@ -14,29 +14,31 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for EscapingNode
  */
-class EscapingNodeTest extends UnitTestCase {
+class EscapingNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function testEscapesNodeInConstructor() {
-		$string = '<strong>escape me</strong>';
-		$childNode = new TextNode($string);
-		$node = new EscapingNode($childNode);
-		$renderingContext = new RenderingContextFixture();
-		$this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string, ENT_QUOTES));
-	}
+    /**
+     * @test
+     */
+    public function testEscapesNodeInConstructor()
+    {
+        $string = '<strong>escape me</strong>';
+        $childNode = new TextNode($string);
+        $node = new EscapingNode($childNode);
+        $renderingContext = new RenderingContextFixture();
+        $this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string, ENT_QUOTES));
+    }
 
-	/**
-	 * @test
-	 */
-	public function testEscapesNodeOverriddenWithAddChildNode() {
-		$string1 = '<strong>escape me</strong>';
-		$string2 = '<strong>no, escape me!</strong>';
-		$node = new EscapingNode(new TextNode($string1));
-		$node->addChildNode(new TextNode($string2));
-		$renderingContext = new RenderingContextFixture();
-		$this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
-	}
-
+    /**
+     * @test
+     */
+    public function testEscapesNodeOverriddenWithAddChildNode()
+    {
+        $string1 = '<strong>escape me</strong>';
+        $string2 = '<strong>no, escape me!</strong>';
+        $node = new EscapingNode(new TextNode($string1));
+        $node->addChildNode(new TextNode($string2));
+        $renderingContext = new RenderingContextFixture();
+        $this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
+    }
 }

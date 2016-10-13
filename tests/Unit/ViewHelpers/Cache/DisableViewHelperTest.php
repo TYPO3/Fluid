@@ -15,31 +15,33 @@ use TYPO3Fluid\Fluid\ViewHelpers\Cache\DisableViewHelper;
 /**
  * Testcase for DisableViewHelper
  */
-class DisableViewHelperTest extends ViewHelperBaseTestcase {
+class DisableViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @test
-	 */
-	public function testRenderCallsRenderChildren() {
-		$subject = $this->getMockBuilder(DisableViewHelper::class)->setMethods(array('renderChildren'))->getMock();
-		$subject->expects($this->once())->method('renderChildren')->willReturn('test');
-		$this->assertEquals('test', $subject->render());
-	}
+    /**
+     * @test
+     */
+    public function testRenderCallsRenderChildren()
+    {
+        $subject = $this->getMockBuilder(DisableViewHelper::class)->setMethods(['renderChildren'])->getMock();
+        $subject->expects($this->once())->method('renderChildren')->willReturn('test');
+        $this->assertEquals('test', $subject->render());
+    }
 
-	/**
-	 * @test
-	 */
-	public function testCompile() {
-		$subject = new DisableViewHelper();
-		$subject->setRenderingContext(new RenderingContextFixture());
-		$node = $this->getMockBuilder(ViewHelperNode::class)
-			->setMethods(array('dummy'))
-			->disableOriginalConstructor()
-			->getMock();
-		$compiler = $this->getMockBuilder(TemplateCompiler::class)->setMethods(array('disable'))->getMock();
-		$compiler->expects($this->once())->method('disable');
-		$code = '';
-		$subject->compile('test', 'test', $code, $node, $compiler);
-	}
-
+    /**
+     * @test
+     */
+    public function testCompile()
+    {
+        $subject = new DisableViewHelper();
+        $subject->setRenderingContext(new RenderingContextFixture());
+        $node = $this->getMockBuilder(ViewHelperNode::class)
+            ->setMethods(['dummy'])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $compiler = $this->getMockBuilder(TemplateCompiler::class)->setMethods(['disable'])->getMock();
+        $compiler->expects($this->once())->method('disable');
+        $code = '';
+        $subject->compile('test', 'test', $code, $node, $compiler);
+    }
 }

@@ -12,36 +12,40 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper;
 /**
  * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper
  */
-class PrintfViewHelperTest extends ViewHelperBaseTestcase {
+class PrintfViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @var \TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper
-	 */
-	protected $viewHelper;
+    /**
+     * @var \TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper
+     */
+    protected $viewHelper;
 
-	public function setUp() {
-		parent::setUp();
-		$this->viewHelper = $this->getMock(PrintfViewHelper::class, array('renderChildren'));
-		$this->injectDependenciesIntoViewHelper($this->viewHelper);
-	}
+    public function setUp()
+    {
+        parent::setUp();
+        $this->viewHelper = $this->getMock(PrintfViewHelper::class, ['renderChildren']);
+        $this->injectDependenciesIntoViewHelper($this->viewHelper);
+    }
 
-	/**
-	 * @test
-	 */
-	public function viewHelperCanUseArrayAsArgument() {
-		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%04d-%02d-%02d'));
-		$this->viewHelper->setArguments(array('value' => NULL, 'arguments' => array('year' => 2009, 'month' => 4, 'day' => 5)));
-		$actualResult = $this->viewHelper->initializeArgumentsAndRender();
-		$this->assertEquals('2009-04-05', $actualResult);
-	}
+    /**
+     * @test
+     */
+    public function viewHelperCanUseArrayAsArgument()
+    {
+        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%04d-%02d-%02d'));
+        $this->viewHelper->setArguments(['value' => null, 'arguments' => ['year' => 2009, 'month' => 4, 'day' => 5]]);
+        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
+        $this->assertEquals('2009-04-05', $actualResult);
+    }
 
-	/**
-	 * @test
-	 */
-	public function viewHelperCanSwapMultipleArguments() {
-		$this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%2$s %1$d %3$s %2$s'));
-		$this->viewHelper->setArguments(array('value' => NULL, 'arguments' => array(123, 'foo', 'bar')));
-		$actualResult = $this->viewHelper->initializeArgumentsAndRender();
-		$this->assertEquals('foo 123 bar foo', $actualResult);
-	}
+    /**
+     * @test
+     */
+    public function viewHelperCanSwapMultipleArguments()
+    {
+        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%2$s %1$d %3$s %2$s'));
+        $this->viewHelper->setArguments(['value' => null, 'arguments' => [123, 'foo', 'bar']]);
+        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
+        $this->assertEquals('foo 123 bar foo', $actualResult);
+    }
 }

@@ -13,23 +13,26 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for TextNode
  */
-class TextNodeTest extends UnitTestCase {
+class TextNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function renderReturnsSameStringAsGivenInConstructor() {
-		$string = 'I can work quite effectively in a train!';
-		$node = new TextNode($string);
-		$renderingContext = new RenderingContextFixture();
-		$this->assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
-	}
+    /**
+     * @test
+     */
+    public function renderReturnsSameStringAsGivenInConstructor()
+    {
+        $string = 'I can work quite effectively in a train!';
+        $node = new TextNode($string);
+        $renderingContext = new RenderingContextFixture();
+        $this->assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+    }
 
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-	 */
-	public function constructorThrowsExceptionIfNoStringGiven() {
-		new TextNode(123);
-	}
+    /**
+     * @test
+     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
+     */
+    public function constructorThrowsExceptionIfNoStringGiven()
+    {
+        new TextNode(123);
+    }
 }

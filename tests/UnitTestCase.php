@@ -16,6 +16,7 @@ namespace TYPO3Fluid\Fluid\Tests;
  *
  * @api
  */
-abstract class UnitTestCase extends BaseTestCase {
+abstract class UnitTestCase extends BaseTestCase
+{
 
 }

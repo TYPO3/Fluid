@@ -13,57 +13,60 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 /**
  * Class FluidCacheWarmupResult
  */
-class FluidCacheWarmupResult {
+class FluidCacheWarmupResult
+{
 
-	const RESULT_COMPILABLE = 'compilable';
-	const RESULT_COMPILED = 'compiled';
-	const RESULT_HASLAYOUT = 'hasLayout';
-	const RESULT_COMPILEDCLASS = 'compiledClassName';
-	const RESULT_FAILURE = 'failure';
-	const RESULT_MITIGATIONS = 'mitigations';
+    const RESULT_COMPILABLE = 'compilable';
+    const RESULT_COMPILED = 'compiled';
+    const RESULT_HASLAYOUT = 'hasLayout';
+    const RESULT_COMPILEDCLASS = 'compiledClassName';
+    const RESULT_FAILURE = 'failure';
+    const RESULT_MITIGATIONS = 'mitigations';
 
-	/**
-	 * @var array
-	 */
-	protected $results = array();
+    /**
+     * @var array
+     */
+    protected $results = [];
 
-	/**
-	 * @param FluidCacheWarmupResult $result1...$resultN
-	 * @return self
-	 */
-	public function merge() {
-		foreach (func_get_args() as $result) {
-			$this->results += $result->getResults();
-		}
-		return $this;
-	}
+    /**
+     * @param FluidCacheWarmupResult $result1...$resultN
+     * @return self
+     */
+    public function merge()
+    {
+        foreach (func_get_args() as $result) {
+            $this->results += $result->getResults();
+        }
+        return $this;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getResults() {
-		return $this->results;
-	}
+    /**
+     * @return array
+     */
+    public function getResults()
+    {
+        return $this->results;
+    }
 
-	/**
-	 * @param ParsedTemplateInterface $state
-	 * @param string $templatePathAndFilename
-	 * @return self
-	 */
-	public function add(ParsedTemplateInterface $state, $templatePathAndFilename) {
-		$currentlyCompiled = $state->isCompiled();
-		$class = get_class($state);
-		$this->results[$templatePathAndFilename] = array(
-			static::RESULT_COMPILABLE => $currentlyCompiled || $state->isCompilable(),
-			static::RESULT_COMPILED => $state->isCompiled(),
-			static::RESULT_HASLAYOUT => $state->hasLayout(),
-			static::RESULT_COMPILEDCLASS => $state->getIdentifier()
-		);
-		if ($state instanceof FailedCompilingState) {
-			$this->results[$templatePathAndFilename][static::RESULT_FAILURE] = $state->getFailureReason();
-			$this->results[$templatePathAndFilename][static::RESULT_MITIGATIONS] = $state->getMitigations();
-		}
-		return $this;
-	}
-
+    /**
+     * @param ParsedTemplateInterface $state
+     * @param string $templatePathAndFilename
+     * @return self
+     */
+    public function add(ParsedTemplateInterface $state, $templatePathAndFilename)
+    {
+        $currentlyCompiled = $state->isCompiled();
+        $class = get_class($state);
+        $this->results[$templatePathAndFilename] = [
+            static::RESULT_COMPILABLE => $currentlyCompiled || $state->isCompilable(),
+            static::RESULT_COMPILED => $state->isCompiled(),
+            static::RESULT_HASLAYOUT => $state->hasLayout(),
+            static::RESULT_COMPILEDCLASS => $state->getIdentifier()
+        ];
+        if ($state instanceof FailedCompilingState) {
+            $this->results[$templatePathAndFilename][static::RESULT_FAILURE] = $state->getFailureReason();
+            $this->results[$templatePathAndFilename][static::RESULT_MITIGATIONS] = $state->getMitigations();
+        }
+        return $this;
+    }
 }

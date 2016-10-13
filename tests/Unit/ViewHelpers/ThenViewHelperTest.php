@@ -12,28 +12,30 @@ use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 /**
  * Testcase for ElseViewHelper
  */
-class ThenViewHelperTest extends ViewHelperBaseTestcase {
+class ThenViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @test
-	 */
-	public function renderRendersChildren() {
-		$viewHelper = $this->getMock(ThenViewHelper::class, array('renderChildren'));
+    /**
+     * @test
+     */
+    public function renderRendersChildren()
+    {
+        $viewHelper = $this->getMock(ThenViewHelper::class, ['renderChildren']);
 
-		$viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-		$actualResult = $viewHelper->render();
-		$this->assertEquals('foo', $actualResult);
-	}
+        $viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+        $actualResult = $viewHelper->render();
+        $this->assertEquals('foo', $actualResult);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testCompileReturnsEmptyString() {
-		$section = new ThenViewHelper();
-		$init = '';
-		$viewHelperNodeMock = $this->getMock(ViewHelperNode::class, array(), array(), '', FALSE);
-		$result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
-		$this->assertEquals('\'\'', $result);
-	}
-
+    /**
+     * @test
+     */
+    public function testCompileReturnsEmptyString()
+    {
+        $section = new ThenViewHelper();
+        $init = '';
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
+        $this->assertEquals('\'\'', $result);
+    }
 }

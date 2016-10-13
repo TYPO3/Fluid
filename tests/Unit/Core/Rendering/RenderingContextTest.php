@@ -24,88 +24,95 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  * Testcase for ParsingState
  *
  */
-class RenderingContextTest extends UnitTestCase {
+class RenderingContextTest extends UnitTestCase
+{
 
-	/**
-	 * @var RenderingContextInterface
-	 */
-	protected $renderingContext;
+    /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
 
-	public function setUp() {
-		$this->renderingContext = new RenderingContextFixture();
-	}
+    public function setUp()
+    {
+        $this->renderingContext = new RenderingContextFixture();
+    }
 
-	/**
-	 * @param string $property
-	 * @param mixed $value
-	 * @dataProvider getPropertyNameTestValues
-	 */
-	public function testGetter($property, $value) {
-		$view = new TemplateView();
-		$subject = $this->getAccessibleMock(RenderingContext::class, array('dummy'), array($view));
-		$subject->_set($property, $value);
-		$getter = 'get' . ucfirst($property);
-		$this->assertSame($value, $subject->$getter());
-	}
+    /**
+     * @param string $property
+     * @param mixed $value
+     * @dataProvider getPropertyNameTestValues
+     */
+    public function testGetter($property, $value)
+    {
+        $view = new TemplateView();
+        $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy'], [$view]);
+        $subject->_set($property, $value);
+        $getter = 'get' . ucfirst($property);
+        $this->assertSame($value, $subject->$getter());
+    }
 
-	/**
-	 * @param string $property
-	 * @param mixed $value
-	 * @dataProvider getPropertyNameTestValues
-	 */
-	public function testSetter($property, $value) {
-		$view = new TemplateView();
-		$subject = new RenderingContext($view);
-		$setter = 'set' . ucfirst($property);
-		$subject->$setter($value);
-		$this->assertAttributeSame($value, $property, $subject);
-	}
+    /**
+     * @param string $property
+     * @param mixed $value
+     * @dataProvider getPropertyNameTestValues
+     */
+    public function testSetter($property, $value)
+    {
+        $view = new TemplateView();
+        $subject = new RenderingContext($view);
+        $setter = 'set' . ucfirst($property);
+        $subject->$setter($value);
+        $this->assertAttributeSame($value, $property, $subject);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getPropertyNameTestValues() {
-		return array(
-			array('variableProvider', new StandardVariableProvider(array('foo' => 'bar'))),
-			array('viewHelperResolver', $this->getMock(ViewHelperResolver::class)),
-			array('viewHelperInvoker', $this->getMock(ViewHelperInvoker::class)),
-			array('controllerName', 'foobar-controllerName'),
-			array('controllerAction', 'foobar-controllerAction'),
-			array('expressionNodeTypes', array('Foo', 'Bar')),
-			array('templatePaths', $this->getMock(TemplatePaths::class)),
-			array('cache', $this->getMock(SimpleFileCache::class)),
-			array('templateParser', $this->getMock(TemplateParser::class)),
-			array('templateCompiler', $this->getMock(TemplateCompiler::class)),
-			array('templateProcessors', array($this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)))
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getPropertyNameTestValues()
+    {
+        return [
+            ['variableProvider', new StandardVariableProvider(['foo' => 'bar'])],
+            ['viewHelperResolver', $this->getMock(ViewHelperResolver::class)],
+            ['viewHelperInvoker', $this->getMock(ViewHelperInvoker::class)],
+            ['controllerName', 'foobar-controllerName'],
+            ['controllerAction', 'foobar-controllerAction'],
+            ['expressionNodeTypes', ['Foo', 'Bar']],
+            ['templatePaths', $this->getMock(TemplatePaths::class)],
+            ['cache', $this->getMock(SimpleFileCache::class)],
+            ['templateParser', $this->getMock(TemplateParser::class)],
+            ['templateCompiler', $this->getMock(TemplateCompiler::class)],
+            ['templateProcessors', [$this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)]]
+        ];
+    }
 
-	/**
-	 * @test
-	 */
-	public function templateVariableContainerCanBeReadCorrectly() {
-		$templateVariableContainer = $this->getMock(StandardVariableProvider::class);
-		$this->renderingContext->setVariableProvider($templateVariableContainer);
-		$this->assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
-	}
+    /**
+     * @test
+     */
+    public function templateVariableContainerCanBeReadCorrectly()
+    {
+        $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
+        $this->renderingContext->setVariableProvider($templateVariableContainer);
+        $this->assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
+    }
 
-	/**
-	 * @test
-	 */
-	public function viewHelperVariableContainerCanBeReadCorrectly() {
-		$viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
-		$this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
-		$this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
-	}
+    /**
+     * @test
+     */
+    public function viewHelperVariableContainerCanBeReadCorrectly()
+    {
+        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
+        $this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+        $this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
+    }
 
-	/**
-	 * @test
-	 */
-	public function testIsCacheEnabled() {
-		$subject = new RenderingContext($this->getMock(TemplateView::class));
-		$this->assertFalse($subject->isCacheEnabled());
-		$subject->setCache($this->getMock(SimpleFileCache::class));
-		$this->assertTrue($subject->isCacheEnabled());
-	}
-
+    /**
+     * @test
+     */
+    public function testIsCacheEnabled()
+    {
+        $subject = new RenderingContext($this->getMock(TemplateView::class));
+        $this->assertFalse($subject->isCacheEnabled());
+        $subject->setCache($this->getMock(SimpleFileCache::class));
+        $this->assertTrue($subject->isCacheEnabled());
+    }
 }

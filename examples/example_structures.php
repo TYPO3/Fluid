@@ -20,12 +20,12 @@ $view->assign('notTrueEither', FALSE);
 $view->assign('butTrue', TRUE);
 $view->assign('switchValue', 3);
 $view->assign('secondSwitchValue', 'b');
-$view->assign('array', array('one', 'two', 'three'));
-$view->assign('group', array(
-	array('property' => 'one'),
-	array('property' => 'one'),
-	array('property' => 'two')
-));
+$view->assign('array', ['one', 'two', 'three']);
+$view->assign('group', [
+	['property' => 'one'],
+	['property' => 'one'],
+	['property' => 'two']
+]);
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();

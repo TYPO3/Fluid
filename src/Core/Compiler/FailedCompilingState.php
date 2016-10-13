@@ -15,7 +15,8 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
  * Replacement ParsingState used when a template fails to compile.
  * Includes additional reasons why compiling failed.
  */
-class FailedCompilingState extends ParsingState implements ParsedTemplateInterface  {
+class FailedCompilingState extends ParsingState implements ParsedTemplateInterface
+{
 
     /**
      * @var string
@@ -25,12 +26,13 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
     /**
      * @var string[]
      */
-    protected $mitigations = array();
+    protected $mitigations = [];
 
     /**
      * @return string
      */
-    public function getFailureReason() {
+    public function getFailureReason()
+    {
         return $this->failureReason;
     }
 
@@ -38,21 +40,24 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
      * @param string $failureReason
      * @return void
      */
-    public function setFailureReason($failureReason) {
+    public function setFailureReason($failureReason)
+    {
         $this->failureReason = $failureReason;
     }
 
     /**
      * @return array
      */
-    public function getMitigations() {
+    public function getMitigations()
+    {
         return $this->mitigations;
     }
 
     /**
      * @param array $mitigations
      */
-    public function setMitigations(array $mitigations) {
+    public function setMitigations(array $mitigations)
+    {
         $this->mitigations = $mitigations;
     }
 
@@ -60,8 +65,8 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
      * @param string $mitigation
      * @return void
      */
-    public function addMitigation($mitigation) {
+    public function addMitigation($mitigation)
+    {
         $this->mitigations[] = $mitigation;
     }
-
 }

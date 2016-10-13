@@ -41,41 +41,42 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *
  * @api
  */
-class AliasViewHelper extends AbstractViewHelper {
+class AliasViewHelper extends AbstractViewHelper
+{
 
-	use CompileWithRenderStatic;
+    use CompileWithRenderStatic;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		parent::initializeArguments();
-		$this->registerArgument('map', 'array', 'Array that specifies which variables should be mapped to which alias', TRUE);
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('map', 'array', 'Array that specifies which variables should be mapped to which alias', true);
+    }
 
-	/**
-	 * @param array $arguments
-	 * @param \Closure $renderChildrenClosure
-	 * @param RenderingContextInterface $renderingContext
-	 * @return mixed
-	 */
-	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-	{
-		$templateVariableContainer = $renderingContext->getVariableProvider();
-		$map = $arguments['map'];
-		foreach ($map as $aliasName => $value) {
-			$templateVariableContainer->add($aliasName, $value);
-		}
-		$output = $renderChildrenClosure();
-		foreach ($map as $aliasName => $value) {
-			$templateVariableContainer->remove($aliasName);
-		}
-		return $output;
-	}
-
+    /**
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        $templateVariableContainer = $renderingContext->getVariableProvider();
+        $map = $arguments['map'];
+        foreach ($map as $aliasName => $value) {
+            $templateVariableContainer->add($aliasName, $value);
+        }
+        $output = $renderChildrenClosure();
+        foreach ($map as $aliasName => $value) {
+            $templateVariableContainer->remove($aliasName);
+        }
+        return $output;
+    }
 }

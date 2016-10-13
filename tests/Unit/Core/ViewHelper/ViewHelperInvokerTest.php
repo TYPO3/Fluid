@@ -17,36 +17,38 @@ use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 /**
  * Class ViewHelperInvokerTest
  */
-class ViewHelperInvokerTest extends UnitTestCase {
+class ViewHelperInvokerTest extends UnitTestCase
+{
 
-	/**
-	 * @param string $viewHelperClassName
-	 * @param array $arguments
-	 * @param mixed $expectedOutput
-	 * @param string|NULL $expectedException
-	 * @test
-	 * @dataProvider getInvocationTestValues
-	 */
-	public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException) {
-		$view = new TemplateView();
-		$resolver = new ViewHelperResolver();
-		$invoker = new ViewHelperInvoker($resolver);
-		$renderingContext = new RenderingContext($view);
-		if ($expectedException) {
-			$this->setExpectedException($expectedException);
-		}
-		$result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
-		$this->assertEquals($expectedOutput, $result);
-	}
+    /**
+     * @param string $viewHelperClassName
+     * @param array $arguments
+     * @param mixed $expectedOutput
+     * @param string|NULL $expectedException
+     * @test
+     * @dataProvider getInvocationTestValues
+     */
+    public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException)
+    {
+        $view = new TemplateView();
+        $resolver = new ViewHelperResolver();
+        $invoker = new ViewHelperInvoker($resolver);
+        $renderingContext = new RenderingContext($view);
+        if ($expectedException) {
+            $this->setExpectedException($expectedException);
+        }
+        $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
+        $this->assertEquals($expectedOutput, $result);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getInvocationTestValues() {
-		return array(
-			array(TestViewHelper::class, array('param1' => 'foo', 'param2' => array('bar')), 'foo', NULL),
-			array(TestViewHelper::class, array('param1' => 'foo', 'param2' => array('bar'), 'add1' => 'baz', 'add2' => 'zap'), 'foo', NULL),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getInvocationTestValues()
+    {
+        return [
+            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo', null],
+            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar'], 'add1' => 'baz', 'add2' => 'zap'], 'foo', null],
+        ];
+    }
 }

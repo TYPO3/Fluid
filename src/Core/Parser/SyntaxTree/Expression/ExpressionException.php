@@ -11,5 +11,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  *
  * @api
  */
-class ExpressionException extends \TYPO3Fluid\Fluid\Core\Exception {
+class ExpressionException extends \TYPO3Fluid\Fluid\Core\Exception
+{
 }

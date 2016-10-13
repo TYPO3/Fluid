@@ -52,7 +52,7 @@ class CustomViewHelperResolver extends ViewHelperResolver {
 				'array', // our argument must now be an array
 				'This is our new description for the argument',
 				FALSE, // argument is no longer mandatory
-				array('foo' => 'bar') // our argument has a new default value if argument is not provided
+				['foo' => 'bar'] // our argument has a new default value if argument is not provided
 			);
 		}
 		return $arguments;

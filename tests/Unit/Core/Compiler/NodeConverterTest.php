@@ -26,139 +26,144 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Class NodeConverterTest
  */
-class NodeConverterTest extends UnitTestCase {
+class NodeConverterTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function testSetVariableCounter() {
-		$instance = new NodeConverter(new TemplateCompiler());
-		$instance->setVariableCounter(10);
-		$this->assertAttributeEquals(10, 'variableCounter', $instance);
-	}
+    /**
+     * @test
+     */
+    public function testSetVariableCounter()
+    {
+        $instance = new NodeConverter(new TemplateCompiler());
+        $instance->setVariableCounter(10);
+        $this->assertAttributeEquals(10, 'variableCounter', $instance);
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getConvertMethodCallTestValues
-	 * @param NodeInterface $node
-	 * @param string $expected
-	 */
-	public function testConvertCallsExpectedMethod(NodeInterface $node, $expected) {
-		$instance = $this->getMock(NodeConverter::class, array($expected), array(), '', FALSE);
-		$instance->expects($this->once())->method($expected);
-		$instance->convert($node);
-	}
+    /**
+     * @test
+     * @dataProvider getConvertMethodCallTestValues
+     * @param NodeInterface $node
+     * @param string $expected
+     */
+    public function testConvertCallsExpectedMethod(NodeInterface $node, $expected)
+    {
+        $instance = $this->getMock(NodeConverter::class, [$expected], [], '', false);
+        $instance->expects($this->once())->method($expected);
+        $instance->convert($node);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getConvertMethodCallTestValues() {
-		return array(
-			array($this->getMock(TextNode::class, array(), array(), '', FALSE), 'convertTextNode'),
-			array($this->getMock(ExpressionNodeInterface::class), 'convertExpressionNode'),
-			array($this->getMock(NumericNode::class, array(), array(), '', FALSE), 'convertNumericNode'),
-			array($this->getMock(ViewHelperNode::class, array(), array(), '', FALSE), 'convertViewHelperNode'),
-			array($this->getMock(ObjectAccessorNode::class, array(), array(), '', FALSE), 'convertObjectAccessorNode'),
-			array($this->getMock(ArrayNode::class, array(), array(), '', FALSE), 'convertArrayNode'),
-			array($this->getMock(RootNode::class, array(), array(), '', FALSE), 'convertListOfSubNodes'),
-			array($this->getMock(BooleanNode::class, array(), array(), '', FALSE), 'convertBooleanNode'),
-			array($this->getMock(EscapingNode::class, array(), array(), '', FALSE), 'convertEscapingNode'),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getConvertMethodCallTestValues()
+    {
+        return [
+            [$this->getMock(TextNode::class, [], [], '', false), 'convertTextNode'],
+            [$this->getMock(ExpressionNodeInterface::class), 'convertExpressionNode'],
+            [$this->getMock(NumericNode::class, [], [], '', false), 'convertNumericNode'],
+            [$this->getMock(ViewHelperNode::class, [], [], '', false), 'convertViewHelperNode'],
+            [$this->getMock(ObjectAccessorNode::class, [], [], '', false), 'convertObjectAccessorNode'],
+            [$this->getMock(ArrayNode::class, [], [], '', false), 'convertArrayNode'],
+            [$this->getMock(RootNode::class, [], [], '', false), 'convertListOfSubNodes'],
+            [$this->getMock(BooleanNode::class, [], [], '', false), 'convertBooleanNode'],
+            [$this->getMock(EscapingNode::class, [], [], '', false), 'convertEscapingNode'],
+        ];
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getConvertTestValues
-	 * @param NodeInterface $node
-	 * @param string $expected
-	 */
-	public function testConvert(NodeInterface $node, $expected) {
-		$instance = new NodeConverter(new TemplateCompiler());
-		$result = $instance->convert($node);
-		$this->assertEquals($expected, $result['execution']);
-	}
+    /**
+     * @test
+     * @dataProvider getConvertTestValues
+     * @param NodeInterface $node
+     * @param string $expected
+     */
+    public function testConvert(NodeInterface $node, $expected)
+    {
+        $instance = new NodeConverter(new TemplateCompiler());
+        $result = $instance->convert($node);
+        $this->assertEquals($expected, $result['execution']);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getConvertTestValues() {
-		$treeBooleanRoot = new RootNode();
-		$treeBooleanRoot->addChildNode(new TextNode('1'));
-		$treeBooleanRoot->addChildNode(new TextNode('!='));
-		$treeBooleanRoot->addChildNode(new TextNode('2'));
-		$treeBoolean = new BooleanNode($treeBooleanRoot);
-		$simpleRoot = new RootNode();
-		$simpleRoot->addChildNode(new TextNode('foobar'));
-		$multiRoot = new RootNode();
-		$multiRoot->addChildNode(new TextNode('foo'));
-		$multiRoot->addChildNode(new TextNode('bar'));
-		$multiRoot->addChildNode(new TextNode('baz'));
-		return array(
-			array(
-				new ObjectAccessorNode('_all'),
-				'$renderingContext->getVariableProvider()->getAll()'
-			),
-			array(
-				new ObjectAccessorNode('foo.bar'),
-				'$renderingContext->getVariableProvider()->getByPath(\'foo.bar\', $array0)'
-			),
-			array(
-				new ObjectAccessorNode('foo.bar', array('array', 'array')),
-				'isset($renderingContext->getVariableProvider()[\'foo\'][\'bar\']) ? $renderingContext->getVariableProvider()[\'foo\'][\'bar\'] : NULL'
-			),
-			array(
-				new BooleanNode(new TextNode('TRUE')),
-				'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
+    /**
+     * @return array
+     */
+    public function getConvertTestValues()
+    {
+        $treeBooleanRoot = new RootNode();
+        $treeBooleanRoot->addChildNode(new TextNode('1'));
+        $treeBooleanRoot->addChildNode(new TextNode('!='));
+        $treeBooleanRoot->addChildNode(new TextNode('2'));
+        $treeBoolean = new BooleanNode($treeBooleanRoot);
+        $simpleRoot = new RootNode();
+        $simpleRoot->addChildNode(new TextNode('foobar'));
+        $multiRoot = new RootNode();
+        $multiRoot->addChildNode(new TextNode('foo'));
+        $multiRoot->addChildNode(new TextNode('bar'));
+        $multiRoot->addChildNode(new TextNode('baz'));
+        return [
+            [
+                new ObjectAccessorNode('_all'),
+                '$renderingContext->getVariableProvider()->getAll()'
+            ],
+            [
+                new ObjectAccessorNode('foo.bar'),
+                '$renderingContext->getVariableProvider()->getByPath(\'foo.bar\', $array0)'
+            ],
+            [
+                new ObjectAccessorNode('foo.bar', ['array', 'array']),
+                'isset($renderingContext->getVariableProvider()[\'foo\'][\'bar\']) ? $renderingContext->getVariableProvider()[\'foo\'][\'bar\'] : NULL'
+            ],
+            [
+                new BooleanNode(new TextNode('TRUE')),
+                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
 					$expression1(
 						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
 					),
 					$renderingContext
 				)'
-			),
-			array(
-				new BooleanNode(new TextNode('1 = 1')),
-				'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
+            ],
+            [
+                new BooleanNode(new TextNode('1 = 1')),
+                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
 					$expression1(
 						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
 					),
 					$renderingContext
 				)'
-			),
-			array(
-				$treeBoolean,
-				'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
+            ],
+            [
+                $treeBoolean,
+                'TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::convertToBoolean(
 					$expression1(
 						TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::gatherContext($renderingContext, $array0)
 					),
 					$renderingContext
 				)'
-			),
-			array(
-				new TernaryExpressionNode('1 ? 2 : 3', array(1, 2, 3)),
-				'$ternaryExpression1(TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::gatherContext($renderingContext, $array0[1]), $renderingContext)'
-			),
-			array(
-				new EscapingNode(new TextNode('foo')),
-				'htmlspecialchars(\'foo\', ENT_QUOTES)'
-			),
-			array(
-				new ViewHelperNode(
-					new RenderingContextFixture(),
-					'f',
-					'render',
-					array('section' => new TextNode('test'), 'partial' => 'test'),
-					new ParsingState()
-				),
-				'TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper::renderStatic($arguments0, $renderChildrenClosure1, $renderingContext)'
-			),
-			array($simpleRoot, '\'foobar\''),
-			array($multiRoot, '$output0'),
-			array(new TextNode('test'), '\'test\''),
-			array(new NumericNode('3'), '3'),
-			array(new NumericNode('4.5'), '4.5'),
-			array(new ArrayNode(array('foo', 'bar')), '$array0'),
-			array(new ArrayNode(array(0, new TextNode('test'), new ArrayNode(array('foo', 'bar')))), '$array0')
-		);
-	}
-
+            ],
+            [
+                new TernaryExpressionNode('1 ? 2 : 3', [1, 2, 3]),
+                '$ternaryExpression1(TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode::gatherContext($renderingContext, $array0[1]), $renderingContext)'
+            ],
+            [
+                new EscapingNode(new TextNode('foo')),
+                'htmlspecialchars(\'foo\', ENT_QUOTES)'
+            ],
+            [
+                new ViewHelperNode(
+                    new RenderingContextFixture(),
+                    'f',
+                    'render',
+                    ['section' => new TextNode('test'), 'partial' => 'test'],
+                    new ParsingState()
+                ),
+                'TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper::renderStatic($arguments0, $renderChildrenClosure1, $renderingContext)'
+            ],
+            [$simpleRoot, '\'foobar\''],
+            [$multiRoot, '$output0'],
+            [new TextNode('test'), '\'test\''],
+            [new NumericNode('3'), '3'],
+            [new NumericNode('4.5'), '4.5'],
+            [new ArrayNode(['foo', 'bar']), '$array0'],
+            [new ArrayNode([0, new TextNode('test'), new ArrayNode(['foo', 'bar'])]), '$array0']
+        ];
+    }
 }

@@ -9,12 +9,14 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 /**
  * Dummy object to test Viewhelper behavior on objects with a __toString method
  */
-class UserWithToString extends UserWithoutToString {
+class UserWithToString extends UserWithoutToString
+{
 
-	/**
-	 * @return string
-	 */
-	function __toString() {
-		return $this->name;
-	}
+    /**
+     * @return string
+     */
+    function __toString()
+    {
+        return $this->name;
+    }
 }

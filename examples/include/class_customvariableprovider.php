@@ -33,7 +33,7 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
 	 * @param string $path
 	 * @return mixed
 	 */
-	public function getByPath($path, array $accessors = array()) {
+	public function getByPath($path, array $accessors = []) {
 		if ($path === 'random') {
 			return 'random' . sha1(rand(0, 999999999));
 		} elseif ($path === 'incrementer') {

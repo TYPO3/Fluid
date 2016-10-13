@@ -13,47 +13,48 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
 /**
  * If content is empty use alternative text
  */
-class OrViewHelper extends AbstractViewHelper {
+class OrViewHelper extends AbstractViewHelper
+{
 
-	use CompileWithContentArgumentAndRenderStatic;
+    use CompileWithContentArgumentAndRenderStatic;
 
-	/**
-	 * Initialize
-	 *
-	 * @return void
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('content', 'mixed', 'Content to check if empty');
-		$this->registerArgument('alternative', 'mixed', 'Alternative if content is empty');
-		$this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
-	}
+    /**
+     * Initialize
+     *
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('content', 'mixed', 'Content to check if empty');
+        $this->registerArgument('alternative', 'mixed', 'Alternative if content is empty');
+        $this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
+    }
 
-	/**
-	 * @param array $arguments
-	 * @param \Closure $renderChildrenClosure
-	 * @param RenderingContextInterface $renderingContext
-	 * @return mixed
-	 */
-	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		$alternative = $arguments['alternative'];
-		$arguments = (array) $arguments['arguments'];
+    /**
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        $alternative = $arguments['alternative'];
+        $arguments = (array) $arguments['arguments'];
 
-		if (empty($arguments)) {
-			$arguments = NULL;
-		}
+        if (empty($arguments)) {
+            $arguments = null;
+        }
 
-		$content = $renderChildrenClosure();
+        $content = $renderChildrenClosure();
 
-		if (NULL === $content) {
-			$content = $alternative;
-		}
+        if (null === $content) {
+            $content = $alternative;
+        }
 
-		if (FALSE === empty($content)) {
-			$content = NULL !== $arguments ? vsprintf($content, $arguments) : $content;
-		}
+        if (false === empty($content)) {
+            $content = null !== $arguments ? vsprintf($content, $arguments) : $content;
+        }
 
-		return $content;
-	}
-
-
+        return $content;
+    }
 }

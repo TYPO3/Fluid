@@ -47,28 +47,31 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  *
  * @api
  */
-class PrintfViewHelper extends AbstractViewHelper {
+class PrintfViewHelper extends AbstractViewHelper
+{
 
-	use CompileWithContentArgumentAndRenderStatic;
+    use CompileWithContentArgumentAndRenderStatic;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		parent::initializeArguments();
-		$this->registerArgument('value', 'string', 'String to format');
-		$this->registerArgument('arguments', 'array', 'The arguments for vsprintf', FALSE, array());
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('value', 'string', 'String to format');
+        $this->registerArgument('arguments', 'array', 'The arguments for vsprintf', false, []);
+    }
 
-	/**
-	 * Applies vsprintf() on the specified value.
-	 *
-	 * @param array $arguments
-	 * @param \Closure $renderChildrenClosure
-	 * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
-	 * @return string
-	 */
-	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		return vsprintf($renderChildrenClosure(), $arguments['arguments']);
-	}
+    /**
+     * Applies vsprintf() on the specified value.
+     *
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
+     * @return string
+     */
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        return vsprintf($renderChildrenClosure(), $arguments['arguments']);
+    }
 }

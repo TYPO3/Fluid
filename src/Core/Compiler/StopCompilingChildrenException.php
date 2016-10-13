@@ -25,25 +25,27 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  *
  * @api
  */
-class StopCompilingChildrenException extends \TYPO3Fluid\Fluid\Core\Exception {
+class StopCompilingChildrenException extends \TYPO3Fluid\Fluid\Core\Exception
+{
 
-	/**
-	 * @var string
-	 */
-	protected $replacementString;
+    /**
+     * @var string
+     */
+    protected $replacementString;
 
-	/**
-	 * @return string
-	 */
-	public function getReplacementString() {
-		return $this->replacementString;
-	}
+    /**
+     * @return string
+     */
+    public function getReplacementString()
+    {
+        return $this->replacementString;
+    }
 
-	/**
-	 * @param string $replacementString
-	 */
-	public function setReplacementString($replacementString) {
-		$this->replacementString = $replacementString;
-	}
-
+    /**
+     * @param string $replacementString
+     */
+    public function setReplacementString($replacementString)
+    {
+        $this->replacementString = $replacementString;
+    }
 }

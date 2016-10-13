@@ -14,22 +14,26 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 /**
  * Constraint syntax tree node fixture
  */
-class ConstraintSyntaxTreeNode extends ViewHelperNode {
-	public $callProtocol = array();
+class ConstraintSyntaxTreeNode extends ViewHelperNode
+{
+    public $callProtocol = [];
 
-	public function __construct(VariableProviderInterface $variableContainer) {
-		$this->variableContainer = $variableContainer;
-	}
+    public function __construct(VariableProviderInterface $variableContainer)
+    {
+        $this->variableContainer = $variableContainer;
+    }
 
-	public function evaluateChildNodes(RenderingContextInterface $renderingContext) {
-		$identifiers = (array) $this->variableContainer->getAllIdentifiers();
-		$callElement = array();
-		foreach ($identifiers as $identifier) {
-			$callElement[$identifier] = $this->variableContainer->get($identifier);
-		}
-		$this->callProtocol[] = $callElement;
-	}
+    public function evaluateChildNodes(RenderingContextInterface $renderingContext)
+    {
+        $identifiers = (array) $this->variableContainer->getAllIdentifiers();
+        $callElement = [];
+        foreach ($identifiers as $identifier) {
+            $callElement[$identifier] = $this->variableContainer->get($identifier);
+        }
+        $this->callProtocol[] = $callElement;
+    }
 
-	public function evaluate(RenderingContextInterface $renderingContext) {
-	}
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+    }
 }

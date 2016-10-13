@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\View;
  *
  * @api
  */
-class TemplateView extends AbstractTemplateView {
+class TemplateView extends AbstractTemplateView
+{
 
 }

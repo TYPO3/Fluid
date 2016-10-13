@@ -79,20 +79,21 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *
  * @api
  */
-class IfViewHelper extends AbstractConditionViewHelper {
+class IfViewHelper extends AbstractConditionViewHelper
+{
 
-	/**
-	 * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
-	 *
-	 * @return string the rendered string
-	 * @api
-	 */
-	public function render() {
-		if ($this->arguments['condition']) {
-			return $this->renderThenChild();
-		} else {
-			return $this->renderElseChild();
-		}
-	}
-
+    /**
+     * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
+     *
+     * @return string the rendered string
+     * @api
+     */
+    public function render()
+    {
+        if ($this->arguments['condition']) {
+            return $this->renderThenChild();
+        } else {
+            return $this->renderElseChild();
+        }
+    }
 }

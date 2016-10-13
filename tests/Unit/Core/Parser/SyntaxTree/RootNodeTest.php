@@ -15,16 +15,17 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  * Testcase for RootNode
  *
  */
-class RootNodeTest extends UnitTestCase {
+class RootNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function testEvaluateCallsEvaluateChildNodes() {
-		$view = new TemplateView();
-		$subject = $this->getMock(RootNode::class, array('evaluateChildNodes'));
-		$subject->expects($this->once())->method('evaluateChildNodes');
-		$subject->evaluate(new RenderingContext($view));
-	}
-
+    /**
+     * @test
+     */
+    public function testEvaluateCallsEvaluateChildNodes()
+    {
+        $view = new TemplateView();
+        $subject = $this->getMock(RootNode::class, ['evaluateChildNodes']);
+        $subject->expects($this->once())->method('evaluateChildNodes');
+        $subject->evaluate(new RenderingContext($view));
+    }
 }

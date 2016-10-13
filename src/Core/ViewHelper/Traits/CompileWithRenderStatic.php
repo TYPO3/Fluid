@@ -13,7 +13,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * any ViewHelper that conforms to the `renderStatic`
  * method pattern.
  */
-trait CompileWithRenderStatic {
+trait CompileWithRenderStatic
+{
 
     /**
      * Default render method - simply calls renderStatic() with a
@@ -22,10 +23,11 @@ trait CompileWithRenderStatic {
      * @return string Rendered string
      * @api
      */
-    public function render() {
+    public function render()
+    {
         return self::renderStatic(
             $this->arguments,
-            call_user_func_array(array($this, 'buildRenderChildrenClosure'), array()),
+            call_user_func_array([$this, 'buildRenderChildrenClosure'], []),
             $this->renderingContext
         );
     }
@@ -53,5 +55,4 @@ trait CompileWithRenderStatic {
         $initializationPhpCode .= $initialization;
         return $execution;
     }
-
 }

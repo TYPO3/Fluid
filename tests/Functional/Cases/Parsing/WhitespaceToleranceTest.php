@@ -6,73 +6,74 @@ use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 /**
  * Class WhitespaceToleranceTest
  */
-class WhitespaceToleranceTest extends BaseFunctionalTestCase {
+class WhitespaceToleranceTest extends BaseFunctionalTestCase
+{
 
     /**
      * @var array
      */
-    protected $variables = array();
+    protected $variables = [];
 
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations() {
-        return array(
-            'Normal expected whitespace tolerance' => array(
+    public function getTemplateCodeFixturesAndExpectations()
+    {
+        return [
+            'Normal expected whitespace tolerance' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content="works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'No whitespace before self-close of tag' => array(
+                ['works'],
+                [],
+            ],
+            'No whitespace before self-close of tag' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content="works"/>',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace before self-close of tag' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace before self-close of tag' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content="works"      />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace before argument name' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace before argument name' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content="works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace after argument name' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace after argument name' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content    ="works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace before argument value' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace before argument value' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content= "works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace after argument name and before argument value' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace after argument name and before argument value' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled content = "works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace before and after argument name' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace before and after argument name' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled  content ="works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-            'Extra whitespace before argument name and after argument name and before argument value' => array(
+                ['works'],
+                [],
+            ],
+            'Extra whitespace before argument name and after argument name and before argument value' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled  content = "works" />',
                 $this->variables,
-                array('works'),
-                array(),
-            ),
-        );
+                ['works'],
+                [],
+            ],
+        ];
     }
-
 }

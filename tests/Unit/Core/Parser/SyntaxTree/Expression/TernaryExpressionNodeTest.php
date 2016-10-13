@@ -15,64 +15,68 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 /**
  * Class TernaryExpressionNodeTest
  */
-class TernaryExpressionNodeTest extends UnitTestCase {
+class TernaryExpressionNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @dataProvider getTernaryExpressionDetection
-	 * @param string $expression
-	 * @param mixed $expected
-	 */
-	public function testTernaryExpressionDetection($expression, $expected) {
-		$result = preg_match_all(TernaryExpressionNode::$detectionExpression, $expression, $matches, PREG_SET_ORDER);
-		$this->assertEquals($expected, count($matches) > 0);
-	}
+    /**
+     * @dataProvider getTernaryExpressionDetection
+     * @param string $expression
+     * @param mixed $expected
+     */
+    public function testTernaryExpressionDetection($expression, $expected)
+    {
+        $result = preg_match_all(TernaryExpressionNode::$detectionExpression, $expression, $matches, PREG_SET_ORDER);
+        $this->assertEquals($expected, count($matches) > 0);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getTernaryExpressionDetection() {
-		return array(
-			array('{true ? foo : bar}', TRUE),
-			array('{true ? 1 : 0}', TRUE),
-			array('{true ? foo : \'no\'}', TRUE),
-			array('{(true) ? \'yes\' : \'no\'}', TRUE),
-			array('{!(true) ? \'yes\' : \'no\'}', TRUE),
-			array('{(true || false) ? \'yes\' : \'no\'}', TRUE),
-			array('{(true && 1) ? \'yes\' : \'no\'}', TRUE),
-			array('{(\'foo\' == \'foo\') ? \'yes\' : \'no\'}', TRUE),
-			array('{(1 > 0) ? \'yes\' : \'no\'}', TRUE),
-			array('{(1 < 0) ? \'yes\' : \'no\'}', TRUE),
-			array('{(1 >= 0) ? \'yes\' : \'no\'}', TRUE),
-			array('{(1 <= 0) ? \'yes\' : \'no\'}', TRUE),
-			array('{(1 % 0) ? \'yes\' : \'no\'}', TRUE),
-			array('{(true || (\'foo\' == \'bar\')) ? \'yes\' : \'no\'}', TRUE),
-			array('{(foo || 1 && 1 && !(false) || (1 % 2) || (1 > 0) || (\'foo\' == \'bar\')) ? \'yes\' : \'no\'}', TRUE),
-			array('{{f:if(condition: 1, then: 1, else: 0)} ? \'yes\' : \'no\'}', TRUE),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getTernaryExpressionDetection()
+    {
+        return [
+            ['{true ? foo : bar}', true],
+            ['{true ? 1 : 0}', true],
+            ['{true ? foo : \'no\'}', true],
+            ['{(true) ? \'yes\' : \'no\'}', true],
+            ['{!(true) ? \'yes\' : \'no\'}', true],
+            ['{(true || false) ? \'yes\' : \'no\'}', true],
+            ['{(true && 1) ? \'yes\' : \'no\'}', true],
+            ['{(\'foo\' == \'foo\') ? \'yes\' : \'no\'}', true],
+            ['{(1 > 0) ? \'yes\' : \'no\'}', true],
+            ['{(1 < 0) ? \'yes\' : \'no\'}', true],
+            ['{(1 >= 0) ? \'yes\' : \'no\'}', true],
+            ['{(1 <= 0) ? \'yes\' : \'no\'}', true],
+            ['{(1 % 0) ? \'yes\' : \'no\'}', true],
+            ['{(true || (\'foo\' == \'bar\')) ? \'yes\' : \'no\'}', true],
+            ['{(foo || 1 && 1 && !(false) || (1 % 2) || (1 > 0) || (\'foo\' == \'bar\')) ? \'yes\' : \'no\'}', true],
+            ['{{f:if(condition: 1, then: 1, else: 0)} ? \'yes\' : \'no\'}', true],
+        ];
+    }
 
-	/**
-	 * @dataProvider getEvaluateExpressionTestValues
-	 * @param string $expression
-	 * @param array $variables
-	 * @param mixed $expected
-	 */
-	public function testEvaluateExpression($expression, array $variables, $expected) {
-		$view = new TemplateView();
-		$renderingContext = new RenderingContext($view);
-		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-		$result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression, array());
-		$this->assertEquals($expected, $result);
-	}
+    /**
+     * @dataProvider getEvaluateExpressionTestValues
+     * @param string $expression
+     * @param array $variables
+     * @param mixed $expected
+     */
+    public function testEvaluateExpression($expression, array $variables, $expected)
+    {
+        $view = new TemplateView();
+        $renderingContext = new RenderingContext($view);
+        $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
+        $result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression, []);
+        $this->assertEquals($expected, $result);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getEvaluateExpressionTestValues() {
-		return array(
-			array('1 ? 2 : 3', array(), 2),
-			array('0 ? 2 : 3', array(), 3),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getEvaluateExpressionTestValues()
+    {
+        return [
+            ['1 ? 2 : 3', [], 2],
+            ['0 ? 2 : 3', [], 3],
+        ];
+    }
 }

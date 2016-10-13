@@ -60,82 +60,85 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *
  * @api
  */
-class ForViewHelper extends AbstractViewHelper {
+class ForViewHelper extends AbstractViewHelper
+{
 
-	use CompileWithRenderStatic;
-	
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    use CompileWithRenderStatic;
+    
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		parent::initializeArguments();
-		$this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', TRUE);
-		$this->registerArgument('as', 'string', 'The name of the iteration variable', TRUE);
-		$this->registerArgument('key', 'string', 'Variable to assign array key to', FALSE);
-		$this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', FALSE, FALSE);
-		$this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);
+        $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
+        $this->registerArgument('key', 'string', 'Variable to assign array key to', false);
+        $this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', false, false);
+        $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
+    }
 
-	/**
-	 * @param array $arguments
-	 * @param \Closure $renderChildrenClosure
-	 * @param RenderingContextInterface $renderingContext
-	 * @return string
-	 * @throws ViewHelper\Exception
-	 */
-	public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext) {
-		$templateVariableContainer = $renderingContext->getVariableProvider();
-		if ($arguments['each'] === NULL) {
-			return '';
-		}
-		if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
-			throw new ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
-		}
+    /**
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return string
+     * @throws ViewHelper\Exception
+     */
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        $templateVariableContainer = $renderingContext->getVariableProvider();
+        if ($arguments['each'] === null) {
+            return '';
+        }
+        if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
+            throw new ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+        }
 
-		if ($arguments['reverse'] === TRUE) {
-			// array_reverse only supports arrays
-			if (is_object($arguments['each'])) {
-				/** @var $each \Traversable */
-				$each = $arguments['each'];
-				$arguments['each'] = iterator_to_array($each);
-			}
-			$arguments['each'] = array_reverse($arguments['each']);
-		}
-		$iterationData = array(
-			'index' => 0,
-			'cycle' => 1,
-			'total' => count($arguments['each'])
-		);
+        if ($arguments['reverse'] === true) {
+            // array_reverse only supports arrays
+            if (is_object($arguments['each'])) {
+                /** @var $each \Traversable */
+                $each = $arguments['each'];
+                $arguments['each'] = iterator_to_array($each);
+            }
+            $arguments['each'] = array_reverse($arguments['each']);
+        }
+        $iterationData = [
+            'index' => 0,
+            'cycle' => 1,
+            'total' => count($arguments['each'])
+        ];
 
-		$output = '';
-		foreach ($arguments['each'] as $keyValue => $singleElement) {
-			$templateVariableContainer->add($arguments['as'], $singleElement);
-			if ($arguments['key'] !== NULL) {
-				$templateVariableContainer->add($arguments['key'], $keyValue);
-			}
-			if ($arguments['iteration'] !== NULL) {
-				$iterationData['isFirst'] = $iterationData['cycle'] === 1;
-				$iterationData['isLast'] = $iterationData['cycle'] === $iterationData['total'];
-				$iterationData['isEven'] = $iterationData['cycle'] % 2 === 0;
-				$iterationData['isOdd'] = !$iterationData['isEven'];
-				$templateVariableContainer->add($arguments['iteration'], $iterationData);
-				$iterationData['index']++;
-				$iterationData['cycle']++;
-			}
-			$output .= $renderChildrenClosure();
-			$templateVariableContainer->remove($arguments['as']);
-			if ($arguments['key'] !== NULL) {
-				$templateVariableContainer->remove($arguments['key']);
-			}
-			if ($arguments['iteration'] !== NULL) {
-				$templateVariableContainer->remove($arguments['iteration']);
-			}
-		}
-		return $output;
-	}
+        $output = '';
+        foreach ($arguments['each'] as $keyValue => $singleElement) {
+            $templateVariableContainer->add($arguments['as'], $singleElement);
+            if ($arguments['key'] !== null) {
+                $templateVariableContainer->add($arguments['key'], $keyValue);
+            }
+            if ($arguments['iteration'] !== null) {
+                $iterationData['isFirst'] = $iterationData['cycle'] === 1;
+                $iterationData['isLast'] = $iterationData['cycle'] === $iterationData['total'];
+                $iterationData['isEven'] = $iterationData['cycle'] % 2 === 0;
+                $iterationData['isOdd'] = !$iterationData['isEven'];
+                $templateVariableContainer->add($arguments['iteration'], $iterationData);
+                $iterationData['index']++;
+                $iterationData['cycle']++;
+            }
+            $output .= $renderChildrenClosure();
+            $templateVariableContainer->remove($arguments['as']);
+            if ($arguments['key'] !== null) {
+                $templateVariableContainer->remove($arguments['key']);
+            }
+            if ($arguments['iteration'] !== null) {
+                $templateVariableContainer->remove($arguments['iteration']);
+            }
+        }
+        return $output;
+    }
 }

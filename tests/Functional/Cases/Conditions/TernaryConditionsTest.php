@@ -6,130 +6,131 @@ use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 /**
  * Class VariableConditionsTest
  */
-class TernaryConditionsTest extends BaseFunctionalTestCase {
+class TernaryConditionsTest extends BaseFunctionalTestCase
+{
 
-	/**
-	 * @return array
-	 */
-	public function getTemplateCodeFixturesAndExpectations() {
-		$someObject = new \stdClass();
-		$someObject->someString = 'bar';
-		$someObject->someInt = 1337;
-		$someObject->someFloat = 13.37;
-		$someObject->someBoolean = TRUE;
-		$someArray = array(
-			'foo' => 'bar'
-		);
-		return array(
-			array(
-				'{true ? \'yes\' : \'no\'}',
-				array(),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{true ? 1 : 2}',
-				array(),
-				array(1),
-				array(2)
-			),
-			array(
-				'{true ? foo : \'bar\'}',
-				array('foo' => 'bar'),
-				array('bar'),
-				array('foo')
-			),
-			array(
-				'{(true) ? \'yes\' : \'no\'}',
-				array(),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(true || false) ? \'yes\' : \'no\'}',
-				array(),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(false || false) ? \'yes\' : \'no\'}',
-				array(),
-				array('no'),
-				array('yes')
-			),
-			array(
-				'{foo ? \'yes\' : \'no\'}',
-				array('foo' => TRUE),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{foo ? \'yes\' : \'no\'}',
-				array('foo' => FALSE),
-				array('no'),
-				array('yes')
-			),
-			array(
-				'{!foo ? \'yes\' : \'no\'}',
-				array('foo' => FALSE),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(foo || false) ? \'yes\' : \'no\'}',
-				array('foo' => TRUE),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(foo || false) ? \'yes\' : \'no\'}',
-				array('foo' => FALSE),
-				array('no'),
-				array('yes')
-			),
-			array(
-				'{(foo.bar || false) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => true)),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(foo.bar && false) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => true)),
-				array('no'),
-				array('yes')
-			),
-			array(
-				'{(foo.bar > 10) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => 11)),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(foo.bar < 10) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => 11)),
-				array('no'),
-				array('yes')
-			),
-			array(
-				'{(foo.bar < 10) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => 11)),
-				array('no'),
-				array('yes')
-			),
-			array(
-				'{(foo.bar % 10) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => 11)),
-				array('yes'),
-				array('no')
-			),
-			array(
-				'{(foo.bar % 10) ? \'yes\' : \'no\'}',
-				array('foo' => array('bar' => 10)),
-				array('no'),
-				array('yes')
-			),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getTemplateCodeFixturesAndExpectations()
+    {
+        $someObject = new \stdClass();
+        $someObject->someString = 'bar';
+        $someObject->someInt = 1337;
+        $someObject->someFloat = 13.37;
+        $someObject->someBoolean = true;
+        $someArray = [
+            'foo' => 'bar'
+        ];
+        return [
+            [
+                '{true ? \'yes\' : \'no\'}',
+                [],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{true ? 1 : 2}',
+                [],
+                [1],
+                [2]
+            ],
+            [
+                '{true ? foo : \'bar\'}',
+                ['foo' => 'bar'],
+                ['bar'],
+                ['foo']
+            ],
+            [
+                '{(true) ? \'yes\' : \'no\'}',
+                [],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(true || false) ? \'yes\' : \'no\'}',
+                [],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(false || false) ? \'yes\' : \'no\'}',
+                [],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{foo ? \'yes\' : \'no\'}',
+                ['foo' => true],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{foo ? \'yes\' : \'no\'}',
+                ['foo' => false],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{!foo ? \'yes\' : \'no\'}',
+                ['foo' => false],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(foo || false) ? \'yes\' : \'no\'}',
+                ['foo' => true],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(foo || false) ? \'yes\' : \'no\'}',
+                ['foo' => false],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{(foo.bar || false) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => true]],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(foo.bar && false) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => true]],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{(foo.bar > 10) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => 11]],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(foo.bar < 10) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => 11]],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{(foo.bar < 10) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => 11]],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{(foo.bar % 10) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => 11]],
+                ['yes'],
+                ['no']
+            ],
+            [
+                '{(foo.bar % 10) ? \'yes\' : \'no\'}',
+                ['foo' => ['bar' => 10]],
+                ['no'],
+                ['yes']
+            ],
+        ];
+    }
 }

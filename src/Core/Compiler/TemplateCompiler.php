@@ -17,173 +17,187 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * Class TemplateCompiler
  */
-class TemplateCompiler {
+class TemplateCompiler
+{
 
-	const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
-	const MODE_NORMAL = 'normal';
-	const MODE_WARMUP = 'warmup';
+    const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
+    const MODE_NORMAL = 'normal';
+    const MODE_WARMUP = 'warmup';
 
-	/**
-	 * @var array
-	 */
-	protected $syntaxTreeInstanceCache = array();
+    /**
+     * @var array
+     */
+    protected $syntaxTreeInstanceCache = [];
 
-	/**
-	 * @var NodeConverter
-	 */
-	protected $nodeConverter;
+    /**
+     * @var NodeConverter
+     */
+    protected $nodeConverter;
 
-	/**
-	 * @var RenderingContextInterface
-	 */
-	protected $renderingContext;
+    /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
 
-	/**
-	 * @var string
-	 */
-	protected $mode = self::MODE_NORMAL;
+    /**
+     * @var string
+     */
+    protected $mode = self::MODE_NORMAL;
 
-	/**
-	 * @var ParsedTemplateInterface
-	 */
-	protected $currentlyProcessingState;
+    /**
+     * @var ParsedTemplateInterface
+     */
+    protected $currentlyProcessingState;
 
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		$this->nodeConverter = new NodeConverter($this);
-	}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->nodeConverter = new NodeConverter($this);
+    }
 
-	/**
-	 * Instruct the TemplateCompiler to enter warmup mode, assigning
-	 * additional context allowing cache-related implementations to
-	 * subsequently check the mode.
-	 *
-	 * Cannot be reversed once done - should only be used from within
-	 * FluidCacheWarmerInterface implementations!
-	 */
-	public function enterWarmupMode() {
-		$this->mode = static::MODE_WARMUP;
-	}
+    /**
+     * Instruct the TemplateCompiler to enter warmup mode, assigning
+     * additional context allowing cache-related implementations to
+     * subsequently check the mode.
+     *
+     * Cannot be reversed once done - should only be used from within
+     * FluidCacheWarmerInterface implementations!
+     */
+    public function enterWarmupMode()
+    {
+        $this->mode = static::MODE_WARMUP;
+    }
 
-	/**
-	 * Returns TRUE only if the TemplateCompiler is in warmup mode.
-	 */
-	public function isWarmupMode() {
-		return $this->mode === static::MODE_WARMUP;
-	}
+    /**
+     * Returns TRUE only if the TemplateCompiler is in warmup mode.
+     */
+    public function isWarmupMode()
+    {
+        return $this->mode === static::MODE_WARMUP;
+    }
 
-	/**
-	 * @return ParsedTemplateInterface|NULL
-	 */
-	public function getCurrentlyProcessingState() {
-		return $this->currentlyProcessingState;
-	}
+    /**
+     * @return ParsedTemplateInterface|NULL
+     */
+    public function getCurrentlyProcessingState()
+    {
+        return $this->currentlyProcessingState;
+    }
 
-	/**
-	 * @param RenderingContextInterface $renderingContext
-	 * @return void
-	 */
-	public function setRenderingContext(RenderingContextInterface $renderingContext) {
-		$this->renderingContext = $renderingContext;
-	}
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return void
+     */
+    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    {
+        $this->renderingContext = $renderingContext;
+    }
 
-	/**
-	 * @return RenderingContextInterface
-	 */
-	public function getRenderingContext() {
-		return $this->renderingContext;
-	}
+    /**
+     * @return RenderingContextInterface
+     */
+    public function getRenderingContext()
+    {
+        return $this->renderingContext;
+    }
 
-	/**
-	 * @param NodeConverter $nodeConverter
-	 * @return void
-	 */
-	public function setNodeConverter(NodeConverter $nodeConverter) {
-		$this->nodeConverter = $nodeConverter;
-	}
+    /**
+     * @param NodeConverter $nodeConverter
+     * @return void
+     */
+    public function setNodeConverter(NodeConverter $nodeConverter)
+    {
+        $this->nodeConverter = $nodeConverter;
+    }
 
-	/**
-	 * @return NodeConverter
-	 */
-	public function getNodeConverter() {
-		return $this->nodeConverter;
-	}
+    /**
+     * @return NodeConverter
+     */
+    public function getNodeConverter()
+    {
+        return $this->nodeConverter;
+    }
 
-	/**
-	 * @return void
-	 */
-	public function disable() {
-		throw new StopCompilingException('Compiling stopped');
-	}
+    /**
+     * @return void
+     */
+    public function disable()
+    {
+        throw new StopCompilingException('Compiling stopped');
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isDisabled() {
-		return !$this->renderingContext->isCacheEnabled();
-	}
+    /**
+     * @return boolean
+     */
+    public function isDisabled()
+    {
+        return !$this->renderingContext->isCacheEnabled();
+    }
 
-	/**
-	 * @param string $identifier
-	 * @return boolean
-	 */
-	public function has($identifier) {
-		if (isset($this->syntaxTreeInstanceCache[$identifier])) {
-			return TRUE;
-		}
-		if (!$this->renderingContext->isCacheEnabled()) {
-			return FALSE;
-		}
-		$identifier = $this->sanitizeIdentifier($identifier);
-		return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
-	}
+    /**
+     * @param string $identifier
+     * @return boolean
+     */
+    public function has($identifier)
+    {
+        if (isset($this->syntaxTreeInstanceCache[$identifier])) {
+            return true;
+        }
+        if (!$this->renderingContext->isCacheEnabled()) {
+            return false;
+        }
+        $identifier = $this->sanitizeIdentifier($identifier);
+        return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
+    }
 
-	/**
-	 * @param string $identifier
-	 * @return ParsedTemplateInterface
-	 */
-	public function get($identifier) {
-		$identifier = $this->sanitizeIdentifier($identifier);
+    /**
+     * @param string $identifier
+     * @return ParsedTemplateInterface
+     */
+    public function get($identifier)
+    {
+        $identifier = $this->sanitizeIdentifier($identifier);
 
-		if (!isset($this->syntaxTreeInstanceCache[$identifier])) {
-			$this->renderingContext->getCache()->get($identifier);
-			$this->syntaxTreeInstanceCache[$identifier] = new $identifier();
-		}
+        if (!isset($this->syntaxTreeInstanceCache[$identifier])) {
+            $this->renderingContext->getCache()->get($identifier);
+            $this->syntaxTreeInstanceCache[$identifier] = new $identifier();
+        }
 
-		return $this->syntaxTreeInstanceCache[$identifier];
-	}
+        return $this->syntaxTreeInstanceCache[$identifier];
+    }
 
-	/**
-	 * @param string $identifier
-	 * @param ParsingState $parsingState
-	 * @return void
-	 */
-	public function store($identifier, ParsingState $parsingState) {
-		if ($this->isDisabled()) {
-			if ($this->renderingContext->isCacheEnabled()) {
-				// Compiler is disabled but cache is enabled. Flush cache to make sure.
-				$this->renderingContext->getCache()->flush($identifier);
-			}
-			$parsingState->setCompilable(FALSE);
-			return;
-		}
+    /**
+     * @param string $identifier
+     * @param ParsingState $parsingState
+     * @return void
+     */
+    public function store($identifier, ParsingState $parsingState)
+    {
+        if ($this->isDisabled()) {
+            if ($this->renderingContext->isCacheEnabled()) {
+                // Compiler is disabled but cache is enabled. Flush cache to make sure.
+                $this->renderingContext->getCache()->flush($identifier);
+            }
+            $parsingState->setCompilable(false);
+            return;
+        }
 
-		$this->currentlyProcessingState = $parsingState;
-		$identifier = $this->sanitizeIdentifier($identifier);
-		$this->nodeConverter->setVariableCounter(0);
-		$generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
+        $this->currentlyProcessingState = $parsingState;
+        $identifier = $this->sanitizeIdentifier($identifier);
+        $this->nodeConverter->setVariableCounter(0);
+        $generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
 
-		$generatedRenderFunctions .= $this->generateCodeForSection(
-			$this->nodeConverter->convertListOfSubNodes($parsingState->getRootNode()),
-			'render',
-			'Main Render function'
-		);
+        $generatedRenderFunctions .= $this->generateCodeForSection(
+            $this->nodeConverter->convertListOfSubNodes($parsingState->getRootNode()),
+            'render',
+            'Main Render function'
+        );
 
-		$classDefinition = 'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate';
+        $classDefinition = 'class ' . $identifier . ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate';
 
-		$templateCode = <<<EOD
+        $templateCode = <<<EOD
 <?php
 
 %s {
@@ -203,68 +217,73 @@ public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\Rendering
 
 }
 EOD;
-		$storedLayoutName = $parsingState->getVariableContainer()->get('layoutName');
-		$templateCode = sprintf(
-			$templateCode,
-			$classDefinition,
-			$this->generateCodeForLayoutName($storedLayoutName),
-			($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
-			var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), TRUE),
-			$generatedRenderFunctions);
-		$this->renderingContext->getCache()->set($identifier, $templateCode);
-	}
+        $storedLayoutName = $parsingState->getVariableContainer()->get('layoutName');
+        $templateCode = sprintf(
+            $templateCode,
+            $classDefinition,
+            $this->generateCodeForLayoutName($storedLayoutName),
+            ($parsingState->hasLayout() ? 'TRUE' : 'FALSE'),
+            var_export($this->renderingContext->getViewHelperResolver()->getNamespaces(), true),
+            $generatedRenderFunctions
+        );
+        $this->renderingContext->getCache()->set($identifier, $templateCode);
+    }
 
-	/**
-	 * @param RootNode|string $storedLayoutNameArgument
-	 * @return string
-	 */
-	protected function generateCodeForLayoutName($storedLayoutNameArgument) {
-		if ($storedLayoutNameArgument instanceof RootNode) {
-			list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
-			return $initialization . PHP_EOL . 'return ' . $execution;
-		} else {
-			return 'return (string) \'' . $storedLayoutNameArgument . '\'';
-		}
-	}
+    /**
+     * @param RootNode|string $storedLayoutNameArgument
+     * @return string
+     */
+    protected function generateCodeForLayoutName($storedLayoutNameArgument)
+    {
+        if ($storedLayoutNameArgument instanceof RootNode) {
+            list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
+            return $initialization . PHP_EOL . 'return ' . $execution;
+        } else {
+            return 'return (string) \'' . $storedLayoutNameArgument . '\'';
+        }
+    }
 
-	/**
-	 * @param ParsingState $parsingState
-	 * @return string
-	 */
-	protected function generateSectionCodeFromParsingState(ParsingState $parsingState) {
-		$generatedRenderFunctions = '';
-		if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
-			$sections = $parsingState->getVariableContainer()->get('1457379500_sections'); // TODO: refactor to $parsedTemplate->getSections()
-			foreach ($sections as $sectionName => $sectionRootNode) {
-				$generatedRenderFunctions .= $this->generateCodeForSection(
-					$this->nodeConverter->convertListOfSubNodes($sectionRootNode),
-					'section_' . sha1($sectionName),
-					'section ' . $sectionName
-				);
-			}
-		}
-		return $generatedRenderFunctions;
-	}
+    /**
+     * @param ParsingState $parsingState
+     * @return string
+     */
+    protected function generateSectionCodeFromParsingState(ParsingState $parsingState)
+    {
+        $generatedRenderFunctions = '';
+        if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
+            $sections = $parsingState->getVariableContainer()->get('1457379500_sections'); // TODO: refactor to $parsedTemplate->getSections()
+            foreach ($sections as $sectionName => $sectionRootNode) {
+                $generatedRenderFunctions .= $this->generateCodeForSection(
+                    $this->nodeConverter->convertListOfSubNodes($sectionRootNode),
+                    'section_' . sha1($sectionName),
+                    'section ' . $sectionName
+                );
+            }
+        }
+        return $generatedRenderFunctions;
+    }
 
-	/**
-	 * Replaces special characters by underscores
-	 * @see http://www.php.net/manual/en/language.variables.basics.php
-	 *
-	 * @param string $identifier
-	 * @return string the sanitized identifier
-	 */
-	protected function sanitizeIdentifier($identifier) {
-		return preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
-	}
+    /**
+     * Replaces special characters by underscores
+     * @see http://www.php.net/manual/en/language.variables.basics.php
+     *
+     * @param string $identifier
+     * @return string the sanitized identifier
+     */
+    protected function sanitizeIdentifier($identifier)
+    {
+        return preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
+    }
 
-	/**
-	 * @param array $converted
-	 * @param string $expectedFunctionName
-	 * @param string $comment
-	 * @return string
-	 */
-	protected function generateCodeForSection(array $converted, $expectedFunctionName, $comment) {
-		$templateCode = <<<EOD
+    /**
+     * @param array $converted
+     * @param string $expectedFunctionName
+     * @param string $comment
+     * @return string
+     */
+    protected function generateCodeForSection(array $converted, $expectedFunctionName, $comment)
+    {
+        $templateCode = <<<EOD
 /**
  * %s
  */
@@ -275,58 +294,60 @@ return %s;
 }
 
 EOD;
-		return sprintf($templateCode, $comment, $expectedFunctionName, $converted['initialization'], $converted['execution']);
-	}
+        return sprintf($templateCode, $comment, $expectedFunctionName, $converted['initialization'], $converted['execution']);
+    }
 
-	/**
-	 * Returns a unique variable name by appending a global index to the given prefix
-	 *
-	 * @param string $prefix
-	 * @return string
-	 */
-	public function variableName($prefix) {
-		return $this->nodeConverter->variableName($prefix);
-	}
+    /**
+     * Returns a unique variable name by appending a global index to the given prefix
+     *
+     * @param string $prefix
+     * @return string
+     */
+    public function variableName($prefix)
+    {
+        return $this->nodeConverter->variableName($prefix);
+    }
 
-	/**
-	 * @param NodeInterface $node
-	 * @return string
-	 */
-	public function wrapChildNodesInClosure(NodeInterface $node) {
-		$closure = '';
-		$closure .= 'function() use ($renderingContext, $self) {' . chr(10);
-		$convertedSubNodes = $this->nodeConverter->convertListOfSubNodes($node);
-		$closure .= $convertedSubNodes['initialization'];
-		$closure .= sprintf('return %s;', $convertedSubNodes['execution']) . chr(10);
-		$closure .= '}';
-		return $closure;
-	}
+    /**
+     * @param NodeInterface $node
+     * @return string
+     */
+    public function wrapChildNodesInClosure(NodeInterface $node)
+    {
+        $closure = '';
+        $closure .= 'function() use ($renderingContext, $self) {' . chr(10);
+        $convertedSubNodes = $this->nodeConverter->convertListOfSubNodes($node);
+        $closure .= $convertedSubNodes['initialization'];
+        $closure .= sprintf('return %s;', $convertedSubNodes['execution']) . chr(10);
+        $closure .= '}';
+        return $closure;
+    }
 
-	/**
-	 * Wraps one ViewHelper argument evaluation in a closure that can be
-	 * rendered by passing a rendering context.
-	 *
-	 * @param ViewHelperNode $node
-	 * @param string $argumentName
-	 * @return string
-	 */
-	public function wrapViewHelperNodeArgumentEvaluationInClosure(ViewHelperNode $node, $argumentName) {
-		$arguments = $node->getArguments();
-		$argument = $arguments[$argumentName];
-		$closure = 'function() use ($renderingContext, $self) {' . chr(10);
-		if ($node->getArgumentDefinition($argumentName)->getType() === 'boolean') {
-			// We treat boolean nodes by compiling a closure to evaluate the stack of the boolean argument
-			$compiledIfArgumentStack = $this->nodeConverter->convert(new ArrayNode($argument->getStack()));
-			$closure .= $compiledIfArgumentStack['initialization'] . chr(10);
-			$closure .= sprintf(
-				'return \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s);',
-				$compiledIfArgumentStack['execution']
-			) . chr(10);
-		} else {
-			$closure .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', serialize($argument)) . chr(10);
-		}
-		$closure .= '}';
-		return $closure;
-	}
-
+    /**
+     * Wraps one ViewHelper argument evaluation in a closure that can be
+     * rendered by passing a rendering context.
+     *
+     * @param ViewHelperNode $node
+     * @param string $argumentName
+     * @return string
+     */
+    public function wrapViewHelperNodeArgumentEvaluationInClosure(ViewHelperNode $node, $argumentName)
+    {
+        $arguments = $node->getArguments();
+        $argument = $arguments[$argumentName];
+        $closure = 'function() use ($renderingContext, $self) {' . chr(10);
+        if ($node->getArgumentDefinition($argumentName)->getType() === 'boolean') {
+            // We treat boolean nodes by compiling a closure to evaluate the stack of the boolean argument
+            $compiledIfArgumentStack = $this->nodeConverter->convert(new ArrayNode($argument->getStack()));
+            $closure .= $compiledIfArgumentStack['initialization'] . chr(10);
+            $closure .= sprintf(
+                'return \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s);',
+                $compiledIfArgumentStack['execution']
+            ) . chr(10);
+        } else {
+            $closure .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', serialize($argument)) . chr(10);
+        }
+        $closure .= '}';
+        return $closure;
+    }
 }

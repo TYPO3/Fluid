@@ -13,157 +13,165 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  *
  * @api
  */
-abstract class AbstractTagBasedViewHelper extends AbstractViewHelper {
+abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
-	 *
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
+     *
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * Names of all registered tag attributes
-	 *
-	 * @var array
-	 */
-	static private $tagAttributes = array();
+    /**
+     * Names of all registered tag attributes
+     *
+     * @var array
+     */
+    static private $tagAttributes = [];
 
-	/**
-	 * Tag builder instance
-	 *
-	 * @var TagBuilder
-	 * @api
-	 */
-	protected $tag = NULL;
+    /**
+     * Tag builder instance
+     *
+     * @var TagBuilder
+     * @api
+     */
+    protected $tag = null;
 
-	/**
-	 * Name of the tag to be created by this view helper
-	 *
-	 * @var string
-	 * @api
-	 */
-	protected $tagName = 'div';
+    /**
+     * Name of the tag to be created by this view helper
+     *
+     * @var string
+     * @api
+     */
+    protected $tagName = 'div';
 
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		$this->setTagBuilder(new TagBuilder($this->tagName));
-	}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->setTagBuilder(new TagBuilder($this->tagName));
+    }
 
-	/**
-	 * @param TagBuilder $tag
-	 * @return void
-	 */
-	public function setTagBuilder(TagBuilder $tag) {
-		$this->tag = $tag;
-		$this->tag->setTagName($this->tagName);
-	}
+    /**
+     * @param TagBuilder $tag
+     * @return void
+     */
+    public function setTagBuilder(TagBuilder $tag)
+    {
+        $this->tag = $tag;
+        $this->tag->setTagName($this->tagName);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @api
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', FALSE);
-		$this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', FALSE);
-	}
+    /**
+     * Constructor
+     *
+     * @api
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false);
+        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false);
+    }
 
-	/**
-	 * Sets the tag name to $this->tagName.
-	 * Additionally, sets all tag attributes which were registered in
-	 * $this->tagAttributes and additionalArguments.
-	 *
-	 * Will be invoked just before the render method.
-	 *
-	 * @return void
-	 * @api
-	 */
-	public function initialize() {
-		parent::initialize();
-		if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
-			$this->tag->addAttributes($this->arguments['additionalAttributes']);
-		}
+    /**
+     * Sets the tag name to $this->tagName.
+     * Additionally, sets all tag attributes which were registered in
+     * $this->tagAttributes and additionalArguments.
+     *
+     * Will be invoked just before the render method.
+     *
+     * @return void
+     * @api
+     */
+    public function initialize()
+    {
+        parent::initialize();
+        if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
+            $this->tag->addAttributes($this->arguments['additionalAttributes']);
+        }
 
-		if ($this->hasArgument('data') && is_array($this->arguments['data'])) {
-			foreach ($this->arguments['data'] as $dataAttributeKey => $dataAttributeValue) {
-				$this->tag->addAttribute('data-' . $dataAttributeKey, $dataAttributeValue);
-			}
-		}
+        if ($this->hasArgument('data') && is_array($this->arguments['data'])) {
+            foreach ($this->arguments['data'] as $dataAttributeKey => $dataAttributeValue) {
+                $this->tag->addAttribute('data-' . $dataAttributeKey, $dataAttributeValue);
+            }
+        }
 
-		if (isset(self::$tagAttributes[get_class($this)])) {
-			foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
-				if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
-					$this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
-				}
-			}
-		}
-	}
+        if (isset(self::$tagAttributes[get_class($this)])) {
+            foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
+                if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
+                    $this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->initializeTag()
-	 *
-	 * @param string $name Name of tag attribute
-	 * @param string $type Type of the tag attribute
-	 * @param string $description Description of tag attribute
-	 * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
-	 * @param mixed $defaultValue Optional, default value of attribute if one applies
-	 * @return void
-	 * @api
-	 */
-	protected function registerTagAttribute($name, $type, $description, $required = FALSE, $defaultValue = NULL) {
-		$this->registerArgument($name, $type, $description, $required, $defaultValue);
-		self::$tagAttributes[get_class($this)][$name] = $name;
-	}
+    /**
+     * Register a new tag attribute. Tag attributes are all arguments which will be directly appended to a tag if you call $this->initializeTag()
+     *
+     * @param string $name Name of tag attribute
+     * @param string $type Type of the tag attribute
+     * @param string $description Description of tag attribute
+     * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
+     * @param mixed $defaultValue Optional, default value of attribute if one applies
+     * @return void
+     * @api
+     */
+    protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
+    {
+        $this->registerArgument($name, $type, $description, $required, $defaultValue);
+        self::$tagAttributes[get_class($this)][$name] = $name;
+    }
 
-	/**
-	 * Registers all standard HTML universal attributes.
-	 * Should be used inside registerArguments();
-	 *
-	 * @return void
-	 * @api
-	 */
-	protected function registerUniversalTagAttributes() {
-		$this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');
-		$this->registerTagAttribute('dir', 'string', 'Text direction for this HTML element. Allowed strings: "ltr" (left to right), "rtl" (right to left)');
-		$this->registerTagAttribute('id', 'string', 'Unique (in this file) identifier for this HTML element.');
-		$this->registerTagAttribute('lang', 'string', 'Language for this element. Use short names specified in RFC 1766');
-		$this->registerTagAttribute('style', 'string', 'Individual CSS styles for this element');
-		$this->registerTagAttribute('title', 'string', 'Tooltip text of element');
-		$this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
-		$this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
-		$this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
-	}
+    /**
+     * Registers all standard HTML universal attributes.
+     * Should be used inside registerArguments();
+     *
+     * @return void
+     * @api
+     */
+    protected function registerUniversalTagAttributes()
+    {
+        $this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');
+        $this->registerTagAttribute('dir', 'string', 'Text direction for this HTML element. Allowed strings: "ltr" (left to right), "rtl" (right to left)');
+        $this->registerTagAttribute('id', 'string', 'Unique (in this file) identifier for this HTML element.');
+        $this->registerTagAttribute('lang', 'string', 'Language for this element. Use short names specified in RFC 1766');
+        $this->registerTagAttribute('style', 'string', 'Individual CSS styles for this element');
+        $this->registerTagAttribute('title', 'string', 'Tooltip text of element');
+        $this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
+        $this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
+        $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
+    }
 
-	/**
-	 * Handles additional arguments, sorting out any data-
-	 * prefixed tag attributes and assigning them. Then passes
-	 * the unassigned arguments to the parent class' method,
-	 * which in the default implementation will throw an error
-	 * about "undeclared argument used".
-	 *
-	 * @param array $arguments
-	 * @return void
-	 */
-	public function handleAdditionalArguments(array $arguments) {
-		$unassigned = array();
-		foreach ($arguments as $argumentName => $argumentValue) {
-			if (strpos($argumentName, 'data-') === 0) {
-				$this->tag->addAttribute($argumentName, $argumentValue);
-			} else {
-				$unassigned[$argumentName] = $argumentValue;
-			}
-		}
-		parent::handleAdditionalArguments($unassigned);
-	}
+    /**
+     * Handles additional arguments, sorting out any data-
+     * prefixed tag attributes and assigning them. Then passes
+     * the unassigned arguments to the parent class' method,
+     * which in the default implementation will throw an error
+     * about "undeclared argument used".
+     *
+     * @param array $arguments
+     * @return void
+     */
+    public function handleAdditionalArguments(array $arguments)
+    {
+        $unassigned = [];
+        foreach ($arguments as $argumentName => $argumentValue) {
+            if (strpos($argumentName, 'data-') === 0) {
+                $this->tag->addAttribute($argumentName, $argumentValue);
+            } else {
+                $unassigned[$argumentName] = $argumentValue;
+            }
+        }
+        parent::handleAdditionalArguments($unassigned);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function render() {
-		return $this->tag->render();
-	}
-
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        return $this->tag->render();
+    }
 }
