@@ -103,6 +103,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
 
     /**
      * @param string $string
+     * @return boolean
      */
     protected function isJSON($string)
     {
