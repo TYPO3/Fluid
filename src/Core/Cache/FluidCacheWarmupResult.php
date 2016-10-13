@@ -29,12 +29,13 @@ class FluidCacheWarmupResult
     protected $results = [];
 
     /**
-     * @param FluidCacheWarmupResult $result1...$resultN
      * @return self
      */
     public function merge()
     {
-        foreach (func_get_args() as $result) {
+        /* @var FluidCacheWarmupResult[] $results */
+        $results = func_get_args();
+        foreach ($results as $result) {
             $this->results += $result->getResults();
         }
         return $this;

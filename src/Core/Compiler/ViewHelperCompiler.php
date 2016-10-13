@@ -73,7 +73,7 @@ class ViewHelperCompiler
      * @param string $argumentsName Name of arguments variable passed to `compile()` method
      * @param string $renderChildrenClosureName Name of renderChildren closure passed to `compile()` method
      * @param string $method The name of the class' method to be called
-     * @param string|NULL Class name which contains the method; NULL means use ViewHelper's class name.
+     * @param string|null Class name which contains the method; null means use ViewHelper's class name.
      * @return array
      */
     public function compileWithCallToStaticMethod(
@@ -115,7 +115,7 @@ class ViewHelperCompiler
      * @param string $renderChildrenClosureName Name of renderChildren closure passed to `compile()` method
      * @param string $contentArgumentName Name of the argument which
      * @param string $method The name of the class' method to be called
-     * @param string|NULL Class name which contains the method; NULL means use ViewHelper's class name.
+     * @param string|null Class name which contains the method; null means use ViewHelper's class name.
      * @return array
      */
     public function compileWithCallToStaticMethodAndContentFromArgumentName(
@@ -123,9 +123,10 @@ class ViewHelperCompiler
         $argumentsName,
         $renderChildrenClosureName,
         $contentArgumentName,
-        $method,
-        $onClass
+        $method = self::RENDER_STATIC,
+        $onClass = null
     ) {
+        $onClass = $onClass ? : get_class($viewHelper);
         return [
             self::DEFAULT_INIT,
             sprintf(

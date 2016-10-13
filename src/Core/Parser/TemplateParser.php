@@ -109,7 +109,7 @@ class TemplateParser
      *
      * @param string $templateString The template to parse as a string
      * @param string|null $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
-     * @return ParsedTemplateInterface Parsed template
+     * @return ParsingState Parsed template
      * @throws Exception
      */
     public function parse($templateString, $templateIdentifier = null)

@@ -189,6 +189,7 @@ class SwitchViewHelper extends AbstractViewHelper
                 $childrenClosure = $compiler->wrapChildNodesInClosure($childNode);
                 $phpCode .= sprintf('default: return call_user_func(%s);', $childrenClosure) . PHP_EOL;
             } elseif ($this->isCaseNode($childNode)) {
+                /** @var ViewHelperNode $childNode */
                 $valueClosure = $compiler->wrapViewHelperNodeArgumentEvaluationInClosure($childNode, 'value');
                 $childrenClosure = $compiler->wrapChildNodesInClosure($childNode);
                 $phpCode .= sprintf(
