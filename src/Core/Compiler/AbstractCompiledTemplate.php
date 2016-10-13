@@ -16,76 +16,85 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * INTERNAL!!
  */
-abstract class AbstractCompiledTemplate implements ParsedTemplateInterface {
+abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
+{
 
-	/**
-	 * @param string $identifier
-	 * @return void
-	 */
-	public function setIdentifier($identifier) {
-		// void, ignored.
-	}
+    /**
+     * @param string $identifier
+     * @return void
+     */
+    public function setIdentifier($identifier)
+    {
+        // void, ignored.
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getIdentifier() {
-		return static::class;
-	}
+    /**
+     * @return string
+     */
+    public function getIdentifier()
+    {
+        return static::class;
+    }
 
-	/**
-	 * Returns a variable container used in the PostParse Facet.
-	 *
-	 * @return VariableProviderInterface
-	 */
-	public function getVariableContainer() {
-		return new StandardVariableProvider();
-	}
+    /**
+     * Returns a variable container used in the PostParse Facet.
+     *
+     * @return VariableProviderInterface
+     */
+    public function getVariableContainer()
+    {
+        return new StandardVariableProvider();
+    }
 
-	/**
-	 * Render the parsed template with rendering context
-	 *
-	 * @param RenderingContextInterface $renderingContext The rendering context to use
-	 * @return string Rendered string
-	 */
-	public function render(RenderingContextInterface $renderingContext) {
-		return '';
-	}
+    /**
+     * Render the parsed template with rendering context
+     *
+     * @param RenderingContextInterface $renderingContext The rendering context to use
+     * @return string Rendered string
+     */
+    public function render(RenderingContextInterface $renderingContext)
+    {
+        return '';
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isCompilable() {
-		return FALSE;
-	}
+    /**
+     * @return boolean
+     */
+    public function isCompilable()
+    {
+        return false;
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isCompiled() {
-		return TRUE;
-	}
+    /**
+     * @return boolean
+     */
+    public function isCompiled()
+    {
+        return true;
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function hasLayout() {
-		return FALSE;
-	}
+    /**
+     * @return boolean
+     */
+    public function hasLayout()
+    {
+        return false;
+    }
 
-	/**
-	 * @param RenderingContextInterface $renderingContext
-	 * @return string
-	 */
-	public function getLayoutName(RenderingContextInterface $renderingContext) {
-		return '';
-	}
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return string
+     */
+    public function getLayoutName(RenderingContextInterface $renderingContext)
+    {
+        return '';
+    }
 
-	/**
-	 * @param RenderingContextInterface $renderingContext
-	 * @return void
-	 */
-	public function addCompiledNamespaces(RenderingContextInterface $renderingContext) {
-	}
-
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return void
+     */
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
+    {
+    }
 }

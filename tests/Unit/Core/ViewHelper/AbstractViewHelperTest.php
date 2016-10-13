@@ -23,342 +23,371 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  * Testcase for AbstractViewHelper
  *
  */
-class AbstractViewHelperTest extends UnitTestCase {
+class AbstractViewHelperTest extends UnitTestCase
+{
 
-	/**
-	 * @var array
-	 */
-	protected $fixtureMethodParameters = array(
-		'param1' => array(
-			'position' => 0,
-			'optional' => FALSE,
-			'type' => 'integer',
-			'defaultValue' => NULL
-		),
-		'param2' => array(
-			'position' => 1,
-			'optional' => FALSE,
-			'type' => 'array',
-			'array' => TRUE,
-			'defaultValue' => NULL
-		),
-		'param3' => array(
-			'position' => 2,
-			'optional' => TRUE,
-			'type' => 'string',
-			'array' => FALSE,
-			'defaultValue' => 'default'
-		),
-	);
+    /**
+     * @var array
+     */
+    protected $fixtureMethodParameters = [
+        'param1' => [
+            'position' => 0,
+            'optional' => false,
+            'type' => 'integer',
+            'defaultValue' => null
+        ],
+        'param2' => [
+            'position' => 1,
+            'optional' => false,
+            'type' => 'array',
+            'array' => true,
+            'defaultValue' => null
+        ],
+        'param3' => [
+            'position' => 2,
+            'optional' => true,
+            'type' => 'string',
+            'array' => false,
+            'defaultValue' => 'default'
+        ],
+    ];
 
-	/**
-	 * @var array
-	 */
-	protected $fixtureMethodTags = array(
-		'param' => array(
-			'integer $param1 P1 Stuff',
-			'array $param2 P2 Stuff',
-			'string $param3 P3 Stuff'
-		)
-	);
+    /**
+     * @var array
+     */
+    protected $fixtureMethodTags = [
+        'param' => [
+            'integer $param1 P1 Stuff',
+            'array $param2 P2 Stuff',
+            'string $param3 P3 Stuff'
+        ]
+    ];
 
     /**
      * @param mixed $input
      * @param mixed $expected
      * @dataProvider getFirstElementOfNonEmptyTestValues
      */
-    public function testGetFirstElementOfNonEmpty($input, $expected) {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('dummy'));
+    public function testGetFirstElementOfNonEmpty($input, $expected)
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy']);
         $this->assertEquals($expected, $viewHelper->_call('getFirstElementOfNonEmpty', $input));
     }
 
     /**
      * @return array
      */
-    public function getFirstElementOfNonEmptyTestValues() {
-        return array(
-            'plain array' => array(array('foo', 'bar'), 'foo'),
-            'iterator w/o arrayaccess' => array(new \IteratorIterator(new \ArrayIterator(array('foo', 'bar'))), 'foo'),
-            'unsupported value' => array('unsupported value', NULL)
-        );
+    public function getFirstElementOfNonEmptyTestValues()
+    {
+        return [
+            'plain array' => [['foo', 'bar'], 'foo'],
+            'iterator w/o arrayaccess' => [new \IteratorIterator(new \ArrayIterator(['foo', 'bar'])), 'foo'],
+            'unsupported value' => ['unsupported value', null]
+        ];
     }
 
-	/**
-	 * @test
-	 */
-	public function argumentsCanBeRegistered() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, NULL, array(), '', FALSE);
+    /**
+     * @test
+     */
+    public function argumentsCanBeRegistered()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
 
-		$name = 'This is a name';
-		$description = 'Example desc';
-		$type = 'string';
-		$isRequired = TRUE;
-		$expected = new ArgumentDefinition($name, $type, $description, $isRequired);
+        $name = 'This is a name';
+        $description = 'Example desc';
+        $type = 'string';
+        $isRequired = true;
+        $expected = new ArgumentDefinition($name, $type, $description, $isRequired);
 
-		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-		$this->assertEquals(array($name => $expected), $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
-	}
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $this->assertEquals([$name => $expected], $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
+    }
 
-	/**
-	 * @test
-	 * @expectedException Exception
-	 */
-	public function registeringTheSameArgumentNameAgainThrowsException() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, NULL, array(), '', FALSE);
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function registeringTheSameArgumentNameAgainThrowsException()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
 
-		$name = 'shortName';
-		$description = 'Example desc';
-		$type = 'string';
-		$isRequired = TRUE;
+        $name = 'shortName';
+        $description = 'Example desc';
+        $type = 'string';
+        $isRequired = true;
 
-		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-		$viewHelper->_call('registerArgument', $name, 'integer', $description, $isRequired);
-	}
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('registerArgument', $name, 'integer', $description, $isRequired);
+    }
 
-	/**
-	 * @test
-	 */
-	public function overrideArgumentOverwritesExistingArgumentDefinition() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, NULL, array(), '', FALSE);
+    /**
+     * @test
+     */
+    public function overrideArgumentOverwritesExistingArgumentDefinition()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
 
-		$name = 'argumentName';
-		$description = 'argument description';
-		$overriddenDescription = 'overwritten argument description';
-		$type = 'string';
-		$overriddenType = 'integer';
-		$isRequired = TRUE;
-		$expected = new ArgumentDefinition($name, $overriddenType, $overriddenDescription, $isRequired);
+        $name = 'argumentName';
+        $description = 'argument description';
+        $overriddenDescription = 'overwritten argument description';
+        $type = 'string';
+        $overriddenType = 'integer';
+        $isRequired = true;
+        $expected = new ArgumentDefinition($name, $overriddenType, $overriddenDescription, $isRequired);
 
-		$viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-		$viewHelper->_call('overrideArgument', $name, $overriddenType, $overriddenDescription, $isRequired);
-		$this->assertEquals($viewHelper->prepareArguments(), array($name => $expected), 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
-	}
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('overrideArgument', $name, $overriddenType, $overriddenDescription, $isRequired);
+        $this->assertEquals($viewHelper->prepareArguments(), [$name => $expected], 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
+    }
 
-	/**
-	 * @test
-	 * @expectedException Exception
-	 */
-	public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, NULL, array(), '', FALSE);
+    /**
+     * @test
+     * @expectedException Exception
+     */
+    public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
 
-		$viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', TRUE);
-	}
+        $viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', true);
+    }
 
-	/**
-	 * @test
-	 */
-	public function prepareArgumentsCallsInitializeArguments() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('initializeArguments'), array(), '', FALSE);
+    /**
+     * @test
+     */
+    public function prepareArgumentsCallsInitializeArguments()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['initializeArguments'], [], '', false);
 
-		$viewHelper->expects($this->once())->method('initializeArguments');
+        $viewHelper->expects($this->once())->method('initializeArguments');
 
-		$viewHelper->prepareArguments();
-	}
+        $viewHelper->prepareArguments();
+    }
 
-	/**
-	 * @test
-	 */
-	public function validateArgumentsCallsPrepareArguments() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('prepareArguments'), array(), '', FALSE);
+    /**
+     * @test
+     */
+    public function validateArgumentsCallsPrepareArguments()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array()));
+        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([]));
 
-		$viewHelper->validateArguments();
-	}
+        $viewHelper->validateArguments();
+    }
 
-	/**
-	 * @test
-	 */
-	public function validateArgumentsAcceptsAllObjectsImplemtingArrayAccessAsAnArray() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('prepareArguments'), array(), '', FALSE);
+    /**
+     * @test
+     */
+    public function validateArgumentsAcceptsAllObjectsImplemtingArrayAccessAsAnArray()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-		$viewHelper->setArguments(array('test' => new \ArrayObject));
-		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array('test' => new ArgumentDefinition('test', 'array', FALSE, 'documentation'))));
-		$viewHelper->validateArguments();
-	}
+        $viewHelper->setArguments(['test' => new \ArrayObject]);
+        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(['test' => new ArgumentDefinition('test', 'array', false, 'documentation')]));
+        $viewHelper->validateArguments();
+    }
 
-	/**
-	 * @test
-	 */
-	public function validateArgumentsCallsTheRightValidators() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('prepareArguments'), array(), '', FALSE);
+    /**
+     * @test
+     */
+    public function validateArgumentsCallsTheRightValidators()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-		$viewHelper->setArguments(array('test' => 'Value of argument'));
+        $viewHelper->setArguments(['test' => 'Value of argument']);
 
-		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array(
-			'test' => new ArgumentDefinition('test', 'string', FALSE, 'documentation')
-		)));
+        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([
+            'test' => new ArgumentDefinition('test', 'string', false, 'documentation')
+        ]));
 
-		$viewHelper->validateArguments();
-	}
+        $viewHelper->validateArguments();
+    }
 
-	/**
-	 * @test
-	 * @expectedException \InvalidArgumentException
-	 */
-	public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('prepareArguments'), array(), '', FALSE);
+    /**
+     * @test
+     * @expectedException \InvalidArgumentException
+     */
+    public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-		$viewHelper->setArguments(array('test' => 'test'));
+        $viewHelper->setArguments(['test' => 'test']);
 
-		$viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(array(
-			'test' => new ArgumentDefinition('test', 'stdClass', FALSE, 'documentation')
-		)));
+        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([
+            'test' => new ArgumentDefinition('test', 'stdClass', false, 'documentation')
+        ]));
 
-		$viewHelper->validateArguments();
-	}
+        $viewHelper->validateArguments();
+    }
 
-	/**
-	 * @test
-	 */
-	public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('validateArguments', 'initialize', 'callRenderMethod'));
-		$viewHelper->expects($this->at(0))->method('validateArguments');
-		$viewHelper->expects($this->at(1))->method('initialize');
-		$viewHelper->expects($this->at(2))->method('callRenderMethod')->will($this->returnValue('Output'));
+    /**
+     * @test
+     */
+    public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['validateArguments', 'initialize', 'callRenderMethod']);
+        $viewHelper->expects($this->at(0))->method('validateArguments');
+        $viewHelper->expects($this->at(1))->method('initialize');
+        $viewHelper->expects($this->at(2))->method('callRenderMethod')->will($this->returnValue('Output'));
 
-		$expectedOutput = 'Output';
-		$actualOutput = $viewHelper->initializeArgumentsAndRender(array('argument1' => 'value1'));
-		$this->assertEquals($expectedOutput, $actualOutput);
-	}
+        $expectedOutput = 'Output';
+        $actualOutput = $viewHelper->initializeArgumentsAndRender(['argument1' => 'value1']);
+        $this->assertEquals($expectedOutput, $actualOutput);
+    }
 
-	/**
-	 * @test
-	 */
-	public function setRenderingContextShouldSetInnerVariables() {
-		$templateVariableContainer = $this->getMock(StandardVariableProvider::class);
-		$viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
+    /**
+     * @test
+     */
+    public function setRenderingContextShouldSetInnerVariables()
+    {
+        $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
+        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
 
-		$view = new TemplateView();
-		$renderingContext = new RenderingContext($view);
-		$renderingContext->setVariableProvider($templateVariableContainer);
-		$renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
+        $view = new TemplateView();
+        $renderingContext = new RenderingContext($view);
+        $renderingContext->setVariableProvider($templateVariableContainer);
+        $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
 
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('prepareArguments'), array(), '', FALSE);
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-		$viewHelper->setRenderingContext($renderingContext);
+        $viewHelper->setRenderingContext($renderingContext);
 
-		$this->assertSame($viewHelper->_get('templateVariableContainer'), $templateVariableContainer);
-		$this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
-	}
+        $this->assertSame($viewHelper->_get('templateVariableContainer'), $templateVariableContainer);
+        $this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testRenderChildrenCallsRenderChildrenClosureIfSet() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, NULL, array(), '', FALSE);
-		$viewHelper->setRenderChildrenClosure(function() { return 'foobar'; });
-		$result = $viewHelper->renderChildren();
-		$this->assertEquals('foobar', $result);
-	}
+    /**
+     * @test
+     */
+    public function testRenderChildrenCallsRenderChildrenClosureIfSet()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
+        $viewHelper->setRenderChildrenClosure(function () {
+            return 'foobar';
+        });
+        $result = $viewHelper->renderChildren();
+        $this->assertEquals('foobar', $result);
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getValidateArgumentsTestValues
-	 * @param ArgumentDefinition $argument
-	 * @param mixed $value
-	 */
-	public function testValidateArguments(ArgumentDefinition $argument, $value) {
-		$viewHelper = $this->getAccessibleMock(
-			AbstractViewHelper::class,
-			array('hasArgument', 'prepareArguments'),
-			array(), '', FALSE
-		);
-		$viewHelper->expects($this->once())->method('prepareArguments')->willReturn(
-			array($argument->getName() => $argument, 'second' => $argument)
-		);
-		$viewHelper->setArguments(array($argument->getName() => $value, 'second' => $value));
-		$viewHelper->expects($this->at(1))->method('hasArgument')->with($argument->getName())->willReturn(TRUE);
-		$viewHelper->expects($this->at(2))->method('hasArgument')->with('second')->willReturn(TRUE);
-		$viewHelper->validateArguments();
-	}
+    /**
+     * @test
+     * @dataProvider getValidateArgumentsTestValues
+     * @param ArgumentDefinition $argument
+     * @param mixed $value
+     */
+    public function testValidateArguments(ArgumentDefinition $argument, $value)
+    {
+        $viewHelper = $this->getAccessibleMock(
+            AbstractViewHelper::class,
+            ['hasArgument', 'prepareArguments'],
+            [],
+            '',
+            false
+        );
+        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn(
+            [$argument->getName() => $argument, 'second' => $argument]
+        );
+        $viewHelper->setArguments([$argument->getName() => $value, 'second' => $value]);
+        $viewHelper->expects($this->at(1))->method('hasArgument')->with($argument->getName())->willReturn(true);
+        $viewHelper->expects($this->at(2))->method('hasArgument')->with('second')->willReturn(true);
+        $viewHelper->validateArguments();
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getValidateArgumentsTestValues() {
-		return array(
-			array(new ArgumentDefinition('test', 'boolean', '', TRUE, FALSE), FALSE),
-			array(new ArgumentDefinition('test', 'boolean', '', TRUE), TRUE),
-			array(new ArgumentDefinition('test', 'string', '', TRUE), 'foobar'),
-			array(new ArgumentDefinition('test', 'string', '', TRUE), new UserWithToString('foobar')),
-			array(new ArgumentDefinition('test', 'array', '', TRUE), array('foobar')),
-			array(new ArgumentDefinition('test', 'mixed', '', TRUE), new \DateTime('now')),
-			array(new ArgumentDefinition('test', 'DateTime[]', '', TRUE), array(new \DateTime('now'), 'test')),
-			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array()),
-			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array('foobar')),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getValidateArgumentsTestValues()
+    {
+        return [
+            [new ArgumentDefinition('test', 'boolean', '', true, false), false],
+            [new ArgumentDefinition('test', 'boolean', '', true), true],
+            [new ArgumentDefinition('test', 'string', '', true), 'foobar'],
+            [new ArgumentDefinition('test', 'string', '', true), new UserWithToString('foobar')],
+            [new ArgumentDefinition('test', 'array', '', true), ['foobar']],
+            [new ArgumentDefinition('test', 'mixed', '', true), new \DateTime('now')],
+            [new ArgumentDefinition('test', 'DateTime[]', '', true), [new \DateTime('now'), 'test']],
+            [new ArgumentDefinition('test', 'string[]', '', true), []],
+            [new ArgumentDefinition('test', 'string[]', '', true), ['foobar']],
+        ];
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getValidateArgumentsErrorsTestValues
-	 * @param ArgumentDefinition $argument
-	 * @param mixed $value
-	 */
-	public function testValidateArgumentsErrors(ArgumentDefinition $argument, $value) {
-		$viewHelper = $this->getAccessibleMock(
-			AbstractViewHelper::class,
-			array('hasArgument', 'prepareArguments'),
-			array(), '', FALSE
-		);
-		$viewHelper->expects($this->once())->method('prepareArguments')->willReturn(array($argument->getName() => $argument));
-		$viewHelper->expects($this->once())->method('hasArgument')->with($argument->getName())->willReturn(TRUE);
-		$viewHelper->setArguments(array($argument->getName() => $value));
-		$this->setExpectedException('InvalidArgumentException');
-		$viewHelper->validateArguments();
-	}
+    /**
+     * @test
+     * @dataProvider getValidateArgumentsErrorsTestValues
+     * @param ArgumentDefinition $argument
+     * @param mixed $value
+     */
+    public function testValidateArgumentsErrors(ArgumentDefinition $argument, $value)
+    {
+        $viewHelper = $this->getAccessibleMock(
+            AbstractViewHelper::class,
+            ['hasArgument', 'prepareArguments'],
+            [],
+            '',
+            false
+        );
+        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn([$argument->getName() => $argument]);
+        $viewHelper->expects($this->once())->method('hasArgument')->with($argument->getName())->willReturn(true);
+        $viewHelper->setArguments([$argument->getName() => $value]);
+        $this->setExpectedException('InvalidArgumentException');
+        $viewHelper->validateArguments();
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getValidateArgumentsErrorsTestValues() {
-		return array(
-			array(new ArgumentDefinition('test', 'boolean', '', TRUE), array('bad')),
-			array(new ArgumentDefinition('test', 'string', '', TRUE), new \ArrayIterator(array('bar'))),
-			array(new ArgumentDefinition('test', 'DateTime', '', TRUE), new \ArrayIterator(array('bar'))),
-			array(new ArgumentDefinition('test', 'DateTime', '', TRUE), 'test'),
-			array(new ArgumentDefinition('test', 'integer', '', TRUE), new \ArrayIterator(array('bar'))),
-			array(new ArgumentDefinition('test', 'object', '', TRUE), 'test'),
-			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array(new \DateTime('now'),'test')),
-			array(new ArgumentDefinition('test', 'string[]', '', TRUE), array(null)),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getValidateArgumentsErrorsTestValues()
+    {
+        return [
+            [new ArgumentDefinition('test', 'boolean', '', true), ['bad']],
+            [new ArgumentDefinition('test', 'string', '', true), new \ArrayIterator(['bar'])],
+            [new ArgumentDefinition('test', 'DateTime', '', true), new \ArrayIterator(['bar'])],
+            [new ArgumentDefinition('test', 'DateTime', '', true), 'test'],
+            [new ArgumentDefinition('test', 'integer', '', true), new \ArrayIterator(['bar'])],
+            [new ArgumentDefinition('test', 'object', '', true), 'test'],
+            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'),'test']],
+            [new ArgumentDefinition('test', 'string[]', '', true), [null]],
+        ];
+    }
 
-	/**
-	 * @test
-	 */
-	public function testValidateAdditionalArgumentsThrowsExceptionIfNotEmpty() {
-		$viewHelper = $this->getAccessibleMock(
-			AbstractViewHelper::class,
-			array('dummy'),
-			array(), '', FALSE
-		);
-		$this->setExpectedException(Exception::class);
-		$viewHelper->validateAdditionalArguments(array('foo' => 'bar'));
-	}
+    /**
+     * @test
+     */
+    public function testValidateAdditionalArgumentsThrowsExceptionIfNotEmpty()
+    {
+        $viewHelper = $this->getAccessibleMock(
+            AbstractViewHelper::class,
+            ['dummy'],
+            [],
+            '',
+            false
+        );
+        $this->setExpectedException(Exception::class);
+        $viewHelper->validateAdditionalArguments(['foo' => 'bar']);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testCompileReturnsAndAssignsExpectedPhpCode() {
-		$view = new TemplateView();
-		$context = new RenderingContext($view);
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('dummy'), array(), '', FALSE);
-		$node = new ViewHelperNode($context, 'f', 'comment', array(), new ParsingState());
-		$init = '';
-		$compiler = new TemplateCompiler();
-		$result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
-		$this->assertEmpty($init);
-		$this->assertEquals(get_class($viewHelper) . '::renderStatic(foobar, baz, $renderingContext)', $result);
-	}
+    /**
+     * @test
+     */
+    public function testCompileReturnsAndAssignsExpectedPhpCode()
+    {
+        $view = new TemplateView();
+        $context = new RenderingContext($view);
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
+        $node = new ViewHelperNode($context, 'f', 'comment', [], new ParsingState());
+        $init = '';
+        $compiler = new TemplateCompiler();
+        $result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
+        $this->assertEmpty($init);
+        $this->assertEquals(get_class($viewHelper) . '::renderStatic(foobar, baz, $renderingContext)', $result);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testDefaultResetStateMethodDoesNothing() {
-		$viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, array('dummy'), array(), '', FALSE);
-		$this->assertNull($viewHelper->resetState());
-	}
-
+    /**
+     * @test
+     */
+    public function testDefaultResetStateMethodDoesNothing()
+    {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
+        $this->assertNull($viewHelper->resetState());
+    }
 }

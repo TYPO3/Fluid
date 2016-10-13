@@ -35,17 +35,18 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  * text</div></div></div>
  * </output>
  */
-class SpacelessViewHelper extends AbstractViewHelper {
+class SpacelessViewHelper extends AbstractViewHelper
+{
 
-	use CompileWithRenderStatic;
+    use CompileWithRenderStatic;
 
-	/**
-	 * @param array $arguments
-	 * @param \Closure $childClosure
-	 * @param RenderingContextInterface $renderingContext
-	 */
-	public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext) {
-		return trim(preg_replace('/\\>\\s+\\</', '><', $childClosure()));
-	}
-
+    /**
+     * @param array $arguments
+     * @param \Closure $childClosure
+     * @param RenderingContextInterface $renderingContext
+     */
+    public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext)
+    {
+        return trim(preg_replace('/\\>\\s+\\</', '><', $childClosure()));
+    }
 }

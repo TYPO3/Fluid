@@ -15,8 +15,8 @@ require __DIR__ . '/include/view_init.php';
 // variables to understand what goes on.
 $view->assign('vartrue', TRUE);
 $view->assign('varfalse', FALSE);
-$view->assign('vararray1', array('foo' => 'bar'));
-$view->assign('vararray2', array('bar' => 'foo'));
+$view->assign('vararray1', ['foo' => 'bar']);
+$view->assign('vararray2', ['bar' => 'foo']);
 $view->assign('checkTernary', TRUE);
 $view->assign('ternaryTrue', 'The ternary expression is TRUE');
 $view->assign('ternaryFalse', 'The ternary expression is FALSE');

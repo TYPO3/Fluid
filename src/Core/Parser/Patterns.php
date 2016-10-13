@@ -9,16 +9,17 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 /**
  * Class Patterns
  */
-abstract class Patterns {
+abstract class Patterns
+{
 
-	const NAMESPACEPREFIX = 'http://typo3.org/ns/';
-	const NAMESPACESUFFIX = '/ViewHelpers';
+    const NAMESPACEPREFIX = 'http://typo3.org/ns/';
+    const NAMESPACESUFFIX = '/ViewHelpers';
 
-	/**
-	 * This regular expression splits the input string at all dynamic tags, AND
-	 * on all <![CDATA[...]]> sections.
-	 */
-	static public $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
+    /**
+     * This regular expression splits the input string at all dynamic tags, AND
+     * on all <![CDATA[...]]> sections.
+     */
+    static public $SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS = '/
 		(
 			(?: <\/?                                      # Start dynamic tags
 					(?:(?:[a-zA-Z0-9\\.]*):[a-zA-Z0-9\\.]+)  # A tag consists of the namespace prefix and word characters
@@ -40,10 +41,10 @@ abstract class Patterns {
 			)
 		)/xs';
 
-	/**
-	 * This regular expression scans if the input string is a ViewHelper tag
-	 */
-	static public $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/
+    /**
+     * This regular expression scans if the input string is a ViewHelper tag
+     */
+    static public $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG = '/
 		^<                                                # A Tag begins with <
 		(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):         # Then comes the Namespace prefix followed by a :
 		(?P<MethodIdentifier>                             # Now comes the Name of the ViewHelper
@@ -67,17 +68,17 @@ abstract class Patterns {
 		(?P<Selfclosing>\/?)                              # A tag might be selfclosing
 		>$/x';
 
-	/**
-	 * This regular expression scans if the input string is a closing ViewHelper
-	 * tag.
-	 */
-	static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG =
-		'/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
+    /**
+     * This regular expression scans if the input string is a closing ViewHelper
+     * tag.
+     */
+    static public $SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG =
+        '/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 
-	/**
-	 * This regular expression splits the tag arguments into its parts
-	 */
-	static public $SPLIT_PATTERN_TAGARGUMENTS = '/
+    /**
+     * This regular expression splits the tag arguments into its parts
+     */
+    static public $SPLIT_PATTERN_TAGARGUMENTS = '/
 		(?:                                              #
 			\s*                                          #
 			(?P<Argument>                                # The attribute name
@@ -95,22 +96,22 @@ abstract class Patterns {
 		)
 		/xs';
 
-	/**
-	 * This pattern detects the escaping modifier
-	 */
-	static public $SCAN_PATTERN_ESCAPINGMODIFIER = '/{escapingEnabled\s*=\s*(?P<enabled>true|false)\s*}/i';
+    /**
+     * This pattern detects the escaping modifier
+     */
+    static public $SCAN_PATTERN_ESCAPINGMODIFIER = '/{escapingEnabled\s*=\s*(?P<enabled>true|false)\s*}/i';
 
-	/**
-	 * This pattern detects CDATA sections and outputs the text between opening
-	 * and closing CDATA.
-	 */
-	static public $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
+    /**
+     * This pattern detects CDATA sections and outputs the text between opening
+     * and closing CDATA.
+     */
+    static public $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
 
-	/**
-	 * Pattern which splits the shorthand syntax into different tokens. The
-	 * "shorthand syntax" is everything like {...}
-	 */
-	static public $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
+    /**
+     * Pattern which splits the shorthand syntax into different tokens. The
+     * "shorthand syntax" is everything like {...}
+     */
+    static public $SPLIT_PATTERN_SHORTHANDSYNTAX = '/
 		(
 			{                                 # Start of shorthand syntax
 				(?:                           # Shorthand syntax is either composed of...
@@ -123,15 +124,15 @@ abstract class Patterns {
 			}                                 # End of shorthand syntax
 		)/x';
 
-	/**
-	 * Pattern which detects the object accessor syntax:
-	 * {object.some.value}, additionally it detects ViewHelpers like
-	 * {f:for(param1:bla)} and chaining like
-	 * {object.some.value -> f:bla.blubb() -> f:bla.blubb2()}
-	 *
-	 * THIS IS ALMOST THE SAME AS IN $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
-	 */
-	static public $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
+    /**
+     * Pattern which detects the object accessor syntax:
+     * {object.some.value}, additionally it detects ViewHelpers like
+     * {f:for(param1:bla)} and chaining like
+     * {object.some.value -> f:bla.blubb() -> f:bla.blubb2()}
+     *
+     * THIS IS ALMOST THE SAME AS IN $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
+     */
+    static public $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS = '/
 		^{                                                  # Start of shorthand syntax
 			                                                # A shorthand syntax is either...
 			(?P<Object>[a-zA-Z0-9_\-\.\{\}]*)                 # ... an object accessor
@@ -165,11 +166,11 @@ abstract class Patterns {
 			)
 		}$/x';
 
-	/**
-	 * THIS IS ALMOST THE SAME AS $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-	 *
-	 */
-	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
+    /**
+     * THIS IS ALMOST THE SAME AS $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
+     *
+     */
+    static public $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
 
 		(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]+)    # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
 		:
@@ -191,15 +192,15 @@ abstract class Patterns {
 		\)                                          # Closing parameter brackets of ViewHelper
 		/x';
 
-	/**
-	 * Pattern which detects the array/object syntax like in JavaScript, so it
-	 * detects strings like:
-	 * {object: value, object2: {nested: array}, object3: "Some string"}
-	 *
-	 * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-	 *
-	 */
-	static public $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
+    /**
+     * Pattern which detects the array/object syntax like in JavaScript, so it
+     * detects strings like:
+     * {object: value, object2: {nested: array}, object3: "Some string"}
+     *
+     * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
+     *
+     */
+    static public $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
 		(?P<Recursion>                                             # Start the recursive part of the regular expression - describing the array syntax
 			{                                                      # Each array needs to start with {
 				(?P<Array>                                         # Start sub-match
@@ -222,12 +223,12 @@ abstract class Patterns {
 			}                                                      # Each array ends with }
 		)$/x';
 
-	/**
-	 * This pattern splits an array into its parts. It is quite similar to the
-	 * pattern above.
-	 *
-	 */
-	static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
+    /**
+     * This pattern splits an array into its parts. It is quite similar to the
+     * pattern above.
+     *
+     */
+    static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
 		(?P<ArrayPart>                                             # Start sub-match
 			(?P<Key>                                               # The keys of the array
 				[a-zA-Z0-9\\-_]+                                   # Unquoted
@@ -246,5 +247,4 @@ abstract class Patterns {
 			)                                                      # END possible value options
 		)                                                          # End array part sub-match
 	/x';
-
 }

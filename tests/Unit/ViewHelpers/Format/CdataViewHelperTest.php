@@ -13,30 +13,34 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper;
 /**
  * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper
  */
-class CdataViewHelperTest extends ViewHelperBaseTestcase {
+class CdataViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @param array $arguments
-	 * @param string|NULL $tagContent
-	 * @param string $expected
-	 * @dataProvider getRenderTestValues
-	 */
-	public function testRender($arguments, $tagContent, $expected) {
-		$instance = new CdataViewHelper();
-		$instance->setArguments($arguments);
-		$instance->setRenderingContext(new RenderingContextFixture());
-		$instance->setRenderChildrenClosure(function() use ($tagContent) { return $tagContent; });
-		$this->assertEquals($expected, $instance->initializeArgumentsAndRender());
-	}
+    /**
+     * @param array $arguments
+     * @param string|NULL $tagContent
+     * @param string $expected
+     * @dataProvider getRenderTestValues
+     */
+    public function testRender($arguments, $tagContent, $expected)
+    {
+        $instance = new CdataViewHelper();
+        $instance->setArguments($arguments);
+        $instance->setRenderingContext(new RenderingContextFixture());
+        $instance->setRenderChildrenClosure(function () use ($tagContent) {
+            return $tagContent;
+        });
+        $this->assertEquals($expected, $instance->initializeArgumentsAndRender());
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getRenderTestValues() {
-		return array(
-			array(array(), 'test1', '<![CDATA[test1]]>'),
-			array(array('value' => 'test2'), NULL, '<![CDATA[test2]]>'),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getRenderTestValues()
+    {
+        return [
+            [[], 'test1', '<![CDATA[test1]]>'],
+            [['value' => 'test2'], null, '<![CDATA[test2]]>'],
+        ];
+    }
 }

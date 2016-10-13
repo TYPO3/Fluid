@@ -21,294 +21,321 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 /**
  * Class RenderingContextFixture
  */
-class RenderingContextFixture implements RenderingContextInterface {
+class RenderingContextFixture implements RenderingContextInterface
+{
 
-	/**
-	 * @var VariableProviderInterface
-	 */
-	public $variableProvider;
+    /**
+     * @var VariableProviderInterface
+     */
+    public $variableProvider;
 
-	/**
-	 * @var ViewHelperVariableContainer
-	 */
-	public $viewHelperVariableContainer;
+    /**
+     * @var ViewHelperVariableContainer
+     */
+    public $viewHelperVariableContainer;
 
-	/**
-	 * @var ViewHelperResolver
-	 */
-	public $viewHelperResolver;
+    /**
+     * @var ViewHelperResolver
+     */
+    public $viewHelperResolver;
 
-	/**
-	 * @var ViewHelperInvoker
-	 */
-	public $viewHelperInvoker;
+    /**
+     * @var ViewHelperInvoker
+     */
+    public $viewHelperInvoker;
 
-	/**
-	 * @var TemplateParser
-	 */
-	public $templateParser;
+    /**
+     * @var TemplateParser
+     */
+    public $templateParser;
 
-	/**
-	 * @var TemplateCompiler
-	 */
-	public $templateCompiler;
+    /**
+     * @var TemplateCompiler
+     */
+    public $templateCompiler;
 
-	/**
-	 * @var TemplatePaths
-	 */
-	public $templatePaths;
+    /**
+     * @var TemplatePaths
+     */
+    public $templatePaths;
 
-	/**
-	 * @var FluidCacheInterface
-	 */
-	public $cache;
+    /**
+     * @var FluidCacheInterface
+     */
+    public $cache;
 
-	/**
-	 * @var TemplateProcessorInterface[]
-	 */
-	public $templateProcessors = array();
+    /**
+     * @var TemplateProcessorInterface[]
+     */
+    public $templateProcessors = [];
 
-	/**
-	 * @var array
-	 */
-	public $expressionNodeTypes = array();
+    /**
+     * @var array
+     */
+    public $expressionNodeTypes = [];
 
-	/**
-	 * @var string
-	 */
-	public $controllerName = 'Default';
+    /**
+     * @var string
+     */
+    public $controllerName = 'Default';
 
-	/**
-	 * @var string
-	 */
-	public $controllerAction = 'Default';
+    /**
+     * @var string
+     */
+    public $controllerAction = 'Default';
 
-	/**
-	 * @var boolean
-	 */
-	public $cacheDisabled = FALSE;
+    /**
+     * @var boolean
+     */
+    public $cacheDisabled = false;
 
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		$mockBuilder = new \PHPUnit_Framework_MockObject_Generator();
-		$this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
-		$this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, array('dummy'));
-		$this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, array('dummy'));
-		$this->viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, array('dummy'));
-		$this->templateParser = $mockBuilder->getMock(TemplateParser::class, array('dummy'));
-		$this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, array('dummy'));
-		$this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, array('dummy'));
-		$this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
-	}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $mockBuilder = new \PHPUnit_Framework_MockObject_Generator();
+        $this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
+        $this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, ['dummy']);
+        $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
+        $this->viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, ['dummy']);
+        $this->templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
+        $this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, ['dummy']);
+        $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
+        $this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
+    }
 
-	/**
-	 * Injects the template variable container containing all variables available through ObjectAccessors
-	 * in the template
-	 *
-	 * @param VariableProviderInterface $variableProvider The template variable container to set
-	 */
-	public function setVariableProvider(VariableProviderInterface $variableProvider) {
-		$this->variableProvider = $variableProvider;
-	}
+    /**
+     * Injects the template variable container containing all variables available through ObjectAccessors
+     * in the template
+     *
+     * @param VariableProviderInterface $variableProvider The template variable container to set
+     */
+    public function setVariableProvider(VariableProviderInterface $variableProvider)
+    {
+        $this->variableProvider = $variableProvider;
+    }
 
-	/**
-	 * @param ViewHelperVariableContainer $viewHelperVariableContainer
-	 */
-	public function setViewHelperVariableContainer(ViewHelperVariableContainer $viewHelperVariableContainer) {
-		$this->viewHelperVariableContainer = $viewHelperVariableContainer;
-	}
+    /**
+     * @param ViewHelperVariableContainer $viewHelperVariableContainer
+     */
+    public function setViewHelperVariableContainer(ViewHelperVariableContainer $viewHelperVariableContainer)
+    {
+        $this->viewHelperVariableContainer = $viewHelperVariableContainer;
+    }
 
-	/**
-	 * Get the template variable container
-	 *
-	 * @return VariableProviderInterface The Template Variable Container
-	 */
-	public function getVariableProvider() {
-		return $this->variableProvider;
-	}
+    /**
+     * Get the template variable container
+     *
+     * @return VariableProviderInterface The Template Variable Container
+     */
+    public function getVariableProvider()
+    {
+        return $this->variableProvider;
+    }
 
-	/**
-	 * Get the ViewHelperVariableContainer
-	 *
-	 * @return ViewHelperVariableContainer
-	 */
-	public function getViewHelperVariableContainer() {
-		return $this->viewHelperVariableContainer;
-	}
+    /**
+     * Get the ViewHelperVariableContainer
+     *
+     * @return ViewHelperVariableContainer
+     */
+    public function getViewHelperVariableContainer()
+    {
+        return $this->viewHelperVariableContainer;
+    }
 
-	/**
-	 * @return ViewHelperResolver
-	 */
-	public function getViewHelperResolver() {
-		return $this->viewHelperResolver;
-	}
+    /**
+     * @return ViewHelperResolver
+     */
+    public function getViewHelperResolver()
+    {
+        return $this->viewHelperResolver;
+    }
 
-	/**
-	 * @param ViewHelperResolver $viewHelperResolver
-	 * @return void
-	 */
-	public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver) {
-		$this->viewHelperResolver = $viewHelperResolver;
-	}
+    /**
+     * @param ViewHelperResolver $viewHelperResolver
+     * @return void
+     */
+    public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver)
+    {
+        $this->viewHelperResolver = $viewHelperResolver;
+    }
 
-	/**
-	 * @return ViewHelperInvoker
-	 */
-	public function getViewHelperInvoker() {
-		return $this->viewHelperInvoker;
-	}
+    /**
+     * @return ViewHelperInvoker
+     */
+    public function getViewHelperInvoker()
+    {
+        return $this->viewHelperInvoker;
+    }
 
-	/**
-	 * @param ViewHelperInvoker $viewHelperInvoker
-	 * @return void
-	 */
-	public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker) {
-		$this->viewHelperInvoker = $viewHelperInvoker;
-	}
+    /**
+     * @param ViewHelperInvoker $viewHelperInvoker
+     * @return void
+     */
+    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker)
+    {
+        $this->viewHelperInvoker = $viewHelperInvoker;
+    }
 
-	/**
-	 * Inject the Template Parser
-	 *
-	 * @param TemplateParser $templateParser The template parser
-	 * @return void
-	 */
-	public function setTemplateParser(TemplateParser $templateParser) {
-		$this->templateParser = $templateParser;
-	}
+    /**
+     * Inject the Template Parser
+     *
+     * @param TemplateParser $templateParser The template parser
+     * @return void
+     */
+    public function setTemplateParser(TemplateParser $templateParser)
+    {
+        $this->templateParser = $templateParser;
+    }
 
-	/**
-	 * @return TemplateParser
-	 */
-	public function getTemplateParser() {
-		return $this->templateParser;
-	}
+    /**
+     * @return TemplateParser
+     */
+    public function getTemplateParser()
+    {
+        return $this->templateParser;
+    }
 
-	/**
-	 * @param TemplateCompiler $templateCompiler
-	 * @return void
-	 */
-	public function setTemplateCompiler(TemplateCompiler $templateCompiler) {
-		$this->templateCompiler = $templateCompiler;
-	}
+    /**
+     * @param TemplateCompiler $templateCompiler
+     * @return void
+     */
+    public function setTemplateCompiler(TemplateCompiler $templateCompiler)
+    {
+        $this->templateCompiler = $templateCompiler;
+    }
 
-	/**
-	 * @return TemplateCompiler
-	 */
-	public function getTemplateCompiler() {
-		return $this->templateCompiler;
-	}
+    /**
+     * @return TemplateCompiler
+     */
+    public function getTemplateCompiler()
+    {
+        return $this->templateCompiler;
+    }
 
-	/**
-	 * @return TemplatePaths
-	 */
-	public function getTemplatePaths() {
-		return $this->templatePaths;
-	}
+    /**
+     * @return TemplatePaths
+     */
+    public function getTemplatePaths()
+    {
+        return $this->templatePaths;
+    }
 
-	/**
-	 * @param TemplatePaths $templatePaths
-	 * @return void
-	 */
-	public function setTemplatePaths(TemplatePaths $templatePaths) {
-		$this->templatePaths = $templatePaths;
-	}
+    /**
+     * @param TemplatePaths $templatePaths
+     * @return void
+     */
+    public function setTemplatePaths(TemplatePaths $templatePaths)
+    {
+        $this->templatePaths = $templatePaths;
+    }
 
-	/**
-	 * Delegation: Set the cache used by this View's compiler
-	 *
-	 * @param FluidCacheInterface $cache
-	 * @return void
-	 */
-	public function setCache(FluidCacheInterface $cache) {
-		$this->cache = $cache;
-	}
+    /**
+     * Delegation: Set the cache used by this View's compiler
+     *
+     * @param FluidCacheInterface $cache
+     * @return void
+     */
+    public function setCache(FluidCacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
 
-	/**
-	 * @return FluidCacheInterface
-	 */
-	public function getCache() {
-		return $this->cache;
-	}
+    /**
+     * @return FluidCacheInterface
+     */
+    public function getCache()
+    {
+        return $this->cache;
+    }
 
-	/**
-	 * @return boolean
-	 */
-	public function isCacheEnabled() {
-		return !$this->cacheDisabled;
-	}
+    /**
+     * @return boolean
+     */
+    public function isCacheEnabled()
+    {
+        return !$this->cacheDisabled;
+    }
 
-	/**
-	 * Delegation: Set TemplateProcessor instances in the parser
-	 * through a public API.
-	 *
-	 * @param TemplateProcessorInterface[] $templateProcessors
-	 * @return void
-	 */
-	public function setTemplateProcessors(array $templateProcessors) {
-		$this->templateProcessors = $templateProcessors;
-	}
+    /**
+     * Delegation: Set TemplateProcessor instances in the parser
+     * through a public API.
+     *
+     * @param TemplateProcessorInterface[] $templateProcessors
+     * @return void
+     */
+    public function setTemplateProcessors(array $templateProcessors)
+    {
+        $this->templateProcessors = $templateProcessors;
+    }
 
-	/**
-	 * @return TemplateProcessorInterface[]
-	 */
-	public function getTemplateProcessors() {
-		return $this->templateProcessors;
-	}
+    /**
+     * @return TemplateProcessorInterface[]
+     */
+    public function getTemplateProcessors()
+    {
+        return $this->templateProcessors;
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getExpressionNodeTypes() {
-		return $this->expressionNodeTypes;
-	}
+    /**
+     * @return array
+     */
+    public function getExpressionNodeTypes()
+    {
+        return $this->expressionNodeTypes;
+    }
 
-	/**
-	 * @param array $expressionNodeTypes
-	 * @return void
-	 */
-	public function setExpressionNodeTypes(array $expressionNodeTypes) {
-		$this->expressionNodeTypes = $expressionNodeTypes;
-	}
+    /**
+     * @param array $expressionNodeTypes
+     * @return void
+     */
+    public function setExpressionNodeTypes(array $expressionNodeTypes)
+    {
+        $this->expressionNodeTypes = $expressionNodeTypes;
+    }
 
-	/**
-	 * Build parser configuration
-	 *
-	 * @return Configuration
-	 */
-	public function buildParserConfiguration() {
-		return new Configuration();
-	}
+    /**
+     * Build parser configuration
+     *
+     * @return Configuration
+     */
+    public function buildParserConfiguration()
+    {
+        return new Configuration();
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getControllerName() {
-		return $this->controllerName;
-	}
+    /**
+     * @return string
+     */
+    public function getControllerName()
+    {
+        return $this->controllerName;
+    }
 
-	/**
-	 * @param string $controllerName
-	 * @return void
-	 */
-	public function setControllerName($controllerName) {
-		$this->controllerName;
-	}
+    /**
+     * @param string $controllerName
+     * @return void
+     */
+    public function setControllerName($controllerName)
+    {
+        $this->controllerName;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getControllerAction() {
-		return $this->controllerAction;
-	}
+    /**
+     * @return string
+     */
+    public function getControllerAction()
+    {
+        return $this->controllerAction;
+    }
 
-	/**
-	 * @param string $action
-	 * @return void
-	 */
-	public function setControllerAction($action) {
-		$this->controllerAction = $action;
-	}
-
+    /**
+     * @param string $action
+     * @return void
+     */
+    public function setControllerAction($action)
+    {
+        $this->controllerAction = $action;
+    }
 }

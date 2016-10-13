@@ -26,15 +26,15 @@ $paths = $view->getTemplatePaths();
 // and `TemplatesB` and render that using this MVC approach, you will be
 // rendering the file located in `TemplatesB` becase this folder was last
 // and is checked first (think of these paths as prioritised fallbacks).
-$paths->setTemplateRootPaths(array(
+$paths->setTemplateRootPaths([
 	__DIR__ . '/../Resources/Private/Templates/'
-));
-$paths->setLayoutRootPaths(array(
+]);
+$paths->setLayoutRootPaths([
 	__DIR__ . '/../Resources/Private/Layouts/'
-));
-$paths->setPartialRootPaths(array(
+]);
+$paths->setPartialRootPaths([
 	__DIR__ . '/../Resources/Private/Partials/'
-));
+]);
 
 if ($FLUID_CACHE_DIRECTORY) {
 	// Configure View's caching to use ./examples/cache/ as caching directory.

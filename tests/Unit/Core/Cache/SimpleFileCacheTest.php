@@ -15,114 +15,124 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Class SimpleFileCacheTest
  */
-class SimpleFileCacheTest extends UnitTestCase {
+class SimpleFileCacheTest extends UnitTestCase
+{
 
-	/**
-	 * @var vfsStreamDirectory
-	 */
-	protected $directory;
+    /**
+     * @var vfsStreamDirectory
+     */
+    protected $directory;
 
-	/**
-	 * @return void
-	 */
-	public function setUp() {
-		$this->directory = vfsStream::setup('cache');
-	}
+    /**
+     * @return void
+     */
+    public function setUp()
+    {
+        $this->directory = vfsStream::setup('cache');
+    }
 
-	/**
-	 * @test
-	 */
-	public function testGetCacheWarmerReturnsStandardCacheWarmer() {
-		$cache = new SimpleFileCache(vfsStream::url('cache/'));
-		$this->assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
-	}
+    /**
+     * @test
+     */
+    public function testGetCacheWarmerReturnsStandardCacheWarmer()
+    {
+        $cache = new SimpleFileCache(vfsStream::url('cache/'));
+        $this->assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
+    }
 
-	/**
-	 * @test
-	 */
-	public function testGetReturnsFalseWhenNotFound() {
-		$cache = new SimpleFileCache(vfsStream::url('cache/'));
-		$result = $cache->get('test');
-		$this->assertFalse($result);
-	}
+    /**
+     * @test
+     */
+    public function testGetReturnsFalseWhenNotFound()
+    {
+        $cache = new SimpleFileCache(vfsStream::url('cache/'));
+        $result = $cache->get('test');
+        $this->assertFalse($result);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testGetReturnsTrueWhenFound() {
-		$cache = new SimpleFileCache(vfsStream::url('cache/'));
-		$result = $cache->get('DateTime');
-		$this->assertTrue($result);
-	}
+    /**
+     * @test
+     */
+    public function testGetReturnsTrueWhenFound()
+    {
+        $cache = new SimpleFileCache(vfsStream::url('cache/'));
+        $result = $cache->get('DateTime');
+        $this->assertTrue($result);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testAddToCacheCreatesFile() {
-		$cache = new SimpleFileCache(vfsStream::url('cache/'));
-		$cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
-		$this->assertFileExists(vfsStream::url('cache/test.php'));
-	}
+    /**
+     * @test
+     */
+    public function testAddToCacheCreatesFile()
+    {
+        $cache = new SimpleFileCache(vfsStream::url('cache/'));
+        $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
+        $this->assertFileExists(vfsStream::url('cache/test.php'));
+    }
 
-	/**
-	 * @test
-	 */
-	public function testGetLoadsFile() {
-		$cache = new SimpleFileCache(vfsStream::url('cache/'));
-		$cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
-		$result = $cache->get('test');
-		$this->assertTrue(class_exists('MyCachedClass', FALSE));
-	}
+    /**
+     * @test
+     */
+    public function testGetLoadsFile()
+    {
+        $cache = new SimpleFileCache(vfsStream::url('cache/'));
+        $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
+        $result = $cache->get('test');
+        $this->assertTrue(class_exists('MyCachedClass', false));
+    }
 
-	/**
-	 * @test
-	 */
-	public function testFlushAll() {
-		$cache = $this->getMock(
-			SimpleFileCache::class,
-			array('getCachedFilenames', 'flushByFilename', 'flushByname'),
-			array(vfsStream::url('cache/'))
-		);
-		$cache->expects($this->never())->method('flushByName');
-		$cache->expects($this->once())->method('getCachedFilenames')->willReturn(array('foo'));
-		$cache->expects($this->once())->method('flushByFilename')->with('foo');
-		$cache->flush();
-	}
+    /**
+     * @test
+     */
+    public function testFlushAll()
+    {
+        $cache = $this->getMock(
+            SimpleFileCache::class,
+            ['getCachedFilenames', 'flushByFilename', 'flushByname'],
+            [vfsStream::url('cache/')]
+        );
+        $cache->expects($this->never())->method('flushByName');
+        $cache->expects($this->once())->method('getCachedFilenames')->willReturn(['foo']);
+        $cache->expects($this->once())->method('flushByFilename')->with('foo');
+        $cache->flush();
+    }
 
-	/**
-	 * @test
-	 */
-	public function testFlushByName() {
-		$cache = $this->getMock(
-			SimpleFileCache::class,
-			array('getCachedFilenames', 'flushByFilename', 'flushByname'),
-			array(vfsStream::url('cache/'))
-		);
-		$cache->expects($this->once())->method('flushByName')->with('foo');
-		$cache->expects($this->never())->method('getCachedFilenames');
-		$cache->expects($this->never())->method('flushByFilename');
-		$cache->flush('foo');
-	}
+    /**
+     * @test
+     */
+    public function testFlushByName()
+    {
+        $cache = $this->getMock(
+            SimpleFileCache::class,
+            ['getCachedFilenames', 'flushByFilename', 'flushByname'],
+            [vfsStream::url('cache/')]
+        );
+        $cache->expects($this->once())->method('flushByName')->with('foo');
+        $cache->expects($this->never())->method('getCachedFilenames');
+        $cache->expects($this->never())->method('flushByFilename');
+        $cache->flush('foo');
+    }
 
-	/**
-	 * @test
-	 */
-	public function testFlushByNameDeletesSingleFile() {
-		$cache = new SimpleFileCache(vfsStream::url('cache/'));
-		$cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
-		$cache->set('test2', '<?php' . PHP_EOL . 'class MyOtherCachedClass {}' . PHP_EOL);
-		$cache->flush('test');
-		$this->assertFileExists(vfsStream::url('cache/test2.php'));
-		$this->assertFileNotExists(vfsStream::url('cache/test.php'));
-	}
+    /**
+     * @test
+     */
+    public function testFlushByNameDeletesSingleFile()
+    {
+        $cache = new SimpleFileCache(vfsStream::url('cache/'));
+        $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
+        $cache->set('test2', '<?php' . PHP_EOL . 'class MyOtherCachedClass {}' . PHP_EOL);
+        $cache->flush('test');
+        $this->assertFileExists(vfsStream::url('cache/test2.php'));
+        $this->assertFileNotExists(vfsStream::url('cache/test.php'));
+    }
 
-	/**
-	 * @test
-	 */
-	public function testSetThrowsRuntimeExceptionOnInvalidDirectory() {
-		$cache = new SimpleFileCache('/does/not/exist');
-		$this->setExpectedException('RuntimeException');
-		$cache->set('foo', 'bar');
-	}
-
+    /**
+     * @test
+     */
+    public function testSetThrowsRuntimeExceptionOnInvalidDirectory()
+    {
+        $cache = new SimpleFileCache('/does/not/exist');
+        $this->setExpectedException('RuntimeException');
+        $cache->set('foo', 'bar');
+    }
 }

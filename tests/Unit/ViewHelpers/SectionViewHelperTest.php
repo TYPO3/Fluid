@@ -18,37 +18,39 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
  * Testcase for SectionViewHelper
  *
  */
-class SectionViewHelperTest extends UnitTestCase {
+class SectionViewHelperTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function sectionIsAddedToParseVariableContainer() {
-		$section = new SectionViewHelper();
+    /**
+     * @test
+     */
+    public function sectionIsAddedToParseVariableContainer()
+    {
+        $section = new SectionViewHelper();
 
-		$viewHelperNodeMock = $this->getMock(ViewHelperNode::class, array(), array(), '', FALSE);
-		$viewHelperArguments = array(
-			'name' => new TextNode('sectionName')
-		);
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $viewHelperArguments = [
+            'name' => new TextNode('sectionName')
+        ];
 
-		$variableContainer = new StandardVariableProvider();
+        $variableContainer = new StandardVariableProvider();
 
-		$section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
+        $section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 
-		$this->assertTrue($variableContainer->exists('1457379500_sections'), 'Sections array was not created, albeit it should.');
-		$sections = $variableContainer->get('1457379500_sections');
-		$this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
-	}
+        $this->assertTrue($variableContainer->exists('1457379500_sections'), 'Sections array was not created, albeit it should.');
+        $sections = $variableContainer->get('1457379500_sections');
+        $this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
+    }
 
-	/**
-	 * @test
-	 */
-	public function testCompileReturnsEmptyString() {
-		$section = new SectionViewHelper();
-		$init = '';
-		$viewHelperNodeMock = $this->getMock(ViewHelperNode::class, array(), array(), '', FALSE);
-		$result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
-		$this->assertEquals('\'\'', $result);
-	}
-
+    /**
+     * @test
+     */
+    public function testCompileReturnsEmptyString()
+    {
+        $section = new SectionViewHelper();
+        $init = '';
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
+        $this->assertEquals('\'\'', $result);
+    }
 }

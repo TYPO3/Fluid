@@ -13,9 +13,11 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * [Enter description here]
  *
  */
-class TransparentSyntaxTreeNode extends AbstractNode {
-	public $variableContainer;
+class TransparentSyntaxTreeNode extends AbstractNode
+{
+    public $variableContainer;
 
-	public function evaluate(RenderingContextInterface $renderingContext) {
-	}
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+    }
 }

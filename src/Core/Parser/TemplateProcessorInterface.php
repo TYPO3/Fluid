@@ -22,22 +22,22 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
  * custom instructions from the template which are
  * then used to manipulate how ViewHelpers resolve.
  */
-interface TemplateProcessorInterface {
+interface TemplateProcessorInterface
+{
 
-	/**
-	 * @param RenderingContextInterface $renderingContext
-	 * @return void
-	 */
-	public function setRenderingContext(RenderingContextInterface $renderingContext);
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return void
+     */
+    public function setRenderingContext(RenderingContextInterface $renderingContext);
 
-	/**
-	 * Pre-process the template source before it is
-	 * returned to the TemplateParser or passed to
-	 * the next TemplateProcessorInterface instance.
-	 *
-	 * @param string $templateSource
-	 * @return string
-	 */
-	public function preProcessSource($templateSource);
-
+    /**
+     * Pre-process the template source before it is
+     * returned to the TemplateParser or passed to
+     * the next TemplateProcessorInterface instance.
+     *
+     * @param string $templateSource
+     * @return string
+     */
+    public function preProcessSource($templateSource);
 }

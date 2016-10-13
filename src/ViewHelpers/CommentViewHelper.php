@@ -45,38 +45,39 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class CommentViewHelper extends AbstractViewHelper {
+class CommentViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeChildren = false;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * Comments out the tag content
-	 *
-	 * @return string
-	 * @api
-	 */
-	public function render() {
-	}
+    /**
+     * Comments out the tag content
+     *
+     * @return string
+     * @api
+     */
+    public function render()
+    {
+    }
 
-	/**
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 * @return null
-	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		return NULL;
-	}
-
-
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @param ViewHelperNode $node
+     * @param TemplateCompiler $compiler
+     * @return null
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return null;
+    }
 }

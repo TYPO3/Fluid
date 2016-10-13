@@ -17,75 +17,79 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 /**
  * Class CastingExpressionNodeTest
  */
-class CastingExpressionNodeTest extends UnitTestCase {
+class CastingExpressionNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function testEvaluateDelegatesToEvaluteExpression() {
-		$subject = $this->getMock(
-			CastingExpressionNode::class,
-			array('dummy'),
-			array('{test as string}', array('test as string'))
-		);
-		$view = new TemplateView();
-		$context = new RenderingContext($view);
-		$context->setVariableProvider(new StandardVariableProvider(array('test' => 10)));
-		$result = $subject->evaluate($context);
-		$this->assertSame('10', $result);
-	}
+    /**
+     * @test
+     */
+    public function testEvaluateDelegatesToEvaluteExpression()
+    {
+        $subject = $this->getMock(
+            CastingExpressionNode::class,
+            ['dummy'],
+            ['{test as string}', ['test as string']]
+        );
+        $view = new TemplateView();
+        $context = new RenderingContext($view);
+        $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
+        $result = $subject->evaluate($context);
+        $this->assertSame('10', $result);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testEvaluateInvalidExpressionThrowsException() {
-		$view = new TemplateView();
-		$renderingContext = new RenderingContext($view);
-		$renderingContext->setVariableProvider(new StandardVariableProvider());
-		$this->setExpectedException(ExpressionException::class);
-		$result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', array());
-	}
+    /**
+     * @test
+     */
+    public function testEvaluateInvalidExpressionThrowsException()
+    {
+        $view = new TemplateView();
+        $renderingContext = new RenderingContext($view);
+        $renderingContext->setVariableProvider(new StandardVariableProvider());
+        $this->setExpectedException(ExpressionException::class);
+        $result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
+    }
 
-	/**
-	 * @dataProvider getEvaluateExpressionTestValues
-	 * @param string $expression
-	 * @param array $variables
-	 * @param mixed $expected
-	 */
-	public function testEvaluateExpression($expression, array $variables, $expected) {
-		$view = new TemplateView();
-		$renderingContext = new RenderingContext($view);
-		$renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-		$result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, array());
-		$this->assertEquals($expected, $result);
-	}
+    /**
+     * @dataProvider getEvaluateExpressionTestValues
+     * @param string $expression
+     * @param array $variables
+     * @param mixed $expected
+     */
+    public function testEvaluateExpression($expression, array $variables, $expected)
+    {
+        $view = new TemplateView();
+        $renderingContext = new RenderingContext($view);
+        $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
+        $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
+        $this->assertEquals($expected, $result);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getEvaluateExpressionTestValues() {
-		$arrayIterator = new \ArrayIterator(array('foo', 'bar'));
-		$toArrayObject = new UserWithToArray('foobar');
-		return array(
-			array('123 as string', array(), '123'),
-			array('1 as boolean', array(), TRUE),
-			array('0 as boolean', array(), FALSE),
-			array('0 as array', array(), array(0)),
-			array('1 as array', array(), array(1)),
-			array('mystring as float', array('mystring' => '1.23'), 1.23),
-			array('myvariable as integer', array('myvariable' => 321), 321),
-			array('myinteger as string', array('myinteger' => 111), '111'),
-			array('mydate as DateTime', array('mydate' => 90000), \DateTime::createFromFormat('U', 90000)),
-			array('mydate as DateTime', array('mydate' => 'January'), new \DateTime('January')),
-			array('1 as namestoredinvariables', array('namestoredinvariables' => 'boolean'), TRUE),
-			array('mystring as array', array('mystring' => 'foo,bar'), array('foo', 'bar')),
-			array('mystring as array', array('mystring' => 'foo , bar'), array('foo', 'bar')),
-			array('myiterator as array', array('myiterator' => $arrayIterator), array('foo', 'bar')),
-			array('myarray as array', array('myarray' => array('foo', 'bar')), array('foo', 'bar')),
-			array('myboolean as array', array('myboolean' => TRUE), array()),
-			array('myboolean as array', array('myboolean' => FALSE), array()),
-			array('myobject as array', array('myobject' => $toArrayObject), array('name' => 'foobar')),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getEvaluateExpressionTestValues()
+    {
+        $arrayIterator = new \ArrayIterator(['foo', 'bar']);
+        $toArrayObject = new UserWithToArray('foobar');
+        return [
+            ['123 as string', [], '123'],
+            ['1 as boolean', [], true],
+            ['0 as boolean', [], false],
+            ['0 as array', [], [0]],
+            ['1 as array', [], [1]],
+            ['mystring as float', ['mystring' => '1.23'], 1.23],
+            ['myvariable as integer', ['myvariable' => 321], 321],
+            ['myinteger as string', ['myinteger' => 111], '111'],
+            ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', 90000)],
+            ['mydate as DateTime', ['mydate' => 'January'], new \DateTime('January')],
+            ['1 as namestoredinvariables', ['namestoredinvariables' => 'boolean'], true],
+            ['mystring as array', ['mystring' => 'foo,bar'], ['foo', 'bar']],
+            ['mystring as array', ['mystring' => 'foo , bar'], ['foo', 'bar']],
+            ['myiterator as array', ['myiterator' => $arrayIterator], ['foo', 'bar']],
+            ['myarray as array', ['myarray' => ['foo', 'bar']], ['foo', 'bar']],
+            ['myboolean as array', ['myboolean' => true], []],
+            ['myboolean as array', ['myboolean' => false], []],
+            ['myobject as array', ['myobject' => $toArrayObject], ['name' => 'foobar']],
+        ];
+    }
 }

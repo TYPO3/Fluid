@@ -47,39 +47,41 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class DisableViewHelper extends AbstractViewHelper {
+class DisableViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeChildren = false;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return string
-	 */
-	public function render() {
-		return $this->renderChildren();
-	}
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        return $this->renderChildren();
+    }
 
-	/**
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 */
-	public function compile(
-		$argumentsName,
-		$closureName,
-		&$initializationPhpCode,
-		ViewHelperNode $node,
-		TemplateCompiler $compiler
-	) {
-		$compiler->disable();
-	}
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @param ViewHelperNode $node
+     * @param TemplateCompiler $compiler
+     */
+    public function compile(
+        $argumentsName,
+        $closureName,
+        &$initializationPhpCode,
+        ViewHelperNode $node,
+        TemplateCompiler $compiler
+    ) {
+        $compiler->disable();
+    }
 }

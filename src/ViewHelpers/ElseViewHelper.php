@@ -30,38 +30,41 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
-class ElseViewHelper extends AbstractViewHelper {
+class ElseViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
+    }
 
-	/**
-	 * @return string the rendered string
-	 * @api
-	 */
-	public function render() {
-		return $this->renderChildren();
-	}
+    /**
+     * @return string the rendered string
+     * @api
+     */
+    public function render()
+    {
+        return $this->renderChildren();
+    }
 
-	/**
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 * @return string|NULL
-	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		return '\'\'';
-	}
-
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @param ViewHelperNode $node
+     * @param TemplateCompiler $compiler
+     * @return string|NULL
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return '\'\'';
+    }
 }

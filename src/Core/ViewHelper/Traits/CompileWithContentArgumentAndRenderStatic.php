@@ -17,7 +17,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * the normal render children closure, if that named
  * argument is specified and not empty.
  */
-trait CompileWithContentArgumentAndRenderStatic {
+trait CompileWithContentArgumentAndRenderStatic
+{
 
     /**
      * Name of variable that contains the value to use
@@ -43,13 +44,16 @@ trait CompileWithContentArgumentAndRenderStatic {
      * @return string Rendered string
      * @api
      */
-    public function render() {
+    public function render()
+    {
         $argumentName = $this->resolveContentArgumentName();
         $arguments = $this->arguments;
         if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function() use ($arguments, $argumentName) { return $arguments[$argumentName]; };
+            $renderChildrenClosure = function () use ($arguments, $argumentName) {
+                return $arguments[$argumentName];
+            };
         } else {
-            $renderChildrenClosure = call_user_func_array(array($this, 'buildRenderChildrenClosure'), array());
+            $renderChildrenClosure = call_user_func_array([$this, 'buildRenderChildrenClosure'], []);
         }
         return self::renderStatic(
             $arguments,
@@ -88,9 +92,10 @@ trait CompileWithContentArgumentAndRenderStatic {
     /**
      * @return string
      */
-    protected function resolveContentArgumentName() {
+    protected function resolveContentArgumentName()
+    {
         if (empty($this->contentArgumentName)) {
-            $registeredArguments = call_user_func_array(array($this, 'prepareArguments'), array());
+            $registeredArguments = call_user_func_array([$this, 'prepareArguments'], []);
             foreach ($registeredArguments as $registeredArgument) {
                 if (!$registeredArgument->isRequired()) {
                     $this->contentArgumentName = $registeredArgument->getName();
@@ -104,5 +109,4 @@ trait CompileWithContentArgumentAndRenderStatic {
         }
         return $this->contentArgumentName;
     }
-
 }

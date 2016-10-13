@@ -12,7 +12,8 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Class FailedCompilingStateTest
  */
-class FailedCompilingStateTest extends UnitTestCase {
+class FailedCompilingStateTest extends UnitTestCase
+{
 
     /**
      * @param string $property
@@ -20,8 +21,9 @@ class FailedCompilingStateTest extends UnitTestCase {
      * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testGetter($property, $value) {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, array('dummy'));
+    public function testGetter($property, $value)
+    {
+        $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set($property, $value);
         $method = 'get' . ucfirst($property);
         $this->assertEquals($value, $subject->$method());
@@ -33,8 +35,9 @@ class FailedCompilingStateTest extends UnitTestCase {
      * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testSetter($property, $value) {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, array('dummy'));
+    public function testSetter($property, $value)
+    {
+        $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set($property, $value);
         $method = 'set' . ucfirst($property);
         $subject->$method($value);
@@ -44,21 +47,22 @@ class FailedCompilingStateTest extends UnitTestCase {
     /**
      * @test
      */
-    public function testAddMitigation() {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, array('dummy'));
-        $subject->_set('mitigations', array('m1'));
+    public function testAddMitigation()
+    {
+        $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
+        $subject->_set('mitigations', ['m1']);
         $subject->addMitigation('m2');
-        $this->assertAttributeEquals(array('m1', 'm2'), 'mitigations', $subject);
+        $this->assertAttributeEquals(['m1', 'm2'], 'mitigations', $subject);
     }
 
     /**
      * @return array
      */
-    public function getPropertyTestValues() {
-        return array(
-            array('failureReason', 'test reason'),
-            array('mitigations', array('m1', 'm2'))
-        );
+    public function getPropertyTestValues()
+    {
+        return [
+            ['failureReason', 'test reason'],
+            ['mitigations', ['m1', 'm2']]
+        ];
     }
-
 }

@@ -14,106 +14,109 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for BooleanNode
  */
-class BooleanParserTest extends UnitTestCase {
-	/**
-	 * @var RenderingContextInterface
-	 */
-	protected $renderingContext;
+class BooleanParserTest extends UnitTestCase
+{
+    /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
 
-	/**
-	 * Setup fixture
-	 */
-	public function setUp() {
-		$this->renderingContext = new RenderingContextFixture();
-	}
+    /**
+     * Setup fixture
+     */
+    public function setUp()
+    {
+        $this->renderingContext = new RenderingContextFixture();
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getSomeEvaluationTestValues
-	 * @param string $comparison
-	 * @param boolean $expected
-	 */
-	public function testSomeEvaluations($comparison, $expected, $variables = array()) {
-		$parser = new BooleanParser();
-		$this->assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
+    /**
+     * @test
+     * @dataProvider getSomeEvaluationTestValues
+     * @param string $comparison
+     * @param boolean $expected
+     */
+    public function testSomeEvaluations($comparison, $expected, $variables = [])
+    {
+        $parser = new BooleanParser();
+        $this->assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
 
-		$compiledEvaluation = $parser->compile($comparison);
-		$functionName = 'expression_' . md5($comparison . rand(0, 100000));
-		eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
-		$this->assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
-	}
+        $compiledEvaluation = $parser->compile($comparison);
+        $functionName = 'expression_' . md5($comparison . rand(0, 100000));
+        eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
+        $this->assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getSomeEvaluationTestValues() {
-		return array(
-			array('(1 && false) || false || \'foobar\' == \'foobar\'', TRUE),
+    /**
+     * @return array
+     */
+    public function getSomeEvaluationTestValues()
+    {
+        return [
+            ['(1 && false) || false || \'foobar\' == \'foobar\'', true],
 
-			array('0', FALSE),
-			array('!(1)', FALSE),
-			array('!1', FALSE),
-			array('', FALSE),
-			array('false', FALSE),
-			array('FALSE', FALSE),
-			array('fAlSe', FALSE),
-			array('   false   ', FALSE),
-			array('   FALSE   ', FALSE),
-			array('     ', FALSE),
-			array('\'foo\' == \'bar\'', FALSE),
-			array('\'foo\' != \'foo\'', FALSE),
+            ['0', false],
+            ['!(1)', false],
+            ['!1', false],
+            ['', false],
+            ['false', false],
+            ['FALSE', false],
+            ['fAlSe', false],
+            ['   false   ', false],
+            ['   FALSE   ', false],
+            ['     ', false],
+            ['\'foo\' == \'bar\'', false],
+            ['\'foo\' != \'foo\'', false],
 
-			array('1', TRUE),
-			array('true', true),
-			array('TRUE', true),
-			array('tRuE', true),
-			array('   true   ', true),
-			array('   TRUE   ', true),
-			array('\' FALSE \'', true),
-			array('\' \\\'FALSE \'', true),
-			array('\' \\"FALSE \'', true),
-			array('foo', true),
-			array('\'foo\' == \'foo\'', TRUE),
-			array('\'foo\' != \'bar\'', TRUE),
-			array('(1 && false) || false || \'foobar\' == \'foobar\'', TRUE),
+            ['1', true],
+            ['true', true],
+            ['TRUE', true],
+            ['tRuE', true],
+            ['   true   ', true],
+            ['   TRUE   ', true],
+            ['\' FALSE \'', true],
+            ['\' \\\'FALSE \'', true],
+            ['\' \\"FALSE \'', true],
+            ['foo', true],
+            ['\'foo\' == \'foo\'', true],
+            ['\'foo\' != \'bar\'', true],
+            ['(1 && false) || false || \'foobar\' == \'foobar\'', true],
 
-			array('0 == \'0\'', TRUE, array()),
-			array('0 == "0"', TRUE, array()),
-			array('0 === \'0\'', FALSE, array()),
+            ['0 == \'0\'', true, []],
+            ['0 == "0"', true, []],
+            ['0 === \'0\'', false, []],
 
-			array('1 == 1', TRUE),
-			array('1 == 0', FALSE),
-			array('1 >= 1', TRUE),
-			array('1 <= 1', TRUE),
-			array('1 >= 2', FALSE),
-			array('2 <= 1', FALSE),
-			array('-1 != -1', FALSE),
-			array('-1 == -1', TRUE),
-			array('-1 < 0', TRUE),
-			array('-1 > -2', TRUE),
+            ['1 == 1', true],
+            ['1 == 0', false],
+            ['1 >= 1', true],
+            ['1 <= 1', true],
+            ['1 >= 2', false],
+            ['2 <= 1', false],
+            ['-1 != -1', false],
+            ['-1 == -1', true],
+            ['-1 < 0', true],
+            ['-1 > -2', true],
 
-			array('1 > FALSE',  TRUE),
-			array('FALSE > 0',  FALSE),
+            ['1 > FALSE',  true],
+            ['FALSE > 0',  false],
 
-			array('2 % 2', FALSE),
-			array('1 % 2', TRUE),
+            ['2 % 2', false],
+            ['1 % 2', true],
 
-			array('0 && 1', FALSE),
-			array('1 && 1', TRUE),
-			array('0 || 0', FALSE),
-			array('0 || 1', TRUE),
-			array('(0 && 1) || 1', TRUE),
-			array('(0 && 0) || 0', TRUE),
-			array('(1 && 1) || 0', TRUE),
+            ['0 && 1', false],
+            ['1 && 1', true],
+            ['0 || 0', false],
+            ['0 || 1', true],
+            ['(0 && 1) || 1', true],
+            ['(0 && 0) || 0', true],
+            ['(1 && 1) || 0', true],
 
-			// edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
-			array('\'foo\' == 0', TRUE),
-			array('1.1 >= foo', TRUE),
-			array('\'foo\' > 0', FALSE),
+            // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
+            ['\'foo\' == 0', true],
+            ['1.1 >= foo', true],
+            ['\'foo\' > 0', false],
 
-			array('{foo}', TRUE, array('foo' => TRUE)),
-			array('{foo} == FALSE', TRUE, array('foo' => FALSE))
-		);
-	}
-
+            ['{foo}', true, ['foo' => true]],
+            ['{foo} == FALSE', true, ['foo' => false]]
+        ];
+    }
 }

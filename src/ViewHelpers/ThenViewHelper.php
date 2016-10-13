@@ -16,33 +16,35 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
  */
-class ThenViewHelper extends AbstractViewHelper {
+class ThenViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * Just render everything.
-	 *
-	 * @return string the rendered string
-	 * @api
-	 */
-	public function render() {
-		return $this->renderChildren();
-	}
+    /**
+     * Just render everything.
+     *
+     * @return string the rendered string
+     * @api
+     */
+    public function render()
+    {
+        return $this->renderChildren();
+    }
 
-	/**
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 * @return string
-	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		return '\'\'';
-	}
-
+    /**
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @param ViewHelperNode $node
+     * @param TemplateCompiler $compiler
+     * @return string
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return '\'\'';
+    }
 }

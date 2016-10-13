@@ -55,67 +55,72 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
  *
  * @api
  */
-class SectionViewHelper extends AbstractViewHelper {
+class SectionViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * Initialize the arguments.
-	 *
-	 * @return void
-	 * @api
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('name', 'string', 'Name of the section', TRUE);
-	}
+    /**
+     * Initialize the arguments.
+     *
+     * @return void
+     * @api
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('name', 'string', 'Name of the section', true);
+    }
 
-	/**
-	 * Save the associated ViewHelper node in a static public class variable.
-	 * called directly after the ViewHelper was built.
-	 *
-	 * @param ViewHelperNode $node
-	 * @param TextNode[] $arguments
-	 * @param VariableProviderInterface $variableContainer
-	 * @return void
-	 */
-	public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer) {
-		/** @var $nameArgument TextNode */
-		$nameArgument = $arguments['name'];
-		$sectionName = $nameArgument->getText();
-		$sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : array();
-		$sections[$sectionName] = $node;
-		$variableContainer['1457379500_sections'] = $sections;
-	}
+    /**
+     * Save the associated ViewHelper node in a static public class variable.
+     * called directly after the ViewHelper was built.
+     *
+     * @param ViewHelperNode $node
+     * @param TextNode[] $arguments
+     * @param VariableProviderInterface $variableContainer
+     * @return void
+     */
+    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
+    {
+        /** @var $nameArgument TextNode */
+        $nameArgument = $arguments['name'];
+        $sectionName = $nameArgument->getText();
+        $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
+        $sections[$sectionName] = $node;
+        $variableContainer['1457379500_sections'] = $sections;
+    }
 
-	/**
-	 * Rendering directly returns all child nodes.
-	 *
-	 * @return string HTML String of all child nodes.
-	 * @api
-	 */
-	public function render() {
-		$content = '';
-		if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
-			$this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
-			$content = $this->renderChildren();
-		}
-		return $content;
-	}
+    /**
+     * Rendering directly returns all child nodes.
+     *
+     * @return string HTML String of all child nodes.
+     * @api
+     */
+    public function render()
+    {
+        $content = '';
+        if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+            $this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
+            $content = $this->renderChildren();
+        }
+        return $content;
+    }
 
-	/**
-	 * The inner contents of a section should not be rendered.
-	 *
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 * @return string
-	 */
-	public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler) {
-		return '\'\'';
-	}
+    /**
+     * The inner contents of a section should not be rendered.
+     *
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @param ViewHelperNode $node
+     * @param TemplateCompiler $compiler
+     * @return string
+     */
+    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    {
+        return '\'\'';
+    }
 }

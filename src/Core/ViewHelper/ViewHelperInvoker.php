@@ -28,52 +28,53 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  * responsible for invoking the render method of a ViewHelper
  * using the properties available in the node.
  */
-class ViewHelperInvoker {
+class ViewHelperInvoker
+{
 
-	/**
-	 * Invoke the ViewHelper described by the ViewHelperNode, the properties
-	 * of which will already have been filled by the ViewHelperResolver.
-	 *
-	 * @param string|ViewHelperInterface $viewHelperClassNameOrInstance
-	 * @param array $arguments
-	 * @param RenderingContextInterface $renderingContext
-	 * @param null|\Closure $renderChildrenClosure
-	 * @return string
-	 */
-	public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = NULL) {
-		$viewHelperResolver = $renderingContext->getViewHelperResolver();
-		if ($viewHelperClassNameOrInstance instanceof ViewHelperInterface) {
-			$viewHelper = $viewHelperClassNameOrInstance;
-		} else {
-			$viewHelper = $viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassNameOrInstance);
-		}
-		$expectedViewHelperArguments = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
+    /**
+     * Invoke the ViewHelper described by the ViewHelperNode, the properties
+     * of which will already have been filled by the ViewHelperResolver.
+     *
+     * @param string|ViewHelperInterface $viewHelperClassNameOrInstance
+     * @param array $arguments
+     * @param RenderingContextInterface $renderingContext
+     * @param null|\Closure $renderChildrenClosure
+     * @return string
+     */
+    public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = null)
+    {
+        $viewHelperResolver = $renderingContext->getViewHelperResolver();
+        if ($viewHelperClassNameOrInstance instanceof ViewHelperInterface) {
+            $viewHelper = $viewHelperClassNameOrInstance;
+        } else {
+            $viewHelper = $viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassNameOrInstance);
+        }
+        $expectedViewHelperArguments = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
 
-		// Rendering process
-		$evaluatedArguments = array();
-		$undeclaredArguments = array();
-		foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
-			if (isset($arguments[$argumentName])) {
-				/** @var NodeInterface|mixed $argumentValue */
-				$argumentValue = $arguments[$argumentName];
-				$evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-			} else {
-				$evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
-			}
-		}
-		foreach ($arguments as $argumentName => $argumentValue) {
-			if (!array_key_exists($argumentName, $evaluatedArguments)) {
-				$undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-			}
-		}
+        // Rendering process
+        $evaluatedArguments = [];
+        $undeclaredArguments = [];
+        foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
+            if (isset($arguments[$argumentName])) {
+                /** @var NodeInterface|mixed $argumentValue */
+                $argumentValue = $arguments[$argumentName];
+                $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+            } else {
+                $evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
+            }
+        }
+        foreach ($arguments as $argumentName => $argumentValue) {
+            if (!array_key_exists($argumentName, $evaluatedArguments)) {
+                $undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+            }
+        }
 
-		if ($renderChildrenClosure) {
-			$viewHelper->setRenderChildrenClosure($renderChildrenClosure);
-		}
-		$viewHelper->setRenderingContext($renderingContext);
-		$viewHelper->setArguments($evaluatedArguments);
-		$viewHelper->handleAdditionalArguments($undeclaredArguments);
-		return $viewHelper->initializeArgumentsAndRender();
-	}
-
+        if ($renderChildrenClosure) {
+            $viewHelper->setRenderChildrenClosure($renderChildrenClosure);
+        }
+        $viewHelper->setRenderingContext($renderingContext);
+        $viewHelper->setArguments($evaluatedArguments);
+        $viewHelper->handleAdditionalArguments($undeclaredArguments);
+        return $viewHelper->initializeArgumentsAndRender();
+    }
 }

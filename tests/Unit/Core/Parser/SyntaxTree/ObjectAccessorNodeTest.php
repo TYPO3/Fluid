@@ -14,50 +14,53 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for ObjectAccessorNode
  */
-class ObjectAccessorNodeTest extends UnitTestCase {
+class ObjectAccessorNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 * @dataProvider getEvaluateTestValues
-	 * @param array $variables
-	 * @param string $path
-	 * @param mixed $expected
-	 */
-	public function testEvaluateGetsExpectedValue(array $variables, $path, $expected) {
-		$node = new ObjectAccessorNode($path);
-		$renderingContext = $this->getMock(RenderingContextInterface::class);
-		$variableContainer = new StandardVariableProvider($variables);
-		$renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
-		$value = $node->evaluate($renderingContext);
-		$this->assertEquals($expected, $value);
-	}
+    /**
+     * @test
+     * @dataProvider getEvaluateTestValues
+     * @param array $variables
+     * @param string $path
+     * @param mixed $expected
+     */
+    public function testEvaluateGetsExpectedValue(array $variables, $path, $expected)
+    {
+        $node = new ObjectAccessorNode($path);
+        $renderingContext = $this->getMock(RenderingContextInterface::class);
+        $variableContainer = new StandardVariableProvider($variables);
+        $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
+        $value = $node->evaluate($renderingContext);
+        $this->assertEquals($expected, $value);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getEvaluateTestValues() {
-		return array(
-			array(array('foo' => 'bar'), 'foo.notaproperty', NULL),
-			array(array('foo' => 'bar'), '_all', array('foo' => 'bar')),
-			array(array('foo' => 'bar'), 'foo', 'bar'),
-			array(array('foo' => array('bar' => 'test')), 'foo.bar', 'test'),
-			array(array('foo' => array('bar' => 'test'), 'dynamic' => 'bar'), 'foo.{dynamic}', 'test'),
-			array(array('foo' => array('bar' => 'test'), 'dynamic' => array('sub' => 'bar')), 'foo.{dynamic.sub}', 'test'),
-			array(array('foo' => array('bar' => 'test'), 'dynamic' => array('sub' => 'bar'), 'baz' => 'sub'), 'foo.{dynamic.{baz}}', 'test'),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getEvaluateTestValues()
+    {
+        return [
+            [['foo' => 'bar'], 'foo.notaproperty', null],
+            [['foo' => 'bar'], '_all', ['foo' => 'bar']],
+            [['foo' => 'bar'], 'foo', 'bar'],
+            [['foo' => ['bar' => 'test']], 'foo.bar', 'test'],
+            [['foo' => ['bar' => 'test'], 'dynamic' => 'bar'], 'foo.{dynamic}', 'test'],
+            [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar']], 'foo.{dynamic.sub}', 'test'],
+            [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar'], 'baz' => 'sub'], 'foo.{dynamic.{baz}}', 'test'],
+        ];
+    }
 
-	/**
-	 * @test
-	 */
-	public function testEvaluatedUsesVariableProviderGetByPath() {
-		$node = new ObjectAccessorNode('foo.bar');
-		$renderingContext = $this->getMock(RenderingContextInterface::class);
-		$variableContainer = $this->getMock(StandardVariableProvider::class, array());
-		$variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', array())->will($this->returnValue('foo'));
-		$renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
-		$value = $node->evaluate($renderingContext);
-		$this->assertEquals('foo', $value);
-	}
-
+    /**
+     * @test
+     */
+    public function testEvaluatedUsesVariableProviderGetByPath()
+    {
+        $node = new ObjectAccessorNode('foo.bar');
+        $renderingContext = $this->getMock(RenderingContextInterface::class);
+        $variableContainer = $this->getMock(StandardVariableProvider::class, []);
+        $variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', [])->will($this->returnValue('foo'));
+        $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
+        $value = $node->evaluate($renderingContext);
+        $this->assertEquals('foo', $value);
+    }
 }

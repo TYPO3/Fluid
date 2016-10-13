@@ -6,39 +6,40 @@ use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;
 /**
  * Class BasicConditionsTest
  */
-class BasicConditionsTest extends BaseConditionalFunctionalTestCase {
+class BasicConditionsTest extends BaseConditionalFunctionalTestCase
+{
 
-	/**
-	 * @return array
-	 */
-	public function getTemplateCodeFixturesAndExpectations() {
-		return array(
-			array('1 == 1', TRUE),
-			array('1 != 2', TRUE),
-			array('1 == 2', FALSE),
-			array('1 === 1', TRUE),
-			array('\'foo\' == 0', TRUE),
-			array('1.1 >= \'foo\'', TRUE),
-			array('\'String containing word \"false\" in text\'', TRUE),
-			array('\'  FALSE  \'', TRUE),
-			array('\'foo\' > 0', FALSE),
-			array('FALSE', FALSE),
-			array('(FALSE || (FALSE || 1)', TRUE),
-			array('(FALSE || (FALSE || 1)', TRUE),
-			array('(FALSE || (FALSE || 1)', TRUE),
+    /**
+     * @return array
+     */
+    public function getTemplateCodeFixturesAndExpectations()
+    {
+        return [
+            ['1 == 1', true],
+            ['1 != 2', true],
+            ['1 == 2', false],
+            ['1 === 1', true],
+            ['\'foo\' == 0', true],
+            ['1.1 >= \'foo\'', true],
+            ['\'String containing word \"false\" in text\'', true],
+            ['\'  FALSE  \'', true],
+            ['\'foo\' > 0', false],
+            ['FALSE', false],
+            ['(FALSE || (FALSE || 1)', true],
+            ['(FALSE || (FALSE || 1)', true],
+            ['(FALSE || (FALSE || 1)', true],
 
-			// integers
-			array('13 == \'13\'', TRUE),
-			array('13 === \'13\'', FALSE),
+            // integers
+            ['13 == \'13\'', true],
+            ['13 === \'13\'', false],
 
-			// floats
-			array('13.37 == \'13.37\'', TRUE),
-			array('13.37 === \'13.37\'', FALSE),
+            // floats
+            ['13.37 == \'13.37\'', true],
+            ['13.37 === \'13.37\'', false],
 
-			// groups
-			array('(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1', TRUE),
-			array('(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE', FALSE)
-		);
-	}
-
+            // groups
+            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1', true],
+            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE', false]
+        ];
+    }
 }

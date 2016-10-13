@@ -17,49 +17,53 @@ use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
 /**
  * Testcase for LayoutViewHelper
  */
-class LayoutViewHelperTest extends ViewHelperBaseTestcase {
+class LayoutViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @test
-	 */
-	public function testInitializeArgumentsRegistersExpectedArguments() {
-		$instance = $this->getMock(LayoutViewHelper::class, array('registerArgument'));
-		$instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
-		$instance->initializeArguments();
-	}
+    /**
+     * @test
+     */
+    public function testInitializeArgumentsRegistersExpectedArguments()
+    {
+        $instance = $this->getMock(LayoutViewHelper::class, ['registerArgument']);
+        $instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
+        $instance->initializeArguments();
+    }
 
-	/**
-	 * @test
-	 */
-	public function testRenderReturnsNull() {
-		$instance = new LayoutViewHelper();
-		$result = $instance->render();
-		$this->assertNull($result);
-	}
+    /**
+     * @test
+     */
+    public function testRenderReturnsNull()
+    {
+        $instance = new LayoutViewHelper();
+        $result = $instance->render();
+        $this->assertNull($result);
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getPostParseEventTestValues
-	 * @param arary $arguments
-	 * @param string $expectedLayoutName
-	 */
-	public function testPostParseEvent(array $arguments, $expectedLayoutName) {
-		$instance = new LayoutViewHelper();
-		$variableContainer = new StandardVariableProvider();
-		$node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', $arguments, new ParsingState());
-		$result = LayoutViewHelper::postParseEvent($node, $arguments, $variableContainer);
-		$this->assertNull($result);
-		$this->assertEquals($expectedLayoutName, $variableContainer->get('layoutName'));
-	}
+    /**
+     * @test
+     * @dataProvider getPostParseEventTestValues
+     * @param arary $arguments
+     * @param string $expectedLayoutName
+     */
+    public function testPostParseEvent(array $arguments, $expectedLayoutName)
+    {
+        $instance = new LayoutViewHelper();
+        $variableContainer = new StandardVariableProvider();
+        $node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', $arguments, new ParsingState());
+        $result = LayoutViewHelper::postParseEvent($node, $arguments, $variableContainer);
+        $this->assertNull($result);
+        $this->assertEquals($expectedLayoutName, $variableContainer->get('layoutName'));
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getPostParseEventTestValues() {
-		return array(
-			array(array('name' => 'test'), 'test'),
-			array(array(), new TextNode('Default')),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getPostParseEventTestValues()
+    {
+        return [
+            [['name' => 'test'], 'test'],
+            [[], new TextNode('Default')],
+        ];
+    }
 }

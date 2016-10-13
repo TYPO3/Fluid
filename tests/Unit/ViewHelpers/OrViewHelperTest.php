@@ -12,69 +12,74 @@ use TYPO3Fluid\Fluid\ViewHelpers\OrViewHelper;
 /**
  * Class OrViewHelperTest
  */
-class OrViewHelperTest extends ViewHelperBaseTestcase {
+class OrViewHelperTest extends ViewHelperBaseTestcase
+{
 
-	/**
-	 * @test
-	 */
-	public function testInitializeArguments() {
-		$instance = $this->getMock(OrViewHelper::class, array('registerArgument'));
-		$instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), FALSE, '');
-		$instance->expects($this->at(1))->method('registerArgument')->with('alternative', 'mixed', $this->anything(), FALSE, '');
-		$instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything());
-		$instance->setRenderingContext(new RenderingContextFixture());
-		$instance->initializeArguments();
-	}
+    /**
+     * @test
+     */
+    public function testInitializeArguments()
+    {
+        $instance = $this->getMock(OrViewHelper::class, ['registerArgument']);
+        $instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), false, '');
+        $instance->expects($this->at(1))->method('registerArgument')->with('alternative', 'mixed', $this->anything(), false, '');
+        $instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything());
+        $instance->setRenderingContext(new RenderingContextFixture());
+        $instance->initializeArguments();
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getRenderTestValues
-	 * @param array $arguments
-	 * @param mixed $expected
-	 */
-	public function testRender($arguments, $expected) {
-		$instance = $this->getMock(OrViewHelper::class, array('renderChildren'));
-		$instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
-		$instance->setArguments($arguments);
-		$instance->setRenderingContext(new RenderingContextFixture());
-		$result = $instance->render();
-		$this->assertEquals($expected, $result);
-	}
+    /**
+     * @test
+     * @dataProvider getRenderTestValues
+     * @param array $arguments
+     * @param mixed $expected
+     */
+    public function testRender($arguments, $expected)
+    {
+        $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
+        $instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
+        $instance->setArguments($arguments);
+        $instance->setRenderingContext(new RenderingContextFixture());
+        $result = $instance->render();
+        $this->assertEquals($expected, $result);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getRenderTestValues() {
-		return array(
-			array(array('arguments' => NULL, 'content' => 'alt', 'alternative' => 'alternative'), 'alt'),
-			array(array('arguments' => NULL, 'content' => '1', 'alternative' => 'alternative'), '1'),
-		);
-	}
+    /**
+     * @return array
+     */
+    public function getRenderTestValues()
+    {
+        return [
+            [['arguments' => null, 'content' => 'alt', 'alternative' => 'alternative'], 'alt'],
+            [['arguments' => null, 'content' => '1', 'alternative' => 'alternative'], '1'],
+        ];
+    }
 
-	/**
-	 * @test
-	 * @dataProvider getRenderAlternativeTestValues
-	 * @param array $arguments
-	 * @param mixed $expected
-	 */
-	public function testRenderAlternative($arguments, $expected) {
-		$instance = $this->getMock(OrViewHelper::class, array('renderChildren'));
-		$instance->expects($this->once())->method('renderChildren')->willReturn(NULL);
-		$arguments['content'] = NULL;
-		$instance->setArguments($arguments);
-		$instance->setRenderingContext(new RenderingContextFixture());
-		$result = $instance->render();
-		$this->assertEquals($expected, $result);
-	}
+    /**
+     * @test
+     * @dataProvider getRenderAlternativeTestValues
+     * @param array $arguments
+     * @param mixed $expected
+     */
+    public function testRenderAlternative($arguments, $expected)
+    {
+        $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
+        $instance->expects($this->once())->method('renderChildren')->willReturn(null);
+        $arguments['content'] = null;
+        $instance->setArguments($arguments);
+        $instance->setRenderingContext(new RenderingContextFixture());
+        $result = $instance->render();
+        $this->assertEquals($expected, $result);
+    }
 
-	/**
-	 * @return array
-	 */
-	public function getRenderAlternativeTestValues() {
-		return array(
-			array(array('arguments' => NULL, 'alternative' => 'alternative'), 'alternative'),
-			array(array('arguments' => array('abc'), 'alternative' => 'alternative %s alt'), 'alternative abc alt'),
-		);
-	}
-
+    /**
+     * @return array
+     */
+    public function getRenderAlternativeTestValues()
+    {
+        return [
+            [['arguments' => null, 'alternative' => 'alternative'], 'alternative'],
+            [['arguments' => ['abc'], 'alternative' => 'alternative %s alt'], 'alternative abc alt'],
+        ];
+    }
 }

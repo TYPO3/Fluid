@@ -26,46 +26,49 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
  *
  * @api
  */
-class LayoutViewHelper extends AbstractViewHelper {
+class LayoutViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * Initialize arguments
-	 *
-	 * @return void
-	 * @api
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
-	}
+    /**
+     * Initialize arguments
+     *
+     * @return void
+     * @api
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
+    }
 
-	/**
-	 * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
-	 *
-	 * @param ViewHelperNode $node
-	 * @param array $arguments
-	 * @param VariableProviderInterface $variableContainer
-	 * @return void
-	 */
-	public static function postParseEvent(
-		ViewHelperNode $node,
-		array $arguments,
-		VariableProviderInterface $variableContainer
-	) {
-		if (isset($arguments['name'])) {
-			$layoutNameNode = $arguments['name'];
-		} else {
-			$layoutNameNode = 'Default';
-		}
+    /**
+     * On the post parse event, add the "layoutName" variable to the variable container so it can be used by the TemplateView.
+     *
+     * @param ViewHelperNode $node
+     * @param array $arguments
+     * @param VariableProviderInterface $variableContainer
+     * @return void
+     */
+    public static function postParseEvent(
+        ViewHelperNode $node,
+        array $arguments,
+        VariableProviderInterface $variableContainer
+    ) {
+        if (isset($arguments['name'])) {
+            $layoutNameNode = $arguments['name'];
+        } else {
+            $layoutNameNode = 'Default';
+        }
 
-		$variableContainer->add('layoutName', $layoutNameNode);
-	}
+        $variableContainer->add('layoutName', $layoutNameNode);
+    }
 
-	/**
-	 * This tag will not be rendered at all.
-	 *
-	 * @return void
-	 * @api
-	 */
-	public function render() {
-	}
+    /**
+     * This tag will not be rendered at all.
+     *
+     * @return void
+     * @api
+     */
+    public function render()
+    {
+    }
 }

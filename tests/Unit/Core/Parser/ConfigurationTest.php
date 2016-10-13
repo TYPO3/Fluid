@@ -14,28 +14,30 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Class ConfigurationTest
  */
-class ConfigurationTest extends UnitTestCase {
+class ConfigurationTest extends UnitTestCase
+{
 
-	/**
-	 * @test
-	 */
-	public function testAddInterceptor() {
-		$interceptor = new Escape();
-		$configuration = new Configuration();
-		$configuration->addInterceptor($interceptor);
-		$interceptors = $configuration->getInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-		$this->assertContains($interceptor, $interceptors);
-	}
+    /**
+     * @test
+     */
+    public function testAddInterceptor()
+    {
+        $interceptor = new Escape();
+        $configuration = new Configuration();
+        $configuration->addInterceptor($interceptor);
+        $interceptors = $configuration->getInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
+        $this->assertContains($interceptor, $interceptors);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testAddEscapingInterceptor() {
-		$interceptor = new Escape();
-		$configuration = new Configuration();
-		$configuration->addEscapingInterceptor($interceptor);
-		$interceptors = $configuration->getEscapingInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-		$this->assertContains($interceptor, $interceptors);
-	}
-
+    /**
+     * @test
+     */
+    public function testAddEscapingInterceptor()
+    {
+        $interceptor = new Escape();
+        $configuration = new Configuration();
+        $configuration->addEscapingInterceptor($interceptor);
+        $interceptors = $configuration->getEscapingInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
+        $this->assertContains($interceptor, $interceptors);
+    }
 }

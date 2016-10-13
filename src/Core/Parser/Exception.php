@@ -11,5 +11,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  *
  * @api
  */
-class Exception extends \TYPO3Fluid\Fluid\Core\Exception {
+class Exception extends \TYPO3Fluid\Fluid\Core\Exception
+{
 }

@@ -56,102 +56,105 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class WarmupViewHelper extends AbstractViewHelper {
+class WarmupViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeChildren = false;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		$this->registerArgument(
-			'variables',
-			'array',
-			'Array of variables to assign ONLY when compiling. See main class documentation.',
-			FALSE,
-			array()
-		);
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument(
+            'variables',
+            'array',
+            'Array of variables to assign ONLY when compiling. See main class documentation.',
+            false,
+            []
+        );
+    }
 
-	/**
-	 * Render this ViewHelper
-	 *
-	 * Makes a decision based on whether or not warmup mode is
-	 * currently active - if it is NOT ACTIVE the ViewHelper
-	 * returns the result of `renderChildren` without any further
-	 * operations. If ACTIVE the ViewHelper will assign/overlay
-	 * replacement variables, call `renderChildren`, restore the
-	 * original variable provider and finally return the content.
-	 *
-	 * @return string
-	 */
-	public function render() {
-		if (!$this->renderingContext->getTemplateCompiler()->isWarmupMode()) {
-			return $this->renderChildren();
-		}
-		$originalVariableProvider = static::overlayVariablesIfNotSet(
-			$this->renderingContext,
-			$this->arguments['variables']
-		);
-		$content = $this->renderChildren();
-		$this->renderingContext->setVariableProvider($originalVariableProvider);
-		return $content;
-	}
+    /**
+     * Render this ViewHelper
+     *
+     * Makes a decision based on whether or not warmup mode is
+     * currently active - if it is NOT ACTIVE the ViewHelper
+     * returns the result of `renderChildren` without any further
+     * operations. If ACTIVE the ViewHelper will assign/overlay
+     * replacement variables, call `renderChildren`, restore the
+     * original variable provider and finally return the content.
+     *
+     * @return string
+     */
+    public function render()
+    {
+        if (!$this->renderingContext->getTemplateCompiler()->isWarmupMode()) {
+            return $this->renderChildren();
+        }
+        $originalVariableProvider = static::overlayVariablesIfNotSet(
+            $this->renderingContext,
+            $this->arguments['variables']
+        );
+        $content = $this->renderChildren();
+        $this->renderingContext->setVariableProvider($originalVariableProvider);
+        return $content;
+    }
 
-	/**
-	 * Custom implementation of compile method. Performns variable
-	 * provider overlaying, calls renderChildren and throws a
-	 * StopCompilingChildren with a static replacement string attached.
-	 *
-	 * TemplateCompiler then inserts this string as a static string in
-	 * the compiled template (and stops compiling all child nodes).
-	 *
-	 * @param string $argumentsName
-	 * @param string $closureName
-	 * @param string $initializationPhpCode
-	 * @param ViewHelperNode $node
-	 * @param TemplateCompiler $compiler
-	 */
-	public function compile(
-		$argumentsName,
-		$closureName,
-		&$initializationPhpCode,
-		ViewHelperNode $node,
-		TemplateCompiler $compiler
-	) {
-		$originalVariableProvider = static::overlayVariablesIfNotSet($this->renderingContext, $this->arguments);
-		$stopCompilingChildrenException = new StopCompilingChildrenException();
-		$stopCompilingChildrenException->setReplacementString($this->renderChildren());
-		$this->renderingContext->setVariableProvider($originalVariableProvider);
-		throw $stopCompilingChildrenException;
-	}
+    /**
+     * Custom implementation of compile method. Performns variable
+     * provider overlaying, calls renderChildren and throws a
+     * StopCompilingChildren with a static replacement string attached.
+     *
+     * TemplateCompiler then inserts this string as a static string in
+     * the compiled template (and stops compiling all child nodes).
+     *
+     * @param string $argumentsName
+     * @param string $closureName
+     * @param string $initializationPhpCode
+     * @param ViewHelperNode $node
+     * @param TemplateCompiler $compiler
+     */
+    public function compile(
+        $argumentsName,
+        $closureName,
+        &$initializationPhpCode,
+        ViewHelperNode $node,
+        TemplateCompiler $compiler
+    ) {
+        $originalVariableProvider = static::overlayVariablesIfNotSet($this->renderingContext, $this->arguments);
+        $stopCompilingChildrenException = new StopCompilingChildrenException();
+        $stopCompilingChildrenException->setReplacementString($this->renderChildren());
+        $this->renderingContext->setVariableProvider($originalVariableProvider);
+        throw $stopCompilingChildrenException;
+    }
 
-	/**
-	 * Overlay variables by replacing the VariableProvider with a
-	 * ChainedVariableProvider using dual data sources. Returns the
-	 * original VariableProvider which must replace the temporary
-	 * one again once the rendering/compiling is done.
-	 *
-	 * @param RenderingContextInterface $renderingContext
-	 * @param array $variables
-	 * @return VariableProviderInterface
-	 */
-	protected static function overlayVariablesIfNotSet(RenderingContextInterface $renderingContext, array $variables) {
-		$currentProvider = $renderingContext->getVariableProvider();
-		$chainedVariableProvider = new ChainedVariableProvider(array(
-			$currentProvider,
-			new StandardVariableProvider($variables)
-		));
-		$renderingContext->setVariableProvider($chainedVariableProvider);
-		return $currentProvider;
-	}
-
+    /**
+     * Overlay variables by replacing the VariableProvider with a
+     * ChainedVariableProvider using dual data sources. Returns the
+     * original VariableProvider which must replace the temporary
+     * one again once the rendering/compiling is done.
+     *
+     * @param RenderingContextInterface $renderingContext
+     * @param array $variables
+     * @return VariableProviderInterface
+     */
+    protected static function overlayVariablesIfNotSet(RenderingContextInterface $renderingContext, array $variables)
+    {
+        $currentProvider = $renderingContext->getVariableProvider();
+        $chainedVariableProvider = new ChainedVariableProvider([
+            $currentProvider,
+            new StandardVariableProvider($variables)
+        ]);
+        $renderingContext->setVariableProvider($chainedVariableProvider);
+        return $currentProvider;
+    }
 }

@@ -26,20 +26,20 @@ require __DIR__ . '/include/view_init.php';
 // the overrides to a path in, for example, another package's Resources folder.
 // Specifying this array can also be done as constructor argument for the
 // TemplatePaths class which can be passed to the View; see view_init.php.
-$view->getTemplatePaths()->fillFromConfigurationArray(array(
-	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_TEMPLATEROOTPATHS => array(
+$view->getTemplatePaths()->fillFromConfigurationArray([
+	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [
 		__DIR__ . '/Resources/Private/Templates/',
 		__DIR__ . '/ResourceOverrides/Private/Templates/',
-	),
-	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_LAYOUTROOTPATHS => array(
+	],
+	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_LAYOUTROOTPATHS => [
 		__DIR__ . '/Resources/Private/Layouts/',
 		__DIR__ . '/ResourceOverrides/Private/Layouts/',
-	),
-	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_PARTIALROOTPATHS => array(
+	],
+	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_PARTIALROOTPATHS => [
 		__DIR__ . '/Resources/Private/Partials/',
 		__DIR__ . '/ResourceOverrides/Private/Partials/',
-	)
-));
+	]
+]);
 
 $view->assign('foobar', 'This is foobar');
 $view->assign('baz', 'This is baz');

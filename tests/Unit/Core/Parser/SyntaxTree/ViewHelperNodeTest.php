@@ -21,100 +21,106 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for \TYPO3Fluid\CMS\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
  */
-class ViewHelperNodeTest extends UnitTestCase {
+class ViewHelperNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @var RenderingContext
-	 */
-	protected $renderingContext;
+    /**
+     * @var RenderingContext
+     */
+    protected $renderingContext;
 
-	/**
-	 * @var TemplateVariableContainer|\PHPUnit_Framework_MockObject_MockObject
-	 */
-	protected $templateVariableContainer;
+    /**
+     * @var TemplateVariableContainer|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $templateVariableContainer;
 
-	/**
-	 * @var ViewHelperResolver|\PHPUnit_Framework_MockObject_MockObject
-	 */
-	protected $mockViewHelperResolver;
+    /**
+     * @var ViewHelperResolver|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $mockViewHelperResolver;
 
-	/**
-	 * Setup fixture
-	 */
-	public function setUp() {
-		$this->renderingContext = new RenderingContextFixture();
-		$this->mockViewHelperResolver = $this->getMock(ViewHelperResolver::class, array('resolveViewHelperClassName', 'createViewHelperInstanceFromClassName', 'getArgumentDefinitionsForViewHelper'));
-		$this->mockViewHelperResolver->expects($this->any())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
-		$this->mockViewHelperResolver->expects($this->any())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
-		$this->mockViewHelperResolver->expects($this->any())->method('getArgumentDefinitionsForViewHelper')->willReturn(array(
-			'foo' => new ArgumentDefinition('foo', 'string', 'Dummy required argument', TRUE)
-		));
-		$this->renderingContext->setViewHelperResolver($this->mockViewHelperResolver);
-	}
+    /**
+     * Setup fixture
+     */
+    public function setUp()
+    {
+        $this->renderingContext = new RenderingContextFixture();
+        $this->mockViewHelperResolver = $this->getMock(ViewHelperResolver::class, ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName', 'getArgumentDefinitionsForViewHelper']);
+        $this->mockViewHelperResolver->expects($this->any())->method('resolveViewHelperClassName')->with('f', 'vh')->willReturn(TestViewHelper::class);
+        $this->mockViewHelperResolver->expects($this->any())->method('createViewHelperInstanceFromClassName')->with(TestViewHelper::class)->willReturn(new TestViewHelper());
+        $this->mockViewHelperResolver->expects($this->any())->method('getArgumentDefinitionsForViewHelper')->willReturn([
+            'foo' => new ArgumentDefinition('foo', 'string', 'Dummy required argument', true)
+        ]);
+        $this->renderingContext->setViewHelperResolver($this->mockViewHelperResolver);
+    }
 
-	/**
-	 * @test
-	 */
-	public function constructorSetsViewHelperAndArguments() {
-		$arguments = array('foo' => 'bar');
-		/** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
-		$viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
+    /**
+     * @test
+     */
+    public function constructorSetsViewHelperAndArguments()
+    {
+        $arguments = ['foo' => 'bar'];
+        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
+        $viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
 
-		$this->assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
-	}
+        $this->assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testEvaluateCallsInvoker() {
-		$invoker = $this->getMock(ViewHelperInvoker::class, array('invoke'));
-		$invoker->expects($this->once())->method('invoke')->willReturn('test');
-		$this->renderingContext->setViewHelperInvoker($invoker);
-		$node = new ViewHelperNode($this->renderingContext, 'f', 'vh', array('foo' => 'bar'), new ParsingState());
-		$result = $node->evaluate($this->renderingContext);
-		$this->assertEquals('test', $result);
-	}
+    /**
+     * @test
+     */
+    public function testEvaluateCallsInvoker()
+    {
+        $invoker = $this->getMock(ViewHelperInvoker::class, ['invoke']);
+        $invoker->expects($this->once())->method('invoke')->willReturn('test');
+        $this->renderingContext->setViewHelperInvoker($invoker);
+        $node = new ViewHelperNode($this->renderingContext, 'f', 'vh', ['foo' => 'bar'], new ParsingState());
+        $result = $node->evaluate($this->renderingContext);
+        $this->assertEquals('test', $result);
+    }
 
-	/**
-	 * @test
-	 */
-	public function testThrowsExceptionOnMissingRequiredArgument() {
-		$this->setExpectedException(ParserException::class);
-		new ViewHelperNode($this->renderingContext, 'f', 'vh', array('notfoo' => FALSE), new ParsingState());
-	}
+    /**
+     * @test
+     */
+    public function testThrowsExceptionOnMissingRequiredArgument()
+    {
+        $this->setExpectedException(ParserException::class);
+        new ViewHelperNode($this->renderingContext, 'f', 'vh', ['notfoo' => false], new ParsingState());
+    }
 
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-	 */
-	public function abortIfRequiredArgumentsAreMissingThrowsException() {
-		$expected = array(
-			new ArgumentDefinition('firstArgument', 'string', '', FALSE),
-			new ArgumentDefinition('secondArgument', 'string', '', TRUE)
-		);
+    /**
+     * @test
+     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
+     */
+    public function abortIfRequiredArgumentsAreMissingThrowsException()
+    {
+        $expected = [
+            new ArgumentDefinition('firstArgument', 'string', '', false),
+            new ArgumentDefinition('secondArgument', 'string', '', true)
+        ];
 
-		$templateParser = $this->getAccessibleMock(ViewHelperNode::class, array('dummy'), array(), '', FALSE);
+        $templateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
 
-		$templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, array());
-	}
+        $templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, []);
+    }
 
-	/**
-	 * @test
-	 */
-	public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists() {
-		$expectedArguments = array(
-			new ArgumentDefinition('name1', 'string', 'desc', FALSE),
-			new ArgumentDefinition('name2', 'string', 'desc', TRUE)
-		);
-		$actualArguments = array(
-			'name2' => 'bla'
-		);
+    /**
+     * @test
+     */
+    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists()
+    {
+        $expectedArguments = [
+            new ArgumentDefinition('name1', 'string', 'desc', false),
+            new ArgumentDefinition('name2', 'string', 'desc', true)
+        ];
+        $actualArguments = [
+            'name2' => 'bla'
+        ];
 
-		$mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, array('dummy'), array(), '', FALSE);
+        $mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
 
-		$mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
-		// dummy assertion to avoid "did not perform any assertions" error
-		$this->assertTrue(TRUE);
-	}
-
+        $mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
+        // dummy assertion to avoid "did not perform any assertions" error
+        $this->assertTrue(true);
+    }
 }

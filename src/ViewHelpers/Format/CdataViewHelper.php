@@ -41,39 +41,40 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  *
  * @api
  */
-class CdataViewHelper extends AbstractViewHelper {
+class CdataViewHelper extends AbstractViewHelper
+{
 
-	use CompileWithContentArgumentAndRenderStatic;
+    use CompileWithContentArgumentAndRenderStatic;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeChildren = false;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('value', 'mixed', 'The value to output');
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('value', 'mixed', 'The value to output');
+    }
 
-	/**
-	 * @param array $arguments
-	 * @param callable $renderChildrenClosure
-	 * @param RenderingContextInterface $renderingContext
-	 * @return string
-	 */
-	public static function renderStatic(
-		array $arguments,
-		\Closure $renderChildrenClosure,
-		RenderingContextInterface $renderingContext
-	) {
-		return sprintf('<![CDATA[%s]]>', $renderChildrenClosure());
-	}
-
+    /**
+     * @param array $arguments
+     * @param callable $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return string
+     */
+    public static function renderStatic(
+        array $arguments,
+        \Closure $renderChildrenClosure,
+        RenderingContextInterface $renderingContext
+    ) {
+        return sprintf('<![CDATA[%s]]>', $renderChildrenClosure());
+    }
 }

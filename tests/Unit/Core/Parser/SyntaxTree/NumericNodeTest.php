@@ -15,49 +15,55 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  * Testcase for NumericNode
  *
  */
-class NumericNodeTest extends UnitTestCase {
+class NumericNodeTest extends UnitTestCase
+{
 
-	/**
-	 * @var RenderingContext
-	 */
-	protected $renderingContext;
+    /**
+     * @var RenderingContext
+     */
+    protected $renderingContext;
 
-	public function setUp() {
-		$this->renderingContext = new RenderingContextFixture();
-	}
+    public function setUp()
+    {
+        $this->renderingContext = new RenderingContextFixture();
+    }
 
-	/**
-	 * @test
-	 */
-	public function renderReturnsProperIntegerGivenInConstructor() {
-		$string = '1';
-		$node = new NumericNode($string);
-		$this->assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
-	}
+    /**
+     * @test
+     */
+    public function renderReturnsProperIntegerGivenInConstructor()
+    {
+        $string = '1';
+        $node = new NumericNode($string);
+        $this->assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+    }
 
-	/**
-	 * @test
-	 */
-	public function renderReturnsProperFloatGivenInConstructor() {
-		$string = '1.1';
-		$node = new NumericNode($string);
-		$this->assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
-	}
+    /**
+     * @test
+     */
+    public function renderReturnsProperFloatGivenInConstructor()
+    {
+        $string = '1.1';
+        $node = new NumericNode($string);
+        $this->assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+    }
 
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-	 */
-	public function constructorThrowsExceptionIfNoNumericGiven() {
-		new NumericNode('foo');
-	}
+    /**
+     * @test
+     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
+     */
+    public function constructorThrowsExceptionIfNoNumericGiven()
+    {
+        new NumericNode('foo');
+    }
 
-	/**
-	 * @test
-	 * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-	 */
-	public function addChildNodeThrowsException() {
-		$node = new NumericNode('1');
-		$node->addChildNode(clone $node);
-	}
+    /**
+     * @test
+     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
+     */
+    public function addChildNodeThrowsException()
+    {
+        $node = new NumericNode('1');
+        $node->addChildNode(clone $node);
+    }
 }

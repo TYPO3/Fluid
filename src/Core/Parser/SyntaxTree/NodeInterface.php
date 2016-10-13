@@ -11,36 +11,37 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * Node in the syntax tree.
  */
-interface NodeInterface {
+interface NodeInterface
+{
 
-	/**
-	 * Evaluate all child nodes and return the evaluated results.
-	 *
-	 * @param RenderingContextInterface $renderingContext
-	 * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
-	 */
-	public function evaluateChildNodes(RenderingContextInterface $renderingContext);
+    /**
+     * Evaluate all child nodes and return the evaluated results.
+     *
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+     */
+    public function evaluateChildNodes(RenderingContextInterface $renderingContext);
 
-	/**
-	 * Returns all child nodes for a given node.
-	 *
-	 * @return array<\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
-	 */
-	public function getChildNodes();
+    /**
+     * Returns all child nodes for a given node.
+     *
+     * @return array<\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
+     */
+    public function getChildNodes();
 
-	/**
-	 * Appends a sub node to this node. Is used inside the parser to append children
-	 *
-	 * @param NodeInterface $childNode The sub node to add
-	 * @return void
-	 */
-	public function addChildNode(NodeInterface $childNode);
+    /**
+     * Appends a sub node to this node. Is used inside the parser to append children
+     *
+     * @param NodeInterface $childNode The sub node to add
+     * @return void
+     */
+    public function addChildNode(NodeInterface $childNode);
 
-	/**
-	 * Evaluates the node - can return not only strings, but arbitary objects.
-	 *
-	 * @param RenderingContextInterface $renderingContext
-	 * @return mixed Evaluated node
-	 */
-	public function evaluate(RenderingContextInterface $renderingContext);
+    /**
+     * Evaluates the node - can return not only strings, but arbitary objects.
+     *
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed Evaluated node
+     */
+    public function evaluate(RenderingContextInterface $renderingContext);
 }
