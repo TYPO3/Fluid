@@ -182,9 +182,8 @@ abstract class AbstractTemplateView extends AbstractView
             $actionName = $this->baseRenderingContext->getControllerAction();
         }
         $actionName = ucfirst($actionName);
-        $templateIdentifier = $templatePaths->getTemplateIdentifier($controllerName, $actionName);
         $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
-            $templateIdentifier,
+            $templatePaths->getTemplateIdentifier($controllerName, $actionName),
             function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
                 return $paths->getTemplateSource($controllerName, $actionName);
             }
@@ -197,9 +196,8 @@ abstract class AbstractTemplateView extends AbstractView
             $this->stopRendering();
         } else {
             $layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
-            $layoutIdentifier = $templatePaths->getLayoutIdentifier($layoutName);
             $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
-                $layoutIdentifier,
+                $templatePaths->getLayoutIdentifier($layoutName),
                 function ($parent, TemplatePaths $paths) use ($layoutName) {
                     return $paths->getLayoutSource($layoutName);
                 }
