@@ -322,17 +322,17 @@ abstract class AbstractTemplateView extends AbstractView {
 	 */
 	protected function getCurrentRenderingType() {
 		$currentRendering = end($this->renderingStack);
-		return $currentRendering['type'] ? $currentRendering['type'] : self::RENDERING_TEMPLATE;
+		return $currentRendering['type'];
 	}
 
 	/**
-	 * Get the parsed template which is currently being rendered or compiled.
+	 * Get the parsed template which is currently being rendered.
 	 *
 	 * @return ParsedTemplateInterface
 	 */
 	protected function getCurrentParsedTemplate() {
 		$currentRendering = end($this->renderingStack);
-		return $currentRendering['parsedTemplate'] ? $currentRendering['parsedTemplate'] : $this->getCurrentRenderingContext()->getTemplateCompiler()->getCurrentlyProcessingState();
+		return $currentRendering['parsedTemplate'];
 	}
 
 	/**
@@ -342,7 +342,7 @@ abstract class AbstractTemplateView extends AbstractView {
 	 */
 	protected function getCurrentRenderingContext() {
 		$currentRendering = end($this->renderingStack);
-		return $currentRendering['renderingContext'] ? $currentRendering['renderingContext'] : $this->baseRenderingContext;
+		return $currentRendering['renderingContext'];
 	}
 
 }
