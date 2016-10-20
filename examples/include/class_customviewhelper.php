@@ -21,34 +21,36 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * value and makes it optional before delivering
  * the arguments definitions to Fluid.
  */
-class CustomViewHelper extends AbstractViewHelper {
+class CustomViewHelper extends AbstractViewHelper
+{
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeChildren = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeChildren = false;
 
-	/**
-	 * @var boolean
-	 */
-	protected $escapeOutput = FALSE;
+    /**
+     * @var boolean
+     */
+    protected $escapeOutput = false;
 
-	/**
-	 * @return void
-	 */
-	public function initializeArguments() {
-		$this->registerArgument('page', 'string', 'An arbitrary page identifier', TRUE);
-	}
+    /**
+     * @return void
+     */
+    public function initializeArguments()
+    {
+        $this->registerArgument('page', 'string', 'An arbitrary page identifier', true);
+    }
 
-	/**
-	 * @return string
-	 */
-	public function render() {
-		return 'The following is a dump of the "page"' . PHP_EOL .
-			'Argument passed to CustomViewHelper:' . PHP_EOL .
-			'---------------------------' . PHP_EOL .
-			var_export($this->arguments['page'], TRUE) . PHP_EOL .
-			'---------------------------';
-	}
-
+    /**
+     * @return string
+     */
+    public function render()
+    {
+        return 'The following is a dump of the "page"' . PHP_EOL .
+            'Argument passed to CustomViewHelper:' . PHP_EOL .
+            '---------------------------' . PHP_EOL .
+            var_export($this->arguments['page'], true) . PHP_EOL .
+            '---------------------------';
+    }
 }
