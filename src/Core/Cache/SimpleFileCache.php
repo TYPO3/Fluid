@@ -113,7 +113,7 @@ class SimpleFileCache implements FluidCacheInterface
      */
     protected function getCachedFilenames()
     {
-        return scandir($this->directory . '*.php');
+        return glob($this->directory . '*.php');
     }
 
     /**
