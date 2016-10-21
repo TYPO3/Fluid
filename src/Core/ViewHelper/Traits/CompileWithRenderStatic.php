@@ -4,7 +4,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Class CompilableWithRenderStatic

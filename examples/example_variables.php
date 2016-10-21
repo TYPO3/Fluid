@@ -18,31 +18,31 @@ $dynamic2 = 'DYN2'; // used as dynamic part when accessing other variables
 // In this example we assign all our variables in one array. Alternative is
 // to repeatedly call $view->assign('name', 'value').
 $view->assignMultiple([
-	// Casting types
-	'types' => [
-		'csv' => 'one,two',
-		'aStringWithNumbers' => '132 a string',
-		'anArray' => ['one', 'two'],
-		'typeNameInteger' => 'integer'
-	],
+    // Casting types
+    'types' => [
+        'csv' => 'one,two',
+        'aStringWithNumbers' => '132 a string',
+        'anArray' => ['one', 'two'],
+        'typeNameInteger' => 'integer'
+    ],
     'foobar' => 'string foo',
-	// The variables we will use as dynamic part names:
-	'dynamic1' => $dynamic1,
-	'dynamic2' => $dynamic2,
-	// Strings we will be accessing dynamically:
-	'stringwith' . $dynamic1 . 'part' => 'String using $dynamic1',
-	'stringwith' . $dynamic2 . 'part' => 'String using $dynamic2',
-	// Arrays we will be accessing dynamically:
-	'array' => [
-		'fixed' => 'Fixed key in $array[fixed]',
-		// A numerically indexed array which we will access directly.
-		'numeric' => [
-			'foo',
-			'bar'
-		],
-		$dynamic1 => 'Dynamic key in $array[$dynamic1]',
-		$dynamic2 => 'Dynamic key in $array[$dynamic2]',
-	],
+    // The variables we will use as dynamic part names:
+    'dynamic1' => $dynamic1,
+    'dynamic2' => $dynamic2,
+    // Strings we will be accessing dynamically:
+    'stringwith' . $dynamic1 . 'part' => 'String using $dynamic1',
+    'stringwith' . $dynamic2 . 'part' => 'String using $dynamic2',
+    // Arrays we will be accessing dynamically:
+    'array' => [
+        'fixed' => 'Fixed key in $array[fixed]',
+        // A numerically indexed array which we will access directly.
+        'numeric' => [
+            'foo',
+            'bar'
+        ],
+        $dynamic1 => 'Dynamic key in $array[$dynamic1]',
+        $dynamic2 => 'Dynamic key in $array[$dynamic2]',
+    ],
     '123numericprefix' => 'Numeric prefixed variable'
 ]);
 

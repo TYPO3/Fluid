@@ -17,9 +17,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
-use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -312,7 +310,7 @@ class TemplateParser
      * @param string $arguments Arguments string, not yet parsed
      * @param boolean $selfclosing true, if the tag is a self-closing tag.
      * @param string $templateElement The template code containing the ViewHelper call
-     * @return ViewHelperNode|NULL
+     * @return NodeInterface|null
      */
     protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing, $templateElement)
     {
@@ -344,7 +342,7 @@ class TemplateParser
      * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
      * @param string $methodIdentifier Method identifier
      * @param array $argumentsObjectTree Arguments object tree
-     * @return ViewHelperNode|NULL An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
+     * @return null|NodeInterface An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
      * @throws Exception
      */
     protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree)
@@ -473,7 +471,7 @@ class TemplateParser
      * @param ParsingState $state the parsing state
      * @return void
      */
-    protected function callInterceptor(NodeInterface &$node, $interceptionPoint, ParsingState $state)
+    protected function callInterceptor(NodeInterface & $node, $interceptionPoint, ParsingState $state)
     {
         if ($this->configuration === null) {
             return;
@@ -630,7 +628,7 @@ class TemplateParser
      * adds it to the current node.
      *
      * @param ParsingState $state The current parsing state
-     * @param array $arrayText The array as string.
+     * @param NodeInterface[] $arrayText The array as string.
      * @return void
      */
     protected function arrayHandler(ParsingState $state, $arrayText)
@@ -662,7 +660,7 @@ class TemplateParser
                 $arrayKey = $this->unquoteString($singleMatch['Key']);
                 if (!empty($singleMatch['VariableIdentifier'])) {
                     $arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
-                } elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0' )) {
+                } elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0')) {
                     $arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
                 } elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
                     $argumentString = $this->unquoteString($singleMatch['QuotedString']);

@@ -13,11 +13,11 @@ require __DIR__ . '/include/view_init.php';
 // Assigning View variables: we assign variables that will be used by the
 // expressions we build in this example. Refer to the names of these
 // variables to understand what goes on.
-$view->assign('vartrue', TRUE);
-$view->assign('varfalse', FALSE);
+$view->assign('vartrue', true);
+$view->assign('varfalse', false);
 $view->assign('vararray1', ['foo' => 'bar']);
 $view->assign('vararray2', ['bar' => 'foo']);
-$view->assign('checkTernary', TRUE);
+$view->assign('checkTernary', true);
 $view->assign('ternaryTrue', 'The ternary expression is TRUE');
 $view->assign('ternaryFalse', 'The ternary expression is FALSE');
 

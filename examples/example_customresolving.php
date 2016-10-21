@@ -16,7 +16,7 @@
  */
 
 if (!defined('FLUID_CACHE_DIRECTORY')) {
-	define('FLUID_CACHE_DIRECTORY', __DIR__ . '/cache/');
+    define('FLUID_CACHE_DIRECTORY', __DIR__ . '/cache/');
 }
 
 require __DIR__ . '/include/view_init.php';

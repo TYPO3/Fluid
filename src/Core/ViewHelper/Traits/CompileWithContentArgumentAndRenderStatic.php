@@ -5,7 +5,6 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
 use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Class CompilableWithContentArgumentAndRenderStatic
@@ -49,7 +48,7 @@ trait CompileWithContentArgumentAndRenderStatic
         $argumentName = $this->resolveContentArgumentName();
         $arguments = $this->arguments;
         if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function () use ($arguments, $argumentName) {
+            $renderChildrenClosure = function() use ($arguments, $argumentName) {
                 return $arguments[$argumentName];
             };
         } else {

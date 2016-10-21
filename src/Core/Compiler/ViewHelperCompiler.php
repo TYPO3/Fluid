@@ -83,7 +83,7 @@ class ViewHelperCompiler
         $method = self::RENDER_STATIC,
         $onClass = null
     ) {
-        $onClass = $onClass ? : get_class($viewHelper);
+        $onClass = $onClass ?: get_class($viewHelper);
         return [
             self::DEFAULT_INIT,
             sprintf(
@@ -126,7 +126,7 @@ class ViewHelperCompiler
         $method = self::RENDER_STATIC,
         $onClass = null
     ) {
-        $onClass = $onClass ? : get_class($viewHelper);
+        $onClass = $onClass ?: get_class($viewHelper);
         return [
             self::DEFAULT_INIT,
             sprintf(

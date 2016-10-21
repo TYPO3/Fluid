@@ -395,7 +395,7 @@ class TemplatePaths
      * Sanitize a path, ensuring it is absolute and
      * if a directory, suffixed by a trailing slash.
      *
-     * @param string|array $path
+     * @param string $path
      * @return string
      */
     protected function sanitizePath($path)

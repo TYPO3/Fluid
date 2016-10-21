@@ -12,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception\NotFoundException;
 use TYPO3Fluid\Fluid\View\Exception;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
@@ -247,7 +246,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         try {
             $parsedTemplate = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $identifier,
-                function (TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
+                function(TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
                     return file_get_contents($templatePathAndFilename, FILE_TEXT);
                 }
             );

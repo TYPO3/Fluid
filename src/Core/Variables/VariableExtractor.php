@@ -87,7 +87,7 @@ class VariableExtractor
     }
 
     /**
-     * @param mixed $subject
+     * @param VariableProviderInterface $subject
      * @param string $propertyPath
      * @return array
      */
@@ -113,7 +113,7 @@ class VariableExtractor
     /**
      * @param mixed $subject
      * @param string $propertyPath
-     * @return array
+     * @return string
      */
     protected function resolveSubVariableReferences($subject, $propertyPath)
     {

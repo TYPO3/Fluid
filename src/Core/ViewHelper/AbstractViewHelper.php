@@ -295,7 +295,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected function buildRenderChildrenClosure()
     {
         $self = clone $this;
-        return function () use ($self) {
+        return function() use ($self) {
             return $self->renderChildren();
         };
     }

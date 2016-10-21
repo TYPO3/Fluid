@@ -27,18 +27,18 @@ require __DIR__ . '/include/view_init.php';
 // Specifying this array can also be done as constructor argument for the
 // TemplatePaths class which can be passed to the View; see view_init.php.
 $view->getTemplatePaths()->fillFromConfigurationArray([
-	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [
-		__DIR__ . '/Resources/Private/Templates/',
-		__DIR__ . '/ResourceOverrides/Private/Templates/',
-	],
-	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_LAYOUTROOTPATHS => [
-		__DIR__ . '/Resources/Private/Layouts/',
-		__DIR__ . '/ResourceOverrides/Private/Layouts/',
-	],
-	\TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_PARTIALROOTPATHS => [
-		__DIR__ . '/Resources/Private/Partials/',
-		__DIR__ . '/ResourceOverrides/Private/Partials/',
-	]
+    \TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_TEMPLATEROOTPATHS => [
+        __DIR__ . '/Resources/Private/Templates/',
+        __DIR__ . '/ResourceOverrides/Private/Templates/',
+    ],
+    \TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_LAYOUTROOTPATHS => [
+        __DIR__ . '/Resources/Private/Layouts/',
+        __DIR__ . '/ResourceOverrides/Private/Layouts/',
+    ],
+    \TYPO3Fluid\Fluid\View\TemplatePaths::CONFIG_PARTIALROOTPATHS => [
+        __DIR__ . '/Resources/Private/Partials/',
+        __DIR__ . '/ResourceOverrides/Private/Partials/',
+    ]
 ]);
 
 $view->assign('foobar', 'This is foobar');

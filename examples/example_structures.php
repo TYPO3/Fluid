@@ -15,16 +15,16 @@ require __DIR__ . '/include/view_init.php';
 $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Structures.html');
 
 $view->assign('dynamicSection', 'Dynamic');
-$view->assign('notTrue', FALSE);
-$view->assign('notTrueEither', FALSE);
-$view->assign('butTrue', TRUE);
+$view->assign('notTrue', false);
+$view->assign('notTrueEither', false);
+$view->assign('butTrue', true);
 $view->assign('switchValue', 3);
 $view->assign('secondSwitchValue', 'b');
 $view->assign('array', ['one', 'two', 'three']);
 $view->assign('group', [
-	['property' => 'one'],
-	['property' => 'one'],
-	['property' => 'two']
+    ['property' => 'one'],
+    ['property' => 'one'],
+    ['property' => 'two']
 ]);
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
