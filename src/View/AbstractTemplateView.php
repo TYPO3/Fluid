@@ -48,15 +48,6 @@ abstract class AbstractTemplateView extends AbstractView
     protected $renderingStack = [];
 
     /**
-     * Partial Name -> Partial Identifier cache.
-     * This is a performance optimization, effective when rendering a
-     * single partial many times.
-     *
-     * @var array
-     */
-    protected $partialIdentifierCache = [];
-
-    /**
      * Constructor
      *
      * @param null|RenderingContextInterface $context
@@ -282,12 +273,8 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false)
     {
-        if (!isset($this->partialIdentifierCache[$partialName])) {
-            $this->partialIdentifierCache[$partialName] = $this->baseRenderingContext->getTemplatePaths()->getPartialIdentifier($partialName);
-        }
-        $partialIdentifier = $this->partialIdentifierCache[$partialName];
         $parsedPartial = $this->baseRenderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
-            $partialIdentifier,
+            $this->baseRenderingContext->getTemplatePaths()->getPartialIdentifier($partialName),
             function ($parent, TemplatePaths $paths) use ($partialName) {
                 return $paths->getPartialSource($partialName);
             }
