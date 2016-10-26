@@ -5,6 +5,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
 use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Class CompilableWithContentArgumentAndRenderStatic
@@ -18,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  */
 trait CompileWithContentArgumentAndRenderStatic
 {
-
     /**
      * Name of variable that contains the value to use
      * instead of render children closure, if specified.
@@ -45,18 +45,9 @@ trait CompileWithContentArgumentAndRenderStatic
      */
     public function render()
     {
-        $argumentName = $this->resolveContentArgumentName();
-        $arguments = $this->arguments;
-        if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function() use ($arguments, $argumentName) {
-                return $arguments[$argumentName];
-            };
-        } else {
-            $renderChildrenClosure = call_user_func_array([$this, 'buildRenderChildrenClosure'], []);
-        }
         return self::renderStatic(
-            $arguments,
-            $renderChildrenClosure,
+            $this->arguments,
+            $this->buildRenderChildrenClosure(),
             $this->renderingContext
         );
     }
@@ -76,16 +67,40 @@ trait CompileWithContentArgumentAndRenderStatic
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
-        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethodAndContentFromArgumentName(
+        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
             $this,
             $argumentsName,
             $closureName,
-            $this->resolveContentArgumentName(),
             ViewHelperCompiler::RENDER_STATIC,
             static::class
         );
         $initializationPhpCode .= $initialization;
         return $execution;
+    }
+
+    /**
+     * Helper which is mostly needed when calling renderStatic() from within
+     * render().
+     *
+     * No public API yet.
+     *
+     * @return \Closure
+     */
+    protected function buildRenderChildrenClosure()
+    {
+        $argumentName = $this->resolveContentArgumentName();
+        $arguments = $this->arguments;
+        if (!empty($argumentName) && isset($arguments[$argumentName])) {
+            $renderChildrenClosure = function () use ($arguments, $argumentName) {
+                return $arguments[$argumentName];
+            };
+        } else {
+            $self = clone $this;
+            $renderChildrenClosure = function () use ($self) {
+                return $self->renderChildren();
+            };
+        }
+        return $renderChildrenClosure;
     }
 
     /**
