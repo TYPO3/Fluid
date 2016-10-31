@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DefaultRenderMethod;
 
 /**
  * Outputs an argument/value without any escaping. Is normally used to output
@@ -46,7 +47,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class RawViewHelper extends AbstractViewHelper
 {
-
+    use DefaultRenderMethod;
     use CompileWithContentArgumentAndRenderStatic;
 
     /**

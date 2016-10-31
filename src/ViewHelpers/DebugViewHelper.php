@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DefaultRenderMethod;
 
 /**
  *
@@ -34,7 +35,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class DebugViewHelper extends AbstractViewHelper
 {
-
+    use DefaultRenderMethod;
     use CompileWithRenderStatic;
 
     /**

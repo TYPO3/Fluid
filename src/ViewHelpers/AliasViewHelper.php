@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DefaultRenderMethod;
 
 /**
  * Declares new variables which are aliases of other variables.
@@ -43,7 +44,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class AliasViewHelper extends AbstractViewHelper
 {
-
+    use DefaultRenderMethod;
     use CompileWithRenderStatic;
 
     /**

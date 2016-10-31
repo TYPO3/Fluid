@@ -11,6 +11,8 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\PostParseInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileEmpty;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\PassthroughRenderChildren;
 
 /**
  * With this tag, you can select a layout to be used for the current template.
@@ -28,6 +30,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
  */
 class LayoutViewHelper extends AbstractViewHelper
 {
+    use CompileEmpty;
+    use PassthroughRenderChildren;
 
     /**
      * Initialize arguments
@@ -60,15 +64,5 @@ class LayoutViewHelper extends AbstractViewHelper
         }
 
         $variableContainer->add('layoutName', $layoutNameNode);
-    }
-
-    /**
-     * This tag will not be rendered at all.
-     *
-     * @return void
-     * @api
-     */
-    public function render()
-    {
     }
 }

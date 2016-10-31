@@ -12,6 +12,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileEmpty;
 
 /**
  * A ViewHelper to declare sections in templates for later use with e.g. the RenderViewHelper.
@@ -57,6 +58,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
  */
 class SectionViewHelper extends AbstractViewHelper
 {
+    use CompileEmpty;
 
     /**
      * @var boolean
@@ -109,18 +111,4 @@ class SectionViewHelper extends AbstractViewHelper
         return $content;
     }
 
-    /**
-     * The inner contents of a section should not be rendered.
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return '\'\'';
-    }
 }

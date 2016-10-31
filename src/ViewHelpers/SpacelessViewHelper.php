@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DefaultRenderMethod;
 
 /**
  * Space Removal ViewHelper
@@ -37,7 +38,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class SpacelessViewHelper extends AbstractViewHelper
 {
-
+    use DefaultRenderMethod;
     use CompileWithRenderStatic;
 
     /**

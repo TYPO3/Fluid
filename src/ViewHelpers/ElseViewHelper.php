@@ -9,6 +9,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileEmpty;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\PassthroughRenderChildren;
 
 /**
  * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
@@ -32,6 +34,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ElseViewHelper extends AbstractViewHelper
 {
+    use CompileEmpty;
+    use PassthroughRenderChildren;
 
     /**
      * @var boolean
@@ -46,25 +50,4 @@ class ElseViewHelper extends AbstractViewHelper
         $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
     }
 
-    /**
-     * @return string the rendered string
-     * @api
-     */
-    public function render()
-    {
-        return $this->renderChildren();
-    }
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string|NULL
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return '\'\'';
-    }
 }

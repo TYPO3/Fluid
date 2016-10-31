@@ -9,6 +9,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileEmpty;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\PassthroughRenderChildren;
 
 /**
  * "THEN" -> only has an effect inside of "IF". See If-ViewHelper for documentation.
@@ -18,33 +20,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ThenViewHelper extends AbstractViewHelper
 {
+    use CompileEmpty;
+    use PassthroughRenderChildren;
 
     /**
      * @var boolean
      */
     protected $escapeOutput = false;
-
-    /**
-     * Just render everything.
-     *
-     * @return string the rendered string
-     * @api
-     */
-    public function render()
-    {
-        return $this->renderChildren();
-    }
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return '\'\'';
-    }
 }

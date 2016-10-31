@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DefaultRenderMethod;
 
 /**
  * Grouped loop view helper.
@@ -75,7 +76,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class GroupedForViewHelper extends AbstractViewHelper
 {
-
+    use DefaultRenderMethod;
     use CompileWithRenderStatic;
 
     /**

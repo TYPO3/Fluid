@@ -9,13 +9,14 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DefaultRenderMethod;
 
 /**
  * If content is empty use alternative text
  */
 class OrViewHelper extends AbstractViewHelper
 {
-
+    use DefaultRenderMethod;
     use CompileWithContentArgumentAndRenderStatic;
 
     /**

@@ -30,9 +30,8 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsNumberOfElementsInAnArray()
     {
-        $this->viewHelper->expects($this->never())->method('buildRenderChildrenClosure');
+        $this->viewHelper->expects($this->once())->method('buildRenderChildrenClosure')->willReturn(function() { return ['foo', 'bar', 'Baz']; });
         $expectedResult = 3;
-        $this->arguments = ['subject' => ['foo', 'bar', 'Baz']];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
         $actualResult = $this->viewHelper->initializeArgumentsAndRender();
         $this->assertSame($expectedResult, $actualResult);
@@ -43,9 +42,8 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsNumberOfElementsInAnArrayObject()
     {
-        $this->viewHelper->expects($this->never())->method('buildRenderChildrenClosure');
+        $this->viewHelper->expects($this->once())->method('buildRenderChildrenClosure')->willReturn(function() { return new \ArrayObject(['foo', 'bar']); });
         $expectedResult = 2;
-        $this->arguments = ['subject' => new \ArrayObject(['foo', 'bar'])];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
         $actualResult = $this->viewHelper->initializeArgumentsAndRender();
         $this->assertSame($expectedResult, $actualResult);
@@ -56,9 +54,8 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsZeroIfGivenArrayIsEmpty()
     {
-        $this->viewHelper->expects($this->never())->method('buildRenderChildrenClosure');
+        $this->viewHelper->expects($this->once())->method('buildRenderChildrenClosure')->willReturn(function() { return []; });
         $expectedResult = 0;
-        $this->arguments = ['subject' => []];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
         $actualResult = $this->viewHelper->render();
         $this->assertSame($expectedResult, $actualResult);

@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileEmpty;
 
 /**
  * Case view helper that is only usable within the SwitchViewHelper.
@@ -19,6 +20,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CaseViewHelper extends AbstractViewHelper
 {
+    use CompileEmpty;
 
     /**
      * @var boolean
@@ -54,18 +56,5 @@ class CaseViewHelper extends AbstractViewHelper
             return $this->renderChildren();
         }
         return '';
-    }
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return '\'\'';
     }
 }

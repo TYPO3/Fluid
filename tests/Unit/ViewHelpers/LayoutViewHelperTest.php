@@ -35,7 +35,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRenderReturnsNull()
     {
-        $instance = new LayoutViewHelper();
+        $instance = $this->getMock(LayoutViewHelper::class, ['renderChildren']);
         $result = $instance->render();
         $this->assertNull($result);
     }

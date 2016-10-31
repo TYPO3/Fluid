@@ -1,20 +1,22 @@
 <?php
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
+
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 
 /**
- * Class CompilableWithRenderStatic
+ * Class CompileEmpty
  *
- * Provides default methods for rendering and compiling
- * any ViewHelper that conforms to the `renderStatic`
- * method pattern.
+ * Implemented by ViewHelpers which must compile to provide empty
+ * content (e.g. ViewHelper is a structure ViewHelper which uses
+ * postParseEvent and/or are not supposed to render once compiled).
  */
-trait CompileWithRenderStatic
+trait CompileEmpty
 {
     /**
+     * Return empty string to be placed in the compiled template.
+     *
      * @param string $argumentsName
      * @param string $closureName
      * @param string $initializationPhpCode
@@ -29,12 +31,6 @@ trait CompileWithRenderStatic
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
-        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
-            $this,
-            $argumentsName,
-            $closureName
-        );
-        $initializationPhpCode .= $initialization;
-        return $execution;
+        return '\'\'';
     }
 }
