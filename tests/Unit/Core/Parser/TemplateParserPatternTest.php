@@ -461,6 +461,129 @@ class PatternsTest extends UnitTestCase
     /**
      * @return array
      */
+    public function dataProviderValidArrayExpressionsBeginningAndEndingOnDigits()
+    {
+        return [
+            [
+                'expression' => '{baz: foo.bar1}',
+                'expected' => [
+                    0 => [
+                        0 => 'baz: foo.bar1',
+                        'ArrayPart' => 'baz: foo.bar1',
+                        1 => 'baz: foo.bar1',
+                        'Key' => 'baz',
+                        2 => 'baz',
+                        'QuotedString' => '',
+                        3 => '',
+                        'VariableIdentifier' => 'foo.bar1',
+                        4 => 'foo.bar1'
+                    ]
+                ]
+            ],
+            [
+                'expression' => '{"foo2": "bar2"}',
+                'expected' => [
+                    0 => [
+                        0 => '"foo2": "bar2"',
+                        'ArrayPart' => '"foo2": "bar2"',
+                        1 => '"foo2": "bar2"',
+                        'Key' => '"foo2"',
+                        2 => '"foo2"',
+                        'QuotedString' => '"bar2"',
+                        3 => '"bar2"'
+                    ]
+                ]
+            ],
+            [
+                'expression' => '{foo3: bar.baz3}',
+                'expected' => [
+                    0 => [
+                        0 => 'foo3: bar.baz3',
+                        'ArrayPart' => 'foo3: bar.baz3',
+                        1 => 'foo3: bar.baz3',
+                        'Key' => 'foo3',
+                        2 => 'foo3',
+                        'QuotedString' => '',
+                        3 => '',
+                        'VariableIdentifier' => 'bar.baz3',
+                        4 => 'bar.baz3'
+                    ]
+                ]
+            ],
+            [
+                'expression' => '{foo4: _4bar.-baz4}',
+                'expected' => [
+                    0 => [
+                        0 => 'foo4: _4bar.-baz4',
+                        'ArrayPart' => 'foo4: _4bar.-baz4',
+                        1 => 'foo4: _4bar.-baz4',
+                        'Key' => 'foo4',
+                        2 => 'foo4',
+                        'QuotedString' => '',
+                        3 => '',
+                        'VariableIdentifier' => '_4bar.-baz4',
+                        4 => '_4bar.-baz4'
+                    ]
+                ]
+            ],
+            [
+                'expression' => '{5foo5: -5bar}',
+                'expected' => [
+                    0 => [
+                        0 => '5foo5: -5bar',
+                        'ArrayPart' => '5foo5: -5bar',
+                        1 => '5foo5: -5bar',
+                        'Key' => '5foo5',
+                        2 => '5foo5',
+                        'QuotedString' => '',
+                        3 => '',
+                        'VariableIdentifier' => '-5bar',
+                        4 => '-5bar'
+                    ]
+                ]
+            ],
+            [
+                'expression' => '{foo6: 66}',
+                'expected' => [
+                    0 => [
+                        0 => 'foo6: 66',
+                        'ArrayPart' => 'foo6: 66',
+                        1 => 'foo6: 66',
+                        'Key' => 'foo6',
+                        2 => 'foo6',
+                        'QuotedString' => '',
+                        3 => '',
+                        'VariableIdentifier' => '',
+                        4 => '',
+                        'Number' => '66',
+                        5 => '66'
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param string $expression
+     * @param string $expected
+     * @dataProvider dataProviderValidArrayExpressionsBeginningAndEndingOnDigits()
+     * @test
+     */
+    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesKeysEndingInDigits($expression, $expected)
+    {
+        $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
+        $success = preg_match_all($pattern, $expression, $matches, PREG_SET_ORDER) > 0;
+        $this->assertTrue($success);
+        $this->assertEquals(
+            $expected,
+            $matches,
+            'The regular expression splitting the array apart does not work!'
+        );
+    }
+
+    /**
+     * @return array
+     */
     public function dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS()
     {
         return [
