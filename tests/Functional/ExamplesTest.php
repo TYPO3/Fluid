@@ -201,7 +201,7 @@ class ExamplesTest extends BaseTestCase
                     'Array member in $array[$dynamic2]: Dynamic key in $array[$dynamic2]',
                     'Direct access of numeric prefixed variable: Numeric prefixed variable',
                     'Aliased access of numeric prefixed variable: Numeric prefixed variable',
-                    'Received $array.foobar with value <b>Unescaped string</b>',
+                    'Received $array.foobar with value <b>Unescaped string</b> (same using "value" argument: <b>Unescaped string</b>)',
                     'Received $array.printf with formatted string Formatted string, value: formatted',
                     'Received $array.baz with value 42',
                     'Received $array.xyz.foobar with value Escaped sub-string',
