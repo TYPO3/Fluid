@@ -224,30 +224,30 @@ abstract class Patterns
 		)$/x';
 
     /**
-     * This pattern splits an array into its parts. It is quite similar to the
-     * pattern above.
-     *
+     * This pattern splits an array into its parts, each part consists of a key and a value.
+     * It is quite similar to the pattern above.
+     * Note that this pattern can be used on strings with or without surrounding curly brackets.
      */
     static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
-		(?P<ArrayPart>                                                      # Start sub-match
-			(?P<Key>                                                        # The keys of the array
+		(?P<ArrayPart>                                                      # Start sub-match of one key and value pair
+			(?P<Key>                                                        # The arry key
 				 [a-zA-Z0-9_-]+                                             # Unquoted
 				|"(?:\\\\"|[^"])+"                                          # Double quoted
 				|\'(?:\\\\\'|[^\'])+\'                                      # Single quoted
 			)
 			\\s*:\\s*                                                       # Key|Value delimiter :
-			(?:                                                             # Possible value options:
-				(?P<QuotedString>                                          # Quoted string
+			(?:                                                             # BEGIN Possible value options
+				(?P<QuotedString>                                           # Quoted string
 					 "(?:\\\\"|[^"])*"
 					|\'(?:\\\\\'|[^\'])*\'
 				)
 				|(?P<VariableIdentifier>
-					(?:(?=[^,{}\.]*[a-zA-Z])[a-zA-Z0-9_-]*)                        # variable identifiers must contain letters (otherwise they are hardcoded numbers)
-					(?:\\.[a-zA-Z0-9_-]+)*                                  # but subsequent access of keys and properties may be only numbers
+					(?:(?=[^,{}\.]*[a-zA-Z])[a-zA-Z0-9_-]*)                 # variable identifiers must contain letters (otherwise they are hardcoded numbers)
+					(?:\\.[a-zA-Z0-9_-]+)*                                  # but in sub key access only numbers are fine (foo.55)
 				)
-				|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # Number
+				|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # A hardcoded Number (also possibly with decimals)
 				|\\{\\s*(?P<Subarray>(?:(?P>ArrayPart)\\s*,?\\s*)+)\\s*\\}  # Another sub-array
 			)                                                               # END possible value options
-		)\\s*(?=\\z|,|\\})                                                           # End array part sub-match
+		)\\s*(?=\\z|,|\\})                                                  # An array part sub-match ends with either a comma, a closing curly bracket or end of string
 	/x';
 }
