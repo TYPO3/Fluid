@@ -229,6 +229,12 @@ class ExamplesTest extends BaseTestCase
                     'Cached as static text 2',
                     'Cached as static text 3',
                 ]
+            ],
+            'example_passthrough.php' => [
+                'example_passthrough.php',
+                [
+                    '<f:format.raw>This does not get parsed; the source is passed through with Fluid markup</f:format.raw>'
+                ]
             ]
         ];
     }

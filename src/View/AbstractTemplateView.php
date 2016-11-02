@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\View;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -173,12 +174,17 @@ abstract class AbstractTemplateView extends AbstractView
             $actionName = $this->baseRenderingContext->getControllerAction();
         }
         $actionName = ucfirst($actionName);
-        $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
-            $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-            function($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
-                return $paths->getTemplateSource($controllerName, $actionName);
-            }
-        );
+        try {
+            $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
+                $templatePaths->getTemplateIdentifier($controllerName, $actionName),
+                function($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
+                    return $paths->getTemplateSource($controllerName, $actionName);;
+                }
+            );
+        } catch (PassthroughSourceException $error) {
+            return $error->getSource();
+        }
+
         $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
 
         if (!$parsedTemplate->hasLayout()) {
@@ -187,12 +193,16 @@ abstract class AbstractTemplateView extends AbstractView
             $this->stopRendering();
         } else {
             $layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
-            $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
-                $templatePaths->getLayoutIdentifier($layoutName),
-                function($parent, TemplatePaths $paths) use ($layoutName) {
-                    return $paths->getLayoutSource($layoutName);
-                }
-            );
+            try {
+                $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
+                    $templatePaths->getLayoutIdentifier($layoutName),
+                    function($parent, TemplatePaths $paths) use ($layoutName) {
+                        return $paths->getLayoutSource($layoutName);
+                    }
+                );
+            } catch (PassthroughSourceException $error) {
+                return $error->getSource();
+            }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
             $output = $parsedLayout->render($this->baseRenderingContext);
             $this->stopRendering();
@@ -273,12 +283,17 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false)
     {
-        $parsedPartial = $this->baseRenderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
-            $this->baseRenderingContext->getTemplatePaths()->getPartialIdentifier($partialName),
-            function ($parent, TemplatePaths $paths) use ($partialName) {
-                return $paths->getPartialSource($partialName);
-            }
-        );
+        $templatePaths = $this->baseRenderingContext->getTemplatePaths();
+        try {
+            $parsedPartial = $this->baseRenderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
+                $templatePaths->getPartialIdentifier($partialName),
+                function ($parent, TemplatePaths $paths) use ($partialName) {
+                    return $paths->getPartialSource($partialName);
+                }
+            );
+        } catch (PassthroughSourceException $error) {
+            return $error->getSource();
+        }
         $renderingContext = clone $this->getCurrentRenderingContext();
         $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
         $this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
