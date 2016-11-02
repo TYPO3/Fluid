@@ -229,22 +229,25 @@ abstract class Patterns
      *
      */
     static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
-		(?P<ArrayPart>                                             # Start sub-match
-			(?P<Key>                                               # The keys of the array
-				[a-zA-Z0-9\\-_]+                                   # Unquoted
-				|"(?:\\\"|[^"])+"                                  # Double quoted
-				|\'(?:\\\\\'|[^\'])+\'                             # Single quoted
+		(?P<ArrayPart>                                                      # Start sub-match
+			(?P<Key>                                                        # The keys of the array
+				 [a-zA-Z0-9_-]+                                             # Unquoted
+				|"(?:\\\\"|[^"])+"                                          # Double quoted
+				|\'(?:\\\\\'|[^\'])+\'                                      # Single quoted
 			)
-			\s*:\s*                                                # Key|Value delimiter :
-			(?:                                                    # Possible value options:
-				(?P<QuotedString>                                  # Quoted string
-					(?:"(?:\\\"|[^"])*")
-					|(?:\'(?:\\\\\'|[^\'])*\')
+			\\s*:\\s*                                                       # Key|Value delimiter :
+			(?:                                                             # Possible value options:
+				(?P<QuotedString>                                          # Quoted string
+					 "(?:\\\\"|[^"])*"
+					|\'(?:\\\\\'|[^\'])*\'
 				)
-				|(?P<VariableIdentifier>[a-zA-Z0-9\-_.]*[a-zA-Z]+)  # variable identifiers must contain letters (otherwise they are hardcoded numbers)
-				|(?P<Number>[0-9.]+)                               # Number
-				|{\s*(?P<Subarray>(?:(?P>ArrayPart)\s*,?\s*)+)\s*} # Another sub-array
-			)                                                      # END possible value options
-		)                                                          # End array part sub-match
+				|(?P<VariableIdentifier>
+					(?:(?=[^,{}\.]*[a-zA-Z])[a-zA-Z0-9_-]*)                        # variable identifiers must contain letters (otherwise they are hardcoded numbers)
+					(?:\\.[a-zA-Z0-9_-]+)*                                  # but subsequent access of keys and properties may be only numbers
+				)
+				|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # Number
+				|\\{\\s*(?P<Subarray>(?:(?P>ArrayPart)\\s*,?\\s*)+)\\s*\\}  # Another sub-array
+			)                                                               # END possible value options
+		)\\s*(?=\\z|,|\\})                                                           # End array part sub-match
 	/x';
 }
