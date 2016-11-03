@@ -37,9 +37,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class SpacelessViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
+    /** 
+     * @var boolean
+     */
+    protected $escapeOutput = false;
+    
     /**
      * @param array $arguments
      * @param \Closure $childClosure
