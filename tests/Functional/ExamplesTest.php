@@ -199,6 +199,7 @@ class ExamplesTest extends BaseTestCase
                     'String variable name with dynamic2 part: String using $dynamic2.',
                     'Array member in $array[$dynamic1]: Dynamic key in $array[$dynamic1]',
                     'Array member in $array[$dynamic2]: Dynamic key in $array[$dynamic2]',
+                    'Output of variable whose name is stored in a variable: string foo',
                     'Direct access of numeric prefixed variable: Numeric prefixed variable',
                     'Aliased access of numeric prefixed variable: Numeric prefixed variable',
                     'Received $array.foobar with value <b>Unescaped string</b>',

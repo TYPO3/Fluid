@@ -43,7 +43,9 @@ $view->assignMultiple([
         $dynamic1 => 'Dynamic key in $array[$dynamic1]',
         $dynamic2 => 'Dynamic key in $array[$dynamic2]',
     ],
-    '123numericprefix' => 'Numeric prefixed variable'
+    '123numericprefix' => 'Numeric prefixed variable',
+    // A variable whose value refers to another variable name
+    'dynamicVariableName' => 'foobar'
 ]);
 
 // Assigning the template path and filename to be rendered. Doing this overrides
