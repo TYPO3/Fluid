@@ -45,7 +45,7 @@ trait CompileWithContentArgumentAndRenderStatic
      */
     public function render()
     {
-        return self::renderStatic(
+        return static::renderStatic(
             $this->arguments,
             $this->buildRenderChildrenClosure(),
             $this->renderingContext
