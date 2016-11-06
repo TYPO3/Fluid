@@ -26,10 +26,15 @@ trait CompileWithRenderStatic
     {
         return static::renderStatic(
             $this->arguments,
-            call_user_func_array([$this, 'buildRenderChildrenClosure'], []),
+            $this->buildRenderChildrenClosure(),
             $this->renderingContext
         );
     }
+
+    /**
+     * @return \Closure
+     */
+    protected abstract function buildRenderChildrenClosure();
 
     /**
      * @param string $argumentsName
