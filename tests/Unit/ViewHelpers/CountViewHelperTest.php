@@ -22,7 +22,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     public function setUp()
     {
         parent::setUp();
-        $this->viewHelper = $this->getAccessibleMock(CountViewHelper::class, ['buildRenderChildrenClosure']);
+        $this->viewHelper = $this->getAccessibleMock(CountViewHelper::class, ['renderChildren']);
     }
 
     /**
@@ -30,7 +30,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsNumberOfElementsInAnArray()
     {
-        $this->viewHelper->expects($this->never())->method('buildRenderChildrenClosure');
+        $this->viewHelper->expects($this->never())->method('renderChildren');
         $expectedResult = 3;
         $this->arguments = ['subject' => ['foo', 'bar', 'Baz']];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -43,7 +43,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsNumberOfElementsInAnArrayObject()
     {
-        $this->viewHelper->expects($this->never())->method('buildRenderChildrenClosure');
+        $this->viewHelper->expects($this->never())->method('renderChildren');
         $expectedResult = 2;
         $this->arguments = ['subject' => new \ArrayObject(['foo', 'bar'])];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -56,7 +56,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsZeroIfGivenArrayIsEmpty()
     {
-        $this->viewHelper->expects($this->never())->method('buildRenderChildrenClosure');
+        $this->viewHelper->expects($this->never())->method('renderChildren');
         $expectedResult = 0;
         $this->arguments = ['subject' => []];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -69,10 +69,8 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull()
     {
-        $this->viewHelper->expects($this->once())->method('buildRenderChildrenClosure')
-            ->will($this->returnValue(function () {
-                return ['foo', 'baz', 'bar'];
-            }));
+        $this->viewHelper->expects($this->once())->method('renderChildren')
+            ->will($this->returnValue(['foo', 'baz', 'bar']));
         $expectedResult = 3;
         $this->arguments = ['subject' => null];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -85,10 +83,8 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull()
     {
-        $this->viewHelper->expects($this->once())->method('buildRenderChildrenClosure')
-            ->will($this->returnValue(function () {
-                return null;
-            }));
+        $this->viewHelper->expects($this->once())->method('renderChildren')
+            ->will($this->returnValue(null));
         $this->viewHelper->setArguments(['subject' => null]);
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
         $expectedResult = 0;
