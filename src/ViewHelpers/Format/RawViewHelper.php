@@ -88,6 +88,14 @@ class RawViewHelper extends AbstractViewHelper
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
-        return sprintf('%s()', $closureName);
+        $contentArgumentName = $this->resolveContentArgumentName();
+        return sprintf(
+            'isset(%s[\'%s\']) ? %s[\'%s\'] : %s()',
+            $argumentsName,
+            $contentArgumentName,
+            $argumentsName,
+            $contentArgumentName,
+            $closureName
+        );
     }
 }

@@ -43,7 +43,7 @@ Direct access of numeric prefixed variable: {123numericprefix}
 </f:section>
 
 <f:section name="Secondary">
-Received $array.foobar with value {array.foobar -> f:format.raw()}
+Received $array.foobar with value {array.foobar -> f:format.raw()} (same using "value" argument: {f:format.raw(value: array.foobar)})
 Received $array.printf with formatted string {array.printf -> f:format.printf(arguments: {0: 'formatted'})}
 Received $array.baz with value {array.baz}
 Received $array.xyz.foobar with value {array.xyz.foobar}
