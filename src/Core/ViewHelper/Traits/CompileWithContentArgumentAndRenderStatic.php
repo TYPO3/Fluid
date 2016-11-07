@@ -74,6 +74,17 @@ trait CompileWithContentArgumentAndRenderStatic
             ViewHelperCompiler::RENDER_STATIC,
             static::class
         );
+        $contentArgumentName = $this->resolveContentArgumentName();
+        $initializationPhpCode .= sprintf(
+            '%s = %s[\'%s\'] ? function() use (%s) { return %s[\'%s\']; } : %s;',
+            $closureName,
+            $argumentsName,
+            $contentArgumentName,
+            $argumentsName,
+            $argumentsName,
+            $contentArgumentName,
+            $closureName
+        );
         $initializationPhpCode .= $initialization;
         return $execution;
     }
