@@ -124,7 +124,7 @@ class CycleViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param $as
+     * @param string $as
      * @param ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
      * @return integer
      */
