@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -47,25 +48,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class CycleViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var boolean
      */
     protected $escapeOutput = false;
-
-    /**
-     * The values to be iterated through
-     *
-     * @var array|\SplObjectStorage
-     */
-    protected $values = null;
-
-    /**
-     * Current values index
-     *
-     * @var integer
-     */
-    protected $currentCycleIndex = null;
 
     /**
      * @return void
@@ -85,45 +71,70 @@ class CycleViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        $values = $this->arguments['values'];
-        $as = $this->arguments['as'];
+        return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
+    }
+
+    /**
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        $values = $arguments['values'];
+        $as = $arguments['as'];
         if ($values === null) {
-            return $this->renderChildren();
+            return $renderChildrenClosure();
         }
-        if ($this->values === null) {
-            $this->initializeValues($values);
-        }
-        if ($this->currentCycleIndex === null || $this->currentCycleIndex >= count($this->values)) {
-            $this->currentCycleIndex = 0;
-        }
+        $values = static::initializeValues($values);
+        $index = static::initializeIndex($as, $renderingContext->getViewHelperVariableContainer());
 
-        $currentValue = isset($this->values[$this->currentCycleIndex]) ? $this->values[$this->currentCycleIndex] : null;
-        $this->templateVariableContainer->add($as, $currentValue);
-        $output = $this->renderChildren();
-        $this->templateVariableContainer->remove($as);
+        $currentValue = isset($values[$index]) ? $values[$index] : null;
 
-        $this->currentCycleIndex++;
+        $renderingContext->getVariableProvider()->add($as, $currentValue);
+        $output = $renderChildrenClosure();
+        $renderingContext->getVariableProvider()->remove($as);
+
+        $index++;
+        if (!isset($values[$index])) {
+            $index = 0;
+        }
+        $renderingContext->getViewHelperVariableContainer()->addOrUpdate(static::class, $as, $index);
 
         return $output;
     }
 
     /**
-     * Sets this->values to the current values argument and resets $this->currentCycleIndex.
-     *
-     * @param array|\Traversable $values The array or \SplObjectStorage to be stored in $this->values
-     * @return void
+     * @param mixed $values
+     * @return array
      * @throws ViewHelper\Exception
      */
-    protected function initializeValues($values)
+    protected static function initializeValues($values)
     {
-        if (is_object($values)) {
-            if (!$values instanceof \Traversable) {
-                throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
-            }
-            $this->values = iterator_to_array($values, false);
-        } else {
-            $this->values = array_values($values);
+        if (is_array($values)) {
+            return array_values($values);
         }
-        $this->currentCycleIndex = 0;
+
+        if (is_object($values) && $values instanceof \Traversable) {
+            return iterator_to_array($values, false);
+        }
+
+        throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+    }
+
+    /**
+     * @param string $as
+     * @param ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+     * @return integer
+     */
+    protected static function initializeIndex($as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer)
+    {
+        $index = 0;
+        if ($viewHelperVariableContainer->exists(static::class, $as)) {
+            $index = $viewHelperVariableContainer->get(static::class, $as);
+        }
+
+        return $index;
     }
 }
