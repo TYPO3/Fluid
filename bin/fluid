@@ -47,6 +47,7 @@ class FluidCommandLine {
 	const ARGUMENT_VARIABLES = 'variables';
 	const ARGUMENT_CONTROLLERNAME = 'controller';
 	const ARGUMENT_CONTROLLERACTION = 'action';
+    const ARGUMENT_BOOTSTRAP = 'bootstrap';
 	const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
 	const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
 	const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
@@ -63,6 +64,9 @@ class FluidCommandLine {
 				$this->dumpSupportedParameters() .
 				$this->dumpusageExample();
 		}
+		if (isset($arguments[self::ARGUMENT_BOOTSTRAP])) {
+            include $arguments[self::ARGUMENT_BOOTSTRAP];
+        }
 		$view = new \TYPO3Fluid\Fluid\View\TemplateView();
 		if (isset($arguments[self::ARGUMENT_RENDERINGCONTEXT])) {
 			$context = new $arguments[self::ARGUMENT_RENDERINGCONTEXT]($view);
@@ -388,7 +392,16 @@ Cache warmup can be triggered by calling:
 And should you require it you can pass the class name of a custom RenderingContext (which can return a
 custom FluidCacheWarmer instance!):
 
-	./bin/flud --warmup --renderingContext "My\Custom\RenderingContext"
+	./bin/flud --warmup --renderingContext "My\\Custom\\RenderingContext"
+
+Furthermore, should you require special bootstrapping of a framework, you can specify
+an entry point containing a bootstrap (with or without output, does not matter) which
+will be required/included as part of the initialisation.
+
+    ./bin/fluid --warmup --renderingContext "My\\Custom\\RenderingContext" --bootstrap /path/to/bootstrap.php
+
+Note: the bootstrapping can also be used for other cases, but be careful to use
+a bootstrapper which does not cause output if you intend to render templates.
 
 A WebSocket mode is available. When starting the CLI utility in WebSocket mode,
 very basic HTTP requests are rendered directly by listening on an IP:PORT combination:
