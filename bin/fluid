@@ -47,7 +47,7 @@ class FluidCommandLine {
 	const ARGUMENT_VARIABLES = 'variables';
 	const ARGUMENT_CONTROLLERNAME = 'controller';
 	const ARGUMENT_CONTROLLERACTION = 'action';
-    const ARGUMENT_BOOTSTRAP = 'bootstrap';
+    	const ARGUMENT_BOOTSTRAP = 'bootstrap';
 	const ARGUMENT_TEMPLATEROOTPATHS = 'templateRootPaths';
 	const ARGUMENT_LAYOUTROOTPATHS = 'layoutRootPaths';
 	const ARGUMENT_PARTIALROOTPATHS = 'partialRootPaths';
@@ -392,7 +392,7 @@ Cache warmup can be triggered by calling:
 And should you require it you can pass the class name of a custom RenderingContext (which can return a
 custom FluidCacheWarmer instance!):
 
-	./bin/flud --warmup --renderingContext "My\\Custom\\RenderingContext"
+	./bin/fluid --warmup --renderingContext "My\\Custom\\RenderingContext"
 
 Furthermore, should you require special bootstrapping of a framework, you can specify
 an entry point containing a bootstrap (with or without output, does not matter) which
