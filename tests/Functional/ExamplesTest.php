@@ -235,7 +235,13 @@ class ExamplesTest extends BaseTestCase
                 [
                     '<f:format.raw>This does not get parsed; the source is passed through with Fluid markup</f:format.raw>'
                 ]
-            ]
+            ],
+            'example_cachewarmup.php' => [
+                'example_cachewarmup.php',
+                [
+                    'Cache Warmup Example'
+                ]
+            ],
         ];
     }
 }

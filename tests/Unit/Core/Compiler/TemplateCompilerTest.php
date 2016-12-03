@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Compiler\NodeConverter;
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
@@ -156,11 +157,15 @@ class TemplateCompilerTest extends UnitTestCase
      */
     public function testStoreWhenDisabledFlushesCache()
     {
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = $this->getMockBuilder(RenderingContextFixture::class)->setMethods(['isCacheEnabled'])->getMock();
+        $renderingContext->expects($this->once())->method('isCacheEnabled')->willReturn(true);
+        $cache = $this->getMockBuilder(FluidCacheInterface::class)->setMethods(['flush'])->getMockForAbstractClass();
+        $cache->expects($this->once())->method('flush')->with('fakeidentifier');
+        $renderingContext->setCache($cache);
         $state = new ParsingState();
-        $instance = $this->getAccessibleMock(TemplateCompiler::class);
+        $instance = $this->getAccessibleMock(TemplateCompiler::class, ['isDisabled']);
+        $instance->expects($this->once())->method('isDisabled')->willReturn(true);
         $instance->_set('renderingContext', $renderingContext);
-        $instance->_set('disabled', true);
         $instance->store('fakeidentifier', $state);
     }
 
@@ -185,5 +190,45 @@ class TemplateCompilerTest extends UnitTestCase
         $instance = new TemplateCompiler();
         $instance->setRenderingContext($context);
         $this->assertSame($context, $instance->getRenderingContext());
+    }
+
+    /**
+     * @test
+     */
+    public function testEnterWarmupModeSetsInternalMode()
+    {
+        $instance = new TemplateCompiler();
+        $instance->enterWarmupMode();
+        $this->assertAttributeSame(TemplateCompiler::MODE_WARMUP, 'mode', $instance);
+    }
+
+    /**
+     * @test
+     */
+    public function testIsWarmupModeReturnsTrueIfWarmupModeSet()
+    {
+        $instance = new TemplateCompiler();
+        $instance->enterWarmupMode();
+        $this->assertSame(true, $instance->isWarmupMode());
+    }
+
+    /**
+     * @test
+     */
+    public function testIsWarmupModeReturnsFalseIfWarmupModeNotSet()
+    {
+        $instance = new TemplateCompiler();
+        $this->assertSame(false, $instance->isWarmupMode());
+    }
+
+    /**
+     * @test
+     */
+    public function testGetCurrentlyProcessingStateReturnsState()
+    {
+        $state = new ParsingState();
+        $instance = $this->getAccessibleMock(TemplateCompiler::class, ['dummy']);
+        $instance->_set('currentlyProcessingState', $state);
+        $this->assertSame($state, $instance->getCurrentlyProcessingState());
     }
 }

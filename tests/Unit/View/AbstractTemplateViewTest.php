@@ -7,6 +7,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
@@ -16,6 +19,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Testcase for the TemplateView
@@ -226,5 +230,59 @@ class AbstractTemplateViewTest extends UnitTestCase
             [true],
             [false]
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function testRenderPartialCatchesPassthroughExceptionAndReturnsExceptionStoredString()
+    {
+        $mock = $this->getMockBuilder(AbstractTemplateView::class)->getMockForAbstractClass();
+        $error = new PassthroughSourceException();
+        $error->setSource('replacement');
+        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->getMock();
+        $parser->expects($this->once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
+        $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getPartialIdentifier'])->getMock();
+        $paths->expects($this->once())->method('getPartialIdentifier')->willReturn('foobar');
+        $mock->getRenderingContext()->setTemplateParser($parser);
+        $mock->getRenderingContext()->setTemplatePaths($paths);
+        $result = $mock->renderPartial('dummy', null, []);
+        $this->assertSame('replacement', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function testRenderCatchesPassthroughExceptionAndReturnsExceptionStoredStringWithoutLayout()
+    {
+        $mock = $this->getMockBuilder(AbstractTemplateView::class)->getMockForAbstractClass();
+        $error = new PassthroughSourceException();
+        $error->setSource('replacement');
+        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->getMock();
+        $parser->expects($this->once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
+        $mock->getRenderingContext()->setTemplateParser($parser);
+        $result = $mock->render('dummy');
+        $this->assertSame('replacement', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function testRenderCatchesPassthroughExceptionAndReturnsExceptionStoredStringWithLayout()
+    {
+        $mock = $this->getMockBuilder(AbstractTemplateView::class)->getMockForAbstractClass();
+        $error = new PassthroughSourceException();
+        $error->setSource('replacement');
+        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->getMock();
+        $parsedTemplate = $this->getMockBuilder(ParsedTemplateInterface::class)->setMethods(['hasLayout'])->getMockForAbstractClass();
+        $parsedTemplate->expects($this->once())->method('hasLayout')->willReturn(true);
+        $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getLayoutIdentifier'])->getMock();
+        $paths->expects($this->once())->method('getLayoutIdentifier')->willReturn('foobar');
+        $parser->expects($this->at(0))->method('getOrParseAndStoreTemplate')->willReturn($parsedTemplate);
+        $parser->expects($this->at(1))->method('getOrParseAndStoreTemplate')->willThrowException($error);
+        $mock->getRenderingContext()->setTemplateParser($parser);
+        $mock->getRenderingContext()->setTemplatePaths($paths);
+        $result = $mock->render('dummy');
+        $this->assertSame('replacement', $result);
     }
 }
