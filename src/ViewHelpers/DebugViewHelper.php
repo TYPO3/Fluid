@@ -117,8 +117,6 @@ class DebugViewHelper extends AbstractViewHelper
                     $typeLabel,
                     htmlspecialchars(var_export($variable, true), ENT_COMPAT, 'UTF-8', false)
                 );
-            } elseif (is_null($variable)) {
-                $string = 'null' . PHP_EOL;
             } else {
                 $string = sprintf('<code>%s</code>', $typeLabel);
                 if ($level > $levels) {
