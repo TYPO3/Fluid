@@ -83,7 +83,18 @@ class FluidCommandLine {
                 $this->dumpusageExample();
         }
         if (isset($arguments[self::ARGUMENT_BOOTSTRAP])) {
-            include $arguments[self::ARGUMENT_BOOTSTRAP];
+            if (is_file($arguments[self::ARGUMENT_BOOTSTRAP])) {
+                include $arguments[self::ARGUMENT_BOOTSTRAP];
+            } elseif (
+                strpos($arguments[self::ARGUMENT_BOOTSTRAP], '::')
+                && is_callable(explode('::', $arguments[self::ARGUMENT_BOOTSTRAP]))
+            ) {
+                call_user_func(explode('::', $arguments[self::ARGUMENT_BOOTSTRAP]));
+            } else {
+                throw new InvalidArgumentException(
+                    'Provided bootstrap argument is neither a file nor an executable, public, static function!'
+                );
+            }
         }
         $view = new \TYPO3Fluid\Fluid\View\TemplateView();
         if (isset($arguments[self::ARGUMENT_RENDERINGCONTEXT])) {
