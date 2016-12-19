@@ -93,7 +93,7 @@ class ForViewHelper extends AbstractViewHelper
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         $templateVariableContainer = $renderingContext->getVariableProvider();
-        if ($arguments['each'] === null) {
+        if (!isset($arguments['each'])) {
             return '';
         }
         if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
@@ -109,19 +109,21 @@ class ForViewHelper extends AbstractViewHelper
             }
             $arguments['each'] = array_reverse($arguments['each']);
         }
-        $iterationData = [
-            'index' => 0,
-            'cycle' => 1,
-            'total' => count($arguments['each'])
-        ];
+        if (isset($arguments['iteration'])) {
+            $iterationData = [
+                'index' => 0,
+                'cycle' => 1,
+                'total' => count($arguments['each'])
+            ];
+        }
 
         $output = '';
         foreach ($arguments['each'] as $keyValue => $singleElement) {
             $templateVariableContainer->add($arguments['as'], $singleElement);
-            if ($arguments['key'] !== null) {
+            if (isset($arguments['key'])) {
                 $templateVariableContainer->add($arguments['key'], $keyValue);
             }
-            if ($arguments['iteration'] !== null) {
+            if (isset($arguments['iteration'])) {
                 $iterationData['isFirst'] = $iterationData['cycle'] === 1;
                 $iterationData['isLast'] = $iterationData['cycle'] === $iterationData['total'];
                 $iterationData['isEven'] = $iterationData['cycle'] % 2 === 0;
@@ -132,10 +134,10 @@ class ForViewHelper extends AbstractViewHelper
             }
             $output .= $renderChildrenClosure();
             $templateVariableContainer->remove($arguments['as']);
-            if ($arguments['key'] !== null) {
+            if (isset($arguments['key'])) {
                 $templateVariableContainer->remove($arguments['key']);
             }
-            if ($arguments['iteration'] !== null) {
+            if (isset($arguments['iteration'])) {
                 $templateVariableContainer->remove($arguments['iteration']);
             }
         }

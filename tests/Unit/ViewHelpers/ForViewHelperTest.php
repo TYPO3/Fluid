@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\CountableIterator;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 
 /**
@@ -444,6 +445,33 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $this->arguments['each'] = new \DateTime('now');
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $this->setExpectedException(Exception::class);
+        $viewHelper->render();
+    }
+
+    /**
+     * @test
+     */
+    public function renderCountsSubjectIfIterationArgumentProvided()
+    {
+        $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
+        $subject->expects($this->once())->method('count')->willReturn(1);
+        $viewHelper = new ForViewHelper();
+        $this->arguments['each'] = $subject;
+        $this->arguments['iteration'] = 'test';
+        $this->injectDependenciesIntoViewHelper($viewHelper);
+        $viewHelper->render();
+    }
+    /**
+     * @test
+     */
+    public function renderDoesNotCountSubjectIfIterationArgumentNotProvided()
+    {
+        $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
+        $subject->expects($this->never())->method('count');
+        $viewHelper = new ForViewHelper();
+        $this->arguments['each'] = $subject;
+        $this->arguments['iteration'] = null;
+        $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->render();
     }
 }
