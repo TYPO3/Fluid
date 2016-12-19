@@ -361,10 +361,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         } elseif ($type === 'array' || substr($type, -2) === '[]') {
             if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
                 return false;
-            } elseif (count($value) > 0 && substr($type, -2) === '[]') {
+            } elseif (substr($type, -2) === '[]') {
                 $firstElement = $this->getFirstElementOfNonEmpty($value);
-                if ($firstElement == null) {
-                    return false;
+                if ($firstElement === null) {
+                    return true;
                 }
                 return $this->isValidType(substr($type, 0, -2), $firstElement);
             }

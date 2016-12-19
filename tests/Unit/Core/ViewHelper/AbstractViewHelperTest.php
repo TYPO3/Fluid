@@ -345,8 +345,7 @@ class AbstractViewHelperTest extends UnitTestCase
             [new ArgumentDefinition('test', 'DateTime', '', true), 'test'],
             [new ArgumentDefinition('test', 'integer', '', true), new \ArrayIterator(['bar'])],
             [new ArgumentDefinition('test', 'object', '', true), 'test'],
-            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'),'test']],
-            [new ArgumentDefinition('test', 'string[]', '', true), [null]],
+            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'),'test']]
         ];
     }
 
