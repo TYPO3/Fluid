@@ -26,7 +26,7 @@ class MathExpressionNode extends AbstractExpressionNode
 		(
 			{                                # Start of shorthand syntax
 				(?:                          # Math expression is composed of...
-					[a-zA-Z0-9\.]+[\s]?[*+\^\/\%\-]{1}[\s]?[a-zA-Z0-9\.]+   # Various math expressions left and right sides with any spaces
+					[a-zA-Z0-9\.]+(?:[\s]?[*+\^\/\%\-]{1}[\s]?[a-zA-Z0-9\.]+)+   # Various math expressions left and right sides with any spaces
 					|(?R)                    # Other expressions inside
 				)+
 			}                                # End of shorthand syntax
