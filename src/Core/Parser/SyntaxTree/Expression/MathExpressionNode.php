@@ -42,7 +42,7 @@ class MathExpressionNode extends AbstractExpressionNode
     {
         // Split the expression on all recognized operators
         $matches = [];
-        preg_match_all('/([+\-*\^\/\%]|[a-z0-9\.]+)/s', $expression, $matches);
+        preg_match_all('/([+\-*\^\/\%]|[a-zA-Z0-9\.]+)/s', $expression, $matches);
         $matches[0] = array_map('trim', $matches[0]);
         // Like the BooleanNode, we dumb down the processing logic to not apply
         // any special precedence on the priority of operators. We simply process
