@@ -48,6 +48,11 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
      */
     public function getRenderTestValues()
     {
+        $recursive = new \ArrayIterator(['foo' => null]);
+        $recursive->offsetSet('foo', $recursive);
+        $stream = fopen('php://memory', 'r+');
+        fputs($stream, 'foobar', 6);
+        rewind($stream);
         return [
             ['test', ['typeOnly' => false, 'html' => false, 'levels' => 1], "string 'test'" . PHP_EOL],
             ['test', ['typeOnly' => true, 'html' => false, 'levels' => 1], 'string'],
@@ -102,11 +107,34 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
                 'null' . PHP_EOL
             ],
             [
+                null,
+                ['typeOnly' => false, 'html' => true, 'levels' => 3],
+                '<code>NULL = NULL</code>'
+            ],
+            [
                 \DateTime::createFromFormat('U', '1468328915'),
                 ['typeOnly' => false, 'html' => false, 'levels' => 3],
                 'DateTime: ' . PHP_EOL . '  "class": string \'DateTime\'' . PHP_EOL .
                 '  "ISO8601": string \'2016-07-12T13:08:35+0000\'' . PHP_EOL . '  "UNIXTIME": integer 1468328915' . PHP_EOL
-            ]
+            ],
+            [
+                $recursive,
+                ['typeOnly' => false, 'html' => false, 'levels' => 3],
+                'ArrayIterator: ' . PHP_EOL . '  "foo": ArrayIterator: ' . PHP_EOL . '    "foo": ArrayIterator: ' . PHP_EOL . '      "foo": ArrayIterator: *Recursion limited*'
+            ],
+            [
+                $recursive,
+                ['typeOnly' => false, 'html' => true, 'levels' => 3],
+                '<code>ArrayIterator</code><ul><li>foo: <code>ArrayIterator</code><ul><li>foo: <code>ArrayIterator</code><ul><li>foo: <code>ArrayIterator</code><i>Recursion limited</i></li></ul></li></ul></li></ul>'
+            ],
+            [
+                $stream,
+                ['typeOnly' => false, 'html' => true, 'levels' => 1],
+                '<code>resource</code><ul><li>timed_out: <code>boolean = false</code></li><li>blocked: <code>boolean = true</code>' .
+                '</li><li>eof: <code>boolean = false</code></li><li>wrapper_type: <code>string = \'PHP\'</code></li><li>stream_type: ' .
+                '<code>string = \'MEMORY\'</code></li><li>mode: <code>string = \'w+b\'</code></li><li>unread_bytes: <code>integer = 0</code></li>' .
+                '<li>seekable: <code>boolean = true</code></li><li>uri: <code>string = \'php://memory\'</code></li></ul>'
+            ],
         ];
     }
 }
