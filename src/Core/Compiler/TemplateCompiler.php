@@ -169,6 +169,16 @@ class TemplateCompiler
     }
 
     /**
+     * Resets the currently processing state
+     *
+     * @return void
+     */
+    public function reset()
+    {
+        $this->currentlyProcessingState = null;
+    }
+
+    /**
      * @param string $identifier
      * @param ParsingState $parsingState
      * @return void
