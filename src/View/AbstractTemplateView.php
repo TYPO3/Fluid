@@ -167,25 +167,18 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function render($actionName = null)
     {
-        $controllerName = $this->baseRenderingContext->getControllerName();
-        $templateParser = $this->baseRenderingContext->getTemplateParser();
-        $templatePaths = $this->baseRenderingContext->getTemplatePaths();
-        if ($actionName === null) {
-            $actionName = $this->baseRenderingContext->getControllerAction();
+        $renderingContext = $this->getCurrentRenderingContext();
+        $templateParser = $renderingContext->getTemplateParser();
+        $templatePaths = $renderingContext->getTemplatePaths();
+        if ($actionName) {
+            $actionName = ucfirst($actionName);
+            $renderingContext->setControllerAction($actionName);
         }
-        $actionName = ucfirst($actionName);
         try {
-            $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
-                $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-                function($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
-                    return $paths->getTemplateSource($controllerName, $actionName);;
-                }
-            );
+            $parsedTemplate = $this->getCurrentParsedTemplate();
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
         }
-
-        $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
 
         if (!$parsedTemplate->hasLayout()) {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
@@ -233,7 +226,11 @@ abstract class AbstractTemplateView extends AbstractView
             $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
         }
 
-        $parsedTemplate = $this->getCurrentParsedTemplate();
+        try {
+            $parsedTemplate = $this->getCurrentParsedTemplate();
+        } catch (PassthroughSourceException $error) {
+            return $error->getSource();
+        }
 
         if ($parsedTemplate->isCompiled()) {
             $methodNameOfSection = 'section_' . sha1($sectionName);
@@ -349,7 +346,26 @@ abstract class AbstractTemplateView extends AbstractView
     protected function getCurrentParsedTemplate()
     {
         $currentRendering = end($this->renderingStack);
-        return $currentRendering['parsedTemplate'] ? $currentRendering['parsedTemplate'] : $this->getCurrentRenderingContext()->getTemplateCompiler()->getCurrentlyProcessingState();
+        $renderingContext = $this->getCurrentRenderingContext();
+        $parsedTemplate = $currentRendering['parsedTemplate'] ? $currentRendering['parsedTemplate'] : $renderingContext->getTemplateCompiler()->getCurrentlyProcessingState();
+        if ($parsedTemplate) {
+            return $parsedTemplate;
+        }
+        $templatePaths = $renderingContext->getTemplatePaths();
+        $templateParser = $renderingContext->getTemplateParser();
+        $controllerName = $renderingContext->getControllerName();
+        $actionName = $renderingContext->getControllerAction();
+        $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
+            $templatePaths->getTemplateIdentifier($controllerName, $actionName),
+            function($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
+                return $paths->getTemplateSource($controllerName, $actionName);
+            }
+        );
+        if ($parsedTemplate->isCompiled()) {
+            $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
+        }
+        $renderingContext->getTemplateCompiler()->reset();
+        return $parsedTemplate;
     }
 
     /**
