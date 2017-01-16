@@ -19,6 +19,16 @@ class VariableViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
+    public function registersArguments()
+    {
+        $subject = new VariableViewHelper();
+        $subject->initializeArguments();
+        $this->assertAttributeNotEmpty('argumentDefinitions', $subject);
+    }
+
+    /**
+     * @test
+     */
     public function assignsVariableInVariableProvider()
     {
         $variableProvider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['add'])->getMock();
