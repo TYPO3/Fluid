@@ -176,9 +176,10 @@ class TemplateCompiler
     public function store($identifier, ParsingState $parsingState)
     {
         if ($this->isDisabled()) {
-            if ($this->renderingContext->isCacheEnabled()) {
+            $cache = $this->renderingContext->getCache();
+            if ($cache) {
                 // Compiler is disabled but cache is enabled. Flush cache to make sure.
-                $this->renderingContext->getCache()->flush($identifier);
+                $cache->flush($identifier);
             }
             $parsingState->setCompilable(false);
             return;

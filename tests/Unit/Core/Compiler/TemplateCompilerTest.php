@@ -156,11 +156,14 @@ class TemplateCompilerTest extends UnitTestCase
      */
     public function testStoreWhenDisabledFlushesCache()
     {
-        $renderingContext = new RenderingContextFixture();
+        $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->setMethods(['flush'])->getMock();
+        $cacheMock->expects($this->once())->method('flush');
+        $renderingContext = $this->getMockBuilder(RenderingContextFixture::class)->setMethods(['isCacheEnabled', 'getCache'])->getMock();
+        $renderingContext->expects($this->once())->method('isCacheEnabled')->willReturn(false);
+        $renderingContext->expects($this->once())->method('getCache')->willReturn($cacheMock);
         $state = new ParsingState();
-        $instance = $this->getAccessibleMock(TemplateCompiler::class);
-        $instance->_set('renderingContext', $renderingContext);
-        $instance->_set('disabled', true);
+        $instance = new TemplateCompiler();
+        $instance->setRenderingContext($renderingContext);
         $instance->store('fakeidentifier', $state);
     }
 
