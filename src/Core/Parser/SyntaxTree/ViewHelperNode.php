@@ -164,7 +164,8 @@ class ViewHelperNode extends AbstractNode
     {
         /** @var $argumentDefinition ArgumentDefinition */
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
-            if ($argumentDefinition->getType() === 'boolean' && isset($argumentsObjectTree[$argumentName])) {
+            if (($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool')
+                 && isset($argumentsObjectTree[$argumentName])) {
                 $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
             }
         }

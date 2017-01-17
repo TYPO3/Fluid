@@ -8,6 +8,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -122,5 +124,29 @@ class ViewHelperNodeTest extends UnitTestCase
         $mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
         // dummy assertion to avoid "did not perform any assertions" error
         $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
+    public function booleanArgumentsMustBeConvertedIntoBooleanNodes()
+    {
+        $argumentDefinitions = [
+            'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),
+            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false)
+        ];
+        $argumentsObjectTree = [
+            'var1' => new TextNode('true'),
+            'var2' => new TextNode('true')
+        ];
+
+        $mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
+
+        $mockTemplateParser->_callRef('rewriteBooleanNodesInArgumentsObjectTree', $argumentDefinitions, $argumentsObjectTree);
+
+        $this->assertEquals($argumentsObjectTree, [
+            'var1' => new BooleanNode(new TextNode('true')),
+            'var2' => new BooleanNode(new TextNode('true'))
+        ]);
     }
 }
