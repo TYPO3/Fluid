@@ -128,7 +128,6 @@ class ViewHelperNodeTest extends UnitTestCase
 
     /**
      * @test
-     * @group foo
      */
     public function booleanArgumentsMustBeConvertedIntoBooleanNodes()
     {
