@@ -445,12 +445,7 @@ class TemplateParser
 
         // Object Accessor
         if (strlen($objectAccessorString) > 0) {
-            if ($state->isCompilable() && !$state->isCompiled()) {
-                $accessors = VariableExtractor::extractAccessors($state->getVariableContainer(), $objectAccessorString);
-            } else {
-                $accessors = [];
-            }
-            $node = new ObjectAccessorNode($objectAccessorString, $accessors);
+            $node = new ObjectAccessorNode($objectAccessorString);
             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $state);
             $state->getNodeFromStack()->addChildNode($node);
         }
