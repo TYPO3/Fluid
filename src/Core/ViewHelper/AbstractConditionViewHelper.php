@@ -24,14 +24,13 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * <[aConditionViewHelperName] .... then="condition true" else="condition false" />,
  * or as well use the "then" and "else" child nodes.
  *
- * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
+ * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
  * Make sure to NOT OVERRIDE the constructor.
  *
  * @api
  */
 abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {
-
     /**
      * @var boolean
      */
@@ -44,7 +43,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.', false);
         $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.', false);
-        $this->registerArgument('condition', 'boolean', 'Condition expression conforming to Fluid boolean rules', false, false);
     }
 
     /**
@@ -60,13 +58,24 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * subclasses that will be using this base class in the future. Let this
      * be a warning if someone considers changing this method signature!
      *
-     * @param array|NULL $arguments
+     * @param array $arguments
      * @return boolean
      * @api
      */
-    protected static function evaluateCondition($arguments = null)
+    abstract protected static function evaluateCondition($arguments = null);
+
+    /**
+     * Renders <f:then> child if condition is true, otherwise renders <f:else> child.
+     *
+     * @return string the rendered string
+     */
+    public function render()
     {
-        return (boolean) $arguments['condition'];
+        if (static::evaluateCondition($this->arguments)) {
+            return $this->renderThenChild();
+        } else {
+            return $this->renderElseChild();
+        }
     }
 
     /**
@@ -90,14 +99,14 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         } elseif (array_key_exists('else', $arguments)) {
             return $arguments['else'];
         }
-        return '';
+        return null;
     }
 
     /**
      * @param array $closures
      * @param array $conditionClosures
      * @param RenderingContextInterface $renderingContext
-     * @return string
+     * @return mixed
      */
     private static function evaluateElseClosures(array $closures, array $conditionClosures, RenderingContextInterface $renderingContext)
     {
@@ -110,7 +119,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
                 }
             }
         }
-        return '';
+        return null;
     }
 
     /**

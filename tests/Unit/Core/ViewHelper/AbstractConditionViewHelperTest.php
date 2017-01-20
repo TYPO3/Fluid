@@ -15,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 
 /**
@@ -31,7 +32,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     public function setUp()
     {
         parent::setUp();
-        $this->viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, ['renderChildren', 'hasArgument']);
+        $this->viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, ['renderChildren', 'hasArgument', 'evaluateCondition']);
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
     }
 
@@ -109,10 +110,10 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRenderFromArgumentsReturnsExpectedValue(array $arguments, $expected)
     {
-        $viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, ['dummy']);
+        $viewHelper = $this->getMockBuilder(IfViewHelper::class)->setMethods(['dummy'])->getMock();
         $viewHelper->setArguments($arguments);
         $viewHelper->setViewHelperNode(new ViewHelperNode($this->renderingContext, 'f', 'if', [], new ParsingState()));
-        $result = AbstractConditionViewHelper::renderStatic($arguments, function () {
+        $result = IfViewHelper::renderStatic($arguments, function () {
             return '';
         }, $this->renderingContext);
         $this->assertEquals($expected, $result);
@@ -310,9 +311,10 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRenderStatic(array $arguments, $expected)
     {
-        $this->viewHelper->setArguments($arguments);
+        $subject = $this->getMockBuilder(IfViewHelper::class)->setMethods(['dummy'])->getMock();
+        $subject->setArguments($arguments);
         $result = call_user_func_array(
-            [$this->viewHelper, 'renderStatic'],
+            [$subject, 'renderStatic'],
             [$arguments, function () {
                 return '';
             }, new RenderingContextFixture()]

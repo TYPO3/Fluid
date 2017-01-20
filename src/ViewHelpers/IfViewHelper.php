@@ -83,17 +83,25 @@ class IfViewHelper extends AbstractConditionViewHelper
 {
 
     /**
-     * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
+     * Initializes the "then" and "else" arguments
+     */
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('condition', 'boolean', 'Condition expression conforming to Fluid boolean rules', false, false);
+    }
+
+    /**
+     * Simplest of all possible evaluations - returns true if the
+     * boolean argument in "condition" is true.
      *
-     * @return string the rendered string
+     * @param array|NULL $arguments
+     * @return boolean
      * @api
      */
-    public function render()
+    protected static function evaluateCondition($arguments = null)
     {
-        if ($this->arguments['condition']) {
-            return $this->renderThenChild();
-        } else {
-            return $this->renderElseChild();
-        }
+        return (boolean) $arguments['condition'];
     }
+
 }
