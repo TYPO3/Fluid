@@ -142,7 +142,7 @@ class DebugViewHelper extends AbstractViewHelper
 
     /**
      * @param mixed $variable
-     * @retrurn array
+     * @return array
      */
     protected static function getValuesOfNonScalarVariable($variable)
     {
