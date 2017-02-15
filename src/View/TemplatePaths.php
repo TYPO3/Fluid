@@ -395,12 +395,15 @@ class TemplatePaths
      * Sanitize a path, ensuring it is absolute and
      * if a directory, suffixed by a trailing slash.
      *
-     * @param string $path
+     * @param string|array $path
      * @return string
      */
     protected function sanitizePath($path)
     {
-        if (strpos($path, 'php://') === 0) {
+        if (is_array($path)) {
+            $paths = array_map([$this, 'sanitizePath'], $path);
+            return array_unique($paths);
+        } elseif (strpos($path, 'php://') === 0) {
             return $path;
         } elseif (!empty($path)) {
             $path = str_replace(['\\', '//'], '/', (string) $path);
