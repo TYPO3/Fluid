@@ -25,8 +25,6 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
 
     const NAMESPACE_DECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/m';
 
-    const SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG = '/xmlns:([a-z0-9\.]+)=("[^"]+"|\'[^\']+\')*/xi';
-
     /**
      * @var RenderingContextInterface
      */
@@ -99,12 +97,46 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     public function registerNamespacesFromTemplateSource($templateSource)
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
-        if (preg_match_all(static::SPLIT_PATTERN_TEMPLATE_OPEN_NAMESPACETAG, $templateSource, $matchedVariables, PREG_SET_ORDER) > 0) {
-            foreach ($matchedVariables as $namespaceMatch) {
-                $viewHelperNamespace = $this->renderingContext->getTemplateParser()->unquoteString($namespaceMatch[2]);
-                $phpNamespace = $viewHelperResolver->resolvePhpNamespaceFromFluidNamespace($viewHelperNamespace);
-                if (strpos($phpNamespace, '/') === false) {
-                    $viewHelperResolver->addNamespace($namespaceMatch[1], $phpNamespace);
+        $matches = [];
+        $namespacePattern = 'xmlns:([a-z0-9\.]+)=("[^"]+"|\'[^\']+\')+';
+        $matched = preg_match('/<([a-z0-9]+)(?:[^>]*?)\\s+' . $namespacePattern . '[^>]*>/', $templateSource, $matches);
+
+        if ($matched) {
+            $namespaces = [];
+            preg_match_all('/' . $namespacePattern . '/', $matches[0], $namespaces, PREG_SET_ORDER);
+            foreach ($namespaces as $set) {
+                $namespaceUrl = trim($set[2], '"\'');
+                if (strpos($namespaceUrl, 'http://typo3.org/ns/') === 0) {
+                    $namespaceUri = substr($namespaceUrl, 20);
+                    $namespacePhp = str_replace('/', '\\', $namespaceUri);
+                } elseif (!preg_match('/([^a-z0-9_\\\\]+)/i', $namespaceUrl)) {
+                    $namespacePhp = $namespaceUrl;
+                    $namespacePhp = preg_replace('/\\\\{2,}/', '\\', $namespacePhp);
+                } else {
+                    $namespacePhp = null;
+                }
+                $viewHelperResolver->addNamespace($set[1], $namespacePhp);
+            }
+            if (strpos($matches[0], 'data-namespace-typo3-fluid="true"')) {
+                $templateSource = str_replace($matches[0], '', $templateSource);
+                $closingTagName = $matches[1];
+                $closingTag = '</' . $closingTagName . '>';
+                if (strpos($templateSource, $closingTag)) {
+                    $templateSource = substr($templateSource, 0, strrpos($templateSource, $closingTag)) .
+                        substr($templateSource, strrpos($templateSource, $closingTag) + strlen($closingTag));
+                }
+            } else {
+                if (!empty($namespaces)) {
+                    $namespaceAttributesToRemove = [];
+                    foreach ($namespaces as $namespace) {
+                        if (!$viewHelperResolver->isNamespaceIgnored($namespace[1])) {
+                            $namespaceAttributesToRemove[] = preg_quote($namespace[1], '/') . '="' . preg_quote($namespace[2], '/') . '"';
+                        }
+                    }
+                    if (count($namespaceAttributesToRemove)) {
+                        $matchWithRemovedNamespaceAttributes = preg_replace('/(?:\\s*+xmlns:(?:' . implode('|', $namespaceAttributesToRemove) . ')\\s*+)++/', ' ', $matches[0]);
+                        $templateSource = str_replace($matches[0], $matchWithRemovedNamespaceAttributes, $templateSource);
+                    }
                 }
             }
         }
