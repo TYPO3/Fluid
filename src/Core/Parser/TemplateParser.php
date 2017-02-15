@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
@@ -17,8 +16,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
  * Template parser building up an object syntax tree
@@ -95,6 +92,23 @@ class TemplateParser
     public function getCurrentParsingPointers()
     {
         return [$this->pointerLineNumber, $this->pointerLineCharacter, $this->pointerTemplateCode];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEscapingEnabled()
+    {
+        return $this->escapingEnabled;
+    }
+
+    /**
+     * @param boolean $escapingEnabled
+     * @return void
+     */
+    public function setEscapingEnabled($escapingEnabled)
+    {
+        $this->escapingEnabled = (boolean) $escapingEnabled;
     }
 
     /**

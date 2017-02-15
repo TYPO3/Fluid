@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\PassthroughSourceModifierTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
@@ -127,6 +128,7 @@ class RenderingContext implements RenderingContextInterface
         $this->setTemplatePaths(new TemplatePaths());
         $this->setTemplateProcessors(
             [
+                new EscapingModifierTemplateProcessor(),
                 new PassthroughSourceModifierTemplateProcessor(),
                 new NamespaceDetectionTemplateProcessor()
             ]
