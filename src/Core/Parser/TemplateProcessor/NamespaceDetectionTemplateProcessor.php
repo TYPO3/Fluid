@@ -55,7 +55,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     public function preProcessSource($templateSource)
     {
         $templateSource = $this->replaceCdataSectionsByEmptyLines($templateSource);
-        $this->registerNamespacesFromTemplateSource($templateSource);
+        $templateSource = $this->registerNamespacesFromTemplateSource($templateSource);
         $this->throwExceptionsForUnhandledNamespaces($templateSource);
         return $templateSource;
     }
@@ -92,7 +92,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * Register all namespaces that are declared inside the template string
      *
      * @param string $templateSource
-     * @return void
+     * @return string
      */
     public function registerNamespacesFromTemplateSource($templateSource)
     {
@@ -152,6 +152,8 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
         foreach ($namespaces[0] as $removal) {
             $templateSource = str_replace($removal, '', $templateSource);
         }
+
+        return $templateSource;
     }
 
     /**
