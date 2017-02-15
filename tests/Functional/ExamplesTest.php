@@ -172,6 +172,13 @@ class ExamplesTest extends BaseTestCase
                     'Value of "foobar": Single template'
                 ]
             ],
+            'example_escapingmodifier.php' => [
+                'example_escapingmodifier.php',
+                [
+                    'Value of "html": <strong>This is not escaped</strong>',
+                    'From partial: <strong>This is not escaped</strong>',
+                ]
+            ],
             'example_structures.php' => [
                 'example_structures.php',
                 [

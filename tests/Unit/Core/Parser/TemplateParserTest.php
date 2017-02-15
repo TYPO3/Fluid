@@ -73,6 +73,17 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
+    public function testPublicGetAndSetEscapingEnabledWorks()
+    {
+        $subject = new TemplateParser();
+        $default = $subject->isEscapingEnabled();
+        $subject->setEscapingEnabled(!$default);
+        $this->assertAttributeSame(!$default, 'escapingEnabled', $subject);
+    }
+
+    /**
+     * @test
+     */
     public function testBuildObjectTreeThrowsExceptionOnUnclosedViewHelperTag()
     {
         $renderingContext = new RenderingContextFixture();
