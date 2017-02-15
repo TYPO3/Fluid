@@ -117,6 +117,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             }
             $viewHelperResolver->addNamespace($identifier, $namespace);
         }
+        foreach ($namespaces[0] as $removal) {
+            $templateSource = str_replace($removal, '', $templateSource);
+        }
     }
 
     /**
