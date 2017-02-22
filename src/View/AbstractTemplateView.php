@@ -324,6 +324,7 @@ abstract class AbstractTemplateView extends AbstractView
      */
     protected function stopRendering()
     {
+        $this->getCurrentRenderingContext()->getTemplateCompiler()->reset();
         array_pop($this->renderingStack);
     }
 
@@ -364,7 +365,6 @@ abstract class AbstractTemplateView extends AbstractView
         if ($parsedTemplate->isCompiled()) {
             $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
         }
-        $renderingContext->getTemplateCompiler()->reset();
         return $parsedTemplate;
     }
 
