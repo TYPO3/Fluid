@@ -1,0 +1,21 @@
+<f:layout name="Default" />
+
+<f:section name="Main">
+
+<!-- View errors; rendering an asset that doesn't exist -->
+<f:render partial="DoesNotExist" />
+<f:render section="DoesNotExist" />
+
+<!-- ViewHelper errors; receiving arguments that were not registered -->
+<f:if notregistered="1" />
+
+<!-- ViewHelper errors; using a ViewHelper which does not exist -->
+<f:invalid />
+
+<!-- Parser error: bad expression - cast to invalid type -->
+{foobar as invalidtype}
+
+<!-- Compiler error: does not break on stop compiling -->
+<f:cache.disable />
+
+</f:section>

@@ -15,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -361,6 +362,7 @@ class AbstractViewHelperTest extends UnitTestCase
             '',
             false
         );
+        $viewHelper->setRenderingContext(new RenderingContextFixture());
         $this->setExpectedException(Exception::class);
         $viewHelper->validateAdditionalArguments(['foo' => 'bar']);
     }

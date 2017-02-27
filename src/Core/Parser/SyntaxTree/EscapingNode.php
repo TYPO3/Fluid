@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 
 /**
  * Escaping Node - wraps all content that must be escaped before output.

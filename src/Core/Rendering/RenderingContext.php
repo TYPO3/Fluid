@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
+use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -31,6 +33,10 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 class RenderingContext implements RenderingContextInterface
 {
+    /**
+     * @var ErrorHandlerInterface
+     */
+    protected $errorHandler;
 
     /**
      * Template Variable Container. Contains all variables available through object accessors in the template
@@ -137,6 +143,23 @@ class RenderingContext implements RenderingContextInterface
         $this->setViewHelperInvoker(new ViewHelperInvoker());
         $this->setViewHelperVariableContainer(new ViewHelperVariableContainer());
         $this->setVariableProvider(new StandardVariableProvider());
+    }
+
+    /**
+     * @return ErrorHandlerInterface
+     */
+    public function getErrorHandler()
+    {
+        return isset($this->errorHandler) ? $this->errorHandler : new StandardErrorHandler();
+    }
+
+    /**
+     * @param ErrorHandlerInterface $errorHandler
+     * @return void
+     */
+    public function setErrorHandler(ErrorHandlerInterface $errorHandler)
+    {
+        $this->errorHandler = $errorHandler;
     }
 
     /**

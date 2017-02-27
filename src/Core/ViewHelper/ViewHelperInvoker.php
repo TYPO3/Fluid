@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
 /**
  * Class ViewHelperInvoker
@@ -54,27 +53,32 @@ class ViewHelperInvoker
         // Rendering process
         $evaluatedArguments = [];
         $undeclaredArguments = [];
-        foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
-            if (isset($arguments[$argumentName])) {
-                /** @var NodeInterface|mixed $argumentValue */
-                $argumentValue = $arguments[$argumentName];
-                $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-            } else {
-                $evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
-            }
-        }
-        foreach ($arguments as $argumentName => $argumentValue) {
-            if (!array_key_exists($argumentName, $evaluatedArguments)) {
-                $undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-            }
-        }
 
-        if ($renderChildrenClosure) {
-            $viewHelper->setRenderChildrenClosure($renderChildrenClosure);
+        try {
+            foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
+                if (isset($arguments[$argumentName])) {
+                    /** @var NodeInterface|mixed $argumentValue */
+                    $argumentValue = $arguments[$argumentName];
+                    $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+                } else {
+                    $evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
+                }
+            }
+            foreach ($arguments as $argumentName => $argumentValue) {
+                if (!array_key_exists($argumentName, $evaluatedArguments)) {
+                    $undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+                }
+            }
+
+            if ($renderChildrenClosure) {
+                $viewHelper->setRenderChildrenClosure($renderChildrenClosure);
+            }
+            $viewHelper->setRenderingContext($renderingContext);
+            $viewHelper->setArguments($evaluatedArguments);
+            $viewHelper->handleAdditionalArguments($undeclaredArguments);
+            return $viewHelper->initializeArgumentsAndRender();
+        } catch (Exception $error) {
+            return $renderingContext->getErrorHandler()->handleViewHelperError($error);
         }
-        $viewHelper->setRenderingContext($renderingContext);
-        $viewHelper->setArguments($evaluatedArguments);
-        $viewHelper->handleAdditionalArguments($undeclaredArguments);
-        return $viewHelper->initializeArgumentsAndRender();
     }
 }
