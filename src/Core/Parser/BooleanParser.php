@@ -6,8 +6,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
-
 /**
  * This BooleanParser helps to parse and evaluate boolean expressions.
  * it's basically a recursive decent parser that uses a tokenizing regex

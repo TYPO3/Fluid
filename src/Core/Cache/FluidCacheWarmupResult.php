@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\Cache;
 
 use TYPO3Fluid\Fluid\Core\Compiler\FailedCompilingState;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 
 /**
  * Class FluidCacheWarmupResult

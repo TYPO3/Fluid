@@ -6,9 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 
 /**
  * Type Casting Node - allows the shorthand version

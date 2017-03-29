@@ -12,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
-use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
 /**
  * Class ViewHelperInvokerTest
