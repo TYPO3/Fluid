@@ -85,7 +85,7 @@ class ViewHelperResolver
      */
     public function addNamespace($identifier, $phpNamespace)
     {
-        if (!array_key_exists($identifier, $this->namespaces)) {
+        if (!array_key_exists($identifier, $this->namespaces) || $this->namespaces[$identifier] === null) {
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array) $phpNamespace;
         } elseif (is_array($phpNamespace)) {
             $this->namespaces[$identifier] = array_unique(array_merge($this->namespaces[$identifier], $phpNamespace));
@@ -268,6 +268,7 @@ class ViewHelperResolver
      *
      * @param string $namespace
      * @param string $viewHelperShortName
+     * @return ViewHelperInterface
      */
     public function createViewHelperInstance($namespace, $viewHelperShortName)
     {
