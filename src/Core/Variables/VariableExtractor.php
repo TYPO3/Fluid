@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /*
@@ -160,7 +161,7 @@ class VariableExtractor
         } elseif ($accessor === self::ACCESSOR_GETTER) {
             return ($class !== false && method_exists($subject, 'get' . ucfirst($propertyName)));
         } elseif ($accessor === self::ACCESSOR_ASSERTER) {
-            return ($class !== false && method_exists($subject, 'is' . ucfirst($propertyName)));
+            return ($class !== false && $this->isExtractableThroughAsserter($subject, $propertyName));
         } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
             return ($class !== false && property_exists($subject, $propertyName));
         }
@@ -183,7 +184,7 @@ class VariableExtractor
             if ($accessor === self::ACCESSOR_GETTER) {
                 return call_user_func_array([$subject, 'get' . ucfirst($propertyName)], []);
             } elseif ($accessor === self::ACCESSOR_ASSERTER) {
-                return call_user_func_array([$subject, 'is' . ucfirst($propertyName)], []);
+                return $this->extractThroughAsserter($subject, $propertyName);
             } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
                 return $subject->$propertyName;
             }
@@ -207,11 +208,10 @@ class VariableExtractor
         if (is_object($subject)) {
             $upperCasePropertyName = ucfirst($propertyName);
             $getter = 'get' . $upperCasePropertyName;
-            $asserter = 'is' . $upperCasePropertyName;
             if (method_exists($subject, $getter)) {
                 return self::ACCESSOR_GETTER;
             }
-            if (method_exists($subject, $asserter)) {
+            if ($this->isExtractableThroughAsserter($subject, $propertyName)) {
                 return self::ACCESSOR_ASSERTER;
             }
             if (property_exists($subject, $propertyName)) {
@@ -220,5 +220,34 @@ class VariableExtractor
         }
 
         return null;
+    }
+
+    /**
+     * Tests whether a property can be extracted through `is*` or `has*` methods.
+     *
+     * @param mixed $subject
+     * @param string $propertyName
+     * @return bool
+     */
+    protected function isExtractableThroughAsserter($subject, $propertyName)
+    {
+        return method_exists($subject, 'is' . ucfirst($propertyName))
+            || method_exists($subject, 'has' . ucfirst($propertyName));
+    }
+
+    /**
+     * Extracts a property through `is*` or `has*` methods.
+     *
+     * @param object $subject
+     * @param string $propertyName
+     * @return mixed
+     */
+    protected function extractThroughAsserter($subject, $propertyName)
+    {
+        if (method_exists($subject, 'is' . ucfirst($propertyName))) {
+            return call_user_func_array([$subject, 'is' . ucfirst($propertyName)], []);
+        }
+
+        return call_user_func_array([$subject, 'has' . ucfirst($propertyName)], []);
     }
 }

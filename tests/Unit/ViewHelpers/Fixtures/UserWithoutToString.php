@@ -40,4 +40,20 @@ class UserWithoutToString
     {
         return !empty($this->name);
     }
+
+    /**
+     * @return boolean
+     */
+    public function hasHasAccessor()
+    {
+        return !empty($this->name);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isIsAccessor()
+    {
+        return !empty($this->name);
+    }
 }

@@ -48,6 +48,10 @@ class VariableExtractorTest extends UnitTestCase
             [['user' => $namedUser], 'user.invalid', null],
             [['foodynamicbar' => 'test', 'dyn' => 'dynamic'], 'foo{dyn}bar', 'test'],
             [['foo' => ['dynamic' => ['bar' => 'test']], 'dyn' => 'dynamic'], 'foo.{dyn}.bar', 'test'],
+            [['user' => $namedUser], 'user.hasAccessor', true],
+            [['user' => $namedUser], 'user.isAccessor', true],
+            [['user' => $unnamedUser], 'user.hasAccessor', false],
+            [['user' => $unnamedUser], 'user.isAccessor', false],
         ];
     }
 
@@ -82,7 +86,7 @@ class VariableExtractorTest extends UnitTestCase
             [['inArray' => $inArray], 'inArray.user.name', [$asArray, $asArray, $asGetter]],
             [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.user.name', [$asArray, $asArray, $asGetter]],
             [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.allIdentifiers', [$asArray, $asGetter]],
-            [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]]
+            [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
         ];
     }
 
