@@ -64,7 +64,7 @@ class ForViewHelper extends AbstractViewHelper
 {
 
     use CompileWithRenderStatic;
-    
+
     /**
      * @var boolean
      */
@@ -113,7 +113,7 @@ class ForViewHelper extends AbstractViewHelper
             $iterationData = [
                 'index' => 0,
                 'cycle' => 1,
-                'total' => count($arguments['each'])
+                'total' => ($arguments['each'] instanceof \Iterator) ? iterator_count($arguments['each']) : count($arguments['each'])
             ];
         }
 
