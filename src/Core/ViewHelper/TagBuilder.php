@@ -44,6 +44,24 @@ class TagBuilder
     protected $forceClosingTag = false;
 
     /**
+     * Specifies whether or not this tag allows empty attribute
+     * values to be assigned on the tag when rendering it.
+     *
+     * @var boolean
+     */
+    protected $allowEmptyAttributes = false;
+
+    /**
+     * @param string $tagName
+     * @param string $tagContent
+     * @return self
+     */
+    public static function create($tagName = '', $tagContent = '')
+    {
+        return new TagBuilder($tagName, $tagContent);
+    }
+
+    /**
      * Constructor
      *
      * @param string $tagName name of the tag to be rendered
@@ -222,6 +240,7 @@ class TagBuilder
         $this->content = '';
         $this->attributes = [];
         $this->forceClosingTag = false;
+        $this->allowEmptyAttributes = false;
     }
 
     /**
@@ -237,10 +256,13 @@ class TagBuilder
         }
         $output = '<' . $this->tagName;
         foreach ($this->attributes as $attributeName => $attributeValue) {
-            $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
+            if ($this->allowEmptyAttributes || ($attributeValue !== '' && $attributeValue !== null)) {
+                $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
+            }
         }
         if ($this->hasContent() || $this->forceClosingTag) {
-            $output .= '>' . $this->content . '</' . $this->tagName . '>';
+            $output .= '>' . $this->content .
+                '</' . $this->tagName . '>';
         } else {
             $output .= ' />';
         }
