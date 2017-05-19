@@ -27,7 +27,6 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
  */
 class StandardCacheWarmerTest extends UnitTestCase
 {
-
     /**
      * @test
      */
@@ -126,5 +125,17 @@ class StandardCacheWarmerTest extends UnitTestCase
             [new \TYPO3Fluid\Fluid\View\Exception('Fluid view exception')],
             [new \RuntimeException('General runtime exception')]
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function testCreateClosureCreatesFileReadingClosure()
+    {
+        $subject = new StandardCacheWarmer();
+        $method = new \ReflectionMethod($subject, 'createClosure');
+        $method->setAccessible(true);
+        $closure = $method->invokeArgs($subject, [__FILE__]);
+        $this->assertNotEmpty($closure(new TemplateParser(), new TemplatePaths()));
     }
 }
