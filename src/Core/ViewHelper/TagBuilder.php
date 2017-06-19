@@ -47,7 +47,7 @@ class TagBuilder
      * Constructor
      *
      * @param string $tagName name of the tag to be rendered
-     * @param string $tagContent content of the tag to be rendered
+     * @param string|\Closure $tagContent content of the tag to be rendered
      * @api
      */
     public function __construct($tagName = '', $tagContent = '')
@@ -60,12 +60,13 @@ class TagBuilder
      * Sets the tag name
      *
      * @param string $tagName name of the tag to be rendered
-     * @return void
+     * @return TagBuilder
      * @api
      */
     public function setTagName($tagName)
     {
         $this->tagName = $tagName;
+        return $this;
     }
 
     /**
@@ -83,12 +84,13 @@ class TagBuilder
      * Sets the content of the tag
      *
      * @param string $tagContent content of the tag to be rendered
-     * @return void
+     * @return TagBuilder
      * @api
      */
     public function setContent($tagContent)
     {
         $this->content = $tagContent;
+        return $this;
     }
 
     /**
@@ -121,11 +123,13 @@ class TagBuilder
      * E.g. <textarea> cant be self-closing even if its empty
      *
      * @param boolean $forceClosingTag
+     * @return TagBuilder
      * @api
      */
     public function forceClosingTag($forceClosingTag)
     {
         $this->forceClosingTag = $forceClosingTag;
+        return $this;
     }
 
     /**
@@ -188,7 +192,7 @@ class TagBuilder
      *
      * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
      * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute values#
-     * @return void
+     * @return TagBuilder
      * @api
      */
     public function addAttributes(array $attributes, $escapeSpecialCharacters = true)
@@ -196,24 +200,26 @@ class TagBuilder
         foreach ($attributes as $attributeName => $attributeValue) {
             $this->addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters);
         }
+        return $this;
     }
 
     /**
      * Removes an attribute from the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be removed from the tag
-     * @return void
+     * @return TagBuilder
      * @api
      */
     public function removeAttribute($attributeName)
     {
         unset($this->attributes[$attributeName]);
+        return $this;
     }
 
     /**
      * Resets the TagBuilder by setting all members to their default value
      *
-     * @return void
+     * @return TagBuilder
      * @api
      */
     public function reset()
@@ -222,6 +228,7 @@ class TagBuilder
         $this->content = '';
         $this->attributes = [];
         $this->forceClosingTag = false;
+        return $this;
     }
 
     /**
@@ -240,7 +247,7 @@ class TagBuilder
             $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
         }
         if ($this->hasContent() || $this->forceClosingTag) {
-            $output .= '>' . $this->content . '</' . $this->tagName . '>';
+            $output .= '>' . (is_callable($this->content) ? call_user_func($this->content) : $this->content) . '</' . $this->tagName . '>';
         } else {
             $output .= ' />';
         }

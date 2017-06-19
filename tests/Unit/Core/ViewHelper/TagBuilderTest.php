@@ -36,6 +36,15 @@ class TagBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    public function contentSupportsClosure()
+    {
+        $tagBuilder = new TagBuilder('div', function () { return 'some text'; });
+        $this->assertEquals('<div>some text</div>', $tagBuilder->render());
+    }
+
+    /**
+     * @test
+     */
     public function setContentDoesNotEscapeValue()
     {
         $tagBuilder = new TagBuilder();

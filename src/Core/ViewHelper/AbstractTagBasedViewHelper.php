@@ -76,18 +76,12 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Sets the tag name to $this->tagName.
-     * Additionally, sets all tag attributes which were registered in
-     * $this->tagAttributes and additionalArguments.
-     *
-     * Will be invoked just before the render method.
-     *
-     * @return void
-     * @api
+     * @param array $arguments
      */
-    public function initialize()
+    public function setArguments(array $arguments)
     {
-        parent::initialize();
+        $this->tag->reset();
+        parent::setArguments($arguments);
         if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
             $this->tag->addAttributes($this->arguments['additionalAttributes']);
         }
