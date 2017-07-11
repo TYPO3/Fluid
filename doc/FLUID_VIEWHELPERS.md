@@ -105,11 +105,10 @@ When installed with development dependencies, `TYPO3.Fluid` includes a CLI comma
 native ViewHelpers and any inside your own packages. To use this command:
 
 ```bash
-./vendor/bin/generateschema TYPO3Fluid\\Fluid\\ViewHelpers src/ViewHelpers > schema.xsd
+./vendor/bin/generateschema VendorName\\PackageName VendorName\\OptionalSecondPackage > schema.xsd
 ```
 
-Replace the first and second parameters with your own PHP namespace prefix and path to your ViewHelper class files, respectively,
-to generate a schema file for your own ViewHelpers.
+Provide as many package namespaces as desired and all ViewHelper classes in all those namespaces will be included in the schame. The first provided namespace gets used when determining the XSD namespace URL.
 
 If you installed `TYPO3.Fluid` as dependency or prevented installing development dependencies you will need to manually install
 the schema generating utility:
