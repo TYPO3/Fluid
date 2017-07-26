@@ -142,13 +142,14 @@ class TemplateCompiler
      */
     public function has($identifier)
     {
+        $identifier = $this->sanitizeIdentifier($identifier);
+
         if (isset($this->syntaxTreeInstanceCache[$identifier])) {
             return true;
         }
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-        $identifier = $this->sanitizeIdentifier($identifier);
         return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
     }
 
@@ -185,6 +186,8 @@ class TemplateCompiler
      */
     public function store($identifier, ParsingState $parsingState)
     {
+        $identifier = $this->sanitizeIdentifier($identifier);
+
         if ($this->isDisabled()) {
             $cache = $this->renderingContext->getCache();
             if ($cache) {
@@ -196,7 +199,6 @@ class TemplateCompiler
         }
 
         $this->currentlyProcessingState = $parsingState;
-        $identifier = $this->sanitizeIdentifier($identifier);
         $this->nodeConverter->setVariableCounter(0);
         $generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
 
