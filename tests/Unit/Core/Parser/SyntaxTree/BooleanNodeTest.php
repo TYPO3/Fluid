@@ -85,9 +85,9 @@ class BooleanNodeTest extends UnitTestCase
     {
         return [
             [0, false],
-            [-1, false],
-            ['-1', false],
-            [-.5, false],
+            [-1, true],
+            ['-1', true],
+            [-.5, true],
             [1, true],
             [.5, true],
         ];
