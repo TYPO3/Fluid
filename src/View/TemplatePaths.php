@@ -147,7 +147,7 @@ class TemplatePaths
      */
     public function setLayoutPathAndFilename($layoutPathAndFilename)
     {
-        $this->layoutPathAndFilename = $layoutPathAndFilename;
+        $this->layoutPathAndFilename = (string) $this->sanitizePath($layoutPathAndFilename);
     }
 
     /**
@@ -632,6 +632,9 @@ class TemplatePaths
      */
     public function getLayoutPathAndFilename($layoutName = 'Default')
     {
+        if ($this->layoutPathAndFilename !== null) {
+            return $this->layoutPathAndFilename;
+        }
         $format = $this->getFormat();
         $layoutName = ucfirst($layoutName);
         $layoutKey = $layoutName . '.' . $format;
