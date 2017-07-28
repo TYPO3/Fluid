@@ -246,9 +246,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         try {
             $parsedTemplate = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $identifier,
-                function(TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
-                    return file_get_contents($templatePathAndFilename, FILE_TEXT);
-                }
+                $this->createClosure($templatePathAndFilename)
             );
         } catch (StopCompilingException $error) {
             $parsedTemplate->setFailureReason(sprintf('Compiling is intentionally disabled. Specific reason unknown. Message: "%s"', $error->getMessage()));
@@ -303,5 +301,16 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
             ]);
         }
         return $parsedTemplate;
+    }
+
+    /**
+     * @param string $templatePathAndFilename
+     * @return \Closure
+     */
+    protected function createClosure($templatePathAndFilename)
+    {
+        return function(TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
+            return file_get_contents($templatePathAndFilename, FILE_TEXT);
+        };
     }
 }
