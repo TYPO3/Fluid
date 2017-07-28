@@ -266,7 +266,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
      */
     public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable()
     {
@@ -278,6 +277,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $this->arguments['key'] = 'someKey';
         $this->arguments['reverse'] = true;
 
+        $this->setExpectedException(\InvalidArgumentException::class);
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->initializeArgumentsAndRender();
     }

@@ -28,6 +28,15 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * @test
+     */
+    public function viewHelperInitializesArguments()
+    {
+        $this->viewHelper->initializeArguments();
+        $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
+    }
+
+    /**
+     * @test
      * @expectedException \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
     public function renderThrowsExceptionIfSwitchExpressionIsNotSetInViewHelperVariableContainer()
