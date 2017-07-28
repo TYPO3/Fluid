@@ -41,6 +41,7 @@ class TemplatePathsTest extends BaseTestCase
         return [
             ['', ''],
             ['/foo/bar/baz', '/foo/bar/baz'],
+            [['/foo/bar/baz', '/baz'], ['/foo/bar/baz', '/baz']],
             ['C:\\foo\\bar\baz', 'C:/foo/bar/baz'],
             [__FILE__, strtr(__FILE__, '\\', '/')],
             [__DIR__, strtr(__DIR__, '\\', '/') . '/'],

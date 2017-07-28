@@ -45,20 +45,19 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     public function getEscapingTestValues()
     {
         return [
-            [
-                '{escaping on}', true,
-                '{escaping = on}', true,
-                '{escaping=on}', true,
-                '{escaping off}', false,
-                '{escaping = off}', false,
-                '{escaping=off}', false,
-                '{escapingEnabled on}', true,
-                '{escapingEnabled = on}', true,
-                '{escapingEnabled=on}', true,
-                '{escapingEnabled off}', false,
-                '{escapingEnabled = off}', false,
-                '{escapingEnabled=off}', false,
-            ]
+            ['', true],
+            ['{escaping on}', true],
+            ['{escaping = on}', true],
+            ['{escaping=on}', true],
+            ['{escaping off}', false],
+            ['{escaping = off}', false],
+            ['{escaping=off}', false],
+            ['{escapingEnabled on}', true],
+            ['{escapingEnabled = on}', true],
+            ['{escapingEnabled=on}', true],
+            ['{escapingEnabled off}', false],
+            ['{escapingEnabled = off}', false],
+            ['{escapingEnabled=off}', false]
         ];
     }
 

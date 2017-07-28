@@ -35,6 +35,17 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
+    public function testWarmupModeToggle()
+    {
+        $instance = new TemplateCompiler();
+        $instance->enterWarmupMode();
+        $this->assertAttributeSame(TemplateCompiler::MODE_WARMUP, 'mode', $instance);
+        $this->assertTrue($instance->isWarmupMode());
+    }
+
+    /**
+     * @test
+     */
     public function testSetRenderingContext()
     {
         $instance = new TemplateCompiler();
