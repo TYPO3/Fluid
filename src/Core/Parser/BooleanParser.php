@@ -454,9 +454,9 @@ class BooleanParser
                 return $x;
             }
             if (strpos($x, '.') !== false) {
-                return floatval($x);
+                return (float)$x;
             } else {
-                return intval($x);
+                return (int)$x;
             }
         }
 

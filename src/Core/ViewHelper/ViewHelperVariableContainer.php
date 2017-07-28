@@ -102,9 +102,7 @@ class ViewHelperVariableContainer
      */
     public function remove($viewHelperName, $key)
     {
-        if ($this->exists($viewHelperName, $key)) {
-            unset($this->objects[$viewHelperName][$key]);
-        }
+        unset($this->objects[$viewHelperName][$key]);
     }
 
     /**
