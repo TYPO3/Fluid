@@ -44,6 +44,11 @@ class TagBuilder
     protected $forceClosingTag = false;
 
     /**
+     * @var bool
+     */
+    protected $ignoreEmptyAttributes = false;
+
+    /**
      * Constructor
      *
      * @param string $tagName name of the tag to be rendered
@@ -110,10 +115,7 @@ class TagBuilder
      */
     public function hasContent()
     {
-        if ($this->content === null) {
-            return false;
-        }
-        return $this->content !== '';
+        return $this->content !== '' && $this->content !== null;
     }
 
     /**
@@ -167,6 +169,18 @@ class TagBuilder
     }
 
     /**
+     * @param boolean $ignoreEmptyAttributes
+     * @return void
+     */
+    public function ignoreEmptyAttributes($ignoreEmptyAttributes)
+    {
+        $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
+        if ($ignoreEmptyAttributes) {
+            $this->attributes = array_filter($this->attributes, function ($item) { return trim((string) $item) !== ''; });
+        }
+    }
+
+    /**
      * Adds an attribute to the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be added to the tag
@@ -177,10 +191,19 @@ class TagBuilder
      */
     public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = true)
     {
-        if ($escapeSpecialCharacters) {
-            $attributeValue = htmlspecialchars($attributeValue);
+        if ($attributeName === 'data' && (is_array($attributeValue) || $attributeValue instanceof \Traversable)) {
+            foreach ($attributeValue as $name => $value) {
+                $this->addAttribute('data-' . $name, $value, $escapeSpecialCharacters);
+            }
+        } else {
+            if (trim((string) $attributeValue) === '' && $this->ignoreEmptyAttributes) {
+                return;
+            }
+            if ($escapeSpecialCharacters) {
+                $attributeValue = htmlspecialchars($attributeValue);
+            }
+            $this->attributes[$attributeName] = $attributeValue;
         }
-        $this->attributes[$attributeName] = $attributeValue;
     }
 
     /**
