@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\ViewHelpers\DebugViewHelper;
  */
 class DebugViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
      * @test
      */
@@ -33,14 +32,16 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
      * @param array $arguments
      * @param string $expected
      */
-    public function testRender($value, array $arguments, $expected)
+    public function testRender($value, array $arguments, $expected = null)
     {
         $instance = $this->getMock(DebugViewHelper::class, ['renderChildren']);
         $instance->expects($this->once())->method('renderChildren')->willReturn($value);
         $instance->setArguments($arguments);
         $instance->setRenderingContext(new RenderingContextFixture());
         $result = $instance->render();
-        $this->assertEquals($expected, $result);
+        if ($expected) {
+            $this->assertEquals($expected, $result);
+        }
     }
 
     /**
@@ -48,6 +49,11 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
      */
     public function getRenderTestValues()
     {
+        $arrayObject = new \ArrayObject(['foo' => 'bar']);
+        $recursive = clone $arrayObject;
+        $recursive['recursive'] = $arrayObject;
+        $stream = fopen('php://memory', 'r+');
+        fwrite($stream, 'Hello world');
         return [
             ['test', ['typeOnly' => false, 'html' => false, 'levels' => 1], "string 'test'" . PHP_EOL],
             ['test', ['typeOnly' => true, 'html' => false, 'levels' => 1], 'string'],
@@ -67,7 +73,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
                 '<code>array</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>'
             ],
             [
-                new \ArrayObject(['foo' => 'bar']),
+                $arrayObject,
                 ['typeOnly' => false, 'html' => true, 'levels' => 2],
                 '<code>ArrayObject</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>'
             ],
@@ -82,7 +88,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
                 'array: ' . PHP_EOL . '  "foo": string \'bar\'' . PHP_EOL
             ],
             [
-                new \ArrayObject(['foo' => 'bar']),
+                $arrayObject,
                 ['typeOnly' => false, 'html' => false, 'levels' => 3],
                 'ArrayObject: ' . PHP_EOL . '  "foo": string \'bar\'' . PHP_EOL
             ],
@@ -100,6 +106,20 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
                 null,
                 ['typeOnly' => false, 'html' => false, 'levels' => 3],
                 'null' . PHP_EOL
+            ],
+            [
+                $recursive,
+                ['typeOnly' => false, 'html' => false, 'levels' => 1],
+                'ArrayObject: ' . PHP_EOL . '  "foo": string \'bar\'' . PHP_EOL . '  "recursive": ArrayObject: *Recursion limited*'
+            ],
+            [
+                $recursive,
+                ['typeOnly' => false, 'html' => true, 'levels' => 1],
+                '<code>ArrayObject</code><ul><li>foo: <code>string = \'bar\'</code></li><li>recursive: <code>ArrayObject</code><i>Recursion limited</i></li></ul>'
+            ],
+            [
+                $stream,
+                ['typeOnly' => false, 'html' => false, 'levels' => 1]
             ],
             [
                 \DateTime::createFromFormat('U', '1468328915'),

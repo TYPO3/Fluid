@@ -14,24 +14,6 @@ use TYPO3Fluid\Fluid\ViewHelpers\SpacelessViewHelper;
  */
 class SpacelessViewHelperTest extends ViewHelperBaseTestcase
 {
-
-    /**
-     * @param string $input
-     * @param string $expected
-     * @dataProvider getRenderStaticData
-     * @test
-     */
-    public function testRender($input, $expected)
-    {
-        $instance = new SpacelessViewHelper();
-        $instance->setRenderChildrenClosure(function () use ($input) {
-            return $input;
-        });
-        $instance->setRenderingContext($this->getMock(RenderingContextInterface::class));
-        $instance->setArguments([]);
-        $this->assertEquals($expected, $instance->render());
-    }
-
     /**
      * @param string $input
      * @param string $expected
