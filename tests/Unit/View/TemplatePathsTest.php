@@ -86,6 +86,7 @@ class TemplatePathsTest extends BaseTestCase
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setLayoutPathAndFilename('foobar');
         $this->assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
+        $this->assertEquals('foobar', $instance->getLayoutPathAndFilename());
     }
 
     /**
