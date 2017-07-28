@@ -65,7 +65,7 @@ class SimpleFileCache implements FluidCacheInterface
         }
         $file = $this->getCachedFilePathAndFilename($name);
         if (file_exists($file) && !class_exists($name)) {
-            include_once($file);
+            include_once $file;
             return true;
         }
         return false;
