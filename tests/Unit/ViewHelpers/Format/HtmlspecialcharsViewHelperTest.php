@@ -35,6 +35,15 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
+    public function viewHelperInitializesArguments()
+    {
+        $this->viewHelper->initializeArguments();
+        $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
+    }
+
+    /**
+     * @test
+     */
     public function viewHelperDeactivatesEscapingInterceptor()
     {
         $this->assertFalse($this->viewHelper->isOutputEscapingEnabled());

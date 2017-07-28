@@ -41,6 +41,7 @@ class TemplatePathsTest extends BaseTestCase
         return [
             ['', ''],
             ['/foo/bar/baz', '/foo/bar/baz'],
+            [['/foo/bar/baz', '/baz'], ['/foo/bar/baz', '/baz']],
             ['C:\\foo\\bar\baz', 'C:/foo/bar/baz'],
             [__FILE__, strtr(__FILE__, '\\', '/')],
             [__DIR__, strtr(__DIR__, '\\', '/') . '/'],
@@ -85,6 +86,7 @@ class TemplatePathsTest extends BaseTestCase
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setLayoutPathAndFilename('foobar');
         $this->assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
+        $this->assertEquals('foobar', $instance->getLayoutPathAndFilename());
     }
 
     /**

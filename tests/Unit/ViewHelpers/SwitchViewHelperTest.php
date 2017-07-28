@@ -29,11 +29,28 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     protected $viewHelper;
 
+    /**
+     * @var ViewHelperNode
+     */
+    protected $viewHelperNode;
+
     public function setUp()
     {
         parent::setUp();
-        $this->viewHelper = $this->getMock(SwitchViewHelper::class, ['renderChildren']);
+        $this->viewHelperNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
+        $this->viewHelperNode->expects($this->any())->method('getChildNodes')->willReturn([]);
+        $this->viewHelper = $this->getMockBuilder(SwitchViewHelper::class)->setMethods(['renderChildren'])->getMock();
+        $this->viewHelper->setViewHelperNode($this->viewHelperNode);
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
+    }
+
+    /**
+     * @test
+     */
+    public function viewHelperInitializesArguments()
+    {
+        $this->viewHelper->initializeArguments();
+        $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
     }
 
     /**

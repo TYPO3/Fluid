@@ -32,16 +32,6 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * @test
-     */
-    public function testRenderReturnsNull()
-    {
-        $instance = new LayoutViewHelper();
-        $result = $instance->render();
-        $this->assertNull($result);
-    }
-
-    /**
-     * @test
      * @dataProvider getPostParseEventTestValues
      * @param arary $arguments
      * @param string $expectedLayoutName
