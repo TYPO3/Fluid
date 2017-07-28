@@ -168,8 +168,10 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             if ($childNode instanceof ViewHelperNode
                 && substr($childNode->getViewHelperClassName(), -14) === 'ElseViewHelper') {
                 $arguments = $childNode->getArguments();
-                if (isset($arguments['if']) && $arguments['if']->evaluate($this->renderingContext)) {
-                    return $childNode->evaluate($this->renderingContext);
+                if (isset($arguments['if'])) {
+                    if ($arguments['if']->evaluate($this->renderingContext)) {
+                        return $childNode->evaluate($this->renderingContext);
+                    }
                 } else {
                     $elseNode = $childNode;
                 }

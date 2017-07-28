@@ -254,6 +254,21 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
+    public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndElseViewHelperChildIfArgumentConditionIsFalseToo()
+    {
+        $mockElseViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'getArguments', 'evaluate'], [], '', false);
+        $mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue(ElseViewHelper::class));
+        $mockElseViewHelperNode->expects($this->at(1))->method('getArguments')->will($this->returnValue(['if' => new BooleanNode(false)]));
+        $mockElseViewHelperNode->expects($this->never())->method('evaluate');
+
+        $this->viewHelper->setChildNodes([$mockElseViewHelperNode]);
+        $actualResult = $this->viewHelper->_call('renderElseChild');
+        $this->assertEquals('', $actualResult);
+    }
+
+    /**
+     * @test
+     */
     public function thenArgumentHasPriorityOverChildNodesIfConditionIsTrue()
     {
         $mockThenViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate', 'setRenderingContext'], [], '', false);

@@ -163,7 +163,8 @@ class NodeConverterTest extends UnitTestCase
             [new NumericNode('3'), '3'],
             [new NumericNode('4.5'), '4.5'],
             [new ArrayNode(['foo', 'bar']), '$array0'],
-            [new ArrayNode([0, new TextNode('test'), new ArrayNode(['foo', 'bar'])]), '$array0']
+            [new ArrayNode([0, new TextNode('test'), new ArrayNode(['foo', 'bar'])]), '$array0'],
+            [$this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass(), '']
         ];
     }
 }

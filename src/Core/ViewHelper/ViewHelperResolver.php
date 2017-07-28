@@ -268,6 +268,7 @@ class ViewHelperResolver
      *
      * @param string $namespace
      * @param string $viewHelperShortName
+     * @return ViewHelperInterface
      */
     public function createViewHelperInstance($namespace, $viewHelperShortName)
     {

@@ -142,14 +142,15 @@ class TemplateCompiler
      */
     public function has($identifier)
     {
+        $identifier = $this->sanitizeIdentifier($identifier);
+
         if (isset($this->syntaxTreeInstanceCache[$identifier])) {
             return true;
         }
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-        $identifier = $this->sanitizeIdentifier($identifier);
-        return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
+        return !empty($identifier) && (class_exists($identifier, false) || $this->renderingContext->getCache()->get($identifier));
     }
 
     /**
@@ -161,9 +162,12 @@ class TemplateCompiler
         $identifier = $this->sanitizeIdentifier($identifier);
 
         if (!isset($this->syntaxTreeInstanceCache[$identifier])) {
-            $this->renderingContext->getCache()->get($identifier);
+            if (!class_exists($identifier, false)) {
+                $this->renderingContext->getCache()->get($identifier);
+            }
             $this->syntaxTreeInstanceCache[$identifier] = new $identifier();
         }
+
 
         return $this->syntaxTreeInstanceCache[$identifier];
     }
@@ -181,10 +185,12 @@ class TemplateCompiler
     /**
      * @param string $identifier
      * @param ParsingState $parsingState
-     * @return void
+     * @return string|null
      */
     public function store($identifier, ParsingState $parsingState)
     {
+        $identifier = $this->sanitizeIdentifier($identifier);
+
         if ($this->isDisabled()) {
             $cache = $this->renderingContext->getCache();
             if ($cache) {
@@ -192,11 +198,10 @@ class TemplateCompiler
                 $cache->flush($identifier);
             }
             $parsingState->setCompilable(false);
-            return;
+            return null;
         }
 
         $this->currentlyProcessingState = $parsingState;
-        $identifier = $this->sanitizeIdentifier($identifier);
         $this->nodeConverter->setVariableCounter(0);
         $generatedRenderFunctions = $this->generateSectionCodeFromParsingState($parsingState);
 
@@ -238,6 +243,7 @@ EOD;
             $generatedRenderFunctions
         );
         $this->renderingContext->getCache()->set($identifier, $templateCode);
+        return $templateCode;
     }
 
     /**

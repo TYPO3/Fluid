@@ -184,14 +184,6 @@ class ViewHelperNode extends AbstractNode
                 $additionalArguments[$argumentName] = $value;
             }
         }
-        foreach ($argumentDefinitions as $argumentDefinition) {
-            if ($argumentDefinition->isRequired() && $argumentDefinition->getDefaultValue() === null) {
-                $name = $argumentDefinition->getName();
-                if (!array_key_exists($name, $argumentsObjectTree)) {
-                    throw new Exception(sprintf('Required argument %s for ViewHelper %s was not provided', $name, $this->viewHelperClassName));
-                }
-            }
-        }
         $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $argumentsObjectTree);
         $this->uninitializedViewHelper->validateAdditionalArguments($additionalArguments);
     }
