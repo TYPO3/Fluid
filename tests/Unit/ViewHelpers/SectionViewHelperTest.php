@@ -41,16 +41,4 @@ class SectionViewHelperTest extends UnitTestCase
         $sections = $variableContainer->get('1457379500_sections');
         $this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
     }
-
-    /**
-     * @test
-     */
-    public function testCompileReturnsEmptyString()
-    {
-        $section = new SectionViewHelper();
-        $init = '';
-        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
-        $result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
-        $this->assertEquals('\'\'', $result);
-    }
 }
