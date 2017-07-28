@@ -185,7 +185,7 @@ class TemplateCompiler
     /**
      * @param string $identifier
      * @param ParsingState $parsingState
-     * @return void
+     * @return string|null
      */
     public function store($identifier, ParsingState $parsingState)
     {
@@ -198,7 +198,7 @@ class TemplateCompiler
                 $cache->flush($identifier);
             }
             $parsingState->setCompilable(false);
-            return;
+            return null;
         }
 
         $this->currentlyProcessingState = $parsingState;
@@ -243,6 +243,7 @@ EOD;
             $generatedRenderFunctions
         );
         $this->renderingContext->getCache()->set($identifier, $templateCode);
+        return $templateCode;
     }
 
     /**

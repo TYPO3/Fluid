@@ -26,6 +26,7 @@ Ternary expression: {checkTernary ? ternaryTrue : ternaryFalse}
 <f:if condition="0 || 1 && 1" then="0 || 1 && 1 === TRUE" />
 <f:if condition="{varfalse}" else="$varfalse === FALSE" />
 <f:if condition="{vartrue}" then="$vartrue === TRUE" />
+<f:if condition="!({vartrue})" else="!($vartrue) === FALSE" />
 <f:if condition="{vararray1} == {vararray2}" else="$vararray1 == $vararray2 === FALSE" />
 <f:if condition="({vararray1} == {vararray1}) && {vartrue}" then="($vararray1 == $vararray1) && $vartrue === TRUE" />
 <f:if condition="{varfalse} == {varfalse}" then="$varfalse == $varfalse === TRUE" />
