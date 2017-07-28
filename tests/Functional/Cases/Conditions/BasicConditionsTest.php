@@ -29,6 +29,8 @@ class BasicConditionsTest extends BaseConditionalFunctionalTestCase
             ['(FALSE || (FALSE || 1)', true],
             ['(FALSE || (FALSE || 1)', true],
 
+            ['(FALSE or (FALSE or 1)', true],
+
             // integers
             ['13 == \'13\'', true],
             ['13 === \'13\'', false],

@@ -110,6 +110,22 @@ class BooleanParserTest extends UnitTestCase
             ['(0 && 0) || 0', true],
             ['(1 && 1) || 0', true],
 
+            ['0 and 1', false],
+            ['1 and 1', true],
+            ['0 or 0', false],
+            ['0 or 1', true],
+            ['(0 and 1) or 1', true],
+            ['(0 and 0) or 0', true],
+            ['(1 and 1) or 0', true],
+            ['0 And 1', false],
+            ['1 anD 1', true],
+            ['0 oR 0', false],
+            ['0 Or 1', true],
+            ['0 AND 1', false],
+            ['1 AND 1', true],
+            ['0 OR 0', false],
+            ['0 OR 1', true],
+
             // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
             ['\'foo\' == 0', true],
             ['1.1 >= foo', true],
