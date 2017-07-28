@@ -150,12 +150,7 @@ class TemplateCompiler
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-<<<<<<< HEAD
-        $identifier = $this->sanitizeIdentifier($identifier);
         return !empty($identifier) && (class_exists($identifier, false) || $this->renderingContext->getCache()->get($identifier));
-=======
-        return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
->>>>>>> master
     }
 
     /**
