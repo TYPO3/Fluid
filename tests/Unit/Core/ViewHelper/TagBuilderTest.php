@@ -158,6 +158,45 @@ class TagBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    public function emptyAttributesGetRemovedWhenCallingIgnoreEmptyAttributesWithTrue()
+    {
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->addAttribute('attribute1', '');
+        $tagBuilder->addAttribute('attribute2', '');
+        $tagBuilder->addAttribute('attribute3', 'attribute3value');
+        $tagBuilder->ignoreEmptyAttributes(true);
+        $this->assertEquals('<tag attribute3="attribute3value" />', $tagBuilder->render());
+    }
+
+    /**
+     * @test
+     */
+    public function emptyAttributesGetPreservedWhenCallingIgnoreEmptyAttributesWithFalse()
+    {
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->ignoreEmptyAttributes(false);
+        $tagBuilder->addAttribute('attribute1', '');
+        $tagBuilder->addAttribute('attribute2', '');
+        $tagBuilder->addAttribute('attribute3', 'attribute3value');
+        $this->assertEquals('<tag attribute1="" attribute2="" attribute3="attribute3value" />', $tagBuilder->render());
+    }
+
+    /**
+     * @test
+     */
+    public function ignoresNewEmptyAttributesIfEmptyAttributesIgnored()
+    {
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->ignoreEmptyAttributes(true);
+        $tagBuilder->addAttribute('attribute1', '');
+        $tagBuilder->addAttribute('attribute2', '');
+        $tagBuilder->addAttribute('attribute3', 'attribute3value');
+        $this->assertEquals('<tag attribute3="attribute3value" />', $tagBuilder->render());
+    }
+
+    /**
+     * @test
+     */
     public function attributesCanBeAccessed()
     {
         $tagBuilder = new TagBuilder('tag');
