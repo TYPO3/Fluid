@@ -145,7 +145,7 @@ class NodeConverterTest extends UnitTestCase
             ],
             [
                 new EscapingNode(new TextNode('foo')),
-                'htmlspecialchars(\'foo\', ENT_QUOTES)'
+                'call_user_func_array( function ($var) { return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) ? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [\'foo\'])'
             ],
             [
                 new ViewHelperNode(
