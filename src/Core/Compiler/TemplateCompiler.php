@@ -150,7 +150,7 @@ class TemplateCompiler
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-        return !empty($identifier) && $this->renderingContext->getCache()->get($identifier);
+        return !empty($identifier) && (class_exists($identifier, false) || $this->renderingContext->getCache()->get($identifier));
     }
 
     /**
@@ -162,9 +162,12 @@ class TemplateCompiler
         $identifier = $this->sanitizeIdentifier($identifier);
 
         if (!isset($this->syntaxTreeInstanceCache[$identifier])) {
-            $this->renderingContext->getCache()->get($identifier);
+            if (!class_exists($identifier, false)) {
+                $this->renderingContext->getCache()->get($identifier);
+            }
             $this->syntaxTreeInstanceCache[$identifier] = new $identifier();
         }
+
 
         return $this->syntaxTreeInstanceCache[$identifier];
     }
