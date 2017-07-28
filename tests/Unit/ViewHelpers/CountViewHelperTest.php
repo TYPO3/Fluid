@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
 /**
@@ -94,12 +96,14 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function renderThrowsExceptionIfGivenSubjectIsNotCountable()
     {
+        $this->viewHelper->expects($this->never())->method('renderChildren');
+        $this->viewHelper->setRenderingContext(new RenderingContextFixture());
         $object = new \stdClass();
         $this->viewHelper->setArguments(['subject' => $object]);
+        $this->setExpectedException(\InvalidArgumentException::class);
         $this->viewHelper->initializeArgumentsAndRender();
     }
 }

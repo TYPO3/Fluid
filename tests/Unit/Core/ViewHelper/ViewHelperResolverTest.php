@@ -71,8 +71,7 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testResolveViewHelperClassNameThrowsExceptionIfClassNotResolved()
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['resolveViewHelperName']);
-        $resolver->expects($this->once())->method('resolveViewHelperName')->willReturn(false);
+        $resolver = new ViewHelperResolver();
         $this->setExpectedException(Exception::class);
         $resolver->resolveViewHelperClassName('f', 'invalid');
     }
@@ -193,6 +192,9 @@ class ViewHelperResolverTest extends UnitTestCase
         $this->assertEquals($expected, $resolver->resolvePhpNamespaceFromFluidNamespace($input));
     }
 
+    /**
+     * @return array
+     */
     public function getResolvePhpNamespaceFromFluidNamespaceTestValues()
     {
         return [
