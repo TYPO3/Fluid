@@ -98,7 +98,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         $matches = [];
-        $namespacePattern = 'xmlns:([a-z0-9\.]+)=("[^"]+"|\'[^\']+\')+';
+        $namespacePattern = 'xmlns:([a-zA-Z0-9\.]+)=("[^"]+"|\'[^\']+\')+';
         $matched = preg_match('/<([a-z0-9]+)(?:[^>]*?)\\s+' . $namespacePattern . '[^>]*>/', $templateSource, $matches);
 
         if ($matched) {

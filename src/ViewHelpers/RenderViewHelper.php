@@ -7,8 +7,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * A ViewHelper to render a section, a partial, a specified section in a partial
@@ -84,7 +85,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  */
 class RenderViewHelper extends AbstractViewHelper
 {
-
+    use CompileWithRenderStatic;
+    
     /**
      * @var boolean
      */
@@ -106,38 +108,33 @@ class RenderViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Renders the content.
-     *
-     * @return string
-     * @throws \InvalidArgumentException
-     * @api
+     * @return mixed
      */
-    public function render()
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        $section = $this->arguments['section'];
-        $partial = $this->arguments['partial'];
-        $arguments = (array) $this->arguments['arguments'];
-        $optional = (boolean) $this->arguments['optional'];
-        $contentAs = $this->arguments['contentAs'];
-        $delegate = $this->arguments['delegate'];
-        $tagContent = $this->renderChildren();
-
-        if ($contentAs !== null) {
-            $arguments[$contentAs] = $tagContent;
+        $section = $arguments['section'];
+        $partial = $arguments['partial'];
+        $variables = (array) $arguments['arguments'];
+        $optional = (boolean) $arguments['optional'];
+        $delegate = $arguments['delegate'];
+        $tagContent = $renderChildrenClosure();
+        if ($arguments['contentAs']) {
+            $variables[$arguments['contentAs']] = $tagContent;
         }
 
+        $view = $renderingContext->getViewHelperVariableContainer()->getView();
         $content = '';
         if ($delegate !== null) {
             if (!is_a($delegate, ParsedTemplateInterface::class, true)) {
                 throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
             }
-            $renderingContext = clone $this->renderingContext;
-            $renderingContext->getVariableProvider()->setSource($arguments);
+            $renderingContext = clone $renderingContext;
+            $renderingContext->getVariableProvider()->setSource($variables);
             $content = (new $delegate())->render($renderingContext);
         } elseif ($partial !== null) {
-            $content = $this->viewHelperVariableContainer->getView()->renderPartial($partial, $section, $arguments, $optional);
+            $content = $view->renderPartial($partial, $section, $variables, $optional);
         } elseif ($section !== null) {
-            $content = $this->viewHelperVariableContainer->getView()->renderSection($section, $arguments, $optional);
+            $content = $view->renderSection($section, $variables, $optional);
         } elseif (!$optional) {
             throw new \InvalidArgumentException('ViewHelper f:render called without either argument section, partial or delegate and optional flag is false');
         }
@@ -145,7 +142,7 @@ class RenderViewHelper extends AbstractViewHelper
         // not set, NULL is returned and cast to a new, empty string
         // outside of this ViewHelper.
         if ($content === '') {
-            $content = isset($this->arguments['default']) ? $this->arguments['default'] : $tagContent;
+            $content = $arguments['default'] ?: $tagContent;
         }
         return $content;
     }

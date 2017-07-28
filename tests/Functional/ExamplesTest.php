@@ -93,6 +93,7 @@ class ExamplesTest extends BaseTestCase
                     '0 || 1 && 1 === TRUE',
                     '$varfalse === FALSE',
                     '$vartrue === TRUE',
+                    '!($vartrue) === FALSE',
                     '$vararray1 == $vararray2 === FALSE',
                     '($vararray1 == $vararray1) && $vartrue === TRUE',
                     '$varfalse == $varfalse === TRUE',

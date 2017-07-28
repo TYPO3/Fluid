@@ -145,7 +145,7 @@ class NodeConverterTest extends UnitTestCase
             ],
             [
                 new EscapingNode(new TextNode('foo')),
-                'htmlspecialchars(\'foo\', ENT_QUOTES)'
+                'call_user_func_array( function ($var) { return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) ? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [\'foo\'])'
             ],
             [
                 new ViewHelperNode(
@@ -163,7 +163,8 @@ class NodeConverterTest extends UnitTestCase
             [new NumericNode('3'), '3'],
             [new NumericNode('4.5'), '4.5'],
             [new ArrayNode(['foo', 'bar']), '$array0'],
-            [new ArrayNode([0, new TextNode('test'), new ArrayNode(['foo', 'bar'])]), '$array0']
+            [new ArrayNode([0, new TextNode('test'), new ArrayNode(['foo', 'bar'])]), '$array0'],
+            [$this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass(), '']
         ];
     }
 }

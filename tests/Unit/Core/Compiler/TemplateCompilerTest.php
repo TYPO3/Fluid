@@ -35,6 +35,17 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
+    public function testWarmupModeToggle()
+    {
+        $instance = new TemplateCompiler();
+        $instance->enterWarmupMode();
+        $this->assertAttributeSame(TemplateCompiler::MODE_WARMUP, 'mode', $instance);
+        $this->assertTrue($instance->isWarmupMode());
+    }
+
+    /**
+     * @test
+     */
     public function testSetRenderingContext()
     {
         $instance = new TemplateCompiler();
@@ -49,10 +60,10 @@ class TemplateCompilerTest extends UnitTestCase
     public function testHasReturnsFalseWithoutCache()
     {
         $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
-        $renderingContext = new RenderingContextFixture();
+        $renderingContext = $this->getMock(RenderingContextFixture::class, ['getCache']);
         $renderingContext->cacheDisabled = true;
+        $renderingContext->expects($this->never())->method('getCache');
         $instance->setRenderingContext($renderingContext);
-        $instance->expects($this->never())->method('sanitizeIdentifier');
         $result = $instance->has('test');
         $this->assertFalse($result);
     }
@@ -126,9 +137,9 @@ class TemplateCompilerTest extends UnitTestCase
     {
         $renderingContext = new RenderingContextFixture();
         $renderingContext->cacheDisabled = true;
-        $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
+        $instance = $this->getMock(TemplateCompiler::class, ['generateSectionCodeFromParsingState']);
         $instance->setRenderingContext($renderingContext);
-        $instance->expects($this->never())->method('sanitizeIdentifier');
+        $instance->expects($this->never())->method('generateSectionCodeFromParsingState');
         $instance->store('foobar', new ParsingState());
     }
 

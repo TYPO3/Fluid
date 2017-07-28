@@ -78,7 +78,7 @@ class SwitchViewHelper extends AbstractViewHelper
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $expression);
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'break', false);
 
-        $content = $this->retrieveContentFromChildNodes($this->childNodes);
+        $content = $this->retrieveContentFromChildNodes($this->viewHelperNode->getChildNodes());
 
         if ($variableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
             $variableContainer->remove(SwitchViewHelper::class, 'switchExpression');

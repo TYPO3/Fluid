@@ -133,7 +133,6 @@ class TemplateParser
         try {
             $this->reset();
 
-            $templateString = $this->extractEscapingModifier($templateString);
             $templateString = $this->preProcessTemplateSource($templateString);
 
             $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
@@ -226,36 +225,6 @@ class TemplateParser
         $this->escapingEnabled = true;
         $this->pointerLineNumber = 1;
         $this->pointerLineCharacter = 1;
-    }
-
-    /**
-     * Extracts escaping modifiers ({escapingEnabled=true/false}) out of the given template and sets $this->escapingEnabled accordingly
-     *
-     * @param string $templateString Template string to extract the {escaping = ..} definitions from
-     * @return string The updated template string without escaping declarations inside
-     * @throws Exception if there is more than one modifier
-     */
-    protected function extractEscapingModifier($templateString)
-    {
-        $matches = [];
-        preg_match_all(Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER, $templateString, $matches, PREG_SET_ORDER);
-        if ($matches === []) {
-            return $templateString;
-        }
-        if (count($matches) > 1) {
-            $this->renderingContext->getErrorHandler()->handleParserError(
-                new Exception(
-                    'There is more than one escaping modifier defined. There can only be one {escapingEnabled=...} per template.',
-                    1461009874
-                )
-            );
-        }
-        if (strtolower($matches[0]['enabled']) === 'false') {
-            $this->escapingEnabled = false;
-        }
-        $templateString = preg_replace(Patterns::$SCAN_PATTERN_ESCAPINGMODIFIER, '', $templateString);
-
-        return $templateString;
     }
 
     /**
@@ -700,7 +669,7 @@ class TemplateParser
                 if (!empty($singleMatch['VariableIdentifier'])) {
                     $arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
                 } elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0')) {
-                    $arrayToBuild[$arrayKey] = floatval($singleMatch['Number']);
+                    $arrayToBuild[$arrayKey] = (float)$singleMatch['Number'];
                 } elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
                     $argumentString = $this->unquoteString($singleMatch['QuotedString']);
                     $arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
