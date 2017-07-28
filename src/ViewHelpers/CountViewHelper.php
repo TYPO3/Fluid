@@ -34,7 +34,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class CountViewHelper extends AbstractViewHelper
 {
-
     use CompileWithContentArgumentAndRenderStatic;
 
     /**
@@ -64,6 +63,17 @@ class CountViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        return count($renderChildrenClosure());
+        $countable = $renderChildrenClosure();
+        if ($countable === null) {
+            return 0;
+        } elseif (!$countable instanceof \Countable && !is_array($countable)) {
+            throw new ViewHelper\Exception(
+                sprintf(
+                    'Subject given to f:count() is not countable (type: %s)',
+                    is_object($countable) ? get_class($countable) : gettype($countable)
+                )
+            );
+        }
+        return count($countable);
     }
 }

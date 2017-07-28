@@ -34,10 +34,8 @@ class PassthroughSourceModifierTemplateProcessor implements TemplateProcessorInt
             $stopException = new PassthroughSourceException();
             $stopException->setSource($templateSource);
             throw $stopException;
-        } elseif (strpos($templateSource, '{parsing on}') !== false) {
-            return str_replace('{parsing on}', '', $templateSource);
         }
-        return $templateSource;
+        return str_replace('{parsing on}', '', $templateSource);
     }
 
     /**
