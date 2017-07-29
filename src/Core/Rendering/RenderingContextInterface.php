@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
@@ -22,6 +23,16 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
  */
 interface RenderingContextInterface
 {
+    /**
+     * @return ErrorHandlerInterface
+     */
+    public function getErrorHandler();
+
+    /**
+     * @param ErrorHandlerInterface $errorHandler
+     * @return void
+     */
+    public function setErrorHandler(ErrorHandlerInterface $errorHandler);
 
     /**
      * Injects the template variable container containing all variables available through ObjectAccessors

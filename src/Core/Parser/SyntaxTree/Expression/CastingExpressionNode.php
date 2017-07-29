@@ -58,8 +58,9 @@ class CastingExpressionNode extends AbstractExpressionNode
         if (!in_array($type, self::$validTypes)) {
             throw new ExpressionException(
                 sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression',
-                    $type
+                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
+                    $type,
+                    $expression
                 )
             );
         }

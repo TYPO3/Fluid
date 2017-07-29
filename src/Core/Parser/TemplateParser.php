@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
@@ -190,6 +191,7 @@ class TemplateParser
                 try {
                     $compiler->store($templateIdentifier, $parsedTemplate);
                 } catch (StopCompilingException $stop) {
+                    $this->renderingContext->getErrorHandler()->handleCompilerError($stop);
                     $parsedTemplate->setCompilable(false);
                     return $parsedTemplate;
                 }
@@ -285,7 +287,10 @@ class TemplateParser
         }
 
         if ($state->countNodeStack() !== 1) {
-            throw new Exception('Not all tags were closed!', 1238169398);
+            throw new Exception(
+                'Not all tags were closed!',
+                1238169398
+            );
         }
         return $state;
     }
@@ -339,20 +344,32 @@ class TemplateParser
         if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
             return null;
         }
-        $currentViewHelperNode = new ViewHelperNode(
-            $this->renderingContext,
-            $namespaceIdentifier,
-            $methodIdentifier,
-            $argumentsObjectTree,
-            $state
-        );
+        try {
+            $currentViewHelperNode = new ViewHelperNode(
+                $this->renderingContext,
+                $namespaceIdentifier,
+                $methodIdentifier,
+                $argumentsObjectTree,
+                $state
+            );
 
-        $this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
-        $viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
-        $viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
-        $state->pushNodeToStack($currentViewHelperNode);
-
-        return $currentViewHelperNode;
+            $this->callInterceptor($currentViewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER, $state);
+            $viewHelper = $currentViewHelperNode->getUninitializedViewHelper();
+            $viewHelper::postParseEvent($currentViewHelperNode, $argumentsObjectTree, $state->getVariableContainer());
+            $state->pushNodeToStack($currentViewHelperNode);
+            return $currentViewHelperNode;
+        } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
+            $this->textHandler(
+                $state,
+                $this->renderingContext->getErrorHandler()->handleViewHelperError($error)
+            );
+        } catch (Exception $error) {
+            $this->textHandler(
+                $state,
+                $this->renderingContext->getErrorHandler()->handleParserError($error)
+            );
+        }
+        return null;
     }
 
     /**
@@ -582,23 +599,31 @@ class TemplateParser
                             $expressionStartPosition = strpos($section, $matchedVariableSet[0]);
                             /** @var ExpressionNodeInterface $expressionNode */
                             $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
-                            if ($expressionStartPosition > 0) {
-                                $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
-                            }
-                            $state->getNodeFromStack()->addChildNode($expressionNode);
-                            $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
-                            if ($expressionEndPosition < strlen($section)) {
-                                $this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
-                                break;
+                            try {
+                                // Trigger initial parse-time evaluation to allow the node to manipulate the rendering context.
+                                $expressionNode->evaluate($this->renderingContext);
+
+                                if ($expressionStartPosition > 0) {
+                                    $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
+                                }
+                                $state->getNodeFromStack()->addChildNode($expressionNode);
+
+                                $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
+                                if ($expressionEndPosition < strlen($section)) {
+                                    $this->textAndShorthandSyntaxHandler($state, substr($section, $expressionEndPosition), $context);
+                                    break;
+                                }
+                            } catch (ExpressionException $error) {
+                                $this->textHandler(
+                                    $state,
+                                    $this->renderingContext->getErrorHandler()->handleExpressionError($error)
+                                );
                             }
                         }
                     }
                 }
 
-                if ($expressionNode) {
-                    // Trigger initial parse-time evaluation to allow the node to manipulate the rendering context.
-                    $expressionNode->evaluate($this->renderingContext);
-                } else {
+                if (!$expressionNode) {
                     // As fallback we simply render the expression back as template content.
                     $this->textHandler($state, $section);
                 }

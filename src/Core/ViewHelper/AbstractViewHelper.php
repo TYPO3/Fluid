@@ -166,7 +166,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
     {
         if (array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception('Argument "' . $name . '" has already been defined, thus it should not be defined again.', 1253036401);
+            throw new Exception(
+                'Argument "' . $name . '" has already been defined, thus it should not be defined again.',
+                1253036401
+            );
         }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
         return $this;
@@ -189,7 +192,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null)
     {
         if (!array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception('Argument "' . $name . '" has not been defined, thus it can\'t be overridden.', 1279212461);
+            throw new Exception(
+                'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
+                1279212461
+            );
         }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
         return $this;
@@ -332,13 +338,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 $type = $registeredArgument->getType();
                 if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
                     $givenType = is_object($value) ? get_class($value) : gettype($value);
-                    $errorException = new \InvalidArgumentException(
-                        'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
-                        $givenType . '" in view helper "' . get_class($this) . '".',
-                        1256475113
-                    );
                     if (!$this->isValidType($type, $value)) {
-                        throw $errorException;
+                        throw new \InvalidArgumentException(
+                            'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
+                            $givenType . '" in view helper "' . get_class($this) . '".',
+                            1256475113
+                        );
                     }
                 }
             }
@@ -387,6 +392,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * that is not empty
      *
      * @param mixed $value
+     * @return mixed
      */
     protected function getFirstElementOfNonEmpty($value)
     {
@@ -455,9 +461,10 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         if (!empty($arguments)) {
             throw new Exception(
                 sprintf(
-                    'Undeclared arguments passed to ViewHelper %s: %s',
+                    'Undeclared arguments passed to ViewHelper %s: %s. Valid arguments are: %s',
                     get_class($this),
-                    implode(', ', array_keys($arguments))
+                    implode(', ', array_keys($arguments)),
+                    implode(', ', array_keys($this->argumentDefinitions))
                 )
             );
         }

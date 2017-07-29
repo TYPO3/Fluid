@@ -8,6 +8,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
+use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
@@ -23,6 +25,10 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
  */
 class RenderingContextFixture implements RenderingContextInterface
 {
+    /**
+     * @var ErrorHandlerInterface
+     */
+    public $errorHandler;
 
     /**
      * @var VariableProviderInterface
@@ -103,6 +109,23 @@ class RenderingContextFixture implements RenderingContextInterface
         $this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, ['dummy']);
         $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
         $this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
+    }
+
+    /**
+     * @return ErrorHandlerInterface
+     */
+    public function getErrorHandler()
+    {
+        return isset($this->errorHandler) ? $this->errorHandler : new StandardErrorHandler();
+    }
+
+    /**
+     * @param ErrorHandlerInterface $errorHandler
+     * @return void
+     */
+    public function setErrorHandler(ErrorHandlerInterface $errorHandler)
+    {
+        $this->errorHandler = $errorHandler;
     }
 
     /**
