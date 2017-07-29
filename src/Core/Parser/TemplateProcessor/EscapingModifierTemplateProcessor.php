@@ -51,14 +51,13 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
         }
         $matches = [];
         preg_match_all(static::SCAN_PATTERN_ESCAPINGMODIFIER, $templateSource, $matches, PREG_SET_ORDER);
-        if ($matches === []) {
-            return $templateSource;
-        }
         if (count($matches) > 1) {
             throw new Exception(
                 'There is more than one escaping modifier defined. There can only be one {escapingEnabled=...} per template.',
                 1407331080
             );
+        } elseif ($matches === []) {
+            return $templateSource;
         }
         if (strtolower($matches[0][2]) === 'false' || strtolower($matches[0][2]) === 'off') {
             $this->renderingContext->getTemplateParser()->setEscapingEnabled(false);

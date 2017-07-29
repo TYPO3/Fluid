@@ -314,25 +314,8 @@ class BooleanParser
     protected function parseTermToken()
     {
         $t = $this->peek();
-        if ($this->isTerm($t)) {
-            $this->consume($t);
-            return $this->evaluateTerm($t, $this->context);
-        }
-        throw ParserException(sprintf('%t is not a valid expression term', $t));
-    }
-
-    /**
-     * Checks if the given string is a term or keyword
-     *
-     * @param string $x
-     */
-    protected function isTerm($x)
-    {
-        if (in_array($x, ['&&', '||', '!', '==', '\''])) {
-            return false;
-        }
-
-        return is_string($x);
+        $this->consume($t);
+        return $this->evaluateTerm($t, $this->context);
     }
 
     /**
@@ -367,9 +350,6 @@ class BooleanParser
      */
     protected function evaluateNot($x)
     {
-        if ($this->compileToCode === true) {
-            return '!(' . $x . ')';
-        }
         return !$x;
     }
 
@@ -446,7 +426,7 @@ class BooleanParser
      */
     protected function evaluateTerm($x, $context)
     {
-        if (strpos($x, '{') === 0 && substr($x, -1) === '}') {
+        if (isset($context[$x]) || (strpos($x, '{') === 0 && substr($x, -1) === '}')) {
             if ($this->compileToCode === true) {
                 return '($context["' . trim($x, '{}') . '"])';
             }
@@ -475,13 +455,6 @@ class BooleanParser
                 return 'FALSE';
             }
             return false;
-        }
-
-        if (isset($context[$x]) === true) {
-            if ($this->compileToCode === true) {
-                return '($context["' . $x . '"])';
-            }
-            return $context[$x];
         }
 
         if ($this->compileToCode === true) {
