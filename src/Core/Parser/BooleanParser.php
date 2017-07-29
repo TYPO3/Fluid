@@ -74,7 +74,11 @@ class BooleanParser
 			|
 				\|\|
 			|
+			    [aA][nN][dD]
+			|
 				&&
+			|
+			    [oO][rR]
 			|
 				.?
 			)\s*
@@ -180,8 +184,8 @@ class BooleanParser
     protected function parseOrToken()
     {
         $x = $this->parseAndToken();
-        while ($this->peek() === '||') {
-            $this->consume('||');
+        while (($token = $this->peek()) && in_array(strtolower($token), ['||', 'or'])) {
+            $this->consume($token);
             $y = $this->parseAndToken();
 
             if ($this->compileToCode === true) {
@@ -202,8 +206,8 @@ class BooleanParser
     protected function parseAndToken()
     {
         $x = $this->parseCompareToken();
-        while ($this->peek() === '&&') {
-            $this->consume('&&');
+        while (($token = $this->peek()) && in_array(strtolower($token), ['&&', 'and'])) {
+            $this->consume($token);
             $y = $this->parseCompareToken();
 
             if ($this->compileToCode === true) {
