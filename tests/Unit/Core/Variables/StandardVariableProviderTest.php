@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
  */
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -172,5 +173,107 @@ class StandardVariableProviderTest extends UnitTestCase
         $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
         $copy = $subject->getScopeCopy(['bar' => 'foo']);
         $this->assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
+    }
+
+    /**
+     * @param mixed $subject
+     * @param string $path
+     * @param mixed $expected
+     * @test
+     * @dataProvider getPathTestValues
+     */
+    public function testGetByPath($subject, $path, $expected)
+    {
+        $provider = new StandardVariableProvider($subject);
+        $result = $provider->getByPath($path);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function getPathTestValues()
+    {
+        $namedUser = new UserWithoutToString('Foobar Name');
+        $unnamedUser = new UserWithoutToString('');
+        return [
+            [['foo' => 'bar'], 'foo', 'bar'],
+            [['foo' => 'bar'], 'foo.invalid', null],
+            [['user' => $namedUser], 'user.name', 'Foobar Name'],
+            [['user' => $unnamedUser], 'user.name', ''],
+            [['user' => $namedUser], 'user.named', true],
+            [['user' => $unnamedUser], 'user.named', false],
+            [['user' => $namedUser], 'user.invalid', null],
+            [['foodynamicbar' => 'test', 'dyn' => 'dynamic'], 'foo{dyn}bar', 'test'],
+            [['foo' => ['dynamic' => ['bar' => 'test']], 'dyn' => 'dynamic'], 'foo.{dyn}.bar', 'test'],
+            [['user' => $namedUser], 'user.hasAccessor', true],
+            [['user' => $namedUser], 'user.isAccessor', true],
+            [['user' => $unnamedUser], 'user.hasAccessor', false],
+            [['user' => $unnamedUser], 'user.isAccessor', false],
+        ];
+    }
+
+    /**
+     * @param mixed $subject
+     * @param string $path
+     * @param mixed $expected
+     * @test
+     * @dataProvider getAccessorsForPathTestValues
+     */
+    public function testGetAccessorsForPath($subject, $path, $expected)
+    {
+        $provider = new StandardVariableProvider($subject);
+        $result = $provider->getAccessorsForPath($path);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAccessorsForPathTestValues()
+    {
+        $namedUser = new UserWithoutToString('Foobar Name');
+        $inArray = ['user' => $namedUser];
+        $inArrayAccess = new StandardVariableProvider($inArray);
+        $inPublic = (object) $inArray;
+        $asArray = StandardVariableProvider::ACCESSOR_ARRAY;
+        $asGetter = StandardVariableProvider::ACCESSOR_GETTER;
+        $asPublic = StandardVariableProvider::ACCESSOR_PUBLICPROPERTY;
+        return [
+            [['inArray' => $inArray], 'inArray.user', [$asArray, $asArray]],
+            [['inArray' => $inArray], 'inArray.user.name', [$asArray, $asArray, $asGetter]],
+            [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.user.name', [$asArray, $asArray, $asGetter]],
+            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.allIdentifiers', [$asArray, $asGetter]],
+            [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
+        ];
+    }
+
+    /**
+     * @param mixed $subject
+     * @param string $path
+     * @param string $accessor
+     * @param mixed $expected
+     * @test
+     * @dataProvider getExtractRedectAccessorTestValues
+     */
+    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected)
+    {
+        $provider = new StandardVariableProvider($subject);
+        $result = $provider->getByPath($path, [$accessor]);
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * @return array
+     */
+    public function getExtractRedectAccessorTestValues()
+    {
+        return [
+            [['test' => 'test'], 'test', null, 'test'],
+            [['test' => 'test'], 'test', 'garbageextractionname', 'test'],
+            [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_PUBLICPROPERTY, 'test'],
+            [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_GETTER, 'test'],
+            [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_ASSERTER, 'test'],
+        ];
     }
 }
