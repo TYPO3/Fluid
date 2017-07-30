@@ -103,7 +103,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelper->setRenderingContext(new RenderingContextFixture());
         $object = new \stdClass();
         $this->viewHelper->setArguments(['subject' => $object]);
-        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->setExpectedException(Exception::class);
         $this->viewHelper->initializeArgumentsAndRender();
     }
 }
