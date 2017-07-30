@@ -31,12 +31,6 @@ interface ViewHelperInterface
     public function setArguments(array $arguments);
 
     /**
-     * @param NodeInterface[] $nodes
-     * @return void
-     */
-    public function setChildNodes(array $nodes);
-
-    /**
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
@@ -50,29 +44,12 @@ interface ViewHelperInterface
     public function initializeArgumentsAndRender();
 
     /**
-     * Initializes the view helper before invoking the render method.
-     *
-     * Override this method to solve tasks before the view helper content is rendered.
-     *
-     * @return void
-     */
-    public function initialize();
-
-    /**
      * Helper method which triggers the rendering of everything between the
      * opening and the closing tag.
      *
      * @return mixed The finally rendered child nodes.
      */
     public function renderChildren();
-
-    /**
-     * Validate arguments, and throw exception if arguments do not validate.
-     *
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    public function validateArguments();
 
     /**
      * Initialize all arguments. You need to override this method and call

@@ -8,19 +8,23 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
+use TYPO3Fluid\Fluid\Core\Event\EventInterface;
+use TYPO3Fluid\Fluid\Core\Event\PostParseEvent;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\DeprecatedViewHelper;
 
 /**
  * The abstract base class for all view helpers.
  *
  * @api
  */
-abstract class AbstractViewHelper implements ViewHelperInterface
+abstract class AbstractViewHelper implements ViewHelperInterface, DeprecatedViewHelperInterface
 {
+    use DeprecatedViewHelper;
 
     /**
      * Stores all \TYPO3Fluid\Fluid\ArgumentDefinition instances
@@ -52,20 +56,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected $arguments = [];
 
     /**
-     * Arguments array.
-     * @var NodeInterface[] array
-     * @api
-     */
-    protected $childNodes = [];
-
-    /**
-     * Current variable container reference.
-     * @var VariableProviderInterface
-     * @api
-     */
-    protected $templateVariableContainer;
-
-    /**
      * @var RenderingContextInterface
      */
     protected $renderingContext;
@@ -74,13 +64,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @var \Closure
      */
     protected $renderChildrenClosure = null;
-
-    /**
-     * ViewHelper Variable Container
-     * @var ViewHelperVariableContainer
-     * @api
-     */
-    protected $viewHelperVariableContainer;
 
     /**
      * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
@@ -118,8 +101,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
-        $this->templateVariableContainer = $renderingContext->getVariableProvider();
-        $this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
     }
 
     /**
@@ -212,19 +193,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     public function setViewHelperNode(ViewHelperNode $node)
     {
         $this->viewHelperNode = $node;
-    }
-
-    /**
-     * Sets all needed attributes needed for the rendering. Called by the
-     * framework. Populates $this->viewHelperNode.
-     * This is PURELY INTERNAL! Never override this method!!
-     *
-     * @param NodeInterface[] $childNodes
-     * @return void
-     */
-    public function setChildNodes(array $childNodes)
-    {
-        $this->childNodes = $childNodes;
     }
 
     /**
@@ -321,89 +289,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             self::$argumentDefinitionCache[$thisClassName] = $this->argumentDefinitions;
         }
         return $this->argumentDefinitions;
-    }
-
-    /**
-     * Validate arguments, and throw exception if arguments do not validate.
-     *
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    public function validateArguments()
-    {
-        $argumentDefinitions = $this->prepareArguments();
-        foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
-            if ($this->hasArgument($argumentName)) {
-                $value = $this->arguments[$argumentName];
-                $type = $registeredArgument->getType();
-                if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
-                    $givenType = is_object($value) ? get_class($value) : gettype($value);
-                    if (!$this->isValidType($type, $value)) {
-                        throw new \InvalidArgumentException(
-                            'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
-                            $givenType . '" in view helper "' . get_class($this) . '".',
-                            1256475113
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Check whether the defined type matches the value type
-     *
-     * @param string $type
-     * @param mixed $value
-     * @return boolean
-     */
-    protected function isValidType($type, $value)
-    {
-        if ($type === 'object') {
-            if (!is_object($value)) {
-                return false;
-            }
-        } elseif ($type === 'array' || substr($type, -2) === '[]') {
-            if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
-                return false;
-            } elseif (substr($type, -2) === '[]') {
-                $firstElement = $this->getFirstElementOfNonEmpty($value);
-                if ($firstElement === null) {
-                    return true;
-                }
-                return $this->isValidType(substr($type, 0, -2), $firstElement);
-            }
-        } elseif ($type === 'string') {
-            if (is_object($value) && !method_exists($value, '__toString')) {
-                return false;
-            }
-        } elseif ($type === 'boolean' && !is_bool($value)) {
-            return false;
-        } elseif (class_exists($type) && $value !== null && !$value instanceof $type) {
-            return false;
-        } elseif (is_object($value) && !is_a($value, $type, true)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Return the first element of the given array, ArrayAccess or Traversable
-     * that is not empty
-     *
-     * @param mixed $value
-     * @return mixed
-     */
-    protected function getFirstElementOfNonEmpty($value)
-    {
-        if (is_array($value)) {
-            return reset($value);
-        } elseif ($value instanceof \Traversable) {
-            foreach ($value as $element) {
-                return $element;
-            }
-        }
-        return null;
     }
 
     /**
@@ -518,17 +403,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return void
      */
     public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
-    {
-    }
-
-    /**
-     * Resets the ViewHelper state.
-     *
-     * Overwrite this method if you need to get a clean state of your ViewHelper.
-     *
-     * @return void
-     */
-    public function resetState()
     {
     }
 }
