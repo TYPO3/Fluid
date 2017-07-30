@@ -108,6 +108,33 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     /**
      * @test
      */
+    public function getAllGetsAllVariables()
+    {
+        $this->viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo', 'bar' => 'bar']);
+        $this->assertSame(['foo' => 'foo', 'bar' => 'bar'], $this->viewHelperVariableContainer->getAll('Foo\\Bar'));
+    }
+
+    /**
+     * @test
+     */
+    public function getAllReturnsDefaultIfNotFound()
+    {
+        $this->viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo']);
+        $this->assertSame(['foo' => 'bar'], $this->viewHelperVariableContainer->getAll('Baz\\Baz', ['foo' => 'bar']));
+    }
+
+    /**
+     * @test
+     */
+    public function addAllThrowsInvalidArgumentExceptionOnUnsupportedType()
+    {
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $this->viewHelperVariableContainer->addAll('Foo\\Bar', new \DateTime('now'));
+    }
+
+    /**
+     * @test
+     */
     public function testSleepReturnsExpectedPropertyNames()
     {
         $subject = new ViewHelperVariableContainer();
