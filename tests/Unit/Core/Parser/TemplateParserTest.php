@@ -125,22 +125,26 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function getOrParseAndStoreTemplateSetsCompilableStateAndReturnsOnStopComilingException()
+    public function getOrParseAndStoreTemplateSetsAndStoresUncompilableStateInCache()
     {
-        $parsedTemplate = $this->getMock(ParsingState::class, ['setCompilable']);
-        $parsedTemplate->expects($this->once())->method('setCompilable')->with(false);
+        $parsedTemplate = new ParsingState();
+        $parsedTemplate->setCompilable(true);
         $templateParser = $this->getMock(TemplateParser::class, ['parse']);
         $templateParser->expects($this->once())->method('parse')->willReturn($parsedTemplate);
         $context = new RenderingContextFixture();
-        $compiler = $this->getMock(TemplateCompiler::class, ['store', 'has']);
-        $compiler->expects($this->once())->method('has')->willReturn(false);
-        $compiler->expects($this->once())->method('store')->willThrowException(new StopCompilingException());
+        $compiler = $this->getMock(TemplateCompiler::class, ['store', 'get', 'has', 'isUncompilable']);
+        $compiler->expects($this->never())->method('get');
+        $compiler->expects($this->at(0))->method('has')->willReturn(false);
+        $compiler->expects($this->at(1))->method('store')->willThrowException(new StopCompilingException());
+        $compiler->expects($this->at(2))->method('store');
         $context->setTemplateCompiler($compiler);
         $context->setVariableProvider(new StandardVariableProvider());
         $templateParser->setRenderingContext($context);
-        $parsedTemplate = $templateParser->getOrParseAndStoreTemplate('fake-foo-baz', function ($a, $b) {
+        $result = $templateParser->getOrParseAndStoreTemplate('fake-foo-baz', function ($a, $b) {
             return 'test';
         });
+        $this->assertSame($parsedTemplate, $result);
+        $this->assertFalse($parsedTemplate->isCompilable());
     }
 
     /**
