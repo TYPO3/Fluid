@@ -45,6 +45,30 @@ class ViewHelperVariableContainer
     }
 
     /**
+     * Adds, or overrides recursively, all current variables defined in associative
+     * array or Traversable (with string keys!).
+     *
+     * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
+     * @param array|\Traversable $variables An associative array of all variables to add
+     * @return void
+     * @api
+     */
+    public function addAll($viewHelperName, $variables)
+    {
+        if (!is_array($variables) && !$variables instanceof \Traversable) {
+            throw new \InvalidArgumentException(
+                'Invalid argument type for $variables in ViewHelperVariableContainer->addAll(). Expects array/Traversable ' .
+                'but received ' . (is_object($variables) ? get_class($variables) : gettype($variables)),
+                1501425195
+            );
+        }
+        $this->objects[$viewHelperName] = array_replace_recursive(
+            isset($this->objects[$viewHelperName]) ? $this->objects[$viewHelperName] : [],
+            $variables instanceof \Traversable ? iterator_to_array($variables) : $variables
+        );
+    }
+
+    /**
      * Add a variable to the Variable Container. Make sure that $viewHelperName is ALWAYS set
      * to your fully qualified ViewHelper Class Name.
      * In case the value is already inside, it is silently overridden.
@@ -73,10 +97,18 @@ class ViewHelperVariableContainer
      */
     public function get($viewHelperName, $key, $default = null)
     {
-        if ($this->exists($viewHelperName, $key)) {
-            return $this->objects[$viewHelperName][$key];
-        }
-        return $default;
+        return $this->exists($viewHelperName, $key) ? $this->objects[$viewHelperName][$key] : $default;
+    }
+
+    /**
+     * Gets all variables stored for a particular ViewHelper
+     *
+     * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
+     * @param mixed $default
+     */
+    public function getAll($viewHelperName, $default = null)
+    {
+        return array_key_exists($viewHelperName, $this->objects) ? $this->objects[$viewHelperName] : $default;
     }
 
     /**
