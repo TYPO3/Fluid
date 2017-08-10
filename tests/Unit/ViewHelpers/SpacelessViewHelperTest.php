@@ -34,9 +34,10 @@ class SpacelessViewHelperTest extends ViewHelperBaseTestcase
     public function getRenderStaticData()
     {
         return [
-            'extra whitespace between tags' => ['<div>foo</div>  <div>bar</div>', '<div>foo</div><div>bar</div>'],
+            'extra whitespace between tags' => ['<div>foo</div>  <div>bar</div>', '<div>foo</div> <div>bar</div>'],
             'whitespace preserved in text node' => [PHP_EOL . '<div>' . PHP_EOL . 'foo</div>', '<div>' . PHP_EOL . 'foo</div>'],
-            'whitespace removed from non-text node' => [PHP_EOL . '<div>' . PHP_EOL . '<div>foo</div></div>', '<div><div>foo</div></div>']
+            'whitespace removed from non-text node' => [PHP_EOL . '<div>' . PHP_EOL . '<div>foo</div></div>', '<div> <div>foo</div></div>'],
+            'no changes to empty tags' => ['<div></div>', '<div></div>']
         ];
     }
 }

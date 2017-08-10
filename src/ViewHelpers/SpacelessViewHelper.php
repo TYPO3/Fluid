@@ -52,6 +52,6 @@ class SpacelessViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext)
     {
-        return trim(preg_replace('/\\>\\s+\\</', '><', $childClosure()));
+        return trim(preg_replace('/\\>\\s+\\</', '> <', $childClosure()));
     }
 }
