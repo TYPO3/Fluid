@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;

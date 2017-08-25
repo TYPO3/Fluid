@@ -207,7 +207,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * array, returning the "basename" components of controller-template
      * directories encountered, as an array.
      *
-     * @param string $templateRootPaths
+     * @param array $templateRootPaths
      * @return \Generator
      */
     protected function detectControllerNamesInTemplateRootPaths(array $templateRootPaths)
