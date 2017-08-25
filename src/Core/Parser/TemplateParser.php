@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
@@ -180,23 +181,35 @@ class TemplateParser
             $parsedTemplate = $this->parsedTemplates[$templateIdentifier];
         } elseif ($compiler->has($templateIdentifier)) {
             $parsedTemplate = $compiler->get($templateIdentifier);
+            if ($parsedTemplate instanceof UncompilableTemplateInterface) {
+                $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+            }
         } else {
-            $parsedTemplate = $this->parse(
-                $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
-                $templateIdentifier
-            );
-            $parsedTemplate->setIdentifier($templateIdentifier);
-            $this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
-            if ($parsedTemplate->isCompilable()) {
-                try {
-                    $compiler->store($templateIdentifier, $parsedTemplate);
-                } catch (StopCompilingException $stop) {
-                    $this->renderingContext->getErrorHandler()->handleCompilerError($stop);
-                    $parsedTemplate->setCompilable(false);
-                    return $parsedTemplate;
-                }
+            $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+            try {
+                $compiler->store($templateIdentifier, $parsedTemplate);
+            } catch (StopCompilingException $stop) {
+                $this->renderingContext->getErrorHandler()->handleCompilerError($stop);
+                $parsedTemplate->setCompilable(false);
+                $compiler->store($templateIdentifier, $parsedTemplate);
             }
         }
+        return $parsedTemplate;
+    }
+
+    /**
+     * @param string $templateIdentifier
+     * @param \Closure $templateSourceClosure
+     * @return ParsedTemplateInterface
+     */
+    protected function parseTemplateSource($templateIdentifier, $templateSourceClosure)
+    {
+        $parsedTemplate = $this->parse(
+            $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
+            $templateIdentifier
+        );
+        $parsedTemplate->setIdentifier($templateIdentifier);
+        $this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
         return $parsedTemplate;
     }
 
@@ -669,7 +682,8 @@ class TemplateParser
                 if (!empty($singleMatch['VariableIdentifier'])) {
                     $arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
                 } elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0')) {
-                    $arrayToBuild[$arrayKey] = (float)$singleMatch['Number'];
+                    // Note: this method of casting picks "int" when value is a natural number and "float" if any decimals are found. See also NumericNode.
+                    $arrayToBuild[$arrayKey] = $singleMatch['Number'] + 0;
                 } elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
                     $argumentString = $this->unquoteString($singleMatch['QuotedString']);
                     $arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);

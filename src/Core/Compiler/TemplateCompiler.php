@@ -144,13 +144,16 @@ class TemplateCompiler
     {
         $identifier = $this->sanitizeIdentifier($identifier);
 
-        if (isset($this->syntaxTreeInstanceCache[$identifier])) {
+        if (isset($this->syntaxTreeInstanceCache[$identifier]) || class_exists($identifier, false)) {
             return true;
         }
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-        return !empty($identifier) && (class_exists($identifier, false) || $this->renderingContext->getCache()->get($identifier));
+        if (!empty($identifier)) {
+            return (boolean) $this->renderingContext->getCache()->get($identifier);
+        }
+        return false;
     }
 
     /**
@@ -165,7 +168,11 @@ class TemplateCompiler
             if (!class_exists($identifier, false)) {
                 $this->renderingContext->getCache()->get($identifier);
             }
-            $this->syntaxTreeInstanceCache[$identifier] = new $identifier();
+            if (!is_a($identifier, UncompilableTemplateInterface::class, true)) {
+                $this->syntaxTreeInstanceCache[$identifier] = new $identifier();
+            } else {
+                return new $identifier();
+            }
         }
 
 
@@ -189,16 +196,20 @@ class TemplateCompiler
      */
     public function store($identifier, ParsingState $parsingState)
     {
-        $identifier = $this->sanitizeIdentifier($identifier);
-
         if ($this->isDisabled()) {
-            $cache = $this->renderingContext->getCache();
-            if ($cache) {
-                // Compiler is disabled but cache is enabled. Flush cache to make sure.
-                $cache->flush($identifier);
-            }
             $parsingState->setCompilable(false);
             return null;
+        }
+
+        $identifier = $this->sanitizeIdentifier($identifier);
+        $cache = $this->renderingContext->getCache();
+        if (!$parsingState->isCompilable()) {
+            $templateCode = '<?php' . PHP_EOL . 'class ' . $identifier .
+                ' extends \TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate' . PHP_EOL .
+                ' implements \TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface' . PHP_EOL .
+                '{' . PHP_EOL . '}';
+            $cache->set($identifier, $templateCode);
+            return $templateCode;
         }
 
         $this->currentlyProcessingState = $parsingState;
