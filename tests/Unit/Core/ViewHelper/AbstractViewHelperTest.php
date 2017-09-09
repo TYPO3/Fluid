@@ -16,6 +16,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefaultRenderStaticViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -390,5 +392,31 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
         $this->assertNull($viewHelper->resetState());
+    }
+
+    /**
+     * @test
+     */
+    public function testCallRenderMethodCanRenderViewHelperWithoutRenderMethodAndCallsRenderStatic()
+    {
+        $subject = new RenderMethodFreeViewHelper();
+        $method = new \ReflectionMethod($subject, 'callRenderMethod');
+        $method->setAccessible(true);
+        $subject->setRenderingContext(new RenderingContextFixture());
+        $result = $method->invoke($subject);
+        $this->assertSame('I was rendered', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function testCallRenderMethodOnViewHelperWithoutRenderMethodWithDefaultRenderStaticMethodThrowsException()
+    {
+        $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
+        $method = new \ReflectionMethod($subject, 'callRenderMethod');
+        $method->setAccessible(true);
+        $subject->setRenderingContext(new RenderingContextFixture());
+        $this->setExpectedException(Exception::class);
+        $method->invoke($subject);
     }
 }
