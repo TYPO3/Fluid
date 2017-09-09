@@ -258,7 +258,22 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     protected function callRenderMethod()
     {
-        return call_user_func([$this, 'render']);
+        if (method_exists($this, 'render')) {
+            return call_user_func([$this, 'render']);
+        }
+        if ((new \ReflectionMethod($this, 'renderStatic'))->getDeclaringClass()->getName() !== AbstractViewHelper::class) {
+            // Method is safe to call - will not recurse through ViewHelperInvoker via the default
+            // implementation of renderStatic() on this class.
+            return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
+        }
+        throw new Exception(
+            sprintf(
+                'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
+                'Exceuting this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
+                '"renderStatic()" on your ViewHelper class',
+                get_class($this)
+            )
+        );
     }
 
     /**
