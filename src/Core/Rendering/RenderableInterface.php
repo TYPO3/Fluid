@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * This interface is implemented by objects which can be rendered
