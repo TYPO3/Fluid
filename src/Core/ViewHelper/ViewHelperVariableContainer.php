@@ -25,7 +25,7 @@ class ViewHelperVariableContainer
     protected $objects = [];
 
     /**
-     * @var ViewInterface
+     * @var ViewInterface|null
      */
     protected $view;
 
@@ -154,7 +154,7 @@ class ViewHelperVariableContainer
      *
      * !!! This is NOT a public API and might still change!!!
      *
-     * @return ViewInterface The View
+     * @return ViewInterface|null The View
      */
     public function getView()
     {

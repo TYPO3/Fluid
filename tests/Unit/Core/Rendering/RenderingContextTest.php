@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for ParsingState
@@ -44,8 +43,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testGetter($property, $value)
     {
-        $view = new TemplateView();
-        $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy'], [$view]);
+        $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy']);
         $subject->_set($property, $value);
         $getter = 'get' . ucfirst($property);
         $this->assertSame($value, $subject->$getter());
@@ -58,8 +56,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testSetter($property, $value)
     {
-        $view = new TemplateView();
-        $subject = new RenderingContext($view);
+        $subject = new RenderingContext();
         $setter = 'set' . ucfirst($property);
         $subject->$setter($value);
         $this->assertAttributeSame($value, $property, $subject);
@@ -110,7 +107,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testIsCacheEnabled()
     {
-        $subject = new RenderingContext($this->getMock(TemplateView::class));
+        $subject = new RenderingContext();
         $this->assertFalse($subject->isCacheEnabled());
         $subject->setCache($this->getMock(SimpleFileCache::class));
         $this->assertTrue($subject->isCacheEnabled());
