@@ -205,18 +205,21 @@ abstract class Patterns
 			{                                                      # Each array needs to start with {
 				(?P<Array>                                         # Start sub-match
 					(?:
-						\s*(
-							[a-zA-Z0-9\\-_]+                       # Unquoted key
-							|"(?:\\\"|[^"])+"                      # Double quoted key, supporting more characters like dots and square brackets
-							|\'(?:\\\\\'|[^\'])+\'                 # Single quoted key, supporting more characters like dots and square brackets
-						)
-						\s*:\s*                                    # Key|Value delimiter :
-						(?:                                        # Possible value options:
-							"(?:\\\"|[^"])*"                       # Double quoted string
-							|\'(?:\\\\\'|[^\'])*\'                 # Single quoted string
-							|[a-zA-Z0-9\-_.]+                      # variable identifiers
-							|(?P>Recursion)                        # Another sub-array
-						)                                          # END possible value options
+						\s*(?:                                     # key-value syntax
+							(                                      # Possible key options
+								[a-zA-Z0-9\\-_]+                   # Unquoted key
+								|"(?:\\\"|[^"])+"                  # Double quoted key, supporting more characters like dots and square brackets
+								|\'(?:\\\\\'|[^\'])+\'             # Single quoted key, supporting more characters like dots and square brackets
+							)                                      # END possible key options
+							\s*:\s*                                # Key|Value delimiter :
+							(?:                                    # Possible value options:
+								"(?:\\\"|[^"])*"                   # Double quoted string
+								|\'(?:\\\\\'|[^\'])*\'             # Single quoted string
+								|[a-zA-Z0-9\-_.]+                  # variable identifiers
+								|(?P>Recursion)                    # Another sub-array
+							)                                      # END possible value options
+						)                                          # END key-value syntax
+						|[a-zA-Z0-9\\-_]+                          # Single unquoted key matching short array syntax
 						\s*,?                                      # There might be a , to separate different parts of the array
 					)*                                             # The above cycle is repeated for all array elements
 				)                                                  # End array sub-match
@@ -248,6 +251,7 @@ abstract class Patterns
 				|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # A hardcoded Number (also possibly with decimals)
 				|\\{\\s*(?P<Subarray>(?:(?P>ArrayPart)\\s*,?\\s*)+)\\s*\\}  # Another sub-array
 			)                                                               # END possible value options
+			|(?P<KeyValue>[a-zA-Z0-9_-]+)                                   # The arry key and value in short syntax
 		)\\s*(?=\\z|,|\\})                                                  # An array part sub-match ends with either a comma, a closing curly bracket or end of string
 	/x';
 }

@@ -678,6 +678,10 @@ class TemplateParser
         $arrayToBuild = [];
         if (preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $singleMatch) {
+                if (!empty($singleMatch['KeyValue'])) {
+                    $arrayToBuild[$singleMatch['KeyValue']] = new ObjectAccessorNode($singleMatch['KeyValue']);
+                    continue;
+                }
                 $arrayKey = $this->unquoteString($singleMatch['Key']);
                 if (!empty($singleMatch['VariableIdentifier'])) {
                     $arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
