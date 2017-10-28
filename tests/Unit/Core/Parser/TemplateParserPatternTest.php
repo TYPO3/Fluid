@@ -339,7 +339,11 @@ class PatternsTest extends UnitTestCase
             ['string' => '{"a":{bla:{x:z}, b: a}}'],
             ['string' => '{a:{bla:{"x":z}, b: a}}'],
             ['string' => '{"@a": "bar"}'],
-            ['string' => '{\'_b\': "bar"}']
+            ['string' => '{\'_b\': "bar"}'],
+
+            // short syntax
+            ['string' => '{a, b, c:   {   d }}'],
+            ['string' => '{a:"foo", b, c: { e: \'bar\', g }}']
         ];
     }
 
