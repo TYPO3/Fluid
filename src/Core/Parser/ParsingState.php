@@ -116,7 +116,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function render(RenderingContextInterface $renderingContext)
     {
-        return $this->rootNode->evaluate($renderingContext);
+        return $this->getRootNode()->evaluate($renderingContext);
     }
 
     /**
