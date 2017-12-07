@@ -72,7 +72,6 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
      * @return void
-     * @throws Exception\InvalidVariableException
      * @api
      */
     public function add($identifier, $value);
