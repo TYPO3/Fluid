@@ -90,6 +90,13 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                 ],
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>'
             ],
+            'supports xmlns detection, HTTPS' => [
+                '<html xmlns:x="https://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL. '</html>',
+                [
+                    ['x', 'X\\Y\\ViewHelpers']
+                ],
+                '<html xmlns:x="https://typo3.org/ns/X/Y/ViewHelpers">' . PHP_EOL . '</html>'
+            ],
             'supports xmlns detection, multiple' => [
                 '<html xmlns:x="http://typo3.org/ns/X/Y/ViewHelpers" xmlns:z="http://typo3.org/ns/X/Z/ViewHelpers" data-namespace-typo3-fluid="true">' . PHP_EOL. '</html>',
                 [
