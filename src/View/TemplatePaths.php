@@ -457,7 +457,7 @@ class TemplatePaths
      */
     protected function ensureSuffixedPath($path)
     {
-        return rtrim($path, '/') . '/';
+        return $path !== '' ? rtrim($path, '/') . '/' : '';
     }
 
     /**
