@@ -404,7 +404,7 @@ class TemplatePaths
         if (is_array($path)) {
             $paths = array_map([$this, 'sanitizePath'], $path);
             return array_unique($paths);
-        } elseif (($wrapper = substr($path, 0, strpos($path, ':'))) && in_array($wrapper, stream_get_wrappers())) {
+        } elseif (($wrapper = parse_url($path, PHP_URL_SCHEME)) && in_array($wrapper, stream_get_wrappers())) {
             return $path;
         } elseif (!empty($path)) {
             $path = str_replace(['\\', '//'], '/', (string) $path);
