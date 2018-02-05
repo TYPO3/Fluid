@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
+use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
@@ -230,6 +231,16 @@ abstract class AbstractTemplateView extends AbstractView
             $parsedTemplate = $this->getCurrentParsedTemplate();
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
+        } catch (InvalidTemplateResourceException $error) {
+            if (!$ignoreUnknown) {
+                return $renderingContext->getErrorHandler()->handleViewError($error);
+            }
+            return '';
+        } catch (InvalidSectionException $error) {
+            if (!$ignoreUnknown) {
+                return $renderingContext->getErrorHandler()->handleViewError($error);
+            }
+            return '';
         } catch (Exception $error) {
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
@@ -297,6 +308,16 @@ abstract class AbstractTemplateView extends AbstractView
             );
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
+        } catch (InvalidTemplateResourceException $error) {
+            if (!$ignoreUnknown) {
+                return $renderingContext->getErrorHandler()->handleViewError($error);
+            }
+            return '';
+        } catch (InvalidSectionException $error) {
+            if (!$ignoreUnknown) {
+                return $renderingContext->getErrorHandler()->handleViewError($error);
+            }
+            return '';
         } catch (Exception $error) {
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
