@@ -26,7 +26,7 @@ class ViewHelperResolver
     /**
      * @var array
      */
-    protected static $resolvedViewHelperClassNames = [];
+    protected $resolvedViewHelperClassNames = [];
 
     /**
      * Namespaces requested by the template being rendered,
@@ -85,7 +85,7 @@ class ViewHelperResolver
      */
     public function addNamespace($identifier, $phpNamespace)
     {
-        if (!array_key_exists($identifier, $this->namespaces)) {
+        if (!array_key_exists($identifier, $this->namespaces) || $this->namespaces[$identifier] === null) {
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array) $phpNamespace;
         } elseif (is_array($phpNamespace)) {
             $this->namespaces[$identifier] = array_unique(array_merge($this->namespaces[$identifier], $phpNamespace));
@@ -244,7 +244,7 @@ class ViewHelperResolver
      */
     public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
     {
-        if (!isset(static::$resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
+        if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
             $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
             $actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
             if (false === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
@@ -256,9 +256,9 @@ class ViewHelperResolver
                     $resolvedViewHelperClassName
                 ), 1407060572);
             }
-            static::$resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $actualViewHelperClassName;
+            $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $actualViewHelperClassName;
         }
-        return static::$resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier];
+        return $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier];
     }
 
     /**
