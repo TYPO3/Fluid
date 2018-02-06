@@ -55,7 +55,8 @@ class TemplatePathsTest extends BaseTestCase
             [__DIR__, strtr(__DIR__, '\\', '/') . '/'],
             ['composer.json', strtr(getcwd(), '\\', '/') . '/composer.json'],
             ['php://stdin', 'php://stdin'],
-            ['foo://bar/baz', '']
+            ['foo://bar/baz', ''],
+            ['file://foo/bar/baz', 'file://foo/bar/baz']
         ];
     }
 
