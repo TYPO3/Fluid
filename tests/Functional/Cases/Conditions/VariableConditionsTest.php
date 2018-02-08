@@ -5,14 +5,6 @@ use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 
 
-class CanBeCounted implements \Countable
-{
-    public function count()
-    {
-        return 0;
-    }
-}
-
 /**
  * Class VariableConditionsTest
  */
