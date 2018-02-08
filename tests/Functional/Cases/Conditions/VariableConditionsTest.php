@@ -4,6 +4,15 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 
+
+class CanBeCounted implements \Countable
+{
+    public function count()
+    {
+        return 0;
+    }
+}
+
 /**
  * Class VariableConditionsTest
  */
@@ -25,6 +34,8 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
         $someArray = [
             'foo' => 'bar'
         ];
+
+        $emptyCountable = new \SplObjectStorage();
         return [
             // simple assignments
             ['{test}', true, ['test' => 1]],
@@ -70,7 +81,11 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
 
             // inline viewHelpers
             ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 1)', true],
-            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0)', false]
+            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0)', false],
+
+            //conditions with countable objects
+            ['{emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
+            ['{emptyCountable} || false', false, ['emptyCountable' => $emptyCountable]]
         ];
     }
 }
