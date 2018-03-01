@@ -49,6 +49,7 @@ class DebugViewHelper extends AbstractViewHelper
 
     /**
      * @return void
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
     public function initializeArguments()
     {
@@ -92,7 +93,7 @@ class DebugViewHelper extends AbstractViewHelper
         if (!$html) {
             if (is_scalar($variable)) {
                 $string = sprintf('%s %s', $typeLabel, var_export($variable, true)) . PHP_EOL;
-            } elseif (is_null($variable)) {
+            } elseif ($variable === null) {
                 $string = 'null' . PHP_EOL;
             } else {
                 $string = sprintf('%s: ', $typeLabel);
@@ -111,7 +112,7 @@ class DebugViewHelper extends AbstractViewHelper
                 }
             }
         } else {
-            if (is_scalar($variable) || is_null($variable)) {
+            if (is_scalar($variable) || $variable === null) {
                 $string = sprintf(
                     '<code>%s = %s</code>',
                     $typeLabel,
@@ -146,25 +147,31 @@ class DebugViewHelper extends AbstractViewHelper
     {
         if ($variable instanceof \ArrayObject || is_array($variable)) {
             return (array) $variable;
-        } elseif ($variable instanceof \Iterator) {
+        }
+
+        if ($variable instanceof \Iterator) {
             return iterator_to_array($variable);
-        } elseif (is_resource($variable)) {
+        }
+
+        if (is_resource($variable)) {
             return stream_get_meta_data($variable);
-        } elseif ($variable instanceof \DateTimeInterface) {
+        }
+
+        if ($variable instanceof \DateTimeInterface) {
             return [
                 'class' => get_class($variable),
-                'ISO8601' => $variable->format(\DateTime::ISO8601),
+                'ISO8601' => $variable->format(\DateTime::ATOM),
                 'UNIXTIME' => (integer) $variable->format('U')
             ];
-        } else {
-            $reflection = new \ReflectionObject($variable);
-            $properties = $reflection->getProperties();
-            $output = [];
-            foreach ($properties as $property) {
-                $propertyName = $property->getName();
-                $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
-            }
-            return $output;
         }
+
+        $reflection = new \ReflectionObject($variable);
+        $properties = $reflection->getProperties();
+        $output = [];
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
+        }
+        return $output;
     }
 }
