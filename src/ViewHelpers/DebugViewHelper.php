@@ -49,7 +49,6 @@ class DebugViewHelper extends AbstractViewHelper
 
     /**
      * @return void
-     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
     public function initializeArguments()
     {
@@ -93,7 +92,7 @@ class DebugViewHelper extends AbstractViewHelper
         if (!$html) {
             if (is_scalar($variable)) {
                 $string = sprintf('%s %s', $typeLabel, var_export($variable, true)) . PHP_EOL;
-            } elseif ($variable === null) {
+            } elseif (is_null($variable)) {
                 $string = 'null' . PHP_EOL;
             } else {
                 $string = sprintf('%s: ', $typeLabel);
@@ -112,7 +111,7 @@ class DebugViewHelper extends AbstractViewHelper
                 }
             }
         } else {
-            if (is_scalar($variable) || $variable === null) {
+            if (is_scalar($variable) || is_null($variable)) {
                 $string = sprintf(
                     '<code>%s = %s</code>',
                     $typeLabel,
@@ -147,31 +146,25 @@ class DebugViewHelper extends AbstractViewHelper
     {
         if ($variable instanceof \ArrayObject || is_array($variable)) {
             return (array) $variable;
-        }
-
-        if ($variable instanceof \Iterator) {
+        } elseif ($variable instanceof \Iterator) {
             return iterator_to_array($variable);
-        }
-
-        if (is_resource($variable)) {
+        } elseif (is_resource($variable)) {
             return stream_get_meta_data($variable);
-        }
-
-        if ($variable instanceof \DateTimeInterface) {
+        } elseif ($variable instanceof \DateTimeInterface) {
             return [
                 'class' => get_class($variable),
                 'ISO8601' => $variable->format(\DateTime::ATOM),
                 'UNIXTIME' => (integer) $variable->format('U')
             ];
+        } else {
+            $reflection = new \ReflectionObject($variable);
+            $properties = $reflection->getProperties();
+            $output = [];
+            foreach ($properties as $property) {
+                $propertyName = $property->getName();
+                $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
+            }
+            return $output;
         }
-
-        $reflection = new \ReflectionObject($variable);
-        $properties = $reflection->getProperties();
-        $output = [];
-        foreach ($properties as $property) {
-            $propertyName = $property->getName();
-            $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
-        }
-        return $output;
     }
 }
