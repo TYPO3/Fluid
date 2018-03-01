@@ -153,7 +153,7 @@ class DebugViewHelper extends AbstractViewHelper
         } elseif ($variable instanceof \DateTimeInterface) {
             return [
                 'class' => get_class($variable),
-                'ISO8601' => $variable->format(\DateTime::ISO8601),
+                'ISO8601' => $variable->format(\DateTime::ATOM),
                 'UNIXTIME' => (integer) $variable->format('U')
             ];
         } else {
