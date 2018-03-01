@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -49,13 +50,32 @@ class DebugViewHelper extends AbstractViewHelper
 
     /**
      * @return void
+     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
      */
     public function initializeArguments()
     {
         parent::initializeArguments();
-        $this->registerArgument('typeOnly', 'boolean', 'If TRUE, debugs only the type of variables', false, false);
-        $this->registerArgument('levels', 'integer', 'Levels to render when rendering nested objects/arrays', false, 5);
-        $this->registerArgument('html', 'boolean', 'Render HTML. If FALSE, output is indented plaintext', false, false);
+        $this->registerArgument(
+            'typeOnly',
+            'boolean',
+            'If TRUE, debugs only the type of variables',
+            false,
+            false
+        );
+        $this->registerArgument(
+            'levels',
+            'integer',
+            'Levels to render when rendering nested objects/arrays',
+            false,
+            5
+        );
+        $this->registerArgument(
+            'html',
+            'boolean',
+            'Render HTML. If FALSE, output is indented plaintext',
+            false,
+            false
+        );
     }
 
     /**
@@ -69,12 +89,12 @@ class DebugViewHelper extends AbstractViewHelper
         $typeOnly = $arguments['typeOnly'];
         $expressionToExamine = $renderChildrenClosure();
         if ($typeOnly === true) {
-            return (is_object($expressionToExamine) ? get_class($expressionToExamine) : gettype($expressionToExamine));
+            return (
+            \is_object($expressionToExamine) ? \get_class($expressionToExamine) : \gettype($expressionToExamine)
+            );
         }
 
-        $html = $arguments['html'];
-        $levels = $arguments['levels'];
-        return static::dumpVariable($expressionToExamine, $html, 1, $levels);
+        return static::dumpVariable($expressionToExamine, $arguments['html'], 1, $arguments['levels']);
     }
 
 
@@ -87,12 +107,12 @@ class DebugViewHelper extends AbstractViewHelper
      */
     protected static function dumpVariable($variable, $html, $level, $levels)
     {
-        $typeLabel = is_object($variable) ? get_class($variable) : gettype($variable);
+        $typeLabel = \is_object($variable) ? \get_class($variable) : \gettype($variable);
 
         if (!$html) {
             if (is_scalar($variable)) {
                 $string = sprintf('%s %s', $typeLabel, var_export($variable, true)) . PHP_EOL;
-            } elseif (is_null($variable)) {
+            } elseif ($variable === null) {
                 $string = 'null' . PHP_EOL;
             } else {
                 $string = sprintf('%s: ', $typeLabel);
@@ -111,11 +131,16 @@ class DebugViewHelper extends AbstractViewHelper
                 }
             }
         } else {
-            if (is_scalar($variable) || is_null($variable)) {
+            if (is_scalar($variable) || $variable === null) {
                 $string = sprintf(
                     '<code>%s = %s</code>',
                     $typeLabel,
-                    htmlspecialchars(var_export($variable, true), ENT_COMPAT, 'UTF-8', false)
+                    htmlspecialchars(
+                        var_export($variable, true),
+                        ENT_COMPAT,
+                        'UTF-8',
+                        false
+                    )
                 );
             } else {
                 $string = sprintf('<code>%s</code>', $typeLabel);
@@ -144,27 +169,33 @@ class DebugViewHelper extends AbstractViewHelper
      */
     protected static function getValuesOfNonScalarVariable($variable)
     {
-        if ($variable instanceof \ArrayObject || is_array($variable)) {
-            return (array) $variable;
-        } elseif ($variable instanceof \Iterator) {
-            return iterator_to_array($variable);
-        } elseif (is_resource($variable)) {
-            return stream_get_meta_data($variable);
-        } elseif ($variable instanceof \DateTimeInterface) {
-            return [
-                'class' => get_class($variable),
-                'ISO8601' => $variable->format(\DateTime::ISO8601),
-                'UNIXTIME' => (integer) $variable->format('U')
-            ];
-        } else {
-            $reflection = new \ReflectionObject($variable);
-            $properties = $reflection->getProperties();
-            $output = [];
-            foreach ($properties as $property) {
-                $propertyName = $property->getName();
-                $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
-            }
-            return $output;
+        if ($variable instanceof \ArrayObject || \is_array($variable)) {
+            return (array)$variable;
         }
+
+        if ($variable instanceof \Iterator) {
+            return iterator_to_array($variable);
+        }
+
+        if (\is_resource($variable)) {
+            return stream_get_meta_data($variable);
+        }
+
+        if ($variable instanceof \DateTimeInterface) {
+            return [
+                'class' => \get_class($variable),
+                'ISO8601' => $variable->format(\DateTime::ISO8601),
+                'UNIXTIME' => (integer)$variable->format('U')
+            ];
+        }
+
+        $reflection = new \ReflectionObject($variable);
+        $properties = $reflection->getProperties();
+        $output = [];
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
+        }
+        return $output;
     }
 }
