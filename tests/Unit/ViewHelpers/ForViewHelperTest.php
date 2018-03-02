@@ -187,7 +187,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     }
 
     /**
-     * @return \Traversable
+     * @return \Generator
      */
     public function reverseDataProvider()
     {
