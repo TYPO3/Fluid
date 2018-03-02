@@ -268,41 +268,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function keyContainsNumericalIndexInAscendingOrderEvenIfReverseIsTrueIfTheGivenArrayDoesNotHaveAKey()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
-
-        $this->arguments['each'] = ['foo', 'bar', 'baz'];
-        $this->arguments['as'] = 'innerVariable';
-        $this->arguments['key'] = 'someKey';
-        $this->arguments['reverse'] = true;
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
-
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'baz',
-                'someKey' => 0
-            ],
-            [
-                'innerVariable' => 'bar',
-                'someKey' => 1
-            ],
-            [
-                'innerVariable' => 'foo',
-                'someKey' => 2
-            ]
-        ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-    }
-
-    /**
-     * @test
-     */
     public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable()
     {
         $viewHelper = new ForViewHelper();
