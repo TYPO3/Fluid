@@ -187,45 +187,46 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     }
 
     /**
-     * @return \Generator
+     * @return array
      */
     public function reverseDataProvider()
     {
-        yield 'string keys' => [
-            [
-                'key1' => 'value1',
-                'key2' => 'value2',
+        return [
+            'string keys' => [
+                [
+                    'key1' => 'value1',
+                    'key2' => 'value2',
+                ],
+                [
+                    [
+                        'innerVariable' => 'value2',
+                        'someKey' => 'key2',
+                    ],
+                    [
+                        'innerVariable' => 'value1',
+                        'someKey' => 'key1',
+                    ],
+                ],
             ],
-            [
+            'numeric keys' => [
                 [
-                    'innerVariable' => 'value2',
-                    'someKey' => 'key2',
+                    'value1',
+                    'value2',
+                    'value3',
                 ],
                 [
-                    'innerVariable' => 'value1',
-                    'someKey' => 'key1',
-                ],
-            ],
-        ];
-
-        yield 'numeric keys' => [
-            [
-                'value1',
-                'value2',
-                'value3',
-            ],
-            [
-                [
-                    'innerVariable' => 'value3',
-                    'someKey' => 2,
-                ],
-                [
-                    'innerVariable' => 'value2',
-                    'someKey' => 1,
-                ],
-                [
-                    'innerVariable' => 'value1',
-                    'someKey' => 0,
+                    [
+                        'innerVariable' => 'value3',
+                        'someKey' => 2,
+                    ],
+                    [
+                        'innerVariable' => 'value2',
+                        'someKey' => 1,
+                    ],
+                    [
+                        'innerVariable' => 'value1',
+                        'someKey' => 0,
+                    ],
                 ],
             ],
         ];
