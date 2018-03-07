@@ -224,6 +224,7 @@ class TemplatePathsTest extends BaseTestCase
                 'examples/Resources/Private/Layouts/Default.html',
                 'examples/Resources/Private/Layouts/Dynamic.html',
                 'examples/Resources/Private/Templates/Default/Default.html',
+                'examples/Resources/Private/Templates/Default/Nested/Default.html',
             ],
             $result
         );
