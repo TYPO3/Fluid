@@ -324,8 +324,17 @@ class TemplatePaths
      */
     protected function resolveFilesInFolder($folder, $format)
     {
-        $files = glob($folder . '*.' . $format);
-        return !$files ? [] : $files;
+        if (!is_dir($folder)) {
+            return [];
+        }
+
+        $directoryIterator = new \RecursiveDirectoryIterator($folder, \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS);
+        $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        $filterIterator = new \CallbackFilterIterator($recursiveIterator, function($current, $key, $iterator) use ($format) {
+            return $current->getExtension() === $format;
+        });
+
+        return array_keys(iterator_to_array($filterIterator));
     }
 
     /**
