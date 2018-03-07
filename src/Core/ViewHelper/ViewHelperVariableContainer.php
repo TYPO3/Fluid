@@ -105,6 +105,7 @@ class ViewHelperVariableContainer
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param mixed $default
+     * @return array
      */
     public function getAll($viewHelperName, $default = null)
     {

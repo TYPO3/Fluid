@@ -6,12 +6,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Exception;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper3;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
