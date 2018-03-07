@@ -327,10 +327,14 @@ class TemplatePaths
         if (!is_dir($folder)) {
             return [];
         }
+
         $directoryIterator = new \RecursiveDirectoryIterator($folder, \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS);
-        $filterIterator = new \RecursiveRegexIterator($directoryIterator, '/^.+\.' . $format . '$/i', \RecursiveRegexIterator::GET_MATCH);
-        $recursiveIterator = new \RecursiveIteratorIterator($filterIterator, \RecursiveIteratorIterator::SELF_FIRST);
-        return array_map('strval', array_column(iterator_to_array($recursiveIterator), 0));
+        $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
+        $filterIterator = new \CallbackFilterIterator($recursiveIterator, function($current, $key, $iterator) use ($format) {
+            return $current->getExtension() === $format;
+        });
+
+        return array_reverse(array_keys(iterator_to_array($filterIterator)));
     }
 
     /**
