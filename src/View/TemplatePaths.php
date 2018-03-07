@@ -334,7 +334,7 @@ class TemplatePaths
             return $current->getExtension() === $format;
         });
 
-        return array_reverse(array_keys(iterator_to_array($filterIterator)));
+        return array_keys(iterator_to_array($filterIterator));
     }
 
     /**
