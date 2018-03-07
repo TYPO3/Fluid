@@ -55,7 +55,7 @@ class TemplatePaths
      *
      * @var array
      */
-    protected static $resolvedIdentifiers = [
+    protected $resolvedIdentifiers = [
         self::NAME_TEMPLATES => [],
         self::NAME_LAYOUTS => [],
         self::NAME_PARTIALS => []
@@ -66,7 +66,7 @@ class TemplatePaths
      *
      * @var array
      */
-    protected static $resolvedFiles = [
+    protected $resolvedFiles = [
         self::NAME_TEMPLATES => [],
         self::NAME_LAYOUTS => [],
         self::NAME_PARTIALS => []
@@ -112,7 +112,6 @@ class TemplatePaths
      */
     public function __construct($packageNameOrArray = null)
     {
-        $this->clearResolvedIdentifiersAndTemplates();
         if (is_array($packageNameOrArray)) {
             $this->fillFromConfigurationArray($packageNameOrArray);
         } elseif (!empty($packageNameOrArray)) {
@@ -259,17 +258,17 @@ class TemplatePaths
         $controller = str_replace('\\', '/', $controller);
         $action = ucfirst($action);
         $identifier = $controller . '/' . $action . '.' . $format;
-        if (!array_key_exists($identifier, self::$resolvedFiles['templates'])) {
+        if (!array_key_exists($identifier, $this->resolvedFiles['templates'])) {
             $templateRootPaths = $this->getTemplateRootPaths();
             foreach ([$controller . '/' . $action, $action] as $possibleRelativePath) {
                 try {
-                    return self::$resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $possibleRelativePath, $format);
+                    return $this->resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $possibleRelativePath, $format);
                 } catch (InvalidTemplateResourceException $error) {
-                    self::$resolvedFiles['templates'][$identifier] = null;
+                    $this->resolvedFiles['templates'][$identifier] = null;
                 }
             }
         }
-        return isset(self::$resolvedFiles[self::NAME_TEMPLATES][$identifier]) ? self::$resolvedFiles[self::NAME_TEMPLATES][$identifier] : null;
+        return isset($this->resolvedFiles[self::NAME_TEMPLATES][$identifier]) ? $this->resolvedFiles[self::NAME_TEMPLATES][$identifier] : null;
     }
 
     /**
@@ -404,7 +403,7 @@ class TemplatePaths
         if (is_array($path)) {
             $paths = array_map([$this, 'sanitizePath'], $path);
             return array_unique($paths);
-        } elseif (strpos($path, 'php://') === 0) {
+        } elseif (($wrapper = parse_url($path, PHP_URL_SCHEME)) && in_array($wrapper, stream_get_wrappers())) {
             return $path;
         } elseif (!empty($path)) {
             $path = str_replace(['\\', '//'], '/', (string) $path);
@@ -457,7 +456,7 @@ class TemplatePaths
      */
     protected function ensureSuffixedPath($path)
     {
-        return rtrim($path, '/') . '/';
+        return $path !== '' ? rtrim($path, '/') . '/' : '';
     }
 
     /**
@@ -637,11 +636,11 @@ class TemplatePaths
         }
         $layoutName = ucfirst($layoutName);
         $layoutKey = $layoutName . '.' . $this->getFormat();
-        if (!array_key_exists($layoutKey, self::$resolvedFiles[self::NAME_LAYOUTS])) {
+        if (!array_key_exists($layoutKey, $this->resolvedFiles[self::NAME_LAYOUTS])) {
             $paths = $this->getLayoutRootPaths();
-            self::$resolvedFiles[self::NAME_LAYOUTS][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName);
+            $this->resolvedFiles[self::NAME_LAYOUTS][$layoutKey] = $this->resolveFileInPaths($paths, $layoutName);
         }
-        return self::$resolvedFiles[self::NAME_LAYOUTS][$layoutKey];
+        return $this->resolvedFiles[self::NAME_LAYOUTS][$layoutKey];
     }
 
     /**
@@ -654,12 +653,12 @@ class TemplatePaths
     public function getPartialIdentifier($partialName)
     {
         $partialKey = $partialName . '.' . $this->getFormat();
-        if (!array_key_exists($partialKey, self::$resolvedIdentifiers[self::NAME_PARTIALS])) {
+        if (!array_key_exists($partialKey, $this->resolvedIdentifiers[self::NAME_PARTIALS])) {
             $partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
             $prefix = 'partial_' . $partialName;
-            self::$resolvedIdentifiers[self::NAME_PARTIALS][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
+            $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
         }
-        return self::$resolvedIdentifiers[self::NAME_PARTIALS][$partialKey];
+        return $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey];
     }
 
     /**
@@ -685,12 +684,12 @@ class TemplatePaths
     public function getPartialPathAndFilename($partialName)
     {
         $partialKey = $partialName . '.' . $this->getFormat();
-        if (!array_key_exists($partialKey, self::$resolvedFiles[self::NAME_PARTIALS])) {
+        if (!array_key_exists($partialKey, $this->resolvedFiles[self::NAME_PARTIALS])) {
             $paths = $this->getPartialRootPaths();
             $partialName = ucfirst($partialName);
-            self::$resolvedFiles[self::NAME_PARTIALS][$partialKey] = $this->resolveFileInPaths($paths, $partialName);
+            $this->resolvedFiles[self::NAME_PARTIALS][$partialKey] = $this->resolveFileInPaths($paths, $partialName);
         }
-        return self::$resolvedFiles[self::NAME_PARTIALS][$partialKey];
+        return $this->resolvedFiles[self::NAME_PARTIALS][$partialKey];
     }
 
     /**
@@ -732,9 +731,9 @@ class TemplatePaths
     protected function clearResolvedIdentifiersAndTemplates($type = null)
     {
         if ($type !== null) {
-            self::$resolvedIdentifiers[$type] = self::$resolvedFiles[$type] = [];
+            $this->resolvedIdentifiers[$type] = $this->resolvedFiles[$type] = [];
         } else {
-            self::$resolvedIdentifiers = self::$resolvedFiles = [
+            $this->resolvedIdentifiers = $this->resolvedFiles = [
                 self::NAME_TEMPLATES => [],
                 self::NAME_LAYOUTS => [],
                 self::NAME_PARTIALS => []

@@ -75,7 +75,7 @@ trait CompileWithContentArgumentAndRenderStatic
         );
         $contentArgumentName = $this->resolveContentArgumentName();
         $initializationPhpCode .= sprintf(
-            '%s = %s[\'%s\'] ? function() use (%s) { return %s[\'%s\']; } : %s;',
+            '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
             $closureName,
             $argumentsName,
             $contentArgumentName,

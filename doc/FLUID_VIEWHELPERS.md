@@ -15,7 +15,7 @@ registered namespace available in _all template files_ without further importing
 
 ```php
 $view = new TemplateView();
-$view->getTemplatePaths()->addNamespace('foo', 'Vendor\\Foo\\ViewHelpers');
+$view->getRenderingContext()->getViewHelperResolver()->addNamespace('foo', 'Vendor\\Foo\\ViewHelpers');
 ```
 
 And the latter method which can be used in each template file that requires the ViewHelpers:
