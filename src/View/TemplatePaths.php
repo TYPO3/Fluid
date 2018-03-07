@@ -403,7 +403,7 @@ class TemplatePaths
         if (is_array($path)) {
             $paths = array_map([$this, 'sanitizePath'], $path);
             return array_unique($paths);
-        } elseif (strpos($path, 'php://') === 0) {
+        } elseif (($wrapper = parse_url($path, PHP_URL_SCHEME)) && in_array($wrapper, stream_get_wrappers())) {
             return $path;
         } elseif (!empty($path)) {
             $path = str_replace(['\\', '//'], '/', (string) $path);
@@ -456,7 +456,7 @@ class TemplatePaths
      */
     protected function ensureSuffixedPath($path)
     {
-        return rtrim($path, '/') . '/';
+        return $path !== '' ? rtrim($path, '/') . '/' : '';
     }
 
     /**

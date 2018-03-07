@@ -125,7 +125,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
                 \DateTime::createFromFormat('U', '1468328915'),
                 ['typeOnly' => false, 'html' => false, 'levels' => 3],
                 'DateTime: ' . PHP_EOL . '  "class": string \'DateTime\'' . PHP_EOL .
-                '  "ISO8601": string \'2016-07-12T13:08:35+0000\'' . PHP_EOL . '  "UNIXTIME": integer 1468328915' . PHP_EOL
+                '  "ISO8601": string \'2016-07-12T13:08:35+00:00\'' . PHP_EOL . '  "UNIXTIME": integer 1468328915' . PHP_EOL
             ]
         ];
     }

@@ -166,14 +166,15 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * @test
+     * @dataProvider reverseDataProvider
      */
-    public function renderPreservesKeysIfReverseIsTrue()
+    public function renderPreservesKeysIfReverseIsTrue(array $each, array $expectedCallProtocol)
     {
         $viewHelper = new ForViewHelper();
 
         $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
 
-        $this->arguments['each'] = ['key1' => 'value1', 'key2' => 'value2'];
+        $this->arguments['each'] = $each;
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['key'] = 'someKey';
         $this->arguments['reverse'] = true;
@@ -182,17 +183,53 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $viewHelper->setViewHelperNode($viewHelperNode);
         $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'value2',
-                'someKey' => 'key2'
-            ],
-            [
-                'innerVariable' => 'value1',
-                'someKey' => 'key1'
-            ]
-        ];
         $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+    }
+
+    /**
+     * @return array
+     */
+    public function reverseDataProvider()
+    {
+        return [
+            'string keys' => [
+                [
+                    'key1' => 'value1',
+                    'key2' => 'value2',
+                ],
+                [
+                    [
+                        'innerVariable' => 'value2',
+                        'someKey' => 'key2',
+                    ],
+                    [
+                        'innerVariable' => 'value1',
+                        'someKey' => 'key1',
+                    ],
+                ],
+            ],
+            'numeric keys' => [
+                [
+                    'value1',
+                    'value2',
+                    'value3',
+                ],
+                [
+                    [
+                        'innerVariable' => 'value3',
+                        'someKey' => 2,
+                    ],
+                    [
+                        'innerVariable' => 'value2',
+                        'someKey' => 1,
+                    ],
+                    [
+                        'innerVariable' => 'value1',
+                        'someKey' => 0,
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -223,41 +260,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ],
             [
                 'innerVariable' => 'baz',
-                'someKey' => 2
-            ]
-        ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-    }
-
-    /**
-     * @test
-     */
-    public function keyContainsNumericalIndexInAscendingOrderEvenIfReverseIsTrueIfTheGivenArrayDoesNotHaveAKey()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
-
-        $this->arguments['each'] = ['foo', 'bar', 'baz'];
-        $this->arguments['as'] = 'innerVariable';
-        $this->arguments['key'] = 'someKey';
-        $this->arguments['reverse'] = true;
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
-
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'baz',
-                'someKey' => 0
-            ],
-            [
-                'innerVariable' => 'bar',
-                'someKey' => 1
-            ],
-            [
-                'innerVariable' => 'foo',
                 'someKey' => 2
             ]
         ];
