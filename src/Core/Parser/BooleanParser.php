@@ -80,7 +80,7 @@ class BooleanParser
 			|
 				.?
 			)\s*
-	/xs';
+	/xsu';
 
     /**
      * Cursor that contains a integer value pointing to the location inside the
@@ -151,7 +151,7 @@ class BooleanParser
      */
     protected function peek($includeWhitespace = false)
     {
-        preg_match(static::TOKENREGEX, substr($this->expression, $this->cursor), $matches);
+        preg_match(static::TOKENREGEX, mb_substr($this->expression, $this->cursor), $matches);
         if ($includeWhitespace === true) {
             return $matches[0];
         }
@@ -167,10 +167,10 @@ class BooleanParser
      */
     protected function consume($string)
     {
-        if (strlen($string) === 0) {
+        if (mb_strlen($string) === 0) {
             return;
         }
-        $this->cursor = strpos($this->expression, $string, $this->cursor) + strlen($string);
+        $this->cursor = mb_strpos($this->expression, $string, $this->cursor) + mb_strlen($string);
     }
 
     /**
@@ -424,18 +424,18 @@ class BooleanParser
      */
     protected function evaluateTerm($x, $context)
     {
-        if (isset($context[$x]) || (strpos($x, '{') === 0 && substr($x, -1) === '}')) {
+        if (isset($context[$x]) || (mb_strpos($x, '{') === 0 && mb_substr($x, -1) === '}')) {
             if ($this->compileToCode === true) {
-                return '($context["' . trim($x, '{}') . '"])';
+                return BooleanParser::class . '::convertNodeToBoolean($context["' . trim($x, '{}') . '"])';
             }
-            return $context[trim($x, '{}')];
+            return self::convertNodeToBoolean($context[trim($x, '{}')]);
         }
 
         if (is_numeric($x)) {
             if ($this->compileToCode === true) {
                 return $x;
             }
-            if (strpos($x, '.') !== false) {
+            if (mb_strpos($x, '.') !== false) {
                 return (float)$x;
             } else {
                 return (int)$x;
@@ -460,5 +460,12 @@ class BooleanParser
         }
 
         return trim($x, '\'"');
+    }
+
+    public static function convertNodeToBoolean($value) {
+        if (is_object($value) && $value instanceof \Countable) {
+            return count($value) > 0;
+        }
+        return $value;
     }
 }
