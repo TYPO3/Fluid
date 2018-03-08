@@ -77,7 +77,9 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
 
             //conditions with countable objects
             ['{emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
+            ['FALSE || FALSE', false, ['emptyCountable' => $emptyCountable]],
             ['{emptyCountable} || FALSE', false, ['emptyCountable' => $emptyCountable]],
+            ['FALSE || {emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
             // inline if-viewhelper condition with countable objects
             ['{f:if(condition: \'{emptyCountable} || FALSE\', else: \'1\')} == 1)', true, ['emptyCountable' => $emptyCountable]]
         ];

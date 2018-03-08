@@ -426,9 +426,9 @@ class BooleanParser
     {
         if (isset($context[$x]) || (mb_strpos($x, '{') === 0 && mb_substr($x, -1) === '}')) {
             if ($this->compileToCode === true) {
-                return '($context["' . trim($x, '{}') . '"])';
+                return BooleanParser::class . '::convertNodeToBoolean($context["' . trim($x, '{}') . '"])';
             }
-            return $context[trim($x, '{}')];
+            return self::convertNodeToBoolean($context[trim($x, '{}')]);
         }
 
         if (is_numeric($x)) {
@@ -460,5 +460,12 @@ class BooleanParser
         }
 
         return trim($x, '\'"');
+    }
+
+    public static function convertNodeToBoolean($value) {
+        if (is_object($value) && $value instanceof \Countable) {
+            return count($value) > 0;
+        }
+        return $value;
     }
 }
