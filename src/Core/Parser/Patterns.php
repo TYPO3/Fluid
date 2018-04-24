@@ -195,7 +195,7 @@ abstract class Patterns
     /**
      * Pattern which detects the array/object syntax like in JavaScript, so it
      * detects strings like:
-     * {object: value, object2: {nested: array}, object3: "Some string"}
+     * {object: value, object2: {nested: array}, object3: "Some string", object4}
      *
      * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
      *
@@ -205,19 +205,23 @@ abstract class Patterns
 			{                                                      # Each array needs to start with {
 				(?P<Array>                                         # Start sub-match
 					(?:
-						\s*(
-							[a-zA-Z0-9\\-_]+                       # Unquoted key
-							|"(?:\\\"|[^"])+"                      # Double quoted key, supporting more characters like dots and square brackets
-							|\'(?:\\\\\'|[^\'])+\'                 # Single quoted key, supporting more characters like dots and square brackets
-						)
-						\s*:\s*                                    # Key|Value delimiter :
-						(?:                                        # Possible value options:
-							"(?:\\\"|[^"])*"                       # Double quoted string
-							|\'(?:\\\\\'|[^\'])*\'                 # Single quoted string
-							|[a-zA-Z0-9\-_.]+                      # variable identifiers
-							|(?P>Recursion)                        # Another sub-array
-						)                                          # END possible value options
-						\s*,?                                      # There might be a , to separate different parts of the array
+						\s*(?:
+						(?:                                        # key-value syntax
+							(                                      # Possible key options
+								[a-zA-Z0-9\\-_]+                   # Unquoted key
+								|"(?:\\\\"|[^"])+"                 # Double quoted key, supporting more characters like dots and square brackets
+								|\'(?:\\\\\'|[^\'])+\'             # Single quoted key, supporting more characters like dots and square brackets
+							)                                      # END possible key options
+							\s*:\s*                                # Key|Value delimiter :
+							(?:                                    # Possible value options:
+								"(?:\\\\"|[^"])*"                  # Double quoted string
+								|\'(?:\\\\\'|[^\'])*\'             # Single quoted string
+								|[a-zA-Z0-9\\-_.]+                 # variable identifiers
+								|(?P>Recursion)                    # Another sub-array
+							)                                      # END possible value options
+						)                                          # END key-value syntax
+						|[a-zA-Z0-9\\-_]+                          # Single unquoted key matching short array syntax
+						)\s*,?                                     # There might be a , to separate different parts of the array
 					)*                                             # The above cycle is repeated for all array elements
 				)                                                  # End array sub-match
 			}                                                      # Each array ends with }
@@ -229,25 +233,28 @@ abstract class Patterns
      * Note that this pattern can be used on strings with or without surrounding curly brackets.
      */
     static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
-		(?P<ArrayPart>                                                      # Start sub-match of one key and value pair
-			(?P<Key>                                                        # The arry key
-				 [a-zA-Z0-9_-]+                                             # Unquoted
-				|"(?:\\\\"|[^"])+"                                          # Double quoted
-				|\'(?:\\\\\'|[^\'])+\'                                      # Single quoted
+		(?P<ArrayPart>
+			(?:                                                                 # Start sub-match of one key and value pair
+				(?P<Key>                                                        # The arry key
+					 [a-zA-Z0-9_-]+                                             # Unquoted
+					|"(?:\\\\"|[^"])+"                                          # Double quoted
+					|\'(?:\\\\\'|[^\'])+\'                                      # Single quoted
+				)
+				\\s*:\\s*                                                       # Key|Value delimiter :
+				(?:                                                             # BEGIN Possible value options
+					(?P<QuotedString>                                           # Quoted string
+						 "(?:\\\\"|[^"])*"
+						|\'(?:\\\\\'|[^\'])*\'
+					)
+					|(?P<VariableIdentifier>
+						(?:(?=[^,{}\.]*[a-zA-Z])[a-zA-Z0-9_-]*)                 # variable identifiers must contain letters (otherwise they are hardcoded numbers)
+						(?:\\.[a-zA-Z0-9_-]+)*                                  # but in sub key access only numbers are fine (foo.55)
+					)
+					|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # A hardcoded Number (also possibly with decimals)
+					|\\{\\s*(?P<Subarray>(?:(?P>ArrayPart)\\s*,?\\s*)+)\\s*\\}  # Another sub-array
+				)                                                               # END possible value options
 			)
-			\\s*:\\s*                                                       # Key|Value delimiter :
-			(?:                                                             # BEGIN Possible value options
-				(?P<QuotedString>                                           # Quoted string
-					 "(?:\\\\"|[^"])*"
-					|\'(?:\\\\\'|[^\'])*\'
-				)
-				|(?P<VariableIdentifier>
-					(?:(?=[^,{}\.]*[a-zA-Z])[a-zA-Z0-9_-]*)                 # variable identifiers must contain letters (otherwise they are hardcoded numbers)
-					(?:\\.[a-zA-Z0-9_-]+)*                                  # but in sub key access only numbers are fine (foo.55)
-				)
-				|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # A hardcoded Number (also possibly with decimals)
-				|\\{\\s*(?P<Subarray>(?:(?P>ArrayPart)\\s*,?\\s*)+)\\s*\\}  # Another sub-array
-			)                                                               # END possible value options
-		)\\s*(?=\\z|,|\\})                                                  # An array part sub-match ends with either a comma, a closing curly bracket or end of string
+			|(?P<KeyValue>[a-zA-Z0-9_-]+)                                       # The arry key and value in short syntax
+		)\\s*(?=\\z|,|\\})                                                      # An array part sub-match ends with either a comma, a closing curly bracket or end of string
 	/x';
 }

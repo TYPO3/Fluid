@@ -118,3 +118,23 @@ fail if you receive unexpected types. To be able to cast a variable in this case
 
 ...and Fluid will be able to detect the **expression** you used, extract and cast the variable and finally remove the quotations
 and use the variable directly (although, semantically, the quotes mean you create a new TextNode that contains a type other than
+
+Array syntax
+------------
+
+Arrays can be written as non-associative and associative arrays. For associative arrays, there also exists a shorthand notation
+allows to very concisely write associative arrays that have the variable name as key.
+
+```xml
+<f:foo bar="{myVar, anotherVar, some: { yetAnotherVar }}"></f:foo>
+```
+
+will evaluate the same as if it was written as
+
+```xml
+<f:foo bar="{myVar: myVar, anotherVar: anotherVar, some: { yetAnotherVar: yetAnotherVar }}"></f:foo>
+```
+
+Note though, that this syntax is not possible for single element arrays, since the notation is ambiguous with the simple variable
+access syntax. This is an side effect of Fluid using curly brackets both for variable access and array declarations and therefore
+can not be worked around.

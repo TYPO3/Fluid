@@ -13,6 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
@@ -597,24 +598,39 @@ class TemplateParserTest extends UnitTestCase
         return [
             [
                 'key1: "foo", key2: \'bar\', key3: someVar, key4: 123, key5: { key6: "baz" }',
-                ['key1' => 'foo', 'key2' => 'bar', 'key3' => 'someVar', 'key4' => 123.0, 'key5' => ['key6' => 'baz']]
+                ['key1' => 'foo', 'key2' => 'bar', 'key3' => 'someVal', 'key4' => 123, 'key5' => ['key6' => 'baz']]
             ],
             [
                 'key1: "\'foo\'", key2: \'\\\'bar\\\'\'',
                 ['key1' => '\'foo\'', 'key2' => '\'bar\'']
+            ],
+            [
+                'key1, key2, key3: someVar, key4, key5: { key6 }',
+                ['key1' => 'foo', 'key2' => 'bar', 'key3' => 'someVal', 'key4' => 123, 'key5' => ['key6' => 'baz']]
             ]
         ];
     }
 
     /**
-     * @__test
+     * @test
      * @dataProvider arrayTexts
      */
     public function recursiveArrayHandlerReturnsExpectedArray($arrayText, $expectedArray)
     {
+        $renderingContext = new RenderingContextFixture();
+        $variableProvider = new StandardVariableProvider();
+        $renderingContext->setVariableProvider($variableProvider);
+        $variableProvider->add('someVar', 'someVal');
+        $variableProvider->add('key1', 'foo');
+        $variableProvider->add('key2', 'bar');
+        $variableProvider->add('key4', 123);
+        $variableProvider->add('key6', 'baz');
+
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
         $templateParser->expects($this->any())->method('buildArgumentObjectTree')->willReturnArgument(0);
-        $this->assertSame($expectedArray, $templateParser->_call('recursiveArrayHandler', $arrayText));
+        $parsedArray = new ArrayNode($templateParser->_call('recursiveArrayHandler', $arrayText));
+
+        $this->assertSame($expectedArray, $parsedArray->evaluate($renderingContext));
     }
 
     /**
