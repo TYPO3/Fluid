@@ -51,7 +51,11 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return static::evaluateExpression($renderingContext, $this->expression, $this->matches);
+        try {
+            return static::evaluateExpression($renderingContext, $this->expression, $this->matches);
+        } catch (ExpressionException $exception) {
+            return $renderingContext->getErrorHandler()->handleExpressionError($exception);
+        }
     }
 
     /**
