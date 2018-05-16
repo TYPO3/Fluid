@@ -108,6 +108,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                 if (strpos($namespaceUrl, 'http://typo3.org/ns/') === 0) {
                     $namespaceUri = substr($namespaceUrl, 20);
                     $namespacePhp = str_replace('/', '\\', $namespaceUri);
+                } elseif (strpos($namespaceUrl, 'https://typo3.org/ns/') === 0) {
+                    $namespaceUri = substr($namespaceUrl, 21);
+                    $namespacePhp = str_replace('/', '\\', $namespaceUri);
                 } elseif (!preg_match('/([^a-z0-9_\\\\]+)/i', $namespaceUrl)) {
                     $namespacePhp = $namespaceUrl;
                     $namespacePhp = preg_replace('/\\\\{2,}/', '\\', $namespacePhp);
