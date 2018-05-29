@@ -127,8 +127,8 @@ trait CompileWithContentArgumentAndRenderStatic
                 }
             }
             throw new Exception(
-                'Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
-                'at least one registered and optional argument'
+                sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
+                'at least one registered and optional argument', __CLASS__)
             );
         }
         return $this->contentArgumentName;
