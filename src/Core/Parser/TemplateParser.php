@@ -564,6 +564,9 @@ class TemplateParser
     public function unquoteString($quotedValue)
     {
         $value = $quotedValue;
+        if ($value === '') {
+            return $value;
+        }
         if ($quotedValue{0} === '"') {
             $value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
         } elseif ($quotedValue{0} === '\'') {

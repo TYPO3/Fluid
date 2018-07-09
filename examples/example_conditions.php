@@ -20,6 +20,13 @@ $view->assign('vararray2', ['bar' => 'foo']);
 $view->assign('checkTernary', true);
 $view->assign('ternaryTrue', 'The ternary expression is TRUE');
 $view->assign('ternaryFalse', 'The ternary expression is FALSE');
+$view->assign('asArray', [
+    'nested' => [
+        'then' => 'Dotted variable TRUE',
+        'else' => 'Dotted variable FALSE',
+        'check' => true
+    ]
+]);
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.

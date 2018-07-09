@@ -10,7 +10,12 @@ Conditions template from Singles.
 	<f:else>Not touched</f:else>
 </f:if>
 
-Ternary expression: {checkTernary ? ternaryTrue : ternaryFalse}
+Ternary expression without then case: {ternaryTrue ? : ternaryFalse}
+Negated ternary expression without then case: {!checkTernary ? : ternaryFalse}
+Standard ternary expression: {checkTernary ? ternaryTrue : ternaryFalse}
+Negated ternary expression: {!checkTernary ? ternaryTrue : ternaryFalse}
+Ternary expression with dotted variable paths: {asArray.nested.true ? asArray.nested.then : asArray.nested.else}
+Ternary expression with dotted variable paths without then case: {asArray.nested.then ? : asArray.nested.else}
 
 <f:if condition="0" else="0 === FALSE" />
 <f:if condition="1" then="1 === TRUE" />
