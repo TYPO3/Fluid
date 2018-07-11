@@ -80,6 +80,10 @@ class ExamplesTest extends BaseTestCase
             'example_conditions.php' => [
                 'example_conditions.php',
                 [
+                    'Standard ternary expression: The ternary expression is TRUE',
+                    'Negated ternary expression without then case: The ternary expression is FALSE',
+                    'Negated ternary expression: The ternary expression is FALSE',
+                    'Ternary expression without then case: The ternary expression is TRUE',
                     '1 === TRUE',
                     '(0) === FALSE',
                     '(1) === TRUE',

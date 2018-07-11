@@ -25,6 +25,8 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
         $someArray = [
             'foo' => 'bar'
         ];
+
+        $emptyCountable = new \SplObjectStorage();
         return [
             // simple assignments
             ['{test}', true, ['test' => 1]],
@@ -70,7 +72,15 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
 
             // inline viewHelpers
             ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 1)', true],
-            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0)', false]
+            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0)', false],
+
+            //conditions with countable objects
+            ['{emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
+            ['FALSE || FALSE', false, ['emptyCountable' => $emptyCountable]],
+            ['{emptyCountable} || FALSE', false, ['emptyCountable' => $emptyCountable]],
+            ['FALSE || {emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
+            // inline if-viewhelper condition with countable objects
+            ['{f:if(condition: \'{emptyCountable} || FALSE\', else: \'1\')} == 1)', true, ['emptyCountable' => $emptyCountable]]
         ];
     }
 }

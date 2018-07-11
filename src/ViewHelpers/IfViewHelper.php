@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 
 /**
@@ -81,19 +82,19 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  */
 class IfViewHelper extends AbstractConditionViewHelper
 {
+    public function initializeArguments()
+    {
+        parent::initializeArguments();
+        $this->registerArgument('condition', 'boolean', 'Condition expression conforming to Fluid boolean rules', false, false);
+    }
 
     /**
-     * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
-     *
-     * @return string the rendered string
-     * @api
+     * @param array $arguments
+     * @param RenderingContextInterface $renderingContext
+     * @return bool
      */
-    public function render()
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
     {
-        if ($this->arguments['condition']) {
-            return $this->renderThenChild();
-        } else {
-            return $this->renderElseChild();
-        }
+        return (bool)$arguments['condition'];
     }
 }

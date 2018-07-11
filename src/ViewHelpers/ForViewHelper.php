@@ -105,7 +105,7 @@ class ForViewHelper extends AbstractViewHelper
                 $each = $arguments['each'];
                 $arguments['each'] = iterator_to_array($each);
             }
-            $arguments['each'] = array_reverse($arguments['each']);
+            $arguments['each'] = array_reverse($arguments['each'], true);
         }
         if (isset($arguments['iteration'])) {
             $iterationData = [

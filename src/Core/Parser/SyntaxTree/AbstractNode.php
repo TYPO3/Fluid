@@ -31,16 +31,17 @@ abstract class AbstractNode implements NodeInterface
      */
     public function evaluateChildNodes(RenderingContextInterface $renderingContext)
     {
-        $numberOfChildNodes = count($this->childNodes);
+        $childNodes = $this->getChildNodes();
+        $numberOfChildNodes = count($childNodes);
         if ($numberOfChildNodes === 0) {
             return null;
         }
         if ($numberOfChildNodes === 1) {
-            return $this->evaluateChildNode($this->childNodes[0], $renderingContext, false);
+            return $this->evaluateChildNode($childNodes[0], $renderingContext, false);
         }
         $output = '';
         /** @var $subNode NodeInterface */
-        foreach ($this->childNodes as $subNode) {
+        foreach ($childNodes as $subNode) {
             $output .= $this->evaluateChildNode($subNode, $renderingContext, true);
         }
         return $output;

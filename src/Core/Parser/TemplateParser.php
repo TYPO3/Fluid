@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
@@ -563,6 +564,9 @@ class TemplateParser
     public function unquoteString($quotedValue)
     {
         $value = $quotedValue;
+        if ($value === '') {
+            return $value;
+        }
         if ($quotedValue{0} === '"') {
             $value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
         } elseif ($quotedValue{0} === '\'') {
@@ -614,7 +618,9 @@ class TemplateParser
                             $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $state);
                             try {
                                 // Trigger initial parse-time evaluation to allow the node to manipulate the rendering context.
-                                $expressionNode->evaluate($this->renderingContext);
+                                if ($expressionNode instanceof ParseTimeEvaluatedExpressionNodeInterface) {
+                                    $expressionNode->evaluate($this->renderingContext);
+                                }
 
                                 if ($expressionStartPosition > 0) {
                                     $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));

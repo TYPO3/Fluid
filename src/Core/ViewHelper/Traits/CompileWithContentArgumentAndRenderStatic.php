@@ -75,7 +75,7 @@ trait CompileWithContentArgumentAndRenderStatic
         );
         $contentArgumentName = $this->resolveContentArgumentName();
         $initializationPhpCode .= sprintf(
-            '%s = %s[\'%s\'] ? function() use (%s) { return %s[\'%s\']; } : %s;',
+            '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
             $closureName,
             $argumentsName,
             $contentArgumentName,
@@ -127,8 +127,8 @@ trait CompileWithContentArgumentAndRenderStatic
                 }
             }
             throw new Exception(
-                'Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
-                'at least one registered and optional argument'
+                sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
+                'at least one registered and optional argument', __CLASS__)
             );
         }
         return $this->contentArgumentName;

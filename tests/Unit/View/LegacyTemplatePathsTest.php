@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  */
 
 use TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures\LegacyTemplatePathsFixture;
-use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
 /**
  * Class TemplatePathsTest

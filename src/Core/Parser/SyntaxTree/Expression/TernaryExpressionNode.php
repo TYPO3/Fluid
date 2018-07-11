@@ -26,11 +26,11 @@ class TernaryExpressionNode extends AbstractExpressionNode
 		(
 			{                                                               # Start of shorthand syntax
 				(?:                                                         # Math expression is composed of...
-					[a-zA-Z0-9.\(\)\!\|\&\\\'\'\"\=\<\>\%\s\{\}\:\,]+       # Check variable side
-					[\s]+\?[\s]+
-					[a-zA-Z0-9.\s\'\"]+                                     # Then variable side
-					[\s]*:[\s]*
-					[a-zA-Z0-9.\s\'\"]+                                     # Else variable side
+					[\\!a-zA-Z0-9.\(\)\!\|\&\\\'\'\"\=\<\>\%\s\{\}\:\,]+    # Check variable side
+					[\s]?\?[\s]?
+					[a-zA-Z0-9.\s\'\"\\.]*                                  # Then variable side, optional
+					[\s]?:[\s]?
+					[a-zA-Z0-9.\s\'\"\\.]+                                  # Else variable side
 				)
 			}                                                               # End of shorthand syntax
 		)/x';
@@ -50,12 +50,18 @@ class TernaryExpressionNode extends AbstractExpressionNode
     {
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
+        $negated = false;
         list ($check, $then, $else) = $parts;
+
+        if ($then === '') {
+            $then = $check{0} === '!' ? $else : $check;
+        }
 
         $context = static::gatherContext($renderingContext, $expression);
 
         $parser = new BooleanParser();
         $checkResult = $parser->evaluate($check, $context);
+
         if ($checkResult) {
             return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
         } else {
