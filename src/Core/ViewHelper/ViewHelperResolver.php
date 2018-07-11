@@ -316,7 +316,7 @@ class ViewHelperResolver
         }
         $classNames = [
             $className . 'ViewHelper',
-            $className
+            $className,
         ];
 
         if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
@@ -325,7 +325,7 @@ class ViewHelperResolver
             $namespacePrefix = $this->namespaces[$namespaceIdentifier] = str_replace('.', '\\', $namespaceIdentifier);
             $namespaces = [
                 $namespacePrefix . '\\ViewHelpers',
-                $namespacePrefix
+                $namespacePrefix,
             ];
         }
 
