@@ -44,7 +44,60 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.', false);
         $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.', false);
-        $this->registerArgument('condition', 'boolean', 'Condition expression conforming to Fluid boolean rules', false, false);
+    }
+
+    /**
+     * Renders <f:then> child if $condition is true, otherwise renders <f:else> child.
+     * Method which only gets called if the template is not compiled. For static calling,
+     * the then/else nodes are converted to closures and condition evaluation closures.
+     *
+     * @return string the rendered string
+     * @api
+     */
+    public function render()
+    {
+        if (static::verdict($this->arguments, $this->renderingContext)) {
+            return $this->renderThenChild();
+        }
+        return $this->renderElseChild();
+    }
+
+    /**
+     * @param array $arguments
+     * @param \Closure $renderChildrenClosure
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        if (static::verdict($arguments, $renderingContext)) {
+            if (isset($arguments['then'])) {
+                return $arguments['then'];
+            }
+            if (isset($arguments['__thenClosure'])) {
+                return $arguments['__thenClosure']();
+            }
+        } elseif (!empty($arguments['__elseClosures'])) {
+            $elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : [];
+            return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $renderingContext);
+        } elseif (array_key_exists('else', $arguments)) {
+            return $arguments['else'];
+        }
+        return '';
+    }
+
+    /**
+     * Static method which can be overridden by subclasses. If a subclass
+     * requires a different (or faster) decision then this method is the one
+     * to override and implement.
+     *
+     * @param array $arguments
+     * @param RenderingContextInterface $renderingContext
+     * @return bool
+     */
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    {
+        return static::evaluateCondition($arguments);
     }
 
     /**
@@ -60,37 +113,14 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * subclasses that will be using this base class in the future. Let this
      * be a warning if someone considers changing this method signature!
      *
+     * @deprecated Deprecated in favor of ClassName::verdict($arguments, renderingContext), will no longer be called in 3.0
      * @param array|NULL $arguments
      * @return boolean
      * @api
      */
     protected static function evaluateCondition($arguments = null)
     {
-        return (boolean) $arguments['condition'];
-    }
-
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
-        if (static::evaluateCondition($arguments)) {
-            if (isset($arguments['then'])) {
-                return $arguments['then'];
-            }
-            if (isset($arguments['__thenClosure'])) {
-                return $arguments['__thenClosure']();
-            }
-        } elseif (!empty($arguments['__elseClosures'])) {
-            $elseIfClosures = isset($arguments['__elseifClosures']) ? $arguments['__elseifClosures'] : [];
-            return static::evaluateElseClosures($arguments['__elseClosures'], $elseIfClosures, $renderingContext);
-        } elseif (array_key_exists('else', $arguments)) {
-            return $arguments['else'];
-        }
-        return '';
+        return isset($arguments['condition']) && (bool)($arguments['condition']);
     }
 
     /**
