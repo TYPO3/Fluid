@@ -112,29 +112,35 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         $paths = $renderingContext->getTemplatePaths();
         foreach ($this->formats as $format) {
             $paths->setFormat($format);
-            foreach ($this->detectControllerNamesInTemplateRootPaths($paths->getTemplateRootPaths()) as $controllerName) {
-                foreach ($paths->resolveAvailableTemplateFiles($controllerName, $format) as $templateFile) {
+            $formatCutoffPoint = - (strlen($format) + 1);
+            foreach ($paths->getTemplateRootPaths() as $templateRootPath) {
+                $pathCutoffPoint = strlen($templateRootPath);
+                foreach ($this->detectControllerNamesInTemplateRootPaths([$templateRootPath]) as $controllerName) {
+                    foreach ($paths->resolveAvailableTemplateFiles($controllerName, $format) as $templateFile) {
+                        $state = $this->warmSingleFile(
+                            $templateFile,
+                            $paths->getTemplateIdentifier(
+                                $controllerName,
+                                substr($templateFile, $pathCutoffPoint, $formatCutoffPoint)
+                            ),
+                            $renderingContext
+                        );
+                        $result->add($state, $templateFile);
+                    }
+                }
+                $limitedPaths = clone $paths;
+                $limitedPaths->setTemplateRootPaths([$templateRootPath]);
+                foreach ($limitedPaths->resolveAvailableTemplateFiles(null, $format) as $templateFile) {
                     $state = $this->warmSingleFile(
                         $templateFile,
                         $paths->getTemplateIdentifier(
-                            $controllerName,
-                            basename($templateFile, '.' . $format)
+                            'Default',
+                            substr($templateFile, $pathCutoffPoint, $formatCutoffPoint)
                         ),
                         $renderingContext
                     );
                     $result->add($state, $templateFile);
                 }
-            }
-            foreach ($paths->resolveAvailableTemplateFiles(null, $format) as $templateFile) {
-                $state = $this->warmSingleFile(
-                    $templateFile,
-                    $paths->getTemplateIdentifier(
-                        'Default',
-                        basename($templateFile, '.' . $format)
-                    ),
-                    $renderingContext
-                );
-                $result->add($state, $templateFile);
             }
         }
         return $result;
@@ -158,14 +164,20 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
         foreach ($this->formats as $format) {
-            foreach ($paths->resolveAvailablePartialFiles($format) as $partialFile) {
-                $paths->setFormat($format);
-                $state = $this->warmSingleFile(
-                    $partialFile,
-                    $paths->getPartialIdentifier(basename($partialFile, '.' . $format)),
-                    $renderingContext
-                );
-                $result->add($state, $partialFile);
+            $formatCutoffPoint = - (strlen($format) + 1);
+            foreach ($paths->getPartialRootPaths() as $partialRootPath) {
+                $limitedPaths = clone $paths;
+                $limitedPaths->setPartialRootPaths([$partialRootPath]);
+                $pathCutoffPoint = strlen($partialRootPath);
+                foreach ($limitedPaths->resolveAvailablePartialFiles($format) as $partialFile) {
+                    $paths->setFormat($format);
+                    $state = $this->warmSingleFile(
+                        $partialFile,
+                        $paths->getPartialIdentifier(substr($partialFile, $pathCutoffPoint, $formatCutoffPoint)),
+                        $renderingContext
+                    );
+                    $result->add($state, $partialFile);
+                }
             }
         }
         return $result;
@@ -189,14 +201,20 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
         foreach ($this->formats as $format) {
-            foreach ($paths->resolveAvailableLayoutFiles($format) as $layoutFile) {
-                $paths->setFormat($format);
-                $state = $this->warmSingleFile(
-                    $layoutFile,
-                    $paths->getLayoutIdentifier(basename($layoutFile, '.' . $layoutFile)),
-                    $renderingContext
-                );
-                $result->add($state, $layoutFile);
+            $formatCutoffPoint = - (strlen($format) + 1);
+            foreach ($paths->getLayoutRootPaths() as $layoutRootPath) {
+                $limitedPaths = clone $paths;
+                $limitedPaths->setLayoutRootPaths([$layoutRootPath]);
+                $pathCutoffPoint = strlen($layoutRootPath);
+                foreach ($limitedPaths->resolveAvailableLayoutFiles($format) as $layoutFile) {
+                    $paths->setFormat($format);
+                    $state = $this->warmSingleFile(
+                        $layoutFile,
+                        $paths->getLayoutIdentifier(substr($layoutFile, $pathCutoffPoint, $formatCutoffPoint)),
+                        $renderingContext
+                    );
+                    $result->add($state, $layoutFile);
+                }
             }
         }
         return $result;
