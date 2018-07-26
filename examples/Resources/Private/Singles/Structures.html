@@ -7,6 +7,33 @@ Fluid allows a handful of structures to render
 dynamic parts of templates. Each method is
 uniquely suited for precise use cases:
 
+* No difference between inline and tag argument syntax
+
+With the exception of using quotes, which must still be escaped, there is no difference between the following
+examples of syntax:
+
+	<f:render partial="Structures" section="ValidSection" />
+	{f:render(partial: 'Structures', section: 'ValidSection')}
+	{f:render(partial="Structures", section="ValidSection")}
+	{f:render(partial="Structures" section="ValidSection")}
+
+* Passing arguments in inline mode
+
+The following line:
+
+	Tag: "<f:format.raw>{dynamicSection}</f:format.raw>"
+
+Is identical in behavior to:
+
+	Pass: "{dynamicSection -> f:format.raw()}"
+
+Which can also be expressed as:
+
+	Pipe: "{dynamicSection | f:format.raw()}"
+	Pipe, multiple levels: "{dynamicSection | f:format.raw() | f:format.htmlspecialchars()}"
+
+In other words, tag contents can be passed also in inline mode, using either the combined "->" operator or standard pipe "|".
+
 * Loop
 
 You can loop through arrays in two ways; as standard
