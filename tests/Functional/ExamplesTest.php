@@ -187,6 +187,10 @@ class ExamplesTest extends BaseTestCase
             'example_structures.php' => [
                 'example_structures.php',
                 [
+                    'Tag: "Dynamic"',
+                    'Pass: "Dynamic"',
+                    'Pipe: "Dynamic"',
+                    'Pipe, multiple levels: "Dynamic"',
                     'This section exists and is rendered: Valid section',
                     'Expects no output because section name is invalid: ' . "\n",
                     'Dynamic section name: Dynamically suffixed section',

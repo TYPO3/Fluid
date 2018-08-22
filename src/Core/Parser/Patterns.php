@@ -115,7 +115,7 @@ abstract class Patterns
 		(
 			{                                 # Start of shorthand syntax
 				(?:                           # Shorthand syntax is either composed of...
-					[a-zA-Z0-9\->_:,.()*+\^\/\%] # Various characters including math operations
+					[a-zA-Z0-9\|\->_:=,.()*+\^\/\%] # Various characters including math operations
 					|"(?:\\\"|[^"])*"         # Double-quoted strings
 					|\'(?:\\\\\'|[^\'])*\'    # Single-quoted strings
 					|(?R)                     # Other shorthand syntaxes inside, albeit not in a quoted string
@@ -136,7 +136,7 @@ abstract class Patterns
 		^{                                                  # Start of shorthand syntax
 			                                                # A shorthand syntax is either...
 			(?P<Object>[a-zA-Z0-9_\-\.\{\}]*)                 # ... an object accessor
-			\s*(?P<Delimiter>(?:->)?)\s*
+			\s*(?P<Delimiter>(?:->|\|)?)\s*
 
 			(?P<ViewHelper>                                 # ... a ViewHelper
 				[a-zA-Z0-9\\.]+                             # Namespace prefix of ViewHelper (as in $SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG)
@@ -146,7 +146,7 @@ abstract class Patterns
 					(?P<ViewHelperArguments>                # Start submatch for ViewHelper arguments. This is taken from $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
 						(?:
 							\s*[a-zA-Z0-9\-_]+              # The keys of the array
-							\s*:\s*                         # Key|Value delimiter :
+							\s*[:=]\s*                      # Key|Value delimiter : or =
 							(?:                             # Possible value options:
 								"(?:\\\"|[^"])*"            # Double qouoted string
 								|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
@@ -160,7 +160,7 @@ abstract class Patterns
 			)?
 			(?P<AdditionalViewHelpers>                      # There can be more than one ViewHelper chained, by adding more -> and the ViewHelper (recursively)
 				(?:
-					\s*->\s*
+					\s*(?:->|\|)\s*
 					(?P>ViewHelper)
 				)*
 			)
@@ -179,7 +179,7 @@ abstract class Patterns
 			(?P<ViewHelperArguments>                # Start submatch for ViewHelper arguments. This is taken from $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
 				(?:
 					\s*[a-zA-Z0-9\-_]+              # The keys of the array
-					\s*:\s*                         # Key|Value delimiter :
+					\s*[:=]\s*                      # Key|Value delimiter : or =
 					(?:                             # Possible value options:
 						"(?:\\\"|[^"])*"            # Double qouoted string
 						|\'(?:\\\\\'|[^\'])*\'      # Single quoted string
@@ -210,7 +210,7 @@ abstract class Patterns
 							|"(?:\\\"|[^"])+"                      # Double quoted key, supporting more characters like dots and square brackets
 							|\'(?:\\\\\'|[^\'])+\'                 # Single quoted key, supporting more characters like dots and square brackets
 						)
-						\s*:\s*                                    # Key|Value delimiter :
+						\s*[:=]\s*                                 # Key|Value delimiter : or =
 						(?:                                        # Possible value options:
 							"(?:\\\"|[^"])*"                       # Double quoted string
 							|\'(?:\\\\\'|[^\'])*\'                 # Single quoted string
@@ -235,7 +235,7 @@ abstract class Patterns
 				|"(?:\\\\"|[^"])+"                                          # Double quoted
 				|\'(?:\\\\\'|[^\'])+\'                                      # Single quoted
 			)
-			\\s*:\\s*                                                       # Key|Value delimiter :
+			\\s*[:=]\\s*                                                    # Key|Value delimiter : or =
 			(?:                                                             # BEGIN Possible value options
 				(?P<QuotedString>                                           # Quoted string
 					 "(?:\\\\"|[^"])*"
