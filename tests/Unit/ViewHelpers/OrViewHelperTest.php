@@ -36,11 +36,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRender($arguments, $expected)
     {
-        $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
-        $instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
-        $instance->setArguments($arguments);
-        $instance->setRenderingContext(new RenderingContextFixture());
-        $result = $instance->render();
+        $result = OrViewHelper::renderStatic($arguments, function() use ($arguments) { return $arguments['content']; }, new RenderingContextFixture());
         $this->assertEquals($expected, $result);
     }
 
@@ -63,12 +59,8 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRenderAlternative($arguments, $expected)
     {
-        $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
-        $instance->expects($this->once())->method('renderChildren')->willReturn(null);
         $arguments['content'] = null;
-        $instance->setArguments($arguments);
-        $instance->setRenderingContext(new RenderingContextFixture());
-        $result = $instance->render();
+        $result = OrViewHelper::renderStatic($arguments, function() { return null; }, new RenderingContextFixture());
         $this->assertEquals($expected, $result);
     }
 

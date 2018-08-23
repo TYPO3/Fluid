@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -100,6 +101,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @api
      */
     protected $escapeOutput = null;
+
+    /**
+     * Content argument identification. Override this property and set value to the name of an argument, then calling
+     * $renderChildrenClosure() or $this->renderChildren() will return the value of that argument if the argument was
+     * not passed as explicit argument. Allows one argument to become a "content argument" that facilitates passing
+     * with inline syntax pipe/pass or as traditional ViewHelper argument, without needing to do any special checks
+     * in your ViewHelper class.
+     *
+     * @var string
+     */
+    protected $contentArgumentName = null;
 
     /**
      * @param array $arguments
@@ -305,19 +317,27 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
-     * Helper which is mostly needed when calling renderStatic() from within
-     * render().
-     *
-     * No public API yet.
+     * Creates a closure that will render either the tag content or inline-passed value
+     * received by the ViewHelper - or returns the value of the "content argument" if
+     * this is implemented in the specific ViewHelper class.
      *
      * @return \Closure
      */
     protected function buildRenderChildrenClosure()
     {
-        $self = clone $this;
-        return function() use ($self) {
-            return $self->renderChildren();
-        };
+        $argumentName = $this->resolveContentArgumentName();
+        $arguments = $this->arguments;
+        if (!empty($argumentName) && isset($arguments[$argumentName])) {
+            $renderChildrenClosure = function () use ($arguments, $argumentName) {
+                return $arguments[$argumentName];
+            };
+        } else {
+            $self = clone $this;
+            $renderChildrenClosure = function () use ($self) {
+                return $self->renderChildren();
+            };
+        }
+        return $renderChildrenClosure;
     }
 
     /**
@@ -362,6 +382,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 }
             }
         }
+    }
+
+    /**
+     * Implemented for plug-and-play compatibility with deprecated trait that used to provide
+     * content argument support for ViewHelpers.
+     *
+     * @return string
+     */
+    protected function resolveContentArgumentName()
+    {
+        return $this->contentArgumentName;
     }
 
     /**
@@ -485,10 +516,6 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     }
 
     /**
-     * You only should override this method *when you absolutely know what you
-     * are doing*, and really want to influence the generated PHP code during
-     * template compilation directly.
-     *
      * @param string $argumentsName
      * @param string $closureName
      * @param string $initializationPhpCode
@@ -498,12 +525,32 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
-        return sprintf(
-            '%s::renderStatic(%s, %s, $renderingContext)',
-            get_class($this),
+        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
+            $this,
             $argumentsName,
+            $closureName,
+            ViewHelperCompiler::RENDER_STATIC,
+            get_class($this)
+        );
+
+        $contentArgumentName = $this->resolveContentArgumentName();
+        if (empty($contentArgumentName)) {
+            $initializationPhpCode .= $initialization;
+            return $execution;
+        }
+
+        $initializationPhpCode .= sprintf(
+            '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
+            $closureName,
+            $argumentsName,
+            $contentArgumentName,
+            $argumentsName,
+            $argumentsName,
+            $contentArgumentName,
             $closureName
         );
+        $initializationPhpCode .= $initialization;
+        return $execution;
     }
 
     /**

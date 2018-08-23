@@ -49,29 +49,6 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
         $this->assertFalse($this->viewHelper->isOutputEscapingEnabled());
     }
 
-    /**
-     * @test
-     */
-    public function renderUsesValueAsSourceIfSpecified()
-    {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $this->viewHelper->setArguments(
-            ['value' => 'Some string', 'keepQuotes' => false, 'encoding' => 'UTF-8', 'doubleEncode' => false]
-        );
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('Some string', $actualResult);
-    }
-
-    /**
-     * test
-     */
-    public function renderUsesChildNodesAsSourceIfSpecified()
-    {
-        $this->viewHelper->expects($this->atLeastOnce())->method('renderChildren')->will($this->returnValue('Some string'));
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('Some string', $actualResult);
-    }
-
     public function dataProvider()
     {
         return [

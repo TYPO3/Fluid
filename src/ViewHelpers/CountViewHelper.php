@@ -34,8 +34,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class CountViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
-
     /**
      * @var boolean
      */
@@ -45,6 +43,11 @@ class CountViewHelper extends AbstractViewHelper
      * @var boolean
      */
     protected $escapeOutput = false;
+
+    /**
+     * @var string
+     */
+    protected $contentArgumentName = 'subject';
 
     /**
      * @return void

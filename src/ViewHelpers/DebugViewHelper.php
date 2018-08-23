@@ -34,9 +34,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class DebugViewHelper extends AbstractViewHelper
 {
-
-    use CompileWithRenderStatic;
-
     /**
      * @var boolean
      */
@@ -48,6 +45,11 @@ class DebugViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
+     * @var string
+     */
+    protected $contentArgumentName = 'value';
+
+    /**
      * @return void
      */
     public function initializeArguments()
@@ -56,6 +58,7 @@ class DebugViewHelper extends AbstractViewHelper
         $this->registerArgument('typeOnly', 'boolean', 'If TRUE, debugs only the type of variables', false, false);
         $this->registerArgument('levels', 'integer', 'Levels to render when rendering nested objects/arrays', false, 5);
         $this->registerArgument('html', 'boolean', 'Render HTML. If FALSE, output is indented plaintext', false, false);
+        $this->registerArgument('value', 'mixed', 'The value to be debugged. Can also be passed as tag content or as inline pass.');
     }
 
     /**

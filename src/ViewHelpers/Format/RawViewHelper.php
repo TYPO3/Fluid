@@ -46,9 +46,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class RawViewHelper extends AbstractViewHelper
 {
-
-    use CompileWithContentArgumentAndRenderStatic;
-
     /**
      * @var boolean
      */
@@ -58,6 +55,11 @@ class RawViewHelper extends AbstractViewHelper
      * @var boolean
      */
     protected $escapeOutput = false;
+
+    /**
+     * @var string
+     */
+    protected $contentArgumentName = 'value';
 
     /**
      * @return void

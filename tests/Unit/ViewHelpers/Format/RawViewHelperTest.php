@@ -38,23 +38,10 @@ class RawViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsUnmodifiedValueIfSpecified()
+    public function renderReturnsUnmodifiedValue()
     {
         $value = 'input value " & äöüß@';
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $this->viewHelper->setArguments(['value' => $value]);
-        $actualResult = $this->viewHelper->render();
+        $actualResult = RawViewHelper::renderStatic(['value' => $value], function() use ($value) { return $value; }, new RenderingContextFixture());
         $this->assertEquals($value, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsUnmodifiedChildNodesIfNoValueIsSpecified()
-    {
-        $childNodes = 'input value " & äöüß@';
-        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue($childNodes));
-        $actualResult = $this->viewHelper->render();
-        $this->assertEquals($childNodes, $actualResult);
     }
 }

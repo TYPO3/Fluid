@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
@@ -27,70 +28,32 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     }
 
     /**
-     * @test
+     * @param mixed $subject
+     * @param int $expectedResult
+     * @dataProvider getCountTestValues
      */
-    public function renderReturnsNumberOfElementsInAnArray()
+    public function testCountOperation($subject, $expectedResult)
     {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $expectedResult = 3;
-        $this->arguments = ['subject' => ['foo', 'bar', 'Baz']];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
+        $actualResult = CountViewHelper::renderStatic(['subject' => $subject], function() use ($subject) { return $subject; }, $this->renderingContext);
         $this->assertSame($expectedResult, $actualResult);
     }
 
-    /**
-     * @test
-     */
-    public function renderReturnsNumberOfElementsInAnArrayObject()
+    public function getCountTestValues()
     {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $expectedResult = 2;
-        $this->arguments = ['subject' => new \ArrayObject(['foo', 'bar'])];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsZeroIfGivenArrayIsEmpty()
-    {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $expectedResult = 0;
-        $this->arguments = ['subject' => []];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->render();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull()
-    {
-        $this->viewHelper->expects($this->once())->method('renderChildren')
-            ->will($this->returnValue(['foo', 'baz', 'bar']));
-        $expectedResult = 3;
-        $this->arguments = ['subject' => null];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull()
-    {
-        $this->viewHelper->expects($this->once())->method('renderChildren')
-            ->will($this->returnValue(null));
-        $this->viewHelper->setArguments(['subject' => null]);
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $expectedResult = 0;
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
+        return [
+            [
+                ['foo', 'bar', 'Baz'],
+                3,
+            ],
+            [
+                new \ArrayObject(['foo', 'bar']),
+                2,
+            ],
+            [
+                [],
+                0,
+            ]
+        ];
     }
 
     /**
@@ -98,11 +61,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderThrowsExceptionIfGivenSubjectIsNotCountable()
     {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $this->viewHelper->setRenderingContext(new RenderingContextFixture());
-        $object = new \stdClass();
-        $this->viewHelper->setArguments(['subject' => $object]);
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->viewHelper->initializeArgumentsAndRender();
+        $this->setExpectedException(Exception::class);
+        CountViewHelper::renderStatic([], function() { return new \stdClass(); }, $this->renderingContext);
     }
 }

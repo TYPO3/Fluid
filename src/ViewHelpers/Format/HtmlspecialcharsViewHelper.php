@@ -49,6 +49,11 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
+     * @var string
+     */
+    protected $contentArgumentName = 'value';
+
+    /**
      * @return void
      */
     public function initializeArguments()
@@ -69,13 +74,10 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        $value = $this->arguments['value'];
+        $value = $this->renderChildren();
         $keepQuotes = $this->arguments['keepQuotes'];
         $encoding = $this->arguments['encoding'];
         $doubleEncode = $this->arguments['doubleEncode'];
-        if ($value === null) {
-            $value = $this->renderChildren();
-        }
 
         if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {
             return $value;

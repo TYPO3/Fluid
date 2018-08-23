@@ -33,7 +33,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class VariableViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
+    /**
+     * @var string
+     */
+    protected $contentArgumentName = 'value';
 
     /**
      * @return void

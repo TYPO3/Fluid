@@ -15,8 +15,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  */
 class OrViewHelper extends AbstractViewHelper
 {
-
-    use CompileWithContentArgumentAndRenderStatic;
+    /**
+     * @var string
+     */
+    protected $contentArgumentName = 'content';
 
     /**
      * Initialize

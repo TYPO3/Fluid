@@ -15,104 +15,11 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  * an argument value must be checked and used instead of
  * the normal render children closure, if that named
  * argument is specified and not empty.
+ *
+ * @deprecated Trait no longer required, content argument supported by any VH via base class.
  */
 trait CompileWithContentArgumentAndRenderStatic
 {
-    /**
-     * Name of variable that contains the value to use
-     * instead of render children closure, if specified.
-     * If no name is provided here, the first variable
-     * registered in `initializeArguments` of the ViewHelper
-     * will be used.
-     *
-     * Note: it is significantly better practice to define
-     * this property in your ViewHelper class and so fix it
-     * to one particular argument instead of resolving,
-     * especially when your ViewHelper is called multiple
-     * times within an uncompiled template!
-     *
-     * @var string
-     */
-    protected $contentArgumentName;
-
-    /**
-     * Default render method to render ViewHelper with
-     * first defined optional argument as content.
-     *
-     * @return string Rendered string
-     * @api
-     */
-    public function render()
-    {
-        return static::renderStatic(
-            $this->arguments,
-            $this->buildRenderChildrenClosure(),
-            $this->renderingContext
-        );
-    }
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler
-    ) {
-        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
-            $this,
-            $argumentsName,
-            $closureName,
-            ViewHelperCompiler::RENDER_STATIC,
-            static::class
-        );
-        $contentArgumentName = $this->resolveContentArgumentName();
-        $initializationPhpCode .= sprintf(
-            '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
-            $closureName,
-            $argumentsName,
-            $contentArgumentName,
-            $argumentsName,
-            $argumentsName,
-            $contentArgumentName,
-            $closureName
-        );
-        $initializationPhpCode .= $initialization;
-        return $execution;
-    }
-
-    /**
-     * Helper which is mostly needed when calling renderStatic() from within
-     * render().
-     *
-     * No public API yet.
-     *
-     * @return \Closure
-     */
-    protected function buildRenderChildrenClosure()
-    {
-        $argumentName = $this->resolveContentArgumentName();
-        $arguments = $this->arguments;
-        if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function () use ($arguments, $argumentName) {
-                return $arguments[$argumentName];
-            };
-        } else {
-            $self = clone $this;
-            $renderChildrenClosure = function () use ($self) {
-                return $self->renderChildren();
-            };
-        }
-        return $renderChildrenClosure;
-    }
-
     /**
      * @return string
      */

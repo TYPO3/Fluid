@@ -34,11 +34,8 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRender($value, array $arguments, $expected = null)
     {
-        $instance = $this->getMock(DebugViewHelper::class, ['renderChildren']);
-        $instance->expects($this->once())->method('renderChildren')->willReturn($value);
-        $instance->setArguments($arguments);
-        $instance->setRenderingContext(new RenderingContextFixture());
-        $result = $instance->render();
+        $closure = function() use ($value) { return $value; };
+        $result = DebugViewHelper::renderStatic($arguments, $closure, new RenderingContextFixture());
         if ($expected) {
             $this->assertEquals($expected, $result);
         }
