@@ -31,20 +31,18 @@ abstract class AbstractNode implements NodeInterface
      */
     public function evaluateChildNodes(RenderingContextInterface $renderingContext)
     {
-        $childNodes = $this->getChildNodes();
-        $numberOfChildNodes = count($childNodes);
-        if ($numberOfChildNodes === 0) {
+        $evaluatedNodes = [];
+        foreach ($this->getChildNodes() as $childNode) {
+            $evaluatedNodes[] = $this->evaluateChildNode($childNode, $renderingContext, false);
+        }
+        // Make decisions about what to actually return
+        if (empty($evaluatedNodes)) {
             return null;
         }
-        if ($numberOfChildNodes === 1) {
-            return $this->evaluateChildNode($childNodes[0], $renderingContext, false);
+        if (count($evaluatedNodes) === 1) {
+            return $evaluatedNodes[0];
         }
-        $output = '';
-        /** @var $subNode NodeInterface */
-        foreach ($childNodes as $subNode) {
-            $output .= $this->evaluateChildNode($subNode, $renderingContext, true);
-        }
-        return $output;
+        return implode('', array_map([$this, 'castToString'], $evaluatedNodes));
     }
 
     /**
@@ -56,12 +54,22 @@ abstract class AbstractNode implements NodeInterface
     protected function evaluateChildNode(NodeInterface $node, RenderingContextInterface $renderingContext, $cast)
     {
         $output = $node->evaluate($renderingContext);
-        if ($cast && is_object($output)) {
-            if (!method_exists($output, '__toString')) {
-                throw new Parser\Exception('Cannot cast object of type "' . get_class($output) . '" to string.', 1273753083);
-            }
-            $output = (string) $output;
+        if ($cast) {
+            $output = $this->castToString($output);
         }
+        return $output;
+    }
+
+    /**
+     * @param mixed $value
+     * @return string
+     */
+    protected function castToString($value)
+    {
+        if (is_object($value) && !method_exists($value, '__toString')) {
+            throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
+        }
+        $output = (string) $value;
         return $output;
     }
 
