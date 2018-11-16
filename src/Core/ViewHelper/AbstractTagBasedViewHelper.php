@@ -88,6 +88,9 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     public function initialize()
     {
         parent::initialize();
+        $this->tag->reset();
+        $this->tag->setTagName($this->tagName);
+
         if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
             $this->tag->addAttributes($this->arguments['additionalAttributes']);
         }
