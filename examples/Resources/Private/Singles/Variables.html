@@ -29,6 +29,7 @@ Direct access of numeric prefixed variable: {123numericprefix}
 
 <!-- Passing arguments to sections/partials -->
 <f:render section="Secondary" arguments="{
+    ternaryCheck: 1,
 	myVariable: 'Nice string',
 	array: {
 		baz: 42,
@@ -43,6 +44,8 @@ Direct access of numeric prefixed variable: {123numericprefix}
 </f:section>
 
 <f:section name="Secondary">
+Escaped ternary expression: {ternaryCheck ? array.foobar : array.foobar}
+Escaped cast expression: {array.foobar as string}
 Received $array.foobar with value {array.foobar -> f:format.raw()} (same using "value" argument: {f:format.raw(value: array.foobar)})
 Received $array.printf with formatted string {array.printf -> f:format.printf(arguments: {0: 'formatted'})}
 Received $array.baz with value {array.baz}
