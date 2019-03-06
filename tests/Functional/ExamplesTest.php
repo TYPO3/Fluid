@@ -209,6 +209,8 @@ class ExamplesTest extends BaseTestCase
                     'Output of variable whose name is stored in a variable: string foo',
                     'Direct access of numeric prefixed variable: Numeric prefixed variable',
                     'Aliased access of numeric prefixed variable: Numeric prefixed variable',
+                    'Escaped ternary expression: &lt;b&gt;Unescaped string&lt;/b&gt;',
+                    'Escaped cast expression: &lt;b&gt;Unescaped string&lt;/b&gt;',
                     'Received $array.foobar with value <b>Unescaped string</b> (same using "value" argument: <b>Unescaped string</b>)',
                     'Received $array.printf with formatted string Formatted string, value: formatted',
                     'Received $array.baz with value 42',

@@ -611,6 +611,7 @@ class TemplateParser
                             if ($expressionStartPosition > 0) {
                                 $state->getNodeFromStack()->addChildNode(new TextNode(substr($section, 0, $expressionStartPosition)));
                             }
+                            $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $state);
                             $state->getNodeFromStack()->addChildNode($expressionNode);
                             $expressionEndPosition = $expressionStartPosition + strlen($matchedVariableSet[0]);
                             if ($expressionEndPosition < strlen($section)) {
