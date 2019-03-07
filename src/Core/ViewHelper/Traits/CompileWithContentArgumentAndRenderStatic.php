@@ -39,7 +39,7 @@ trait CompileWithContentArgumentAndRenderStatic
      * Default render method to render ViewHelper with
      * first defined optional argument as content.
      *
-     * @return string Rendered string
+     * @return mixed Rendered result
      * @api
      */
     public function render()

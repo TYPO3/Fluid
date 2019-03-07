@@ -19,7 +19,7 @@ trait CompileWithRenderStatic
      * Default render method - simply calls renderStatic() with a
      * prepared set of arguments.
      *
-     * @return string Rendered string
+     * @return mixed Rendered result
      * @api
      */
     public function render()
