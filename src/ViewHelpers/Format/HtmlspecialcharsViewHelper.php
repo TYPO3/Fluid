@@ -11,25 +11,34 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Applies htmlspecialchars() escaping to a value
+ * Applies :php:`htmlspecialchars()` escaping to a value.
  *
- * @see http://www.php.net/manual/function.htmlspecialchars.php
+ * See http://www.php.net/manual/function.htmlspecialchars.php
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="default notation">
- * <f:format.htmlspecialchars>{text}</f:format.htmlspecialchars>
- * </code>
- * <output>
- * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
- * </output>
+ * Default notation
+ * ----------------
  *
- * <code title="inline notation">
- * {text -> f:format.htmlspecialchars(encoding: 'ISO-8859-1')}
- * </code>
- * <output>
- * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
- * </output>
+ * ::
+ *
+ *     <f:format.htmlspecialchars>{text}</f:format.htmlspecialchars>
+ *
+ * Output::
+ *
+ *     Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
+ *
+ * Inline notation
+ * ---------------
+ *
+ * ::
+ *
+ *     {text -> f:format.htmlspecialchars(encoding: 'ISO-8859-1')}
+ *
+ * Output::
+ *
+ *     Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
  *
  * @api
  */

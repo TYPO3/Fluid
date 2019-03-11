@@ -12,7 +12,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Case view helper that is only usable within the SwitchViewHelper.
+ * Case ViewHelper that is only usable within the :ref:`SwitchViewHelper <typo3fluid-fluid-switch>`.
+ *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  *
  * @api
@@ -35,7 +36,7 @@ class CaseViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return string the contents of this view helper if $value equals the expression of the surrounding switch view helper, otherwise an empty string
+     * @return string the contents of this ViewHelper if $value equals the expression of the surrounding switch ViewHelper, otherwise an empty string
      * @throws ViewHelper\Exception
      * @api
      */
@@ -44,7 +45,7 @@ class CaseViewHelper extends AbstractViewHelper
         $value = $this->arguments['value'];
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
-            throw new ViewHelper\Exception('The "case" View helper can only be used within a switch View helper', 1368112037);
+            throw new ViewHelper\Exception('The "case" ViewHelper can only be used within a switch ViewHelper', 1368112037);
         }
         $switchExpression = $viewHelperVariableContainer->get(SwitchViewHelper::class, 'switchExpression');
 

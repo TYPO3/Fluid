@@ -12,49 +12,64 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
- * Loop view helper which can be used to iterate over arrays.
- * Implements what a basic foreach()-PHP-method does.
+ * Loop ViewHelper which can be used to iterate over arrays.
+ * Implements what a basic :php:`foreach()` does.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Simple Loop">
- * <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">{foo}</f:for>
- * </code>
- * <output>
- * 1234
- * </output>
+ * Simple Loop
+ * -----------
  *
- * <code title="Output array key">
- * <ul>
- *   <f:for each="{fruit1: 'apple', fruit2: 'pear', fruit3: 'banana', fruit4: 'cherry'}" as="fruit" key="label">
- *     <li>{label}: {fruit}</li>
- *   </f:for>
- * </ul>
- * </code>
- * <output>
- * <ul>
- *   <li>fruit1: apple</li>
- *   <li>fruit2: pear</li>
- *   <li>fruit3: banana</li>
- *   <li>fruit4: cherry</li>
- * </ul>
- * </output>
+ * ::
  *
- * <code title="Iteration information">
- * <ul>
- *   <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo" iteration="fooIterator">
- *     <li>Index: {fooIterator.index} Cycle: {fooIterator.cycle} Total: {fooIterator.total}{f:if(condition: fooIterator.isEven, then: ' Even')}{f:if(condition: fooIterator.isOdd, then: ' Odd')}{f:if(condition: fooIterator.isFirst, then: ' First')}{f:if(condition: fooIterator.isLast, then: ' Last')}</li>
- *   </f:for>
- * </ul>
- * </code>
- * <output>
- * <ul>
- *   <li>Index: 0 Cycle: 1 Total: 4 Odd First</li>
- *   <li>Index: 1 Cycle: 2 Total: 4 Even</li>
- *   <li>Index: 2 Cycle: 3 Total: 4 Odd</li>
- *   <li>Index: 3 Cycle: 4 Total: 4 Even Last</li>
- * </ul>
- * </output>
+ *     <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo">{foo}</f:for>
+ *
+ * Output::
+ *
+ *     1234
+ *
+ * Output array key
+ * ----------------
+ *
+ * ::
+ *
+ *     <ul>
+ *         <f:for each="{fruit1: 'apple', fruit2: 'pear', fruit3: 'banana', fruit4: 'cherry'}"
+ *             as="fruit" key="label"
+ *         >
+ *             <li>{label}: {fruit}</li>
+ *         </f:for>
+ *     </ul>
+ *
+ * Output::
+ *
+ *     <ul>
+ *         <li>fruit1: apple</li>
+ *         <li>fruit2: pear</li>
+ *         <li>fruit3: banana</li>
+ *         <li>fruit4: cherry</li>
+ *     </ul>
+ *
+ * Iteration information
+ * ---------------------
+ *
+ * ::
+ *
+ *     <ul>
+ *         <f:for each="{0:1, 1:2, 2:3, 3:4}" as="foo" iteration="fooIterator">
+ *             <li>Index: {fooIterator.index} Cycle: {fooIterator.cycle} Total: {fooIterator.total}{f:if(condition: fooIterator.isEven, then: ' Even')}{f:if(condition: fooIterator.isOdd, then: ' Odd')}{f:if(condition: fooIterator.isFirst, then: ' First')}{f:if(condition: fooIterator.isLast, then: ' Last')}</li>
+ *         </f:for>
+ *     </ul>
+ *
+ * Output::
+ *
+ *     <ul>
+ *         <li>Index: 0 Cycle: 1 Total: 4 Odd First</li>
+ *         <li>Index: 1 Cycle: 2 Total: 4 Even</li>
+ *         <li>Index: 2 Cycle: 3 Total: 4 Odd</li>
+ *         <li>Index: 3 Cycle: 4 Total: 4 Even Last</li>
+ *     </ul>
  *
  * @api
  */

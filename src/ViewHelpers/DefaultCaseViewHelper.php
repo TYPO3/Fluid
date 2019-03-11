@@ -12,7 +12,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * A view helper which specifies the "default" case when used within the SwitchViewHelper.
+ * A ViewHelper which specifies the "default" case when used within the :ref:`SwitchViewHelper <typo3fluid-fluid-switch>`.
+ *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  *
  * @api
@@ -26,7 +27,7 @@ class DefaultCaseViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * @return string the contents of this view helper if no other "Case" view helper of the surrounding switch view helper matches
+     * @return string the contents of this ViewHelper if no other "Case" ViewHelper of the surrounding switch ViewHelper matches
      * @throws ViewHelper\Exception
      * @api
      */
@@ -34,7 +35,7 @@ class DefaultCaseViewHelper extends AbstractViewHelper
     {
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
-            throw new ViewHelper\Exception('The "default case" View helper can only be used within a switch View helper', 1368112037);
+            throw new ViewHelper\Exception('The "default case" ViewHelper can only be used within a switch ViewHelper', 1368112037);
         }
         return $this->renderChildren();
     }
