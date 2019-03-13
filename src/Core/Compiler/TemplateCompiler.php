@@ -230,7 +230,7 @@ class TemplateCompiler
 %s {
 
 public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$self = \$this; 
+\$self = \$this;
 %s;
 }
 public function hasLayout() {
@@ -364,17 +364,9 @@ EOD;
         $arguments = $node->getArguments();
         $argument = $arguments[$argumentName];
         $closure = 'function() use ($renderingContext, $self) {' . chr(10);
-        if ($node->getArgumentDefinition($argumentName)->getType() === 'boolean') {
-            // We treat boolean nodes by compiling a closure to evaluate the stack of the boolean argument
-            $compiledIfArgumentStack = $this->nodeConverter->convert(new ArrayNode($argument->getStack()));
-            $closure .= $compiledIfArgumentStack['initialization'] . chr(10);
-            $closure .= sprintf(
-                'return \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode::evaluateStack($renderingContext, %s);',
-                $compiledIfArgumentStack['execution']
-            ) . chr(10);
-        } else {
-            $closure .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', serialize($argument)) . chr(10);
-        }
+        $compiled = $this->nodeConverter->convert($argument);
+        $closure .= $compiled['initialization'] . chr(10);
+        $closure .= 'return ' . $compiled['execution'] . ';' . chr(10);
         $closure .= '}';
         return $closure;
     }
