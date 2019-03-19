@@ -8,6 +8,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithProtectedGetter;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -120,4 +122,25 @@ class VariableExtractorTest extends UnitTestCase
             [new \ArrayObject(['testProperty' => 'testValue']), 'testProperty', null, 'testValue'],
         ];
     }
+
+    /**
+     * @test
+     */
+    public function testExtractCallsMagicMethodGetters()
+    {
+        $subject = new ClassWithMagicGetter();
+        $result = VariableExtractor::extract($subject, 'test');
+        $this->assertEquals('test result', $result);
+    }
+
+    /**
+     * @test
+     */
+    public function testExtractReturnsNullOnProtectedGetters()
+    {
+        $subject = new ClassWithProtectedGetter();
+        $result = VariableExtractor::extract($subject, 'test');
+        $this->assertEquals(null, $result);
+    }
+
 }
