@@ -22,13 +22,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * The % operator converts the result of the % operation to boolean.
  *
  * XX and YY can be one of:
+ *
  * - number
  * - Object Accessor
  * - Array
  * - a ViewHelper
+ *
  * Note: Strings at XX/YY are NOT allowed, however, for the time being,
  * a string comparison can be achieved with comparing arrays (see example
  * below).
+ *
  * ::
  *
  *   <f:if condition="{rank} > 100">
@@ -44,39 +47,40 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *     Will result true if {foo.bar}'s represented value equals 'stringToCompare'.
  *   </f:if>
  *
- * = Examples =
+ * **Examples**
  *
- * <code title="Basic usage">
- * <f:if condition="somecondition">
- *   This is being shown in case the condition matches
- * </f:if>
- * </code>
- * <output>
- * Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
- * </output>
+ * ::
+ *   <code title="Basic usage">
+ *   <f:if condition="somecondition">
+ *     This is being shown in case the condition matches
+ *   </f:if>
+ *   </code>
+ *   <output>
+ *   Everything inside the <f:if> tag is being displayed if the condition evaluates to TRUE.
+ *   </output>
  *
- * <code title="If / then / else">
- * <f:if condition="somecondition">
- *   <f:then>
- *     This is being shown in case the condition matches.
- *   </f:then>
- *   <f:else>
- *     This is being displayed in case the condition evaluates to FALSE.
- *   </f:else>
- * </f:if>
- * </code>
- * <output>
- * Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
- * Otherwise, everything inside the "else"-tag is displayed.
- * </output>
+ *   <code title="If / then / else">
+ *   <f:if condition="somecondition">
+ *     <f:then>
+ *       This is being shown in case the condition matches.
+ *     </f:then>
+ *     <f:else>
+ *       This is being displayed in case the condition evaluates to FALSE.
+ *     </f:else>
+ *   </f:if>
+ *   </code>
+ *   <output>
+ *     Everything inside the "then" tag is displayed if the condition evaluates to TRUE.
+ *     Otherwise, everything inside the "else"-tag is displayed.
+ *   </output>
  *
- * <code title="inline notation">
- * {f:if(condition: someCondition, then: 'condition is met', else: 'condition is not met')}
- * </code>
- * <output>
- * The value of the "then" attribute is displayed if the condition evaluates to TRUE.
- * Otherwise, everything the value of the "else"-attribute is displayed.
- * </output>
+ *   <code title="inline notation">
+ *     {f:if(condition: someCondition, then: 'condition is met', else: 'condition is not met')}
+ *   </code>
+ *   <output>
+ *     The value of the "then" attribute is displayed if the condition evaluates to TRUE.
+ *     Otherwise, everything the value of the "else"-attribute is displayed.
+ *   </output>
  *
  * @api
  */
