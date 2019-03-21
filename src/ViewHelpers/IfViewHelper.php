@@ -39,8 +39,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  *   <f:if condition="{rank} == {k:bar()}">
  *     Checks if rank is equal to the result of the ViewHelper "k:bar"
  *   </f:if>
- *   <f:if condition="{foo.bar} == {'stringToCompare'}">
- *     Will result true if {foo.bar}'s represented value equals 'stringToCompare'.
+ *   <f:if condition="{foo.bar} == 'stringToCompare'">
+ *     Will result in true if {foo.bar}'s represented value equals 'stringToCompare'.
  *   </f:if>
  *
  * = Examples =
