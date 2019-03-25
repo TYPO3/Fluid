@@ -183,36 +183,37 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $withDefaultCaseOnly = clone $emptySwitchNode;
         $withDefaultCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'defaultCase', [], $parsingState));
         $withSingleCaseOnly = clone $emptySwitchNode;
-        $withSingleCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'case', ['value' => 'foo'], $parsingState));
+        $withSingleCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'case', ['value' => new TextNode('foo')], $parsingState));
         return [
             'Empty switch statement' => [
                 $emptySwitchNode,
-                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
+                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . chr(10) .
                 'switch ($arguments[\'expression\']) {' .
-                PHP_EOL . '}' . PHP_EOL .
+                chr(10) . '}' . chr(10) .
                 '}, array($arguments))',
                 ''
             ],
             'With default case only' => [
                 $withDefaultCaseOnly,
-                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
-                'switch ($arguments[\'expression\']) {' . PHP_EOL .
-                'default: return call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
-                'return NULL;' . PHP_EOL .
-                '});' . PHP_EOL .
-                '}' . PHP_EOL . '}, array($arguments))',
+                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . chr(10) .
+                'switch ($arguments[\'expression\']) {' . chr(10) .
+                'default: return call_user_func(function() use ($renderingContext, $self) {' . chr(10) .
+                'return NULL;' . chr(10) .
+                '});' . chr(10) .
+                '}' . chr(10) . '}, array($arguments))',
                 ''
             ],
             'With single case only' => [
                 $withSingleCaseOnly,
-                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
-                'switch ($arguments[\'expression\']) {' . PHP_EOL .
-                'case call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
-                '$argument = unserialize(\'s:3:"foo";\'); return $argument->evaluate($renderingContext);' . PHP_EOL .
-                '}): return call_user_func(function() use ($renderingContext, $self) {' . PHP_EOL .
-                'return NULL;' . PHP_EOL .
-                '});' . PHP_EOL .
-                '}' . PHP_EOL . '}, array($arguments))',
+                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . chr(10) .
+                'switch ($arguments[\'expression\']) {' . chr(10) .
+                'case call_user_func(function() use ($renderingContext, $self) {' . chr(10) .
+                chr(10) .
+                'return \'foo\';' . chr(10) .
+                '}): return call_user_func(function() use ($renderingContext, $self) {' . chr(10) .
+                'return NULL;' . chr(10) .
+                '});' . chr(10) .
+                '}' . chr(10) . '}, array($arguments))',
                 ''
             ],
         ];
