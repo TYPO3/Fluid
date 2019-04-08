@@ -51,8 +51,9 @@ using the pattern `{$templateRootPath}/{$controllerName}/{$actionName}.{$format}
 the `TemplatePaths` instance - which means that by filling the `TemplatePaths` instance with information about your MVC context
 you can have Fluid automatically resolve the paths of template files associated with controller actions.
 
-Templates may or may not use a Layout (indicated by the use of `<f:layout name="LayoutName" />` in the template source). Fluid
-will behave slightly different when a Template uses a Layout and when it does not:
+Templates may or may not use a Layout. The Layout can be indicated by the use of `<f:layout name="LayoutName" />` in the template source, or by the special variable `layoutName` if found in the `VariableContainer`.
+
+Fluid will behave slightly different when a Template uses a Layout and when it does not:
 
 * When no Layout is used, _the template is rendered directly_ and will output everything not contained in an `<f:section>`
 * When a Layout is used, _the Template itself is not rendered directly_. Instead, the Template defines any number of `<f:section>`
