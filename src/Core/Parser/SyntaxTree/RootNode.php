@@ -24,4 +24,46 @@ class RootNode extends AbstractNode
     {
         return $this->evaluateChildNodes($renderingContext);
     }
+
+    /**
+     * Returns one of the following:
+     *
+     * - Itself, if there is more than one child node and one or more nodes are not TextNode or NumericNode
+     * - A plain value if there is a single child node of type TextNode or NumericNode
+     * - The one child node if there is only a single child node not of type TextNode or NumericNode
+     * - Null if there are no child nodes at all.
+     *
+     * @return RootNode|string|int|float|null
+     */
+    public function flatten()
+    {
+        if (empty($this->childNodes)) {
+            return null;
+        }
+        $nodesCounted = 0;
+        $containsNonTextNonNumericNodes = false;
+        foreach ($this->childNodes as $childNode) {
+            ++$nodesCounted;
+            if (!($childNode instanceof TextNode || $childNode instanceof NumericNode)) {
+                $containsNonTextNonNumericNodes = true;
+                break;
+            }
+        }
+        if ($nodesCounted === 1) {
+            if ($containsNonTextNonNumericNodes) {
+                return $this->childNodes[0];
+            }
+        }
+        if (!$containsNonTextNonNumericNodes) {
+            return array_reduce($this->childNodes, function($initial, NodeInterface $node) {
+                if ($node instanceof TextNode) {
+                    return $initial . $node->getText();
+                }
+                if ($node instanceof NumericNode) {
+                    return $initial . (string) $node->getValue();
+                }
+            }, '');
+        }
+        return $this;
+    }
 }

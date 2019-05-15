@@ -186,11 +186,15 @@ class NodeConverter
             foreach ($node->getArguments() as $argumentName => $argumentValue) {
                 if ($argumentValue instanceof NodeInterface) {
                     $converted = $this->convert($argumentValue);
+                } elseif (is_numeric($argumentValue)) {
+                    // this case might happen for simple values
+                    $converted['execution'] = $argumentValue + 0;
                 } else {
-                    $converted = [
-                        'initialization' => '',
-                        'execution' => $argumentValue
-                    ];
+                    // this case might happen for simple values
+                    $converted['execution'] = sprintf(
+                        '\'%s\';',
+                        $this->escapeTextForUseInSingleQuotes($argumentValue)
+                    ) . chr(10);
                 }
                 $argumentInitializationCode .= $converted['initialization'];
                 $argumentInitializationCode .= sprintf(

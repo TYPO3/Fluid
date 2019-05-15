@@ -114,6 +114,8 @@ class RenderViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
+        #var_dump($arguments);
+        #exit();
         $section = $arguments['section'];
         $partial = $arguments['partial'];
         $variables = (array) $arguments['arguments'];

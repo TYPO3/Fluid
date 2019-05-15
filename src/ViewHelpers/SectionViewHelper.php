@@ -88,7 +88,7 @@ class SectionViewHelper extends AbstractViewHelper
     {
         /** @var $nameArgument TextNode */
         $nameArgument = $arguments['name'];
-        $sectionName = $nameArgument->getText();
+        $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
         $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
         $sections[$sectionName] = $node;
         $variableContainer['1457379500_sections'] = $sections;

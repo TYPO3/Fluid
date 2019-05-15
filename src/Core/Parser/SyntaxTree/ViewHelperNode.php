@@ -44,6 +44,16 @@ class ViewHelperNode extends AbstractNode
     protected $pointerTemplateCode = null;
 
     /**
+     * @var string
+     */
+    protected $namespace = '';
+
+    /**
+     * @var string
+     */
+    protected $identifier = '';
+
+    /**
      * Constructor.
      *
      * @param RenderingContextInterface $renderingContext a RenderingContext, provided by invoker
@@ -55,6 +65,8 @@ class ViewHelperNode extends AbstractNode
     public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments, ParsingState $state)
     {
         $resolver = $renderingContext->getViewHelperResolver();
+        $this->namespace = $namespace;
+        $this->identifier = $identifier;
         $this->arguments = $arguments;
         $this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
         $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
@@ -64,6 +76,22 @@ class ViewHelperNode extends AbstractNode
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
         $this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
         $this->validateArguments($this->argumentDefinitions, $this->arguments);
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->namespace;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
     }
 
     /**
@@ -166,6 +194,14 @@ class ViewHelperNode extends AbstractNode
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
             if (($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool')
                  && isset($argumentsObjectTree[$argumentName])) {
+                /*
+                if (!is_numeric($argumentsObjectTree[$argumentName])
+                    && !is_bool($argumentsObjectTree[$argumentName])
+                    && $argumentsObjectTree[$argumentName] !== null) {
+                } else {
+                    $argumentsObjectTree[$argumentName] = (bool)$argumentsObjectTree[$argumentName];
+                }
+                */
                 $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
             }
         }

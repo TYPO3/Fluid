@@ -1,0 +1,32 @@
+<?php
+namespace TYPO3Fluid\Fluid\ViewHelpers;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+
+class CViewHelper extends AbstractViewHelper
+{
+    protected $escapeChildren = false;
+
+    public function initializeArguments()
+    {
+        $this->registerArgument('s', 'string', 'A string argument');
+        $this->registerArgument('i', 'int', 'An integer argument');
+        $this->registerArgument('f', 'float', 'A float argument');
+        $this->registerArgument('b', 'bool', 'A boolean argument');
+        $this->registerArgument('a', 'array', 'An array argument');
+        $this->registerArgument('dt', \DateTime::class, 'A DateTime object argument');
+    }
+
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    {
+        return 'String: ' . $arguments['s'] . ', Int: ' . $arguments['i'] . ', Float: ' . $arguments['f'] .
+            ', Bool: ' . var_export($arguments['b'], true) . ', Array: ' . var_export($arguments['a'], true) .
+            ', DateTime: ' . ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : 'null');
+    }
+}

@@ -35,6 +35,36 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class TemplateParserTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function testUnbrokenJsonArraySyntaxWithObjectAccessor()
+    {
+        $source = 'abc {' . PHP_EOL . '    foo = {foo.bar}' . PHP_EOL . '} abc';
+        $context = new RenderingContextFixture();
+        $context->getVariableProvider()->method('getScopeCopy')->willReturnSelf();
+        $context->getVariableProvider()->method('getByPath')->with('foo.bar')->willReturn('baz');
+
+        #$node = new RootNode();
+
+        #$parsingState = $this->getMockBuilder(ParsingState::class)->getMock();
+        #$parsingState->expects($this->exactly(1))->method('getNodeFromStack')->willReturn($node);
+        #$parsingState->setRootNode($node);
+
+        $expectedText = 'foo.bar';
+
+        $parser = new TemplateParser();
+        $parser->setRenderingContext($context);
+        #$parser->expects($this->any())->method('getParsingState')->willReturn($parsingState);
+
+        #$parser->expects($this->never())->method('arrayHandler');
+        #$parser->expects($this->never())->method('textHandler');
+        #$parser->expects($this->exactly(1))->method('objectAccessorHandler')->with($parsingState, $expectedText, $context);
+        #$parser->expects($this->exactly(1))->method('textAndShorthandSyntaxHandler')->with($this->anything(), $expectedText, $context);
+        $parsed = $parser->parse($source);
+        #var_dump($parsed->render($context));
+        #exit();
+    }
 
     /**
      * @test
