@@ -31,10 +31,8 @@ namespace TYPO3Fluid\Fluid\Core\NewParser;
  * Works by:
  *
  * - Iterating a byte value array while maintaining an internal pointer
- * - Whenever encountering split characters, produce output that includes
- *   the split character for example a Part might contain {foo}
- * - On-the-fly exchanging the bit masks used for calculation to perform
- *   all splitting in a single loop without function calls.
+ * - Yielding byte and position (which contains captured text since last yield)
+ * - When yielding, reload the bit masks used in the next iteration
  */
 class Splitter
 {

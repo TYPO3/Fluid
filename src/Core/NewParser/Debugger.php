@@ -55,14 +55,14 @@ class Debugger
         $contexts = [];
         $nesting = [];
 
-        $byteSequence = new ByteSequence($sequencer->source);
+        $spacing = '';
 
         try {
             foreach ($sequencer->sequence() as $symbol => $capture) {
-                $captures[] = $byteSequence->pack($capture);
+                $captures[] = $capture->captured === null ? null : str_replace(PHP_EOL, '', $capture->captured);
                 $symbols[] = $symbol;
                 $contexts[] = $sequencer->position->context->context;
-                $nesting[] = count($sequencer->position->stack) - 1;
+                $nesting[] = count($sequencer->position->stack);
             }
         } catch (\RuntimeException $exception) {
             $this->writeLogLine($exception->getMessage(), 31);
@@ -71,14 +71,14 @@ class Debugger
 
         $this->writeLogLine(PHP_EOL);
         $this->writeLogLine($legend);
-        $this->writeLogLine(str_repeat('—', count($sequencer->source->bytes) + (count($captures) * 3) + 2));
+        $this->writeLogLine(str_repeat('—', strlen(str_replace(PHP_EOL, '', $sequencer->source->source))));
 
         $symbolLine = '';
         foreach ($symbols as $index => $symbol) {
             $char = $symbol === Splitter::BYTE_BACKSLASH ? '\\' : chr($symbol);
-            $capturedLength = strlen($captures[$index]) + 1;
+            $capturedLength = strlen((string)$captures[$index]) + 1;
             $symbolLine .= $colors[$contexts[$index]] ?? "\033[01;0m";
-            $symbolLine .= str_repeat(' ', max($capturedLength, 1) - 1) . $char . '   ';
+            $symbolLine .= str_repeat(' ', max($capturedLength - 1, 0)) . $char . $spacing;
             #echo str_repeat((string)$contexts[$index], $capturedLength > 0 ? $capturedLength : 1);
             $symbolLine .= "\033[0m";
         }
@@ -91,7 +91,7 @@ class Debugger
             $captureLine .= $colors[$contexts[$index]] ?? "\033[01;0m";
             $captureLine .= $capture;
             //$captureLine .= str_pad(addslashes(chr($symbols[$index])), 1, ' ') . '   ';
-            $captureLine .= str_repeat(' ', strlen($char)) . '   ';
+            $captureLine .= str_repeat(' ', strlen($char)) . $spacing;
             $captureLine .= "\033[0m";
         }
 
@@ -99,12 +99,11 @@ class Debugger
 
         $nestingLine = '';
         foreach ($nesting as $index => $depth) {
-            $capturedLength = strlen($captures[$index]) + strlen((string)addslashes(chr($symbols[$index])));
-            $nestingLine .= str_repeat((string)$depth, ($capturedLength > 0 ? $capturedLength : 1)) . '   ';
+            $capturedLength = strlen(str_replace(PHP_EOL, '', (string)$captures[$index])) + 1;
+            $nestingLine .= str_repeat((string)$depth, ($capturedLength > 0 ? $capturedLength : 0)) . $spacing;
         }
 
         $this->writeLogLine($nestingLine);
-        #echo PHP_EOL;
-        #echo PHP_EOL;
+        $this->writeLogLine(str_repeat('—', strlen(str_replace(PHP_EOL, '', $sequencer->source->source))));
     }
 }

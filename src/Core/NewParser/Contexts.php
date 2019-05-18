@@ -30,6 +30,9 @@ class Contexts
     /** @var Context */
     public $attributes;
 
+    /** @var Context */
+    public $dead;
+
     public function __construct()
     {
         // Root context: aware of tag start or inline start only.
@@ -39,10 +42,10 @@ class Contexts
             Splitter::MASK_INLINE_OPEN
         );
 
-        // Inline context: aware of sub-inline syntax, inline VH syntax, and arguments enclosed by parenthesis by looking for parenthesis start
+        // Inline context: aware of array syntax, sub-inline syntax, inline VH syntax, and arguments enclosed by parenthesis by looking for parenthesis start
         $this->inline = new Context(
             Context::CONTEXT_INLINE,
-            Splitter::MASK_PARENTHESIS_START | Splitter::MASK_INLINE_LEGACY_PASS | Splitter::MASK_WHITESPACE | Splitter::MASK_COLON,
+            Splitter::MASK_PARENTHESIS_START | Splitter::MASK_INLINE_LEGACY_PASS | Splitter::MASK_WHITESPACE | Splitter::MASK_COLON | Splitter::MASK_QUOTES | Splitter::MASK_SEPARATORS,
             Splitter::MASK_INLINE_OPEN | Splitter::MASK_INLINE_END | Splitter::MASK_INLINE_PASS
         );
 
@@ -71,8 +74,14 @@ class Contexts
         // Attributes: identical to array, except does not ignore whitespace and does not split on array [] characters
         $this->attributes = new Context(
             Context::CONTEXT_ATTRIBUTES,
-            Splitter::MASK_PARENTHESIS_END | Splitter::MASK_SEPARATORS | Splitter::MASK_QUOTES | Splitter::MASK_TAG_CLOSE | Splitter::MASK_TAG_END | Splitter::MASK_WHITESPACE,
+            Splitter::MASK_QUOTES | Splitter::MASK_TAG_CLOSE | Splitter::MASK_TAG_END | Splitter::MASK_WHITESPACE | Splitter::MASK_SEPARATORS,
             Splitter::MASK_INLINE_OPEN | Splitter::MASK_INLINE_END
+        );
+        // Attributes: identical to array, except does not ignore whitespace and does not split on array [] characters
+        $this->dead = new Context(
+            Context::CONTEXT_DEAD,
+            Splitter::MASK_TAG_END,
+            Splitter::MASK_INLINE_OPEN
         );
     }
 }
