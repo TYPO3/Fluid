@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Core\NewParser;
 
+use TYPO3Fluid\Fluid\Core\Parser\Context;
+
 class Debugger
 {
     private $fp;
@@ -28,7 +30,7 @@ class Debugger
         $this->writeLogContent(($color === 0 ? $line : "\033[01;" . (string) $color . 'm' . $line . "\033[01;0m") . PHP_EOL);
     }
 
-    public function debugSequencer(Sequencer $sequencer): void
+    public function debugSequence(\Iterator $sequence): void
     {
         $colors = [
             "\033[01;0m",
@@ -49,7 +51,6 @@ class Debugger
             $legend .= ' ';
         }
 
-
         $captures = [];
         $symbols = [];
         $contexts = [];
@@ -58,7 +59,7 @@ class Debugger
         $spacing = '';
 
         try {
-            foreach ($sequencer->sequence() as $symbol => $capture) {
+            foreach ($sequence as $symbol => $capture) {
                 $captures[] = $capture->captured === null ? null : str_replace(PHP_EOL, '', $capture->captured);
                 $symbols[] = $symbol;
                 $contexts[] = $sequencer->position->context->context;

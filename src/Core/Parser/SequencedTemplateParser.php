@@ -56,6 +56,9 @@ class SequencedTemplateParser extends TemplateParser
     /** @var Position */
     private $position;
 
+    /** @var Source */
+    private $source;
+
     public function parse($templateString, $templateIdentifier = null): ParsingState
     {
         $templateString = $this->preProcessTemplateSource($templateString);
@@ -360,7 +363,6 @@ class SequencedTemplateParser extends TemplateParser
     {
         $array = [];
 
-        #$this->position->switch($this->contexts->attributes);
         $contextToRestore = $this->switch($this->contexts->attributes);
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
@@ -381,7 +383,7 @@ class SequencedTemplateParser extends TemplateParser
 
                 //case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $key = $position->captured;
+                    $key = trim($position->captured);
                     break;
 
                 case Splitter::BYTE_QUOTE_SINGLE:
@@ -446,9 +448,12 @@ class SequencedTemplateParser extends TemplateParser
      */
     protected function sequenceInlineNodes(\Iterator $sequence, bool $allowArray = true): NodeInterface
     {
-        $startingIndex = $this->position->index;
-
         $text = '{';
+        if ($this->source->bytes[$this->position->index - 1] === Splitter::BYTE_BACKSLASH) {
+            // Respect escaped curly braces.
+            return new TextNode($text);
+        }
+
         $node = null;
         $key = null;
         $namespace = null;
@@ -464,6 +469,12 @@ class SequencedTemplateParser extends TemplateParser
         foreach ($sequence as $symbol => $position) {
             $text .= $position->captured . chr($symbol);
             switch ($symbol) {
+                case Splitter::BYTE_BACKSLASH:
+                    // Add the next character to the expression and advance the Position index by 1 to skip the next.
+                    ++$this->position->index;
+                    $text = substr($text, 0, -1) . $this->source->source[$this->position->index];
+                    break;
+
                 case Splitter::BYTE_MINUS:
                     break;
 

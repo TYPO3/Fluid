@@ -65,46 +65,8 @@ class Splitter
     public const BYTE_ARRAY_END = 93; // The "]" character
     public const BYTE_SLASH = 47; // The "/" character
     public const BYTE_BACKSLASH = 92; // The "\" character
-
-    // Amount to shift mid-bytes to low-bytes (123 - 64 = 59 as mapped byte value)
     public const MAP_SHIFT = 64;
-
-    // A bit mask consisting of "<" and ">"
-    public const MASK_TAG_OPEN = 0 | (1 << self::BYTE_TAG);
-    public const MASK_TAG_CLOSE = 0 | (1 << self::BYTE_TAG_CLOSE);
-    public const MASK_TAG_END = 0 | (1 << self::BYTE_TAG_END);
-    #public const MASK_TAG = 0 | (1 << self::BYTE_TAG) | (1 << self::BYTE_TAG_END);
-    // And one consisting of { and }. This set of bits are subtracted by 64 and will only be used in a special comparison
-    // which also subtracts 64 after confirming the original byte value was > 64.
-    public const MASK_INLINE_OPEN = 0 | (1 << (self::BYTE_INLINE - self::MAP_SHIFT));
-    public const MASK_INLINE_END = 0 | (1 << (self::BYTE_INLINE_END - self::MAP_SHIFT));
-    public const MASK_INLINE_PASS = 0 | (1 << (self::BYTE_PIPE - self::MAP_SHIFT));
-    public const MASK_INLINE_LEGACY_PASS = 0 | (1 << self::BYTE_MINUS) | (1 << self::BYTE_TAG_END);
-    #public const MASK_INLINE = 0 | self::MASK_INLINE_OPEN | self::MASK_INLINE_END;
-
-    // A bit mask consisting of " and ' to match quotes
-    public const MASK_QUOTES = 0 | (1 << self::BYTE_QUOTE_DOUBLE) | (1 << self::BYTE_QUOTE_SINGLE);
-
-    // A bit mask consisting of: (space) (tab) (carriage return)
-    public const MASK_WHITESPACE = 0 | (1 << self::BYTE_WHITESPACE_TAB) | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN) | (1 << self::BYTE_WHITESPACE_SPACE);
     public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
-
-    // A bit mask consisting of "=" and ":" and ","
-    public const MASK_SEPARATORS = 0 | (1 << self::BYTE_SEPARATOR_EQUALS) | (1 << self::BYTE_SEPARATOR_COLON) | (1 << self::BYTE_SEPARATOR_COMMA);
-    public const MASK_COMMA = 0 | (1 << self::BYTE_SEPARATOR_COMMA);
-    public const MASK_EQUALS = 0 | (1 << self::BYTE_SEPARATOR_EQUALS);
-
-    // A bit mask consisting of ( and )
-    #public const MASK_PARENTHESIS = 0 | (1 << self::BYTE_PARENTHESIS_START) | (1 << self::BYTE_PARENTHESIS_END);
-    public const MASK_PARENTHESIS_START = 0 | (1 << self::BYTE_PARENTHESIS_START);
-    public const MASK_PARENTHESIS_END = 0 | (1 << self::BYTE_PARENTHESIS_END);
-
-    public const MASK_COLON = 0 | (1 << self::BYTE_SEPARATOR_COLON);
-    public const MASK_MINUS = 0 | (1 << self::BYTE_MINUS);
-    public const MASK_BACKSLASH = 0 | (1 << (self::BYTE_BACKSLASH - self::MAP_SHIFT));
-
-    // A bit mask consisting of [ and ]
-    public const MASK_ARRAY = 0 | (1 << (self::BYTE_ARRAY_START - self::MAP_SHIFT)) | (1 << (self::BYTE_ARRAY_END - self::MAP_SHIFT));
 
     /** @var Position */
     public $position;
@@ -147,43 +109,27 @@ class Splitter
             // Strip the highest byte, mapping >64 byte values to <64 ones which will be recognized by the bit mask.
             // A match only means that we have encountered a potentially interesting character.
             // alternative method: if (($mask >> ($byte & 63) & 1)
-            if ($mask & (1 << ($bytes[$index] & 63))) {
+            // REMOVED CONDITION, COST 0.0015%: if ($mask & (1 << ($bytes[$index] & 63))) {
 
-                $byte = $bytes[$index];
+            $byte = $bytes[$index];
 
-                // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
-                // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
-                // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.
-                if ($byte < 64 && ($primaryMask & (1 << $byte))) {
-                    yield $byte => $this->position->copy($captured);
-                    $this->position->lastYield = $index;
-                    if ($this->debugger) {
-                        $this->debugger->writeLogLine(chr($byte) . ' ' . $this->position->getContextName(), 31);
-                    }
-                    $primaryMask = $this->position->context->primaryMask;
-                    $secondaryMask = $this->position->context->secondaryMask;
-                    $mask = $primaryMask | $secondaryMask;
-                    continue;
-                } elseif ($byte > 64 && $byte < 128 && ($secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
-                    yield $byte => $this->position->copy($captured);
-                    $this->position->lastYield = $index;
-                    if ($this->debugger) {
-                        $this->debugger->writeLogLine(chr($byte) . ' ' . $this->position->getContextName(), 35);
-                    }
-                    $primaryMask = $this->position->context->primaryMask;
-                    $secondaryMask = $this->position->context->secondaryMask;
-                    $mask = $primaryMask | $secondaryMask;
-                    continue;
-                } else {
-                    if ($this->debugger) {
-                        $this->debugger->writeLogLine(chr($byte) . ' ' . $this->position->getContextName(), 36);
-                    }
-                }
-
-            } else {
-                if ($this->debugger) {
-                    $this->debugger->writeLogLine(chr($bytes[$index]) . ' ' . $this->position->getContextName(), 37);
-                }
+            // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
+            // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
+            // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.
+            if ($byte < 64 && ($primaryMask & (1 << $byte))) {
+                yield $byte => $this->position->copy($captured);
+                $this->position->lastYield = $index;
+                $primaryMask = $this->position->context->primaryMask;
+                $secondaryMask = $this->position->context->secondaryMask;
+                $mask = $primaryMask | $secondaryMask;
+                continue;
+            } elseif ($byte > 64 && $byte < 128 && ($secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
+                yield $byte => $this->position->copy($captured);
+                $this->position->lastYield = $index;
+                $primaryMask = $this->position->context->primaryMask;
+                $secondaryMask = $this->position->context->secondaryMask;
+                $mask = $primaryMask | $secondaryMask;
+                continue;
             }
 
             // Append captured bytes from source, must happen after the conditions above so we avoid appending tokens.

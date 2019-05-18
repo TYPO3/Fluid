@@ -18,10 +18,16 @@ class Context
     public $secondaryMask = 0;
     public $startingByte = 0;
 
-    public function __construct(int $context, int $primaryMask, int $secondaryMask)
+    public function __construct(int $context, string $tokens)
     {
         $this->context = $context;
-        $this->primaryMask = $primaryMask;
-        $this->secondaryMask = $secondaryMask;
+        foreach (str_split($tokens) as $character) {
+            $byte = ord($character);
+            if ($byte >= 64) {
+                $this->secondaryMask |= (1 << ($byte - Splitter::MAP_SHIFT));
+            } elseif ($byte < 64) {
+                $this->primaryMask |= (1 << $byte);
+            }
+        }
     }
 }
