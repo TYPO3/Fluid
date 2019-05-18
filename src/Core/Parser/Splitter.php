@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TYPO3Fluid\Fluid\Core\NewParser;
+namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /**
  * Splitter

@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace TYPO3Fluid\Fluid\Core\NewParser;
-
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
+namespace TYPO3Fluid\Fluid\Core\Parser;
 
 class SequencingException extends Exception
 {
