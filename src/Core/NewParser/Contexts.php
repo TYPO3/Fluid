@@ -22,13 +22,13 @@ class Contexts
     public $tag;
 
     /** @var Context */
-    public $inactiveTag;
-
-    /** @var Context */
     public $array;
 
     /** @var Context */
     public $quoted;
+
+    /** @var Context */
+    public $attributes;
 
     public function __construct()
     {
@@ -49,14 +49,7 @@ class Contexts
         // Tag: entered into when a detected tag has a namespace operator in tag name
         $this->tag = new Context(
             Context::CONTEXT_TAG,
-            Splitter::MASK_TAG_END | Splitter::MASK_TAG_CLOSE | Splitter::MASK_WHITESPACE,
-            0
-        );
-
-        // Inactive tag: switched to when peeking reveals no namespace separator in tag name
-        $this->inactiveTag = new Context(
-            Context::CONTEXT_TAG_INACTIVE,
-            Splitter::MASK_TAG_END,
+            Splitter::MASK_TAG_END | Splitter::MASK_COLON | Splitter::MASK_TAG_CLOSE | Splitter::MASK_WHITESPACE,
             Splitter::MASK_INLINE_OPEN
         );
 
@@ -64,15 +57,22 @@ class Contexts
         // parenthesis arguments for inline syntax and tag attribute arguments for tag syntax.
         $this->array = new Context(
             Context::CONTEXT_ARRAY,
-            Splitter::MASK_PARENTHESIS_END | Splitter::MASK_SEPARATORS | Splitter::MASK_QUOTES | Splitter::MASK_TAG_CLOSE | Splitter::MASK_TAG_END | Splitter::MASK_WHITESPACE,
-            Splitter::MASK_INLINE_OPEN | Splitter::MASK_INLINE_END
+            Splitter::MASK_PARENTHESIS_END | Splitter::MASK_SEPARATORS | Splitter::MASK_QUOTES,
+            Splitter::MASK_INLINE_OPEN | Splitter::MASK_INLINE_END | Splitter::MASK_ARRAY
         );
 
         // Quoted: entered into when a quote mark (single or double) is encountered (in an array which includes in tag arguments)
         $this->quoted = new Context(
             Context::CONTEXT_QUOTED,
             Splitter::MASK_QUOTES,
-            Splitter::MASK_BACKSLASH | Splitter::MASK_INLINE_OPEN
+            Splitter::MASK_INLINE_OPEN
+        );
+
+        // Attributes: identical to array, except does not ignore whitespace and does not split on array [] characters
+        $this->attributes = new Context(
+            Context::CONTEXT_ATTRIBUTES,
+            Splitter::MASK_PARENTHESIS_END | Splitter::MASK_SEPARATORS | Splitter::MASK_QUOTES | Splitter::MASK_TAG_CLOSE | Splitter::MASK_TAG_END | Splitter::MASK_WHITESPACE,
+            Splitter::MASK_INLINE_OPEN | Splitter::MASK_INLINE_END
         );
     }
 }

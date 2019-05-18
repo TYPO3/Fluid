@@ -8,9 +8,9 @@ class Context
     public const CONTEXT_ROOT = 0;
     public const CONTEXT_INLINE = 1;
     public const CONTEXT_TAG = 2;
-    public const CONTEXT_TAG_INACTIVE = 3;
-    public const CONTEXT_ARRAY= 4;
-    public const CONTEXT_QUOTED = 5;
+    public const CONTEXT_ARRAY= 3;
+    public const CONTEXT_QUOTED = 4;
+    public const CONTEXT_ATTRIBUTES = 5;
 
     public $context = self::CONTEXT_ROOT;
     public $primaryMask = 0;

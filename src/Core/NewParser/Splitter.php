@@ -126,7 +126,7 @@ class Splitter
      * character (byte). The secondary bit mask is costless as it is OR'ed into
      * the primary bit mask.
      *
-     * @return \Generator
+     * @return \Generator|Position[]
      */
     public function parse(): \Generator
     {
@@ -137,13 +137,15 @@ class Splitter
             return;
         }
 
+        $source = &$this->source->source;
         $index = &$this->position->index;
-        $length = $this->source->length;
+        $length = $this->source->length + 1;
         $primaryMask = $this->position->context->primaryMask;
         $secondaryMask = $this->position->context->secondaryMask;
         $mask = $primaryMask | $secondaryMask;
+        $captured = null;
 
-        for (; $index <= $length; ++$index) {
+        for (; $index < $length; ++$index) {
             // Strip the highest byte, mapping >64 byte values to <64 ones which will be recognized by the bit mask.
             // A match only means that we have encountered a potentially interesting character.
             // alternative method: if (($mask >> ($byte & 63) & 1)
@@ -154,8 +156,8 @@ class Splitter
                 // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
                 // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
                 // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.
-                if (($primaryMask & (1 << $byte)) && $byte < 64) {
-                    yield $byte => $this->position->copy();
+                if ($byte < 64 && ($primaryMask & (1 << $byte))) {
+                    yield $byte => $this->position->copy($captured);
                     $this->position->lastYield = $index;
                     if ($this->debugger) {
                         $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($byte) . ' ' . $this->position->getContextName(), 31);
@@ -163,8 +165,9 @@ class Splitter
                     $primaryMask = $this->position->context->primaryMask;
                     $secondaryMask = $this->position->context->secondaryMask;
                     $mask = $primaryMask | $secondaryMask;
-                } elseif (($secondaryMask & (1 << ($byte - static::MAP_SHIFT))) && $byte < 128) {
-                    yield $byte => $this->position->copy();
+                    continue;
+                } elseif ($byte > 64 && $byte < 128 && ($secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
+                    yield $byte => $this->position->copy($captured);
                     $this->position->lastYield = $index;
                     if ($this->debugger) {
                         $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($byte) . ' ' . $this->position->getContextName(), 35);
@@ -172,6 +175,7 @@ class Splitter
                     $primaryMask = $this->position->context->primaryMask;
                     $secondaryMask = $this->position->context->secondaryMask;
                     $mask = $primaryMask | $secondaryMask;
+                    continue;
                 } else {
                     if ($this->debugger) {
                         $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($byte) . ' ' . $this->position->getContextName(), 36);
@@ -183,6 +187,9 @@ class Splitter
                     $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($bytes[$index]) . ' ' . $this->position->getContextName(), 37);
                 }
             }
+
+            // Append captured bytes from source, must happen after the conditions above so we avoid appending tokens.
+            $captured .= $source{$index - 1};
         }
 
         if (count($this->position->stack) > 1) {
@@ -196,9 +203,8 @@ class Splitter
             );
         }
 
-        if ($this->position->lastYield < $this->position->index) {
-            ++$this->position->index;
-            yield Splitter::BYTE_NULL => $this->position;
+        if ($this->position->lastYield < $this->source->length) {
+            yield Splitter::BYTE_NULL => $this->position->copy($captured);
         }
     }
 
@@ -234,134 +240,5 @@ class Splitter
             }
         }
         return max($this->source->length, $offset);
-    }
-
-    /**
-     * Shorthand alias for seekBeforeMatch which prepares the bit masks
-     * required to match a colon coming before any of the following:
-     *
-     * - A tag end ">" character
-     * - A tag close "/" character
-     * - An inline arguments start "(" character
-     * - An inline pass operator (or legacy pass operator) - "|" or ">" or "-" character
-     *   to catch cases like "{var->v:h()}"
-     * - Any whitespace which would not match a tag with attributes like "<tag attr='foo:x'>"
-     *
-     * A return value that is *DIFFERENT FROM OFFSET* means a colon was
-     * found before any of the above bytes.
-     *
-     * @param int $searchLength The maximum number of bytes to scan before returning $offset (meaning "not found")
-     * @return int
-     */
-    public function seekColon(int $searchLength): int
-    {
-        $offset = $this->seekMatchBeforeMatch(
-            static::MASK_COLON,
-            0,
-            static::MASK_WHITESPACE | static::MASK_INLINE_LEGACY_PASS,
-            static::MASK_INLINE_END | static::MASK_INLINE_PASS,
-            $this->position->index,
-            $searchLength
-        );
-        return $offset;
-    }
-
-    /**
-     * Shorthand alias for seekBeforeMatch which prepares the bit masks
-     * required to determine if the expression starting at current
-     * position is an inline syntax (vs. an array).
-     *
-     * Returns TRUE if the expression is an inline expression (which it
-     * is after scan, $offset remains the same as current index).
-     *
-     * @param int $searchLength
-     * @return bool
-     */
-    public function seekInlineQualifier(int $searchLength): bool
-    {
-        // An inline expression is possible if we find:
-        // - an inline pass, colon, parenthesis start, ending or opening curly brace coming before a separator (comma, equals but not colon) or quotes
-        // Except if we find a colon - then we need to check:
-        // - a parenthesis open before whitespace, ending or opening curly brace
-        $offset = $this->seekMatchBeforeMatch(
-            static::MASK_PARENTHESIS_START | static::MASK_COLON,
-            static::MASK_INLINE_PASS | static::MASK_INLINE_OPEN | static::MASK_INLINE_END,
-            static::MASK_COMMA | static::MASK_EQUALS,
-            0,
-            $this->position->index + 1,
-            $searchLength
-        );
-
-        if ($this->source->bytes[$offset] === Splitter::BYTE_SEPARATOR_COLON) {
-            $colonPosition = $offset;
-            $colonScanStart = $colonPosition + 1;
-            // If we detected a colon we need to determine one thing: will a parenthesis open come before whitespace or curly braces
-            // after the colon.
-            $offset = $this->seekMatchBeforeMatch(
-                static::MASK_PARENTHESIS_START,
-                0,
-                static::MASK_WHITESPACE,
-                static::MASK_INLINE_OPEN | static::MASK_INLINE_END,
-                $colonScanStart,
-                $searchLength
-            );
-            if ($offset === $colonScanStart) {
-                // Parenthesis open NOT found - the expression is not inline.
-                return false;
-            }
-        }
-        $isInline = $offset !== $this->position->index;
-        return $isInline;
-    }
-
-    /**
-     * Searches out an identified byte, by bit mask, in bytes of source
-     * starting from $offset and scanning a maximum of $searchLength
-     * bytes ahead from $offset. Takes a secondary pair of masks which
-     * if found before the main mask, causes $offset to be returned.
-     *
-     * Returns the index at which a matching byte was found, or returns
-     * $offset if the mask was not matched (before the negative mask).
-     *
-     * @param int $primaryMask Bit mask of byte values < 64 to scan for
-     * @param int $secondaryMask Bit mask of byte values > 64 to scan for
-     * @param int $primaryNegativeMask Bit mask of byte values < 64 to scan for which if found before main masks, causes return of $offset
-     * @param int $secondaryNegativeMask Bit mask of byte values > 64 to scan for which if found before main masks, causes return of $offset
-     * @param int $offset Index from which to start scanning
-     * @param int $searchLength Maximum number of bytes to scan
-     * @return int
-     */
-    public function seekMatchBeforeMatch(int $primaryMask, int $secondaryMask, int $primaryNegativeMask, int $secondaryNegativeMask, int $offset, int $searchLength): int
-    {
-        $bytes = &$this->source->bytes;
-        $max = $offset + $searchLength;
-
-        $mask = $primaryNegativeMask | $secondaryNegativeMask | $primaryMask | $secondaryMask;
-
-        for ($index = $offset; $index < $max; $index++) {
-
-            // Strip the highest byte, mapping >64 byte values to <64 ones which will be recognized by the bit mask.
-            // A match only means that we have encountered a potentially interesting character.
-            // alternative method: if (($mask >> ($byte & 63) & 1)
-            if ($mask & (1 << ($bytes[$index] & 63))) {
-
-                $byte = $bytes[$index];
-
-                // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
-                // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
-                // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.
-                if (($primaryNegativeMask & (1 << $byte)) && $byte < 64) {
-                    return $offset;
-                } elseif ($byte < 128 && $byte > 64 && ($secondaryNegativeMask & (1 << ($byte - static::MAP_SHIFT)))) {
-                    return $offset;
-                } elseif (($primaryMask & (1 << $byte)) && $byte < 64) {
-                    return $index;
-                } elseif ($byte < 128 && $byte > 64 && ($secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
-                    return $index;
-                }
-            }
-        }
-
-        return $offset;
     }
 }

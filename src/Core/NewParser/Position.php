@@ -9,22 +9,26 @@ class Position
     public $index = 1;
     public $lastYield = 0;
 
+    /** @var string|null */
+    public $captured = null;
+
     /** @var Context */
     public $context;
 
     public $stack = [];
 
-    public function __construct(Context $context, int $lastYield = 0, int $index = 1)
+    public function __construct(Context $context, int $lastYield = 0, int $index = 1, ?string $captured = null)
     {
         $this->context = $context;
         $this->lastYield = $lastYield;
         $this->index = $index;
+        $this->captured = $captured;
     }
 
     public function enter(Context $context, int $startingByte = 0): self
     {
         #var_dump('Entering: ' . $this->context->context);
-        $clone = clone $this->context;;
+        $clone = clone $this->context;
         $clone->startingByte = $startingByte;
         $this->stack[] = $clone;
         $this->context = $context;
@@ -44,9 +48,11 @@ class Position
         return $this;
     }
 
-    public function copy(): self
+    public function copy(?string &$captured): self
     {
-        return new self($this->context, $this->lastYield, $this->index);
+        $copy = new self($this->context, $this->lastYield, $this->index, $captured);
+        $captured = null;
+        return $copy;
     }
 
     public function byteMatchesStartingByteOfTopmostStackElement(int $byte): bool

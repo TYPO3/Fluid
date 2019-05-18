@@ -72,8 +72,10 @@ class Sequencer
         $line = $this->pack($crop);
         $character = $position->index - $crop->lastYield - 1;
         $string = 'Line ' . $lines . ' character ' . $character . PHP_EOL;
+        $string .= PHP_EOL;
+        $string .= str_repeat(' ', max($character, 0)) . 'v' . PHP_EOL;
         $string .= trim($line) . PHP_EOL;
-        $string .= str_repeat('-', $character - 2) . '^^^^^' . PHP_EOL;
+        $string .= str_repeat(' ', max($character, 0)) . '^' . PHP_EOL;
         return $string;
     }
 
@@ -113,12 +115,12 @@ class Sequencer
      * trim() method which avoids adding, instead of removing after,
      * any unwanted bytes.
      */
-    public function pack(Position $position, int $ignorePrimaryMask = 0, int $ignoreSecondaryMask = 0): string
+    public function pack(Position $position, int $ignorePrimaryMask = 0, int $ignoreSecondaryMask = 0): ?string
     {
-        $offset = min($position->lastYield + 1, $this->source->length);
-        $end = min($position->index, $this->source->length);
+        $offset = $position->lastYield + 1;
+        $end = $position->index;
         $source = &$this->source->source;
-        $captured = '';
+        $captured = null;
         for ($index = $offset; $index < $end; $index++) {
             $byte = $this->source->bytes[$index];
             if ($ignorePrimaryMask > 0 && $byte < 64 && ($ignorePrimaryMask & (1 << $byte))) {
@@ -127,7 +129,6 @@ class Sequencer
                 continue;
             }
             $captured .= $source{$index - 1};
-            #$captured .= chr($byte);
         }
         return $captured;
     }
@@ -145,37 +146,38 @@ class Sequencer
             return;
         }
 
+        $spool = [];
+
         try {
             foreach ($this->splitter->parse() as $token => $captured) {
                 switch ($token) {
 
-                    # OPENING CASES - handling for start of tag and start plus end of inline expression
+                    // Cases for "/"
+                    case Splitter::BYTE_TAG_CLOSE:
                     case Splitter::BYTE_NULL:
                         yield $token => $captured;
-                        #$this->position->lastYield = $captured->index;
-                        $this->position->leave();
                         break;
 
-                    // Case: "{" token. This enters a new context and does so regardless of the current context, always
-                    // creating a new stack level. The inline expression may be an array, a variable reference or a
-                    // ViewHelper call - what exactly it becomes depends on the function consuming this sequencer.
+                    // Case: "{" token. Start spooling until we know enough tokens to decide if we are in inline or
+                    // array context.
                     case Splitter::BYTE_INLINE:
-                        yield $token => $captured;
-                        #$this->position->lastYield = $captured->index;
-
-                        $this->position->enter($this->contexts->inline);
-                        #/*
-                        if ($this->position->context->context !== Context::CONTEXT_ROOT && !$this->splitter->seekInlineQualifier(60)) {
-                            // We have entered an array context
-                            $this->position->switch($this->contexts->array);
+                        if ($this->position->context->context === Context::CONTEXT_ARRAY) {
+                            // This sub-case means we have encountered inline syntax inside array context (a sub-array)
+                        #    yield from $this->spool($spool, [Context::CONTEXT_INLINE => Context::CONTEXT_ARRAY], [Splitter::BYTE_INLINE => Splitter::BYTE_ARRAY_START]);
                         }
-                        #*/
+                        $spool[] = [$token, $captured];
+                        $this->position->enter($this->contexts->inline);
                         break;
 
                     // Case: "}" token - always means exit whatever current context is and go up one stack level.
                     case Splitter::BYTE_INLINE_END:
-                        yield $token => $captured;
-                        #$this->position->lastYield = $captured->index;
+                        if ($this->position->context->context === Context::CONTEXT_ARRAY) {
+                            yield from $this->spool($spool, [Context::CONTEXT_INLINE => Context::CONTEXT_ARRAY], [Splitter::BYTE_INLINE => Splitter::BYTE_ARRAY_START]);
+                            yield Splitter::BYTE_ARRAY_END => $captured;
+                        } else {
+                            yield from $this->spool($spool, [], [Splitter::BYTE_ARRAY_START => Splitter::BYTE_INLINE]);
+                            yield $token => $captured;
+                        }
                         $this->position->leave();
                         break;
 
@@ -184,20 +186,7 @@ class Sequencer
                     // it should use a more detailed bit mask causing arguments to be found.
                     case Splitter::BYTE_TAG:
                         yield $token => $captured;
-                        #$this->position->lastYield = $captured->index;
-                        if (($newIndex = $this->splitter->seekColon(Splitter::MAX_NAMESPACE_LENGTH)) && $newIndex !== $this->position->index) {
-                            // The tag has a namespace - enter the tag context.
-                            $this->position->enter($this->contexts->tag);
-                        } else {
-                            // The tag does NOT have a namespace. Keep scanning but only scan for inline open or tag end.
-                            $this->position->enter($this->contexts->inactiveTag);
-                        }
-                        break;
-
-                    // Cases for "/"
-                    case Splitter::BYTE_TAG_CLOSE:
-                        yield $token => $captured;
-                        $captured->lastYield = $captured->index;
+                        $this->position->enter($this->contexts->tag);
                         break;
 
                     // This byte may occur in two different contexts: tag context, or inline. If it occurs in inline
@@ -205,13 +194,18 @@ class Sequencer
                     // but still is supported. If the context is inline the byte will NOT cause a new context to
                     // be entered. If it is anywhere else, it means the current context is exited.
                     case Splitter::BYTE_TAG_END:
-                        if ($this->position->context->context === Context::CONTEXT_INLINE) {
-                            // TODO: yield the "pipe" token as replacement to give rewrite legacy pass to current syntax.
+
+                        if ($captured->context->context === Context::CONTEXT_INLINE) {
+                            #$spool[] = [Splitter::BYTE_PIPE, $captured];
+                            yield from $this->spool($spool, [Context::CONTEXT_ARRAY => Context::CONTEXT_INLINE], [Splitter::BYTE_ARRAY_START => Splitter::BYTE_INLINE]);
                             yield Splitter::BYTE_PIPE => $captured;
-                            #$captured->lastYield = $captured->index;
+                        } elseif ($captured->context->context === Context::CONTEXT_ARRAY) {
+                            #$spool[] = [Splitter::BYTE_PIPE, $captured];
+                            $this->position->switch($this->contexts->inline);
+                            yield from $this->spool($spool, [Context::CONTEXT_ARRAY => Context::CONTEXT_INLINE], [Splitter::BYTE_ARRAY_START => Splitter::BYTE_INLINE]);
+                            yield Splitter::BYTE_PIPE => $captured;
                         } else {
                             yield $token => $captured;
-                            #$captured->lastYield = $captured->index;
                             $this->position->leave();
                             if ($this->position->context->context === Context::CONTEXT_TAG) {
                                 // We remain inside ViewHelper arguments - leave one additional level of the stack.
@@ -227,76 +221,123 @@ class Sequencer
                     // If it does not match the opening quote we continue scanning as if the quote a normal character.
                     case Splitter::BYTE_QUOTE_DOUBLE:
                     case Splitter::BYTE_QUOTE_SINGLE:
+                        /*
+                        $last = end($spool);
+                        if ($last !== false) {
+                            $lastByte = ($last[0] ?? 0);
+                            if ($lastByte === Splitter::BYTE_SEPARATOR_COLON || $lastByte === Splitter::BYTE_INLINE || $lastByte === Splitter::BYTE_SEPARATOR_COMMA) {
+                                #$spool[] = [$token, $captured];
+                                yield from $this->spool($spool, [Context::CONTEXT_INLINE => Context::CONTEXT_ARRAY], [Splitter::BYTE_INLINE => Splitter::BYTE_ARRAY_START]);
+                                #$this->position->switch($this->contexts->array);
+                            } else {
+                                $spool[] = [$token, $captured];
+                                yield from $this->spool($spool);
+                                #$this->position->switch($this->contexts->array);
+                            }
+                        }
+                        */
+
+                        yield from $this->spool($spool, [Context::CONTEXT_INLINE => Context::CONTEXT_ARRAY], [Splitter::BYTE_INLINE => Splitter::BYTE_ARRAY_START]);
                         if ($this->position->context->context !== Context::CONTEXT_QUOTED) {
                             yield $token => $captured;
-                            #$captured->lastYield = $captured->index;
                             $this->position->enter($this->contexts->quoted, $token);
                         } elseif ($this->position->byteMatchesStartingByteOfTopmostStackElement($token)) {
                             yield $token => $captured;
-                            #$captured->lastYield = $captured->index;
                             $this->position->leave();
                         }
                         break;
 
-                    # BACKSLASH CASE
+                    # BACKSLASH AND LEGACY PASS MINUS PREFIX CASES
 
                     // Case for handling a backslash character, which only has any meaning when inside quoted context.
                     // If the context is right and the next character is not also a backslash, the function is to skip
                     // the next byte (which would be a quote because we already filtered out sub-inline syntax above)
                     // and continue with the same bit mask and context.
                     case Splitter::BYTE_BACKSLASH:
-                        #var_dump($this->position->context->context);
-                        #var_dump(chr($this->source->bytes[$this->position->index + 1]));
-                        #if ($this->position->context->context === Context::CONTEXT_QUOTED && (($this->source->bytes[$this->position->index + 1] ?? null) !== Splitter::BYTE_BACKSLASH)) {
-                            #++$this->position->index;
-                            #++$this->position->index;
-                            #throw new \RuntimeException('foob');
-                            #continue;
-                        #}
+                    case Splitter::BYTE_MINUS:
                         break;
 
                     # TAG CASE - handling of tags. BYTE_MINUS is added here since it only has relevance for the legacy
                     # inline passing operator that is handled by BYTE_TAG_END. When legacy pass support is dropped this
                     # case and the check inside BYTE_TAG_END may be removed.
-                    case Splitter::BYTE_MINUS: // Allowed for legacy inline pass. Is NOT yielded!
-                        break;
 
+                    case Splitter::BYTE_ARRAY_END:
                     case Splitter::BYTE_PARENTHESIS_END:
+                        yield from $this->spool($spool);
                         yield $token => $captured;
-                        #$captured->lastYield = $captured->index;
-                        if ($this->position->context->context !== Context::CONTEXT_INLINE) {
-                            $this->position->leave();
-                        }
+                        $this->position->leave();
                         break;
 
-                    // Whitespace: has meaning if in tag mode, in which case it switches to "arguments" context. In other
-                    // cases (e.g. inside array) it may serve as separators but will not switch the context.
+                    // Whitespace: has meaning if in tag and inline mode. In tag mode it indicates the beginning of
+                    // an arguments list - in inline syntax it is used to determine if array syntax was used, or if a
+                    // "pass" operator has whitespace around it.
                     case Splitter::BYTE_WHITESPACE_SPACE:
                     case Splitter::BYTE_WHITESPACE_TAB:
                     case Splitter::BYTE_WHITESPACE_RETURN:
                     case Splitter::BYTE_WHITESPACE_EOL:
-                        yield $token => $captured;
-                        #$captured->lastYield = $captured->index;
-                        if ($this->position->context->context === Context::CONTEXT_TAG) {
-                            $this->position->enter($this->contexts->array);
+                        if ($this->position->context->context === Context::CONTEXT_INLINE || $this->position->context->context === Context::CONTEXT_ARRAY) {
+                            $spool[] = [$token, $captured];
+                            #$this->position->switch($this->contexts->array);
+                            /*
+                            $last = end($spool);
+                            if ($last !== false) {
+                                $lastByte = ($last[0] ?? 0);
+                                $spool[] = [$token, $captured];
+                                if ($lastByte === Splitter::BYTE_SEPARATOR_COLON) {
+                                    $this->position->switch($this->contexts->array);
+                                } else {
+                                    $this->position->switch($this->contexts->inline);
+                                }
+                            } else {
+                                yield from $this->spool($spool);
+                                yield $token => $captured;
+                            }
+                            */
+                        } elseif ($this->position->context->context === Context::CONTEXT_TAG) {
+                            yield $token => $captured;
+                            $this->position->enter($this->contexts->attributes);
+                        }
+                        break;
+
+                    case Splitter::BYTE_SEPARATOR_COLON:
+                        if ($this->position->context->context === Context::CONTEXT_INLINE) {
+                            if (is_numeric($captured->captured)) {
+                                $this->position->switch($this->contexts->array);
+                            }
+                            $spool[] = [$token, $captured];
+                        } elseif ($this->position->context->context === Context::CONTEXT_ARRAY) {
+                            $spool[] = [$token, $captured];
+                        } else {
+                            yield $token => $captured;
                         }
                         break;
 
                     case Splitter::BYTE_SEPARATOR_COMMA:
-                    case Splitter::BYTE_SEPARATOR_COLON:
-                        yield $token => $captured;
-                        #$captured->lastYield = $captured->index;
+                        $this->position->switch($this->contexts->array);
+                        $spool[] = [$token, $captured];
                         break;
 
                     case Splitter::BYTE_SEPARATOR_EQUALS:
+                        $spool[] = [$token, $captured];
+                        break;
+
                     case Splitter::BYTE_PIPE:
+                        $this->position->switch($this->contexts->inline);
+                        yield from $this->spool($spool, [Context::CONTEXT_ARRAY => Context::CONTEXT_INLINE], [Splitter::BYTE_ARRAY_START => Splitter::BYTE_INLINE]);
                         yield $token => $captured;
-                        #$captured->lastYield = $captured->index;
                         break;
 
                     case Splitter::BYTE_PARENTHESIS_START:
+                        $this->position->switch($this->contexts->inline);
+                        yield from $this->spool($spool, [Context::CONTEXT_ARRAY => Context::CONTEXT_INLINE], [Splitter::BYTE_ARRAY_START => Splitter::BYTE_INLINE]);
+                        #yield from $this->spool($spool);
                         yield $token => $captured;
-                        #$captured->lastYield = $captured->index;
+                        $this->position->enter($this->contexts->array);
+                        break;
+
+                    case Splitter::BYTE_ARRAY_START:
+                        yield from $this->spool($spool);
+                        yield $token => $captured;
                         $this->position->enter($this->contexts->array);
                         break;
 
@@ -306,6 +347,8 @@ class Sequencer
 
                 }
             }
+
+            yield from $this->spool($spool);
 
             if (!empty($this->position->stack)) {
                 throw new SequencingException('The stack still contains ' . count($this->position->stack) . ' element(s)');
@@ -322,5 +365,14 @@ class Sequencer
                 $exception->getCode()
             );
         }
+    }
+
+    protected function spool(iterable &$spool, array $contextMap = [], array $byteMap = []): \Generator
+    {
+        foreach ($spool as $set) {
+            $set[1]->context->context = $contextMap[$set[1]->context->context] ?? $set[1]->context->context;
+            yield ($byteMap[$set[0]] ?? $set[0]) => $set[1];
+        }
+        $spool = [];
     }
 }

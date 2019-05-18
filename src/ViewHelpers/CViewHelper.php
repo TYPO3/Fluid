@@ -13,6 +13,8 @@ class CViewHelper extends AbstractViewHelper
 {
     protected $escapeChildren = false;
 
+    protected $escapeOutput = false;
+
     public function initializeArguments()
     {
         $this->registerArgument('s', 'string', 'A string argument');
@@ -21,12 +23,25 @@ class CViewHelper extends AbstractViewHelper
         $this->registerArgument('b', 'bool', 'A boolean argument');
         $this->registerArgument('a', 'array', 'An array argument');
         $this->registerArgument('dt', \DateTime::class, 'A DateTime object argument');
+        $this->registerArgument('return', 'bool', 'Return the arguments array, do not encode');
     }
 
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
-        return 'String: ' . $arguments['s'] . ', Int: ' . $arguments['i'] . ', Float: ' . $arguments['f'] .
-            ', Bool: ' . var_export($arguments['b'], true) . ', Array: ' . var_export($arguments['a'], true) .
-            ', DateTime: ' . ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : 'null');
+        $data = [
+            'string' => $arguments['s'],
+            'int' => $arguments['i'],
+            'float' => $arguments['f'],
+            'bool' => $arguments['b'],
+            'array' => $arguments['a'],
+            'datetime' => ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : null)
+        ];
+        if ($arguments['return']) {
+            return $data;
+        }
+        return json_encode($data, JSON_PRETTY_PRINT);
+        /*'String: ' . var_export($arguments['s'], true) . ', Int: ' . var_export($arguments['i'], true) . ', Float: ' . var_export($arguments['f'], true) .
+            ', Bool: ' . var_export($arguments['b'], true) . ', Array: ' . json_encode($arguments['a']) .
+            ', DateTime: ' . ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : 'null');*/
     }
 }

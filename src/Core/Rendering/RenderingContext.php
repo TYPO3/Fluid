@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
+use TYPO3Fluid\Fluid\Core\NewParser\SequencedTemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
@@ -129,7 +130,7 @@ class RenderingContext implements RenderingContextInterface
     public function __construct(ViewInterface $view)
     {
         $this->view = $view;
-        $this->setTemplateParser(new TemplateParser());
+        $this->setTemplateParser(new SequencedTemplateParser());
         $this->setTemplateCompiler(new TemplateCompiler());
         $this->setTemplatePaths(new TemplatePaths());
         $this->setTemplateProcessors(

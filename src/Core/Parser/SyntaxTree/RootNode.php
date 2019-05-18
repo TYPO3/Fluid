@@ -33,9 +33,10 @@ class RootNode extends AbstractNode
      * - The one child node if there is only a single child node not of type TextNode or NumericNode
      * - Null if there are no child nodes at all.
      *
+     * @param bool $extractNode If TRUE, will extract the value of a single node if the node type contains a scalar value
      * @return RootNode|string|int|float|null
      */
-    public function flatten()
+    public function flatten(bool $extractNode = true)
     {
         if (empty($this->childNodes)) {
             return null;
@@ -54,7 +55,7 @@ class RootNode extends AbstractNode
                 return $this->childNodes[0];
             }
         }
-        if (!$containsNonTextNonNumericNodes) {
+        if ($extractNode && !$containsNonTextNonNumericNodes) {
             return array_reduce($this->childNodes, function($initial, NodeInterface $node) {
                 if ($node instanceof TextNode) {
                     return $initial . $node->getText();
