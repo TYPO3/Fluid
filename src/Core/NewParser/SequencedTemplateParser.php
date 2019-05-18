@@ -448,6 +448,7 @@ class SequencedTemplateParser extends TemplateParser
     {
         $startingIndex = $this->position->index;
 
+        $text = '{';
         $node = null;
         $key = null;
         $namespace = null;
@@ -461,6 +462,7 @@ class SequencedTemplateParser extends TemplateParser
         $contextToRestore = $this->switch($this->contexts->inline);
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
+            $text .= $position->captured . chr($symbol);
             switch ($symbol) {
                 case Splitter::BYTE_MINUS:
                     break;
@@ -509,34 +511,32 @@ class SequencedTemplateParser extends TemplateParser
                         $this->switch($contextToRestore);
                         return new ArrayNode($array);
                     } elseif (!$callDetected) {
-                        $entirePosition = $position->pad($position->index - ($startingIndex + 1), 1);
-                        $section = $this->pack($entirePosition);
+
                         foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                             $matchedVariables = [];
-                            preg_match_all($expressionNodeTypeClassName::$detectionExpression, $section, $matchedVariables, PREG_SET_ORDER);
+                            preg_match_all($expressionNodeTypeClassName::$detectionExpression, $text, $matchedVariables, PREG_SET_ORDER);
                             foreach ($matchedVariables as $matchedVariableSet) {
                                 $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $this->state);
-                                #try {
+                                try {
                                     // Trigger initial parse-time evaluation to allow the node to manipulate the rendering context.
                                     if ($expressionNode instanceof ParseTimeEvaluatedExpressionNodeInterface) {
                                         $expressionNode->evaluate($this->renderingContext);
                                     }
 
                                     $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $this->state);
-                                    #$sequence->next();
                                     return $expressionNode;
-
-                                #} catch (ExpressionException $error) {
-                                #    $this->textHandler(
-                                #        $state,
-                                #        $this->renderingContext->getErrorHandler()->handleExpressionError($error)
-                                #    );
-                                #}
+                                } catch (ExpressionException $error) {
+                                    return new TextNode($this->renderingContext->getErrorHandler()->handleExpressionError($error));
+                                }
                             }
 
                         }
-                        $node = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
-                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+                        if ($position->captured === null) {
+                            $node = new TextNode($text);
+                        } else {
+                            $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1), $position);
+                            $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+                        }
                     } else {
                         $potentialAccessor = $potentialAccessor ?? $position->captured;
                         if ($potentialAccessor !== null) {
@@ -565,7 +565,6 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     }
 
-                    #$this->position->leave();
                     $this->switch($contextToRestore);
                     return $node;
 
