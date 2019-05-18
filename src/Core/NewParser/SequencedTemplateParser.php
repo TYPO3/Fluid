@@ -234,14 +234,16 @@ class SequencedTemplateParser extends TemplateParser
         $namespace = null;
         $method = null;
         $bytes = &$this->source->bytes;
+        $source = &$this->source->source;
         $node = new RootNode();
 
-        $this->position->enter($this->contexts->tag);
+        $contextToRestore = $this->switch($this->contexts->tag);
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
+            $text .= $position->captured . chr($symbol);
             switch ($symbol) {
                 case Splitter::BYTE_INLINE:
-                    $text .= $position->captured;
+                    $text = substr($text, 0, -1); // Remove the captured inline start.
                     $node->addChildNode(new TextNode($text));
                     $node->addChildNode($this->sequenceInlineNodes($sequence));
                     $text = '';
@@ -251,25 +253,22 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_QUOTE_DOUBLE:
                 case Splitter::BYTE_QUOTE_SINGLE:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $text .= $position->captured . chr($symbol);
                     break;
 
                 case Splitter::BYTE_TAG_CLOSE:
                     $closeBytePosition = $position->index;
-                    $text .= $position->captured . '/';
                     break;
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                     if (!isset($namespace)) {
                         $namespace = $position->captured;
                     }
-                    $text .= ':';
                     break;
 
                 case Splitter::BYTE_TAG_END:
-                    $this->position->leave();
-                    if (!isset($namespace)) {
-                        $text .= $position->captured . '>';
+                    $this->switch($contextToRestore);
+
+                    if (!isset($namespace) || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
                         $node->addChildNode(new TextNode($text));
                         return $node;
                     }
@@ -278,7 +277,8 @@ class SequencedTemplateParser extends TemplateParser
                     if ($closeBytePosition > 0 && $bytes[$closeBytePosition - 1] === Splitter::BYTE_TAG) {
                         $closesNode = $this->state->popNodeFromStack();
                         if ($closesNode instanceof ViewHelperNode && $closesNode->getNamespace() === $namespace && $closesNode->getIdentifier() === $method) {
-                            ($closesNode->getUninitializedViewHelper())::postParseEvent($closesNode, $closesNode->getArguments(), $this->state->getVariableContainer());
+                            $viewHelper = $closesNode->getUninitializedViewHelper();
+                            $viewHelper::postParseEvent($closesNode, $closesNode->getArguments(), $this->state->getVariableContainer());
                             $this->callInterceptor($closesNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
                             return $closesNode;
                         } else {
@@ -312,6 +312,7 @@ class SequencedTemplateParser extends TemplateParser
                         $this->state->pushNodeToStack($viewHelperNode);
                         return null;
                     }
+
                     return $viewHelperNode;
 
                 case Splitter::BYTE_WHITESPACE_TAB:
@@ -332,10 +333,9 @@ class SequencedTemplateParser extends TemplateParser
                         // We continue in this same loop because it still matches the potential symbols being yielded.
                         // Most importantly: this new reduced context will NOT match a colon which is the trigger symbol
                         // for a ViewHelper tag.
-                        $text .= $position->captured . chr($symbol);
                         unset($namespace, $method);
                     }
-                    $this->position->switch($this->contexts->dead);
+                    $this->switch($this->contexts->dead);
                     break;
 
                 default:
@@ -348,7 +348,7 @@ class SequencedTemplateParser extends TemplateParser
             }
         }
 
-        $this->position->leave();
+        $this->switch($contextToRestore);
         return new TextNode($text);
     }
 
@@ -360,7 +360,8 @@ class SequencedTemplateParser extends TemplateParser
     {
         $array = [];
 
-        $this->position->switch($this->contexts->attributes);
+        #$this->position->switch($this->contexts->attributes);
+        $contextToRestore = $this->switch($this->contexts->attributes);
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
             switch ($symbol) {
@@ -415,13 +416,12 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_TAG_CLOSE:
                     if (isset($key)) {
                         // We now have enough to assign the array value and clear our key and value store variables.
-                        //$captured = $this->pack($position, Splitter::MASK_WHITESPACE | Splitter::MASK_SEPARATORS, Splitter::MASK_BACKSLASH);
                         $captured = $position->captured;
                         if ($captured !== null) {
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured, $position);
                         }
                     }
-                    #$this->position->leave();
+                    $this->switch($contextToRestore);
                     return new ArrayNode($array);
 
                 default:
@@ -458,10 +458,9 @@ class SequencedTemplateParser extends TemplateParser
 
         $array = [];
 
-        $this->position->enter($this->contexts->inline);
+        $contextToRestore = $this->switch($this->contexts->inline);
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
-            $childNodeToAdd = $node;
             switch ($symbol) {
                 case Splitter::BYTE_MINUS:
                     break;
@@ -507,6 +506,7 @@ class SequencedTemplateParser extends TemplateParser
                             }
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
                         }
+                        $this->switch($contextToRestore);
                         return new ArrayNode($array);
                     } elseif (!$callDetected) {
                         $entirePosition = $position->pad($position->index - ($startingIndex + 1), 1);
@@ -535,15 +535,9 @@ class SequencedTemplateParser extends TemplateParser
                             }
 
                         }
-                        //$node = new ObjectAccessorNode($this->pack($position));
-                        $node = new ObjectAccessorNode($position->captured);
-                        $this->callInterceptor(
-                            $node,
-                            InterceptorInterface::INTERCEPT_OBJECTACCESSOR,
-                            $this->state
-                        );
+                        $node = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
+                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
                     } else {
-                        //$potentialAccessor = $potentialAccessor ?? $this->pack($position);
                         $potentialAccessor = $potentialAccessor ?? $position->captured;
                         if ($potentialAccessor !== null) {
                             if ($node !== null) {
@@ -553,15 +547,16 @@ class SequencedTemplateParser extends TemplateParser
                                     $position
                                 );
                             }
-                            $node = new ObjectAccessorNode($potentialAccessor);
-                            $this->callInterceptor(
-                                $node,
-                                InterceptorInterface::INTERCEPT_OBJECTACCESSOR,
-                                $this->state
-                            );
+                            $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
+                            $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
                         } elseif ($node instanceof ViewHelperNode) {
-                            ($node->getUninitializedViewHelper())::postParseEvent($node, $arguments, $this->state->getVariableContainer());
+                            $viewHelper = $node->getUninitializedViewHelper();
+                            $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
+
+                            $escapingEnabledBackup = $this->escapingEnabled;
+                            $this->escapingEnabled = (bool)$viewHelper->isOutputEscapingEnabled();
                             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
+                            $this->escapingEnabled = $escapingEnabledBackup;
                         } else {
                             #echo $this->source->source;
                             #var_dump($captured);
@@ -570,23 +565,18 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     }
 
-                    $this->position->leave();
+                    #$this->position->leave();
+                    $this->switch($contextToRestore);
                     return $node;
 
                 case Splitter::BYTE_TAG_END:
                 case Splitter::BYTE_PIPE:
                     // If there is an accessor on the left side of the pipe we make the $node into an ObjectAccessorNode,
                     // the next iteration may then call a ViewHelper (OK) or attempt to pass to another object access (FAIL)
-                    //$potentialAccessor = $potentialAccessor ?? $this->pack($position, Splitter::MASK_WHITESPACE);
                     $hasPass = true;
                     $potentialAccessor = $potentialAccessor ?? $position->captured;
                     if (!empty($potentialAccessor)) {
-                        $node = new ObjectAccessorNode($potentialAccessor);
-                        $this->callInterceptor(
-                            $node,
-                            InterceptorInterface::INTERCEPT_OBJECTACCESSOR,
-                            $this->state
-                        );
+                        $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor, $position);
                     }
                     unset($namespace, $method, $potentialAccessor, $key);
                     break;
@@ -596,11 +586,20 @@ class SequencedTemplateParser extends TemplateParser
                     $method = $position->captured;
                     $isArray = false;
 
+                    $childNodeToAdd = $node;
                     $arguments = $this->sequenceArrayNode($sequence)->getInternalArray();
                     $node = new ViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
-                    ($node->getUninitializedViewHelper())::postParseEvent($node, $arguments, $this->state->getVariableContainer());
-                    // The node is not intercepted yet - only the last node needs to be intercepted.
+                    $viewHelper = $node->getUninitializedViewHelper();
+                    $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
                     if ($childNodeToAdd) {
+                        $escapingEnabledBackup = $this->escapingEnabled;
+                        $this->escapingEnabled = (bool)$viewHelper->isChildrenEscapingEnabled();
+                        if ($childNodeToAdd instanceof ObjectAccessorNode) {
+                            $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+                        } elseif ($childNodeToAdd instanceof ExpressionNodeInterface) {
+                            $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_EXPRESSION, $this->state);
+                        }
+                        $this->escapingEnabled = $escapingEnabledBackup;
                         $node->addChildNode($childNodeToAdd);
                     }
                     unset($potentialAccessor);
@@ -644,7 +643,7 @@ class SequencedTemplateParser extends TemplateParser
         $escapingEnabledBackup = $this->escapingEnabled;
         $this->escapingEnabled = false;
 
-        $this->position->enter($this->contexts->array);
+        $contextToRestore = $this->switch($this->contexts->array);
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
             switch ($symbol) {
@@ -665,7 +664,6 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    //$key = $this->pack($position, Splitter::MASK_WHITESPACE | Splitter::MASK_SEPARATORS);
                     $key = $key ?? trim($position->captured);
                     break;
 
@@ -683,7 +681,6 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_SEPARATOR_COMMA:
                     // Comma separator: if neither key nor value has been collected, the result is an ObjectAccessorNode
                     // which takes the value of the variable that has the same name as the key.
-                    //$captured = $this->pack($position); // , 0, Splitter::MASK_BACKSLASH
                     $captured = $position->captured;
                     $ignoreWhitespaceUntilValueFound = true;
                     if ($captured !== null) {
@@ -701,7 +698,6 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
-                    //$captured = $this->pack($position, Splitter::MASK_WHITESPACE | Splitter::MASK_SEPARATORS);
                     $captured = $position->captured;
                     if (isset($key)) {
                         if ($ignoreWhitespaceUntilValueFound) {
@@ -725,14 +721,12 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_PARENTHESIS_END:
                     if (isset($key)) {
                         // We now have enough to assign the array value and clear our key and value store variables.
-                        #$captured = $this->pack($position, Splitter::MASK_WHITESPACE | Splitter::MASK_SEPARATORS, Splitter::MASK_BACKSLASH);
-                        #$captured = $position->captured;
                         if ($position->captured !== null) {
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
                         }
                     }
+                    $this->switch($contextToRestore);
                     $this->escapingEnabled = $escapingEnabledBackup;
-                    $this->position->leave();
                     return new ArrayNode($array);
 
                 default:
@@ -767,8 +761,7 @@ class SequencedTemplateParser extends TemplateParser
         if ($accessor === null) {
             $this->throwErrorAtPosition('Attempt to create an empty object accessor', 1557748262, $position);
         }
-        $node = new ObjectAccessorNode($accessor);
-        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+        $node = new ObjectAccessorNode(trim($accessor));
         return $node;
     }
 
@@ -792,7 +785,7 @@ class SequencedTemplateParser extends TemplateParser
     protected function sequenceQuotedNode(\Iterator $sequence): RootNode
     {
         $startingByte = $this->source->bytes[$this->position->index];
-        $this->position->enter($this->contexts->quoted);
+        $contextToRestore = $this->switch($this->contexts->quoted);
         $node = new RootNode();
         $sequence->next();
         foreach ($sequence as $symbol => $position) {
@@ -828,7 +821,7 @@ class SequencedTemplateParser extends TemplateParser
                         $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
                         $node->addChildNode($childNode);
                     }
-                    $this->position->leave();
+                    $this->switch($contextToRestore);
                     return $node;
 
                 default:
@@ -841,5 +834,12 @@ class SequencedTemplateParser extends TemplateParser
             }
         }
         $this->throwErrorAtPosition('Unterminated quoted expression', 1557700793, $position);
+    }
+
+    private function switch(Context $context): Context
+    {
+        $previous = $this->position->context;
+        $this->position->context = $context;
+        return $previous;
     }
 }

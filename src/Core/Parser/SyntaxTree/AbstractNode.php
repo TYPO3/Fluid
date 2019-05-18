@@ -69,6 +69,9 @@ abstract class AbstractNode implements NodeInterface
         if (is_object($value) && !method_exists($value, '__toString')) {
             throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
         }
+        if (is_array($value)) {
+            $value = json_encode($value);
+        }
         $output = (string) $value;
         return $output;
     }

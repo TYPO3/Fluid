@@ -158,7 +158,7 @@ class Splitter
                     yield $byte => $this->position->copy($captured);
                     $this->position->lastYield = $index;
                     if ($this->debugger) {
-                        $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($byte) . ' ' . $this->position->getContextName(), 31);
+                        $this->debugger->writeLogLine(chr($byte) . ' ' . $this->position->getContextName(), 31);
                     }
                     $primaryMask = $this->position->context->primaryMask;
                     $secondaryMask = $this->position->context->secondaryMask;
@@ -168,7 +168,7 @@ class Splitter
                     yield $byte => $this->position->copy($captured);
                     $this->position->lastYield = $index;
                     if ($this->debugger) {
-                        $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($byte) . ' ' . $this->position->getContextName(), 35);
+                        $this->debugger->writeLogLine(chr($byte) . ' ' . $this->position->getContextName(), 35);
                     }
                     $primaryMask = $this->position->context->primaryMask;
                     $secondaryMask = $this->position->context->secondaryMask;
@@ -176,29 +176,18 @@ class Splitter
                     continue;
                 } else {
                     if ($this->debugger) {
-                        $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($byte) . ' ' . $this->position->getContextName(), 36);
+                        $this->debugger->writeLogLine(chr($byte) . ' ' . $this->position->getContextName(), 36);
                     }
                 }
 
             } else {
                 if ($this->debugger) {
-                    $this->debugger->writeLogLine(str_repeat(' ', count($this->position->stack)) . chr($bytes[$index]) . ' ' . $this->position->getContextName(), 37);
+                    $this->debugger->writeLogLine(chr($bytes[$index]) . ' ' . $this->position->getContextName(), 37);
                 }
             }
 
             // Append captured bytes from source, must happen after the conditions above so we avoid appending tokens.
             $captured .= $source{$index - 1};
-        }
-
-        if (count($this->position->stack) > 1) {
-            throw new \RuntimeException(
-                sprintf(
-                    'Unterminated expression started at index %d - context stack still contains %d elements: %s',
-                    $this->position->lastYield,
-                    count($this->position->stack),
-                    var_export($this->position->stack, true)
-                )
-            );
         }
 
         if ($this->position->lastYield < $this->source->length) {
