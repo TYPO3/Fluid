@@ -42,19 +42,19 @@ class Contexts
         $this->inline = new Context(Context::CONTEXT_INLINE, "(->|{}:,=|\\\t\n\r\0'\" ");
 
         // Tag: entered into when a detected tag has a namespace operator in tag name
-        $this->tag = new Context(Context::CONTEXT_TAG, "/>:{\t\n\r\0 ");
+        $this->tag = new Context(Context::CONTEXT_TAG, ">:{ /\t\n\r\0");
 
         // Parenthesis context: aware of separators, key/value assignments, the end of a parenthesis and quotation marks. Is used for both
         // parenthesis arguments for inline syntax and tag attribute arguments for tag syntax.
-        $this->array = new Context(Context::CONTEXT_ARRAY, '):,="\'[]{}');
+        $this->array = new Context(Context::CONTEXT_ARRAY, ':,]}="\'[{)');
 
         // Quoted: entered into when a quote mark (single or double) is encountered (in an array which includes in tag arguments)
         $this->quoted = new Context(Context::CONTEXT_QUOTED, '"\'{');
 
         // Attributes: identical to array, except does not ignore whitespace and does not split on array [] characters
-        $this->attributes = new Context(Context::CONTEXT_ATTRIBUTES, "\"'{}/>:,=\t\r\n");
+        $this->attributes = new Context(Context::CONTEXT_ATTRIBUTES, " >:{\"'/,=\t\r\n}");
 
-        // Attributes: identical to array, except does not ignore whitespace and does not split on array [] characters
+        // Dead tag: continues indexing until the tag ends or an inline expression is encountered
         $this->dead = new Context(Context::CONTEXT_DEAD, '>{');
     }
 }
