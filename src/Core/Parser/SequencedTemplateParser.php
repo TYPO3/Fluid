@@ -53,9 +53,6 @@ class SequencedTemplateParser extends TemplateParser
     /** @var Contexts */
     private $contexts;
 
-    /** @var Position */
-    private $position;
-
     /** @var Source */
     private $source;
 
@@ -65,9 +62,7 @@ class SequencedTemplateParser extends TemplateParser
 
         $this->source = new Source($templateString);
         $this->contexts = new Contexts();
-        $this->position = new Position($this->contexts->root);
-        $this->splitter = new Splitter($this->position, $this->source);
-        $this->splitter->debugger = $this->debugger;
+        $this->splitter = new Splitter($this->source, $this->contexts);
 
         $this->state = $this->getParsingState();
         $sequence = $this->splitter->parse();
@@ -165,10 +160,11 @@ class SequencedTemplateParser extends TemplateParser
         return $string;
     }
 
-    protected function throwErrorAtPosition(string $message, int $code, Position $position)
+    protected function throwErrorAtPosition(string $message, int $code)
     {
-        $character = (string) addslashes($this->source->source{$position->index});
-        $ascii = (string) $this->source->bytes[$position->index];
+        $character = (string) addslashes($this->source->source{$this->splitter->index});
+        $position = new Position($this->splitter->context, 0, $this->splitter->index);
+        $ascii = (string) $this->source->bytes[$this->splitter->index];
         $message .=  ' ASCII: ' . $ascii . ': ' . $this->extractSourceDumpOfLineAtPosition($position);
         $error = new SequencingException($message, $code);
         $error->setPosition($position);
@@ -176,7 +172,7 @@ class SequencedTemplateParser extends TemplateParser
     }
 
     /**
-     * @param \Iterator|Position[] $sequence
+     * @param \Iterator|?string[] $sequence
      * @return NodeInterface|null
      */
     protected function sequenceRootNodesAsChildrenOfTopStack(\Iterator $sequence): NodeInterface
@@ -184,39 +180,39 @@ class SequencedTemplateParser extends TemplateParser
         // Please note: repeated calls to $this->getTopmostNodeFromStack() are indeed intentional. That method may
         // return different nodes at different times depending on what has occurreded in other methods! Only the places
         // where $node is actually extracted is it (by design) safe to do so. DO NOT REFACTOR!
-        foreach ($sequence as $symbol => $position) {
+        foreach ($sequence as $symbol => $captured) {
             switch ($symbol) {
                 case Splitter::BYTE_INLINE:
                     $node = $this->state->getNodeFromStack();
-                    if ($position->captured !== null) {
-                        $node->addChildNode(new TextNode($position->captured));
+                    if ($captured !== null) {
+                        $node->addChildNode(new TextNode($captured));
                     }
                     $node->addChildNode($this->sequenceInlineNodes($sequence));
+                    $this->splitter->switch($this->contexts->root);
                     break;
 
                 case Splitter::BYTE_TAG:
-                    if ($position->captured !== null) {
-                        $this->state->getNodeFromStack()->addChildNode(new TextNode($position->captured));
+                    if ($captured !== null) {
+                        $this->state->getNodeFromStack()->addChildNode(new TextNode($captured));
                     }
 
                     $childNode = $this->sequenceTagNode($sequence);
+                    $this->splitter->switch($this->contexts->root);
                     if ($childNode) {
                         $this->state->getNodeFromStack()->addChildNode($childNode);
                     }
                     break;
 
                 case Splitter::BYTE_NULL:
-                    $content = $position->captured;
-                    if ($position->captured !== null) {
-                        $this->state->getNodeFromStack()->addChildNode(new TextNode($position->captured));
+                    if ($captured !== null) {
+                        $this->state->getNodeFromStack()->addChildNode(new TextNode(substr($captured, 0, -1)));
                     }
                     break;
 
                 default:
                     $this->throwErrorAtPosition(
-                        'Unexpected token in root node iteration: ' . addslashes(chr($symbol)) . ' at index ' . $position->index . ' in context ' . $position->getContextName(),
-                        1557700785,
-                        $position
+                        'Unexpected token in root node iteration: ' . addslashes(chr($symbol)) . ' at index ' . $this->splitter->index . ' in context ' . $this->splitter->context->getContextName(),
+                        1557700785
                     );
                     break;
             }
@@ -226,7 +222,7 @@ class SequencedTemplateParser extends TemplateParser
     }
 
     /**
-     * @param \Iterator|Position[] $sequence
+     * @param \Iterator|?string[] $sequence
      * @return NodeInterface|null
      */
     protected function sequenceTagNode(\Iterator $sequence): ?NodeInterface
@@ -239,79 +235,101 @@ class SequencedTemplateParser extends TemplateParser
         $bytes = &$this->source->bytes;
         $source = &$this->source->source;
         $node = new RootNode();
+        $selfClosing = false;
+        $closing = false;
 
-        $contextToRestore = $this->switch($this->contexts->tag);
+        $interceptionPoint = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
+
+        $this->splitter->switch($this->contexts->tag);
         $sequence->next();
-        foreach ($sequence as $symbol => $position) {
-            $text .= $position->captured . chr($symbol);
+        foreach ($sequence as $symbol => $captured) {
+            $text .= $captured;
             switch ($symbol) {
                 case Splitter::BYTE_INLINE:
-                    $text = substr($text, 0, -1); // Remove the captured inline start.
-                    $node->addChildNode(new TextNode($text));
-                    $node->addChildNode($this->sequenceInlineNodes($sequence));
-                    $text = '';
-                    unset($namespace, $method);
+                    $contextBefore = $this->splitter->context;
+                    $collected = $this->sequenceInlineNodes($sequence);
+                    $this->splitter->switch($contextBefore);
+                    if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
+                        if (!isset($key)) {
+                            /*
+                            $this->throwErrorAtPosition(
+                                'Unexpected beginning of array without a preceding key',
+                                1557754838
+                            );
+                            */
+                            $key = count($array) - 1;
+                        }
+                        $arguments[$key] = $collected;
+                    } else {
+                        $node->addChildNode(new TextNode($text));
+                        $node->addChildNode($collected);
+                        $text = '';
+                    }
+                    break;
+
+                case Splitter::BYTE_SEPARATOR_EQUALS:
+                    $key = $captured;
                     break;
 
                 case Splitter::BYTE_QUOTE_DOUBLE:
                 case Splitter::BYTE_QUOTE_SINGLE:
-                case Splitter::BYTE_SEPARATOR_EQUALS:
-                    break;
-
-                case Splitter::BYTE_TAG_CLOSE:
-                    $closeBytePosition = $position->index;
-                    break;
-
-                case Splitter::BYTE_SEPARATOR_COLON:
-                    if (!isset($namespace)) {
-                        $namespace = $position->captured;
+                    $text .= chr($symbol);
+                    if (!isset($key)) {
+                        $key = $this->sequenceQuotedNode($sequence)->flatten(true);
+                    } else {
+                        $arguments[$key] = $this->sequenceQuotedNode($sequence)->flatten();
+                        unset($key);
                     }
                     break;
 
-                case Splitter::BYTE_TAG_END:
-                    $this->switch($contextToRestore);
+                case Splitter::BYTE_TAG_CLOSE:
+                    $text .= '/';
+                    $closing = true;
+                    $selfClosing = $bytes[$this->splitter->index - 1] !== Splitter::BYTE_TAG;
+                    $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
+                    break;
 
-                    if (!isset($namespace) || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
+                case Splitter::BYTE_SEPARATOR_COLON:
+                    $text .= ':';
+                    $namespace = $namespace ?? $captured;
+                    break;
+
+                case Splitter::BYTE_TAG_END:
+                    $text .= '>';
+                    if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES && $captured !== null) {
+                        if (isset($key)) {
+                            // We now have enough to assign the array value and clear our key and value store variables.
+                            $arguments[$key] = $captured;
+                        } else {
+                            $arguments[$captured] = $captured;
+                        }
+                    } elseif ($this->splitter->context->context === Context::CONTEXT_DEAD || !isset($namespace) || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
                         $node->addChildNode(new TextNode($text));
                         return $node;
                     }
 
-                    $method = $method ?? $position->captured;
-                    if ($closeBytePosition > 0 && $bytes[$closeBytePosition - 1] === Splitter::BYTE_TAG) {
+                    $method = $method ?? $captured;
+                    if ($closing && !$selfClosing) {
+                        // Closing byte was more than two bytes back, meaning the tag is NOT self-closing, but is a
+                        // closing tag for a previously opened+stacked node. Finalize the node now.
                         $closesNode = $this->state->popNodeFromStack();
                         if ($closesNode instanceof ViewHelperNode && $closesNode->getNamespace() === $namespace && $closesNode->getIdentifier() === $method) {
-                            $viewHelper = $closesNode->getUninitializedViewHelper();
-                            $viewHelper::postParseEvent($closesNode, $closesNode->getArguments(), $this->state->getVariableContainer());
-                            $this->callInterceptor($closesNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
-                            return $closesNode;
+                            $arguments = $closesNode->getArguments();
+                            $viewHelperNode = $closesNode;
                         } else {
                             $this->throwErrorAtPosition(
-                                'Mismatched closing tag. Expecting: ' . $identifier . '. Found: ' . $closesNode->getNamespace() . ':' . $closesNode->getIdentifier(),
-                                1557700789,
-                                $position
+                                'Mismatched closing tag. Expecting: ' . $namespace . ':' . $method . '. Found: ' . $closesNode->getNamespace() . ':' . $closesNode->getIdentifier(),
+                                1557700789
                             );
                         }
-                    }
-
-                    if ($bytes[$this->position->index - 1] === Splitter::BYTE_TAG_CLOSE) {
-                        // The symbol that caused sequencing of the arguments array to end, was a tag close. Set the
-                        // position of the tag closing character to the current byte position. The originally stored
-                        // close-byte position will be zero because the closing character came *after* the namespace
-                        // and method (e.g. is a self-closing tag).
-                        // We must also advance the iterator because the next character will be a tag end which is not
-                        // necessary to include.
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
-                        $return = true;
                     } else {
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
-                        $return = false;
+                        $viewHelperNode = new ViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
+                        ($viewHelperNode->getUninitializedViewHelper())::postParseEvent($viewHelperNode, $arguments, $this->state->getVariableContainer());
                     }
 
-                    $viewHelperNode = new ViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
-                    ($viewHelperNode->getUninitializedViewHelper())::postParseEvent($viewHelperNode, $arguments, $this->state->getVariableContainer());
                     $this->callInterceptor($viewHelperNode, $interceptionPoint, $this->state);
 
-                    if (!$return) {
+                    if (!$closing) {
                         $this->state->pushNodeToStack($viewHelperNode);
                         return null;
                     }
@@ -322,137 +340,56 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
-                    if (isset($namespace)) {
-                        $method = $method ?? $position->captured;
-
-                        // A whitespace character, in tag context, means the beginning of an array sequence (which may
-                        // or may not contain any items; the next symbol may be a tag end or tag close). We sequence the
-                        // arguments array and create a ViewHelper node.
-                        $arguments = $this->sequenceTagAttributes($sequence)->getInternalArray();
+                    if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
+                        //$captured = $key ?? $captured;
+                        if (isset($key)) {
+                            // We now have enough to assign the array value and clear our key and value store variables.
+                            if ($captured !== null) {
+                                $arguments[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
+                                unset($key);
+                            }
+                        } elseif ($captured !== null) {
+                            $key = $captured;
+                        }
                     } else {
+                        $text .= chr($symbol);
+                        if (isset($namespace)) {
+                            $method = $captured;
+
+                            // A whitespace character, in tag context, means the beginning of an array sequence (which may
+                            // or may not contain any items; the next symbol may be a tag end or tag close). We sequence the
+                            // arguments array and create a ViewHelper node.
+                            $this->splitter->switch($this->contexts->attributes);
+                            break;
+                        }
+
                         // A whitespace before a colon means the tag is not a namespaced tag. We will ignore everything
                         // inside this tag, except for inline syntax, until the tag ends. For this we use a special,
                         // limited variant of the root context where instead of scanning for "<" we scan for ">".
                         // We continue in this same loop because it still matches the potential symbols being yielded.
                         // Most importantly: this new reduced context will NOT match a colon which is the trigger symbol
                         // for a ViewHelper tag.
-                        unset($namespace, $method);
+                        //unset($namespace, $method);
+                        $this->splitter->switch($this->contexts->dead);
                     }
-                    $this->switch($this->contexts->dead);
                     break;
 
                 default:
-                    $this->throwErrorAtPosition(
-                        'Unexpected token in tag sequencing: ' . addslashes(chr($symbol)),
-                        1557700786,
-                        $position
-                    );
+                    $this->throwErrorAtPosition('Unexpected token in tag sequencing', 1557700786);
                     break;
             }
         }
 
-        $this->switch($contextToRestore);
         return new TextNode($text);
     }
 
     /**
-     * @param \Iterator|Position[] $sequence
-     * @return ArrayNode
-     */
-    protected function sequenceTagAttributes(\Iterator $sequence): ArrayNode
-    {
-        $array = [];
-
-        $contextToRestore = $this->switch($this->contexts->attributes);
-        $sequence->next();
-        foreach ($sequence as $symbol => $position) {
-            switch ($symbol) {
-                case Splitter::BYTE_INLINE:
-                    if (!isset($key)) {
-                        /*
-                        $this->throwErrorAtPosition(
-                            'Unexpected beginning of array without a preceding key',
-                            1557754838,
-                            $position
-                        );
-                        */
-                        $key = count($array) - 1;
-                    }
-                    $array[$key] = $this->sequenceInlineNodes($sequence);
-                    break;
-
-                //case Splitter::BYTE_SEPARATOR_COLON:
-                case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $key = trim($position->captured);
-                    break;
-
-                case Splitter::BYTE_QUOTE_SINGLE:
-                case Splitter::BYTE_QUOTE_DOUBLE:
-                    if (!isset($key)) {
-                        $key = $this->sequenceQuotedNode($sequence)->flatten(true);
-                    } else {
-                        $array[$key] = $this->sequenceQuotedNode($sequence)->flatten();
-                        unset($key);
-                    }
-                    break;
-
-                case Splitter::BYTE_WHITESPACE_TAB:
-                case Splitter::BYTE_WHITESPACE_RETURN:
-                case Splitter::BYTE_WHITESPACE_EOL:
-                case Splitter::BYTE_WHITESPACE_SPACE:
-                    $captured = $key ?? $position->captured;
-                    if (isset($key)) {
-                        // We now have enough to assign the array value and clear our key and value store variables.
-                        if ($captured !== null) {
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured, $position);
-                            unset($key);
-                        }
-                    } elseif ($captured !== null) {
-                        $key = $captured;
-                    }
-                    break;
-
-                case Splitter::BYTE_TAG_END:
-                    // Rewind exactly one character so the method that called this method will see the tag close.
-                    --$this->position->index;
-                case Splitter::BYTE_TAG_CLOSE:
-                    if (isset($key)) {
-                        // We now have enough to assign the array value and clear our key and value store variables.
-                        $captured = $position->captured;
-                        if ($captured !== null) {
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured, $position);
-                        }
-                    }
-                    $this->switch($contextToRestore);
-                    return new ArrayNode($array);
-
-                default:
-                    $this->throwErrorAtPosition(
-                        'Unexpected token in attributes context: ' . addslashes(chr($symbol)),
-                        1557700791,
-                        $position
-                    );
-                    break;
-            }
-        }
-        $this->throwErrorAtPosition(
-            'Unterminated tag',
-            1557748574,
-            $position
-        );
-    }
-
-    /**
-     * @param \Iterator|Position[] $sequence
+     * @param \Iterator|?string[] $sequence
      * @return NodeInterface
      */
     protected function sequenceInlineNodes(\Iterator $sequence, bool $allowArray = true): NodeInterface
     {
         $text = '{';
-        if ($this->source->bytes[$this->position->index - 1] === Splitter::BYTE_BACKSLASH) {
-            // Respect escaped curly braces.
-            return new TextNode($text);
-        }
 
         $node = null;
         $key = null;
@@ -464,15 +401,14 @@ class SequencedTemplateParser extends TemplateParser
 
         $array = [];
 
-        $contextToRestore = $this->switch($this->contexts->inline);
+        $this->splitter->switch($this->contexts->inline);
         $sequence->next();
-        foreach ($sequence as $symbol => $position) {
-            $text .= $position->captured . chr($symbol);
+        foreach ($sequence as $symbol => $captured) {
+            $text .= $captured . chr($symbol);
             switch ($symbol) {
                 case Splitter::BYTE_BACKSLASH:
                     // Add the next character to the expression and advance the Position index by 1 to skip the next.
-                    ++$this->position->index;
-                    $text = substr($text, 0, -1) . $this->source->source[$this->position->index];
+                    $text = substr($text, 0, -1) . $this->source->source[$this->splitter->index];
                     break;
 
                 case Splitter::BYTE_MINUS:
@@ -492,11 +428,11 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_SEPARATOR_COMMA:
                     $isArray = true;
-                    if ($position->captured !== null) {
+                    if ($captured !== null) {
                         if (!isset($key)) {
                             $key = $captured;
                         }
-                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
+                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         unset($key);
                     }
                     break;
@@ -504,7 +440,6 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $isArray = true;
                 case Splitter::BYTE_SEPARATOR_COLON:
-                    $captured = $position->captured;
                     $namespace = $key = $captured;
                     break;
 
@@ -513,18 +448,19 @@ class SequencedTemplateParser extends TemplateParser
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
                     // appropriate type of ExpressionNode.
                     if ($isArray) {
-                        if ($position->captured !== null) {
+                        if ($captured !== null) {
                             if (!isset($key)) {
                                 $key = $captured;
                             }
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
+                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         }
-                        $this->switch($contextToRestore);
                         return new ArrayNode($array);
                     } elseif (!$callDetected) {
-
                         foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                             $matchedVariables = [];
+                            // TODO: rewrite expression nodes to receive a sub-Splitter that lets the expression node
+                            // consume a symbol+capture sequence and either match or ignore it; then use the already
+                            // consumed (possibly halted mid-way through iterator!) sequence to achieve desired behavior.
                             preg_match_all($expressionNodeTypeClassName::$detectionExpression, $text, $matchedVariables, PREG_SET_ORDER);
                             foreach ($matchedVariables as $matchedVariableSet) {
                                 $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $this->state);
@@ -542,21 +478,17 @@ class SequencedTemplateParser extends TemplateParser
                             }
 
                         }
-                        if ($position->captured === null) {
+                        if ($captured === null) {
                             $node = new TextNode($text);
                         } else {
-                            $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1), $position);
+                            $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
                             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
                         }
                     } else {
-                        $potentialAccessor = $potentialAccessor ?? $position->captured;
+                        $potentialAccessor = $potentialAccessor ?? $captured;
                         if ($potentialAccessor !== null) {
                             if ($node !== null) {
-                                $this->throwErrorAtPosition(
-                                    'Attempt to pipe a value into an object accessor - you may only pipe to ViewHelpers',
-                                    1557740018,
-                                    $position
-                                );
+                                $this->throwErrorAtPosition('Attempt to pipe a value into an object accessor', 1557740018);
                             }
                             $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
                             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
@@ -576,28 +508,36 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     }
 
-                    $this->switch($contextToRestore);
+                    #$this->switch($contextToRestore);
                     return $node;
 
                 case Splitter::BYTE_TAG_END:
                 case Splitter::BYTE_PIPE:
-                    // If there is an accessor on the left side of the pipe we make the $node into an ObjectAccessorNode,
-                    // the next iteration may then call a ViewHelper (OK) or attempt to pass to another object access (FAIL)
+                    // If there is an accessor on the left side of the pipe and $node is not defined, we create $node
+                    // as an object accessor. If $node already exists we do nothing (and expect the VH trigger, the
+                    // parenthesis start case below, to add $node as childnode and create a new $node).
                     $hasPass = true;
-                    $potentialAccessor = $potentialAccessor ?? $position->captured;
-                    if (!empty($potentialAccessor)) {
-                        $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor, $position);
+                    $potentialAccessor = $potentialAccessor ?? $captured;
+                    if ($potentialAccessor !== null) {
+                        if (!isset($node)) {
+                            $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
+                        } else {
+                            $this->throwErrorAtPosition('Unexpected characters before inline pass: ' . $potentialAccessor, 1558267428);
+                        }
                     }
                     unset($namespace, $method, $potentialAccessor, $key);
                     break;
 
                 case Splitter::BYTE_PARENTHESIS_START:
                     $callDetected = true;
-                    $method = $position->captured;
+                    $method = $captured;
                     $isArray = false;
 
                     $childNodeToAdd = $node;
+                    $this->splitter->switch($this->contexts->array);
                     $arguments = $this->sequenceArrayNode($sequence)->getInternalArray();
+                    $text .= ')';
+                    $this->splitter->switch($this->contexts->inline);
                     $node = new ViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
                     $viewHelper = $node->getUninitializedViewHelper();
                     $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
@@ -619,23 +559,15 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_TAB:
-                    $potentialAccessor = $potentialAccessor ?? $position->captured;
+                    $potentialAccessor = $potentialAccessor ?? $captured;
                     break;
 
                 default:
-                    $this->throwErrorAtPosition(
-                        'Unexpected token in inline context: ' . addslashes(chr($symbol)),
-                        1557700788,
-                        $position
-                    );
+                    $this->throwErrorAtPosition('Unexpected token in inline context', 1557700788);
                     break;
             }
         }
-        $this->throwErrorAtPosition(
-            'Unterminated inline syntax: ' . addslashes(chr($symbol)),
-            1557838506,
-            $position
-        );
+        $this->throwErrorAtPosition('Unterminated inline syntax', 1557838506);
         return $node;
     }
 
@@ -653,9 +585,9 @@ class SequencedTemplateParser extends TemplateParser
         $escapingEnabledBackup = $this->escapingEnabled;
         $this->escapingEnabled = false;
 
-        $contextToRestore = $this->switch($this->contexts->array);
+        #$contextToRestore = $this->switch($this->contexts->array);
         $sequence->next();
-        foreach ($sequence as $symbol => $position) {
+        foreach ($sequence as $symbol => $captured) {
             switch ($symbol) {
                 case Splitter::BYTE_ARRAY_START:
                 case Splitter::BYTE_INLINE:
@@ -663,8 +595,7 @@ class SequencedTemplateParser extends TemplateParser
                         /*
                         $this->throwErrorAtPosition(
                             'Unexpected beginning of array without a preceding key',
-                            1557754838,
-                            $position
+                            1557754838
                         );
                         */
                         $key = 0;
@@ -674,7 +605,7 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $key = $key ?? trim($position->captured);
+                    $key = $key ?? $captured;
                     break;
 
                 case Splitter::BYTE_QUOTE_SINGLE:
@@ -691,14 +622,13 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_SEPARATOR_COMMA:
                     // Comma separator: if neither key nor value has been collected, the result is an ObjectAccessorNode
                     // which takes the value of the variable that has the same name as the key.
-                    $captured = $position->captured;
                     $ignoreWhitespaceUntilValueFound = true;
                     if ($captured !== null) {
                         // Comma has an unquoted, non-array value immediately before it. This is what we want to process.
                         if (!isset($key)) {
                             $key = $captured;
                         }
-                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured, $position);
+                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         $ignoreWhitespaceUntilValueFound = false;
                         unset($key);
                     }
@@ -708,7 +638,6 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
-                    $captured = $position->captured;
                     if (isset($key)) {
                         if ($ignoreWhitespaceUntilValueFound) {
                             break;
@@ -716,7 +645,7 @@ class SequencedTemplateParser extends TemplateParser
 
                         // We now have enough to assign the array value and clear our key and value store variables.
                         if ($captured !== null) {
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured, $position);
+                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                             unset($key);
                         }
                     } elseif ($captured !== null) {
@@ -731,27 +660,22 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_PARENTHESIS_END:
                     if (isset($key)) {
                         // We now have enough to assign the array value and clear our key and value store variables.
-                        if ($position->captured !== null) {
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($position->captured, $position);
+                        if ($captured !== null) {
+                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         }
                     }
-                    $this->switch($contextToRestore);
+                    #$this->switch($contextToRestore);
                     $this->escapingEnabled = $escapingEnabledBackup;
                     return new ArrayNode($array);
 
                 default:
-                    $this->throwErrorAtPosition(
-                        'Unexpected token in array context: ' . addslashes(chr($symbol)),
-                        1557700791,
-                        $position
-                    );
+                    $this->throwErrorAtPosition('Unexpected token in array context', 1557700791);
                     break;
             }
         }
         $this->throwErrorAtPosition(
             'Unterminated array',
-            1557748574,
-            $position
+            1557748574
         );
     }
 
@@ -760,16 +684,15 @@ class SequencedTemplateParser extends TemplateParser
      * an ObjectAccessor if it is not.
      *
      * @param string $accessor
-     * @param Position $position
      * @return int|string
      */
-    protected function createObjectAccessorNodeOrRawValue(string $accessor, Position $position)
+    protected function createObjectAccessorNodeOrRawValue(string $accessor)
     {
         if (is_numeric($accessor)) {
             return $accessor + 0;
         }
         if ($accessor === null) {
-            $this->throwErrorAtPosition('Attempt to create an empty object accessor', 1557748262, $position);
+            $this->throwErrorAtPosition('Attempt to create an empty object accessor', 1557748262);
         }
         $node = new ObjectAccessorNode(trim($accessor));
         return $node;
@@ -794,11 +717,11 @@ class SequencedTemplateParser extends TemplateParser
      */
     protected function sequenceQuotedNode(\Iterator $sequence): RootNode
     {
-        $startingByte = $this->source->bytes[$this->position->index];
-        $contextToRestore = $this->switch($this->contexts->quoted);
+        $startingByte = $this->source->bytes[$this->splitter->index];
+        $contextToRestore = $this->splitter->switch($this->contexts->quoted);
         $node = new RootNode();
         $sequence->next();
-        foreach ($sequence as $symbol => $position) {
+        foreach ($sequence as $symbol => $captured) {
             switch ($symbol) {
                 case Splitter::BYTE_INLINE:
                     // The quoted string contains a sub-expression. We extract the captured content so far and if it
@@ -808,7 +731,6 @@ class SequencedTemplateParser extends TemplateParser
                     //   the pinned value because the inline expression was the only child of the quoted node.
                     // - But if there is content either before the pinned value or after a possible inline node, then
                     //   we add the pinned value as sibline node and return the root node.
-                    $captured = $position->captured;
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
                         $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
@@ -816,6 +738,7 @@ class SequencedTemplateParser extends TemplateParser
                     }
 
                     $node->addChildNode($this->sequenceInlineNodes($sequence));
+                    $this->splitter->switch($this->contexts->quoted);
                     break;
 
                 // Note: although "case $openingQuoteByte:" could have been used here, it would not compile the switch
@@ -825,31 +748,19 @@ class SequencedTemplateParser extends TemplateParser
                     if ($symbol !== $startingByte) {
                         break;
                     }
-                    $captured = $position->captured;
                     if ($captured !== null) {
                         $childNode = new TextNode(trim($captured, '\\'));
                         $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
                         $node->addChildNode($childNode);
                     }
-                    $this->switch($contextToRestore);
+                    $this->splitter->switch($contextToRestore);
                     return $node;
 
                 default:
-                    $this->throwErrorAtPosition(
-                        'Unexpected token in quoted context: ' . addslashes(chr($symbol)),
-                        1557700792,
-                        $position
-                    );
+                    $this->throwErrorAtPosition('Unexpected token in quoted context', 1557700792);
                     break;
             }
         }
-        $this->throwErrorAtPosition('Unterminated quoted expression', 1557700793, $position);
-    }
-
-    private function switch(Context $context): Context
-    {
-        $previous = $this->position->context;
-        $this->position->context = $context;
-        return $previous;
+        $this->throwErrorAtPosition('Unterminated quoted expression', 1557700793);
     }
 }

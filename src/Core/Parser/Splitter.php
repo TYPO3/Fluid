@@ -68,16 +68,20 @@ class Splitter
     public const MAP_SHIFT = 64;
     public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
 
-    /** @var Position */
-    public $position;
-
     /** @var Source */
     public $source;
 
-    public function __construct(Position $position, Source $source)
+    /** @var Context */
+    public $context;
+
+    public $index = 0;
+    private $primaryMask = 0;
+    private $secondaryMask = 0;
+
+    public function __construct(Source $source, Contexts $contexts)
     {
-        $this->position = $position;
         $this->source = $source;
+        $this->switch($contexts->root);
     }
 
     /**
@@ -86,59 +90,52 @@ class Splitter
      * character (byte). The secondary bit mask is costless as it is OR'ed into
      * the primary bit mask.
      *
-     * @return \Generator|Position[]
+     * @return \Generator|?string[]
      */
     public function parse(): \Generator
     {
         $bytes = &$this->source->bytes;
 
         if (empty($bytes)) {
-            yield Splitter::BYTE_NULL => $this->position;
+            yield Splitter::BYTE_NULL => null;
             return;
         }
 
         $source = &$this->source->source;
-        $index = &$this->position->index;
-        $length = $this->source->length + 1;
-        $primaryMask = $this->position->context->primaryMask;
-        $secondaryMask = $this->position->context->secondaryMask;
-        $mask = $primaryMask | $secondaryMask;
         $captured = null;
 
-        for (; $index < $length; ++$index) {
-            // Strip the highest byte, mapping >64 byte values to <64 ones which will be recognized by the bit mask.
-            // A match only means that we have encountered a potentially interesting character.
-            // alternative method: if (($mask >> ($byte & 63) & 1)
-            // REMOVED CONDITION, COST 0.0015%: if ($mask & (1 << ($bytes[$index] & 63))) {
-
-            $byte = $bytes[$index];
-
+        foreach ($bytes as $this->index => $byte) {
             // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
             // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
             // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.
-            if ($byte < 64 && ($primaryMask & (1 << $byte))) {
-                yield $byte => $this->position->copy($captured);
-                $this->position->lastYield = $index;
-                $primaryMask = $this->position->context->primaryMask;
-                $secondaryMask = $this->position->context->secondaryMask;
-                $mask = $primaryMask | $secondaryMask;
+            if ($byte < 64 && ($this->primaryMask & (1 << $byte))) {
+                yield $byte => $captured;
+                $captured = null;
                 continue;
-            } elseif ($byte > 64 && $byte < 128 && ($secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
-                yield $byte => $this->position->copy($captured);
-                $this->position->lastYield = $index;
-                $primaryMask = $this->position->context->primaryMask;
-                $secondaryMask = $this->position->context->secondaryMask;
-                $mask = $primaryMask | $secondaryMask;
+            } elseif ($byte > 64 && $byte < 128 && ($this->secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
+                yield $byte => $captured;
+                $captured = null;
                 continue;
             }
 
             // Append captured bytes from source, must happen after the conditions above so we avoid appending tokens.
-            $captured .= $source{$index - 1};
+            $captured .= $source{$this->index - 1};
         }
 
-        if ($this->position->lastYield < $this->source->length) {
-            yield Splitter::BYTE_NULL => $this->position->copy($captured);
+        //if ($this->position->lastYield < $this->source->length) {
+        if ($captured !== null) {
+            //yield Splitter::BYTE_NULL => $this->position->copy($captured);
+            yield Splitter::BYTE_NULL => $captured;
         }
+    }
+    
+    public function switch(Context $context): Context
+    {
+        $previous = $this->context;
+        $this->context = $context;
+        $this->primaryMask = $context->primaryMask;
+        $this->secondaryMask = $context->secondaryMask;
+        return $previous ?? $context;
     }
 
     public function countCharactersMatchingMask(int $primaryMask, int $offset, int $length): int
