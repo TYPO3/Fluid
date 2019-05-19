@@ -323,6 +323,7 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_TAG_END:
                     $text .= '>';
+                    $method = $method ?? $captured;
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES && $captured !== null) {
                         if (isset($key)) {
                             // We now have enough to assign the array value and clear our key and value store variables.
@@ -330,12 +331,11 @@ class SequencedTemplateParser extends TemplateParser
                         } else {
                             $arguments[$captured] = $captured;
                         }
-                    } elseif ($this->splitter->context->context === Context::CONTEXT_DEAD || !isset($namespace) || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
+                    } elseif ($this->splitter->context->context === Context::CONTEXT_DEAD || !isset($namespace) || !isset($method) || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
                         $node->addChildNode(new TextNode($text));
                         return $node;
                     }
 
-                    $method = $method ?? $captured;
                     if ($closing && !$selfClosing) {
                         // Closing byte was more than two bytes back, meaning the tag is NOT self-closing, but is a
                         // closing tag for a previously opened+stacked node. Finalize the node now.
@@ -451,6 +451,26 @@ class SequencedTemplateParser extends TemplateParser
                     $text = substr($text, 0, -1) . $this->source->source[$this->splitter->index];
                     break;
 
+                case Splitter::BYTE_INLINE:
+                    $text .= '{';
+                    if ($hasColon) {
+                        $captured = $key ?? $captured ?? $potentialAccessor;
+                        // This is a sub-syntax following a colon - meaning it is an array.
+                        #var_dump($captured);
+                        #exit();
+                        if ($captured !== null) {
+                            if (!isset($key)) {
+                                $key = $captured;
+                            }
+                            $array[$key] = $this->sequenceArrayNode($sequence);
+                            #var_dump($array[$key]);
+                            #exit();
+                            $this->splitter->switch($this->contexts->inline);
+                            unset($key);
+                        }
+                    }
+                    break;
+
                 case Splitter::BYTE_MINUS:
                     break;
 
@@ -502,7 +522,7 @@ class SequencedTemplateParser extends TemplateParser
                         }
                         return new ArrayNode($array);
 
-                    } elseif (!$callDetected || $hasEqualsSign || ($hasWhitespace && !$hasPass && !$hasColon)) {
+                    } elseif (!$callDetected || $hasEqualsSign || ($hasWhitespace && !$hasPass && !$hasColon && !$hasEqualsSign)) {
                         // In order to qualify for potentially being an expression, the entire inline node must contain
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
                         // inline pass operand. This significantly limits the number of times this (expensive) routine
