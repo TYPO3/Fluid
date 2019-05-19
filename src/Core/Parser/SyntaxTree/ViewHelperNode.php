@@ -54,6 +54,11 @@ class ViewHelperNode extends AbstractNode
     protected $identifier = '';
 
     /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
+
+    /**
      * Constructor.
      *
      * @param RenderingContextInterface $renderingContext a RenderingContext, provided by invoker
@@ -65,6 +70,7 @@ class ViewHelperNode extends AbstractNode
     public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments, ParsingState $state)
     {
         $resolver = $renderingContext->getViewHelperResolver();
+        $this->renderingContext = $renderingContext;
         $this->namespace = $namespace;
         $this->identifier = $identifier;
         $this->arguments = $arguments;
@@ -76,6 +82,14 @@ class ViewHelperNode extends AbstractNode
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
         $this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
         $this->validateArguments($this->argumentDefinitions, $this->arguments);
+    }
+
+    /**
+     * @return RenderingContextInterface
+     */
+    public function getRenderingContext(): RenderingContextInterface
+    {
+        return $this->renderingContext;
     }
 
     /**

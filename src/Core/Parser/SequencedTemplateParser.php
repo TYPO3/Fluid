@@ -14,11 +14,13 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpress
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\PostponedViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 
 /**
  * Sequence-based Template Parser for Fluid syntax
@@ -37,7 +39,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * very, very important to understand in context of how iterators
  * work. Returning does not advance the iterator like breaking
  * would and this causes a different position in the byte sequence
- * to be experienced in the method that uses the return value.
+ * to be experienced in the method that uses the return value (it
+ * sees the index of the symbol which terminated the expression,
+ * not the next symbol after that).
  */
 class SequencedTemplateParser extends TemplateParser
 {
@@ -58,6 +62,7 @@ class SequencedTemplateParser extends TemplateParser
 
     public function parse($templateString, $templateIdentifier = null): ParsingState
     {
+        $templateIdentifier = $templateIdentifier ?? 'source_' . sha1($templateString);
         $templateString = $this->preProcessTemplateSource($templateString);
 
         $this->source = new Source($templateString);
@@ -74,6 +79,7 @@ class SequencedTemplateParser extends TemplateParser
             $node->addChildNode($child);
         }
         $this->state->setRootNode($node);
+        $this->parsedTemplates[$templateIdentifier] = $this->state;
         return $this->state;
     }
 
@@ -229,6 +235,7 @@ class SequencedTemplateParser extends TemplateParser
     {
         $closeBytePosition = 0;
         $arguments = [];
+        $definitions = null;
         $text = '<';
         $namespace = null;
         $method = null;
@@ -269,6 +276,16 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $key = $captured;
+                    if ($definitions !== null && !isset($definitions[$key])) {
+                        // Verify presence of argument in definitions
+                        $this->throwErrorAtPosition(
+                            sprintf(
+                                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                                $key
+                            ),
+                            1558298976
+                        );
+                    }
                     break;
 
                 case Splitter::BYTE_QUOTE_DOUBLE:
@@ -276,6 +293,16 @@ class SequencedTemplateParser extends TemplateParser
                     $text .= chr($symbol);
                     if (!isset($key)) {
                         $key = $this->sequenceQuotedNode($sequence)->flatten(true);
+                        if ($definitions !== null && !isset($definitions[$key])) {
+                            // Verify presence of argument in definitions
+                            $this->throwErrorAtPosition(
+                                sprintf(
+                                    'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                                    $key
+                                ),
+                                1558298976
+                            );
+                        }
                     } else {
                         $arguments[$key] = $this->sequenceQuotedNode($sequence)->flatten();
                         unset($key);
@@ -322,17 +349,26 @@ class SequencedTemplateParser extends TemplateParser
                                 1557700789
                             );
                         }
-                    } else {
-                        $viewHelperNode = new ViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
-                        ($viewHelperNode->getUninitializedViewHelper())::postParseEvent($viewHelperNode, $arguments, $this->state->getVariableContainer());
                     }
 
-                    $this->callInterceptor($viewHelperNode, $interceptionPoint, $this->state);
+
+                    try {
+                        if (!isset($viewHelperNode)) {
+                            $viewHelperNode = new PostponedViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
+                        }
+                        $viewHelper = $viewHelperNode->getUninitializedViewHelper();
+                        $viewHelperNode->finalizeNode($arguments, $this->state);
+                    } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $exception) {
+                        $this->throwErrorAtPosition($exception->getMessage(), $exception->getCode());
+                    }
 
                     if (!$closing) {
+                        $this->callInterceptor($viewHelperNode, $interceptionPoint, $this->state);
                         $this->state->pushNodeToStack($viewHelperNode);
                         return null;
                     }
+
+                    $viewHelper::postParseEvent($viewHelperNode, $arguments, $this->state->getVariableContainer());
 
                     return $viewHelperNode;
 
@@ -355,6 +391,8 @@ class SequencedTemplateParser extends TemplateParser
                         $text .= chr($symbol);
                         if (isset($namespace)) {
                             $method = $captured;
+                            $viewHelperNode = new PostponedViewHelperNode($this->renderingContext, $namespace, $method);
+                            $definitions = $viewHelperNode->getUninitializedViewHelper($this->renderingContext)->prepareArguments();
 
                             // A whitespace character, in tag context, means the beginning of an array sequence (which may
                             // or may not contain any items; the next symbol may be a tag end or tag close). We sequence the
@@ -397,8 +435,10 @@ class SequencedTemplateParser extends TemplateParser
         $method = null;
         $callDetected = false;
         $hasPass = false;
+        $hasColon = false;
+        $hasEqualsSign = false;
+        $hasWhitespace = false;
         $isArray = false;
-
         $array = [];
 
         $this->splitter->switch($this->contexts->inline);
@@ -438,16 +478,22 @@ class SequencedTemplateParser extends TemplateParser
                     break;
 
                 case Splitter::BYTE_SEPARATOR_EQUALS:
+                    $hasEqualsSign = true;
                     $isArray = true;
+                    $text .= chr($symbol);
+                    break;
+
                 case Splitter::BYTE_SEPARATOR_COLON:
+                    $hasColon = true;
                     $namespace = $key = $captured;
+                    $text .= chr($symbol);
                     break;
 
                 case Splitter::BYTE_INLINE_END:
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
                     // appropriate type of ExpressionNode.
-                    if ($isArray) {
+                    if ($isArray || (!$hasPass && !$callDetected && $hasColon)) {
                         if ($captured !== null) {
                             if (!isset($key)) {
                                 $key = $captured;
@@ -455,7 +501,12 @@ class SequencedTemplateParser extends TemplateParser
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         }
                         return new ArrayNode($array);
-                    } elseif (!$callDetected) {
+
+                    } elseif (!$callDetected || $hasEqualsSign || ($hasWhitespace && !$hasPass && !$hasColon)) {
+                        // In order to qualify for potentially being an expression, the entire inline node must contain
+                        // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
+                        // inline pass operand. This significantly limits the number of times this (expensive) routine
+                        // has to be executed.
                         foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                             $matchedVariables = [];
                             // TODO: rewrite expression nodes to receive a sub-Splitter that lets the expression node
@@ -484,6 +535,7 @@ class SequencedTemplateParser extends TemplateParser
                             $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
                             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
                         }
+
                     } else {
                         $potentialAccessor = $potentialAccessor ?? $captured;
                         if ($potentialAccessor !== null) {
@@ -501,14 +553,13 @@ class SequencedTemplateParser extends TemplateParser
                             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
                             $this->escapingEnabled = $escapingEnabledBackup;
                         } else {
-                            #echo $this->source->source;
-                            #var_dump($captured);
-                            var_dump($node);
-                            exit();
+                            $this->throwErrorAtPosition(
+                                'Unexpected state, expecting either object accessor or ViewHelper but found no recognizable node',
+                                1558305422
+                            );
                         }
                     }
 
-                    #$this->switch($contextToRestore);
                     return $node;
 
                 case Splitter::BYTE_TAG_END:
@@ -529,17 +580,32 @@ class SequencedTemplateParser extends TemplateParser
                     break;
 
                 case Splitter::BYTE_PARENTHESIS_START:
+                    // Special case: if a parenthesis start was preceded by whitespace but had no pass operator we are
+                    // not dealing with a ViewHelper call and will continue the sequencing, grabbing the parenthesis as
+                    // part of the expression.
+                    if (($hasWhitespace && !$hasPass) || !$hasColon) {
+                        $text .= '(';
+                        //$hasColon = $hasPass = $hasWhitespace = $hasEqualsSign = false;
+                        unset($namespace, $method);
+                        break;
+                    }
+
                     $callDetected = true;
                     $method = $captured;
                     $isArray = false;
 
                     $childNodeToAdd = $node;
+                    try {
+                        $node = new PostponedViewHelperNode($this->renderingContext, $namespace, $method);
+                        $viewHelper = $node->getUninitializedViewHelper();
+                        $definitions = $viewHelper->prepareArguments();
+                    } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $exception) {
+                        $this->throwErrorAtPosition($exception->getMessage(), $exception->getCode());
+                    }
                     $this->splitter->switch($this->contexts->array);
-                    $arguments = $this->sequenceArrayNode($sequence)->getInternalArray();
-                    $text .= ')';
+                    $arguments = $this->sequenceArrayNode($sequence, $definitions)->getInternalArray();
                     $this->splitter->switch($this->contexts->inline);
-                    $node = new ViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
-                    $viewHelper = $node->getUninitializedViewHelper();
+                    $node->finalizeNode($arguments, $this->state);
                     $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
                     if ($childNodeToAdd) {
                         $escapingEnabledBackup = $this->escapingEnabled;
@@ -552,6 +618,7 @@ class SequencedTemplateParser extends TemplateParser
                         $this->escapingEnabled = $escapingEnabledBackup;
                         $node->addChildNode($childNodeToAdd);
                     }
+                    $text .= ')';
                     unset($potentialAccessor);
                     break;
 
@@ -559,6 +626,7 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_TAB:
+                    $hasWhitespace = true;
                     $potentialAccessor = $potentialAccessor ?? $captured;
                     break;
 
@@ -573,10 +641,10 @@ class SequencedTemplateParser extends TemplateParser
 
     /**
      * @param \Iterator|Position[] $sequence
-     * @param ?string $key
+     * @param ArgumentDefinition[] $definitions
      * @return ArrayNode
      */
-    protected function sequenceArrayNode(\Iterator $sequence, ?string $key = null): ArrayNode
+    protected function sequenceArrayNode(\Iterator $sequence, array $definitions = null): ArrayNode
     {
         $array = [];
 
@@ -585,7 +653,6 @@ class SequencedTemplateParser extends TemplateParser
         $escapingEnabledBackup = $this->escapingEnabled;
         $this->escapingEnabled = false;
 
-        #$contextToRestore = $this->switch($this->contexts->array);
         $sequence->next();
         foreach ($sequence as $symbol => $captured) {
             switch ($symbol) {
@@ -606,15 +673,34 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $key = $key ?? $captured;
+                    if ($definitions !== null && !isset($definitions[$key])) {
+                        // Verify presence of argument in definitions
+                        $this->throwErrorAtPosition(
+                            sprintf(
+                                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                                $key
+                            ),
+                            1558299426
+                        );
+                    }
                     break;
 
                 case Splitter::BYTE_QUOTE_SINGLE:
                 case Splitter::BYTE_QUOTE_DOUBLE:
                     if (!isset($key)) {
                         $key = $this->sequenceQuotedNode($sequence)->flatten(true);
+                        if ($definitions !== null && !isset($definitions[$key])) {
+                            // Verify presence of argument in definitions
+                            $this->throwErrorAtPosition(
+                                sprintf(
+                                    'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                                    $key
+                                ),
+                                1558299426
+                            );
+                        }
                     } else {
                         $array[$key] = $this->sequenceQuotedNode($sequence)->flatten();
-                        $ignoreWhitespaceUntilValueFound = false;
                         unset($key);
                     }
                     break;
@@ -622,14 +708,22 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_SEPARATOR_COMMA:
                     // Comma separator: if neither key nor value has been collected, the result is an ObjectAccessorNode
                     // which takes the value of the variable that has the same name as the key.
-                    $ignoreWhitespaceUntilValueFound = true;
                     if ($captured !== null) {
                         // Comma has an unquoted, non-array value immediately before it. This is what we want to process.
                         if (!isset($key)) {
                             $key = $captured;
+                            if ($definitions !== null && !isset($definitions[$key])) {
+                                // Verify presence of argument in definitions
+                                $this->throwErrorAtPosition(
+                                    sprintf(
+                                        'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                                        $key
+                                    ),
+                                    1558299426
+                                );
+                            }
                         }
                         $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
-                        $ignoreWhitespaceUntilValueFound = false;
                         unset($key);
                     }
                     break;
@@ -639,10 +733,6 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
                     if (isset($key)) {
-                        if ($ignoreWhitespaceUntilValueFound) {
-                            break;
-                        }
-
                         // We now have enough to assign the array value and clear our key and value store variables.
                         if ($captured !== null) {
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
@@ -650,6 +740,16 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     } elseif ($captured !== null) {
                         $key = $key ?? $captured;
+                        if ($definitions !== null && !isset($definitions[$key])) {
+                            // Verify presence of argument in definitions
+                            $this->throwErrorAtPosition(
+                                sprintf(
+                                    'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                                    $key
+                                ),
+                                1558299426
+                            );
+                        }
                     }
                     break;
 
@@ -664,7 +764,6 @@ class SequencedTemplateParser extends TemplateParser
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         }
                     }
-                    #$this->switch($contextToRestore);
                     $this->escapingEnabled = $escapingEnabledBackup;
                     return new ArrayNode($array);
 
