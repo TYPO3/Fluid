@@ -440,6 +440,7 @@ class SequencedTemplateParser extends TemplateParser
         $hasWhitespace = false;
         $isArray = false;
         $array = [];
+        $ignoredEndingBraces = 0;
 
         $this->splitter->switch($this->contexts->inline);
         $sequence->next();
@@ -452,8 +453,10 @@ class SequencedTemplateParser extends TemplateParser
                     break;
 
                 case Splitter::BYTE_INLINE:
-                    $text .= '{';
-                    if ($hasColon) {
+                    // Encountering this case can mean two things: sub-syntax like {foo.{index}} or array, depending
+                    // on presence of either a colon or comma before the inline.
+                    if ($hasColon || $isArray) {
+                        $isArray = true;
                         $captured = $key ?? $captured ?? $potentialAccessor;
                         // This is a sub-syntax following a colon - meaning it is an array.
                         #var_dump($captured);
@@ -468,6 +471,9 @@ class SequencedTemplateParser extends TemplateParser
                             $this->splitter->switch($this->contexts->inline);
                             unset($key);
                         }
+                    } else {
+                        // Ignore one ending additional curly brace. Subtracted in the BYTE_INLINE_END case below.
+                        ++$ignoredEndingBraces;
                     }
                     break;
 
@@ -510,6 +516,9 @@ class SequencedTemplateParser extends TemplateParser
                     break;
 
                 case Splitter::BYTE_INLINE_END:
+                    if (--$ignoredEndingBraces >= 0) {
+                        break;
+                    }
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
                     // appropriate type of ExpressionNode.
@@ -549,12 +558,8 @@ class SequencedTemplateParser extends TemplateParser
                             }
 
                         }
-                        if ($captured === null) {
-                            $node = new TextNode($text);
-                        } else {
-                            $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
-                            $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
-                        }
+                        $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
+                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
 
                     } else {
                         $potentialAccessor = $potentialAccessor ?? $captured;
@@ -667,8 +672,6 @@ class SequencedTemplateParser extends TemplateParser
     protected function sequenceArrayNode(\Iterator $sequence, array $definitions = null): ArrayNode
     {
         $array = [];
-
-        $ignoreWhitespaceUntilValueFound = $key !== null;
 
         $escapingEnabledBackup = $this->escapingEnabled;
         $this->escapingEnabled = false;
