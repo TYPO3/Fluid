@@ -193,7 +193,7 @@ class SequencedTemplateParser extends TemplateParser
                     if ($captured !== null) {
                         $node->addChildNode(new TextNode($captured));
                     }
-                    $node->addChildNode($this->sequenceInlineNodes($sequence));
+                    $node->addChildNode($this->sequenceInlineNodes($sequence, false));
                     $this->splitter->switch($this->contexts->root);
                     break;
 
@@ -211,7 +211,7 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_NULL:
                     if ($captured !== null) {
-                        $this->state->getNodeFromStack()->addChildNode(new TextNode(substr($captured, 0, -1)));
+                        $this->state->getNodeFromStack()->addChildNode(new TextNode($captured));
                     }
                     break;
 
@@ -244,6 +244,7 @@ class SequencedTemplateParser extends TemplateParser
         $node = new RootNode();
         $selfClosing = false;
         $closing = false;
+        $escapingEnabledBackup = $this->escapingEnabled;
 
         $interceptionPoint = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
 
@@ -351,6 +352,7 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     }
 
+                    $this->escapingEnabled = $escapingEnabledBackup;
 
                     try {
                         if (!isset($viewHelperNode)) {
@@ -391,6 +393,8 @@ class SequencedTemplateParser extends TemplateParser
                         $text .= chr($symbol);
                         if (isset($namespace)) {
                             $method = $captured;
+
+                            $this->escapingEnabled = false;
                             $viewHelperNode = new PostponedViewHelperNode($this->renderingContext, $namespace, $method);
                             $definitions = $viewHelperNode->getUninitializedViewHelper($this->renderingContext)->prepareArguments();
 
@@ -435,7 +439,7 @@ class SequencedTemplateParser extends TemplateParser
         $method = null;
         $callDetected = false;
         $hasPass = false;
-        $hasColon = false;
+        $hasColon = null;
         $hasEqualsSign = false;
         $hasWhitespace = false;
         $isArray = false;
@@ -504,15 +508,14 @@ class SequencedTemplateParser extends TemplateParser
                     break;
 
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $hasEqualsSign = true;
                     $isArray = true;
-                    $text .= chr($symbol);
+                    #$text .= chr($symbol);
                     break;
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                     $hasColon = true;
                     $namespace = $key = $captured;
-                    $text .= chr($symbol);
+                    #$text .= chr($symbol);
                     break;
 
                 case Splitter::BYTE_INLINE_END:
@@ -522,7 +525,7 @@ class SequencedTemplateParser extends TemplateParser
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
                     // appropriate type of ExpressionNode.
-                    if ($isArray || (!$hasPass && !$callDetected && $hasColon)) {
+                    if ($isArray) {
                         if ($captured !== null) {
                             if (!isset($key)) {
                                 $key = $captured;
@@ -530,8 +533,9 @@ class SequencedTemplateParser extends TemplateParser
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
                         }
                         return new ArrayNode($array);
+                    }
 
-                    } elseif (!$callDetected || $hasEqualsSign || ($hasWhitespace && !$hasPass && !$hasColon && !$hasEqualsSign)) {
+                    if ($hasWhitespace && !$callDetected) {
                         // In order to qualify for potentially being an expression, the entire inline node must contain
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
                         // inline pass operand. This significantly limits the number of times this (expensive) routine
@@ -556,33 +560,40 @@ class SequencedTemplateParser extends TemplateParser
                                     return new TextNode($this->renderingContext->getErrorHandler()->handleExpressionError($error));
                                 }
                             }
-
                         }
-                        $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
-                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+                        return new TextNode($text);
+                    }
 
-                    } else {
+                    if ($node instanceof ViewHelperNode) {
+                        $node->finalizeNode($arguments, $this->state);
+                        $viewHelper = $node->getUninitializedViewHelper();
+                        $escapingEnabledBackup = $this->escapingEnabled;
+                        $this->escapingEnabled = (bool)$viewHelper->isOutputEscapingEnabled();
+                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
+                        $this->escapingEnabled = $escapingEnabledBackup;
+                    } elseif (!$hasPass && !$callDetected) {
                         $potentialAccessor = $potentialAccessor ?? $captured;
-                        if ($potentialAccessor !== null) {
-                            if ($node !== null) {
-                                $this->throwErrorAtPosition('Attempt to pipe a value into an object accessor', 1557740018);
-                            }
+                        if (isset($potentialAccessor)) {
                             $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
                             $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
-                        } elseif ($node instanceof ViewHelperNode) {
-                            $viewHelper = $node->getUninitializedViewHelper();
-                            $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
-
-                            $escapingEnabledBackup = $this->escapingEnabled;
-                            $this->escapingEnabled = (bool)$viewHelper->isOutputEscapingEnabled();
-                            $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
-                            $this->escapingEnabled = $escapingEnabledBackup;
                         } else {
-                            $this->throwErrorAtPosition(
-                                'Unexpected state, expecting either object accessor or ViewHelper but found no recognizable node',
-                                1558305422
-                            );
+                            $node = new TextNode($text);
                         }
+                    } elseif ($hasPass && $this->renderingContext->getViewHelperResolver()->isAliasRegistered($potentialAccessor)) {
+                        $childNodeToAdd = $node;
+                        $node = new PostponedViewHelperNode($this->renderingContext, null, $captured, [], $this->state);
+                        $node->addChildNode($childNodeToAdd);
+                        ($node->getUninitializedViewHelper())::postParseEvent($node, [], $this->state->getVariableContainer());
+                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
+                    } else {
+                        $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
+                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+                        /*
+                        $this->throwErrorAtPosition(
+                            'Unexpected state, expecting either object accessor or ViewHelper but found no recognizable node',
+                            1558305422
+                        );
+                        */
                     }
 
                     return $node;
@@ -593,6 +604,7 @@ class SequencedTemplateParser extends TemplateParser
                     // as an object accessor. If $node already exists we do nothing (and expect the VH trigger, the
                     // parenthesis start case below, to add $node as childnode and create a new $node).
                     $hasPass = true;
+                    $isArray = false;
                     $potentialAccessor = $potentialAccessor ?? $captured;
                     if ($potentialAccessor !== null) {
                         if (!isset($node)) {
@@ -601,24 +613,23 @@ class SequencedTemplateParser extends TemplateParser
                             $this->throwErrorAtPosition('Unexpected characters before inline pass: ' . $potentialAccessor, 1558267428);
                         }
                     }
-                    unset($namespace, $method, $potentialAccessor, $key);
+                    unset($namespace, $method, $potentialAccessor, $key, $callDetected);
                     break;
 
                 case Splitter::BYTE_PARENTHESIS_START:
+                    $isArray = false;
+                    /*
+                    */
                     // Special case: if a parenthesis start was preceded by whitespace but had no pass operator we are
                     // not dealing with a ViewHelper call and will continue the sequencing, grabbing the parenthesis as
                     // part of the expression.
-                    if (($hasWhitespace && !$hasPass) || !$hasColon) {
-                        $text .= '(';
-                        //$hasColon = $hasPass = $hasWhitespace = $hasEqualsSign = false;
+                    if (!$hasColon || ($hasWhitespace && !$hasPass)) {
                         unset($namespace, $method);
                         break;
                     }
 
                     $callDetected = true;
                     $method = $captured;
-                    $isArray = false;
-
                     $childNodeToAdd = $node;
                     try {
                         $node = new PostponedViewHelperNode($this->renderingContext, $namespace, $method);
@@ -630,8 +641,8 @@ class SequencedTemplateParser extends TemplateParser
                     $this->splitter->switch($this->contexts->array);
                     $arguments = $this->sequenceArrayNode($sequence, $definitions)->getInternalArray();
                     $this->splitter->switch($this->contexts->inline);
-                    $node->finalizeNode($arguments, $this->state);
-                    $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
+                    #$node->finalizeNode($arguments, $this->state);
+                    #$viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
                     if ($childNodeToAdd) {
                         $escapingEnabledBackup = $this->escapingEnabled;
                         $this->escapingEnabled = (bool)$viewHelper->isChildrenEscapingEnabled();
@@ -652,6 +663,7 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_TAB:
                     $hasWhitespace = true;
+                    $isArray = $hasColon ?? $isArray;
                     $potentialAccessor = $potentialAccessor ?? $captured;
                     break;
 
