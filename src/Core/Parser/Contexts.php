@@ -39,7 +39,7 @@ class Contexts
         $this->root = new Context(Context::CONTEXT_ROOT, '{<');
 
         // Inline context: aware of array syntax, sub-inline syntax, inline VH syntax, and arguments enclosed by parenthesis by looking for parenthesis start
-        $this->inline = new Context(Context::CONTEXT_INLINE, "(->|{}:,=|\\\t\n\r\0'\" ");
+        $this->inline = new Context(Context::CONTEXT_INLINE, "(->[]|{}:,=|\\\t\n\r\0'\" ");
 
         // Tag: entered into when a detected tag has a namespace operator in tag name
         $this->tag = new Context(Context::CONTEXT_TAG, ">:{ /\t\n\r\0");
