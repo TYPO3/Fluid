@@ -109,14 +109,14 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
         }
         foreach ($expected as $expectedValue) {
             if (is_string($expectedValue) === true) {
-                $this->assertContains($expectedValue, $output);
+                $this->assertStringContainsString($expectedValue, $output);
             } else {
                 $this->assertEquals($expectedValue, $output);
             }
         }
         foreach ($notExpected as $notExpectedValue) {
             if (is_string($notExpectedValue) === true) {
-                $this->assertNotContains($notExpectedValue, $output);
+                $this->assertStringNotContainsString($notExpectedValue, $output);
             } else {
                 $this->assertNotEquals($notExpectedValue, $output);
             }
@@ -146,6 +146,8 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
         if ($this->getCache()) {
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
+        } else {
+            $this->markTestSkipped('Cache-specific test skipped');
         }
     }
 }

@@ -21,7 +21,7 @@ class RawViewHelperTest extends UnitTestCase
      */
     protected $viewHelper;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->viewHelper = $this->getMock(RawViewHelper::class, ['renderChildren']);
         $this->viewHelper->setRenderingContext(new RenderingContextFixture());

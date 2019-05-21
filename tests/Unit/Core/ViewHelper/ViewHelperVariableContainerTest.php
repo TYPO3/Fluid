@@ -22,7 +22,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
      */
     protected $viewHelperVariableContainer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->viewHelperVariableContainer = new ViewHelperVariableContainer();
     }

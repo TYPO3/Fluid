@@ -18,7 +18,7 @@ class ExamplesTest extends BaseTestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         vfsStream::setup('fakecache/');
     }

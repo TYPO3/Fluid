@@ -108,10 +108,11 @@ class AbstractViewHelperTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function registeringTheSameArgumentNameAgainThrowsException()
     {
+        $this->expectException(\Exception::class);
+
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
 
         $name = 'shortName';
@@ -145,10 +146,11 @@ class AbstractViewHelperTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument()
     {
+        $this->expectException(\Exception::class);
+
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
 
         $viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', true);
@@ -208,10 +210,11 @@ class AbstractViewHelperTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException \InvalidArgumentException
      */
     public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
         $viewHelper->setArguments(['test' => 'test']);

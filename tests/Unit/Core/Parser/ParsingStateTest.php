@@ -25,12 +25,12 @@ class ParsingStateTest extends UnitTestCase
      */
     protected $parsingState;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parsingState = new ParsingState();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->parsingState);
     }
