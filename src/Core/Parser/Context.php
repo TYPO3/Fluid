@@ -16,13 +16,13 @@ class Context
     public $context = self::CONTEXT_ROOT;
     public $primaryMask = 0;
     public $secondaryMask = 0;
-    public $startingByte = 0;
+    public $bytes = [];
 
     public function __construct(int $context, string $tokens)
     {
         $this->context = $context;
-        foreach (str_split($tokens) as $character) {
-            $byte = ord($character);
+        foreach (unpack('C*', $tokens) as $byte) {
+            $this->bytes[] = $byte;
             if ($byte >= 64) {
                 $this->secondaryMask |= (1 << ($byte - Splitter::MAP_SHIFT));
             } elseif ($byte < 64) {
