@@ -65,9 +65,8 @@ class PostponedViewHelperNode extends ViewHelperNode
      * @param string $namespace the namespace identifier of the ViewHelper.
      * @param string $identifier the name of the ViewHelper to render, inside the namespace provided.
      * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
-     * @param ParsingState|null $state
      */
-    public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments = [], ParsingState $state = null)
+    public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments = [])
     {
         $this->renderingContext = $renderingContext;
         $this->namespace = $namespace;
@@ -81,23 +80,47 @@ class PostponedViewHelperNode extends ViewHelperNode
      */
     public function getUninitializedViewHelper()
     {
-        $resolver = $this->renderingContext->getViewHelperResolver();
-        $this->viewHelperClassName = $resolver->resolveViewHelperClassName($this->namespace, $this->identifier);
-        $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
-        $this->uninitializedViewHelper->setRenderingContext($this->renderingContext);
-        $this->uninitializedViewHelper->setViewHelperNode($this);
-        $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
+        if (!$this->uninitializedViewHelper instanceof ViewHelperInterface) {
+            $resolver = $this->renderingContext->getViewHelperResolver();
+            $this->viewHelperClassName = $resolver->resolveViewHelperClassName($this->namespace, $this->identifier);
+            $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
+            $this->uninitializedViewHelper->setRenderingContext($this->renderingContext);
+            $this->uninitializedViewHelper->setViewHelperNode($this);
+            $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
+        }
         return $this->uninitializedViewHelper;
     }
 
     /**
-     * @param array $arguments
-     * @param ParsingState $state
+     * @param NodeInterface[]|mixed[] $arguments
      */
-    public function finalizeNode(array $arguments, ParsingState $state): void
+    public function setArguments(array $arguments)
     {
         $this->arguments = $arguments;
-        $this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
         $this->validateArguments($this->argumentDefinitions, $this->arguments);
+    }
+
+    protected function validateArguments(array $argumentDefinitions, array $argumentsObjectTree)
+    {
+        $additionalArguments = [];
+        foreach ($argumentsObjectTree as $argumentName => $value) {
+            if (!isset($argumentDefinitions[$argumentName])) {
+                $additionalArguments[$argumentName] = $value;
+            }
+        }
+        $this->getUninitializedViewHelper()->validateAdditionalArguments($additionalArguments);
+    }
+
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+        $evaluatedArguments = [];
+        foreach ($this->argumentDefinitions as $name => $definition) {
+            $argument = $this->arguments[$name] ?? null;
+            $evaluatedArguments[$name] = $argument instanceof NodeInterface ? $argument->evaluate($renderingContext) : $argument;
+        }
+        $viewHelper = $this->getUninitializedViewHelper();
+        $viewHelper->setRenderingContext($renderingContext);
+        $viewHelper->setArguments($evaluatedArguments);
+        return $viewHelper->initializeArgumentsAndRender();
     }
 }

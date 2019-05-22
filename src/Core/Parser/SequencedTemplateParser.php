@@ -8,6 +8,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface;
@@ -17,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\PostponedViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -177,6 +177,17 @@ class SequencedTemplateParser extends TemplateParser
         throw $error;
     }
 
+    protected function throwUnsupportedArgumentError(string $argument, array $definitions)
+    {
+        $this->throwErrorAtPosition(
+            sprintf(
+                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                $argument
+            ),
+            1558298976
+        );
+    }
+
     /**
      * @param \Iterator|?string[] $sequence
      * @return NodeInterface|null
@@ -258,16 +269,10 @@ class SequencedTemplateParser extends TemplateParser
                     $collected = $this->sequenceInlineNodes($sequence);
                     $this->splitter->switch($contextBefore);
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
-                        if (!isset($key)) {
-                            /*
-                            $this->throwErrorAtPosition(
-                                'Unexpected beginning of array without a preceding key',
-                                1557754838
-                            );
-                            */
-                            $key = count($array) - 1;
-                        }
-                        $arguments[$key] = $collected;
+                        #if (!isset($key)) {
+                        #    $key = count($arguments) - 1;
+                        #}
+                        $arguments[$key ?? (count($arguments) - 1)] = $collected;
                     } else {
                         $node->addChildNode(new TextNode($text));
                         $node->addChildNode($collected);
@@ -278,14 +283,7 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $key = $captured;
                     if ($definitions !== null && !isset($definitions[$key])) {
-                        // Verify presence of argument in definitions
-                        $this->throwErrorAtPosition(
-                            sprintf(
-                                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                                $key
-                            ),
-                            1558298976
-                        );
+                        $this->throwUnsupportedArgumentError($key, $definitions);
                     }
                     break;
 
@@ -295,14 +293,7 @@ class SequencedTemplateParser extends TemplateParser
                     if (!isset($key)) {
                         $key = $this->sequenceQuotedNode($sequence)->flatten(true);
                         if ($definitions !== null && !isset($definitions[$key])) {
-                            // Verify presence of argument in definitions
-                            $this->throwErrorAtPosition(
-                                sprintf(
-                                    'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                                    $key
-                                ),
-                                1558298976
-                            );
+                            $this->throwUnsupportedArgumentError($key, $definitions);
                         }
                     } else {
                         $arguments[$key] = $this->sequenceQuotedNode($sequence)->flatten();
@@ -325,14 +316,8 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_TAG_END:
                     $text .= '>';
                     $method = $method ?? $captured;
-                    if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES && $captured !== null) {
-                        if (isset($key)) {
-                            // We now have enough to assign the array value and clear our key and value store variables.
-                            $arguments[$key] = $captured;
-                        } else {
-                            $arguments[$captured] = $captured;
-                        }
-                    } elseif ($this->splitter->context->context === Context::CONTEXT_DEAD || !isset($namespace) || !isset($method) || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
+
+                    if (!isset($namespace) || !isset($method) || $this->splitter->context->context === Context::CONTEXT_DEAD || $this->renderingContext->getViewHelperResolver()->isNamespaceIgnored($namespace)) {
                         $node->addChildNode(new TextNode($text));
                         return $node;
                     }
@@ -341,7 +326,7 @@ class SequencedTemplateParser extends TemplateParser
                         // Closing byte was more than two bytes back, meaning the tag is NOT self-closing, but is a
                         // closing tag for a previously opened+stacked node. Finalize the node now.
                         $closesNode = $this->state->popNodeFromStack();
-                        if ($closesNode instanceof ViewHelperNode && $closesNode->getNamespace() === $namespace && $closesNode->getIdentifier() === $method) {
+                        if ($closesNode instanceof PostponedViewHelperNode && $closesNode->getNamespace() === $namespace && $closesNode->getIdentifier() === $method) {
                             $arguments = $closesNode->getArguments();
                             $viewHelperNode = $closesNode;
                         } else {
@@ -352,14 +337,24 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     }
 
+                    if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES && $captured !== null) {
+                        // We are still capturing arguments and the last yield contained a value. Null-coalesce key
+                        // with captured string so object accessor becomes key name (ECMA shorthand literal)
+                        $arguments[$key ?? $captured] = $this->createObjectAccessorNodeOrRawValue($captured);
+                    }
+
+                    if ($definitions !== null) {
+                        $arguments = $this->createArguments($arguments, $definitions);
+                    }
+
                     $this->escapingEnabled = $escapingEnabledBackup;
 
                     try {
                         if (!isset($viewHelperNode)) {
-                            $viewHelperNode = new PostponedViewHelperNode($this->renderingContext, $namespace, $method, $arguments, $this->state);
+                            $viewHelperNode = new PostponedViewHelperNode($this->renderingContext, $namespace, $method);
                         }
                         $viewHelper = $viewHelperNode->getUninitializedViewHelper();
-                        $viewHelperNode->finalizeNode($arguments, $this->state);
+                        $viewHelperNode->setArguments($arguments);
                     } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $exception) {
                         $this->throwErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
@@ -379,7 +374,6 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
-                        //$captured = $key ?? $captured;
                         if (isset($key)) {
                             // We now have enough to assign the array value and clear our key and value store variables.
                             if ($captured !== null) {
@@ -433,6 +427,7 @@ class SequencedTemplateParser extends TemplateParser
     {
         $text = '{';
 
+        $startingPosition = $this->splitter->index;
         $node = null;
         $key = null;
         $namespace = null;
@@ -449,11 +444,26 @@ class SequencedTemplateParser extends TemplateParser
         $this->splitter->switch($this->contexts->inline);
         $sequence->next();
         foreach ($sequence as $symbol => $captured) {
-            $text .= $captured . chr($symbol);
+            $text .= $captured . $this->source->source{$this->splitter->index - 1};
             switch ($symbol) {
                 case Splitter::BYTE_BACKSLASH:
                     // Add the next character to the expression and advance the Position index by 1 to skip the next.
                     $text = substr($text, 0, -1) . $this->source->source[$this->splitter->index];
+                    break;
+
+                case Splitter::BYTE_ARRAY_START:
+                    ArrayStart:
+                    $isArray = true;
+                    if (!isset($key)) {
+                        $key = $captured ?? 0;
+                    }
+
+                    // Sequence the node. Pass the "use numeric keys?" boolean based on the current byte. Only array
+                    // start creates numeric keys. Inline start with keyless values creates ECMA style {foo:foo, bar:bar}
+                    // from {foo, bar}.
+                    $array[$key] = $node = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                    $this->splitter->switch($this->contexts->inline);
+                    unset($key);
                     break;
 
                 case Splitter::BYTE_INLINE:
@@ -463,21 +473,14 @@ class SequencedTemplateParser extends TemplateParser
                         $isArray = true;
                         $captured = $key ?? $captured ?? $potentialAccessor;
                         // This is a sub-syntax following a colon - meaning it is an array.
-                        #var_dump($captured);
-                        #exit();
                         if ($captured !== null) {
-                            if (!isset($key)) {
-                                $key = $captured;
-                            }
-                            $array[$key] = $this->sequenceArrayNode($sequence);
-                            #var_dump($array[$key]);
-                            #exit();
-                            $this->splitter->switch($this->contexts->inline);
-                            unset($key);
+                            goto ArrayStart;
                         }
-                    } else {
+                    } elseif ($this->splitter->index > ($startingPosition + 1)) {
                         // Ignore one ending additional curly brace. Subtracted in the BYTE_INLINE_END case below.
                         ++$ignoredEndingBraces;
+                    } else {
+                        goto ArrayStart;
                     }
                     break;
 
@@ -509,13 +512,20 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $isArray = true;
-                    #$text .= chr($symbol);
                     break;
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                     $hasColon = true;
                     $namespace = $key = $captured;
-                    #$text .= chr($symbol);
+                    break;
+
+                case Splitter::BYTE_WHITESPACE_SPACE:
+                case Splitter::BYTE_WHITESPACE_EOL:
+                case Splitter::BYTE_WHITESPACE_RETURN:
+                case Splitter::BYTE_WHITESPACE_TAB:
+                    $hasWhitespace = true;
+                    $isArray = $hasColon ?? $isArray ?? is_numeric($captured);
+                    $potentialAccessor = $potentialAccessor ?? $captured;
                     break;
 
                 case Splitter::BYTE_INLINE_END:
@@ -540,6 +550,8 @@ class SequencedTemplateParser extends TemplateParser
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
                         // inline pass operand. This significantly limits the number of times this (expensive) routine
                         // has to be executed.
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
+                        $node = new TextNode($text);
                         foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                             $matchedVariables = [];
                             // TODO: rewrite expression nodes to receive a sub-Splitter that lets the expression node
@@ -554,48 +566,46 @@ class SequencedTemplateParser extends TemplateParser
                                         $expressionNode->evaluate($this->renderingContext);
                                     }
 
-                                    $this->callInterceptor($expressionNode, InterceptorInterface::INTERCEPT_EXPRESSION, $this->state);
-                                    return $expressionNode;
+                                    $interceptionPoint = InterceptorInterface::INTERCEPT_EXPRESSION;
+                                    $node = $expressionNode;
                                 } catch (ExpressionException $error) {
-                                    return new TextNode($this->renderingContext->getErrorHandler()->handleExpressionError($error));
+                                    $node = new TextNode($this->renderingContext->getErrorHandler()->handleExpressionError($error));
                                 }
+                                break;
                             }
                         }
-                        return new TextNode($text);
-                    }
-
-                    if ($node instanceof ViewHelperNode) {
-                        $node->finalizeNode($arguments, $this->state);
+                    } elseif ($node instanceof PostponedViewHelperNode) {
+                        $node->setArguments($arguments);
                         $viewHelper = $node->getUninitializedViewHelper();
-                        $escapingEnabledBackup = $this->escapingEnabled;
-                        $this->escapingEnabled = (bool)$viewHelper->isOutputEscapingEnabled();
-                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
-                        $this->escapingEnabled = $escapingEnabledBackup;
+                        $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
                     } elseif (!$hasPass && !$callDetected) {
                         $potentialAccessor = $potentialAccessor ?? $captured;
                         if (isset($potentialAccessor)) {
+                            // If the accessor is set we can trust it is not a numeric value, since this will have
+                            // set $isArray to TRUE if nothing else already did so.
                             $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
-                            $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
+                            $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
                         } else {
                             $node = new TextNode($text);
+                            $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
                         }
                     } elseif ($hasPass && $this->renderingContext->getViewHelperResolver()->isAliasRegistered($potentialAccessor)) {
                         $childNodeToAdd = $node;
                         $node = new PostponedViewHelperNode($this->renderingContext, null, $captured, [], $this->state);
                         $node->addChildNode($childNodeToAdd);
-                        ($node->getUninitializedViewHelper())::postParseEvent($node, [], $this->state->getVariableContainer());
-                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $this->state);
+                        $viewHelper = $node->getUninitializedViewHelper();
+                        $viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
                     } else {
                         $node = $this->createObjectAccessorNodeOrRawValue(substr($text, 1, -1));
-                        $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $this->state);
-                        /*
-                        $this->throwErrorAtPosition(
-                            'Unexpected state, expecting either object accessor or ViewHelper but found no recognizable node',
-                            1558305422
-                        );
-                        */
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
                     }
 
+                    $escapingEnabledBackup = $this->escapingEnabled;
+                    $this->escapingEnabled = (bool)(isset($viewHelper) && $viewHelper->isOutputEscapingEnabled());
+                    $this->callInterceptor($node, $interceptionPoint, $this->state);
+                    $this->escapingEnabled = $escapingEnabledBackup;
                     return $node;
 
                 case Splitter::BYTE_TAG_END:
@@ -618,8 +628,6 @@ class SequencedTemplateParser extends TemplateParser
 
                 case Splitter::BYTE_PARENTHESIS_START:
                     $isArray = false;
-                    /*
-                    */
                     // Special case: if a parenthesis start was preceded by whitespace but had no pass operator we are
                     // not dealing with a ViewHelper call and will continue the sequencing, grabbing the parenthesis as
                     // part of the expression.
@@ -640,9 +648,8 @@ class SequencedTemplateParser extends TemplateParser
                     }
                     $this->splitter->switch($this->contexts->array);
                     $arguments = $this->sequenceArrayNode($sequence, $definitions)->getInternalArray();
+                    $node->setArguments($arguments);
                     $this->splitter->switch($this->contexts->inline);
-                    #$node->finalizeNode($arguments, $this->state);
-                    #$viewHelper::postParseEvent($node, $arguments, $this->state->getVariableContainer());
                     if ($childNodeToAdd) {
                         $escapingEnabledBackup = $this->escapingEnabled;
                         $this->escapingEnabled = (bool)$viewHelper->isChildrenEscapingEnabled();
@@ -658,15 +665,6 @@ class SequencedTemplateParser extends TemplateParser
                     unset($potentialAccessor);
                     break;
 
-                case Splitter::BYTE_WHITESPACE_SPACE:
-                case Splitter::BYTE_WHITESPACE_EOL:
-                case Splitter::BYTE_WHITESPACE_RETURN:
-                case Splitter::BYTE_WHITESPACE_TAB:
-                    $hasWhitespace = true;
-                    $isArray = $hasColon ?? $isArray;
-                    $potentialAccessor = $potentialAccessor ?? $captured;
-                    break;
-
                 default:
                     $this->throwErrorAtPosition('Unexpected token in inline context', 1557700788);
                     break;
@@ -679,44 +677,34 @@ class SequencedTemplateParser extends TemplateParser
     /**
      * @param \Iterator|Position[] $sequence
      * @param ArgumentDefinition[] $definitions
+     * @param bool $numeric
      * @return ArrayNode
      */
-    protected function sequenceArrayNode(\Iterator $sequence, array $definitions = null): ArrayNode
+    protected function sequenceArrayNode(\Iterator $sequence, array $definitions = null, bool $numeric = false): ArrayNode
     {
         $array = [];
 
+        $key = null;
         $escapingEnabledBackup = $this->escapingEnabled;
         $this->escapingEnabled = false;
+        $itemCount = 0;
 
         $sequence->next();
         foreach ($sequence as $symbol => $captured) {
             switch ($symbol) {
                 case Splitter::BYTE_ARRAY_START:
                 case Splitter::BYTE_INLINE:
-                    if (!isset($key)) {
-                        /*
-                        $this->throwErrorAtPosition(
-                            'Unexpected beginning of array without a preceding key',
-                            1557754838
-                        );
-                        */
-                        $key = 0;
-                    }
-                    $array[$key] = $this->sequenceArrayNode($sequence);
+                    $key = $key ?? $captured ?? ($numeric ? $itemCount : null);
+                    $array[$key] = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                    unset($key);
+                    ++$itemCount;
                     break;
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $key = $key ?? $captured;
+                    $key = $key ?? $captured ?? ($numeric ? $itemCount : null);
                     if ($definitions !== null && !isset($definitions[$key])) {
-                        // Verify presence of argument in definitions
-                        $this->throwErrorAtPosition(
-                            sprintf(
-                                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                                $key
-                            ),
-                            1558299426
-                        );
+                        $this->throwUnsupportedArgumentError($key, $definitions);
                     }
                     break;
 
@@ -725,17 +713,11 @@ class SequencedTemplateParser extends TemplateParser
                     if (!isset($key)) {
                         $key = $this->sequenceQuotedNode($sequence)->flatten(true);
                         if ($definitions !== null && !isset($definitions[$key])) {
-                            // Verify presence of argument in definitions
-                            $this->throwErrorAtPosition(
-                                sprintf(
-                                    'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                                    $key
-                                ),
-                                1558299426
-                            );
+                            $this->throwUnsupportedArgumentError($key, $definitions);
                         }
                     } else {
                         $array[$key] = $this->sequenceQuotedNode($sequence)->flatten();
+                        ++$itemCount;
                         unset($key);
                     }
                     break;
@@ -745,21 +727,14 @@ class SequencedTemplateParser extends TemplateParser
                     // which takes the value of the variable that has the same name as the key.
                     if ($captured !== null) {
                         // Comma has an unquoted, non-array value immediately before it. This is what we want to process.
-                        if (!isset($key)) {
-                            $key = $captured;
-                            if ($definitions !== null && !isset($definitions[$key])) {
-                                // Verify presence of argument in definitions
-                                $this->throwErrorAtPosition(
-                                    sprintf(
-                                        'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                                        $key
-                                    ),
-                                    1558299426
-                                );
-                            }
+                        $key = $key ?? ($numeric ? $itemCount : $captured);
+                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($numeric ? ($captured ?? $key) : $key);
+                        if ($definitions !== null && !isset($definitions[$key])) {
+                            $this->throwUnsupportedArgumentError($key, $definitions);
                         }
-                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
+                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($numeric ? $captured : $key);
                         unset($key);
+                        ++$itemCount;
                     }
                     break;
 
@@ -767,24 +742,16 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
+                    $key = $key ?? $captured ?? ($numeric ? $itemCount : null);
                     if (isset($key)) {
                         // We now have enough to assign the array value and clear our key and value store variables.
                         if ($captured !== null) {
                             $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
+                            ++$itemCount;
                             unset($key);
                         }
-                    } elseif ($captured !== null) {
-                        $key = $key ?? $captured;
-                        if ($definitions !== null && !isset($definitions[$key])) {
-                            // Verify presence of argument in definitions
-                            $this->throwErrorAtPosition(
-                                sprintf(
-                                    'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                                    $key
-                                ),
-                                1558299426
-                            );
-                        }
+                    } elseif ($captured !== null && $definitions !== null && !isset($definitions[$key])) {
+                        $this->throwUnsupportedArgumentError($key, $definitions);
                     }
                     break;
 
@@ -793,12 +760,16 @@ class SequencedTemplateParser extends TemplateParser
                 case Splitter::BYTE_INLINE_END:
                 case Splitter::BYTE_ARRAY_END:
                 case Splitter::BYTE_PARENTHESIS_END:
-                    if (isset($key)) {
-                        // We now have enough to assign the array value and clear our key and value store variables.
-                        if ($captured !== null) {
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
-                        }
+                    if ($captured !== null) {
+                        $key = $key ?? ($numeric ? $itemCount : $captured);
+                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
+                        unset($key);
                     }
+                    ++$itemCount;
+                    if ($definitions !== null) {
+                        $array = $this->createArguments($array, $definitions);
+                    }
+
                     $this->escapingEnabled = $escapingEnabledBackup;
                     return new ArrayNode($array);
 
@@ -811,25 +782,6 @@ class SequencedTemplateParser extends TemplateParser
             'Unterminated array',
             1557748574
         );
-    }
-
-    /**
-     * Returns an integer if the $accessor string is numeric, or returns
-     * an ObjectAccessor if it is not.
-     *
-     * @param string $accessor
-     * @return int|string
-     */
-    protected function createObjectAccessorNodeOrRawValue(string $accessor)
-    {
-        if (is_numeric($accessor)) {
-            return $accessor + 0;
-        }
-        if ($accessor === null) {
-            $this->throwErrorAtPosition('Attempt to create an empty object accessor', 1557748262);
-        }
-        $node = new ObjectAccessorNode(trim($accessor));
-        return $node;
     }
 
     /**
@@ -896,5 +848,56 @@ class SequencedTemplateParser extends TemplateParser
             }
         }
         $this->throwErrorAtPosition('Unterminated quoted expression', 1557700793);
+    }
+
+    /**
+     * Creates arguments by padding with missing+optional arguments
+     * and casting or creating BooleanNode where appropriate. Input
+     * array may not contain all arguments - output array will.
+     *
+     * @param array $arguments
+     * @param array $definitions
+     * @return array
+     */
+    protected function createArguments(array $arguments, array $definitions): array
+    {
+        $missingArguments = [];
+        foreach ($definitions as $name => $definition) {
+            $argument = &$arguments[$name] ?? null;
+            if ($definition->isRequired() && !isset($argument)) {
+                // Required but missing argument, causes failure (delayed, to report all missing arguments at once)
+                $missingArguments[] = $name;
+            } elseif (!isset($argument)) {
+                // Argument is optional (required filtered out above), fit it with the default value
+                $argument = $definition->getDefaultValue();
+            } elseif (($type = $definition->getType()) && ($type === 'bool' || $type === 'boolean')) {
+                // Cast the value or create a BooleanNode
+                $argument = is_scalar($argument) || is_bool($argument) || is_numeric($argument) ? (bool)$argument : new BooleanNode($argument);
+            }
+            $arguments[$name] = $argument;
+        }
+        if (!empty($missingArguments)) {
+            $this->throwErrorAtPosition('Required argument(s) not provided: ' . implode(', ', $missingArguments), 1558533510);
+        }
+        return $arguments;
+    }
+
+    /**
+     * Returns an integer if the $accessor string is numeric, or returns
+     * an ObjectAccessor if it is not.
+     *
+     * @param string $accessor
+     * @return int|float|ObjectAccessorNode
+     */
+    protected function createObjectAccessorNodeOrRawValue(string $accessor)
+    {
+        if (is_numeric($accessor)) {
+            return $accessor + 0;
+        }
+        if ($accessor === null) {
+            $this->throwErrorAtPosition('Attempt to create an empty object accessor', 1557748262);
+        }
+        $node = new ObjectAccessorNode($accessor);
+        return $node;
     }
 }

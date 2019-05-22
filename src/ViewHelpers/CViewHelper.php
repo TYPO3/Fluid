@@ -6,7 +6,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class CViewHelper extends AbstractViewHelper
@@ -34,14 +36,12 @@ class CViewHelper extends AbstractViewHelper
             'float' => $arguments['f'],
             'bool' => $arguments['b'],
             'array' => $arguments['a'],
-            'datetime' => ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : null)
+            'datetime' => ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : null),
+            'child' => $renderChildrenClosure(),
         ];
         if ($arguments['return']) {
             return $data;
         }
         return json_encode($data, JSON_PRETTY_PRINT);
-        /*'String: ' . var_export($arguments['s'], true) . ', Int: ' . var_export($arguments['i'], true) . ', Float: ' . var_export($arguments['f'], true) .
-            ', Bool: ' . var_export($arguments['b'], true) . ', Array: ' . json_encode($arguments['a']) .
-            ', DateTime: ' . ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : 'null');*/
     }
 }

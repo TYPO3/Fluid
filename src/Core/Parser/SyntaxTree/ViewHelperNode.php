@@ -208,15 +208,13 @@ class ViewHelperNode extends AbstractNode
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
             if (($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool')
                  && isset($argumentsObjectTree[$argumentName])) {
-                /*
                 if (!is_numeric($argumentsObjectTree[$argumentName])
                     && !is_bool($argumentsObjectTree[$argumentName])
                     && $argumentsObjectTree[$argumentName] !== null) {
-                } else {
                     $argumentsObjectTree[$argumentName] = (bool)$argumentsObjectTree[$argumentName];
+                } else {
+                    $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
                 }
-                */
-                $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
             }
         }
     }
