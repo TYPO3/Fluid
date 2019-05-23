@@ -73,6 +73,7 @@ class SequencedTemplateParser extends TemplateParser
         $sequence = $this->splitter->parse();
         $iterator = new \NoRewindIterator($sequence);
         $node = $this->sequenceRootNodesAsChildrenOfTopStack($iterator);
+
         if (!$node instanceof RootNode) {
             $child = $node;
             $node = new RootNode();
@@ -444,24 +445,22 @@ class SequencedTemplateParser extends TemplateParser
         $this->splitter->switch($this->contexts->inline);
         $sequence->next();
         foreach ($sequence as $symbol => $captured) {
-            $text .= $captured . $this->source->source{$this->splitter->index - 1};
+            $text .= $captured . $this->source->source[$this->splitter->index - 1];
             switch ($symbol) {
                 case Splitter::BYTE_BACKSLASH:
                     // Add the next character to the expression and advance the Position index by 1 to skip the next.
                     $text = substr($text, 0, -1) . $this->source->source[$this->splitter->index];
+                    ++$this->splitter->index;
                     break;
 
                 case Splitter::BYTE_ARRAY_START:
                     ArrayStart:
                     $isArray = true;
-                    if (!isset($key)) {
-                        $key = $captured ?? 0;
-                    }
 
                     // Sequence the node. Pass the "use numeric keys?" boolean based on the current byte. Only array
                     // start creates numeric keys. Inline start with keyless values creates ECMA style {foo:foo, bar:bar}
                     // from {foo, bar}.
-                    $array[$key] = $node = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                    $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
                     $this->splitter->switch($this->contexts->inline);
                     unset($key);
                     break;
@@ -478,6 +477,7 @@ class SequencedTemplateParser extends TemplateParser
                         }
                     } elseif ($this->splitter->index > ($startingPosition + 1)) {
                         // Ignore one ending additional curly brace. Subtracted in the BYTE_INLINE_END case below.
+                        // The expression in this case looks like {{inline}.....} and we capture the curlies.
                         ++$ignoredEndingBraces;
                     } else {
                         goto ArrayStart;
@@ -491,21 +491,17 @@ class SequencedTemplateParser extends TemplateParser
                 // explicitly found a quoted array key - and we extract it.
                 case Splitter::BYTE_QUOTE_SINGLE:
                 case Splitter::BYTE_QUOTE_DOUBLE:
-                    if (!isset($key)) {
-                        $key = $this->sequenceQuotedNode($sequence)->flatten(true);
-                    } else {
-                        $array[$key] = $this->sequenceQuotedNode($sequence)->flatten(true);
-                    }
+                    isset($key) ? ($array[$key] = $this->sequenceQuotedNode($sequence)->flatten(true)) & $key = null : $key = $this->sequenceQuotedNode($sequence)->flatten(true);
                     $isArray = true;
                     break;
 
                 case Splitter::BYTE_SEPARATOR_COMMA:
                     $isArray = true;
                     if ($captured !== null) {
-                        if (!isset($key)) {
-                            $key = $captured;
-                        }
-                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
+                        #if (!isset($key)) {
+                        #    $key = $captured;
+                        #}
+                        $array[$key ?? $captured] = $this->createObjectAccessorNodeOrRawValue($captured);
                         unset($key);
                     }
                     break;
@@ -532,15 +528,17 @@ class SequencedTemplateParser extends TemplateParser
                     if (--$ignoredEndingBraces >= 0) {
                         break;
                     }
+                    $isArray = $isArray ?: ($hasColon && !$hasPass && !$callDetected);
+
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
                     // appropriate type of ExpressionNode.
                     if ($isArray) {
                         if ($captured !== null) {
-                            if (!isset($key)) {
-                                $key = $captured;
-                            }
-                            $array[$key] = $this->createObjectAccessorNodeOrRawValue($captured);
+                            #if (!isset($key)) {
+                            #    $key = $captured;
+                            #}
+                            $array[$key ?? $captured] = $this->createObjectAccessorNodeOrRawValue($captured);
                         }
                         return new ArrayNode($array);
                     }
@@ -616,12 +614,8 @@ class SequencedTemplateParser extends TemplateParser
                     $hasPass = true;
                     $isArray = false;
                     $potentialAccessor = $potentialAccessor ?? $captured;
-                    if ($potentialAccessor !== null) {
-                        if (!isset($node)) {
-                            $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
-                        } else {
-                            $this->throwErrorAtPosition('Unexpected characters before inline pass: ' . $potentialAccessor, 1558267428);
-                        }
+                    if ($potentialAccessor !== null && !isset($node)) {
+                        $node = $this->createObjectAccessorNodeOrRawValue($potentialAccessor);
                     }
                     unset($namespace, $method, $potentialAccessor, $key, $callDetected);
                     break;
@@ -692,20 +686,24 @@ class SequencedTemplateParser extends TemplateParser
         $sequence->next();
         foreach ($sequence as $symbol => $captured) {
             switch ($symbol) {
-                case Splitter::BYTE_ARRAY_START:
-                case Splitter::BYTE_INLINE:
-                    $key = $key ?? $captured ?? ($numeric ? $itemCount : null);
-                    $array[$key] = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
-                    unset($key);
-                    ++$itemCount;
-                    break;
-
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $key = $key ?? $captured ?? ($numeric ? $itemCount : null);
                     if ($definitions !== null && !isset($definitions[$key])) {
                         $this->throwUnsupportedArgumentError($key, $definitions);
                     }
+                    ++$itemCount;
+                    break;
+
+                    case Splitter::BYTE_ARRAY_START:
+                case Splitter::BYTE_INLINE:
+                    $key = $key ?? $captured ?? ($numeric ? $itemCount : null);
+                    if ($definitions !== null && !isset($definitions[$key])) {
+                        $this->throwUnsupportedArgumentError($key, $definitions);
+                    }
+                    $array[$key] = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                    unset($key);
+                    ++$itemCount;
                     break;
 
                 case Splitter::BYTE_QUOTE_SINGLE:
@@ -728,11 +726,11 @@ class SequencedTemplateParser extends TemplateParser
                     if ($captured !== null) {
                         // Comma has an unquoted, non-array value immediately before it. This is what we want to process.
                         $key = $key ?? ($numeric ? $itemCount : $captured);
-                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($numeric ? ($captured ?? $key) : $key);
                         if ($definitions !== null && !isset($definitions[$key])) {
                             $this->throwUnsupportedArgumentError($key, $definitions);
                         }
-                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($numeric ? $captured : $key);
+                        $array[$key] = $this->createObjectAccessorNodeOrRawValue($numeric ? ($captured ?? $key) : $key);
+                        #$array[$key] = $this->createObjectAccessorNodeOrRawValue($numeric ? $captured : $key);
                         unset($key);
                         ++$itemCount;
                     }

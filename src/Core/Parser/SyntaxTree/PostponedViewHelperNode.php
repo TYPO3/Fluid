@@ -24,11 +24,6 @@ class PostponedViewHelperNode extends ViewHelperNode
 {
 
     /**
-     * @var string
-     */
-    protected $viewHelperClassName;
-
-    /**
      * @var NodeInterface[]
      */
     protected $arguments = [];
@@ -37,16 +32,6 @@ class PostponedViewHelperNode extends ViewHelperNode
      * @var ViewHelperInterface
      */
     protected $uninitializedViewHelper = null;
-
-    /**
-     * @var ArgumentDefinition[]
-     */
-    protected $argumentDefinitions = [];
-
-    /**
-     * @var string
-     */
-    protected $pointerTemplateCode = null;
 
     /**
      * @var string
@@ -66,16 +51,14 @@ class PostponedViewHelperNode extends ViewHelperNode
      * @param string $identifier the name of the ViewHelper to render, inside the namespace provided.
      * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
      */
-    public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments = [])
+    public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier)
     {
         $this->renderingContext = $renderingContext;
         $this->namespace = $namespace;
         $this->identifier = $identifier;
-        $this->arguments = $arguments;
     }
 
     /**
-     * @param RenderingContextInterface $renderingContext
      * @return ViewHelperInterface
      */
     public function getUninitializedViewHelper()
@@ -100,6 +83,10 @@ class PostponedViewHelperNode extends ViewHelperNode
         $this->validateArguments($this->argumentDefinitions, $this->arguments);
     }
 
+    /**
+     * @param ArgumentDefinition[] $argumentDefinitions
+     * @param NodeInterface[]|mixed[] $argumentsObjectTree
+     */
     protected function validateArguments(array $argumentDefinitions, array $argumentsObjectTree)
     {
         $additionalArguments = [];
@@ -111,6 +98,10 @@ class PostponedViewHelperNode extends ViewHelperNode
         $this->getUninitializedViewHelper()->validateAdditionalArguments($additionalArguments);
     }
 
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $evaluatedArguments = [];
