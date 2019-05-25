@@ -147,7 +147,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
         } else {
-            $this->markTestSkipped('Cache-specific test skipped');
+            $this->assertTrue(true);
         }
     }
 }

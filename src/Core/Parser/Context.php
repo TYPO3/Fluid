@@ -12,6 +12,7 @@ class Context
     public const CONTEXT_QUOTED = 4;
     public const CONTEXT_ATTRIBUTES = 5;
     public const CONTEXT_DEAD = 6;
+    public const CONTEXT_PROTECTED = 7;
 
     public $context = self::CONTEXT_ROOT;
     public $primaryMask = 0;

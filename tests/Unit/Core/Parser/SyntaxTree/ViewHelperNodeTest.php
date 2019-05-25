@@ -146,8 +146,8 @@ class ViewHelperNodeTest extends UnitTestCase
         $mockTemplateParser->_callRef('rewriteBooleanNodesInArgumentsObjectTree', $argumentDefinitions, $argumentsObjectTree);
 
         $this->assertEquals($argumentsObjectTree, [
-            'var1' => new BooleanNode(new TextNode('true')),
-            'var2' => new BooleanNode(new TextNode('true'))
+            'var1' => true,
+            'var2' => true
         ]);
     }
 }

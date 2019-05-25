@@ -91,10 +91,15 @@ abstract class AbstractNode implements NodeInterface
      * Appends a sub node to this node. Is used inside the parser to append children
      *
      * @param NodeInterface $childNode The sub node to add
-     * @return void
+     * @return self
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): NodeInterface
     {
-        $this->childNodes[] = $childNode;
+        if ($childNode instanceof TextNode && ($last = end($this->childNodes)) && $last instanceof TextNode) {
+            $last->appendText($childNode->getText());
+        } else {
+            $this->childNodes[] = $childNode;
+        }
+        return $this;
     }
 }

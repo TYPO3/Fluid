@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -40,6 +42,20 @@ class LayoutViewHelper extends AbstractViewHelper
     public function initializeArguments()
     {
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
+    }
+
+    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate): NodeInterface
+    {
+        //$arguments = $this->parsedArguments;
+        $variableContainer = $parsedTemplate->getVariableContainer();
+        if (isset($arguments['name'])) {
+            $layoutNameNode = $arguments['name'];
+        } else {
+            $layoutNameNode = 'Default';
+        }
+
+        $variableContainer->add('layoutName', $layoutNameNode);
+        return $this;
     }
 
     /**

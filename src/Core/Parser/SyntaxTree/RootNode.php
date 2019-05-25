@@ -55,8 +55,8 @@ class RootNode extends AbstractNode
                 return $this->childNodes[0];
             }
         }
-        if ($extractNode && !$containsNonTextNonNumericNodes) {
-            return array_reduce($this->childNodes, function($initial, NodeInterface $node) {
+        if (!$containsNonTextNonNumericNodes) {
+            $value = array_reduce($this->childNodes, function($initial, NodeInterface $node) {
                 if ($node instanceof TextNode) {
                     return $initial . $node->getText();
                 }
@@ -64,6 +64,10 @@ class RootNode extends AbstractNode
                     return $initial . (string) $node->getValue();
                 }
             }, '');
+            if ($extractNode) {
+                return $value;
+            }
+            return new TextNode($value);
         }
         return $this;
     }

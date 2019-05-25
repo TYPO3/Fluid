@@ -150,6 +150,16 @@ class ViewHelperNode extends AbstractNode
     /**
      * INTERNAL - only needed for compiling templates
      *
+     * @return NodeInterface[]
+     */
+    public function getParsedArguments()
+    {
+        return $this->arguments;
+    }
+
+    /**
+     * INTERNAL - only needed for compiling templates
+     *
      * @param string $argumentName
      * @return ArgumentDefinition
      */
@@ -160,12 +170,13 @@ class ViewHelperNode extends AbstractNode
 
     /**
      * @param NodeInterface $childNode
-     * @return void
+     * @return self
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): NodeInterface
     {
         parent::addChildNode($childNode);
         $this->uninitializedViewHelper->setChildNodes($this->childNodes);
+        return $this;
     }
 
     /**

@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -75,6 +77,19 @@ class SectionViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
+    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate): NodeInterface
+    {
+        //$arguments = $this->parsedArguments;
+        $variableContainer = $parsedTemplate->getVariableContainer();
+        /** @var TextNode $nameArgument */
+        $nameArgument = $arguments['name'];
+        $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
+        $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
+        $sections[$sectionName] = $this;
+        $variableContainer['1457379500_sections'] = $sections;
+        return $this;
+    }
+
     /**
      * Save the associated ViewHelper node in a static public class variable.
      * called directly after the ViewHelper was built.
@@ -103,8 +118,8 @@ class SectionViewHelper extends AbstractViewHelper
     public function render()
     {
         $content = '';
-        if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
-            $this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
+        if ($this->renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+            $this->renderingContext->getViewHelperVariableContainer()->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
             $content = $this->renderChildren();
         }
         return $content;

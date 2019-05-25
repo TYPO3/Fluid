@@ -267,7 +267,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     {
         $mockElseViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'getArguments', 'evaluate'], [], '', false);
         $mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue(ElseViewHelper::class));
-        $mockElseViewHelperNode->expects($this->at(1))->method('getArguments')->will($this->returnValue(['if' => new BooleanNode(false)]));
+        $mockElseViewHelperNode->expects($this->at(1))->method('getArguments')->will($this->returnValue(['if' => false]));
         $mockElseViewHelperNode->expects($this->never())->method('evaluate');
 
         $this->viewHelperNode->expects($this->any())->method('getChildNodes')->will($this->returnValue([$mockElseViewHelperNode]));

@@ -46,9 +46,10 @@ class Escape implements InterceptorInterface
      */
     public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState)
     {
+        $viewHelper = $node instanceof ViewHelperNode ? $node->getUninitializedViewHelper() : $node;
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
             /** @var ViewHelperNode $node */
-            if (!$node->getUninitializedViewHelper()->isChildrenEscapingEnabled()) {
+            if (!$viewHelper->isChildrenEscapingEnabled()) {
                 $this->childrenEscapingEnabled = false;
                 $this->viewHelperNodesWhichDisableTheInterceptor[] = $node;
             }
@@ -60,7 +61,7 @@ class Escape implements InterceptorInterface
                 }
             }
             /** @var ViewHelperNode $node */
-            if ($this->childrenEscapingEnabled && $node->getUninitializedViewHelper()->isOutputEscapingEnabled()) {
+            if ($this->childrenEscapingEnabled && $viewHelper->isOutputEscapingEnabled()) {
                 $node = new EscapingNode($node);
             }
         } elseif ($this->childrenEscapingEnabled && ($node instanceof ObjectAccessorNode || $node instanceof ExpressionNodeInterface)) {
