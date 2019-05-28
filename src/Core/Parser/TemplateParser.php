@@ -129,18 +129,26 @@ class TemplateParser
      */
     public function parse($templateString, $templateIdentifier = null)
     {
+        $templateIdentifier = $templateIdentifier ?? 'source_' . sha1($templateString);
         if (!is_string($templateString)) {
             throw new Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
         }
-        try {
-            $this->reset();
 
+        $this->reset();
+        if ($this->configuration->getUseSequencer()) {
             $templateString = $this->preProcessTemplateSource($templateString);
-
-            $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
-            $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
-        } catch (Exception $error) {
-            throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
+            $source = new Source($templateString);
+            $contexts = new Contexts();
+            $sequencer = new Sequencer($this->renderingContext, $this->getParsingState(), $contexts, $source);
+            $parsingState = $sequencer->sequence();
+        } else {
+            try {
+                $templateString = $this->preProcessTemplateSource($templateString);
+                $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
+                $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+            } catch (Exception $error) {
+                throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
+            }
         }
         $this->parsedTemplates[$templateIdentifier] = $parsingState;
         return $parsingState;

@@ -13,6 +13,17 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class RootNode extends AbstractNode
 {
+    public function addChildNode(NodeInterface $childNode): NodeInterface
+    {
+        if ($childNode instanceof RootNode) {
+            // Assimilate child nodes instead of allowing a root node inside a root node.
+            foreach ($childNode->getChildNodes() as $node) {
+                parent::addChildNode($node);
+            }
+            return $this;
+        }
+        return parent::addChildNode($childNode);
+    }
 
     /**
      * Evaluate the root node, by evaluating the subtree.
@@ -41,20 +52,17 @@ class RootNode extends AbstractNode
         if (empty($this->childNodes)) {
             return null;
         }
-        $nodesCounted = 0;
-        $containsNonTextNonNumericNodes = false;
-        foreach ($this->childNodes as $childNode) {
-            ++$nodesCounted;
-            if (!($childNode instanceof TextNode || $childNode instanceof NumericNode)) {
-                $containsNonTextNonNumericNodes = true;
-                break;
-            }
-        }
+        $nodesCounted = count($this->childNodes);
         if ($nodesCounted === 1) {
-            if ($containsNonTextNonNumericNodes) {
-                return $this->childNodes[0];
+            if ($extractNode) {
+                if ($this->childNodes[0] instanceof TextNode) {
+                    $text = $this->childNodes[0]->getText();
+                    return is_numeric($text) ? $text + 0 : $text;
+                }
             }
+            return $this->childNodes[0] instanceof RootNode ? $this->childNodes[0]->flatten($extractNode) : $this->childNodes[0];
         }
+        /*
         if (!$containsNonTextNonNumericNodes) {
             $value = array_reduce($this->childNodes, function($initial, NodeInterface $node) {
                 if ($node instanceof TextNode) {
@@ -69,6 +77,7 @@ class RootNode extends AbstractNode
             }
             return new TextNode($value);
         }
+        */
         return $this;
     }
 }

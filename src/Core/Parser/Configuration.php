@@ -28,6 +28,24 @@ class Configuration
     protected $escapingInterceptors = [];
 
     /**
+     * Use Sequencer-based parsing as substitute for the old regular expression
+     * based parsing. Can be set to "false" to use the old parser instead.
+     *
+     * @var bool
+     */
+    protected $useSequencer = true;
+
+    public function getUseSequencer(): bool
+    {
+        return $this->useSequencer;
+    }
+
+    public function setUseSequencer(bool $useSequencer): void
+    {
+        $this->useSequencer = $useSequencer;
+    }
+
+    /**
      * Adds an interceptor to apply to values coming from object accessors.
      *
      * @param InterceptorInterface $interceptor

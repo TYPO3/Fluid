@@ -60,21 +60,6 @@ class ParsingState implements ParsedTemplateInterface
     protected $compilable = true;
 
     /**
-     * @var Splitter
-     */
-    public $splitter;
-
-    /**
-     * @var Source
-     */
-    public $source;
-
-    /**
-     * @var Contexts
-     */
-    public $contexts;
-
-    /**
      * @param string $identifier
      * @return void
      */

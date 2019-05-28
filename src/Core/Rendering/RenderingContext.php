@@ -130,7 +130,7 @@ class RenderingContext implements RenderingContextInterface
     public function __construct(ViewInterface $view)
     {
         $this->view = $view;
-        $this->setTemplateParser(new SequencedTemplateParser());
+        $this->setTemplateParser(new TemplateParser());
         $this->setTemplateCompiler(new TemplateCompiler());
         $this->setTemplatePaths(new TemplatePaths());
         $this->setTemplateProcessors(

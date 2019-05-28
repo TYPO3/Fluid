@@ -104,7 +104,6 @@ class Splitter
         }
 
         $length = $this->source->length;
-        $source = &$this->source->source;
         $captured = null;
 
         // Quick scans for starting position. Check where the first tag or inline syntax occurs and if this is a

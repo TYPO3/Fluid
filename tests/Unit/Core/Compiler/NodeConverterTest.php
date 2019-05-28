@@ -158,7 +158,7 @@ class NodeConverterTest extends UnitTestCase
                 'TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper::renderStatic($arguments0, $renderChildrenClosure1, $renderingContext)'
             ],
             [$simpleRoot, '\'foobar\''],
-            [$multiRoot, '$output0'],
+            [$multiRoot, '\'foobarbaz\''],
             [new TextNode('test'), '\'test\''],
             [new NumericNode('3'), '3'],
             [new NumericNode('4.5'), '4.5'],
