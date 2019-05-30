@@ -63,7 +63,7 @@ class NumericNode extends AbstractNode
      * @throws Parser\Exception
      * @return self
      */
-    public function addChildNode(NodeInterface $childNode): NodeInterface
+    public function addChildNode(NodeInterface $childNode)
     {
         throw new Parser\Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
     }

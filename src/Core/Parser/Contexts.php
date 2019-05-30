@@ -36,6 +36,9 @@ class Contexts
     /** @var Context */
     public $protected;
 
+    /** @var Context */
+    public $accessor;
+
     public function __construct()
     {
         // Root context: aware of tag start or inline start only.
@@ -62,5 +65,8 @@ class Contexts
 
         // Inline protection mode: reacts to backtick and curly brace start and end, but ignores nested curly braces. Backtick enters quoted context.
         $this->protected = new Context(Context::CONTEXT_PROTECTED, '{}`');
+
+        // Inline accessor mode: identical to protected context but identifiable under its own name to distinguish it from protected
+        $this->accessor = new Context(Context::CONTEXT_ACCESSOR, '{}`');
     }
 }

@@ -35,7 +35,7 @@ interface NodeInterface
      * @param NodeInterface $childNode The sub node to add
      * @return self
      */
-    public function addChildNode(NodeInterface $childNode): NodeInterface;
+    public function addChildNode(NodeInterface $childNode);
 
     /**
      * Evaluates the node - can return not only strings, but arbitary objects.

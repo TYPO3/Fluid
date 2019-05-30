@@ -36,9 +36,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 class Splitter
 {
-    /** @var Debugger|null */
-    public $debugger;
-
     public const MAX_NAMESPACE_LENGTH = 10;
 
     public const BYTE_NULL = 0; // Zero-byte for terminating documents
@@ -97,76 +94,16 @@ class Splitter
     public function parse(): \Generator
     {
         $bytes = &$this->source->bytes;
+        $source = &$this->source->source;
 
         if (empty($bytes)) {
             yield Splitter::BYTE_NULL => null;
             return;
         }
 
-        $length = $this->source->length;
         $captured = null;
 
-        // Quick scans for starting position. Check where the first tag or inline syntax occurs and if this is a
-        // significantly high value, set the starting position to that position and initialize $captured with substr().
-        // Only do this if the source is at least two kilobytes long and we scan for more than one byte value.
-        // This allows optimised versions of a bit masks which for example does not match any tags.
-        if ($length < 2048 && count($this->context->bytes) > 1) {
-            yield from $this->yieldWithForeach();
-        } else {
-            // Determine the starting index as the minimum position of any of the bytes included in the bit mask.
-            $positions = [];
-            foreach ($this->context->bytes as $byte) {
-                if ($byte < 64) {
-                    $positions[] = $this->primaryMask & (1 << $byte) ? array_search($byte, $bytes, true) : $length;
-                } else {
-                    $positions[] = $this->secondaryMask & (1 << ($byte - self::MAP_SHIFT)) ? array_search($byte, $bytes, true) : $length;
-                }
-            }
-            $this->index = min($positions) ?: 1;
-            yield from $this->yieldWithFor();
-        }
-    }
-
-    /**
-     * @return \Generator|?string[]
-     */
-    protected function yieldWithForeach(): \Generator
-    {
-        $bytes = &$this->source->bytes;
-        $source = &$this->source->source;
-        $captured = null;
         foreach ($bytes as $this->index => $byte) {
-            // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
-            // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
-            // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.
-            if ($byte < 64 && ($this->primaryMask & (1 << $byte))) {
-                yield $byte => $captured;
-                $captured = null;
-            } elseif ($byte > 64 && $byte < 128 && ($this->secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
-                yield $byte => $captured;
-                $captured = null;
-            } else {
-                // Append captured bytes from source, must happen after the conditions above so we avoid appending tokens.
-                $captured .= $source{$this->index - 1};
-            }
-        }
-        if ($captured !== null) {
-            yield Splitter::BYTE_NULL => $captured;
-        }
-    }
-
-    /**
-     * @return \Generator|?string[]
-     */
-    protected function yieldWithFor(): \Generator
-    {
-        $length = $this->source->length;
-        $bytes = &$this->source->bytes;
-        $source = &$this->source->source;
-        $captured = $this->index > 1 ? substr($source, 0, $this->index - 1) : null;
-        for (; $this->index <= $length; ++$this->index) {
-            $byte = $bytes[$this->index];
-            //foreach ($bytes as $this->index => $byte) {
             // Decide which byte we encountered by explicitly checking if the encountered byte was in the minimum
             // range (not-mapped match). Next check is if the matched byte is within 64-128 range in which case
             // it is a mapped match. Anything else (>128) will be non-ASCII that is always captured.

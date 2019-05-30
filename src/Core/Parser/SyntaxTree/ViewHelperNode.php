@@ -172,7 +172,7 @@ class ViewHelperNode extends AbstractNode
      * @param NodeInterface $childNode
      * @return self
      */
-    public function addChildNode(NodeInterface $childNode): NodeInterface
+    public function addChildNode(NodeInterface $childNode)
     {
         parent::addChildNode($childNode);
         $this->uninitializedViewHelper->setChildNodes($this->childNodes);

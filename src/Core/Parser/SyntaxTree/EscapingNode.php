@@ -62,7 +62,7 @@ class EscapingNode extends AbstractNode
      * @throws Parser\Exception
      * @return self
      */
-    public function addChildNode(NodeInterface $childNode): NodeInterface
+    public function addChildNode(NodeInterface $childNode)
     {
         $this->node = $childNode;
         return $this;
