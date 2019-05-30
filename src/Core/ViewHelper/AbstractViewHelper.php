@@ -111,10 +111,14 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     /**
      * @param array $arguments
      * @param ParsedTemplateInterface $parsedTemplate
+     * @param RenderingContextInterface $renderingContext
      * @return NodeInterface
      */
-    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate): NodeInterface
+    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
     {
+        $this->renderingContext = $renderingContext;
+        $this->templateVariableContainer = $renderingContext->getVariableProvider();
+        $this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
         $this->validateParsedArguments($arguments);
         return $this->setParsedArguments($arguments);
     }
