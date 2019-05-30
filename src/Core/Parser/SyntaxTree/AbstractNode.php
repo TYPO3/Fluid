@@ -23,6 +23,16 @@ abstract class AbstractNode implements NodeInterface
     protected $childNodes = [];
 
     /**
+     * @param NodeInterface[] $childNodes
+     * @return NodeInterface
+     */
+    public function setChildNodes(array $childNodes)
+    {
+        $this->childNodes = $childNodes;
+        return $this;
+    }
+
+    /**
      * Evaluate all child nodes and return the evaluated results.
      *
      * @param RenderingContextInterface $renderingContext
@@ -102,22 +112,6 @@ abstract class AbstractNode implements NodeInterface
             }
             return $this->childNodes[0];
         }
-        /*
-        if (!$containsNonTextNonNumericNodes) {
-            $value = array_reduce($this->childNodes, function($initial, NodeInterface $node) {
-                if ($node instanceof TextNode) {
-                    return $initial . $node->getText();
-                }
-                if ($node instanceof NumericNode) {
-                    return $initial . (string) $node->getValue();
-                }
-            }, '');
-            if ($extractNode) {
-                return $value;
-            }
-            return new TextNode($value);
-        }
-        */
         return $this;
     }
 

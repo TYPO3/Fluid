@@ -30,6 +30,12 @@ interface NodeInterface
     public function getChildNodes();
 
     /**
+     * @param NodeInterface[] $childNodes
+     * @return NodeInterface
+     */
+    public function setChildNodes(array $childNodes);
+
+    /**
      * Appends a sub node to this node. Is used inside the parser to append children
      *
      * @param NodeInterface $childNode The sub node to add

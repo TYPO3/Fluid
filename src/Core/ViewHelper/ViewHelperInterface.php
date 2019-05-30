@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -18,6 +19,13 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ViewHelperInterface
 {
+    /**
+     * @param array $arguments
+     * @param ParsedTemplateInterface $parsedTemplate
+     * @param RenderingContextInterface $renderingContext
+     * @return NodeInterface
+     */
+    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface;
 
     /**
      * @return ArgumentDefinition[]

@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
@@ -77,17 +78,18 @@ class SectionViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
-    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate): NodeInterface
+    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
     {
-        //$arguments = $this->parsedArguments;
+        parent::postParse($arguments, $parsedTemplate, $renderingContext);
         $variableContainer = $parsedTemplate->getVariableContainer();
         /** @var TextNode $nameArgument */
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
         $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
-        $sections[$sectionName] = $this;
+        $sections[$sectionName] = clone $this;
         $variableContainer['1457379500_sections'] = $sections;
-        return $this;
+        $this->childNodes = [];
+        return new TextNode('');
     }
 
     /**

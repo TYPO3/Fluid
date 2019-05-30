@@ -8,7 +8,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\PostParseInterface;
@@ -44,9 +46,9 @@ class LayoutViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
     }
 
-    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate): NodeInterface
+    public function postParse(array $arguments, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
     {
-        //$arguments = $this->parsedArguments;
+        parent::postParse($arguments, $parsedTemplate, $renderingContext);
         $variableContainer = $parsedTemplate->getVariableContainer();
         if (isset($arguments['name'])) {
             $layoutNameNode = $arguments['name'];
@@ -55,7 +57,7 @@ class LayoutViewHelper extends AbstractViewHelper
         }
 
         $variableContainer->add('layoutName', $layoutNameNode);
-        return $this;
+        return new TextNode('');
     }
 
     /**

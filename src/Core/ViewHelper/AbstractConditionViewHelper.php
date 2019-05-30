@@ -233,8 +233,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     {
         $thenViewHelperEncountered = $elseViewHelperEncountered = false;
         foreach ($node->getChildNodes() as $childNode) {
-            if ($childNode instanceof ViewHelperNode) {
-                $viewHelperClassName = $childNode->getViewHelperClassName();
+            if ($childNode instanceof ViewHelperNode || $childNode instanceof ViewHelperInterface) {
+                $viewHelperClassName = $childNode instanceof ViewHelperNode ? $childNode->getViewHelperClassName() : get_class($childNode);
                 if (substr($viewHelperClassName, -14) === 'ThenViewHelper') {
                     $thenViewHelperEncountered = true;
                     $childNodesAsClosure = $compiler->wrapChildNodesInClosure($childNode);

@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
@@ -14,10 +15,12 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\PostponedViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * Class NodeConverter
@@ -59,7 +62,7 @@ class NodeConverter
      *
      * @param NodeInterface $node
      * @return array two-element array, see above
-     * @throws FluidException
+     * @throws Exception
      */
     public function convert(NodeInterface $node)
     {
@@ -73,11 +76,21 @@ class NodeConverter
             case $node instanceof NumericNode:
                 $converted = $this->convertNumericNode($node);
                 break;
+            case $node instanceof ViewHelperInterface:
+                $converted = $this->convertViewHelper($node);
+                break;
             case $node instanceof ViewHelperNode:
                 $converted = $this->convertViewHelperNode($node);
                 break;
             case $node instanceof ObjectAccessorNode:
-                $converted = $this->convertObjectAccessorNode($node);
+                // Flatten the node, which will return either the single child node or the node itself if it has no
+                // children. If the resulting node is a ViewHelper, compile that ViewHelper instead.
+                $flattened = $node->flatten();
+                if ($flattened instanceof ViewHelperInterface) {
+                    $converted = $this->convert($flattened);
+                } else {
+                    $converted = $this->convertObjectAccessorNode($node);
+                }
                 break;
             case $node instanceof ArrayNode:
                 $converted = $this->convertArrayNode($node);
@@ -150,6 +163,23 @@ class NodeConverter
      * @return array
      * @see convert()
      */
+    protected function convertViewHelper(ViewHelperInterface $viewHelper)
+    {
+        $viewHelperNode = new ViewHelperNodeProxy($this->templateCompiler->getRenderingContext());
+        $viewHelperNode->setArguments($viewHelper->getParsedArguments());
+        $viewHelperNode->setUninitializedViewHelper($viewHelper);
+        $viewHelperNode->setChildNodes($viewHelper->getChildNodes());
+        return $this->convertViewHelperNode($viewHelperNode);
+    }
+
+    /**
+     * Convert a single ViewHelperNode into its cached representation. If the ViewHelper implements the "Compilable" facet,
+     * the ViewHelper itself is asked for its cached PHP code representation. If not, a ViewHelper is built and then invoked.
+     *
+     * @param ViewHelperNode $node
+     * @return array
+     * @see convert()
+     */
     protected function convertViewHelperNode(ViewHelperNode $node)
     {
         $initializationPhpCode = '// Rendering ViewHelper ' . $node->getViewHelperClassName() . chr(10);
@@ -160,7 +190,8 @@ class NodeConverter
         $viewHelperInitializationPhpCode = '';
 
         try {
-            $convertedViewHelperExecutionCode = $node->getUninitializedViewHelper()->compile(
+            $viewHelper = $node->getUninitializedViewHelper();
+            $convertedViewHelperExecutionCode = $viewHelper->compile(
                 $argumentsVariableName,
                 $renderChildrenClosureVariableName,
                 $viewHelperInitializationPhpCode,
@@ -168,8 +199,33 @@ class NodeConverter
                 $this->templateCompiler
             );
 
-            $arguments = $node->getArgumentDefinitions();
+            $arguments = $viewHelper->prepareArguments();
             $argumentInitializationCode = sprintf('%s = array();', $argumentsVariableName) . chr(10);
+
+            $alreadyBuiltArguments = [];
+            foreach ($node->getArguments() as $argumentName => $argumentValue) {
+                if ($argumentValue instanceof NodeInterface) {
+                    $converted = $this->convert($argumentValue);
+                } elseif (is_numeric($argumentValue)) {
+                    // this case might happen for simple values
+                    $converted['execution'] = $argumentValue + 0;
+                } elseif (is_array($argumentValue)) {
+                    $converted = $this->convertArray($argumentValue);
+                } else {
+                    // this case might happen for simple values
+                    $converted['initialization'] = '';
+                    $converted['execution'] = var_export($argumentValue, true);
+                }
+                $argumentInitializationCode .= $converted['initialization'];
+                $argumentInitializationCode .= sprintf(
+                    '%s[\'%s\'] = %s;',
+                    $argumentsVariableName,
+                    $argumentName,
+                    $converted['execution']
+                ) . chr(10);
+                $alreadyBuiltArguments[$argumentName] = true;
+            }
+
             foreach ($arguments as $argumentName => $argumentDefinition) {
                 if (!isset($alreadyBuiltArguments[$argumentName])) {
                     $argumentInitializationCode .= sprintf(
@@ -180,30 +236,6 @@ class NodeConverter
                         chr(10)
                     );
                 }
-            }
-
-            $alreadyBuiltArguments = [];
-            foreach ($node->getArguments() as $argumentName => $argumentValue) {
-                if ($argumentValue instanceof NodeInterface) {
-                    $converted = $this->convert($argumentValue);
-                } elseif (is_numeric($argumentValue)) {
-                    // this case might happen for simple values
-                    $converted['execution'] = $argumentValue + 0;
-                } else {
-                    // this case might happen for simple values
-                    $converted['execution'] = sprintf(
-                        '\'%s\';',
-                        $this->escapeTextForUseInSingleQuotes($argumentValue)
-                    ) . chr(10);
-                }
-                $argumentInitializationCode .= $converted['initialization'];
-                $argumentInitializationCode .= sprintf(
-                    '%s[\'%s\'] = %s;',
-                    $argumentsVariableName,
-                    $argumentName,
-                    $converted['execution']
-                ) . chr(10);
-                $alreadyBuiltArguments[$argumentName] = true;
             }
 
             // Build up closure which renders the child nodes
@@ -279,12 +311,22 @@ class NodeConverter
      */
     protected function convertArrayNode(ArrayNode $node)
     {
+        return $this->convertArray($node->getInternalArray());
+    }
+
+    /**
+     * @param ArrayNode $node
+     * @return array
+     * @see convert()
+     */
+    protected function convertArray(array $array)
+    {
         $initializationPhpCode = '// Rendering Array' . chr(10);
         $arrayVariableName = $this->variableName('array');
 
         $initializationPhpCode .= sprintf('%s = array();', $arrayVariableName) . chr(10);
 
-        foreach ($node->getInternalArray() as $key => $value) {
+        foreach ($array as $key => $value) {
             if ($value instanceof NodeInterface) {
                 $converted = $this->convert($value);
                 $initializationPhpCode .= $converted['initialization'];

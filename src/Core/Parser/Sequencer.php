@@ -321,7 +321,7 @@ class Sequencer
                         return null;
                     }
 
-                    $viewHelperNode->postParse($arguments, $this->state);
+                    $viewHelperNode = $viewHelperNode->postParse($arguments, $this->state, $this->renderingContext);
 
                     return $viewHelperNode;
 
@@ -610,7 +610,7 @@ class Sequencer
                     } elseif ($callDetected) {
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
                         // in which case there is no further syntax to come.
-                        $node->postParse($arguments, $this->state);
+                        $node = $node->postParse($arguments, $this->state, $this->renderingContext);
                         $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_ACCESSOR) {
                         // If we are currently in "accessor" context we can now add the accessor by stripping the collected text.
@@ -623,7 +623,6 @@ class Sequencer
                         // has to be executed.
                         $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
                         $childNodeToAdd = new TextNode($text);
-                        $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd;
                         foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                             $matchedVariables = [];
                             // TODO: rewrite expression nodes to receive a sub-Splitter that lets the expression node
@@ -632,16 +631,15 @@ class Sequencer
                             preg_match_all($expressionNodeTypeClassName::$detectionExpression, $text, $matchedVariables, PREG_SET_ORDER);
                             foreach ($matchedVariables as $matchedVariableSet) {
                                 try {
-                                    $expressionNode = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $this->state);
-                                    $node = $expressionNode;
+                                    $childNodeToAdd = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $this->state);
                                     $interceptionPoint = InterceptorInterface::INTERCEPT_EXPRESSION;
                                 } catch (ExpressionException $error) {
                                     $childNodeToAdd = new TextNode($this->renderingContext->getErrorHandler()->handleExpressionError($error));
-                                    $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd;
                                 }
                                 break;
                             }
                         }
+                        $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd;
                     } elseif (!$hasPass && !$callDetected) {
                         // Third priority check is if there was no pass syntax and no ViewHelper, in which case we
                         // create a standard ObjectAccessorNode; alternatively, if nothing was captured (expression
@@ -661,7 +659,7 @@ class Sequencer
                         $childNodeToAdd = $node;
                         $node = $this->resolver->createViewHelperInstance(null, $potentialAccessor);
                         $node->addChildNode($childNodeToAdd);
-                        $node->postParse($arguments, $this->state);
+                        $node = $node->postParse($arguments, $this->state, $this->renderingContext);
                         $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
                     } else {
                         # TODO: should this be an error case?
@@ -708,7 +706,13 @@ class Sequencer
             switch ($symbol) {
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $key = $key ?? $captured ?? $keyOrValue->flatten(true);
+                    // Colon or equals has same meaning (which allows tag syntax as argument syntax). Encountering this
+                    // byte always means the preceding byte was a key. However, if nothing was captured before this,
+                    // it means colon or equals was used without a key which is a syntax error.
+                    $key = $key ?? $captured ?? (isset($keyOrValue) ? $keyOrValue->flatten(true) : null);
+                    if (!isset($key)) {
+                        throw $this->createErrorAtPosition('Unexpected colon or equals sign, no preceding key', 1559250839);
+                    }
                     if ($definitions !== null && !$numeric && !isset($definitions[$key])) {
                         throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                     }
@@ -716,16 +720,20 @@ class Sequencer
 
                 case Splitter::BYTE_ARRAY_START:
                 case Splitter::BYTE_INLINE:
+                    // Minimal safeguards to improve error feedback. Theoretically such "garbage" could simply be ignored
+                    // without causing problems to the parser, but it is probably best to report it as it could indicate
+                    // the user expected X value but gets Y and doesn't notice why.
                     if ($captured !== null) {
                         throw $this->createErrorAtPosition('Unexpected content before array/inline start in associative array, ASCII: ' . ord($captured), 1559131849);
                     }
-                    if (!isset($key)) {
-                        if (!$numeric) {
-                            throw $this->createErrorAtPosition('Unexpected array/inline start in associative array without preceding key', 1559131848);
-                        }
-                        $key = ++$itemCount;
+                    if (!isset($key) && !$numeric) {
+                        throw $this->createErrorAtPosition('Unexpected array/inline start in associative array without preceding key', 1559131848);
                     }
 
+                    // Encountering a curly brace or square bracket start byte will both cause a sub-array to be sequenced,
+                    // the difference being that only the square bracket will cause third parameter ($numeric) passed to
+                    // sequenceArrayNode() to be true, which in turn causes key-less items to be added with numeric indexes.
+                    $key = $key ?? ++$itemCount;
                     $array[$key] = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
                     $keyOrValue = null;
                     $key = null;
@@ -733,40 +741,39 @@ class Sequencer
 
                 case Splitter::BYTE_QUOTE_SINGLE:
                 case Splitter::BYTE_QUOTE_DOUBLE:
+                    // Safeguard: if anything is captured before a quote this indicates garbage leading content. As with
+                    // the garbage safeguards above, this one could theoretically be ignored in favor of silently making
+                    // the odd syntax "just work".
                     if ($captured !== null) {
                         throw $this->createErrorAtPosition('Unexpected content before quote start in associative array, ASCII: ' . ord($captured), 1559145560);
                     }
-                    if (!isset($key)) {
-                        $keyOrValue = $this->sequenceQuotedNode($sequence, $countedEscapes);
-                        break;
-                    }
 
-                    $array[$key] = $this->sequenceQuotedNode($sequence, $countedEscapes)->flatten(true);
-                    $keyOrValue = null;
-                    $key = null;
-                    $countedEscapes = 0;
+                    // Quotes will always cause sequencing of the quoted string, but differs in behavior based on whether
+                    // or not the $key is set. If $key is set, we know for sure we can assign a value. If it is not set
+                    // we instead leave $keyOrValue defined so this will be processed by one of the next iterations.
+                    $keyOrValue = $this->sequenceQuotedNode($sequence, $countedEscapes);
+                    if (isset($key)) {
+                        $array[$key] = $keyOrValue->flatten(true);
+                        $keyOrValue = null;
+                        $key = null;
+                        $countedEscapes = 0;
+                    }
                     break;
 
                 case Splitter::BYTE_SEPARATOR_COMMA:
-                    // Comma separator: if neither key nor value has been collected, the result is an ObjectAccessorNode
-                    // which takes the value of the variable that has the same name as the key.
-
+                    // Comma separator: if we've collected a key or value, use it. Otherwise, use captured string.
+                    // If neither key nor value nor captured string exists, ignore the comma (likely a tailing comma).
                     if (isset($keyOrValue)) {
                         // Key or value came as quoted string and exists in $keyOrValue
-                        if ($numeric) {
-                            $array[++$itemCount] = $keyOrValue->flatten(true);
-                        } else {
-                            $key = $keyOrValue->flatten(true);
-                            $array[$key] = is_numeric($key) ? $key + 0 : new ObjectAccessorNode($key);
-                        }
-                    } elseif ($captured !== null) {
+                        $potentialValue = $keyOrValue->flatten(true);
+                        $key = $numeric ? ++$itemCount : $potentialValue;
+                        $array[$key] = $numeric ? $potentialValue : (is_numeric($key) ? $key + 0 : new ObjectAccessorNode($key));
+                    } elseif (isset($captured)) {
                         $key = $key ?? ($numeric ? ++$itemCount : $captured);
-                        if (isset($key)) {
-                            if ($definitions !== null && !$numeric && !isset($definitions[$key])) {
-                                throw $this->createUnsupportedArgumentError((string)$key, $definitions);
-                            }
-                            $array[$key] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured ?? $key);
+                        if (!$numeric && isset($definitions) && !isset($definitions[$key])) {
+                            throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                         }
+                        $array[$key] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                     }
                     $keyOrValue = null;
                     $key = null;
@@ -776,26 +783,35 @@ class Sequencer
                 case Splitter::BYTE_WHITESPACE_RETURN:
                 case Splitter::BYTE_WHITESPACE_EOL:
                 case Splitter::BYTE_WHITESPACE_SPACE:
+                    // Any whitespace attempts to set the key, if not already set. The captured string may be null as
+                    // well, leaving the $key variable still null and able to be coalesced.
                     $key = $key ?? $captured;
                     break;
 
                 case Splitter::BYTE_BACKSLASH:
+                    // Escapes are simply counted and passed to the sequenceQuotedNode() method, causing that method
+                    // to ignore exactly this number of backslashes before a matching quote is seen as closing quote.
                     ++$countedEscapes;
                     break;
 
-                case Splitter::BYTE_TAG_CLOSE:
-                case Splitter::BYTE_TAG_END:
                 case Splitter::BYTE_INLINE_END:
                 case Splitter::BYTE_ARRAY_END:
                 case Splitter::BYTE_PARENTHESIS_END:
-                    if (isset($key) && $captured !== null) {
-                        $array[$key] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
-                    } elseif ($numeric && $captured === null && $keyOrValue) {
-                        $array[++$itemCount] = $keyOrValue->flatten(true);
-                    } elseif ($captured !== null) {
-                        $key = $key ?? ($numeric ? ++$itemCount : $keyOrValue->flatten(true));
-                        $potentialValue = (isset($keyOrValue) ? $keyOrValue : null);
-                        $array[$key] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured ?? $potentialValue ?? $key);
+                    // Array end indication. Check if anything was collected previously or was captured currently,
+                    // assign that to the array and return an ArrayNode with the full array inside.
+                    $captured = $captured ?? (isset($keyOrValue) ? $keyOrValue->flatten(true) : null);
+                    $key = $key ?? ($numeric ? ++$itemCount : $captured);
+                    if (isset($captured, $key)) {
+                        if (is_numeric($captured)) {
+                            $array[$key] = $captured + 0;
+                        } elseif (isset($keyOrValue)) {
+                            $array[$key] = $keyOrValue->flatten();
+                        } else {
+                            $array[$key] = new ObjectAccessorNode($captured ?? $key);
+                        }
+                    }
+                    if (!$numeric && isset($key, $definitions) && !isset($definitions[$key])) {
+                        throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                     }
                     $this->escapingEnabled = $escapingEnabledBackup;
                     return new ArrayNode($array);
@@ -854,15 +870,11 @@ class Sequencer
                 case Splitter::BYTE_INLINE:
                     $countedEscapes = 0; // Theoretically not required but done in case of stray escapes (gets ignored)
                     // The quoted string contains a sub-expression. We extract the captured content so far and if it
-                    // is not an empty string, we put the value in the $pinnedValue variable and decide what to do
-                    // next depending on what happens:
-                    // - If we encounter the closing quote and there's no value either before or after, we return
-                    //   the pinned value because the inline expression was the only child of the quoted node.
-                    // - But if there is content either before the pinned value or after a possible inline node, then
-                    //   we add the pinned value as sibline node and return the root node.
+                    // is not an empty string, add it as a child of the RootNode we're building, then we add the inline
+                    // expression as next sibling and continue the loop.
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
-                        //$this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
+                        $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
                         $node->addChildNode($childNode);
                     }
 
@@ -889,11 +901,7 @@ class Sequencer
                         break;
                     }
                     if ($captured !== null) {
-                        $childNode = new TextNode($captured);
-                        //$childNode = new TextNode(trim($captured, '\\'));
-                        //$childNode = is_numeric($captured) ? new NumericNode($captured) : new TextNode($captured);
-                        //$this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
-                        $node->addChildNode($childNode);
+                        $node->addChildNode(new TextNode($captured));
                     }
                     $this->splitter->switch($contextToRestore);
                     return $node;
