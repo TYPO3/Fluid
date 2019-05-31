@@ -71,7 +71,7 @@ class CastingExpressionNodeTest extends UnitTestCase
             ['mystring as float', ['mystring' => '1.23'], 1.23],
             ['myvariable as integer', ['myvariable' => 321], 321],
             ['myinteger as string', ['myinteger' => 111], '111'],
-            ['myinteger as bool', ['myinteger' => 1], true],
+            ['myinteger as boolean', ['myinteger' => 1], true],
             ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', 90000)],
             ['mydate as DateTime', ['mydate' => 'January'], new \DateTime('January')],
             ['mystring as array', ['mystring' => 'foo,bar'], ['foo', 'bar']],

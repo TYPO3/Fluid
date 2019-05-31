@@ -12,6 +12,9 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 class Configuration
 {
+    public const FEATURE_PARSING = 'parsing';
+    public const FEATURE_ESCAPING = 'escaping';
+    public const FEATURE_SEQUENCER = 'sequencer';
 
     /**
      * Generic interceptors registered with the configuration.
@@ -28,21 +31,33 @@ class Configuration
     protected $escapingInterceptors = [];
 
     /**
-     * Use Sequencer-based parsing as substitute for the old regular expression
-     * based parsing. Can be set to "false" to use the old parser instead.
-     *
-     * @var bool
+     * @var array
      */
-    protected $useSequencer = true;
+    protected $features = [
+        self::FEATURE_PARSING => true,
+        self::FEATURE_ESCAPING => true,
+        self::FEATURE_SEQUENCER => false,
+    ];
 
-    public function getUseSequencer(): bool
+    /**
+     * @param string $feature
+     * @param string|int|bool|null $state
+     * @return bool
+     */
+    public function setFeatureState(string $feature, $state): bool
     {
-        return $this->useSequencer;
+        $previous = $this->features[$feature];
+        if (is_bool($state) || is_numeric($state) || is_null($state)) {
+            $this->features[$feature] = (bool)$state;
+        } elseif (is_string($state)) {
+            $this->features[$feature] = in_array(strtolower($state), ['on', 'true', 'enabled']);
+        }
+        return $previous;
     }
 
-    public function setUseSequencer(bool $useSequencer): void
+    public function isFeatureEnabled(string $feature): bool
     {
-        $this->useSequencer = $useSequencer;
+        return $this->features[$feature];
     }
 
     /**

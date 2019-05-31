@@ -10,9 +10,10 @@ use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SequencingException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
@@ -115,6 +116,11 @@ class SequencerTest extends UnitTestCase
                 $context,
                 1407060572
             ],
+            'Invalid inline syntax with Fluid-like symbols' => [
+                '{- > foo}',
+                $context,
+                1558782228
+            ],
             'Colon without preceding key' => [
                 '{f:c(: 1)}',
                 $context,
@@ -130,7 +136,12 @@ class SequencerTest extends UnitTestCase
                 $context,
                 1558298976
             ],
-            'Unsupported value-less argument in ViewHelper as inline' => [
+            'Unsupported key-less argument with subsequent valid argument in ViewHelper as inline' => [
+                '{f:c(unsupported, s)}',
+                $context,
+                1558298976
+            ],
+            'Unsupported key-less argument in ViewHelper as inline' => [
                 '{f:c(unsupported)}',
                 $context,
                 1558298976
@@ -311,81 +322,96 @@ class SequencerTest extends UnitTestCase
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse([], $state, $context)),
             ],
-            'self-closed active tag with hardcoded string argument in root context' => [
+            'self-closed active tag with hardcoded string argument' => [
                 '<f:c s="foo" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo'], $state, $context)),
             ],
-            'self-closed active tag with hardcoded string and integer arguments in root context' => [
+            'self-closed active tag with hardcoded string and integer arguments' => [
                 '<f:c s="foo" i="1" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo', 'i' => 1], $state, $context)),
             ],
-            'self-closed active tag with object accessor string argument in root context' => [
+            'self-closed active tag with object accessor string argument in string argument' => [
                 '<f:c s="{string}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('string')], $state, $context)),
             ],
-            'self-closed active tag with object accessor string argument with string before accessor in root context' => [
+            'self-closed active tag with object accessor string argument with string before accessor in string argument' => [
                 '<f:c s="before {string}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new TextNode('before '))->addChildNode(new ObjectAccessorNode('string'))], $state, $context)),
             ],
-            'self-closed active tag with object accessor string argument with string after accessor in root context' => [
+            'self-closed active tag with object accessor string argument with string after accessor in string argument' => [
                 '<f:c s="{string} after" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode(' after'))], $state, $context)),
                 #(new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('string')], $state)),
             ],
-            'self-closed active tag with object accessor string argument with string before and after accessor in root context' => [
+            'self-closed active tag with object accessor string argument with string before and after accessor in string argument' => [
                 '<f:c s="before {string} after" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new TextNode('before '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode(' after'))], $state, $context)),
             ],
-            'self-closed active tag with string argument containing different quotes inside in root context' => [
+            'self-closed active tag with string argument containing different quotes inside in string argument' => [
                 '<f:c s="before \'quoted\' after" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'before \'quoted\' after'], $state, $context)),
             ],
-            'self-closed active tag with string argument containing escaped same type quotes inside in root context' => [
+            'self-closed active tag with string argument containing escaped same type quotes inside in string argument' => [
                 '<f:c s="before \\"quoted\\" after" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'before "quoted" after'], $state, $context)),
             ],
-            'self-closed active tag with array argument with single unquoted element in root context' => [
+            'self-closed active tag with array argument with single unquoted element in array argument' => [
                 '<f:c a="{foo:bar}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar')])], $state, $context)),
             ],
-            'self-closed active tag with array argument with two unquoted elements with comma and space in root context' => [
+            'self-closed active tag with array argument with two unquoted elements with comma and space in array argument' => [
                 '<f:c a="{foo:bar, baz:honk}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar'), 'baz' => new ObjectAccessorNode('honk')])], $state, $context), $context),
             ],
-            'self-closed active tag with array argument with two unquoted elements with comma without space in root context' => [
+            'self-closed active tag with array argument with two unquoted elements with comma without space in array argument' => [
                 '<f:c a="{foo:bar,baz:honk}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar'), 'baz' => new ObjectAccessorNode('honk')])], $state, $context)),
             ],
-            'self-closed active tag with array argument with single double-quoted element (no escaping) in root context' => [
+            'self-closed active tag with array argument with single double-quoted element (no escaping) in array argument' => [
                 '<f:c a="{foo:"bar"}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 'bar'])], $state, $context)),
             ],
-            'self-closed active tag with array argument with single single-quoted element (no escaping) in root context' => [
+            'self-closed active tag with array argument with single single-quoted element (no escaping) in array argument' => [
                 '<f:c a="{foo:\'bar\'}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 'bar'])], $state, $context)),
             ],
-            'self-closed active tag with array argument with single integer element in root context' => [
+            'self-closed active tag with array argument with single integer element in array argument' => [
                 '<f:c a="{foo:1}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 1])], $state, $context)),
             ],
-            'self-closed active tag with array argument with double-quoted key and single integer element in root context' => [
+            'self-closed active tag with array argument with double-quoted key and single integer element in array argument' => [
                 '<f:c a="{"foo":1}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with square brackets and single double-quoted string element in array argument' => [
+                '<f:c a="["foo"]" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo'])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with square brackets and single double-quoted object accessor element in array argument' => [
+                '<f:c a="["{foo}"]" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ObjectAccessorNode('foo')])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with square brackets and two-element ECMA literal array in array argument' => [
+                '<f:c a="[{foo, bar}]" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ArrayNode(['foo' => new ObjectAccessorNode('foo'), 'bar' => new ObjectAccessorNode('bar')])])], $state, $context)),
             ],
             'self-closed active tag with square brackets array argument with double-quoted key and single integer element in root context' => [
                 '<f:c a="["foo":1]" />',
@@ -585,10 +611,15 @@ class SequencerTest extends UnitTestCase
                 $context,
                 (new RootNode())->addChildNode(new ObjectAccessorNode('foo.{bar}')),
             ],
-            'complex inline syntax not detected as Fluid in root context' => [
-                '{string with < raw || something}',
+            'inline syntax with comma when array is not allowed is detected as possible expression that becomes TextNode' => [
+                '{foo, bar, baz}',
                 $context,
-                (new RootNode())->addChildNode(new TextNode('{string with < raw || something}')),
+                (new RootNode())->addChildNode(new TextNode('{foo, bar, baz}')),
+            ],
+            'complex inline syntax not detected as Fluid in root context' => [
+                '{string - with < raw || something}',
+                $context,
+                (new RootNode())->addChildNode(new TextNode('{string - with < raw || something}')),
             ],
             'complex inline syntax with sub-accessor-like syntax not detected as Fluid in root context' => [
                 '{string with < raw {notFluid} || something}',
@@ -657,6 +688,81 @@ class SequencerTest extends UnitTestCase
         ];
     }
 
+    /**
+     * @test
+     */
+    public function stressTestOneThousandArrayItems()
+    {
+        $context = $this->createContext();
+        $state = $this->createState();
+        $thousandRandomArrayItemsInline = '{f:c(a: {';
+        $thousandRandomArray = [];
+        $chars = str_split('abcdef1234567890');
+        $createRandomString = function (int $length) use ($chars): string {
+            $string = '';
+            for ($i = 0; $i < $length; $i++) {
+                $string .= array_rand($chars);
+            }
+            return $string;
+        };
+        for ($i = 0; $i < 1000; $i++) {
+            $key = 'k' . $createRandomString(rand(16, 32));
+            $value = 'v' . $createRandomString(rand(16, 32));
+            $thousandRandomArrayItemsInline .= $key . ': "' . $value . '", ';
+            $thousandRandomArray[$key] = $value;
+        }
+        $thousandRandomArrayItemsInline .= '})}';
+        $expectedRootNode = (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode($thousandRandomArray)], $state, $context));
+        $this->createsExpectedNodeStructure($thousandRandomArrayItemsInline, $context, $expectedRootNode);
+    }
+
+    /**
+     * @test
+     */
+    public function stressTestOneHundredInlinePasses()
+    {
+        $context = $this->createContext();
+        $template = '{foo ';
+
+        $expectedRootNode = new RootNode();
+        $node = $expectedRootNode;
+        for ($i = 0; $i < 100; $i++) {
+            $childNode = new RawViewHelper();
+            $node->addChildNode($childNode);
+            $template .= '| f:format.raw() ';
+            $node = $childNode;
+        }
+        $node->addChildNode(new ObjectAccessorNode('foo'));
+        $template .= '}';
+
+        $this->createsExpectedNodeStructure($template, $context, $expectedRootNode);
+    }
+
+    /**
+     * @test
+     * @dataProvider getEscapingTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param RootNode $expectedRootNode
+     */
+    public function escapingTest(string $template, RenderingContextInterface $context, RootNode $expectedRootNode)
+    {
+        $this->createsExpectedNodeStructure($template, $context, $expectedRootNode);
+    }
+
+    public function getEscapingTestValues(): array
+    {
+        $context = $this->createContext();
+        $context->getTemplateParser()->getConfiguration()->addEscapingInterceptor(new Escape());
+        return [
+            'escapes object accessors in root context' => [
+                '{foo}',
+                $context,
+                (new RootNode())->addChildNode((new EscapingNode(new ObjectAccessorNode('foo')))),
+            ],
+        ];
+    }
+
     protected function createContext(string $errorHandlerClass = StandardErrorHandler::class): RenderingContextInterface
     {
         $variableProvider = $this->getMockBuilder(VariableProviderInterface::class)->getMock();
@@ -671,10 +777,14 @@ class SequencerTest extends UnitTestCase
         $errorHandler = new $errorHandlerClass();
         $viewHelperResolver->addViewHelperAlias('raw', 'f', 'format.raw');
         $parserConfiguration = new Configuration();
-        $parserConfiguration->setUseSequencer(true);
+        $parserConfiguration->setFeatureState(Configuration::FEATURE_SEQUENCER, true);
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMock();
+        $templateParser = $this->getMockBuilder(TemplateParser::class, ['getConfiguration'])->getMock();
+        $templateParser->expects($this->any())->method('getConfiguration')->willReturn($parserConfiguration);
+        $templateParser->setRenderingContext($context);
         $context->setViewHelperResolver($viewHelperResolver);
         $context->expects($this->any())->method('buildParserConfiguration')->willReturn($parserConfiguration);
+        $context->expects($this->any())->method('getTemplateParser')->willReturn($templateParser);
         $context->expects($this->any())->method('getViewHelperResolver')->willReturn($viewHelperResolver);
         $context->expects($this->any())->method('getVariableProvider')->willReturn($variableProvider);
         $context->expects($this->any())->method('getErrorHandler')->willReturn($errorHandler);
@@ -691,16 +801,7 @@ class SequencerTest extends UnitTestCase
 
     protected function assertNodeEquals(NodeInterface $subject, NodeInterface $expected, string $path = '')
     {
-        //$this->assertEquals($expected, $subject, 'Node types not as expected at path: ' . $path);
         $this->assertInstanceOf(get_class($expected), $subject, 'Node types not as expected at path: ' . $path);
-        $children = $subject->getChildNodes();
-        $expectedChildren = $expected->getChildNodes();
-        if (count($children) !== count($expectedChildren)) {
-            $this->fail('Nodes have an unequal number of child nodes. Got ' . count($children) . ', expected ' . count($expectedChildren) . '. Path: ' . $path);
-        }
-        foreach ($expectedChildren as $index => $expectedChild) {
-            $this->assertNodeEquals($children[$index], $expectedChild, $path . get_class($subject) . '.child@' . $index);
-        }
         if ($subject instanceof ViewHelperInterface) {
             $expectedArguments = $expected->getParsedArguments();
             foreach ($subject->getParsedArguments() as $name => $argument) {
@@ -726,6 +827,12 @@ class SequencerTest extends UnitTestCase
             $this->assertEquals($expected->getInternalArray(), $subject->getInternalArray(), 'Arrays do not match at path ' . $path);
         } elseif ($subject instanceof ExpressionNodeInterface) {
             $this->assertEquals($expected->getMatches(), $subject->getMatches(), 'Expression matches are not equal at path ' . $path);
+        }
+
+        $children = $subject->getChildNodes();
+        $expectedChildren = $expected->getChildNodes();
+        if (count($children) !== count($expectedChildren)) {
+            $this->fail('Nodes have an unequal number of child nodes. Got ' . count($children) . ', expected ' . count($expectedChildren) . '. Path: ' . $path);
         }
         foreach ($expectedChildren as $index => $expectedChild) {
             $child = $children[$index];

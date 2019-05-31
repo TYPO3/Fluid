@@ -209,7 +209,6 @@ class ExamplesTest extends BaseTestCase
                 [
                     'Simple variable: string foo',
                     'A string with numbers in it: 132',
-                    'Ditto, with type name stored in variable: 132',
                     'A comma-separated value iterated as array:' . "\n\t- one\n\t- two",
                     'String variable name with dynamic1 part: String using $dynamic1.',
                     'String variable name with dynamic2 part: String using $dynamic2.',
@@ -262,7 +261,6 @@ class ExamplesTest extends BaseTestCase
                     'ViewHelper error: Undeclared arguments passed to ViewHelper TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper: notregistered. Valid arguments are: then, else, condition - Offending code: <f:if notregistered="1" />',
                     'Parser error: The ViewHelper "<f:invalid>" could not be resolved.',
                     'Based on your spelling, the system would load the class "TYPO3Fluid\Fluid\ViewHelpers\InvalidViewHelper", however this class does not exist. Offending code: <f:invalid />',
-                    'Invalid expression: Invalid target conversion type &quot;invalidtype&quot; specified in casting expression &quot;{foobar as invalidtype}&quot;.',
                 ]
             ]
         ];

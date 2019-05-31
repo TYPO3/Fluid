@@ -56,7 +56,7 @@ class ViewHelperInvoker
 
         try {
             foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
-                $argumentValue = $arguments[$argumentName] ?? null;
+                $argumentValue = $arguments[$argumentName] ?? $argumentDefinition->getDefaultValue();
                 $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
             }
             foreach ($arguments as $argumentName => $argumentValue) {

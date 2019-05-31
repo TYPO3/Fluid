@@ -2,18 +2,12 @@
 // Define a cache directory if one is not set
 $FLUID_CACHE_DIRECTORY = !isset($FLUID_CACHE_DIRECTORY) ? __DIR__ . '/../cache/' : $FLUID_CACHE_DIRECTORY;
 
-if (!class_exists(TYPO3Fluid\Fluid\View\TemplateView::class)) {
-    foreach ([__DIR__ . '/../../vendor/autoload.php', __DIR__ . '/../../../../autoload.php'] as $possibleAutoloadLocation) {
-        if (file_exists($possibleAutoloadLocation)) {
-            require_once $possibleAutoloadLocation;
-        }
-    }
-}
+include 'autoload.php';
 
 // Initializing the View: rendering in Fluid takes place through a View instance
 // which contains a RenderingContext that in turn contains things like definitions
 // of template paths, instances of variable containers and similar.
-$view = new \TYPO3Fluid\Fluid\View\TemplateView();
+$view = new \TYPO3Fluid\Fluid\View\TemplateView($context ?? null);
 
 // TemplatePaths object: a subclass can be used if custom resolving is wanted.
 $paths = $view->getTemplatePaths();

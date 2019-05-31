@@ -78,12 +78,21 @@ class TemplateParser
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
+     * @return self
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
         $this->configuration = $renderingContext->buildParserConfiguration();
+        return $this;
+    }
+
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 
     /**
@@ -135,7 +144,7 @@ class TemplateParser
         }
 
         $this->reset();
-        if ($this->configuration->getUseSequencer()) {
+        if ($this->configuration->isFeatureEnabled(Configuration::FEATURE_SEQUENCER)) {
             $templateString = $this->preProcessTemplateSource($templateString);
             $source = new Source($templateString);
             $contexts = new Contexts();

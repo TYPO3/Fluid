@@ -216,7 +216,7 @@ class NodeConverter
                     $converted['initialization'] = '';
                     $converted['execution'] = var_export($argumentValue, true);
                 }
-                $argumentInitializationCode .= $converted['initialization'];
+                $argumentInitializationCode .= ($converted['initialization'] ?? '');
                 $argumentInitializationCode .= sprintf(
                     '%s[\'%s\'] = %s;',
                     $argumentsVariableName,

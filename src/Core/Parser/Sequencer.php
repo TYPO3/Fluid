@@ -131,7 +131,6 @@ class Sequencer
         $ascii = (string) $this->source->bytes[$this->splitter->index];
         $message .=  ' ASCII: ' . $ascii . ': ' . $this->extractSourceDumpOfLineAtPosition($position);
         $error = new SequencingException($message, $code);
-        $error->setPosition($position);
         return $error;
     }
 
@@ -581,8 +580,6 @@ class Sequencer
                         $this->escapingEnabled = (bool)$node->isChildrenEscapingEnabled();
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
                             $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-                        } elseif ($childNodeToAdd instanceof ExpressionNodeInterface) {
-                            $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_EXPRESSION);
                         }
                         $this->escapingEnabled = $escapingEnabledBackup;
                         $node->addChildNode($childNodeToAdd);
@@ -662,10 +659,13 @@ class Sequencer
                         $node = $node->postParse($arguments, $this->state, $this->renderingContext);
                         $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
                     } else {
-                        # TODO: should this be an error case?
+                        # TODO: should this be an error case, or should it result in a TextNode?
                         throw $this->createErrorAtPosition(
                             'Invalid inline syntax - not accessor, not expression, not array, not ViewHelper, but ' .
-                            'contains the tokens used by these in a sequence that is not valid Fluid syntax.',
+                            'contains the tokens used by these in a sequence that is not valid Fluid syntax. You can ' .
+                            'most likely avoid this by adding whitespace inside the curly braces before the first ' .
+                            'Fluid-like symbol in the expression. Symbols recognized as Fluid are: "' .
+                            addslashes(implode('","', array_map('chr', $this->contexts->inline->bytes))) . '"',
                             1558782228
                         );
                     }
