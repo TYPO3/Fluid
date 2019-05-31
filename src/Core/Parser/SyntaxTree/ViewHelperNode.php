@@ -85,30 +85,6 @@ class ViewHelperNode extends AbstractNode
     }
 
     /**
-     * @return RenderingContextInterface
-     */
-    public function getRenderingContext(): RenderingContextInterface
-    {
-        return $this->renderingContext;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNamespace(): string
-    {
-        return $this->namespace;
-    }
-
-    /**
-     * @return string
-     */
-    public function getIdentifier(): string
-    {
-        return $this->identifier;
-    }
-
-    /**
      * @return ArgumentDefinition[]
      */
     public function getArgumentDefinitions()
@@ -222,9 +198,9 @@ class ViewHelperNode extends AbstractNode
                 if (!is_numeric($argumentsObjectTree[$argumentName])
                     && !is_bool($argumentsObjectTree[$argumentName])
                     && $argumentsObjectTree[$argumentName] !== null) {
-                    $argumentsObjectTree[$argumentName] = (bool)$argumentsObjectTree[$argumentName];
-                } else {
                     $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
+                } else {
+                    $argumentsObjectTree[$argumentName] = (bool)$argumentsObjectTree[$argumentName];
                 }
             }
         }

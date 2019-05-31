@@ -134,11 +134,13 @@ class ViewHelperNodeTest extends UnitTestCase
     {
         $argumentDefinitions = [
             'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),
-            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false)
+            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false),
+            'var3' => new ArgumentDefinition('var3', 'boolean', 'desc', false),
         ];
         $argumentsObjectTree = [
-            'var1' => new TextNode('true'),
-            'var2' => new TextNode('true')
+            'var1' => 1,
+            'var2' => 0,
+            'var3' => 'some string',
         ];
 
         $mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
@@ -147,7 +149,8 @@ class ViewHelperNodeTest extends UnitTestCase
 
         $this->assertEquals($argumentsObjectTree, [
             'var1' => true,
-            'var2' => true
+            'var2' => false,
+            'var3' => new BooleanNode('some string'),
         ]);
     }
 }

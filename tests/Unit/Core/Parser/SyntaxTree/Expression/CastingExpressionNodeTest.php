@@ -23,13 +23,9 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateDelegatesToEvaluteExpression()
+    public function testEvaluateDelegatesToEvaluateExpression()
     {
-        $subject = $this->getMock(
-            CastingExpressionNode::class,
-            ['dummy'],
-            ['{test as string}', ['test as string']]
-        );
+        $subject = new CastingExpressionNode('{test as string}', ['{test as string}', '{test as string}']);
         $view = new TemplateView();
         $context = new RenderingContext($view);
         $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
@@ -46,7 +42,7 @@ class CastingExpressionNodeTest extends UnitTestCase
         $renderingContext = new RenderingContext($view);
         $renderingContext->setVariableProvider(new StandardVariableProvider());
         $this->setExpectedException(ExpressionException::class);
-        $result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
+        CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
     }
 
     /**
@@ -72,17 +68,12 @@ class CastingExpressionNodeTest extends UnitTestCase
         $arrayIterator = new \ArrayIterator(['foo', 'bar']);
         $toArrayObject = new UserWithToArray('foobar');
         return [
-            ['123 as string', [], '123'],
-            ['1 as boolean', [], true],
-            ['0 as boolean', [], false],
-            ['0 as array', [], [0]],
-            ['1 as array', [], [1]],
             ['mystring as float', ['mystring' => '1.23'], 1.23],
             ['myvariable as integer', ['myvariable' => 321], 321],
             ['myinteger as string', ['myinteger' => 111], '111'],
+            ['myinteger as bool', ['myinteger' => 1], true],
             ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', 90000)],
             ['mydate as DateTime', ['mydate' => 'January'], new \DateTime('January')],
-            ['1 as namestoredinvariables', ['namestoredinvariables' => 'boolean'], true],
             ['mystring as array', ['mystring' => 'foo,bar'], ['foo', 'bar']],
             ['mystring as array', ['mystring' => 'foo , bar'], ['foo', 'bar']],
             ['myiterator as array', ['myiterator' => $arrayIterator], ['foo', 'bar']],
