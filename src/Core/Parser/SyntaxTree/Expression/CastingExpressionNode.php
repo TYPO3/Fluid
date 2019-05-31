@@ -9,8 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * Type Casting Node - allows the shorthand version
- * of a condition to be written as `{var ? thenvar : elsevar}`
+ * Type Casting Node - allows casting a variable to native PHP types.
  */
 class CastingExpressionNode extends AbstractExpressionNode
 {
@@ -39,6 +38,23 @@ class CastingExpressionNode extends AbstractExpressionNode
 			}                                # End of shorthand syntax
 		)/x';
 
+    public function __construct($expression, array $matches)
+    {
+        $this->expression = trim($expression, '{}');
+        $this->matches = $matches;
+        list (, $type) = explode(' as ', $this->expression);
+        if (!in_array($type, self::$validTypes)) {
+            throw new ExpressionException(
+                sprintf(
+                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
+                    $type,
+                    $this->expression
+                ),
+                1559248372
+            );
+        }
+    }
+
     /**
      * @param RenderingContextInterface $renderingContext
      * @param string $expression
@@ -50,18 +66,6 @@ class CastingExpressionNode extends AbstractExpressionNode
         $expression = trim($expression, '{}');
         list ($variable, $type) = explode(' as ', $expression);
         $variable = static::getTemplateVariableOrValueItself($variable, $renderingContext);
-        if (!in_array($type, self::$validTypes)) {
-            $type = static::getTemplateVariableOrValueItself($type, $renderingContext);
-        }
-        if (!in_array($type, self::$validTypes)) {
-            throw new ExpressionException(
-                sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
-                    $type,
-                    $expression
-                )
-            );
-        }
         return self::convert($variable, $type);
     }
 
