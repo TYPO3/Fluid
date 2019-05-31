@@ -20,14 +20,4 @@ class Position
         $this->index = $index;
         $this->captured = $captured;
     }
-
-    public function getContextName(): string
-    {
-        static $consts = [];
-        if (empty($consts)) {
-            $reflect = new \ReflectionClass(Context::class);
-            $consts = array_flip($reflect->getConstants());
-        }
-        return $consts[$this->context->context] ?? 'UNKNOWN';
-    }
 }
