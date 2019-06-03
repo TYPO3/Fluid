@@ -143,17 +143,13 @@ class TemplateCompiler
     public function has($identifier)
     {
         $identifier = $this->sanitizeIdentifier($identifier);
-
         if (isset($this->syntaxTreeInstanceCache[$identifier]) || class_exists($identifier, false)) {
             return true;
         }
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-        if (!empty($identifier)) {
-            return (boolean) $this->renderingContext->getCache()->get($identifier);
-        }
-        return false;
+        return (boolean) $this->renderingContext->getCache()->get($identifier);
     }
 
     /**

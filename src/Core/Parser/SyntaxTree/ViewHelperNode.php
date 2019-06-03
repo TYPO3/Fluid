@@ -85,14 +85,6 @@ class ViewHelperNode extends AbstractNode
     }
 
     /**
-     * @return ArgumentDefinition[]
-     */
-    public function getArgumentDefinitions()
-    {
-        return $this->argumentDefinitions;
-    }
-
-    /**
      * Returns the attached (but still uninitialized) ViewHelper for this ViewHelperNode.
      * We need this method because sometimes Interceptors need to ask some information from the ViewHelper.
      *
@@ -131,17 +123,6 @@ class ViewHelperNode extends AbstractNode
     public function getParsedArguments()
     {
         return $this->arguments;
-    }
-
-    /**
-     * INTERNAL - only needed for compiling templates
-     *
-     * @param string $argumentName
-     * @return ArgumentDefinition
-     */
-    public function getArgumentDefinition($argumentName)
-    {
-        return $this->argumentDefinitions[$argumentName];
     }
 
     /**

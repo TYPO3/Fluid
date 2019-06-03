@@ -6,9 +6,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -17,6 +19,12 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  */
 class TernaryExpressionNodeTest extends UnitTestCase
 {
+
+    public function testThrowsExceptionOnNotExactlyThreeExpressionParts()
+    {
+        $this->setExpectedException(ExpressionException::class);
+        TernaryExpressionNode::evaluateExpression(new RenderingContextFixture(), 'x ? y', ['x', 'y']);
+    }
 
     /**
      * @dataProvider getTernaryExpressionDetection

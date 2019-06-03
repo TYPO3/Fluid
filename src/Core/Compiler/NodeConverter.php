@@ -159,7 +159,7 @@ class NodeConverter
      * Convert a single ViewHelperNode into its cached representation. If the ViewHelper implements the "Compilable" facet,
      * the ViewHelper itself is asked for its cached PHP code representation. If not, a ViewHelper is built and then invoked.
      *
-     * @param ViewHelperNode $node
+     * @param ViewHelperInterface $viewHelper
      * @return array
      * @see convert()
      */
@@ -209,8 +209,6 @@ class NodeConverter
                 } elseif (is_numeric($argumentValue)) {
                     // this case might happen for simple values
                     $converted['execution'] = $argumentValue + 0;
-                } elseif (is_array($argumentValue)) {
-                    $converted = $this->convertArray($argumentValue);
                 } else {
                     // this case might happen for simple values
                     $converted['initialization'] = '';

@@ -42,7 +42,19 @@ class CastingExpressionNodeTest extends UnitTestCase
         $renderingContext = new RenderingContext($view);
         $renderingContext->setVariableProvider(new StandardVariableProvider());
         $this->setExpectedException(ExpressionException::class);
-        CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
+        (new CastingExpressionNode('suchaninvalidexpression as 1', []))->evaluate($renderingContext);
+    }
+
+    /**
+     * @test
+     */
+    public function testStaticEvaluateInvalidTypeThrowsException()
+    {
+        $view = new TemplateView();
+        $renderingContext = new RenderingContext($view);
+        $renderingContext->setVariableProvider(new StandardVariableProvider());
+        $this->setExpectedException(ExpressionException::class);
+        CastingExpressionNode::evaluateExpression($renderingContext, 'myvar as invalidtype', []);
     }
 
     /**
@@ -67,6 +79,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     {
         $arrayIterator = new \ArrayIterator(['foo', 'bar']);
         $toArrayObject = new UserWithToArray('foobar');
+        $dateTime = new \DateTime('now');
         return [
             ['mystring as float', ['mystring' => '1.23'], 1.23],
             ['myvariable as integer', ['myvariable' => 321], 321],
@@ -81,6 +94,7 @@ class CastingExpressionNodeTest extends UnitTestCase
             ['myboolean as array', ['myboolean' => true], []],
             ['myboolean as array', ['myboolean' => false], []],
             ['myobject as array', ['myobject' => $toArrayObject], ['name' => 'foobar']],
+            ['mydatetime as array', ['mydatetime' => $dateTime], [$dateTime]],
         ];
     }
 }
