@@ -29,6 +29,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers\CViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
 
 
 /**
@@ -684,6 +685,23 @@ class SequencerTest extends UnitTestCase
                 '{i as invalid}',
                 $this->createContext(TolerantErrorHandler::class),
                 (new RootNode())->addChildNode(new TextNode('Invalid expression: Invalid target conversion type "invalid" specified in casting expression "{i as invalid}".'))
+            ],
+
+            /* STRUCTURAL */
+            'layout node with empty layout name' => [
+                '<f:layout />',
+                $context,
+                (new RootNode())->addChildNode(new TextNode('')),
+            ],
+            'layout node with layout name' => [
+                '<f:layout name="Default" />',
+                $context,
+                (new RootNode())->addChildNode(new TextNode('')),
+            ],
+            'section with name' => [
+                '<f:section  name="Default">DefaultSection</f:section>',
+                $context,
+                (new RootNode())->addChildNode(new TextNode('')),
             ],
         ];
     }
