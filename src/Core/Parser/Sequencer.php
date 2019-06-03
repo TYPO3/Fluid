@@ -197,7 +197,7 @@ class Sequencer
     }
 
     /**
-     * @param \Iterator|?string[] $sequence
+     * @param \Iterator|string[]|null[] $sequence
      * @return NodeInterface|null
      */
     protected function sequenceTagNode(\Iterator $sequence): ?NodeInterface
@@ -367,7 +367,7 @@ class Sequencer
     }
 
     /**
-     * @param \Iterator|?string[] $sequence
+     * @param \Iterator|string[]|null[] $sequence
      * @param bool $allowArray
      * @return NodeInterface
      */
@@ -669,7 +669,7 @@ class Sequencer
 
                     $escapingEnabledBackup = $this->escapingEnabled;
                     $this->escapingEnabled = (bool)((isset($viewHelper) && $node->isOutputEscapingEnabled()) || $escapingEnabledBackup);
-                    $this->callInterceptor($node, $interceptionPoint, $this->state);
+                    $this->callInterceptor($node, $interceptionPoint);
                     $this->escapingEnabled = $escapingEnabledBackup;
                     return $node;
             }
@@ -682,7 +682,7 @@ class Sequencer
     }
 
     /**
-     * @param \Iterator|Position[] $sequence
+     * @param \Iterator|string[]|null[] $sequence
      * @param ArgumentDefinition[] $definitions
      * @param bool $numeric
      * @return ArrayNode
@@ -835,7 +835,7 @@ class Sequencer
      * be a node as such - which is only necessary if the quoted expression
      * contains other (dynamic) values like an inline syntax.
      *
-     * @param \Iterator|Position[] $sequence
+     * @param \Iterator|string[]|null[] $sequence
      * @param int $leadingEscapes A backwards compatibility measure: when passed, this number of escapes must precede a closing quote for it to trigger node closing.
      * @param bool $allowArray
      * @return RootNode
@@ -871,7 +871,7 @@ class Sequencer
                     // expression as next sibling and continue the loop.
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
-                        $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT, $this->state);
+                        $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChildNode($childNode);
                     }
 
