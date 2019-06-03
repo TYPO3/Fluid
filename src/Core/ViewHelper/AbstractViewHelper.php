@@ -173,7 +173,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     protected function createArguments(array $arguments): array
     {
-        //$arguments = $this->parsedArguments;
         $definitions = $this->prepareArguments();
         $missingArguments = [];
         foreach ($definitions as $name => $definition) {

@@ -8,6 +8,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -65,6 +67,104 @@ class AbstractViewHelperTest extends UnitTestCase
             'string $param3 P3 Stuff'
         ]
     ];
+
+    /**
+     * @test
+     */
+    public function testPostParseCallsExpectedFunctions()
+    {
+        $argumentDefinitions = [
+            'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
+        ];
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['setParsedArguments', 'validateAdditionalArguments', 'prepareArguments']);
+        $expectedArguments = [
+            'foo' => 'foovalue',
+            'undeclared' => 'some',
+        ];
+        $additionalArguments = ['undeclared' => 'some'];
+        $viewHelper->expects($this->atLeastOnce())->method('prepareArguments')->willReturn($argumentDefinitions);
+        $viewHelper->expects($this->atLeastOnce())->method('setParsedArguments')->with($expectedArguments);
+        $viewHelper->expects($this->atLeastOnce())->method('validateAdditionalArguments')->with($additionalArguments);
+        #$viewHelper->expects($this->once())->method('setArguments')->with($expectedArguments);
+        $viewHelper->postParse($expectedArguments, new ParsingState(), new RenderingContextFixture());
+        #$viewHelper->evaluate(new RenderingContextFixture());
+    }
+
+    /**
+     * @test
+     */
+    public function testEvaluateCallsExpectedFunctions()
+    {
+        $argumentDefinitions = [
+            'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
+        ];
+        $viewHelper = $this->getAccessibleMock(
+            AbstractViewHelper::class,
+            ['prepareArguments', 'setArguments', 'initializeArgumentsAndRender', 'validateAdditionalArguments']
+        );
+        $expectedArguments = [
+            'foo' => 'foovalue',
+            'undeclared' => 'some',
+        ];
+        $viewHelper->expects($this->atLeastOnce())->method('prepareArguments')->willReturn($argumentDefinitions);
+        $viewHelper->expects($this->once())->method('setArguments')->with($expectedArguments);
+        $viewHelper->setParsedArguments($expectedArguments);
+        $viewHelper->evaluate(new RenderingContextFixture());
+    }
+
+    /**
+     * @test
+     */
+    public function testSetParsedArgumentsThrowsErrorOnMissingRequiredArgument()
+    {
+        $argumentDefinitions = [
+            'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
+        ];
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments']);
+        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn($argumentDefinitions);
+        $this->setExpectedException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+        $viewHelper->setParsedArguments([]);
+    }
+
+    /**
+     * @dataProvider getParsedArgumentsTestValues
+     * @param array $parsedArguments
+     * @param array $expectedArguments
+     */
+    public function testSetParsedArgumentsCreatesExpectedArguments(array $parsedArguments, array $expectedArguments)
+    {
+        $argumentDefinitions = [
+            'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
+            'bar' => new ArgumentDefinition('bar', 'string', 'Bar', false, 'bardefault'),
+            'boo' => new ArgumentDefinition('boo', 'boolean', 'Boo', false, false),
+        ];
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments']);
+        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn($argumentDefinitions);
+        $viewHelper->setParsedArguments($parsedArguments);
+        $this->assertAttributeEquals($expectedArguments, 'parsedArguments', $viewHelper);
+    }
+
+    public function getParsedArgumentsTestValues(): array
+    {
+        return [
+            'missing optional argument, static nodes' => [
+                ['foo' => new TextNode('foovalue')],
+                ['foo' => 'foovalue', 'bar' => 'bardefault', 'boo' => false],
+            ],
+            'with optional argument, static nodes' => [
+                ['foo' => new TextNode('foovalue'), 'bar' => 1],
+                ['foo' => 'foovalue', 'bar' => '1', 'boo' => false],
+            ],
+            'with optional argument, dynamic nodes' => [
+                ['foo' => new ObjectAccessorNode('foovariable')],
+                ['foo' => new ObjectAccessorNode('foovariable'), 'bar' => 'bardefault', 'boo' => false],
+            ],
+            'with optional boolean argument, static values' => [
+                ['foo' => 'foostatic', 'boo' => 1],
+                ['foo' => 'foostatic', 'bar' => 'bardefault', 'boo' => true],
+            ],
+        ];
+    }
 
     /**
      * @param mixed $input

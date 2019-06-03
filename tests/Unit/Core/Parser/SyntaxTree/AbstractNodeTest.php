@@ -37,6 +37,25 @@ class AbstractNodeTest extends UnitTestCase
     /**
      * @test
      */
+    public function flattenWithExtractTrueReturnsNullIfNoChildNodes()
+    {
+        $this->abstractNode = $this->getMock(AbstractNode::class, ['evaluate']);
+        $this->assertNull($this->abstractNode->flatten(true));
+    }
+
+    /**
+     * @test
+     */
+    public function setChildNodesSetsNodesAndReturnsSelf()
+    {
+        $return = $this->abstractNode->setChildNodes([$this->childNode]);
+        $this->assertAttributeEquals([$this->childNode], 'childNodes', $this->abstractNode);
+        $this->assertSame($this->abstractNode, $return);
+    }
+
+    /**
+     * @test
+     */
     public function evaluateChildNodesPassesRenderingContextToChildNodes()
     {
         $this->childNode->expects($this->once())->method('evaluate')->with($this->renderingContext);
