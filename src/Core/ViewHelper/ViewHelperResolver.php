@@ -275,7 +275,8 @@ class ViewHelperResolver
             if (false === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
                 throw new ParserException(sprintf(
                     'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
-                    'Based on your spelling, the system would load the class "%s", however this class does not exist.',
+                    'Based on your spelling, the system would load the class "%s", however this class does not exist. ' .
+                    'We looked in the following namespaces: ' . implode(', ', $this->namespaces[$namespaceIdentifier] ?? ['none']) . '.',
                     $namespaceIdentifier,
                     $methodIdentifier,
                     $resolvedViewHelperClassName

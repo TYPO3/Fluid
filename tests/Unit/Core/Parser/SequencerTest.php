@@ -27,8 +27,8 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\ViewHelpers\CViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers\CViewHelper;
 
 
 /**
@@ -775,6 +775,7 @@ class SequencerTest extends UnitTestCase
         $variableProvider->expects($this->atLeastOnce())->method('getScopeCopy')->willReturnSelf();
         $viewHelperResolver = new ViewHelperResolver();
         $errorHandler = new $errorHandlerClass();
+        $viewHelperResolver->addNamespace('f', 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Core\\Parser\\Fixtures\\ViewHelpers');
         $viewHelperResolver->addViewHelperAlias('raw', 'f', 'format.raw');
         $parserConfiguration = new Configuration();
         $parserConfiguration->setFeatureState(Configuration::FEATURE_SEQUENCER, true);
