@@ -93,72 +93,17 @@ class Sequencer
         $this->splitter = new Splitter($this->source, $this->contexts);
     }
 
-    /**
-     * Creates a dump, starting from the first line break before $position,
-     * to the next line break from $position, counting the lines and characters
-     * and inserting a marker pointing to the exact offending character.
-     *
-     * Is not very efficient - but adds bug tracing information. Should only
-     * be called when exceptions are raised during sequencing.
-     *
-     * @param Position $position
-     * @return string
-     */
-    public function extractSourceDumpOfLineAtPosition(Position $position): string
-    {
-        $lines = $this->splitter->countCharactersMatchingMask(Splitter::MASK_LINEBREAKS, 1, $position->index) + 1;
-        $offset = $this->splitter->findBytePositionBeforeOffset(Splitter::MASK_LINEBREAKS, $position->index);
-        $line = substr(
-            $this->source->source,
-            $offset,
-            $this->splitter->findBytePositionAfterOffset(Splitter::MASK_LINEBREAKS, $position->index)
-        );
-        $character = $position->index - $offset - 1;
-        $string = 'Line ' . $lines . ' character ' . $character . PHP_EOL;
-        $string .= PHP_EOL;
-        $string .= str_repeat(' ', max($character, 0)) . 'v' . PHP_EOL;
-        $string .= trim($line) . PHP_EOL;
-        $string .= str_repeat(' ', max($character, 0)) . '^' . PHP_EOL;
-        return $string;
-    }
-
-    protected function createErrorAtPosition(string $message, int $code): SequencingException
-    {
-        $position = new Position($this->splitter->context, $this->splitter->index);
-        $ascii = (string) $this->source->bytes[$this->splitter->index];
-        $message .=  ' ASCII: ' . $ascii . ': ' . $this->extractSourceDumpOfLineAtPosition($position);
-        $error = new SequencingException($message, $code);
-        return $error;
-    }
-
-    protected function createUnsupportedArgumentError(string $argument, array $definitions): SequencingException
-    {
-        return $this->createErrorAtPosition(
-            sprintf(
-                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
-                $argument
-            ),
-            1558298976
-        );
-    }
-
-    protected function createIterator(\Generator $generator): \NoRewindIterator
-    {
-        return new \NoRewindIterator($generator);
-    }
-
     public function sequence(): ParsingState
     {
-        $split = $this->splitter->parse();
-        $sequence = $this->createIterator($split);
+        #$sequence = $this->splitter->parse();
 
-        // Please note: repeated calls to $this->getTopmostNodeFromStack() are indeed intentional. That method may
-        // return different nodes at different times depending on what has occured in other methods! Only the places
+        // Please note: repeated calls to $this->state->getTopmostNodeFromStack() are indeed intentional. That method may
+        // return different nodes at different times depending on what has occurred in other methods! Only the places
         // where $node is actually extracted is it (by design) safe to do so. DO NOT REFACTOR!
         // It is *also* intentional that this switch has no default case. The root context is very specific and will
         // only apply when the splitter is actually in root, which means there is no chance of it yielding an unexpected
         // character (because that implies a method called by this method already threw a SequencingException).
-        foreach ($sequence as $symbol => $captured) {
+        foreach ($this->splitter->sequence as $symbol => $captured) {
             switch ($symbol) {
                 case Splitter::BYTE_INLINE:
                     $node = $this->state->getNodeFromStack();
@@ -169,7 +114,7 @@ class Sequencer
                     if ($captured !== null) {
                         $node->addChildNode(new TextNode($captured));
                     }
-                    $node->addChildNode($this->sequenceInlineNodes($sequence, false));
+                    $node->addChildNode($this->sequenceInlineNodes(false));
                     $this->splitter->switch($this->contexts->root);
                     break;
 
@@ -178,7 +123,7 @@ class Sequencer
                         $this->state->getNodeFromStack()->addChildNode(new TextNode($captured));
                     }
 
-                    $childNode = $this->sequenceTagNode($sequence);
+                    $childNode = $this->sequenceTagNode();
                     $this->splitter->switch($this->contexts->root);
                     if ($childNode) {
                         $this->state->getNodeFromStack()->addChildNode($childNode);
@@ -197,10 +142,9 @@ class Sequencer
     }
 
     /**
-     * @param \Iterator|string[]|null[] $sequence
      * @return NodeInterface|null
      */
-    protected function sequenceTagNode(\Iterator $sequence): ?NodeInterface
+    protected function sequenceTagNode(): ?NodeInterface
     {
         $arguments = [];
         $definitions = null;
@@ -216,13 +160,13 @@ class Sequencer
         $interceptionPoint = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
 
         $this->splitter->switch($this->contexts->tag);
-        $sequence->next();
-        foreach ($sequence as $symbol => $captured) {
+        $this->splitter->sequence->next();
+        foreach ($this->splitter->sequence as $symbol => $captured) {
             $text .= $captured;
             switch ($symbol) {
                 case Splitter::BYTE_INLINE:
                     $contextBefore = $this->splitter->context;
-                    $collected = $this->sequenceInlineNodes($sequence, isset($namespace) && isset($method));
+                    $collected = $this->sequenceInlineNodes(isset($namespace) && isset($method));
                     $node->addChildNode(new TextNode($text));
                     $node->addChildNode($collected);
                     $text = '';
@@ -232,7 +176,7 @@ class Sequencer
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $key = $captured;
                     if ($definitions !== null && !isset($definitions[$key])) {
-                        throw $this->createUnsupportedArgumentError($key, $definitions);
+                        throw $this->splitter->createUnsupportedArgumentError($key, $definitions);
                     }
                     break;
 
@@ -240,9 +184,9 @@ class Sequencer
                 case Splitter::BYTE_QUOTE_SINGLE:
                     $text .= chr($symbol);
                     if (!isset($key)) {
-                        throw $this->createErrorAtPosition('Quoted value without a key is not allowed in tags', 1558952412);
+                        throw $this->splitter->createErrorAtPosition('Quoted value without a key is not allowed in tags', 1558952412);
                     } else {
-                        $arguments[$key] = $this->sequenceQuotedNode($sequence, 0, isset($namespace) && isset($method))->flatten(true);
+                        $arguments[$key] = $this->sequenceQuotedNode(0, isset($namespace) && isset($method))->flatten(true);
                         $key = null;
                     }
                     break;
@@ -277,7 +221,7 @@ class Sequencer
                     try {
                         $expectedClass = $this->resolver->resolveViewHelperClassName($namespace, $method);
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
-                        throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
+                        throw $this->splitter->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
 
                     if ($closing && !$selfClosing) {
@@ -288,7 +232,7 @@ class Sequencer
                             $arguments = $closesNode->getParsedArguments();
                             $viewHelperNode = $closesNode;
                         } else {
-                            throw $this->createErrorAtPosition(
+                            throw $this->splitter->createErrorAtPosition(
                                 sprintf(
                                     'Mismatched closing tag. Expecting: %s:%s (%s). Found: (%s).',
                                     $namespace,
@@ -363,15 +307,14 @@ class Sequencer
         // closed. Literally every other possible error type will be thrown as more specific exceptions (e.g. invalid
         // argument, missing key, wrong quotes, bad inline and *everything* else with the exception of EOF). Even a
         // stray null byte would not be caught here as null byte is not part of the symbol collection for "tag" context.
-        throw $this->createErrorAtPosition('Unexpected token in tag sequencing', 1557700786);
+        throw $this->splitter->createErrorAtPosition('Unexpected token in tag sequencing', 1557700786);
     }
 
     /**
-     * @param \Iterator|string[]|null[] $sequence
      * @param bool $allowArray
      * @return NodeInterface
      */
-    protected function sequenceInlineNodes(\Iterator $sequence, bool $allowArray = true): NodeInterface
+    protected function sequenceInlineNodes(bool $allowArray = true): NodeInterface
     {
         $text = '{';
         $node = null;
@@ -390,8 +333,8 @@ class Sequencer
         $countedEscapes = 0;
 
         $this->splitter->switch($this->contexts->inline);
-        $sequence->next();
-        foreach ($sequence as $symbol => $captured) {
+        $this->splitter->sequence->next();
+        foreach ($this->splitter->sequence as $symbol => $captured) {
             $text .= $captured;
             switch ($symbol) {
                 case Splitter::BYTE_BACKSLASH:
@@ -409,7 +352,7 @@ class Sequencer
                     // Sequence the node. Pass the "use numeric keys?" boolean based on the current byte. Only array
                     // start creates numeric keys. Inline start with keyless values creates ECMA style {foo:foo, bar:bar}
                     // from {foo, bar}.
-                    $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                    $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode(null, $symbol === Splitter::BYTE_ARRAY_START);
                     $this->splitter->switch($this->contexts->inline);
                     unset($key);
                     break;
@@ -434,11 +377,11 @@ class Sequencer
                         // This is a sub-syntax following a colon - meaning it is an array.
                         if ($captured !== null) {
                             #goto ArrayStart;
-                            $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                            $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode(null, $symbol === Splitter::BYTE_ARRAY_START);
                             $this->splitter->switch($this->contexts->inline);
                         }
                     } else {
-                        $childNodeToAdd = $this->sequenceInlineNodes($sequence, $allowArray);
+                        $childNodeToAdd = $this->sequenceInlineNodes($allowArray);
                         $node = isset($node) ? $node->addChildNode($childNodeToAdd) : (new RootNode())->addChildNode($childNodeToAdd);
                     }
                     break;
@@ -454,7 +397,7 @@ class Sequencer
                 case Splitter::BYTE_BACKTICK:
                     if ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
                         $node->addChildNode(new TextNode($text));
-                        $node->addChildNode($this->sequenceQuotedNode($sequence)->flatten());
+                        $node->addChildNode($this->sequenceQuotedNode()->flatten());
                         $text = '';
                         break;
                     }
@@ -469,10 +412,10 @@ class Sequencer
                         break;
                     }
                     if (isset($key)) {
-                        $array[$key] = $this->sequenceQuotedNode($sequence, $countedEscapes)->flatten(true);
+                        $array[$key] = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
                         $key = null;
                     } else {
-                        $key = $this->sequenceQuotedNode($sequence, $countedEscapes)->flatten(true);
+                        $key = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
                     }
                     $countedEscapes = 0;
                     $isArray = $allowArray;
@@ -567,10 +510,10 @@ class Sequencer
                         $node = $this->resolver->createViewHelperInstance($namespace, $method);
                         $definitions = $node->prepareArguments();
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
-                        throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
+                        throw $this->splitter->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
                     $this->splitter->switch($this->contexts->array);
-                    $arguments = $this->sequenceArrayNode($sequence, $definitions)->getInternalArray();
+                    $arguments = $this->sequenceArrayNode($definitions)->getInternalArray();
                     $this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
                         $escapingEnabledBackup = $this->escapingEnabled;
@@ -657,7 +600,7 @@ class Sequencer
                         $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
                     } else {
                         # TODO: should this be an error case, or should it result in a TextNode?
-                        throw $this->createErrorAtPosition(
+                        throw $this->splitter->createErrorAtPosition(
                             'Invalid inline syntax - not accessor, not expression, not array, not ViewHelper, but ' .
                             'contains the tokens used by these in a sequence that is not valid Fluid syntax. You can ' .
                             'most likely avoid this by adding whitespace inside the curly braces before the first ' .
@@ -678,16 +621,15 @@ class Sequencer
         // See note in sequenceTagNode() end of method body. TL;DR: this is intentionally here instead of as "default"
         // case in the switch above for a very specific reason: the case is only encountered if seeing EOF before the
         // inline expression was closed.
-        throw $this->createErrorAtPosition('Unterminated inline syntax', 1557838506);
+        throw $this->splitter->createErrorAtPosition('Unterminated inline syntax', 1557838506);
     }
 
     /**
-     * @param \Iterator|string[]|null[] $sequence
      * @param ArgumentDefinition[] $definitions
      * @param bool $numeric
      * @return ArrayNode
      */
-    protected function sequenceArrayNode(\Iterator $sequence, array $definitions = null, bool $numeric = false): ArrayNode
+    protected function sequenceArrayNode(array $definitions = null, bool $numeric = false): ArrayNode
     {
         $array = [];
 
@@ -698,8 +640,8 @@ class Sequencer
         $itemCount = -1;
         $countedEscapes = 0;
 
-        $sequence->next();
-        foreach ($sequence as $symbol => $captured) {
+        $this->splitter->sequence->next();
+        foreach ($this->splitter->sequence as $symbol => $captured) {
             switch ($symbol) {
                 case Splitter::BYTE_SEPARATOR_COLON:
                 case Splitter::BYTE_SEPARATOR_EQUALS:
@@ -708,10 +650,10 @@ class Sequencer
                     // it means colon or equals was used without a key which is a syntax error.
                     $key = $key ?? $captured ?? (isset($keyOrValue) ? $keyOrValue->flatten(true) : null);
                     if (!isset($key)) {
-                        throw $this->createErrorAtPosition('Unexpected colon or equals sign, no preceding key', 1559250839);
+                        throw $this->splitter->createErrorAtPosition('Unexpected colon or equals sign, no preceding key', 1559250839);
                     }
                     if ($definitions !== null && !$numeric && !isset($definitions[$key])) {
-                        throw $this->createUnsupportedArgumentError((string)$key, $definitions);
+                        throw $this->splitter->createUnsupportedArgumentError((string)$key, $definitions);
                     }
                     break;
 
@@ -721,17 +663,17 @@ class Sequencer
                     // without causing problems to the parser, but it is probably best to report it as it could indicate
                     // the user expected X value but gets Y and doesn't notice why.
                     if ($captured !== null) {
-                        throw $this->createErrorAtPosition('Unexpected content before array/inline start in associative array, ASCII: ' . ord($captured), 1559131849);
+                        throw $this->splitter->createErrorAtPosition('Unexpected content before array/inline start in associative array, ASCII: ' . ord($captured), 1559131849);
                     }
                     if (!isset($key) && !$numeric) {
-                        throw $this->createErrorAtPosition('Unexpected array/inline start in associative array without preceding key', 1559131848);
+                        throw $this->splitter->createErrorAtPosition('Unexpected array/inline start in associative array without preceding key', 1559131848);
                     }
 
                     // Encountering a curly brace or square bracket start byte will both cause a sub-array to be sequenced,
                     // the difference being that only the square bracket will cause third parameter ($numeric) passed to
                     // sequenceArrayNode() to be true, which in turn causes key-less items to be added with numeric indexes.
                     $key = $key ?? ++$itemCount;
-                    $array[$key] = $this->sequenceArrayNode($sequence, null, $symbol === Splitter::BYTE_ARRAY_START);
+                    $array[$key] = $this->sequenceArrayNode(null, $symbol === Splitter::BYTE_ARRAY_START);
                     $keyOrValue = null;
                     $key = null;
                     break;
@@ -742,13 +684,13 @@ class Sequencer
                     // the garbage safeguards above, this one could theoretically be ignored in favor of silently making
                     // the odd syntax "just work".
                     if ($captured !== null) {
-                        throw $this->createErrorAtPosition('Unexpected content before quote start in associative array, ASCII: ' . ord($captured), 1559145560);
+                        throw $this->splitter->createErrorAtPosition('Unexpected content before quote start in associative array, ASCII: ' . ord($captured), 1559145560);
                     }
 
                     // Quotes will always cause sequencing of the quoted string, but differs in behavior based on whether
                     // or not the $key is set. If $key is set, we know for sure we can assign a value. If it is not set
                     // we instead leave $keyOrValue defined so this will be processed by one of the next iterations.
-                    $keyOrValue = $this->sequenceQuotedNode($sequence, $countedEscapes);
+                    $keyOrValue = $this->sequenceQuotedNode($countedEscapes);
                     if (isset($key)) {
                         $array[$key] = $keyOrValue->flatten(true);
                         $keyOrValue = null;
@@ -768,7 +710,7 @@ class Sequencer
                     } elseif (isset($captured)) {
                         $key = $key ?? ($numeric ? ++$itemCount : $captured);
                         if (!$numeric && isset($definitions) && !isset($definitions[$key])) {
-                            throw $this->createUnsupportedArgumentError((string)$key, $definitions);
+                            throw $this->splitter->createUnsupportedArgumentError((string)$key, $definitions);
                         }
                         $array[$key] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                     }
@@ -808,14 +750,14 @@ class Sequencer
                         }
                     }
                     if (!$numeric && isset($key, $definitions) && !isset($definitions[$key])) {
-                        throw $this->createUnsupportedArgumentError((string)$key, $definitions);
+                        throw $this->splitter->createUnsupportedArgumentError((string)$key, $definitions);
                     }
                     $this->escapingEnabled = $escapingEnabledBackup;
                     return new ArrayNode($array);
             }
         }
 
-        throw $this->createErrorAtPosition(
+        throw $this->splitter->createErrorAtPosition(
             'Unterminated array',
             1557748574
         );
@@ -835,20 +777,19 @@ class Sequencer
      * be a node as such - which is only necessary if the quoted expression
      * contains other (dynamic) values like an inline syntax.
      *
-     * @param \Iterator|string[]|null[] $sequence
      * @param int $leadingEscapes A backwards compatibility measure: when passed, this number of escapes must precede a closing quote for it to trigger node closing.
      * @param bool $allowArray
      * @return RootNode
      */
-    protected function sequenceQuotedNode(\Iterator $sequence, int $leadingEscapes = 0, $allowArray = true): RootNode
+    protected function sequenceQuotedNode(int $leadingEscapes = 0, $allowArray = true): RootNode
     {
         $startingByte = $this->source->bytes[$this->splitter->index];
         $contextToRestore = $this->splitter->switch($this->contexts->quoted);
         $node = new RootNode();
-        $sequence->next();
+        $this->splitter->sequence->next();
         $countedEscapes = 0;
 
-        foreach ($sequence as $symbol => $captured) {
+        foreach ($this->splitter->sequence as $symbol => $captured) {
             switch ($symbol) {
 
                 case Splitter::BYTE_ARRAY_START:
@@ -857,7 +798,7 @@ class Sequencer
                         // Array start "[" only triggers array sequencing if it is the very first byte in the quoted
                         // string - otherwise, it is added as part of the text.
                         $this->splitter->switch($this->contexts->array);
-                        $node->addChildNode($this->sequenceArrayNode($sequence, null, $allowArray));
+                        $node->addChildNode($this->sequenceArrayNode(null, $allowArray));
                         $this->splitter->switch($this->contexts->quoted);
                     } else {
                         $node->addChildNode(new TextNode($captured . '['));
@@ -875,7 +816,7 @@ class Sequencer
                         $node->addChildNode($childNode);
                     }
 
-                    $node->addChildNode($this->sequenceInlineNodes($sequence));
+                    $node->addChildNode($this->sequenceInlineNodes());
                     $this->splitter->switch($this->contexts->quoted);
                     break;
 
@@ -905,7 +846,7 @@ class Sequencer
             }
         }
 
-        throw $this->createErrorAtPosition('Unterminated expression inside quotes', 1557700793);
+        throw $this->splitter->createErrorAtPosition('Unterminated expression inside quotes', 1557700793);
     }
 
     /**

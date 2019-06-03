@@ -73,6 +73,12 @@ class Splitter
     /** @var Context */
     public $context;
 
+    /** @var Contexts */
+    public $contexts;
+
+    /** @var \NoRewindIterator */
+    public $sequence;
+
     public $index = 0;
     private $primaryMask = 0;
     private $secondaryMask = 0;
@@ -80,7 +86,58 @@ class Splitter
     public function __construct(Source $source, Contexts $contexts)
     {
         $this->source = $source;
+        $this->contexts = $contexts;
         $this->switch($contexts->root);
+        $this->sequence = $this->parse();
+    }
+
+    /**
+     * Creates a dump, starting from the first line break before $position,
+     * to the next line break from $position, counting the lines and characters
+     * and inserting a marker pointing to the exact offending character.
+     *
+     * Is not very efficient - but adds bug tracing information. Should only
+     * be called when exceptions are raised during sequencing.
+     *
+     * @param Position $position
+     * @return string
+     */
+    public function extractSourceDumpOfLineAtPosition(Position $position): string
+    {
+        $lines = $this->countCharactersMatchingMask(Splitter::MASK_LINEBREAKS, 1, $position->index) + 1;
+        $offset = $this->findBytePositionBeforeOffset(Splitter::MASK_LINEBREAKS, $position->index);
+        $line = substr(
+            $this->source->source,
+            $offset,
+            $this->findBytePositionAfterOffset(Splitter::MASK_LINEBREAKS, $position->index)
+        );
+        $character = $position->index - $offset - 1;
+        $string = 'Line ' . $lines . ' character ' . $character . PHP_EOL;
+        $string .= PHP_EOL;
+        $string .= str_repeat(' ', max($character, 0)) . 'v' . PHP_EOL;
+        $string .= trim($line) . PHP_EOL;
+        $string .= str_repeat(' ', max($character, 0)) . '^' . PHP_EOL;
+        return $string;
+    }
+
+    public function createErrorAtPosition(string $message, int $code): SequencingException
+    {
+        $position = new Position($this->context, $this->index);
+        $ascii = (string) $this->source->bytes[$this->index];
+        $message .=  ' ASCII: ' . $ascii . ': ' . $this->extractSourceDumpOfLineAtPosition($position);
+        $error = new SequencingException($message, $code);
+        return $error;
+    }
+
+    public function createUnsupportedArgumentError(string $argument, array $definitions): SequencingException
+    {
+        return $this->createErrorAtPosition(
+            sprintf(
+                'Unsupported argument "%s". Supported: ' . implode(', ', array_keys($definitions)),
+                $argument
+            ),
+            1558298976
+        );
     }
 
     /**
@@ -89,9 +146,22 @@ class Splitter
      * character (byte). The secondary bit mask is costless as it is OR'ed into
      * the primary bit mask.
      *
-     * @return \Generator|?string[]
+     * @return \NoRewindIterator|string[]|null[]
      */
-    public function parse(): \Generator
+    public function parse(): \NoRewindIterator
+    {
+        return new \NoRewindIterator($this->createGenerator());
+    }
+
+    /**
+     * Split a string by searching for recognized characters using at least one,
+     * optionally two bit masks consisting of OR'ed bit values of each detectable
+     * character (byte). The secondary bit mask is costless as it is OR'ed into
+     * the primary bit mask.
+     *
+     * @return \NoRewindIterator|string[]|null[]
+     */
+    public function createGenerator(): \Generator
     {
         $bytes = &$this->source->bytes;
         $source = &$this->source->source;

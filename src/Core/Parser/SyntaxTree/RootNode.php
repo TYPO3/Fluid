@@ -13,18 +13,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class RootNode extends AbstractNode
 {
-    public function addChildNode(NodeInterface $childNode)
-    {
-        if ($childNode instanceof RootNode) {
-            // Assimilate child nodes instead of allowing a root node inside a root node.
-            foreach ($childNode->getChildNodes() as $node) {
-                parent::addChildNode($node);
-            }
-            return $this;
-        }
-        return parent::addChildNode($childNode);
-    }
-
     /**
      * Evaluate the root node, by evaluating the subtree.
      *
@@ -35,5 +23,4 @@ class RootNode extends AbstractNode
     {
         return $this->evaluateChildNodes($renderingContext);
     }
-
 }

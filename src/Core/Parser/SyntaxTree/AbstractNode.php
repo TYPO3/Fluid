@@ -131,7 +131,12 @@ abstract class AbstractNode implements NodeInterface
      */
     public function addChildNode(NodeInterface $childNode)
     {
-        if ($childNode instanceof TextNode && ($last = end($this->childNodes)) && $last instanceof TextNode) {
+        if ($childNode instanceof RootNode) {
+            // Assimilate child nodes instead of allowing a root node inside a root node.
+            foreach ($childNode->getChildNodes() as $node) {
+                $this->addChildNode($node);
+            }
+        } elseif ($childNode instanceof TextNode && ($last = end($this->childNodes)) && $last instanceof TextNode) {
             $last->appendText($childNode->getText());
         } else {
             $this->childNodes[] = $childNode;
