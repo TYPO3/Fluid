@@ -96,8 +96,9 @@ class TemplateCompilerTest extends UnitTestCase
         $result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
         $serialized = serialize($arguments['value']);
         $expected = 'function() use ($renderingContext, $self) {' . chr(10);
-        $expected .= sprintf('$argument = unserialize(\'%s\'); return $argument->evaluate($renderingContext);', $serialized);
-        $expected .= chr(10) . '}';
+        $expected .= chr(10);
+        $expected .= 'return \'sometext\';' . chr(10);
+        $expected .= '}';
         $this->assertEquals($expected, $result);
     }
 
