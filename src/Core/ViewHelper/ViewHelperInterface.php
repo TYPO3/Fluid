@@ -17,7 +17,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * Implemented by all ViewHelpers
  */
-interface ViewHelperInterface
+interface ViewHelperInterface extends  NodeInterface
 {
     /**
      * @param array $arguments
@@ -37,12 +37,6 @@ interface ViewHelperInterface
      * @return void
      */
     public function setArguments(array $arguments);
-
-    /**
-     * @param NodeInterface[] $nodes
-     * @return void
-     */
-    public function setChildNodes(array $nodes);
 
     /**
      * @param RenderingContextInterface $renderingContext
