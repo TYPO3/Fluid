@@ -70,6 +70,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     public function replaceCdataSectionsByEmptyLines($templateSource)
     {
         $parts = preg_split('/(\<\!\[CDATA\[|\]\]\>)/', $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE);
+        if ($parts === false) {
+            throw new \RuntimeException('Failure evaluating regular expression. PCRE error code: ' . preg_last_error());
+        }
 
         $balance = 0;
         foreach ($parts as $index => $part) {
@@ -166,6 +169,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         $splitTemplate = preg_split(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        if ($splitTemplate === false) {
+            throw new \RuntimeException('Failure evaluating regular expression. PCRE error code: ' . preg_last_error());
+        }
         foreach ($splitTemplate as $templateElement) {
             if (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
                 if (!$viewHelperResolver->isNamespaceValidOrIgnored($matchedVariables['NamespaceIdentifier'])) {
@@ -177,6 +183,9 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             }
 
             $sections = preg_split(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, $templateElement, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            if ($sections === false) {
+                throw new \RuntimeException('Failure evaluating regular expression. PCRE error code: ' . preg_last_error());
+            }
             foreach ($sections as $section) {
                 if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
                     preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $section, $shorthandViewHelpers, PREG_SET_ORDER);
