@@ -283,6 +283,11 @@ class SequencerTest extends UnitTestCase
                 $context,
                 (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('>x</tag>')),
             ],
+            'simple tag with inline ViewHelper and legacy pass to other ViewHelper as string argument value' => [
+                '<tag s="{f:c() -> f:c()}">x</tag>',
+                $context,
+                (new RootNode())->addChildNode(new TextNode('<tag s="'))->addChildNode((new CViewHelper())->postParse([], $state, $context)->addChildNode((new CViewHelper())->postParse([], $state, $context)))->addChildNode(new TextNode('">x</tag>')),
+            ],
             'self-closed non-active, two value-less static attributes' => [
                 '<tag static1 static2 />',
                 $context,
@@ -790,7 +795,7 @@ class SequencerTest extends UnitTestCase
         $variableProvider->expects($this->any())->method('get')->with('integer')->willReturn(42);
         $variableProvider->expects($this->any())->method('get')->with('numericArray')->willReturn(['foo', 'bar']);
         $variableProvider->expects($this->any())->method('get')->with('associativeArray')->willReturn(['foo' => 'bar']);
-        $variableProvider->expects($this->atLeastOnce())->method('getScopeCopy')->willReturnSelf();
+        $variableProvider->expects($this->any())->method('getScopeCopy')->willReturnSelf();
         $viewHelperResolver = new ViewHelperResolver();
         $errorHandler = new $errorHandlerClass();
         $viewHelperResolver->addNamespace('f', 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Core\\Parser\\Fixtures\\ViewHelpers');
@@ -823,20 +828,19 @@ class SequencerTest extends UnitTestCase
         $this->assertInstanceOf(get_class($expected), $subject, 'Node types not as expected at path: ' . $path);
         if ($subject instanceof ViewHelperInterface) {
             $expectedArguments = $expected->getParsedArguments();
-            foreach ($subject->getParsedArguments() as $name => $argument) {
+            $passedArguments = $subject->getParsedArguments();
+            foreach ($passedArguments as $name => $argument) {
                 if (isset($expectedArguments[$name])) {
                     if ($argument instanceof NodeInterface && $expectedArguments[$name] instanceof NodeInterface) {
                         $this->assertNodeEquals($argument, $expectedArguments[$name], $path . '.argument@' . $name);
                     } else {
                         $this->assertSame($expectedArguments[$name], $argument, 'Arguments at path ' . $path . '.argument@' . $name . ' did not match');
                     }
-                } else {
-                    #$this->fail('Unexpected argument: ' . $name . ' at path: ' . $path);
                 }
                 unset($expectedArguments[$name]);
             }
             if (!empty($expectedArguments)) {
-                $this->fail('ViewHelper did not recevie expected arguments: ' . var_export($expectedArguments, true));
+                $this->fail('ViewHelper did not receive expected arguments: ' . var_export($expectedArguments, true) . ' vs received ' . var_export($passedArguments, true));
             }
         } elseif ($subject instanceof ObjectAccessorNode) {
             $this->assertSame($expected->getObjectPath(), $subject->getObjectPath(), 'ObjectAccessors do not match at path ' . $path);

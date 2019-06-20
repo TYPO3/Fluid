@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -483,6 +484,9 @@ class Sequencer
                     $callDetected = false;
                     $potentialAccessor = $potentialAccessor ?? $captured;
                     $text .=  $this->source->source[$this->splitter->index - 1];
+                    if ($node instanceof ViewHelperInterface) {
+                        $node->postParse($arguments, $this->state, $this->renderingContext);
+                    }
                     if (isset($potentialAccessor)) {
                         $childNodeToAdd = new ObjectAccessorNode($potentialAccessor);
                         $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd; //$node ?? (is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode($potentialAccessor));
