@@ -157,6 +157,11 @@ class SequencerTest extends UnitTestCase
                 $context,
                 1559131849
             ],
+            'Unexpected equals sign without preceding argument name or array key' => [
+                '<f:c ="foo" />',
+                $context,
+                1561039838
+            ],
             'Unexpected content before array/inline start in numeric array' => [
                 '<f:c a="{foo: {0: BAD[bar, baz]}}" />',
                 $context,

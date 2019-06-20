@@ -176,7 +176,9 @@ class Sequencer
 
                 case Splitter::BYTE_SEPARATOR_EQUALS:
                     $key = $captured;
-                    if ($definitions !== null && !isset($definitions[$key])) {
+                    if ($key === null) {
+                        throw $this->splitter->createErrorAtPosition('Unexpected equals sign without preceding attribute/key name', 1561039838);
+                    } elseif ($definitions !== null && !isset($definitions[$key])) {
                         throw $this->splitter->createUnsupportedArgumentError($key, $definitions);
                     }
                     break;
