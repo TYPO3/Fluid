@@ -132,8 +132,8 @@ class ExamplesTest extends BaseTestCase
                 [
                     'Expression: $numberten % 4 = 2',
                     'Expression: 4 * $numberten = 40',
-                    'Expression: 4 / $numberten = 0.4',
-                    'Expression: $numberone / $numberten = 0.1',
+                    'Expression: 4 / $numberten = ' . (0.4), // NOTE: concat'ing a float + string LC-casts the float to localized comma/t-sep. Hence, let PHP also cast the expected value.
+                    'Expression: $numberone / $numberten = ' . (0.1), // NOTE: concat'ing a float + string LC-casts the float to localized comma/t-sep. Hence, let PHP also cast the expected value.
                     'Expression: 10 ^ $numberten = 10000000000'
                 ]
             ],
