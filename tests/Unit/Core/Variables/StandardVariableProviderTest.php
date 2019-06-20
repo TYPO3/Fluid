@@ -23,14 +23,14 @@ class StandardVariableProviderTest extends UnitTestCase
 
     /**
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->variableProvider = $this->getMock(StandardVariableProvider::class, ['dummy']);
     }
 
     /**
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->variableProvider);
     }
@@ -53,7 +53,7 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @test
+     * @return array
      */
     public function getOperabilityTestValues()
     {

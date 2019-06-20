@@ -22,26 +22,26 @@ class EscapeTest extends UnitTestCase
 {
 
     /**
-     * @var Escape|\PHPUnit_Framework_MockObject_MockObject
+     * @var Escape|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $escapeInterceptor;
 
     /**
-     * @var AbstractViewHelper|\PHPUnit_Framework_MockObject_MockObject
+     * @var AbstractViewHelper|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mockViewHelper;
 
     /**
-     * @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject
+     * @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mockNode;
 
     /**
-     * @var ParsingState|\PHPUnit_Framework_MockObject_MockObject
+     * @var ParsingState|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mockParsingState;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->escapeInterceptor = $this->getAccessibleMock(Escape::class, ['dummy']);
         $this->mockViewHelper = $this->getMockBuilder(AbstractViewHelper::class)->disableOriginalConstructor()->getMock();

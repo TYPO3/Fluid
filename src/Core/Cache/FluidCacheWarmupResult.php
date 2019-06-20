@@ -58,7 +58,7 @@ class FluidCacheWarmupResult
         $currentlyCompiled = $state->isCompiled();
         $this->results[$templatePathAndFilename] = [
             static::RESULT_COMPILABLE => $currentlyCompiled || $state->isCompilable(),
-            static::RESULT_COMPILED => $state->isCompiled(),
+            static::RESULT_COMPILED => $currentlyCompiled,
             static::RESULT_HASLAYOUT => $state->hasLayout(),
             static::RESULT_COMPILEDCLASS => $state->getIdentifier()
         ];

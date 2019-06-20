@@ -29,10 +29,11 @@ class TextNodeTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
      */
     public function constructorThrowsExceptionIfNoStringGiven()
     {
+        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+
         new TextNode(123);
     }
 }

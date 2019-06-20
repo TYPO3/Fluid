@@ -34,7 +34,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     protected $viewHelperNode;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->viewHelperNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
@@ -49,8 +49,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function viewHelperInitializesArguments()
     {
-        $this->viewHelper->initializeArguments();
-        $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
+        $this->assertNotEmpty($this->viewHelper->prepareArguments());
     }
 
     /**
@@ -60,7 +59,8 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     {
         $switchExpression = new \stdClass();
         $this->viewHelper->setArguments(['expression' => $switchExpression]);
-        $this->viewHelper->initializeArgumentsAndRender();
+        $output = $this->viewHelper->initializeArgumentsAndRender();
+        $this->assertEquals('', $output);
     }
 
     /**
@@ -69,7 +69,8 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     public function renderRemovesSwitchExpressionFromViewHelperVariableContainerAfterInvocation()
     {
         $this->viewHelper->setArguments(['expression' => 'switchExpression']);
-        $this->viewHelper->initializeArgumentsAndRender();
+        $output = $this->viewHelper->initializeArgumentsAndRender();
+        $this->assertEquals('', $output);
     }
 
     /**

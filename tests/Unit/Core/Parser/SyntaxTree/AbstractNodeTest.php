@@ -24,7 +24,7 @@ class AbstractNodeTest extends UnitTestCase
 
     protected $childNode;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->renderingContext = $this->getMock(RenderingContext::class, [], [], '', false);
 

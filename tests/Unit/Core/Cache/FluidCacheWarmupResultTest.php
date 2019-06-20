@@ -30,7 +30,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
         $result2 = $this->getAccessibleMock(FluidCacheWarmupResult::class, ['dummy']);
         $result2->_set('results', array_pop($results));
         $result1->merge($result2);
-        $this->assertAttributeSame($expected, 'results', $result1);
+        $this->assertEquals($expected, $result1->getResults());
     }
 
     /**
@@ -51,7 +51,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     {
         $subject = $this->getAccessibleMock(FluidCacheWarmupResult::class, ['dummy']);
         $subject->_set('results', ['foo' => 'bar']);
-        $this->assertAttributeEquals(['foo' => 'bar'], 'results', $subject);
+        $this->assertEquals(['foo' => 'bar'], $subject->getResults());
     }
 
     /**
@@ -64,7 +64,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     {
         $result = new FluidCacheWarmupResult();
         $result->add($subject, 'foobar');
-        $this->assertAttributeEquals(['foobar' => $expected], 'results', $result);
+        $this->assertEquals(['foobar' => $expected], $result->getResults());
     }
 
     /**
@@ -77,7 +77,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
         )->setMethods(
             ['isCompiled', 'isCompilable', 'hasLayout', 'getIdentifier']
         )->getMockForAbstractClass();
-        $subject1->expects($this->exactly(2))->method('isCompiled')->willReturn(false);
+        $subject1->expects($this->once())->method('isCompiled')->willReturn(false);
         $subject1->expects($this->once())->method('isCompilable')->willReturn(true);
         $subject1->expects($this->once())->method('hasLayout')->willReturn(false);
         $subject1->expects($this->once())->method('getIdentifier')->willReturn('subject1-identifier');
@@ -86,8 +86,8 @@ class FluidCacheWarmupResultTest extends UnitTestCase
         )->setMethods(
             ['isCompiled', 'isCompilable', 'hasLayout', 'getIdentifier', 'getFailureReason', 'getMitigations']
         )->getMockForAbstractClass();
-        $subject2->expects($this->exactly(2))->method('isCompiled')->willReturn(true);
-        $subject2->expects($this->once())->method('isCompilable')->willReturn(true);
+        $subject2->expects($this->once())->method('isCompiled')->willReturn(true);
+        $subject2->expects($this->never())->method('isCompilable');
         $subject2->expects($this->once())->method('hasLayout')->willReturn(true);
         $subject2->expects($this->once())->method('getIdentifier')->willReturn('subject2-identifier');
         $subject2->expects($this->once())->method('getFailureReason')->willReturn('failure-reason');

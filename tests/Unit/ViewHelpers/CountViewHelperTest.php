@@ -20,7 +20,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
      */
     protected $viewHelper;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->viewHelper = $this->getAccessibleMock(CountViewHelper::class, ['renderChildren']);
