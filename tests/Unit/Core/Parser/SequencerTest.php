@@ -338,6 +338,16 @@ class SequencerTest extends UnitTestCase
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo'], $state, $context)),
             ],
+            'self-closed active tag with hardcoded string argument with backslash that must not be removed/ignored' => [
+                '<f:c s="foo\\bar" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo\\bar'], $state, $context)),
+            ],
+            'self-closed active tag with hardcoded string argument with multiple backslashes that must not be removed/ignored' => [
+                '<f:c s="foo\\bar\\\\baz" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo\\bar\\\\baz'], $state, $context)),
+            ],
             'self-closed active tag with hardcoded string and integer arguments' => [
                 '<f:c s="foo" i="1" />',
                 $context,

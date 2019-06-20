@@ -827,9 +827,16 @@ class Sequencer
                     break;
 
                 case Splitter::BYTE_BACKSLASH:
-                    ++$countedEscapes;
-                    if ($captured !== null) {
-                        $node->addChildNode(new TextNode($captured));
+                    switch ($this->source->bytes[$this->splitter->index + 1]) {
+                        case $startingByte:
+                            ++$countedEscapes;
+                            if ($captured !== null) {
+                                $node->addChildNode(new TextNode($captured));
+                            }
+                            break;
+                        default:
+                            $node->addChildNode(new TextNode($captured . '\\'));
+                            break;
                     }
                     break;
 
