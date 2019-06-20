@@ -40,8 +40,9 @@ class FailedCompilingStateTest extends UnitTestCase
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set($property, $value);
         $method = 'set' . ucfirst($property);
+        $getter = 'get' . ucfirst($property);
         $subject->$method($value);
-        $this->assertAttributeEquals($value, $property, $subject);
+        $this->assertEquals($value, $subject->$getter());
     }
 
     /**
@@ -52,7 +53,7 @@ class FailedCompilingStateTest extends UnitTestCase
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set('mitigations', ['m1']);
         $subject->addMitigation('m2');
-        $this->assertAttributeEquals(['m1', 'm2'], 'mitigations', $subject);
+        $this->assertEquals(['m1', 'm2'], $subject->getMitigations());
     }
 
     /**

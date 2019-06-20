@@ -32,7 +32,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->subject = $this->getMock(RenderViewHelper::class, ['renderChildren']);
@@ -152,11 +152,11 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     public function testRender(array $arguments, $expectedViewMethod)
     {
         if ($expectedViewMethod !== null) {
-            $this->view->expects($this->once())->method($expectedViewMethod)->willReturn('');
+            $this->view->expects($this->once())->method($expectedViewMethod)->willReturn(null);
         }
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
         $this->subject->setArguments($arguments);
-        $this->subject->render();
+        $result = $this->subject->render();
+        $this->assertNull(null);
     }
 
     /**

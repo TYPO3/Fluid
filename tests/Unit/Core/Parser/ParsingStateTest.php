@@ -25,12 +25,12 @@ class ParsingStateTest extends UnitTestCase
      */
     protected $parsingState;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->parsingState = new ParsingState();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($this->parsingState);
     }
@@ -40,7 +40,7 @@ class ParsingStateTest extends UnitTestCase
      */
     public function testSetIdentifierSetsProperty()
     {
-        $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, ['dummy']);
+        $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
         $instance->setIdentifier('test');
         $this->assertAttributeEquals('test', 'identifier', $instance);
     }
@@ -50,7 +50,7 @@ class ParsingStateTest extends UnitTestCase
      */
     public function testGetIdentifierReturnsProperty()
     {
-        $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, ['dummy']);
+        $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
         $instance->_set('identifier', 'test');
         $this->assertEquals('test', $instance->getIdentifier());
     }

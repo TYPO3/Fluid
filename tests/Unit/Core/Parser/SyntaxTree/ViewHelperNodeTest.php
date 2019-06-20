@@ -32,19 +32,19 @@ class ViewHelperNodeTest extends UnitTestCase
     protected $renderingContext;
 
     /**
-     * @var TemplateVariableContainer|\PHPUnit_Framework_MockObject_MockObject
+     * @var TemplateVariableContainer|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $templateVariableContainer;
 
     /**
-     * @var ViewHelperResolver|\PHPUnit_Framework_MockObject_MockObject
+     * @var ViewHelperResolver|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mockViewHelperResolver;
 
     /**
      * Setup fixture
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
         $this->mockViewHelperResolver = $this->getMock(ViewHelperResolver::class, ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName', 'getArgumentDefinitionsForViewHelper']);
@@ -62,7 +62,7 @@ class ViewHelperNodeTest extends UnitTestCase
     public function constructorSetsViewHelperAndArguments()
     {
         $arguments = ['foo' => 'bar'];
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
+        /** @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject $viewHelperNode */
         $viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
 
         $this->assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
@@ -92,10 +92,11 @@ class ViewHelperNodeTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
      */
     public function abortIfRequiredArgumentsAreMissingThrowsException()
     {
+        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+
         $expected = [
             new ArgumentDefinition('firstArgument', 'string', '', false),
             new ArgumentDefinition('secondArgument', 'string', '', true)
