@@ -12,11 +12,19 @@ Configuraion over convention is the main difference between this approach and th
 ## About this document
 The content of this document is related to FLUID template engine. This is not the exhausted feature list of TYPO3 but
 it covers most of the major topics in FLUID.
-## What's New
+## What's new
+This manual is mainly for Fluid 3.0 . There will be new features in 3.0 like Atoms, PHP 7.2 compatible, strict
+types etc.
+## Get Help
+### Slack
+1. [Register for a typo3.org account](https://my.typo3.org/registration/sign-up/)
+2. [Register for Slack](https://my.typo3.org/about-mytypo3org/slack/)
+3. Join the TYPO3 Slack workspace: https://typo3.slack.com
+4. Join the **#fluid_** channel and ask your question
 
 ## Credits
 // TODO
 ## Feedback
 // TODO
 ## Sitemap
-[Sitemap]()
+[Sitemap](sitemap)
