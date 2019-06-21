@@ -25,6 +25,13 @@ types etc.
 ## Credits
 // TODO
 ## Feedback
-// TODO
+For general questions about the documentation please write to <fluid@typo3.org>.
+
+If any bug found in this manual can also be checked on [UNAVAILABLE]. You can then hit the "Edit me on GitHub" button
+in the top right corner and submit a pull request via [UNAVAILABLE].
+
+We the Documentation team would love to collaborate with great minds as maintaining high quality documentation is our prime objective which inturn demands time and effort. If you would like to support us, please join the documentation mailing list/forum on [UNAVAILABLE].
+
+Also, to support the translations to other languages see [UNAVAILABLE].
 ## Sitemap
 [Sitemap](sitemap)
