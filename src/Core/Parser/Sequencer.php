@@ -493,7 +493,6 @@ class Sequencer
                         $childNodeToAdd = new ObjectAccessorNode($potentialAccessor);
                         $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd; //$node ?? (is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode($potentialAccessor));
                     }
-                    //!isset($potentialAccessor) ?: ($node = ($node ?? $this->createObjectAccessorNodeOrRawValue($potentialAccessor)));
                     unset($namespace, $method, $potentialAccessor, $key);
                     break;
 

@@ -92,7 +92,7 @@ abstract class AbstractNode implements NodeInterface
      * - Null if there are no child nodes at all.
      *
      * @param bool $extractNode If TRUE, will extract the value of a single node if the node type contains a scalar value
-     * @return RootNode|string|int|float|null
+     * @return NodeInterface|string|int|float|null
      */
     public function flatten(bool $extractNode = false)
     {
