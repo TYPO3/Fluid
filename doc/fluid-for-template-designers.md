@@ -2,7 +2,7 @@
 In Fluid template consists of two parts: a layout and a template file. Layouts build the HTML 'skeleton' of your page (the part between the `body` tag) and defines the dynamic part with 'sections'. The representation for the backend of those sections and any additional fields are defined in templates. To give you a better idea about that here's an example:
 
 Layout file `typo3conf/ext/myextension/Resources/Private/Layouts/Foo.html`
-```html
+```xml
 <f:layout name="Foo" />
 
 <div id="page" class="{settings.pageClass}">
@@ -16,7 +16,7 @@ Layout file `typo3conf/ext/myextension/Resources/Private/Layouts/Foo.html`
 ```
 
 Template file `typo3conf/ext/myextension/Resources/Private/Templates/Page/Foo.html`
-```html
+```xml
 <div xmlns="http://www.w3.org/1999/xhtml" lang="en"
       xmlns:f="http://typo3.org/ns/TYPO3/Fluid/ViewHelpers"
       xmlns:flux="http://typo3.org/ns/FluidTYPO3/Flux/ViewHelpers"
@@ -71,7 +71,7 @@ The template defines the backend representation of this layout by providing a fl
 
 In our example we add an input field for the CSS class which is then available in the layout as a Fluid variable of the same name:
 
-```html
+```xml
 <flux:form id="foo">
 
     <!-- Input field for Fluid variable 'pageClass' -->
@@ -83,7 +83,7 @@ In our example we add an input field for the CSS class which is then available i
 ```
 
 and a grid that will be used as the backend layout:
-```html
+```xml
 <flux:form id="foo">
 
     [...]
