@@ -10,10 +10,13 @@ Rendering a Fluid template as page template requires setting up a special TypoSc
 (just an example) the backend or frontend layout selector field values to template files which can be rendered. 
 Configuraion over convention is the main difference between this approach and the (in TYPO3 CMS) perdominant approach, is that instead of expecting a large configuration, Fluid Powered TYPO3 will instead expect a minimal configuration of paths rather than complete structure, andthen detect and use templates in this path.
 ## About this document
-// TODO
+The content of this document is related to FLUID template engine. This is not the exhausted feature list of TYPO3 but
+it covers most of the major topics in FLUID.
 ## What's New
-// TODO
+
 ## Credits
 // TODO
 ## Feedback
 // TODO
+## Sitemap
+[Sitemap]()
