@@ -34,4 +34,4 @@ We the Documentation team would love to collaborate with great minds as maintain
 
 Also, to support the translations to other languages see [UNAVAILABLE].
 ## Sitemap
-[Sitemap](sitemap)
+[Sitemap](sitemap.md)
