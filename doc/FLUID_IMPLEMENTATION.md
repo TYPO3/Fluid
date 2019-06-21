@@ -19,6 +19,8 @@ Creating a custom View allows you to change just a few aspects, mainly about com
 the View requires, if it needs a custom `ViewHelperResolver`, if it must have some default variables, if it should have a default
 cache, etc.
 
+*Note: the special variable `layoutName` is reserved and can be assigned to a template to set its Layout instead of using `<f:layout name="LayoutName" />`.*
+
 TemplatePaths
 -------------
 

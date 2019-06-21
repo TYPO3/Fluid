@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 class ForViewHelperTest extends ViewHelperBaseTestcase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
