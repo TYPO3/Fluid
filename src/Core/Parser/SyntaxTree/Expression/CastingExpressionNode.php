@@ -32,9 +32,9 @@ class CastingExpressionNode extends AbstractExpressionNode
 		(
 			{                                # Start of shorthand syntax
 				(?:                          # Math expression is composed of...
-					[a-zA-Z0-9.]+            # Template variable object access path
+					[_a-zA-Z0-9.]+            # Template variable object access path
 					[\s]+as[\s]+             # A single space, then "as", then a single space
-					[a-zA-Z0-9.\s]+          # Casting-to-type side
+					[_a-zA-Z0-9.\s]+          # Casting-to-type side
 				)
 			}                                # End of shorthand syntax
 		)/x';
