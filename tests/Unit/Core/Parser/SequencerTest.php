@@ -367,7 +367,6 @@ class SequencerTest extends UnitTestCase
                 '<f:c s="{string} after" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode(' after'))], $state, $context)),
-                #(new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('string')], $state)),
             ],
             'self-closed active tag with object accessor string argument with string before and after accessor in string argument' => [
                 '<f:c s="before {string} after" />',
@@ -413,6 +412,41 @@ class SequencerTest extends UnitTestCase
                 '<f:c a="{foo:1}" />',
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with quoted string values in array argument' => [
+                '<f:c a="{1: \'foo\', 2: \'bar\'}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => 'foo', 2 => 'bar'])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with quoted integer values in array argument' => [
+                '<f:c a="{1: \'0\', 2: \'1\'}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => 0, 2 => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with quoted inline legacy pass without spaces as array argument' => [
+                '<f:c a="{1: \'{foo->f:c()}\', 2: \'1\'}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with quoted inline legacy pass with spaces as array argument' => [
+                '<f:c a="{1: \'{foo -> f:c()}\', 2: \'1\'}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with quoted inline pipe pass without spaces as array argument' => [
+                '<f:c a="{1: \'{foo|f:c()}\', 2: \'1\'}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with quoted inline pipe pass with spaces as array argument' => [
+                '<f:c a="{1: \'{foo | f:c()}\', 2: \'1\'}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], $state, $context)),
+            ],
+            'self-closed active tag with array argument with numeric non-sequential keys with object accessor values in array argument' => [
+                '<f:c a="{1: foo.bar, 2: baz.buzz}" />',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => new ObjectAccessorNode('foo.bar'), 2 => new ObjectAccessorNode('baz.buzz')])], $state, $context)),
             ],
             'self-closed active tag with array argument with double-quoted key and single integer element in array argument' => [
                 '<f:c a="{"foo":1}" />',

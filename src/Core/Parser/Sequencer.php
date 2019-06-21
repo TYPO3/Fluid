@@ -391,6 +391,7 @@ class Sequencer
 
                 case Splitter::BYTE_MINUS:
                     $text .= '-';
+                    $potentialAccessor = $potentialAccessor ?? $captured;
                     break;
 
                 // Backtick may be encountered in two different contexts: normal inline context, in which case it has
