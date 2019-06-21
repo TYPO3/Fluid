@@ -827,16 +827,15 @@ class Sequencer
                     break;
 
                 case Splitter::BYTE_BACKSLASH:
-                    switch ($this->source->bytes[$this->splitter->index + 1]) {
-                        case $startingByte:
-                            ++$countedEscapes;
-                            if ($captured !== null) {
-                                $node->addChildNode(new TextNode($captured));
-                            }
-                            break;
-                        default:
-                            $node->addChildNode(new TextNode($captured . '\\'));
-                            break;
+                    $next = $this->source->bytes[$this->splitter->index + 1] ?? null;
+                    ++$countedEscapes;
+                    if ($next === $startingByte || $next === Splitter::BYTE_BACKSLASH) {
+                        if ($captured !== null) {
+                            $node->addChildNode(new TextNode($captured));
+                        }
+                    } else {
+                        $node->addChildNode(new TextNode($captured . str_repeat('\\', $countedEscapes)));
+                        $countedEscapes = 0;
                     }
                     break;
 

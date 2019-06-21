@@ -576,6 +576,11 @@ class SequencerTest extends UnitTestCase
                 $context,
                 (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo'])], $state, $context)),
             ],
+            'simple inline ViewHelper with curly braces array argument with incorrect number of redundant escapes in root context' => [
+                '{f:c(a: \'{0: \\\\\'{f:c(a: {foo})}\\\\\'}\')}',
+                $context,
+                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([(new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('foo')])], $state, $context)])], $state, $context)),
+            ],
             'simple inline ViewHelper with curly brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
                 '{f:c(a="{foo="bar"}")}',
                 $context,
