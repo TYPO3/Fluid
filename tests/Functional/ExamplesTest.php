@@ -1,5 +1,5 @@
 <?php
-namespace FluidTYPO3Fluid\Flux\Tests\Unit\Functional;
+namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
