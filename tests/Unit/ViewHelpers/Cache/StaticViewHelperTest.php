@@ -22,7 +22,7 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderCallsRenderChildren()
+    public function testRenderCallsRenderChildren(): void
     {
         $subject = $this->getMockBuilder(StaticViewHelper::class)->setMethods(['renderChildren'])->getMock();
         $subject->expects($this->once())->method('renderChildren')->willReturn('test');
@@ -32,7 +32,7 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompile()
+    public function testCompile(): void
     {
         $subject = new StaticViewHelper();
         $subject->setRenderingContext(new RenderingContextFixture());

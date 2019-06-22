@@ -70,7 +70,7 @@ class SectionViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
@@ -84,14 +84,14 @@ class SectionViewHelper extends AbstractViewHelper
      * @param VariableProviderInterface $variableContainer
      * @return void
      */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
+    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer): void
     {
         /** @var $nameArgument TextNode */
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument->getText();
-        $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
+        $sections = $variableContainer->get('1457379500_sections') ?: [];
         $sections[$sectionName] = $node;
-        $variableContainer['1457379500_sections'] = $sections;
+        $variableContainer->add('1457379500_sections', $sections);
     }
 
     /**
@@ -100,7 +100,7 @@ class SectionViewHelper extends AbstractViewHelper
      * @return string HTML String of all child nodes.
      * @api
      */
-    public function render()
+    public function render(): string
     {
         $content = '';
         if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {

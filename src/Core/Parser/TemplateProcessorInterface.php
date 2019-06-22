@@ -28,7 +28,7 @@ interface TemplateProcessorInterface
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext);
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void;
 
     /**
      * Pre-process the template source before it is
@@ -38,5 +38,5 @@ interface TemplateProcessorInterface
      * @param string $templateSource
      * @return string
      */
-    public function preProcessSource($templateSource);
+    public function preProcessSource(string $templateSource): string;
 }

@@ -87,7 +87,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * Note: If this is NULL the value of $this->escapingInterceptorEnabled is considered for backwards compatibility
      *
-     * @var boolean
+     * @var boolean|null
      * @api
      */
     protected $escapeChildren = null;
@@ -96,7 +96,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * Specifies whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
      * @see isOutputEscapingEnabled()
      *
-     * @var boolean
+     * @var boolean|null
      * @api
      */
     protected $escapeOutput = null;
@@ -105,7 +105,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): void
     {
         $this->arguments = $arguments;
     }
@@ -114,7 +114,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
         $this->templateVariableContainer = $renderingContext->getVariableProvider();
@@ -128,13 +128,13 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @return boolean
      */
-    public function isChildrenEscapingEnabled()
+    public function isChildrenEscapingEnabled(): bool
     {
         if ($this->escapeChildren === null) {
             // Disable children escaping automatically, if output escaping is on anyway.
             return !$this->isOutputEscapingEnabled();
         }
-        return $this->escapeChildren;
+        return $this->escapeChildren !== false;
     }
 
     /**
@@ -144,7 +144,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @return boolean
      */
-    public function isOutputEscapingEnabled()
+    public function isOutputEscapingEnabled(): bool
     {
         return $this->escapeOutput !== false;
     }
@@ -158,11 +158,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
-     * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+     * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): AbstractViewHelper
     {
         if (array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
@@ -184,11 +184,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
-     * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+     * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): AbstractViewHelper
     {
         if (!array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
@@ -208,7 +208,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param ViewHelperNode $node View Helper node to be set.
      * @return void
      */
-    public function setViewHelperNode(ViewHelperNode $node)
+    public function setViewHelperNode(ViewHelperNode $node): void
     {
         $this->viewHelperNode = $node;
     }
@@ -221,7 +221,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param NodeInterface[] $childNodes
      * @return void
      */
-    public function setChildNodes(array $childNodes)
+    public function setChildNodes(array $childNodes): void
     {
         $this->childNodes = $childNodes;
     }
@@ -232,7 +232,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param \Closure $renderChildrenClosure
      * @return void
      */
-    public function setRenderChildrenClosure(\Closure $renderChildrenClosure)
+    public function setRenderChildrenClosure(\Closure $renderChildrenClosure): void
     {
         $this->renderChildrenClosure = $renderChildrenClosure;
     }
@@ -240,7 +240,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
-     * @return string the rendered ViewHelper.
+     * @return mixed the rendered ViewHelper.
      */
     public function initializeArgumentsAndRender()
     {
@@ -253,7 +253,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Call the render() method and handle errors.
      *
-     * @return string the rendered ViewHelper
+     * @return mixed the rendered ViewHelper
      * @throws Exception
      */
     protected function callRenderMethod()
@@ -284,7 +284,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return void
      * @api
      */
-    public function initialize()
+    public function initialize(): void
     {
     }
 
@@ -312,7 +312,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @return \Closure
      */
-    protected function buildRenderChildrenClosure()
+    protected function buildRenderChildrenClosure(): callable
     {
         $self = clone $this;
         return function() use ($self) {
@@ -325,7 +325,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @return ArgumentDefinition[]
      */
-    public function prepareArguments()
+    public function prepareArguments(): array
     {
         $thisClassName = get_class($this);
         if (isset(self::$argumentDefinitionCache[$thisClassName])) {
@@ -343,7 +343,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return void
      * @throws \InvalidArgumentException
      */
-    public function validateArguments()
+    public function validateArguments(): void
     {
         $argumentDefinitions = $this->prepareArguments();
         foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
@@ -371,7 +371,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param mixed $value
      * @return boolean
      */
-    protected function isValidType($type, $value)
+    protected function isValidType(string $type, $value): bool
     {
         if ($type === 'object') {
             if (!is_object($value)) {
@@ -427,7 +427,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return void
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
     }
 
@@ -439,7 +439,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @return boolean TRUE if $argumentName is found, FALSE otherwise
      * @api
      */
-    protected function hasArgument($argumentName)
+    protected function hasArgument(string $argumentName): bool
     {
         return isset($this->arguments[$argumentName]);
     }
@@ -455,7 +455,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function handleAdditionalArguments(array $arguments)
+    public function handleAdditionalArguments(array $arguments): void
     {
     }
 
@@ -470,7 +470,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function validateAdditionalArguments(array $arguments)
+    public function validateAdditionalArguments(array $arguments): void
     {
         if (!empty($arguments)) {
             throw new Exception(
@@ -494,9 +494,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         return sprintf(
             '%s::renderStatic(%s, %s, $renderingContext)',
@@ -531,7 +531,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param VariableProviderInterface $variableContainer
      * @return void
      */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
+    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer): void
     {
     }
 
@@ -542,7 +542,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      *
      * @return void
      */
-    public function resetState()
+    public function resetState(): void
     {
     }
 }

@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 class ClassWithProtectedGetter
 {
 
-    protected function getTest()
+    protected function getTest(): string
     {
         return 'test result';
     }

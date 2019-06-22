@@ -72,7 +72,7 @@ class WarmupViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument(
             'variables',
@@ -95,7 +95,7 @@ class WarmupViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         if (!$this->renderingContext->getTemplateCompiler()->isWarmupMode()) {
             return $this->renderChildren();
@@ -122,14 +122,16 @@ class WarmupViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
+     *
+     * @return string|null
      */
     public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
+        string $argumentsName,
+        string $closureName,
+        string &$initializationPhpCode,
         ViewHelperNode $node,
         TemplateCompiler $compiler
-    ) {
+    ): ?string {
         $originalVariableProvider = static::overlayVariablesIfNotSet($this->renderingContext, $this->arguments);
         $stopCompilingChildrenException = new StopCompilingChildrenException();
         $stopCompilingChildrenException->setReplacementString($this->renderChildren());
@@ -147,7 +149,7 @@ class WarmupViewHelper extends AbstractViewHelper
      * @param array $variables
      * @return VariableProviderInterface
      */
-    protected static function overlayVariablesIfNotSet(RenderingContextInterface $renderingContext, array $variables)
+    protected static function overlayVariablesIfNotSet(RenderingContextInterface $renderingContext, array $variables): VariableProviderInterface
     {
         $currentProvider = $renderingContext->getVariableProvider();
         $chainedVariableProvider = new ChainedVariableProvider([

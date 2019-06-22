@@ -37,7 +37,7 @@ class LayoutViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
     }
@@ -54,7 +54,7 @@ class LayoutViewHelper extends AbstractViewHelper
         ViewHelperNode $node,
         array $arguments,
         VariableProviderInterface $variableContainer
-    ) {
+    ): void {
         if (isset($arguments['name'])) {
             $layoutNameNode = $arguments['name'];
         } else {

@@ -12,7 +12,7 @@ class BasicConditionsTest extends BaseConditionalFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             ['1 == 1', true],

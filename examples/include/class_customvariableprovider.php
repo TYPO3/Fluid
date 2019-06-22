@@ -34,7 +34,7 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
      * @param string $path
      * @return mixed
      */
-    public function getByPath($path, array $accessors = [])
+    public function getByPath(string $path, array $accessors = [])
     {
         if ($path === 'random') {
             return 'random' . sha1(rand(0, 999999999));
@@ -49,7 +49,7 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
      * @param string $identifier
      * @return boolean
      */
-    public function exists($identifier)
+    public function exists(string $identifier): bool
     {
         return ($identifier === 'incrementer' || $identifier === 'random' || parent::exists($identifier));
     }

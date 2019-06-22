@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -37,7 +38,7 @@ class MathExpressionNode extends AbstractExpressionNode
      * @param array $matches
      * @return integer|float
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches)
     {
         // Split the expression on all recognized operators
         $matches = [];
@@ -55,6 +56,16 @@ class MathExpressionNode extends AbstractExpressionNode
                 $operator = $part;
             } else {
                 $part = static::getTemplateVariableOrValueItself($part, $renderingContext);
+
+                if (!is_string($operator)) {
+                    throw new Exception(
+                        sprintf(
+                            'No or invalid operator (%s) given, which is a must!', $operator
+                        ),
+                        1561121432
+                    );
+                }
+
                 $result = self::evaluateOperation($result, $operator, $part);
             }
         }
@@ -67,7 +78,7 @@ class MathExpressionNode extends AbstractExpressionNode
      * @param integer|float $right
      * @return integer|float
      */
-    protected static function evaluateOperation($left, $operator, $right)
+    protected static function evaluateOperation($left, string $operator, $right)
     {
         if ($operator === '%') {
             return $left % $right;

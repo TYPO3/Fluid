@@ -96,7 +96,7 @@ class RenderViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');

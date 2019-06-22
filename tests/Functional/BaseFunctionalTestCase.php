@@ -16,9 +16,9 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * If your test case requires a cache, override this
      * method and return an instance.
      *
-     * @return FluidCacheInterface
+     * @return FluidCacheInterface|null
      */
-    protected function getCache()
+    protected function getCache(): ?FluidCacheInterface
     {
         return null;
     }
@@ -29,7 +29,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      *
      * @return ViewInterface
      */
-    protected function getView($withCache = false)
+    protected function getView($withCache = false): TemplateView
     {
         $view = new TemplateView();
         $cache = $this->getCache();
@@ -73,7 +73,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      *
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [];
     }
@@ -93,12 +93,12 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, $expectedException = null, $withCache = false)
+    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, ?string $expectedException = null, bool $withCache = false): void
     {
         if (!empty($expectedException)) {
             $this->setExpectedException($expectedException);
         }
-        $view = $this->getView(false);
+        $view = $this->getView();
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $view->assignMultiple($variables);
@@ -108,14 +108,14 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
             $this->fail('Test performs no assertions!');
         }
         foreach ($expected as $expectedValue) {
-            if (is_string($expectedValue) === true) {
+            if (is_string($expectedValue)) {
                 $this->assertStringContainsString($expectedValue, $output);
             } else {
                 $this->assertEquals($expectedValue, $output);
             }
         }
         foreach ($notExpected as $notExpectedValue) {
-            if (is_string($notExpectedValue) === true) {
+            if (is_string($notExpectedValue)) {
                 $this->assertStringNotContainsString($notExpectedValue, $output);
             } else {
                 $this->assertNotEquals($notExpectedValue, $output);
@@ -141,7 +141,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, $expectedException = null)
+    public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, ?string $expectedException = null): void
     {
         if ($this->getCache()) {
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);

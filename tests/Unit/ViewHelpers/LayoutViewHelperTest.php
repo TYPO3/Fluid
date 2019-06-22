@@ -23,37 +23,19 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(LayoutViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
         $instance->initializeArguments();
     }
 
-    /**
-     * @test
-     * @dataProvider getPostParseEventTestValues
-     * @param arary $arguments
-     * @param string $expectedLayoutName
-     */
-    public function testPostParseEvent(array $arguments, $expectedLayoutName)
+    public function testPostParseEvent(): void
     {
-        $instance = new LayoutViewHelper();
         $variableContainer = new StandardVariableProvider();
-        $node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', $arguments, new ParsingState());
-        $result = LayoutViewHelper::postParseEvent($node, $arguments, $variableContainer);
+        $node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', ['name' => 'test'], new ParsingState());
+        $result = LayoutViewHelper::postParseEvent($node, ['name' => 'test'], $variableContainer);
         $this->assertNull($result);
-        $this->assertEquals($expectedLayoutName, $variableContainer->get('layoutName'));
-    }
-
-    /**
-     * @return array
-     */
-    public function getPostParseEventTestValues()
-    {
-        return [
-            [['name' => 'test'], 'test'],
-            [[], new TextNode('Default')],
-        ];
+        $this->assertEquals(new TextNode('Default'), $variableContainer->get('layoutName'));
     }
 }

@@ -78,11 +78,11 @@ class ViewHelperCompiler
      */
     public function compileWithCallToStaticMethod(
         ViewHelperInterface $viewHelper,
-        $argumentsName,
-        $renderChildrenClosureName,
-        $method = self::RENDER_STATIC,
+        string $argumentsName,
+        string $renderChildrenClosureName,
+        string $method = self::RENDER_STATIC,
         $onClass = null
-    ) {
+    ): array {
         $onClass = $onClass ?: get_class($viewHelper);
         return [
             self::DEFAULT_INIT,

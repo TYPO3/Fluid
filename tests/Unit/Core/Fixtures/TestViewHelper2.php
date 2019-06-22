@@ -17,7 +17,7 @@ class TestViewHelper2 extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('param1', 'integer', 'P1 Stuff', true);
         $this->registerArgument('param2', 'array', 'P2 Stuff', true);
@@ -29,7 +29,7 @@ class TestViewHelper2 extends AbstractViewHelper
      *
      * @return void
      */
-    public function render()
+    public function render(): void
     {
     }
 }

@@ -20,18 +20,18 @@ interface ParsedTemplateInterface
      * @param string $identifier
      * @return void
      */
-    public function setIdentifier($identifier);
+    public function setIdentifier(string $identifier): void;
 
     /**
      * @return string
      */
-    public function getIdentifier();
+    public function getIdentifier(): string;
 
     /**
      * Render the parsed template with rendering context
      *
      * @param RenderingContextInterface $renderingContext The rendering context to use
-     * @return string Rendered string
+     * @return mixed Rendered string
      */
     public function render(RenderingContextInterface $renderingContext);
 
@@ -40,7 +40,7 @@ interface ParsedTemplateInterface
      *
      * @return VariableProviderInterface
      */
-    public function getVariableContainer();
+    public function getVariableContainer(): VariableProviderInterface;
 
     /**
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
@@ -50,7 +50,7 @@ interface ParsedTemplateInterface
      * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public function getLayoutName(RenderingContextInterface $renderingContext);
+    public function getLayoutName(RenderingContextInterface $renderingContext): string;
 
     /**
      * Method generated on compiled templates to add ViewHelper namespaces which were defined in-template
@@ -59,14 +59,14 @@ interface ParsedTemplateInterface
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext);
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void;
 
     /**
      * Returns TRUE if the current template has a template defined via <f:layout name="..." />
      *
      * @return boolean
      */
-    public function hasLayout();
+    public function hasLayout(): bool;
 
     /**
      * If the template contains constructs which prevent the compiler from compiling the template
@@ -74,10 +74,10 @@ interface ParsedTemplateInterface
      *
      * @return boolean TRUE if the template can be compiled
      */
-    public function isCompilable();
+    public function isCompilable(): bool;
 
     /**
      * @return boolean TRUE if the template is already compiled, FALSE otherwise
      */
-    public function isCompiled();
+    public function isCompiled(): bool;
 }

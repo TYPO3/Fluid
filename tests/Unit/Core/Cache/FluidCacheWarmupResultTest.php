@@ -23,7 +23,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
      * @dataProvider getCacheWarmupResultTestValues
      * @test
      */
-    public function testMerge(array $results, array $expected)
+    public function testMerge(array $results, array $expected): void
     {
         $result1 = $this->getAccessibleMock(FluidCacheWarmupResult::class, ['dummy']);
         $result1->_set('results', array_pop($results));
@@ -36,7 +36,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getCacheWarmupResultTestValues()
+    public function getCacheWarmupResultTestValues(): array
     {
         return [
             [[['foo' => 'bar'], ['baz' => 'oof']], ['baz' => 'oof', 'foo' => 'bar']],
@@ -47,7 +47,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetResults()
+    public function testGetResults(): void
     {
         $subject = $this->getAccessibleMock(FluidCacheWarmupResult::class, ['dummy']);
         $subject->_set('results', ['foo' => 'bar']);
@@ -60,7 +60,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
      * @dataProvider getAddTestValues
      * @test
      */
-    public function testAdd(ParsedTemplateInterface $subject, array $expected)
+    public function testAdd(ParsedTemplateInterface $subject, array $expected): void
     {
         $result = new FluidCacheWarmupResult();
         $result->add($subject, 'foobar');
@@ -70,7 +70,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getAddTestValues()
+    public function getAddTestValues(): array
     {
         $subject1 = $this->getMockBuilder(
             ParsedTemplateInterface::class

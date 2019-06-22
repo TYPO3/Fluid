@@ -52,7 +52,7 @@ class ViewHelperNode extends AbstractNode
      * @param NodeInterface[] $arguments Arguments of view helper - each value is a RootNode.
      * @param ParsingState $state
      */
-    public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments, ParsingState $state)
+    public function __construct(RenderingContextInterface $renderingContext, string $namespace, string $identifier, array $arguments, ParsingState $state)
     {
         $resolver = $renderingContext->getViewHelperResolver();
         $this->arguments = $arguments;
@@ -69,7 +69,7 @@ class ViewHelperNode extends AbstractNode
     /**
      * @return ArgumentDefinition[]
      */
-    public function getArgumentDefinitions()
+    public function getArgumentDefinitions(): array
     {
         return $this->argumentDefinitions;
     }
@@ -80,7 +80,7 @@ class ViewHelperNode extends AbstractNode
      *
      * @return ViewHelperInterface
      */
-    public function getUninitializedViewHelper()
+    public function getUninitializedViewHelper(): ViewHelperInterface
     {
         return $this->uninitializedViewHelper;
     }
@@ -90,7 +90,7 @@ class ViewHelperNode extends AbstractNode
      *
      * @return string Class Name of associated view helper
      */
-    public function getViewHelperClassName()
+    public function getViewHelperClassName(): string
     {
         return $this->viewHelperClassName;
     }
@@ -100,7 +100,7 @@ class ViewHelperNode extends AbstractNode
      *
      * @return NodeInterface[]
      */
-    public function getArguments()
+    public function getArguments(): array
     {
         return $this->arguments;
     }
@@ -111,7 +111,7 @@ class ViewHelperNode extends AbstractNode
      * @param string $argumentName
      * @return ArgumentDefinition
      */
-    public function getArgumentDefinition($argumentName)
+    public function getArgumentDefinition(string $argumentName): ArgumentDefinition
     {
         return $this->argumentDefinitions[$argumentName];
     }
@@ -120,7 +120,7 @@ class ViewHelperNode extends AbstractNode
      * @param NodeInterface $childNode
      * @return void
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): void
     {
         parent::addChildNode($childNode);
         $this->uninitializedViewHelper->setChildNodes($this->childNodes);
@@ -130,7 +130,7 @@ class ViewHelperNode extends AbstractNode
      * @param string $pointerTemplateCode
      * @return void
      */
-    public function setPointerTemplateCode($pointerTemplateCode)
+    public function setPointerTemplateCode(string $pointerTemplateCode): void
     {
         $this->pointerTemplateCode = $pointerTemplateCode;
     }
@@ -146,7 +146,7 @@ class ViewHelperNode extends AbstractNode
      * Afterwards, checks that the view helper did not leave a variable lying around.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return string evaluated node after the view helper has been called.
+     * @return mixed evaluated node after the view helper has been called.
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
@@ -160,7 +160,7 @@ class ViewHelperNode extends AbstractNode
      * @param NodeInterface[] $argumentsObjectTree the arguments syntax tree, key is the argument name, value is an AbstractNode
      * @return void
      */
-    protected function rewriteBooleanNodesInArgumentsObjectTree($argumentDefinitions, &$argumentsObjectTree)
+    protected function rewriteBooleanNodesInArgumentsObjectTree(array $argumentDefinitions, array &$argumentsObjectTree): void
     {
         /** @var $argumentDefinition ArgumentDefinition */
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
@@ -176,7 +176,7 @@ class ViewHelperNode extends AbstractNode
      * @param NodeInterface[] $argumentsObjectTree
      * @throws Exception
      */
-    protected function validateArguments(array $argumentDefinitions, array $argumentsObjectTree)
+    protected function validateArguments(array $argumentDefinitions, array $argumentsObjectTree): void
     {
         $additionalArguments = [];
         foreach ($argumentsObjectTree as $argumentName => $value) {
@@ -195,7 +195,7 @@ class ViewHelperNode extends AbstractNode
      * @param NodeInterface[] $actualArguments Actual arguments
      * @throws Exception
      */
-    protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments)
+    protected function abortIfRequiredArgumentsAreMissing(array $expectedArguments, array $actualArguments): void
     {
         $actualArgumentNames = array_keys($actualArguments);
         foreach ($expectedArguments as $expectedArgument) {

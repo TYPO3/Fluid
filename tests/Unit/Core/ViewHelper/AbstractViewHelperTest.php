@@ -24,7 +24,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for AbstractViewHelper
- *
  */
 class AbstractViewHelperTest extends UnitTestCase
 {
@@ -71,7 +70,7 @@ class AbstractViewHelperTest extends UnitTestCase
      * @param mixed $expected
      * @dataProvider getFirstElementOfNonEmptyTestValues
      */
-    public function testGetFirstElementOfNonEmpty($input, $expected)
+    public function testGetFirstElementOfNonEmpty($input, $expected): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy']);
         $this->assertEquals($expected, $viewHelper->_call('getFirstElementOfNonEmpty', $input));
@@ -80,7 +79,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getFirstElementOfNonEmptyTestValues()
+    public function getFirstElementOfNonEmptyTestValues(): array
     {
         return [
             'plain array' => [['foo', 'bar'], 'foo'],
@@ -92,9 +91,9 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function argumentsCanBeRegistered()
+    public function argumentsCanBeRegistered(): void
     {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
 
         $name = 'This is a name';
         $description = 'Example desc';
@@ -109,11 +108,11 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function registeringTheSameArgumentNameAgainThrowsException()
+    public function registeringTheSameArgumentNameAgainThrowsException(): void
     {
         $this->expectException(\Exception::class);
 
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
 
         $name = 'shortName';
         $description = 'Example desc';
@@ -127,9 +126,9 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function overrideArgumentOverwritesExistingArgumentDefinition()
+    public function overrideArgumentOverwritesExistingArgumentDefinition(): void
     {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
 
         $name = 'argumentName';
         $description = 'argument description';
@@ -147,11 +146,11 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument()
+    public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument(): void
     {
         $this->expectException(\Exception::class);
 
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
 
         $viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', true);
     }
@@ -159,7 +158,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function prepareArgumentsCallsInitializeArguments()
+    public function prepareArgumentsCallsInitializeArguments(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['initializeArguments'], [], '', false);
 
@@ -171,7 +170,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateArgumentsCallsPrepareArguments()
+    public function validateArgumentsCallsPrepareArguments(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
@@ -183,7 +182,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateArgumentsAcceptsAllObjectsImplemtingArrayAccessAsAnArray()
+    public function validateArgumentsAcceptsAllObjectsImplemtingArrayAccessAsAnArray(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
@@ -195,7 +194,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateArgumentsCallsTheRightValidators()
+    public function validateArgumentsCallsTheRightValidators(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
@@ -211,7 +210,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong()
+    public function validateArgumentsCallsTheRightValidatorsAndThrowsExceptionIfValidationIsWrong(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -220,7 +219,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->setArguments(['test' => 'test']);
 
         $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([
-            'test' => new ArgumentDefinition('test', 'stdClass', false, 'documentation')
+            'test' => new ArgumentDefinition('test', \stdClass::class, false, 'documentation')
         ]));
 
         $viewHelper->validateArguments();
@@ -229,7 +228,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods()
+    public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['validateArguments', 'initialize', 'callRenderMethod']);
         $viewHelper->expects($this->at(0))->method('validateArguments');
@@ -244,7 +243,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function setRenderingContextShouldSetInnerVariables()
+    public function setRenderingContextShouldSetInnerVariables(): void
     {
         $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
         $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
@@ -265,10 +264,10 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testRenderChildrenCallsRenderChildrenClosureIfSet()
+    public function testRenderChildrenCallsRenderChildrenClosureIfSet(): string
     {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, null, [], '', false);
-        $viewHelper->setRenderChildrenClosure(function () {
+        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
+        $viewHelper->setRenderChildrenClosure(function (): string {
             return 'foobar';
         });
         $result = $viewHelper->renderChildren();
@@ -281,7 +280,7 @@ class AbstractViewHelperTest extends UnitTestCase
      * @param ArgumentDefinition $argument
      * @param mixed $value
      */
-    public function testValidateArguments(ArgumentDefinition $argument, $value)
+    public function testValidateArguments(ArgumentDefinition $argument, $value): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractViewHelper::class,
@@ -302,7 +301,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getValidateArgumentsTestValues()
+    public function getValidateArgumentsTestValues(): array
     {
         return [
             [new ArgumentDefinition('test', 'boolean', '', true, false), false],
@@ -323,7 +322,7 @@ class AbstractViewHelperTest extends UnitTestCase
      * @param ArgumentDefinition $argument
      * @param mixed $value
      */
-    public function testValidateArgumentsErrors(ArgumentDefinition $argument, $value)
+    public function testValidateArgumentsErrors(ArgumentDefinition $argument, $value): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractViewHelper::class,
@@ -335,20 +334,20 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->expects($this->once())->method('prepareArguments')->willReturn([$argument->getName() => $argument]);
         $viewHelper->expects($this->once())->method('hasArgument')->with($argument->getName())->willReturn(true);
         $viewHelper->setArguments([$argument->getName() => $value]);
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException(\InvalidArgumentException::class);
         $viewHelper->validateArguments();
     }
 
     /**
      * @return array
      */
-    public function getValidateArgumentsErrorsTestValues()
+    public function getValidateArgumentsErrorsTestValues(): array
     {
         return [
             [new ArgumentDefinition('test', 'boolean', '', true), ['bad']],
             [new ArgumentDefinition('test', 'string', '', true), new \ArrayIterator(['bar'])],
-            [new ArgumentDefinition('test', 'DateTime', '', true), new \ArrayIterator(['bar'])],
-            [new ArgumentDefinition('test', 'DateTime', '', true), 'test'],
+            [new ArgumentDefinition('test', \DateTime::class, '', true), new \ArrayIterator(['bar'])],
+            [new ArgumentDefinition('test', \DateTime::class, '', true), 'test'],
             [new ArgumentDefinition('test', 'integer', '', true), new \ArrayIterator(['bar'])],
             [new ArgumentDefinition('test', 'object', '', true), 'test'],
             [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'),'test']]
@@ -358,7 +357,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testValidateAdditionalArgumentsThrowsExceptionIfNotEmpty()
+    public function testValidateAdditionalArgumentsThrowsExceptionIfNotEmpty(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractViewHelper::class,
@@ -375,7 +374,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testCompileReturnsAndAssignsExpectedPhpCode()
+    public function testCompileReturnsAndAssignsExpectedPhpCode(): void
     {
         $view = new TemplateView();
         $context = new RenderingContext($view);
@@ -391,7 +390,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testDefaultResetStateMethodDoesNothing()
+    public function testDefaultResetStateMethodDoesNothing(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
         $this->assertNull($viewHelper->resetState());
@@ -400,7 +399,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testCallRenderMethodCanRenderViewHelperWithoutRenderMethodAndCallsRenderStatic()
+    public function testCallRenderMethodCanRenderViewHelperWithoutRenderMethodAndCallsRenderStatic(): void
     {
         $subject = new RenderMethodFreeViewHelper();
         $method = new \ReflectionMethod($subject, 'callRenderMethod');
@@ -413,7 +412,7 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testCallRenderMethodOnViewHelperWithoutRenderMethodWithDefaultRenderStaticMethodThrowsException()
+    public function testCallRenderMethodOnViewHelperWithoutRenderMethodWithDefaultRenderStaticMethodThrowsException(): void
     {
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
         $method = new \ReflectionMethod($subject, 'callRenderMethod');

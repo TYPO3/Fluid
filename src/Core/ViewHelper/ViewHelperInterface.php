@@ -22,30 +22,30 @@ interface ViewHelperInterface
     /**
      * @return ArgumentDefinition[]
      */
-    public function prepareArguments();
+    public function prepareArguments(): array;
 
     /**
      * @param array $arguments
      * @return void
      */
-    public function setArguments(array $arguments);
+    public function setArguments(array $arguments): void;
 
     /**
      * @param NodeInterface[] $nodes
      * @return void
      */
-    public function setChildNodes(array $nodes);
+    public function setChildNodes(array $nodes): void;
 
     /**
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext);
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void;
 
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
-     * @return string the rendered ViewHelper.
+     * @return mixed the rendered ViewHelper.
      */
     public function initializeArgumentsAndRender();
 
@@ -56,7 +56,7 @@ interface ViewHelperInterface
      *
      * @return void
      */
-    public function initialize();
+    public function initialize(): void;
 
     /**
      * Helper method which triggers the rendering of everything between the
@@ -72,7 +72,7 @@ interface ViewHelperInterface
      * @return void
      * @throws \InvalidArgumentException
      */
-    public function validateArguments();
+    public function validateArguments(): void;
 
     /**
      * Initialize all arguments. You need to override this method and call
@@ -80,7 +80,7 @@ interface ViewHelperInterface
      *
      * @return void
      */
-    public function initializeArguments();
+    public function initializeArguments(): void;
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -90,7 +90,7 @@ interface ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function handleAdditionalArguments(array $arguments);
+    public function handleAdditionalArguments(array $arguments): void;
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -100,7 +100,7 @@ interface ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function validateAdditionalArguments(array $arguments);
+    public function validateAdditionalArguments(array $arguments): void;
 
     /**
      * Here follows a more detailed description of the arguments of this function:
@@ -119,7 +119,7 @@ interface ViewHelperInterface
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return string the resulting string which is directly shown
+     * @return mixed the resulting string which is directly shown
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
 
@@ -151,9 +151,9 @@ interface ViewHelperInterface
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string;
 
     /**
      * Called when being inside a cached template.
@@ -161,5 +161,5 @@ interface ViewHelperInterface
      * @param \Closure $renderChildrenClosure
      * @return void
      */
-    public function setRenderChildrenClosure(\Closure $renderChildrenClosure);
+    public function setRenderChildrenClosure(\Closure $renderChildrenClosure): void;
 }

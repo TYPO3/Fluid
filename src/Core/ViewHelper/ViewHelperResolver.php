@@ -6,7 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 
 /**
@@ -41,7 +41,7 @@ class ViewHelperResolver
     /**
      * @return array
      */
-    public function getNamespaces()
+    public function getNamespaces(): array
     {
         return $this->namespaces;
     }
@@ -83,7 +83,7 @@ class ViewHelperResolver
      * @param string|array $phpNamespace
      * @return void
      */
-    public function addNamespace($identifier, $phpNamespace)
+    public function addNamespace(string $identifier, $phpNamespace): void
     {
         if (!array_key_exists($identifier, $this->namespaces) || $this->namespaces[$identifier] === null) {
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array) $phpNamespace;
@@ -103,7 +103,7 @@ class ViewHelperResolver
      * @param array $namespaces
      * @return void
      */
-    public function addNamespaces(array $namespaces)
+    public function addNamespaces(array $namespaces): void
     {
         foreach ($namespaces as $identifier => $namespace) {
             $this->addNamespace($identifier, $namespace);
@@ -121,7 +121,7 @@ class ViewHelperResolver
      * @param string $fluidNamespace
      * @return string
      */
-    public function resolvePhpNamespaceFromFluidNamespace($fluidNamespace)
+    public function resolvePhpNamespaceFromFluidNamespace(string $fluidNamespace): string
     {
         $namespace = $fluidNamespace;
         $suffixLength = strlen(Patterns::NAMESPACESUFFIX);
@@ -155,7 +155,7 @@ class ViewHelperResolver
      * @param array $namespaces
      * @return void
      */
-    public function setNamespaces(array $namespaces)
+    public function setNamespaces(array $namespaces): void
     {
         $this->namespaces = [];
         foreach ($namespaces as $identifier => $phpNamespace) {
@@ -171,7 +171,7 @@ class ViewHelperResolver
      * @param string $namespaceIdentifier
      * @return boolean TRUE if the given namespace is valid, otherwise FALSE
      */
-    public function isNamespaceValid($namespaceIdentifier)
+    public function isNamespaceValid(string $namespaceIdentifier): bool
     {
         if (!array_key_exists($namespaceIdentifier, $this->namespaces)) {
             return false;
@@ -187,28 +187,23 @@ class ViewHelperResolver
      * @param string $namespaceIdentifier
      * @return boolean TRUE if the given namespace is valid, otherwise FALSE
      */
-    public function isNamespaceValidOrIgnored($namespaceIdentifier)
+    public function isNamespaceValidOrIgnored(string $namespaceIdentifier): bool
     {
-        if ($this->isNamespaceValid($namespaceIdentifier) === true) {
+        if ($this->isNamespaceValid($namespaceIdentifier)) {
             return true;
         }
 
         if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
             return true;
         }
-
-        if ($this->isNamespaceIgnored($namespaceIdentifier)) {
-            return true;
-        }
-
-        return false;
+        return $this->isNamespaceIgnored($namespaceIdentifier);
     }
 
     /**
      * @param string $namespaceIdentifier
      * @return boolean
      */
-    public function isNamespaceIgnored($namespaceIdentifier)
+    public function isNamespaceIgnored(string $namespaceIdentifier): bool
     {
         if (array_key_exists($namespaceIdentifier, $this->namespaces) && $this->namespaces[$namespaceIdentifier] === null) {
             return true;
@@ -242,13 +237,13 @@ class ViewHelperResolver
      * @return string|NULL
      * @throws ParserException
      */
-    public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
+    public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): ?string
     {
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
             $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
             $actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
-            if (false === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
-                throw new ParserException(sprintf(
+            if (!class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
+                throw new Exception(sprintf(
                     'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
                     'Based on your spelling, the system would load the class "%s", however this class does not exist.',
                     $namespaceIdentifier,
@@ -270,7 +265,7 @@ class ViewHelperResolver
      * @param string $viewHelperShortName
      * @return ViewHelperInterface
      */
-    public function createViewHelperInstance($namespace, $viewHelperShortName)
+    public function createViewHelperInstance(string $namespace, string $viewHelperShortName): ViewHelperInterface
     {
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
         return $this->createViewHelperInstanceFromClassName($className);
@@ -285,7 +280,7 @@ class ViewHelperResolver
      * @param string $viewHelperClassName
      * @return ViewHelperInterface
      */
-    public function createViewHelperInstanceFromClassName($viewHelperClassName)
+    public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
     {
         return new $viewHelperClassName();
     }
@@ -300,7 +295,7 @@ class ViewHelperResolver
      * @param ViewHelperInterface $viewHelper
      * @return ArgumentDefinition[]
      */
-    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper)
+    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper): array
     {
         return $viewHelper->prepareArguments();
     }
@@ -312,7 +307,7 @@ class ViewHelperResolver
      * @param string $methodIdentifier Method identifier, might be hierarchical like "link.url"
      * @return string The fully qualified class name of the viewhelper
      */
-    protected function resolveViewHelperName($namespaceIdentifier, $methodIdentifier)
+    protected function resolveViewHelperName(string $namespaceIdentifier, string $methodIdentifier): string
     {
         $explodedViewHelperName = explode('.', $methodIdentifier);
         if (count($explodedViewHelperName) > 1) {

@@ -40,7 +40,7 @@ abstract class BaseTestCase extends TestCase
      * @return MockObject
      * @api
      */
-    protected function getAccessibleMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
+    protected function getAccessibleMock(string $originalClassName, array $methods = [], array $arguments = [], string $mockClassName = '', bool $callOriginalConstructor = true, bool $callOriginalClone = true, bool $callAutoload = true): MockObject
     {
         $builder = $this->getMockBuilder($this->buildAccessibleProxy($originalClassName))->setMethods($methods)->setConstructorArgs($arguments)->setMockClassName($mockClassName);
         if (!$callAutoload) {
@@ -102,7 +102,7 @@ abstract class BaseTestCase extends TestCase
      * @return MockObject
      * @api
      */
-    protected function getMock($originalClassName, $methods = [], array $arguments = [], $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
+    protected function getMock(string $originalClassName, array $methods = [], array $arguments = [], bool $callOriginalConstructor = true, bool $callOriginalClone = true, bool $callAutoload = true): MockObject
     {
         $builder = $this->getMockBuilder($originalClassName)->setMethods($methods)->setConstructorArgs($arguments);
         if (!$callAutoload) {
@@ -133,7 +133,7 @@ abstract class BaseTestCase extends TestCase
      * @return \PHPUnit_Framework_MockObject_MockObject
      * @api
      */
-    protected function getAccessibleMockForAbstractClass($originalClassName, array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
+    protected function getAccessibleMockForAbstractClass(string $originalClassName, array $arguments = [], string $mockClassName = '', bool $callOriginalConstructor = true, bool $callOriginalClone = true, bool $callAutoload = true): MockObject
     {
         return $this->getMockForAbstractClass($this->buildAccessibleProxy($originalClassName), $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload);
     }
@@ -146,7 +146,7 @@ abstract class BaseTestCase extends TestCase
      * @return string Full qualified name of the built class
      * @api
      */
-    protected function buildAccessibleProxy($className)
+    protected function buildAccessibleProxy(string $className): string
     {
         $accessibleClassName = 'AccessibleTestProxy' . md5(uniqid(mt_rand(), true));
         $class = new \ReflectionClass($className);
@@ -184,15 +184,15 @@ abstract class BaseTestCase extends TestCase
         return $accessibleClassName;
     }
 
-    protected function setExpectedException(string $class = \Exception::class, string $message = '', int $code = 0)
+    protected function setExpectedException(string $class = \Exception::class, string $message = '', int $code = 0): void
     {
-        if ($class) {
+        if ($class !== '') {
             $this->expectException($class);
         }
-        if ($message) {
+        if ($message !== '') {
             $this->expectExceptionMessage($message);
         }
-        if ($code) {
+        if ($code !== 0) {
             $this->expectExceptionCode($code);
         }
     }
@@ -210,7 +210,7 @@ abstract class BaseTestCase extends TestCase
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
-    protected function inject($target, $name, $dependency)
+    protected function inject(object $target, string $name, object $dependency): void
     {
         if (!is_object($target)) {
             throw new \InvalidArgumentException('Wrong type for argument $target, must be object.');

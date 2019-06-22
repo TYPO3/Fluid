@@ -23,11 +23,11 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompileThrowsStopCompilingChildrenException()
+    public function testCompileThrowsStopCompilingChildrenException(): string
     {
         $subject = new WarmupViewHelper();
         $subject->initializeArguments();
-        $subject->setRenderChildrenClosure(function () {
+        $subject->setRenderChildrenClosure(function (): string {
             return 'test';
         });
         $subject->setArguments(['variables' => ['foo' => 'bar']]);
@@ -49,7 +49,7 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderReturnsContentDirectlyOutsideWarmupMode()
+    public function testRenderReturnsContentDirectlyOutsideWarmupMode(): void
     {
         $compiler = $this->getMock(TemplateCompiler::class, ['isWarmupMode']);
         $compiler->expects($this->once())->method('isWarmupMode')->willReturn(false);
@@ -57,7 +57,7 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
         $renderingContext->expects($this->never())->method('setVariableProvider');
         $renderingContext->setTemplateCompiler($compiler);
         $subject = new WarmupViewHelper();
-        $subject->setRenderChildrenClosure(function () {
+        $subject->setRenderChildrenClosure(function (): string {
             return 'test';
         });
         $subject->setRenderingContext($renderingContext);
@@ -67,7 +67,7 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderOverlaysAndRestoresVariableProviderAndReturnsContentInsideWarmupMode()
+    public function testRenderOverlaysAndRestoresVariableProviderAndReturnsContentInsideWarmupMode(): void
     {
         $compiler = $this->getMock(TemplateCompiler::class, ['isWarmupMode']);
         $compiler->expects($this->once())->method('isWarmupMode')->willReturn(true);
@@ -76,7 +76,7 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
         $renderingContext->setTemplateCompiler($compiler);
         $subject = new WarmupViewHelper();
         $subject->setArguments(['variables' => ['foo' => 'bar']]);
-        $subject->setRenderChildrenClosure(function () {
+        $subject->setRenderChildrenClosure(function (): string {
             return 'test';
         });
         $subject->setRenderingContext($renderingContext);

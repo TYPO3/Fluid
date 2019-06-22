@@ -1,5 +1,6 @@
 <?php
 
+use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 /*
  * EXAMPLE: Error Handling
  *
@@ -13,7 +14,7 @@ require __DIR__ . '/include/view_init.php';
 // Switch the error handler to the "TolerantErrorHandler" which basically turns
 // errors which would normally break the rendering and throw an exception, into
 // plain string errors which inform of the problem as inline text in the template.
-$view->getRenderingContext()->setErrorHandler(new \TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler());
+$view->getRenderingContext()->setErrorHandler(new TolerantErrorHandler());
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.

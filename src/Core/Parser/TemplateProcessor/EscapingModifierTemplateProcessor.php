@@ -30,7 +30,7 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
     /**
      * @param RenderingContextInterface $renderingContext
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
     }
@@ -43,7 +43,7 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
      * @param string $templateSource
      * @return string
      */
-    public function preProcessSource($templateSource)
+    public function preProcessSource(string $templateSource): string
     {
         if (strpos($templateSource, '{escaping') === false) {
             // No escaping modifier detected - early return to skip preg processing
@@ -63,8 +63,6 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
             $this->renderingContext->getTemplateParser()->setEscapingEnabled(false);
         }
 
-        $templateSource = str_replace($matches[0][0], '', $templateSource);
-
-        return $templateSource;
+        return str_replace($matches[0][0], '', $templateSource);
     }
 }

@@ -23,7 +23,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
      * @param string $templateSource
      * @param boolean $expected
      */
-    public function testSetsEscapingToExpectedValueAndStripsModifier($templateSource, $expected)
+    public function testSetsEscapingToExpectedValueAndStripsModifier(string $templateSource, bool $expected): void
     {
         $subject = new EscapingModifierTemplateProcessor();
         $context = new RenderingContextFixture();
@@ -42,7 +42,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEscapingTestValues()
+    public function getEscapingTestValues(): array
     {
         return [
             ['', true],
@@ -65,7 +65,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
      * @dataProvider getErrorTestValues
      * @param string $templateSource
      */
-    public function testThrowsExceptionOnMultipleDefinitions($templateSource)
+    public function testThrowsExceptionOnMultipleDefinitions(string $templateSource): void
     {
         $subject = new EscapingModifierTemplateProcessor();
         $context = new RenderingContextFixture();
@@ -79,7 +79,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getErrorTestValues()
+    public function getErrorTestValues(): array
     {
         return [
             [

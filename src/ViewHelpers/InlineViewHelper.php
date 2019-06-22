@@ -37,7 +37,7 @@ class InlineViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument(
             'code',
@@ -56,7 +56,7 @@ class InlineViewHelper extends AbstractViewHelper
         array $arguments,
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
-    ) {
+    ): string {
         return $renderingContext->getTemplateParser()->parse($renderChildrenClosure())->render($renderingContext);
     }
 }

@@ -40,10 +40,10 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     /**
      * Initializes the "then" and "else" arguments
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
-        $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.', false);
-        $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.', false);
+        $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.');
+        $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.');
     }
 
     /**
@@ -54,7 +54,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return string the rendered string
      * @api
      */
-    public function render()
+    public function render(): string
     {
         if (static::verdict($this->arguments, $this->renderingContext)) {
             return $this->renderThenChild();
@@ -95,7 +95,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return static::evaluateCondition($arguments);
     }
@@ -118,7 +118,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return boolean
      * @api
      */
-    protected static function evaluateCondition($arguments = null)
+    protected static function evaluateCondition(?array $arguments = null): bool
     {
         return isset($arguments['condition']) && (bool)($arguments['condition']);
     }
@@ -129,7 +129,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    private static function evaluateElseClosures(array $closures, array $conditionClosures, RenderingContextInterface $renderingContext)
+    private static function evaluateElseClosures(array $closures, array $conditionClosures, RenderingContextInterface $renderingContext): string
     {
         foreach ($closures as $elseNodeIndex => $elseNodeClosure) {
             if (!isset($conditionClosures[$elseNodeIndex])) {
@@ -151,7 +151,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return mixed rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
      * @api
      */
-    protected function renderThenChild()
+    protected function renderThenChild(): string
     {
         if ($this->hasArgument('then')) {
             return $this->arguments['then'];
@@ -161,8 +161,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         foreach ($this->viewHelperNode->getChildNodes() as $childNode) {
             if ($childNode instanceof ViewHelperNode
                 && substr($childNode->getViewHelperClassName(), -14) === 'ThenViewHelper') {
-                $data = $childNode->evaluate($this->renderingContext);
-                return $data;
+                return $childNode->evaluate($this->renderingContext);
             }
             if ($childNode instanceof ViewHelperNode
                 && substr($childNode->getViewHelperClassName(), -14) === 'ElseViewHelper') {
@@ -185,7 +184,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
      * @api
      */
-    protected function renderElseChild()
+    protected function renderElseChild(): string
     {
 
         if ($this->hasArgument('else')) {
@@ -220,9 +219,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         $thenViewHelperEncountered = $elseViewHelperEncountered = false;
         foreach ($node->getChildNodes() as $childNode) {

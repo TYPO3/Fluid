@@ -25,7 +25,7 @@ interface RenderableInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Setter for the name of this Renderable.
@@ -33,7 +33,7 @@ interface RenderableInterface
      * @param string $name
      * @return mixed
      */
-    public function setName($name);
+    public function setName(string $name);
 
     /**
      * Sets the parsed RootNode which must be handled by this Renderable. In the
@@ -41,14 +41,14 @@ interface RenderableInterface
      * by the NodeConverter
      *
      * @param NodeInterface $node
-     * @return void
+     * @return RenderableInterface
      */
-    public function setNode(NodeInterface $node);
+    public function setNode(NodeInterface $node): RenderableInterface;
 
     /**
      * @return NodeInterface
      */
-    public function getNode();
+    public function getNode(): NodeInterface;
 
     /**
      * @param RenderingContextInterface $renderingContext

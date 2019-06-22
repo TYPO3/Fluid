@@ -28,7 +28,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testWarm()
+    public function testWarm(): void
     {
         $failedCompilingState = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject = $this->getMockBuilder(StandardCacheWarmer::class)
@@ -81,7 +81,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testDetectControllerNamesInTemplateRootPaths()
+    public function testDetectControllerNamesInTemplateRootPaths(): void
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'detectControllerNamesInTemplateRootPaths');
@@ -98,7 +98,7 @@ class StandardCacheWarmerTest extends UnitTestCase
      * @dataProvider getWarmSingleFileExceptionTestValues
      * @test
      */
-    public function testWarmuSingleFileHandlesException(\RuntimeException $error)
+    public function testWarmuSingleFileHandlesException(\RuntimeException $error): void
     {
         $subject = new StandardCacheWarmer();
         $context = new RenderingContextFixture();
@@ -118,7 +118,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getWarmSingleFileExceptionTestValues()
+    public function getWarmSingleFileExceptionTestValues(): array
     {
         return [
             [new StopCompilingException('StopCompiling exception')],
@@ -134,7 +134,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testCreateClosureCreatesFileReadingClosure()
+    public function testCreateClosureCreatesFileReadingClosure(): void
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'createClosure');

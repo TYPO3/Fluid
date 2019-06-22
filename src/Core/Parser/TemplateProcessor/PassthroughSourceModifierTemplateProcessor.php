@@ -27,7 +27,7 @@ class PassthroughSourceModifierTemplateProcessor implements TemplateProcessorInt
      * @return string
      * @throws PassthroughSourceException
      */
-    public function preProcessSource($templateSource)
+    public function preProcessSource(string $templateSource): string
     {
         if (strpos($templateSource, '{parsing off}') !== false) {
             $templateSource = str_replace('{parsing off}', '', $templateSource);
@@ -42,7 +42,7 @@ class PassthroughSourceModifierTemplateProcessor implements TemplateProcessorInt
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         // void
     }

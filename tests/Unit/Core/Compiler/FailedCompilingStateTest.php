@@ -21,7 +21,7 @@ class FailedCompilingStateTest extends UnitTestCase
      * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testGetter($property, $value)
+    public function testGetter(string $property, $value): void
     {
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set($property, $value);
@@ -35,7 +35,7 @@ class FailedCompilingStateTest extends UnitTestCase
      * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testSetter($property, $value)
+    public function testSetter(string $property, $value): void
     {
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set($property, $value);
@@ -48,7 +48,7 @@ class FailedCompilingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testAddMitigation()
+    public function testAddMitigation(): void
     {
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set('mitigations', ['m1']);
@@ -59,7 +59,7 @@ class FailedCompilingStateTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPropertyTestValues()
+    public function getPropertyTestValues(): array
     {
         return [
             ['failureReason', 'test reason'],

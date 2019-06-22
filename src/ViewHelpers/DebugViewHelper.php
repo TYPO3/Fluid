@@ -50,7 +50,7 @@ class DebugViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('typeOnly', 'boolean', 'If TRUE, debugs only the type of variables', false, false);
@@ -62,7 +62,7 @@ class DebugViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return string
+     * @return mixed
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
@@ -85,7 +85,7 @@ class DebugViewHelper extends AbstractViewHelper
      * @param integer $levels
      * @return string
      */
-    protected static function dumpVariable($variable, $html, $level, $levels)
+    protected static function dumpVariable($variable, bool $html, int $level, int $levels): string
     {
         $typeLabel = is_object($variable) ? get_class($variable) : gettype($variable);
 
@@ -142,7 +142,7 @@ class DebugViewHelper extends AbstractViewHelper
      * @param mixed $variable
      * @return array
      */
-    protected static function getValuesOfNonScalarVariable($variable)
+    protected static function getValuesOfNonScalarVariable($variable): array
     {
         if ($variable instanceof \ArrayObject || is_array($variable)) {
             return (array) $variable;

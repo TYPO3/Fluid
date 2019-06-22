@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -27,7 +28,7 @@ abstract class AbstractNode implements NodeInterface
      *
      * @param RenderingContextInterface $renderingContext
      * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
-     * @throws Parser\Exception
+     * @throws Exception
      */
     public function evaluateChildNodes(RenderingContextInterface $renderingContext)
     {
@@ -51,7 +52,7 @@ abstract class AbstractNode implements NodeInterface
      * @param boolean $cast
      * @return mixed
      */
-    protected function evaluateChildNode(NodeInterface $node, RenderingContextInterface $renderingContext, $cast)
+    protected function evaluateChildNode(NodeInterface $node, RenderingContextInterface $renderingContext, bool $cast)
     {
         $output = $node->evaluate($renderingContext);
         if ($cast) {
@@ -64,13 +65,12 @@ abstract class AbstractNode implements NodeInterface
      * @param mixed $value
      * @return string
      */
-    protected function castToString($value)
+    protected function castToString($value): string
     {
         if (is_object($value) && !method_exists($value, '__toString')) {
-            throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
+            throw new Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
         }
-        $output = (string) $value;
-        return $output;
+        return (string) $value;
     }
 
     /**
@@ -79,7 +79,7 @@ abstract class AbstractNode implements NodeInterface
      *
      * @return NodeInterface[] A list of nodes
      */
-    public function getChildNodes()
+    public function getChildNodes(): array
     {
         return $this->childNodes;
     }
@@ -90,7 +90,7 @@ abstract class AbstractNode implements NodeInterface
      * @param NodeInterface $childNode The sub node to add
      * @return void
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): void
     {
         $this->childNodes[] = $childNode;
     }

@@ -22,7 +22,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for ParsingState
- *
  */
 class RenderingContextTest extends UnitTestCase
 {
@@ -42,7 +41,7 @@ class RenderingContextTest extends UnitTestCase
      * @param mixed $value
      * @dataProvider getPropertyNameTestValues
      */
-    public function testGetter($property, $value)
+    public function testGetter(string $property, $value): void
     {
         $view = new TemplateView();
         $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy'], [$view]);
@@ -56,7 +55,7 @@ class RenderingContextTest extends UnitTestCase
      * @param mixed $value
      * @dataProvider getPropertyNameTestValues
      */
-    public function testSetter($property, $value)
+    public function testSetter(string $property, $value): void
     {
         $view = new TemplateView();
         $subject = new RenderingContext($view);
@@ -68,7 +67,7 @@ class RenderingContextTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPropertyNameTestValues()
+    public function getPropertyNameTestValues(): array
     {
         return [
             ['variableProvider', new StandardVariableProvider(['foo' => 'bar'])],
@@ -88,7 +87,7 @@ class RenderingContextTest extends UnitTestCase
     /**
      * @test
      */
-    public function templateVariableContainerCanBeReadCorrectly()
+    public function templateVariableContainerCanBeReadCorrectly(): void
     {
         $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
         $this->renderingContext->setVariableProvider($templateVariableContainer);
@@ -98,7 +97,7 @@ class RenderingContextTest extends UnitTestCase
     /**
      * @test
      */
-    public function viewHelperVariableContainerCanBeReadCorrectly()
+    public function viewHelperVariableContainerCanBeReadCorrectly(): void
     {
         $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
         $this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
@@ -108,7 +107,7 @@ class RenderingContextTest extends UnitTestCase
     /**
      * @test
      */
-    public function testIsCacheEnabled()
+    public function testIsCacheEnabled(): void
     {
         $subject = new RenderingContext($this->getMock(TemplateView::class));
         $this->assertFalse($subject->isCacheEnabled());

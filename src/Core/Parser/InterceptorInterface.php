@@ -30,12 +30,12 @@ interface InterceptorInterface
      * @param ParsingState $parsingState the parsing state
      * @return NodeInterface
      */
-    public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState);
+    public function process(NodeInterface $node, int $interceptorPosition, ParsingState $parsingState): NodeInterface;
 
     /**
      * The interceptor should define at which interception positions it wants to be called.
      *
      * @return array Array of INTERCEPT_* constants
      */
-    public function getInterceptionPoints();
+    public function getInterceptionPoints(): array;
 }

@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
+use PHPUnit\Framework\MockObject\MockObject;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -24,12 +25,12 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
 {
 
     /**
-     * @var AbstractConditionViewHelper|\PHPUnit\Framework\MockObject\MockObject
+     * @var AbstractConditionViewHelper|MockObject
      */
     protected $viewHelper;
 
     /**
-     * @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject
+     * @var ViewHelperNode|MockObject
      */
     protected $viewHelperNode;
 
@@ -48,7 +49,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
      * @param array $childNodes
      * @param string $expected
      */
-    public function testCompileReturnsAndAssignsExpectedVariables(array $childNodes, $expected)
+    public function testCompileReturnsAndAssignsExpectedVariables(array $childNodes, string $expected): void
     {
         $node = new ViewHelperNode($this->renderingContext, 'f', 'if', [], new ParsingState());
         foreach ($childNodes as $childNode) {
@@ -69,7 +70,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getCompileTestValues()
+    public function getCompileTestValues(): array
     {
         $state = new ParsingState();
         $context = new RenderingContextFixture();
@@ -114,12 +115,12 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
      * @param array $arguments
      * @param $expected
      */
-    public function testRenderFromArgumentsReturnsExpectedValue(array $arguments, $expected)
+    public function testRenderFromArgumentsReturnsExpectedValue(array $arguments, $expected): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractConditionViewHelper::class, ['dummy']);
         $viewHelper->setArguments($arguments);
         $viewHelper->setViewHelperNode(new ViewHelperNode($this->renderingContext, 'f', 'if', [], new ParsingState()));
-        $result = AbstractConditionViewHelper::renderStatic($arguments, function () {
+        $result = AbstractConditionViewHelper::renderStatic($arguments, function (): string {
             return '';
         }, $this->renderingContext);
         $this->assertEquals($expected, $result);
@@ -128,55 +129,55 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderFromArgumentsTestValues()
+    public function getRenderFromArgumentsTestValues(): array
     {
         return [
             [['condition' => false], null],
-            [['condition' => true, '__thenClosure' => function () {
+            [['condition' => true, '__thenClosure' => function (): string {
                 return 'foobar';
             }], 'foobar'],
-            [['condition' => true, '__elseClosures' => [function () {
+            [['condition' => true, '__elseClosures' => [function (): string {
                 return 'foobar';
             }]], ''],
             [['condition' => true], ''],
             [['condition' => true], null],
-            [['condition' => false, '__elseClosures' => [function () {
+            [['condition' => false, '__elseClosures' => [function (): string {
                 return 'foobar';
             }]], 'foobar'],
             [['condition' => false, '__elseifClosures' => [
-                function () {
+                function (): bool {
                     return false;
                 },
-                function () {
+                function (): bool {
                     return true;
                 }
             ], '__elseClosures' => [
-                function () {
+                function (): string {
                     return 'baz';
                 },
-                function () {
+                function (): string {
                     return 'foobar';
                 }
             ]], 'foobar'],
             [['condition' => false, '__elseifClosures' => [
-                function () {
+                function (): bool {
                     return false;
                 },
-                function () {
+                function (): bool {
                     return false;
                 }
             ], '__elseClosures' => [
-                function () {
+                function (): string {
                     return 'baz';
                 },
-                function () {
+                function (): string {
                     return 'foobar';
                 },
-                function () {
+                function (): string {
                     return 'barbar';
                 }
             ]], 'barbar'],
-            [['condition' => false, '__thenClosure' => function () {
+            [['condition' => false, '__thenClosure' => function (): string {
                 return 'foobar';
             }], ''],
             [['condition' => false], ''],
@@ -186,7 +187,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThenChildReturnsAllChildrenIfNoThenViewHelperChildExists()
+    public function renderThenChildReturnsAllChildrenIfNoThenViewHelperChildExists(): void
     {
         $this->viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue('foo'));
         $this->viewHelperNode->expects($this->any())->method('getChildNodes')->will($this->returnValue([]));
@@ -198,7 +199,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThenChildReturnsThenViewHelperChildIfConditionIsTrueAndThenViewHelperChildExists()
+    public function renderThenChildReturnsThenViewHelperChildIfConditionIsTrueAndThenViewHelperChildExists(): void
     {
         $mockThenViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate'], [], '', false);
         $mockThenViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue(ThenViewHelper::class));
@@ -212,7 +213,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThenChildReturnsValueOfThenArgumentIfItIsSpecified()
+    public function renderThenChildReturnsValueOfThenArgumentIfItIsSpecified(): void
     {
         $this->viewHelper->expects($this->atLeastOnce())->method('hasArgument')->with('then')->will($this->returnValue(true));
         $this->arguments['then'] = 'ThenArgument';
@@ -225,7 +226,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThenChildReturnsEmptyStringIfChildNodesOnlyContainElseViewHelper()
+    public function renderThenChildReturnsEmptyStringIfChildNodesOnlyContainElseViewHelper(): void
     {
         $mockElseViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate'], [], '', false);
         $mockElseViewHelperNode->expects($this->any())->method('getViewHelperClassName')->will($this->returnValue(ElseViewHelper::class));
@@ -239,7 +240,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndNoElseViewHelperChildExists()
+    public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndNoElseViewHelperChildExists(): void
     {
         $this->viewHelperNode->expects($this->any())->method('getChildNodes')->will($this->returnValue([]));
         $actualResult = $this->viewHelper->_call('renderElseChild');
@@ -249,7 +250,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderElseChildRendersElseViewHelperChildIfConditionIsFalseAndNoThenViewHelperChildExists()
+    public function renderElseChildRendersElseViewHelperChildIfConditionIsFalseAndNoThenViewHelperChildExists(): void
     {
         $mockElseViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate', 'setRenderingContext'], [], '', false);
         $mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue(ElseViewHelper::class));
@@ -263,7 +264,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndElseViewHelperChildIfArgumentConditionIsFalseToo()
+    public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndElseViewHelperChildIfArgumentConditionIsFalseToo(): void
     {
         $mockElseViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'getArguments', 'evaluate'], [], '', false);
         $mockElseViewHelperNode->expects($this->at(0))->method('getViewHelperClassName')->will($this->returnValue(ElseViewHelper::class));
@@ -281,7 +282,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function thenArgumentHasPriorityOverChildNodesIfConditionIsTrue()
+    public function thenArgumentHasPriorityOverChildNodesIfConditionIsTrue(): void
     {
         $mockThenViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate', 'setRenderingContext'], [], '', false);
         $mockThenViewHelperNode->expects($this->never())->method('evaluate');
@@ -300,7 +301,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsValueOfElseArgumentIfConditionIsFalse()
+    public function renderReturnsValueOfElseArgumentIfConditionIsFalse(): void
     {
         $this->viewHelper->expects($this->atLeastOnce())->method('hasArgument')->with('else')->will($this->returnValue(true));
         $this->arguments['else'] = 'ElseArgument';
@@ -313,7 +314,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function elseArgumentHasPriorityOverChildNodesIfConditionIsFalse()
+    public function elseArgumentHasPriorityOverChildNodesIfConditionIsFalse(): void
     {
         $mockElseViewHelperNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate', 'setRenderingContext'], [], '', false);
         $mockElseViewHelperNode->expects($this->any())->method('getViewHelperClassName')->will($this->returnValue(ElseViewHelper::class));
@@ -335,12 +336,12 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
      * @test
      * @dataProvider getRenderStaticTestValues
      */
-    public function testRenderStatic(array $arguments, $expected)
+    public function testRenderStatic(array $arguments, $expected): void
     {
         $this->viewHelper->setArguments($arguments);
         $result = call_user_func_array(
             [$this->viewHelper, 'renderStatic'],
-            [$arguments, function () {
+            [$arguments, function (): string {
                 return '';
             }, new RenderingContextFixture()]
         );
@@ -350,33 +351,33 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderStaticTestValues()
+    public function getRenderStaticTestValues(): array
     {
         return [
             'standard then argument' => [['condition' => true, 'then' => 'yes'], 'yes'],
-            'then argument closure' => [['condition' => true, '__thenClosure' => function () {
+            'then argument closure' => [['condition' => true, '__thenClosure' => function (): string {
                 return 'yes';
             }], 'yes'],
             'standard else argument' => [['condition' => false, 'else' => 'no'], 'no'],
-            'single else argument closure' => [['condition' => false, '__elseClosures' => [function () {
+            'single else argument closure' => [['condition' => false, '__elseClosures' => [function (): string {
                 return 'no';
             }]], 'no'],
             'else if closures first match true' => [
                 [
                     'condition' => false,
                     '__elseClosures' => [
-                        function () {
+                        function (): string {
                             return 'first-else';
                         },
-                        function () {
+                        function (): string {
                             return 'second-else';
                         }
                     ],
                     '__elseifClosures' => [
-                        function () {
+                        function (): bool {
                             return true;
                         },
-                        function () {
+                        function (): void {
                             throw new \RuntimeException('Test called closure which must not be called');
                         }
                     ]
@@ -387,18 +388,18 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
                 [
                     'condition' => false,
                     '__elseClosures' => [
-                        function () {
+                        function (): string {
                             return 'first-else';
                         },
-                        function () {
+                        function (): string {
                             return 'second-else';
                         }
                     ],
                     '__elseifClosures' => [
-                        function () {
+                        function (): bool {
                             return false;
                         },
-                        function () {
+                        function (): bool {
                             return true;
                         }
                     ]
@@ -409,18 +410,18 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
                 [
                     'condition' => false,
                     '__elseClosures' => [
-                        function () {
+                        function (): string {
                             return 'first-else';
                         },
-                        function () {
+                        function (): string {
                             return 'second-else';
                         }
                     ],
                     '__elseifClosures' => [
-                        function () {
+                        function (): bool {
                             return false;
                         },
-                        function () {
+                        function (): bool {
                             return false;
                         }
                     ]

@@ -54,7 +54,7 @@ class AliasViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('map', 'array', 'Array that specifies which variables should be mapped to which alias', true);

@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
@@ -16,7 +17,7 @@ class SwitchTest extends BaseFunctionalTestCase
      *
      * @return FluidCacheInterface
      */
-    protected function getCache()
+    protected function getCache(): FluidCacheInterface
     {
         return new SimpleFileCache(sys_get_temp_dir());
     }
@@ -24,7 +25,7 @@ class SwitchTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Ignores whitespace inside parent switch outside case children' => [

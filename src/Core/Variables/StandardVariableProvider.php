@@ -35,10 +35,10 @@ class StandardVariableProvider implements VariableProviderInterface
     }
 
     /**
-     * @param array|\ArrayAccess $variables
+     * @param array $variables
      * @return VariableProviderInterface
      */
-    public function getScopeCopy($variables)
+    public function getScopeCopy(array $variables): VariableProviderInterface
     {
         if (!array_key_exists('settings', $variables) && array_key_exists('settings', $this->variables)) {
             $variables['settings'] = $this->variables['settings'];
@@ -55,7 +55,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param mixed $source
      * @return void
      */
-    public function setSource($source)
+    public function setSource($source): void
     {
         $this->variables = $source;
     }
@@ -73,9 +73,9 @@ class StandardVariableProvider implements VariableProviderInterface
      * implementing the interface. Must return an array or
      * ArrayAccess instance!
      *
-     * @return array|\ArrayAccess
+     * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->variables;
     }
@@ -88,7 +88,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @return void
      * @api
      */
-    public function add($identifier, $value)
+    public function add(string $identifier, $value): void
     {
         $this->variables[$identifier] = $value;
     }
@@ -104,7 +104,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @return mixed The variable value identified by $identifier
      * @api
      */
-    public function get($identifier)
+    public function get(string $identifier)
     {
         return $this->getByPath($identifier);
     }
@@ -120,7 +120,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param array $accessors Optional list of accessors (see class constants)
      * @return mixed
      */
-    public function getByPath($path, array $accessors = [])
+    public function getByPath(string $path, array $accessors = [])
     {
         $subject = $this->variables;
         foreach (explode('.', $this->resolveSubVariableReferences($path)) as $index => $pathSegment) {
@@ -140,7 +140,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @return void
      * @api
      */
-    public function remove($identifier)
+    public function remove(string $identifier): void
     {
         if (array_key_exists($identifier, $this->variables)) {
             unset($this->variables[$identifier]);
@@ -152,7 +152,7 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @return array Array of identifier strings
      */
-    public function getAllIdentifiers()
+    public function getAllIdentifiers(): array
     {
         return array_keys($this->variables);
     }
@@ -164,7 +164,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @return boolean TRUE if $identifier exists, FALSE otherwise
      * @api
      */
-    public function exists($identifier)
+    public function exists(string $identifier): bool
     {
         return array_key_exists($identifier, $this->variables);
     }
@@ -174,66 +174,21 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @return string[]
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return ['variables'];
-    }
-
-    /**
-     * Adds a variable to the context.
-     *
-     * @param string $identifier Identifier of the variable to add
-     * @param mixed $value The variable's value
-     * @return void
-     */
-    public function offsetSet($identifier, $value)
-    {
-        $this->add($identifier, $value);
-    }
-
-    /**
-     * Remove a variable from context. Throws exception if variable is not found in context.
-     *
-     * @param string $identifier The identifier to remove
-     * @return void
-     */
-    public function offsetUnset($identifier)
-    {
-        $this->remove($identifier);
-    }
-
-    /**
-     * Checks if this property exists in the VariableContainer.
-     *
-     * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
-     */
-    public function offsetExists($identifier)
-    {
-        return $this->exists($identifier);
-    }
-
-    /**
-     * Get a variable from the context. Throws exception if variable is not found in context.
-     *
-     * @param string $identifier
-     * @return mixed The variable identified by $identifier
-     */
-    public function offsetGet($identifier)
-    {
-        return $this->get($identifier);
     }
 
     /**
      * @param string $propertyPath
      * @return array
      */
-    public function getAccessorsForPath($propertyPath)
+    public function getAccessorsForPath(string $propertyPath): array
     {
         $subject = $this->variables;
         $accessors = [];
         $propertyPathSegments = explode('.', $propertyPath);
-        foreach ($propertyPathSegments as $index => $pathSegment) {
+        foreach ($propertyPathSegments as $pathSegment) {
             $accessor = $this->detectAccessor($subject, $pathSegment);
             if ($accessor === null) {
                 // Note: this may include cases of sub-variable references. When such
@@ -252,7 +207,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $propertyPath
      * @return string
      */
-    protected function resolveSubVariableReferences($propertyPath)
+    protected function resolveSubVariableReferences(string $propertyPath): string
     {
         if (strpos($propertyPath, '{') !== false) {
             preg_match_all('/(\{.*\})/', $propertyPath, $matches);
@@ -272,7 +227,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string|null $accessor
      * @return mixed
      */
-    protected function extractSingleValue($subject, $propertyName, $accessor = null)
+    protected function extractSingleValue($subject, string $propertyName, ?string $accessor = null)
     {
         if (!$accessor || !$this->canExtractWithAccessor($subject, $propertyName, $accessor)) {
             $accessor = $this->detectAccessor($subject, $propertyName);
@@ -289,7 +244,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $accessor
      * @return boolean
      */
-    protected function canExtractWithAccessor($subject, $propertyName, $accessor)
+    protected function canExtractWithAccessor($subject, string $propertyName, string $accessor): bool
     {
         $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_ARRAY) {
@@ -307,10 +262,10 @@ class StandardVariableProvider implements VariableProviderInterface
     /**
      * @param mixed $subject
      * @param string $propertyName
-     * @param string $accessor
+     * @param string|null $accessor
      * @return mixed
      */
-    protected function extractWithAccessor($subject, $propertyName, $accessor)
+    protected function extractWithAccessor($subject, string $propertyName, ?string $accessor)
     {
         if ($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject)
             || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
@@ -336,7 +291,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $propertyName
      * @return string|NULL
      */
-    protected function detectAccessor($subject, $propertyName)
+    protected function detectAccessor($subject, string $propertyName): ?string
     {
         if (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))) {
             return self::ACCESSOR_ARRAY;
@@ -365,7 +320,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $propertyName
      * @return bool
      */
-    protected function isExtractableThroughAsserter($subject, $propertyName)
+    protected function isExtractableThroughAsserter($subject, string $propertyName): bool
     {
         return method_exists($subject, 'is' . ucfirst($propertyName))
             || method_exists($subject, 'has' . ucfirst($propertyName));
@@ -378,7 +333,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $propertyName
      * @return mixed
      */
-    protected function extractThroughAsserter($subject, $propertyName)
+    protected function extractThroughAsserter(object $subject, string $propertyName)
     {
         if (method_exists($subject, 'is' . ucfirst($propertyName))) {
             return call_user_func_array([$subject, 'is' . ucfirst($propertyName)], []);

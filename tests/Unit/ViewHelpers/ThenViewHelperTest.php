@@ -18,7 +18,7 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderRendersChildren()
+    public function renderRendersChildren(): void
     {
         $viewHelper = $this->getMock(ThenViewHelper::class, ['renderChildren']);
 
@@ -30,7 +30,7 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompileReturnsEmptyString()
+    public function testCompileReturnsEmptyString(): void
     {
         $section = new ThenViewHelper();
         $init = '';

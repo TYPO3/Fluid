@@ -44,7 +44,7 @@ class Escape implements InterceptorInterface
      * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
      * @return NodeInterface
      */
-    public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState)
+    public function process(NodeInterface $node, int $interceptorPosition, ParsingState $parsingState): NodeInterface
     {
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
             /** @var ViewHelperNode $node */
@@ -74,7 +74,7 @@ class Escape implements InterceptorInterface
      *
      * @return array Array of INTERCEPT_* constants
      */
-    public function getInterceptionPoints()
+    public function getInterceptionPoints(): array
     {
         return [
             InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,

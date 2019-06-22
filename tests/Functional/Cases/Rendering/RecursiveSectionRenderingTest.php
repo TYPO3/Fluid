@@ -43,7 +43,7 @@ class RecursiveSectionRenderingTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Recursive section rendering clones variable storage and restores after loop ends' => [

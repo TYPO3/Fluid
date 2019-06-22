@@ -17,7 +17,7 @@ class WhitespaceToleranceTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Normal expected whitespace tolerance' => [

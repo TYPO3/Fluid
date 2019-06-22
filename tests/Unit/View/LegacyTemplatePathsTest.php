@@ -16,7 +16,7 @@ class LegacyTemplatePathsTest extends TemplatePathsTest
     /**
      * @return string
      */
-    protected function getSubjectClassName()
+    protected function getSubjectClassName(): string
     {
         return LegacyTemplatePathsFixture::class;
     }

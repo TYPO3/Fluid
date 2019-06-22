@@ -1,5 +1,6 @@
 <?php
 
+use TYPO3Fluid\Fluid\Tests\Example\CustomVariableProvider;
 /*
  * EXAMPLE: VariableProvider usage
  *
@@ -24,7 +25,7 @@ $paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Variabl
 // Assigning a custom VariableProvider which will return two variables:
 // $incrementer and $random; the former automatically increments every
 // time it is accessed and the latter generating a random checksum string.
-$view->getRenderingContext()->setVariableProvider(new \TYPO3Fluid\Fluid\Tests\Example\CustomVariableProvider());
+$view->getRenderingContext()->setVariableProvider(new CustomVariableProvider());
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();

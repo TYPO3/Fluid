@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -28,7 +29,7 @@ class CaseViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('value', 'mixed', 'Value to match in this case', true);
@@ -36,15 +37,15 @@ class CaseViewHelper extends AbstractViewHelper
 
     /**
      * @return string the contents of this view helper if $value equals the expression of the surrounding switch view helper, otherwise an empty string
-     * @throws ViewHelper\Exception
+     * @throws Exception
      * @api
      */
-    public function render()
+    public function render(): string
     {
         $value = $this->arguments['value'];
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
-            throw new ViewHelper\Exception('The "case" View helper can only be used within a switch View helper', 1368112037);
+            throw new Exception('The "case" View helper can only be used within a switch View helper', 1368112037);
         }
         $switchExpression = $viewHelperVariableContainer->get(SwitchViewHelper::class, 'switchExpression');
 
@@ -62,9 +63,9 @@ class CaseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         return '\'\'';
     }

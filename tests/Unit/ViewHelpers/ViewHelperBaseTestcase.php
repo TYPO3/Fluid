@@ -74,7 +74,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
      * @param string $key
      * @return boolean
      */
-    public function viewHelperVariableContainerExistsCallback($viewHelperName, $key)
+    public function viewHelperVariableContainerExistsCallback(string $viewHelperName, string $key): bool
     {
         return isset($this->viewHelperVariableContainerData[$viewHelperName][$key]);
     }
@@ -84,7 +84,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
      * @param string $key
      * @return boolean
      */
-    public function viewHelperVariableContainerGetCallback($viewHelperName, $key)
+    public function viewHelperVariableContainerGetCallback(string $viewHelperName, string $key): bool
     {
         return $this->viewHelperVariableContainerData[$viewHelperName][$key];
     }
@@ -93,7 +93,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
      * @param AbstractViewHelper $viewHelper
      * @return void
      */
-    protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper)
+    protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper): void
     {
         $viewHelper->setRenderingContext($this->renderingContext);
         $viewHelper->setArguments($this->arguments);

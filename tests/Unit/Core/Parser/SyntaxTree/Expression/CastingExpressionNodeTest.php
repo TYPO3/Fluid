@@ -23,7 +23,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateDelegatesToEvaluteExpression()
+    public function testEvaluateDelegatesToEvaluteExpression(): void
     {
         $subject = $this->getMock(
             CastingExpressionNode::class,
@@ -40,7 +40,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateInvalidExpressionThrowsException()
+    public function testEvaluateInvalidExpressionThrowsException(): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -55,7 +55,7 @@ class CastingExpressionNodeTest extends UnitTestCase
      * @param array $variables
      * @param mixed $expected
      */
-    public function testEvaluateExpression($expression, array $variables, $expected)
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -67,7 +67,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateExpressionTestValues()
+    public function getEvaluateExpressionTestValues(): array
     {
         $arrayIterator = new \ArrayIterator(['foo', 'bar']);
         $toArrayObject = new UserWithToArray('foobar');

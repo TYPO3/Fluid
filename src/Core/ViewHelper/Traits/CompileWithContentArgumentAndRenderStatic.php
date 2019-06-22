@@ -60,12 +60,12 @@ trait CompileWithContentArgumentAndRenderStatic
      * @return string
      */
     public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
+        string $argumentsName,
+        string $closureName,
+        string &$initializationPhpCode,
         ViewHelperNode $node,
         TemplateCompiler $compiler
-    ) {
+    ): string {
         list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
             $this,
             $argumentsName,
@@ -96,7 +96,7 @@ trait CompileWithContentArgumentAndRenderStatic
      *
      * @return \Closure
      */
-    protected function buildRenderChildrenClosure()
+    protected function buildRenderChildrenClosure(): callable
     {
         $argumentName = $this->resolveContentArgumentName();
         $arguments = $this->arguments;
@@ -116,7 +116,7 @@ trait CompileWithContentArgumentAndRenderStatic
     /**
      * @return string
      */
-    protected function resolveContentArgumentName()
+    protected function resolveContentArgumentName(): string
     {
         if (empty($this->contentArgumentName)) {
             $registeredArguments = call_user_func_array([$this, 'prepareArguments'], []);

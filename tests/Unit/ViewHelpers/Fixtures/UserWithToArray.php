@@ -15,7 +15,7 @@ class UserWithToArray extends UserWithToString
     /**
      * @return array
      */
-    function toArray()
+    function toArray(): array
     {
         return ['name' => $this->name];
     }

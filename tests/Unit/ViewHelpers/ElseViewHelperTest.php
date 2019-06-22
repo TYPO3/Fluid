@@ -18,7 +18,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(ElseViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything());
@@ -28,7 +28,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderRendersChildren()
+    public function renderRendersChildren(): void
     {
         $viewHelper = $this->getMock(ElseViewHelper::class, ['renderChildren']);
 
@@ -40,7 +40,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompilesToEmptyString()
+    public function testCompilesToEmptyString(): void
     {
         $viewHelper = new ElseViewHelper();
         $node = $this->getMock(ViewHelperNode::class, [], [], '', false);

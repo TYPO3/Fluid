@@ -24,7 +24,7 @@ class ObjectAccessorNodeTest extends UnitTestCase
      * @param string $path
      * @param mixed $expected
      */
-    public function testEvaluateGetsExpectedValue(array $variables, $path, $expected)
+    public function testEvaluateGetsExpectedValue(array $variables, string $path, $expected): void
     {
         $node = new ObjectAccessorNode($path);
         $renderingContext = $this->getMock(RenderingContextInterface::class);
@@ -37,7 +37,7 @@ class ObjectAccessorNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateTestValues()
+    public function getEvaluateTestValues(): array
     {
         return [
             [['foo' => 'bar'], 'foo.notaproperty', null],
@@ -53,11 +53,11 @@ class ObjectAccessorNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluatedUsesVariableProviderGetByPath()
+    public function testEvaluatedUsesVariableProviderGetByPath(): void
     {
         $node = new ObjectAccessorNode('foo.bar');
         $renderingContext = $this->getMock(RenderingContextInterface::class);
-        $variableContainer = $this->getMock(StandardVariableProvider::class, []);
+        $variableContainer = $this->getMock(StandardVariableProvider::class);
         $variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', [])->will($this->returnValue('foo'));
         $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
         $value = $node->evaluate($renderingContext);

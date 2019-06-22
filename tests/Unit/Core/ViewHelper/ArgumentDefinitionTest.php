@@ -18,7 +18,7 @@ class ArgumentDefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectStoresDataCorrectly()
+    public function objectStoresDataCorrectly(): void
     {
         $name = 'This is a name';
         $description = 'Example desc';

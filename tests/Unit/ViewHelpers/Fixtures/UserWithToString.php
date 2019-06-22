@@ -15,7 +15,7 @@ class UserWithToString extends UserWithoutToString
     /**
      * @return string
      */
-    function __toString()
+    function __toString(): string
     {
         return $this->name;
     }

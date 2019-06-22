@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -29,7 +30,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperInitializesArguments()
+    public function viewHelperInitializesArguments(): void
     {
         $this->viewHelper->initializeArguments();
         $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
@@ -38,9 +39,9 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfSwitchExpressionIsNotSetInViewHelperVariableContainer()
+    public function renderThrowsExceptionIfSwitchExpressionIsNotSetInViewHelperVariableContainer(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class);
+        $this->expectException(Exception::class);
 
         $this->viewHelper->setArguments(['value' => 'foo']);
         $this->viewHelper->initializeArgumentsAndRender();
@@ -49,7 +50,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsChildNodesIfTheSpecifiedValueIsEqualToTheSwitchExpression()
+    public function renderReturnsChildNodesIfTheSpecifiedValueIsEqualToTheSwitchExpression(): void
     {
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $renderedChildNodes = 'ChildNodes';
@@ -61,7 +62,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsAnEmptyStringIfTheSpecifiedValueIsNotEqualToTheSwitchExpression()
+    public function renderReturnsAnEmptyStringIfTheSpecifiedValueIsNotEqualToTheSwitchExpression(): void
     {
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $this->viewHelper->setArguments(['value' => 'someOtherValue']);

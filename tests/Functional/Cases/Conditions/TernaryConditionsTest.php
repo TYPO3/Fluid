@@ -12,16 +12,14 @@ class TernaryConditionsTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         $someObject = new \stdClass();
         $someObject->someString = 'bar';
         $someObject->someInt = 1337;
         $someObject->someFloat = 13.37;
         $someObject->someBoolean = true;
-        $someArray = [
-            'foo' => 'bar'
-        ];
+
         return [
             [
                 '{true ? \'yes\' : \'no\'}',

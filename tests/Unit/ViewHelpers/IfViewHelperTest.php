@@ -16,20 +16,20 @@ class IfViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperRendersThenChildIfConditionIsTrue()
+    public function viewHelperRendersThenChildIfConditionIsTrue(): void
     {
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMockForAbstractClass();
-        $actualResult = IfViewHelper::renderStatic(['condition' => true, 'then' => 'THEN', 'else' => 'ELSE'], function() {}, $context);
+        $actualResult = IfViewHelper::renderStatic(['condition' => true, 'then' => 'THEN', 'else' => 'ELSE'], function(): void {}, $context);
         $this->assertEquals('THEN', $actualResult);
     }
 
     /**
      * @test
      */
-    public function viewHelperRendersElseChildIfConditionIsFalse()
+    public function viewHelperRendersElseChildIfConditionIsFalse(): void
     {
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMockForAbstractClass();
-        $actualResult = IfViewHelper::renderStatic(['condition' => false, 'then' => 'THEN', 'else' => 'ELSE'], function() {}, $context);
+        $actualResult = IfViewHelper::renderStatic(['condition' => false, 'then' => 'THEN', 'else' => 'ELSE'], function(): void {}, $context);
         $this->assertEquals('ELSE', $actualResult);
     }
 }

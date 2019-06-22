@@ -35,7 +35,7 @@ interface ExpressionNodeInterface extends NodeInterface
      * @param array $matches
      * @return mixed
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches);
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches);
 
     /**
      * Compiles the ExpressionNode, returning an array with
@@ -51,17 +51,17 @@ interface ExpressionNodeInterface extends NodeInterface
      * @param TemplateCompiler $templateCompiler
      * @return array
      */
-    public function compile(TemplateCompiler $templateCompiler);
+    public function compile(TemplateCompiler $templateCompiler): array;
 
     /**
      * Getter for returning the expression before parsing.
      *
      * @return string
      */
-    public function getExpression();
+    public function getExpression(): string;
 
     /**
      * @return array
      */
-    public function getMatches();
+    public function getMatches(): array;
 }

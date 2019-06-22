@@ -17,7 +17,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *   - replace cdata sections with empty lines (including nested cdata)
  *   - register/ignore namespaces through xmlns and shorthand syntax
  *   - report any unregistered/unignored namespaces through exception
- *
  */
 class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
 {
@@ -38,7 +37,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
     }
@@ -51,7 +50,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * @param string $templateSource
      * @return string
      */
-    public function preProcessSource($templateSource)
+    public function preProcessSource(string $templateSource): string
     {
         $templateSource = $this->replaceCdataSectionsByEmptyLines($templateSource);
         $templateSource = $this->registerNamespacesFromTemplateSource($templateSource);
@@ -67,7 +66,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * @param string $templateSource
      * @return string
      */
-    public function replaceCdataSectionsByEmptyLines($templateSource)
+    public function replaceCdataSectionsByEmptyLines(string $templateSource): string
     {
         $parts = preg_split('/(\<\!\[CDATA\[|\]\]\>)/', $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE);
 
@@ -93,7 +92,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * @param string $templateSource
      * @return string
      */
-    public function registerNamespacesFromTemplateSource($templateSource)
+    public function registerNamespacesFromTemplateSource(string $templateSource): string
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         $matches = [];
@@ -132,7 +131,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                             $namespaceAttributesToRemove[] = preg_quote($namespace[1], '/') . '="' . preg_quote($namespace[2], '/') . '"';
                         }
                     }
-                    if (count($namespaceAttributesToRemove)) {
+                    if (count($namespaceAttributesToRemove) > 0) {
                         $matchWithRemovedNamespaceAttributes = preg_replace('/(?:\\s*+xmlns:(?:' . implode('|', $namespaceAttributesToRemove) . ')\\s*+)++/', ' ', $matches[0]);
                         $templateSource = str_replace($matches[0], $matchWithRemovedNamespaceAttributes, $templateSource);
                     }
@@ -162,7 +161,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
      * @param string $templateSource
      * @return void
      */
-    public function throwExceptionsForUnhandledNamespaces($templateSource)
+    public function throwExceptionsForUnhandledNamespaces(string $templateSource): void
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         $splitTemplate = preg_split(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
@@ -180,7 +179,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             foreach ($sections as $section) {
                 if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
                     preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $section, $shorthandViewHelpers, PREG_SET_ORDER);
-                    if (is_array($shorthandViewHelpers) === true) {
+                    if (is_array($shorthandViewHelpers)) {
                         foreach ($shorthandViewHelpers as $shorthandViewHelper) {
                             if (!$viewHelperResolver->isNamespaceValidOrIgnored($shorthandViewHelper['NamespaceIdentifier'])) {
                                 throw new UnknownNamespaceException('Unknown Namespace: ' . $shorthandViewHelper['NamespaceIdentifier']);

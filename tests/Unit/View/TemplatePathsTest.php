@@ -20,7 +20,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return string
      */
-    protected function getSubjectClassName()
+    protected function getSubjectClassName(): string
     {
         return TemplatePaths::class;
     }
@@ -31,7 +31,7 @@ class TemplatePathsTest extends BaseTestCase
      * @test
      * @dataProvider getSanitizePathTestValues
      */
-    public function testSanitizePath($input, $expected)
+    public function testSanitizePath($input, $expected): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className();
@@ -44,7 +44,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getSanitizePathTestValues()
+    public function getSanitizePathTestValues(): array
     {
         return [
             ['', ''],
@@ -66,7 +66,7 @@ class TemplatePathsTest extends BaseTestCase
      * @test
      * @dataProvider getSanitizePathsTestValues
      */
-    public function testSanitizePaths($input, $expected)
+    public function testSanitizePaths($input, $expected): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className();
@@ -79,7 +79,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getSanitizePathsTestValues()
+    public function getSanitizePathsTestValues(): array
     {
         return [
             [['/foo/bar/baz', 'C:\\foo\\bar\\baz'], ['/foo/bar/baz', 'C:/foo/bar/baz']],
@@ -91,7 +91,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function setsLayoutPathAndFilename()
+    public function setsLayoutPathAndFilename(): void
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
@@ -103,7 +103,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function setsTemplatePathAndFilename()
+    public function setsTemplatePathAndFilename(): void
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
@@ -116,7 +116,7 @@ class TemplatePathsTest extends BaseTestCase
      * @param string $property
      * @param mixed $value
      */
-    public function testGetterAndSetter($property, $value)
+    public function testGetterAndSetter(string $property, $value): void
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
@@ -129,7 +129,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getGetterAndSetterTestValues()
+    public function getGetterAndSetterTestValues(): array
     {
         return [
             ['layoutRootPaths', ['foo' => 'bar']],
@@ -141,7 +141,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return void
      */
-    public function testFillByPackageName()
+    public function testFillByPackageName(): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className('FluidTYPO3.Flux');
@@ -151,7 +151,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return void
      */
-    public function testFillByConfigurationArray()
+    public function testFillByConfigurationArray(): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className([
@@ -167,7 +167,7 @@ class TemplatePathsTest extends BaseTestCase
      * @dataProvider getResolveFilesMethodTestValues
      * @param string $method
      */
-    public function testResolveFilesMethodCallsResolveFilesInFolders($method, $pathsMethod)
+    public function testResolveFilesMethodCallsResolveFilesInFolders(string $method, $pathsMethod): void
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['resolveFilesInFolders']);
         $instance->$pathsMethod(['foo']);
@@ -178,7 +178,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getResolveFilesMethodTestValues()
+    public function getResolveFilesMethodTestValues(): array
     {
         return [
             ['resolveAvailableTemplateFiles', 'setTemplateRootPaths'],
@@ -190,7 +190,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return void
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
@@ -209,7 +209,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testResolveFilesInFolders()
+    public function testResolveFilesInFolders(): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className();
@@ -236,7 +236,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testGetTemplateSourceThrowsExceptionIfFileNotFound()
+    public function testGetTemplateSourceThrowsExceptionIfFileNotFound(): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className();
@@ -247,7 +247,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testGetTemplateSourceReadsStreamWrappers()
+    public function testGetTemplateSourceReadsStreamWrappers(): void
     {
         $fixture = __DIR__ . '/Fixtures/LayoutFixture.html';
         $className = $this->getSubjectClassName();
@@ -261,7 +261,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testResolveFileInPathsThrowsExceptionIfFileNotFound()
+    public function testResolveFileInPathsThrowsExceptionIfFileNotFound(): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className();
@@ -274,7 +274,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat()
+    public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat(): void
     {
         $className = $this->getSubjectClassName();
         $instance = new $className();

@@ -56,7 +56,7 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function __construct(RenderingContextInterface $context = null)
     {
-        if (!$context) {
+        if ($context === null) {
             $context = new RenderingContext($this);
             $context->setControllerName('Default');
             $context->setControllerAction('Default');
@@ -69,7 +69,7 @@ abstract class AbstractTemplateView extends AbstractView
      * View implementation to manipulate the rendering context *before* it is
      * passed during rendering.
      */
-    public function initializeRenderingContext()
+    public function initializeRenderingContext(): void
     {
         $this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
     }
@@ -80,7 +80,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @param FluidCacheInterface $cache
      * @return void
      */
-    public function setCache(FluidCacheInterface $cache)
+    public function setCache(FluidCacheInterface $cache): void
     {
         $this->baseRenderingContext->setCache($cache);
     }
@@ -90,7 +90,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return TemplatePaths
      */
-    public function getTemplatePaths()
+    public function getTemplatePaths(): TemplatePaths
     {
         return $this->baseRenderingContext->getTemplatePaths();
     }
@@ -100,7 +100,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return ViewHelperResolver
      */
-    public function getViewHelperResolver()
+    public function getViewHelperResolver(): ViewHelperResolver
     {
         return $this->baseRenderingContext->getViewHelperResolver();
     }
@@ -110,7 +110,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return RenderingContextInterface
      */
-    public function getRenderingContext()
+    public function getRenderingContext(): RenderingContextInterface
     {
         return $this->baseRenderingContext;
     }
@@ -121,7 +121,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->baseRenderingContext = $renderingContext;
         $this->initializeRenderingContext();
@@ -135,7 +135,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @return $this
      * @api
      */
-    public function assign($key, $value)
+    public function assign(string $key, $value): ViewInterface
     {
         $this->baseRenderingContext->getVariableProvider()->add($key, $value);
         return $this;
@@ -149,7 +149,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @return $this
      * @api
      */
-    public function assignMultiple(array $values)
+    public function assignMultiple(array $values): ViewInterface
     {
         $templateVariableContainer = $this->baseRenderingContext->getVariableProvider();
         foreach ($values as $key => $value) {
@@ -163,10 +163,10 @@ abstract class AbstractTemplateView extends AbstractView
      * If "layoutName" is set in a PostParseFacet callback, it will render the file with the given layout.
      *
      * @param string|null $actionName If set, this action's template will be rendered instead of the one defined in the context.
-     * @return string Rendered Template
+     * @return mixed Rendered Template
      * @api
      */
-    public function render($actionName = null)
+    public function render(?string $actionName = null)
     {
         $renderingContext = $this->getCurrentRenderingContext();
         $templateParser = $renderingContext->getTemplateParser();
@@ -190,7 +190,7 @@ abstract class AbstractTemplateView extends AbstractView
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
-                    function($parent, TemplatePaths $paths) use ($layoutName) {
+                    function($parent, TemplatePaths $paths) use ($layoutName): string {
                         return $paths->getLayoutSource($layoutName);
                     }
                 );
@@ -211,10 +211,10 @@ abstract class AbstractTemplateView extends AbstractView
      * @param string $sectionName Name of section to render
      * @param array $variables The variables to use
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string rendered template for the section
+     * @return mixed rendered template for the section
      * @throws InvalidSectionException
      */
-    public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false)
+    public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false)
     {
         $renderingContext = $this->getCurrentRenderingContext();
 
@@ -290,19 +290,19 @@ abstract class AbstractTemplateView extends AbstractView
      * Renders a partial.
      *
      * @param string $partialName
-     * @param string $sectionName
+     * @param string|null $sectionName
      * @param array $variables
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string
+     * @return mixed
      */
-    public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false)
+    public function renderPartial(string $partialName, ?string $sectionName, array $variables, bool $ignoreUnknown = false)
     {
         $templatePaths = $this->baseRenderingContext->getTemplatePaths();
         $renderingContext = clone $this->getCurrentRenderingContext();
         try {
             $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $templatePaths->getPartialIdentifier($partialName),
-                function ($parent, TemplatePaths $paths) use ($partialName) {
+                function ($parent, TemplatePaths $paths) use ($partialName): string {
                     return $paths->getPartialSource($partialName);
                 }
             );
@@ -340,7 +340,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @param RenderingContextInterface $context
      * @return void
      */
-    protected function startRendering($type, ParsedTemplateInterface $template, RenderingContextInterface $context)
+    protected function startRendering(int $type, ParsedTemplateInterface $template, RenderingContextInterface $context): void
     {
         array_push($this->renderingStack, ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context]);
     }
@@ -351,7 +351,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return void
      */
-    protected function stopRendering()
+    protected function stopRendering(): void
     {
         $this->getCurrentRenderingContext()->getTemplateCompiler()->reset();
         array_pop($this->renderingStack);
@@ -362,7 +362,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return integer one of RENDERING_* constants
      */
-    protected function getCurrentRenderingType()
+    protected function getCurrentRenderingType(): int
     {
         $currentRendering = end($this->renderingStack);
         return $currentRendering['type'] ? $currentRendering['type'] : self::RENDERING_TEMPLATE;
@@ -373,7 +373,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return ParsedTemplateInterface
      */
-    protected function getCurrentParsedTemplate()
+    protected function getCurrentParsedTemplate(): ParsedTemplateInterface
     {
         $currentRendering = end($this->renderingStack);
         $renderingContext = $this->getCurrentRenderingContext();
@@ -387,7 +387,7 @@ abstract class AbstractTemplateView extends AbstractView
         $actionName = $renderingContext->getControllerAction();
         $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
             $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-            function($parent, TemplatePaths $paths) use ($controllerName, $actionName, $renderingContext) {
+            function($parent, TemplatePaths $paths) use ($controllerName, $actionName, $renderingContext): string {
                 return $paths->getTemplateSource($controllerName, $actionName);
             }
         );
@@ -402,7 +402,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @return RenderingContextInterface
      */
-    protected function getCurrentRenderingContext()
+    protected function getCurrentRenderingContext(): RenderingContextInterface
     {
         $currentRendering = end($this->renderingStack);
         return $currentRendering['renderingContext'] ? $currentRendering['renderingContext'] : $this->baseRenderingContext;

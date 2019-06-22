@@ -30,7 +30,7 @@ class FluidCacheWarmupResult
     /**
      * @return self
      */
-    public function merge()
+    public function merge(): self
     {
         /* @var FluidCacheWarmupResult[] $results */
         $results = func_get_args();
@@ -43,7 +43,7 @@ class FluidCacheWarmupResult
     /**
      * @return array
      */
-    public function getResults()
+    public function getResults(): array
     {
         return $this->results;
     }
@@ -53,7 +53,7 @@ class FluidCacheWarmupResult
      * @param string $templatePathAndFilename
      * @return self
      */
-    public function add(ParsedTemplateInterface $state, $templatePathAndFilename)
+    public function add(ParsedTemplateInterface $state, string $templatePathAndFilename): self
     {
         $currentlyCompiled = $state->isCompiled();
         $this->results[$templatePathAndFilename] = [

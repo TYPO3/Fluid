@@ -53,7 +53,7 @@ class BooleanNode extends AbstractNode
     /**
      * @return array
      */
-    public function getStack()
+    public function getStack(): array
     {
         return $this->stack;
     }
@@ -62,7 +62,7 @@ class BooleanNode extends AbstractNode
      * @param RenderingContextInterface $renderingContext
      * @return boolean the boolean value
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): bool
     {
         return self::evaluateStack($renderingContext, $this->stack);
     }
@@ -72,7 +72,7 @@ class BooleanNode extends AbstractNode
      * @param RenderingContextInterface $renderingContext
      * @return boolean
      */
-    public static function createFromNodeAndEvaluate(NodeInterface $node, RenderingContextInterface $renderingContext)
+    public static function createFromNodeAndEvaluate(NodeInterface $node, RenderingContextInterface $renderingContext): bool
     {
         $booleanNode = new BooleanNode($node);
         return $booleanNode->evaluate($renderingContext);
@@ -87,7 +87,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return boolean the boolean value
      */
-    public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts)
+    public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts): bool
     {
         $expression = static::reconcatenateExpression($expressionParts);
         $context = static::gatherContext($renderingContext, $expressionParts);
@@ -102,7 +102,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return string
      */
-    public static function reconcatenateExpression($expressionParts)
+    public static function reconcatenateExpression(array $expressionParts): string
     {
         $merged = [];
         foreach ($expressionParts as $key => $expressionPart) {
@@ -124,7 +124,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return array
      */
-    public static function gatherContext($renderingContext, $expressionParts)
+    public static function gatherContext(RenderingContextInterface $renderingContext, array $expressionParts): array
     {
         $context = [];
         foreach ($expressionParts as $key => $expressionPart) {
@@ -142,11 +142,11 @@ class BooleanNode extends AbstractNode
      *
      * Must be public and static as it is used from inside cached templates.
      *
-     * @param boolean $value Value to be converted to boolean
+     * @param mixed $value Value to be converted to boolean
      * @param RenderingContextInterface $renderingContext
      * @return boolean
      */
-    public static function convertToBoolean($value, $renderingContext)
+    public static function convertToBoolean($value, RenderingContextInterface $renderingContext): bool
     {
         if (is_bool($value)) {
             return $value;
@@ -164,9 +164,6 @@ class BooleanNode extends AbstractNode
         if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
             return count($value) > 0;
         }
-        if (is_object($value)) {
-            return true;
-        }
-        return false;
+        return is_object($value);
     }
 }

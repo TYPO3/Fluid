@@ -13,7 +13,7 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         $user1 = new UserWithToString('foobar');
         $user2 = new UserWithToString('foobar');

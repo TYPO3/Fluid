@@ -31,5 +31,5 @@ interface FluidCacheWarmerInterface
      * @param RenderingContextInterface $renderingContext
      * @return FluidCacheWarmupResult
      */
-    public function warm(RenderingContextInterface $renderingContext);
+    public function warm(RenderingContextInterface $renderingContext): FluidCacheWarmupResult;
 }

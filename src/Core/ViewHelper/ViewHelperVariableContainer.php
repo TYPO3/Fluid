@@ -39,7 +39,7 @@ class ViewHelperVariableContainer
      * @return void
      * @api
      */
-    public function add($viewHelperName, $key, $value)
+    public function add(string $viewHelperName, string $key, $value): void
     {
         $this->addOrUpdate($viewHelperName, $key, $value);
     }
@@ -53,7 +53,7 @@ class ViewHelperVariableContainer
      * @return void
      * @api
      */
-    public function addAll($viewHelperName, $variables)
+    public function addAll(string $viewHelperName, iterable $variables): void
     {
         if (!is_array($variables) && !$variables instanceof \Traversable) {
             throw new \InvalidArgumentException(
@@ -78,7 +78,7 @@ class ViewHelperVariableContainer
      * @param mixed $value The value to store
      * @return void
      */
-    public function addOrUpdate($viewHelperName, $key, $value)
+    public function addOrUpdate(string $viewHelperName, string $key, $value): void
     {
         if (!isset($this->objects[$viewHelperName])) {
             $this->objects[$viewHelperName] = [];
@@ -95,7 +95,7 @@ class ViewHelperVariableContainer
      * @return mixed The object stored
      * @api
      */
-    public function get($viewHelperName, $key, $default = null)
+    public function get(string $viewHelperName, string $key, $default = null)
     {
         return $this->exists($viewHelperName, $key) ? $this->objects[$viewHelperName][$key] : $default;
     }
@@ -107,7 +107,7 @@ class ViewHelperVariableContainer
      * @param mixed $default
      * @return array
      */
-    public function getAll($viewHelperName, $default = null)
+    public function getAll(string $viewHelperName, $default = null): array
     {
         return array_key_exists($viewHelperName, $this->objects) ? $this->objects[$viewHelperName] : $default;
     }
@@ -120,7 +120,7 @@ class ViewHelperVariableContainer
      * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
      * @api
      */
-    public function exists($viewHelperName, $key)
+    public function exists(string $viewHelperName, string $key): bool
     {
         return isset($this->objects[$viewHelperName]) && array_key_exists($key, $this->objects[$viewHelperName]);
     }
@@ -133,7 +133,7 @@ class ViewHelperVariableContainer
      * @return void
      * @api
      */
-    public function remove($viewHelperName, $key)
+    public function remove(string $viewHelperName, string $key): void
     {
         unset($this->objects[$viewHelperName][$key]);
     }
@@ -144,7 +144,7 @@ class ViewHelperVariableContainer
      * @param ViewInterface $view View to set
      * @return void
      */
-    public function setView(ViewInterface $view)
+    public function setView(ViewInterface $view): void
     {
         $this->view = $view;
     }
@@ -156,7 +156,7 @@ class ViewHelperVariableContainer
      *
      * @return ViewInterface The View
      */
-    public function getView()
+    public function getView(): ViewInterface
     {
         return $this->view;
     }
@@ -166,7 +166,7 @@ class ViewHelperVariableContainer
      *
      * @return array
      */
-    public function __sleep()
+    public function __sleep(): array
     {
         return ['objects'];
     }

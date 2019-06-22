@@ -47,7 +47,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperInitializesArguments()
+    public function viewHelperInitializesArguments(): void
     {
         $this->assertNotEmpty($this->viewHelper->prepareArguments());
     }
@@ -55,7 +55,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderSetsSwitchExpressionInViewHelperVariableContainer()
+    public function renderSetsSwitchExpressionInViewHelperVariableContainer(): void
     {
         $switchExpression = new \stdClass();
         $this->viewHelper->setArguments(['expression' => $switchExpression]);
@@ -66,7 +66,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderRemovesSwitchExpressionFromViewHelperVariableContainerAfterInvocation()
+    public function renderRemovesSwitchExpressionFromViewHelperVariableContainerAfterInvocation(): void
     {
         $this->viewHelper->setArguments(['expression' => 'switchExpression']);
         $output = $this->viewHelper->initializeArgumentsAndRender();
@@ -80,7 +80,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      * @test
      * @dataProvider getRetrieveContentFromChildNodesTestValues
      */
-    public function retrieveContentFromChildNodesProcessesChildNodesCorrectly(array $childNodes, array $variables, $expected)
+    public function retrieveContentFromChildNodesProcessesChildNodesCorrectly(array $childNodes, array $variables, $expected): void
     {
         $instance = $this->getAccessibleMock(SwitchViewHelper::class, ['dummy']);
         $context = new RenderingContextFixture();
@@ -99,7 +99,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRetrieveContentFromChildNodesTestValues()
+    public function getRetrieveContentFromChildNodesTestValues(): array
     {
         $matchingNode = $this->getMock(ViewHelperNode::class, ['evaluate', 'getViewHelperClassName'], [], '', false);
         $matchingNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
@@ -125,7 +125,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function retrieveContentFromChildNodesReturnsBreaksOnBreak()
+    public function retrieveContentFromChildNodesReturnsBreaksOnBreak(): void
     {
         $instance = $this->getAccessibleMock(SwitchViewHelper::class, ['dummy']);
         $context = new RenderingContextFixture();
@@ -134,7 +134,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $instance->_set('viewHelperVariableContainer', $context->getViewHelperVariableContainer());
         $instance->_set('renderingContext', $context);
         $matchingCaseViewHelper = new CaseViewHelper();
-        $matchingCaseViewHelper->setRenderChildrenClosure(function () {
+        $matchingCaseViewHelper->setRenderChildrenClosure(function (): string {
             return 'foo-childcontent';
         });
         $breakingMatchingCaseNode = $this->getAccessibleMock(ViewHelperNode::class, ['getViewHelperClassName', 'getUninitializedViewHelper'], [], '', false);
@@ -158,10 +158,11 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      * @test
      * @dataProvider getCompileTestValues
      */
-    public function compileGeneratesExpectedPhpCode(ViewHelperNode $node, $expectedCode, $expectedInitialization)
+    public function compileGeneratesExpectedPhpCode(ViewHelperNode $node, string $expectedCode, string $expectedInitialization): void
     {
         $viewHelper = new SwitchViewHelper();
         $compiler = new TemplateCompiler();
+        $initializationCode = '';
         $code = $viewHelper->compile('$arguments', 'closure', $initializationCode, $node, $compiler);
         $this->assertEquals($expectedCode, $code);
         $this->assertEquals($expectedInitialization, $initializationCode);
@@ -170,7 +171,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getCompileTestValues()
+    public function getCompileTestValues(): array
     {
         $renderingContext = new RenderingContext($this->getMock(TemplateView::class), ['dummy'], [], '', false);
         $parsingState = new ParsingState();

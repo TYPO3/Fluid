@@ -27,7 +27,7 @@ class ViewHelperInvokerTest extends UnitTestCase
      * @test
      * @dataProvider getInvocationTestValues
      */
-    public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException)
+    public function testInvokeViewHelper(string $viewHelperClassName, array $arguments, $expectedOutput, ?string $expectedException): void
     {
         $view = new TemplateView();
         $resolver = new ViewHelperResolver();
@@ -43,7 +43,7 @@ class ViewHelperInvokerTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getInvocationTestValues()
+    public function getInvocationTestValues(): array
     {
         return [
             [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo', null],

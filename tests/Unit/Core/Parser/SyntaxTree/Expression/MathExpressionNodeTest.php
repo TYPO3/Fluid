@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -24,7 +25,7 @@ class MathExpressionNodeTest extends UnitTestCase
      * @param array $variables
      * @param mixed $expected
      */
-    public function testEvaluateExpression($expression, array $variables, $expected)
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -36,10 +37,9 @@ class MathExpressionNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateExpressionTestValues()
+    public function getEvaluateExpressionTestValues(): array
     {
         return [
-            ['1 gabbagabbahey 1', [], 0],
             ['1 + 1', [], 2],
             ['2 - 1', [], 1],
             ['2 % 4', [], 2],
@@ -50,5 +50,15 @@ class MathExpressionNodeTest extends UnitTestCase
             ['1 + b', ['b' => 1], 2],
             ['a + b', ['a' => 1, 'b' => 1], 2],
         ];
+    }
+
+    public function testInvalidOperatorThrowsException(): void
+    {
+        $this->setExpectedException(Exception::class);
+
+        $view = new TemplateView();
+        $renderingContext = new RenderingContext($view);
+        $renderingContext->setVariableProvider(new StandardVariableProvider([]));
+        MathExpressionNode::evaluateExpression($renderingContext, '1 gabbagabbahey 1', []);
     }
 }

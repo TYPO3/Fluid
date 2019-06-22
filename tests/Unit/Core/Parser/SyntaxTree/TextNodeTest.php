@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -19,7 +20,7 @@ class TextNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsSameStringAsGivenInConstructor()
+    public function renderReturnsSameStringAsGivenInConstructor(): void
     {
         $string = 'I can work quite effectively in a train!';
         $node = new TextNode($string);
@@ -30,9 +31,9 @@ class TextNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function constructorThrowsExceptionIfNoStringGiven()
+    public function constructorThrowsExceptionIfNoStringGiven(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+        $this->expectException(Exception::class);
 
         new TextNode(123);
     }

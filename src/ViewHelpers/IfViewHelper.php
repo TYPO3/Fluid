@@ -81,7 +81,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  */
 class IfViewHelper extends AbstractConditionViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('condition', 'boolean', 'Condition expression conforming to Fluid boolean rules', false, false);
@@ -92,7 +92,7 @@ class IfViewHelper extends AbstractConditionViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return (bool)$arguments['condition'];
     }

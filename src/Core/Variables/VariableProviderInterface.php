@@ -17,7 +17,7 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  * constructor variables argument for anything, but
  * should at least implement the getting methods.
  */
-interface VariableProviderInterface extends \ArrayAccess
+interface VariableProviderInterface
 {
 
     /**
@@ -37,10 +37,10 @@ interface VariableProviderInterface extends \ArrayAccess
      * automatically transferred variables (in the default
      * implementation the $settings variable is transferred).
      *
-     * @param array|\ArrayAccess $variables
+     * @param array $variables
      * @return VariableProviderInterface
      */
-    public function getScopeCopy($variables);
+    public function getScopeCopy(array $variables): VariableProviderInterface;
 
     /**
      * Set the source data used by this VariableProvider. The
@@ -50,7 +50,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param mixed $source
      * @return void
      */
-    public function setSource($source);
+    public function setSource($source): void;
 
     /**
      * @return mixed
@@ -62,9 +62,9 @@ interface VariableProviderInterface extends \ArrayAccess
      * implementing the interface. Must return an array or
      * ArrayAccess instance!
      *
-     * @return array|\ArrayAccess
+     * @return array
      */
-    public function getAll();
+    public function getAll(): array;
 
     /**
      * Add a variable to the context
@@ -74,7 +74,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @return void
      * @api
      */
-    public function add($identifier, $value);
+    public function add(string $identifier, $value): void;
 
     /**
      * Get a variable from the context.
@@ -83,7 +83,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @return mixed The variable value identified by $identifier
      * @api
      */
-    public function get($identifier);
+    public function get(string $identifier);
 
     /**
      * Get a variable by dotted path expression, retrieving the
@@ -96,7 +96,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param array $accessors
      * @return mixed
      */
-    public function getByPath($path, array $accessors = []);
+    public function getByPath(string $path, array $accessors = []);
 
     /**
      * Remove a variable from context.
@@ -105,14 +105,14 @@ interface VariableProviderInterface extends \ArrayAccess
      * @return void
      * @api
      */
-    public function remove($identifier);
+    public function remove(string $identifier): void;
 
     /**
      * Returns an array of all identifiers available in the context.
      *
      * @return array Array of identifier strings
      */
-    public function getAllIdentifiers();
+    public function getAllIdentifiers(): array;
 
     /**
      * Checks if this property exists in the VariableContainer.
@@ -121,38 +121,5 @@ interface VariableProviderInterface extends \ArrayAccess
      * @return boolean TRUE if $identifier exists, FALSE otherwise
      * @api
      */
-    public function exists($identifier);
-
-    /**
-     * Adds a variable to the context.
-     *
-     * @param string $identifier Identifier of the variable to add
-     * @param mixed $value The variable's value
-     * @return void
-     */
-    public function offsetSet($identifier, $value);
-
-    /**
-     * Remove a variable from context.
-     *
-     * @param string $identifier The identifier to remove
-     * @return void
-     */
-    public function offsetUnset($identifier);
-
-    /**
-     * Checks if this property exists in the VariableContainer.
-     *
-     * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
-     */
-    public function offsetExists($identifier);
-
-    /**
-     * Get a variable from the context.
-     *
-     * @param string $identifier
-     * @return mixed The variable identified by $identifier
-     */
-    public function offsetGet($identifier);
+    public function exists(string $identifier): bool;
 }

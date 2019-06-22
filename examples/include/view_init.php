@@ -1,8 +1,10 @@
 <?php
+use TYPO3Fluid\Fluid\View\TemplateView;
+use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 // Define a cache directory if one is not set
 $FLUID_CACHE_DIRECTORY = !isset($FLUID_CACHE_DIRECTORY) ? __DIR__ . '/../cache/' : $FLUID_CACHE_DIRECTORY;
 
-if (!class_exists(TYPO3Fluid\Fluid\View\TemplateView::class)) {
+if (!class_exists(TemplateView::class)) {
     foreach ([__DIR__ . '/../../vendor/autoload.php', __DIR__ . '/../../../../autoload.php'] as $possibleAutoloadLocation) {
         if (file_exists($possibleAutoloadLocation)) {
             require_once $possibleAutoloadLocation;
@@ -13,7 +15,7 @@ if (!class_exists(TYPO3Fluid\Fluid\View\TemplateView::class)) {
 // Initializing the View: rendering in Fluid takes place through a View instance
 // which contains a RenderingContext that in turn contains things like definitions
 // of template paths, instances of variable containers and similar.
-$view = new \TYPO3Fluid\Fluid\View\TemplateView();
+$view = new TemplateView();
 
 // TemplatePaths object: a subclass can be used if custom resolving is wanted.
 $paths = $view->getTemplatePaths();
@@ -38,7 +40,7 @@ $paths->setPartialRootPaths([
 
 if ($FLUID_CACHE_DIRECTORY) {
     // Configure View's caching to use ./examples/cache/ as caching directory.
-    $view->setCache(new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($FLUID_CACHE_DIRECTORY));
+    $view->setCache(new SimpleFileCache($FLUID_CACHE_DIRECTORY));
 }
 
 
@@ -50,7 +52,7 @@ if ($FLUID_CACHE_DIRECTORY) {
  * @return void
  */
 if (!function_exists('example_output')) {
-    function example_output($content)
+    function example_output($content): void
     {
         $content = trim($content);
         echo PHP_EOL . $content . PHP_EOL . PHP_EOL;

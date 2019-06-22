@@ -35,7 +35,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperInitializesArguments()
+    public function viewHelperInitializesArguments(): void
     {
         $this->viewHelper->initializeArguments();
         $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
@@ -44,7 +44,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperDeactivatesEscapingInterceptor()
+    public function viewHelperDeactivatesEscapingInterceptor(): void
     {
         $this->assertFalse($this->viewHelper->isOutputEscapingEnabled());
     }
@@ -52,7 +52,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderUsesValueAsSourceIfSpecified()
+    public function renderUsesValueAsSourceIfSpecified(): void
     {
         $this->viewHelper->expects($this->never())->method('renderChildren');
         $this->viewHelper->setArguments(
@@ -65,14 +65,14 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * test
      */
-    public function renderUsesChildNodesAsSourceIfSpecified()
+    public function renderUsesChildNodesAsSourceIfSpecified(): void
     {
         $this->viewHelper->expects($this->atLeastOnce())->method('renderChildren')->will($this->returnValue('Some string'));
         $actualResult = $this->viewHelper->initializeArgumentsAndRender();
         $this->assertEquals('Some string', $actualResult);
     }
 
-    public function dataProvider()
+    public function dataProvider(): array
     {
         return [
             // render does not modify string without special characters
@@ -143,7 +143,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      *
      * @dataProvider dataProvider
      */
-    public function renderTests($value, array $options, $expectedResult)
+    public function renderTests($value, array $options, $expectedResult): void
     {
         $options['value'] = $value;
         $this->viewHelper->setArguments($options);
@@ -154,7 +154,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      * @test
      * @dataProvider dataProvider
      */
-    public function renderTestsWithRenderChildrenFallback($value, array $options, $expectedResult)
+    public function renderTestsWithRenderChildrenFallback($value, array $options, $expectedResult): void
     {
         $this->viewHelper->expects($this->any())->method('renderChildren')->will($this->returnValue($value));
         $options['value'] = null;
@@ -170,7 +170,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      *
      * @dataProvider dataProvider
      */
-    public function compileTests($value, array $options, $expectedResult)
+    public function compileTests($value, array $options, $expectedResult): void
     {
         /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
@@ -198,7 +198,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      *
      * @dataProvider dataProvider
      */
-    public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult)
+    public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult): void
     {
         /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
@@ -225,7 +225,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * __test
      */
-    public function renderConvertsObjectsToStrings()
+    public function renderConvertsObjectsToStrings(): void
     {
         $user = new UserWithToString('Xaver <b>Cross-Site</b>');
         $expectedResult = 'Xaver &lt;b&gt;Cross-Site&lt;/b&gt;';
@@ -237,7 +237,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * __test
      */
-    public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString()
+    public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString(): void
     {
         $user = new UserWithoutToString('Xaver <b>Cross-Site</b>');
         $this->viewHelper->setArguments(['value' => $user]);
@@ -248,7 +248,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * __test
      */
-    public function compileConvertsObjectsToStrings()
+    public function compileConvertsObjectsToStrings(): void
     {
         /** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(AbstractNode::class)->disableOriginalConstructor()->getMock();
@@ -267,7 +267,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function compileDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString()
+    public function compileDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString(): void
     {
         /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();

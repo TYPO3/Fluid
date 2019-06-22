@@ -17,7 +17,7 @@ class TestViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('param1', 'integer', 'P1 Stuff', true);
         $this->registerArgument('param2', 'array', 'P2 Stuff', true);
@@ -29,7 +29,7 @@ class TestViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->arguments['param1'];
     }
@@ -39,7 +39,7 @@ class TestViewHelper extends AbstractViewHelper
      *
      * @param array $arguments
      */
-    public function handleAdditionalArguments(array $arguments)
+    public function handleAdditionalArguments(array $arguments): void
     {
         $filtered = [];
         foreach ($arguments as $name => $value) {

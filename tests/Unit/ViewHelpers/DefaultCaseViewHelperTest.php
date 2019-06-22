@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
 
 /**
@@ -19,7 +20,7 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testThrowsExceptionIfUsedOutsideSwitch()
+    public function testThrowsExceptionIfUsedOutsideSwitch(): void
     {
         $viewHelper = new DefaultCaseViewHelper();
         $this->injectDependenciesIntoViewHelper($viewHelper);
@@ -30,7 +31,7 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCallsRenderChildrenWhenUsedInsideSwitch()
+    public function testCallsRenderChildrenWhenUsedInsideSwitch(): void
     {
         $viewHelper = $this->getAccessibleMock(DefaultCaseViewHelper::class, ['renderChildren']);
         $viewHelper->expects($this->once())->method('renderChildren');

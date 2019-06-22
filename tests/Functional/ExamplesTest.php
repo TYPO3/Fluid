@@ -1,5 +1,5 @@
 <?php
-namespace FluidTYPO3Fluid\Flux\Tests\Unit\Functional;
+namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -29,7 +29,7 @@ class ExamplesTest extends BaseTestCase
      * @param array $expectedOutputs
      * @param string $expectedException
      */
-    public function testExampleScriptFileWithoutCache($script, array $expectedOutputs, $expectedException = null)
+    public function testExampleScriptFileWithoutCache(string $script, array $expectedOutputs, string $expectedException = null): void
     {
         if ($expectedException !== null) {
             $this->setExpectedException($expectedException);
@@ -43,7 +43,7 @@ class ExamplesTest extends BaseTestCase
      * @param array $expectedOutputs
      * @param string $expectedException
      */
-    public function testExampleScriptFileWithCache($script, array $expectedOutputs, $expectedException = null)
+    public function testExampleScriptFileWithCache(string $script, array $expectedOutputs, string $expectedException = null): void
     {
         if ($expectedException !== null) {
             $this->setExpectedException($expectedException);
@@ -58,11 +58,11 @@ class ExamplesTest extends BaseTestCase
      * @param array $expectedOutputs
      * @param string $FLUID_CACHE_DIRECTORY
      */
-    protected function runExampleScriptTest($script, array $expectedOutputs, $FLUID_CACHE_DIRECTORY)
+    protected function runExampleScriptTest(string $script, array $expectedOutputs, string $FLUID_CACHE_DIRECTORY): void
     {
         $scriptFile = __DIR__ . '/../../examples/' . $script;
         $self = $this;
-        $this->setOutputCallback(function ($output) use ($self, $expectedOutputs) {
+        $this->setOutputCallback(function ($output) use ($self, $expectedOutputs): void {
             foreach ($expectedOutputs as $expectedOutput) {
                 $self->assertContains($expectedOutput, $output);
             }
@@ -74,7 +74,7 @@ class ExamplesTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getExampleScriptTestValues()
+    public function getExampleScriptTestValues(): array
     {
         return [
             'example_conditions.php' => [

@@ -30,10 +30,10 @@ class CustomViewHelperResolver extends ViewHelperResolver
      * @param string $methodIdentifier
      * @return string
      */
-    public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
+    public function resolveViewHelperClassName(string $namespaceIdentifier, string $methodIdentifier): ?string
     {
         if ($namespaceIdentifier === 'f' && $methodIdentifier === 'myLink') {
-            return 'TYPO3Fluid\\FluidExample\\ViewHelpers\\CustomViewHelper';
+            return CustomViewHelper::class;
         }
         return parent::resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
     }
@@ -46,7 +46,7 @@ class CustomViewHelperResolver extends ViewHelperResolver
      * @param ViewHelperInterface $viewHelper
      * @return ArgumentDefinition[]
      */
-    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper)
+    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper): array
     {
         $arguments = parent::getArgumentDefinitionsForViewHelper($viewHelper);
         if ($viewHelper instanceof CustomViewHelper) {

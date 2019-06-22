@@ -13,7 +13,7 @@ class ParsingErrorsTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Unclosed ViewHelperNode' => [

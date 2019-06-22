@@ -16,14 +16,14 @@ class Configuration
     /**
      * Generic interceptors registered with the configuration.
      *
-     * @var \SplObjectStorage[]
+     * @var array
      */
     protected $interceptors = [];
 
     /**
      * Escaping interceptors registered with the configuration.
      *
-     * @var \SplObjectStorage[]
+     * @var array
      */
     protected $escapingInterceptors = [];
 
@@ -33,7 +33,7 @@ class Configuration
      * @param InterceptorInterface $interceptor
      * @return void
      */
-    public function addInterceptor(InterceptorInterface $interceptor)
+    public function addInterceptor(InterceptorInterface $interceptor): void
     {
         $this->addInterceptorToArray($interceptor, $this->interceptors);
     }
@@ -44,7 +44,7 @@ class Configuration
      * @param InterceptorInterface $interceptor
      * @return void
      */
-    public function addEscapingInterceptor(InterceptorInterface $interceptor)
+    public function addEscapingInterceptor(InterceptorInterface $interceptor): void
     {
         $this->addInterceptorToArray($interceptor, $this->escapingInterceptors);
     }
@@ -56,16 +56,14 @@ class Configuration
      * @param \SplObjectStorage[] $interceptorArray
      * @return void
      */
-    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray)
+    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray): void
     {
         foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
             if (!isset($interceptorArray[$interceptionPoint])) {
-                $interceptorArray[$interceptionPoint] = new \SplObjectStorage();
+                $interceptorArray[$interceptionPoint] = [];
             }
-            $interceptors = $interceptorArray[$interceptionPoint];
-            if (!$interceptors->contains($interceptor)) {
-                $interceptors->attach($interceptor);
-            }
+            $interceptorClass = get_class($interceptor);
+            $interceptorArray[$interceptionPoint][$interceptorClass] = $interceptor;
         }
     }
 
@@ -75,9 +73,9 @@ class Configuration
      * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
-    public function getInterceptors($interceptionPoint)
+    public function getInterceptors(int $interceptionPoint): array
     {
-        return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : new \SplObjectStorage();
+        return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : [];
     }
 
     /**
@@ -86,8 +84,8 @@ class Configuration
      * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
-    public function getEscapingInterceptors($interceptionPoint)
+    public function getEscapingInterceptors(int $interceptionPoint): array
     {
-        return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : new \SplObjectStorage();
+        return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : [];
     }
 }

@@ -27,7 +27,7 @@ interface NodeInterface
      *
      * @return array<\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
      */
-    public function getChildNodes();
+    public function getChildNodes(): array;
 
     /**
      * Appends a sub node to this node. Is used inside the parser to append children
@@ -35,7 +35,7 @@ interface NodeInterface
      * @param NodeInterface $childNode The sub node to add
      * @return void
      */
-    public function addChildNode(NodeInterface $childNode);
+    public function addChildNode(NodeInterface $childNode): void;
 
     /**
      * Evaluates the node - can return not only strings, but arbitary objects.

@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -71,12 +72,12 @@ class ForViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
-        $this->registerArgument('key', 'string', 'Variable to assign array key to', false);
+        $this->registerArgument('key', 'string', 'Variable to assign array key to');
         $this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', false, false);
         $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
     }
@@ -85,8 +86,8 @@ class ForViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return string
-     * @throws ViewHelper\Exception
+     * @return mixed
+     * @throws Exception
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
@@ -95,7 +96,7 @@ class ForViewHelper extends AbstractViewHelper
             return '';
         }
         if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
-            throw new ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+            throw new Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
         }
 
         if ($arguments['reverse'] === true) {

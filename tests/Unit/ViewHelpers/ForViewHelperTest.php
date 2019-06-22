@@ -31,7 +31,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderExecutesTheLoopCorrectly()
+    public function renderExecutesTheLoopCorrectly(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -55,7 +55,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderPreservesKeys()
+    public function renderPreservesKeys(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -85,7 +85,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsEmptyStringIfObjectIsNull()
+    public function renderReturnsEmptyStringIfObjectIsNull(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -100,7 +100,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsEmptyStringIfObjectIsEmptyArray()
+    public function renderReturnsEmptyStringIfObjectIsEmptyArray(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -115,7 +115,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderIteratesElementsInReverseOrderIfReverseIsTrue()
+    public function renderIteratesElementsInReverseOrderIfReverseIsTrue(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -141,7 +141,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderIteratesElementsInReverseOrderIfReverseIsTrueAndObjectIsIterator()
+    public function renderIteratesElementsInReverseOrderIfReverseIsTrueAndObjectIsIterator(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -168,7 +168,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
      * @test
      * @dataProvider reverseDataProvider
      */
-    public function renderPreservesKeysIfReverseIsTrue(array $each, array $expectedCallProtocol)
+    public function renderPreservesKeysIfReverseIsTrue(array $each, array $expectedCallProtocol): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -189,7 +189,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function reverseDataProvider()
+    public function reverseDataProvider(): array
     {
         return [
             'string keys' => [
@@ -235,7 +235,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function keyContainsNumericalIndexIfTheGivenArrayDoesNotHaveAKey()
+    public function keyContainsNumericalIndexIfTheGivenArrayDoesNotHaveAKey(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -269,7 +269,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable()
+    public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable(): void
     {
         $viewHelper = new ForViewHelper();
         $object = new \stdClass();
@@ -288,7 +288,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderIteratesThroughElementsOfTraversableObjects()
+    public function renderIteratesThroughElementsOfTraversableObjects(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -311,7 +311,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderPreservesKeyWhenIteratingThroughElementsOfObjectsThatImplementIteratorInterface()
+    public function renderPreservesKeyWhenIteratingThroughElementsOfObjectsThatImplementIteratorInterface(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -341,7 +341,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function keyContainsTheNumericalIndexWhenIteratingThroughElementsOfObjectsOfTyeSplObjectStorage()
+    public function keyContainsTheNumericalIndexWhenIteratingThroughElementsOfObjectsOfTyeSplObjectStorage(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -383,7 +383,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function iterationDataIsAddedToTemplateVariableContainerIfIterationArgumentIsSet()
+    public function iterationDataIsAddedToTemplateVariableContainerIfIterationArgumentIsSet(): void
     {
         $viewHelper = new ForViewHelper();
 
@@ -441,7 +441,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionOnInvalidObject()
+    public function renderThrowsExceptionOnInvalidObject(): void
     {
         $viewHelper = new ForViewHelper();
         $this->arguments['each'] = new \DateTime('now');
@@ -453,7 +453,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderCountsSubjectIfIterationArgumentProvided()
+    public function renderCountsSubjectIfIterationArgumentProvided(): void
     {
         $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
         $subject->expects($this->once())->method('count')->willReturn(1);
@@ -466,7 +466,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderDoesNotCountSubjectIfIterationArgumentNotProvided()
+    public function renderDoesNotCountSubjectIfIterationArgumentNotProvided(): void
     {
         $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
         $subject->expects($this->never())->method('count');

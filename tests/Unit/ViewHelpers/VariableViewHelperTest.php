@@ -19,7 +19,7 @@ class VariableViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function registersArguments()
+    public function registersArguments(): void
     {
         $subject = new VariableViewHelper();
         $subject->initializeArguments();
@@ -29,13 +29,13 @@ class VariableViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function assignsVariableInVariableProvider()
+    public function assignsVariableInVariableProvider(): void
     {
         $variableProvider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['add'])->getMock();
         $variableProvider->expects($this->once())->method('add')->with('name', 'value');
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setVariableProvider($variableProvider);
-        VariableViewHelper::renderStatic(['name' => 'name', 'value' => null], function() { return 'value'; }, $renderingContext);
+        VariableViewHelper::renderStatic(['name' => 'name', 'value' => null], function(): string { return 'value'; }, $renderingContext);
     }
 
 }

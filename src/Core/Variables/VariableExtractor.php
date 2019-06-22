@@ -31,7 +31,7 @@ class VariableExtractor
      * @param array $accessors
      * @return mixed
      */
-    public static function extract($subject, $propertyPath, array $accessors = [])
+    public static function extract($subject, string $propertyPath, array $accessors = [])
     {
         $extractor = new self();
         return $extractor->getByPath($subject, $propertyPath, $accessors);
@@ -41,11 +41,11 @@ class VariableExtractor
      * Static interface for instanciating and extracting
      * accessors for each segment of the path.
      *
-     * @param VariableProviderInterface $subject
+     * @param VariableProviderInterface|array $subject
      * @param string $propertyPath
      * @return mixed
      */
-    public static function extractAccessors($subject, $propertyPath)
+    public static function extractAccessors($subject, string $propertyPath): array
     {
         $extractor = new self();
         return $extractor->getAccessorsForPath($subject, $propertyPath);
@@ -70,7 +70,7 @@ class VariableExtractor
      * @param array $accessors
      * @return mixed
      */
-    public function getByPath($subject, $propertyPath, array $accessors = [])
+    public function getByPath($subject, string $propertyPath, array $accessors = [])
     {
         if ($subject instanceof StandardVariableProvider) {
             return $subject->getByPath($propertyPath, $accessors);
@@ -89,15 +89,15 @@ class VariableExtractor
     }
 
     /**
-     * @param VariableProviderInterface $subject
+     * @param VariableProviderInterface|array $subject
      * @param string $propertyPath
      * @return array
      */
-    public function getAccessorsForPath($subject, $propertyPath)
+    public function getAccessorsForPath($subject, string $propertyPath): array
     {
         $accessors = [];
         $propertyPathSegments = explode('.', $propertyPath);
-        foreach ($propertyPathSegments as $index => $pathSegment) {
+        foreach ($propertyPathSegments as $pathSegment) {
             $accessor = $this->detectAccessor($subject, $pathSegment);
             if ($accessor === null) {
                 // Note: this may include cases of sub-variable references. When such
@@ -117,7 +117,7 @@ class VariableExtractor
      * @param string $propertyPath
      * @return string
      */
-    protected function resolveSubVariableReferences($subject, $propertyPath)
+    protected function resolveSubVariableReferences($subject, string $propertyPath): string
     {
         if (strpos($propertyPath, '{') !== false) {
             preg_match_all('/(\{.*\})/', $propertyPath, $matches);
@@ -137,7 +137,7 @@ class VariableExtractor
      * @param string|null $accessor
      * @return mixed
      */
-    protected function extractSingleValue($subject, $propertyName, $accessor = null)
+    protected function extractSingleValue($subject, string $propertyName, ?string $accessor = null)
     {
         if (!$accessor || !$this->canExtractWithAccessor($subject, $propertyName, $accessor)) {
             $accessor = $this->detectAccessor($subject, $propertyName);
@@ -154,7 +154,7 @@ class VariableExtractor
      * @param string $accessor
      * @return boolean
      */
-    protected function canExtractWithAccessor($subject, $propertyName, $accessor)
+    protected function canExtractWithAccessor($subject, string $propertyName, string $accessor): bool
     {
         $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_ARRAY) {
@@ -172,10 +172,10 @@ class VariableExtractor
     /**
      * @param mixed $subject
      * @param string $propertyName
-     * @param string $accessor
+     * @param string|null $accessor
      * @return mixed
      */
-    protected function extractWithAccessor($subject, $propertyName, $accessor)
+    protected function extractWithAccessor($subject, string $propertyName, ?string $accessor)
     {
         if ($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject)
             || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
@@ -201,7 +201,7 @@ class VariableExtractor
      * @param string $propertyName
      * @return string|NULL
      */
-    protected function detectAccessor($subject, $propertyName)
+    protected function detectAccessor($subject, string $propertyName): ?string
     {
         if (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))) {
             return self::ACCESSOR_ARRAY;
@@ -230,7 +230,7 @@ class VariableExtractor
      * @param string $propertyName
      * @return bool
      */
-    protected function isExtractableThroughAsserter($subject, $propertyName)
+    protected function isExtractableThroughAsserter($subject, string $propertyName): bool
     {
         return method_exists($subject, 'is' . ucfirst($propertyName))
             || method_exists($subject, 'has' . ucfirst($propertyName));
@@ -243,7 +243,7 @@ class VariableExtractor
      * @param string $propertyName
      * @return mixed
      */
-    protected function extractThroughAsserter($subject, $propertyName)
+    protected function extractThroughAsserter(object $subject, string $propertyName)
     {
         if (method_exists($subject, 'is' . ucfirst($propertyName))) {
             return call_user_func_array([$subject, 'is' . ucfirst($propertyName)], []);

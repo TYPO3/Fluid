@@ -22,7 +22,7 @@ interface FluidCacheInterface
      * @param string $name
      * @return mixed
      */
-    public function get($name);
+    public function get(string $name);
 
     /**
      * Set or updates an entry identified by $name
@@ -32,7 +32,7 @@ interface FluidCacheInterface
      * @param mixed $value
      * @return void
      */
-    public function set($name, $value);
+    public function set(string $name, $value): void;
 
     /**
      * Flushes the cache either by entry or flushes
@@ -41,10 +41,10 @@ interface FluidCacheInterface
      * @param string|NULL $name
      * @return void
      */
-    public function flush($name = null);
+    public function flush(?string $name = null): void;
 
     /**
      * @return FluidCacheWarmerInterface
      */
-    public function getCacheWarmer();
+    public function getCacheWarmer(): FluidCacheWarmerInterface;
 }

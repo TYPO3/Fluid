@@ -13,7 +13,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for RootNode
- *
  */
 class RootNodeTest extends UnitTestCase
 {
@@ -21,7 +20,7 @@ class RootNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateCallsEvaluateChildNodes()
+    public function testEvaluateCallsEvaluateChildNodes(): void
     {
         $view = new TemplateView();
         $subject = $this->getMock(RootNode::class, ['evaluateChildNodes']);

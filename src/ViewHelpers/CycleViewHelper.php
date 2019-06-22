@@ -1,6 +1,8 @@
 <?php
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -59,7 +61,7 @@ class CycleViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('values', 'array', 'The array or object implementing \ArrayAccess (for example \SplObjectStorage) to iterated over');
@@ -100,9 +102,9 @@ class CycleViewHelper extends AbstractViewHelper
     /**
      * @param mixed $values
      * @return array
-     * @throws ViewHelper\Exception
+     * @throws Exception
      */
-    protected static function initializeValues($values)
+    protected static function initializeValues($values): array
     {
         if (is_array($values)) {
             return array_values($values);
@@ -112,15 +114,15 @@ class CycleViewHelper extends AbstractViewHelper
             return iterator_to_array($values, false);
         }
 
-        throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+        throw new Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
     }
 
     /**
      * @param string $as
-     * @param ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+     * @param ViewHelperVariableContainer $viewHelperVariableContainer
      * @return integer
      */
-    protected static function initializeIndex($as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer)
+    protected static function initializeIndex(string $as, ViewHelperVariableContainer $viewHelperVariableContainer): int
     {
         $index = 0;
         if ($viewHelperVariableContainer->exists(static::class, $as)) {

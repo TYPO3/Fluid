@@ -16,6 +16,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
  */
 class ConstraintSyntaxTreeNode extends ViewHelperNode
 {
+    /**
+     * @var VariableProviderInterface|mixed|mixed
+     */
+    public $variableContainer;
     public $callProtocol = [];
 
     public function __construct(VariableProviderInterface $variableContainer)
@@ -33,7 +37,7 @@ class ConstraintSyntaxTreeNode extends ViewHelperNode
         $this->callProtocol[] = $callElement;
     }
 
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): string
     {
     }
 }

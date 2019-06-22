@@ -26,7 +26,7 @@ class VariableExtractorTest extends UnitTestCase
      * @test
      * @dataProvider getPathTestValues
      */
-    public function testGetByPath($subject, $path, $expected)
+    public function testGetByPath($subject, string $path, $expected): void
     {
         $result = VariableExtractor::extract($subject, $path);
         $this->assertEquals($expected, $result);
@@ -35,7 +35,7 @@ class VariableExtractorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPathTestValues()
+    public function getPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $unnamedUser = new UserWithoutToString('');
@@ -64,7 +64,7 @@ class VariableExtractorTest extends UnitTestCase
      * @test
      * @dataProvider getAccessorsForPathTestValues
      */
-    public function testGetAccessorsForPath($subject, $path, $expected)
+    public function testGetAccessorsForPath($subject, string $path, $expected): void
     {
         $result = VariableExtractor::extractAccessors($subject, $path);
         $this->assertEquals($expected, $result);
@@ -73,7 +73,7 @@ class VariableExtractorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getAccessorsForPathTestValues()
+    public function getAccessorsForPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
@@ -95,12 +95,12 @@ class VariableExtractorTest extends UnitTestCase
     /**
      * @param mixed $subject
      * @param string $path
-     * @param string $accessor
+     * @param string|null $accessor
      * @param mixed $expected
      * @test
      * @dataProvider getExtractRedectAccessorTestValues
      */
-    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected)
+    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, string $path, ?string $accessor, $expected): void
     {
         $result = VariableExtractor::extract($subject, $path, [$accessor]);
         $this->assertEquals($expected, $result);
@@ -109,7 +109,7 @@ class VariableExtractorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getExtractRedectAccessorTestValues()
+    public function getExtractRedectAccessorTestValues(): array
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],
@@ -126,7 +126,7 @@ class VariableExtractorTest extends UnitTestCase
     /**
      * @test
      */
-    public function testExtractCallsMagicMethodGetters()
+    public function testExtractCallsMagicMethodGetters(): void
     {
         $subject = new ClassWithMagicGetter();
         $result = VariableExtractor::extract($subject, 'test');
@@ -136,7 +136,7 @@ class VariableExtractorTest extends UnitTestCase
     /**
      * @test
      */
-    public function testExtractReturnsNullOnProtectedGetters()
+    public function testExtractReturnsNullOnProtectedGetters(): void
     {
         $subject = new ClassWithProtectedGetter();
         $result = VariableExtractor::extract($subject, 'test');

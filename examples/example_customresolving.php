@@ -1,5 +1,6 @@
 <?php
 
+use TYPO3Fluid\Fluid\Tests\Example\CustomViewHelperResolver;
 /*
  * EXAMPLE: Custom ViewHelperResolver
  *
@@ -28,7 +29,7 @@ require_once __DIR__ . '/include/class_customviewhelper.php';
 // through the default namespace without that ViewHelper being in the
 // default package. The ViewHelper is added dynamically as `f:myLink`.
 // See CustomViewHelperResolver class for details.
-$view->getRenderingContext()->setViewHelperResolver(new \TYPO3Fluid\Fluid\Tests\Example\CustomViewHelperResolver());
+$view->getRenderingContext()->setViewHelperResolver(new CustomViewHelperResolver());
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.

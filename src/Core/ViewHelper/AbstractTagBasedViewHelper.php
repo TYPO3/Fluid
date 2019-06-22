@@ -58,7 +58,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param TagBuilder $tag
      * @return void
      */
-    public function setTagBuilder(TagBuilder $tag)
+    public function setTagBuilder(TagBuilder $tag): void
     {
         $this->tag = $tag;
         $this->tag->setTagName($this->tagName);
@@ -69,10 +69,10 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * @api
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
-        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false);
-        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false);
+        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.');
+        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
     }
 
     /**
@@ -85,7 +85,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    public function initialize()
+    public function initialize(): void
     {
         parent::initialize();
         $this->tag->reset();
@@ -121,7 +121,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
+    protected function registerTagAttribute(string $name, string $type, string $description, bool $required = false, $defaultValue = null): void
     {
         $this->registerArgument($name, $type, $description, $required, $defaultValue);
         self::$tagAttributes[get_class($this)][$name] = $name;
@@ -134,7 +134,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    protected function registerUniversalTagAttributes()
+    protected function registerUniversalTagAttributes(): void
     {
         $this->registerTagAttribute('class', 'string', 'CSS class(es) for this element');
         $this->registerTagAttribute('dir', 'string', 'Text direction for this HTML element. Allowed strings: "ltr" (left to right), "rtl" (right to left)');
@@ -157,7 +157,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @return void
      */
-    public function handleAdditionalArguments(array $arguments)
+    public function handleAdditionalArguments(array $arguments): void
     {
         $unassigned = [];
         foreach ($arguments as $argumentName => $argumentValue) {
@@ -173,7 +173,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     /**
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         return $this->tag->render();
     }

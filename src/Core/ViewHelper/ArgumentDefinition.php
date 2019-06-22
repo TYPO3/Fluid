@@ -56,7 +56,7 @@ class ArgumentDefinition
      * @param boolean $required TRUE if argument is required
      * @param mixed $defaultValue Default value
      */
-    public function __construct($name, $type, $description, $required, $defaultValue = null)
+    public function __construct(string $name, string $type, string $description, bool $required, $defaultValue = null)
     {
         $this->name = $name;
         $this->type = $type;
@@ -70,7 +70,7 @@ class ArgumentDefinition
      *
      * @return string Name of argument
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -80,7 +80,7 @@ class ArgumentDefinition
      *
      * @return string Type of argument
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -90,7 +90,7 @@ class ArgumentDefinition
      *
      * @return string Description of argument
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
@@ -100,7 +100,7 @@ class ArgumentDefinition
      *
      * @return boolean TRUE if argument is optional
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }

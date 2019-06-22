@@ -18,7 +18,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(DebugViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('typeOnly', 'boolean', $this->anything(), false, false);
@@ -32,7 +32,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
      * @param array $arguments
      * @param string $expected
      */
-    public function testRender($value, array $arguments, $expected = null)
+    public function testRender($value, array $arguments, string $expected = null): void
     {
         $instance = $this->getMock(DebugViewHelper::class, ['renderChildren']);
         $instance->expects($this->once())->method('renderChildren')->willReturn($value);
@@ -47,7 +47,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderTestValues()
+    public function getRenderTestValues(): array
     {
         $arrayObject = new \ArrayObject(['foo' => 'bar']);
         $recursive = clone $arrayObject;

@@ -43,7 +43,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     /**
      * @return mixed
      */
-    public function getSource()
+    public function getSource(): string
     {
         return $this->source;
     }
@@ -52,7 +52,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
      * @param mixed $source
      * @return void
      */
-    public function setSource($source)
+    public function setSource($source): void
     {
         $this->source = $source;
     }
@@ -60,7 +60,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     /**
      * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         $this->load();
         return parent::getAll();
@@ -70,7 +70,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
      * @param string $identifier
      * @return mixed
      */
-    public function get($identifier)
+    public function get(string $identifier)
     {
         $this->load();
         return parent::get($identifier);
@@ -79,7 +79,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     /**
      * @return array
      */
-    public function getAllIdentifiers()
+    public function getAllIdentifiers(): array
     {
         $this->load();
         return parent::getAllIdentifiers();
@@ -88,7 +88,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     /**
      * @return void
      */
-    protected function load()
+    protected function load(): void
     {
         if ($this->source !== null && time() > ($this->lastLoaded + $this->ttl)) {
             if (!$this->isJSON($this->source)) {
@@ -105,7 +105,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
      * @param string $string
      * @return boolean
      */
-    protected function isJSON($string)
+    protected function isJSON(string $string): bool
     {
         $string = trim($string);
         return ($string{0} === '{' && substr($string, -1) === '}');

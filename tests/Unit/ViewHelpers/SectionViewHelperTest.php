@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Testcase for SectionViewHelper
- *
  */
 class SectionViewHelperTest extends UnitTestCase
 {
@@ -23,7 +22,7 @@ class SectionViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function sectionIsAddedToParseVariableContainer()
+    public function sectionIsAddedToParseVariableContainer(): void
     {
         $section = new SectionViewHelper();
 

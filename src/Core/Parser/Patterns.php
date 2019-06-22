@@ -168,7 +168,6 @@ abstract class Patterns
 
     /**
      * THIS IS ALMOST THE SAME AS $SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-     *
      */
     static public $SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER = '/
 
@@ -198,7 +197,6 @@ abstract class Patterns
      * {object: value, object2: {nested: array}, object3: "Some string"}
      *
      * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-     *
      */
     static public $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
 		(?P<Recursion>                                             # Start the recursive part of the regular expression - describing the array syntax

@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -30,7 +31,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderAddsCurrentValueToTemplateVariableContainerAndRemovesItAfterRendering()
+    public function renderAddsCurrentValueToTemplateVariableContainerAndRemovesItAfterRendering(): void
     {
         $values = ['bar', 'Fluid'];
         $this->viewHelper->setArguments(['values' => $values, 'as' => 'innerVariable']);
@@ -41,9 +42,9 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionWhenPassingObjectsToValuesThatAreNotTraversable()
+    public function renderThrowsExceptionWhenPassingObjectsToValuesThatAreNotTraversable(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class);
+        $this->expectException(Exception::class);
 
         $object = new \stdClass();
         $this->viewHelper->setArguments(['values' => $object, 'as' => 'innerVariable']);
@@ -53,17 +54,17 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsChildNodesIfValuesIsNull()
+    public function renderReturnsChildNodesIfValuesIsNull(): void
     {
         $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Child nodes'));
         $this->viewHelper->setArguments(['values' => null, 'as' => 'foo']);
-        $this->assertEquals('Child nodes', $this->viewHelper->render(null, 'foo'));
+        $this->assertEquals('Child nodes', $this->viewHelper->render());
     }
 
     /**
      * @test
      */
-    public function renderReturnsChildNodesIfValuesIsAnEmptyArray()
+    public function renderReturnsChildNodesIfValuesIsAnEmptyArray(): void
     {
         $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Child nodes'));
         $this->viewHelper->setArguments(['values' => [], 'as' => 'foo']);
@@ -73,7 +74,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderIteratesThroughElementsOfTraversableObjects()
+    public function renderIteratesThroughElementsOfTraversableObjects(): void
     {
         $traversableObject = new \ArrayObject(['key1' => 'value1', 'key2' => 'value2']);
         $this->viewHelper->setArguments(['values' => $traversableObject, 'as' => 'innerVariable']);

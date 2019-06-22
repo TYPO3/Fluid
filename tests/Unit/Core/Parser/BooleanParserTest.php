@@ -35,7 +35,7 @@ class BooleanParserTest extends UnitTestCase
      * @param string $comparison
      * @param boolean $expected
      */
-    public function testSomeEvaluations($comparison, $expected, $variables = [])
+    public function testSomeEvaluations(string $comparison, bool $expected, $variables = []): void
     {
         $parser = new BooleanParser();
         $this->assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
@@ -49,7 +49,7 @@ class BooleanParserTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getSomeEvaluationTestValues()
+    public function getSomeEvaluationTestValues(): array
     {
         return [
             ['(1 && false) || false || \'foobar\' == \'foobar\'', true],

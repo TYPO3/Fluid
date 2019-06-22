@@ -50,7 +50,7 @@ class SpacelessViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext)
+    public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext): string
     {
         return trim(preg_replace('/\\>\\s+\\</', '><', $childClosure()));
     }

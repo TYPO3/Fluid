@@ -24,7 +24,7 @@ class ChainedVariableProviderTest extends UnitTestCase
      * @param mixed $expected
      * @dataProvider getGetTestValues
      */
-    public function testGet(array $local, array $chain, $path, $expected)
+    public function testGet(array $local, array $chain, string $path, $expected): void
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
@@ -38,7 +38,7 @@ class ChainedVariableProviderTest extends UnitTestCase
      * @param mixed $expected
      * @dataProvider getGetTestValues
      */
-    public function testGetByPath(array $local, array $chain, $path, $expected)
+    public function testGetByPath(array $local, array $chain, string $path, $expected): void
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
@@ -48,7 +48,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getGetTestValues()
+    public function getGetTestValues(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
@@ -69,7 +69,7 @@ class ChainedVariableProviderTest extends UnitTestCase
      * @param mixed $expected
      * @dataProvider getGetAllTestValues
      */
-    public function testGetAll(array $local, array $chain, $expected)
+    public function testGetAll(array $local, array $chain, $expected): void
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
@@ -79,7 +79,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getGetAllTestValues()
+    public function getGetAllTestValues(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
@@ -98,7 +98,7 @@ class ChainedVariableProviderTest extends UnitTestCase
      * @param mixed $expected
      * @dataProvider getGetAllIdentifiersTestValues
      */
-    public function testGetAllIdentifiers(array $local, array $chain, $expected)
+    public function testGetAllIdentifiers(array $local, array $chain, $expected): void
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
@@ -108,7 +108,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getGetAllIdentifiersTestValues()
+    public function getGetAllIdentifiersTestValues(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
@@ -124,7 +124,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetScopeCopy()
+    public function testGetScopeCopy(): void
     {
         $chain = [new StandardVariableProvider(), new StandardVariableProvider()];
         $chainedProvider = new ChainedVariableProvider($chain);

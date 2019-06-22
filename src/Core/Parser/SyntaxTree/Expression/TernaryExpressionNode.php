@@ -46,7 +46,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
      * @param array $matches
      * @return mixed
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches): string
     {
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
@@ -90,12 +90,12 @@ class TernaryExpressionNode extends AbstractExpressionNode
      * @param string $expression
      * @return array
      */
-    public static function gatherContext($renderingContext, $expression)
+    public static function gatherContext(RenderingContextInterface $renderingContext, string $expression): array
     {
         $context = [];
         if (preg_match_all(static::$variableDetection, $expression, $matches) > 0) {
             foreach ($matches[1] as $variable) {
-                if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable) === true) {
+                if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable)) {
                     continue;
                 }
                 $context[$variable] = static::getTemplateVariableOrValueItself($variable, $renderingContext);
@@ -118,7 +118,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
      * @param TemplateCompiler $templateCompiler
      * @return string
      */
-    public function compile(TemplateCompiler $templateCompiler)
+    public function compile(TemplateCompiler $templateCompiler): array
     {
         $parts = preg_split('/([\?:])/s', $this->getExpression());
         $parts = array_map([__CLASS__, 'trimPart'], $parts);

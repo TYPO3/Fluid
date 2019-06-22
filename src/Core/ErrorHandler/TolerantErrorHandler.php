@@ -1,11 +1,14 @@
 <?php
 namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
+use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
+use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
-
 /**
  * Class TolerantErrorHandler
  *
@@ -19,19 +22,19 @@ namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
 class TolerantErrorHandler implements ErrorHandlerInterface
 {
     /**
-     * @param \TYPO3Fluid\Fluid\Core\Parser\Exception $error
+     * @param Exception $error
      * @return string
      */
-    public function handleParserError(\TYPO3Fluid\Fluid\Core\Parser\Exception $error)
+    public function handleParserError(Exception $error): string
     {
         return 'Parser error: ' . $error->getMessage() . ' Offending code: ';
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException $error
+     * @param ExpressionException $error
      * @return string
      */
-    public function handleExpressionError(\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException $error)
+    public function handleExpressionError(ExpressionException $error): string
     {
         return 'Invalid expression: ' . $error->getMessage();
     }
@@ -40,16 +43,16 @@ class TolerantErrorHandler implements ErrorHandlerInterface
      * @param \TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error
      * @return string
      */
-    public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error)
+    public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error): string
     {
         return 'ViewHelper error: ' . $error->getMessage() . ' - Offending code: ';
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error
+     * @param StopCompilingException $error
      * @return string
      */
-    public function handleCompilerError(\TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error)
+    public function handleCompilerError(StopCompilingException $error): string
     {
         return '';
     }
@@ -58,9 +61,9 @@ class TolerantErrorHandler implements ErrorHandlerInterface
      * @param \TYPO3Fluid\Fluid\View\Exception $error
      * @return string
      */
-    public function handleViewError(\TYPO3Fluid\Fluid\View\Exception $error)
+    public function handleViewError(\TYPO3Fluid\Fluid\View\Exception $error): string
     {
-        if ($error instanceof \TYPO3Fluid\Fluid\View\Exception\InvalidSectionException) {
+        if ($error instanceof InvalidSectionException) {
             return 'Section rendering error: ' . $error->getMessage() . ' Section rendering is mandatory; "optional" is false.';
         }
         return 'View error: ' . $error->getMessage();

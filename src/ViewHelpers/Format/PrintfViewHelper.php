@@ -55,7 +55,7 @@ class PrintfViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('value', 'string', 'String to format');
@@ -67,8 +67,8 @@ class PrintfViewHelper extends AbstractViewHelper
      *
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
-     * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
-     * @return string
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {

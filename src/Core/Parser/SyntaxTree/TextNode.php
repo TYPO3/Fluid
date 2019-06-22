@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -26,12 +27,12 @@ class TextNode extends AbstractNode
      * Constructor.
      *
      * @param string $text text to store in this textNode
-     * @throws Parser\Exception
+     * @throws Exception
      */
-    public function __construct($text)
+    public function __construct(string $text)
     {
         if (!is_string($text)) {
-            throw new Parser\Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
+            throw new Exception('Text node requires an argument of type string, "' . gettype($text) . '" given.');
         }
         $this->text = $text;
     }
@@ -43,7 +44,7 @@ class TextNode extends AbstractNode
      * @param RenderingContextInterface $renderingContext
      * @return string the text stored in this node/subtree.
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): string
     {
         return $this->text;
     }
@@ -53,7 +54,7 @@ class TextNode extends AbstractNode
      *
      * @return string The text of this node
      */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
@@ -61,7 +62,7 @@ class TextNode extends AbstractNode
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getText();
     }

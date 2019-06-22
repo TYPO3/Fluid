@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -25,12 +26,12 @@ class NumericNode extends AbstractNode
      * Constructor.
      *
      * @param string|number $value value to store in this numericNode
-     * @throws Parser\Exception
+     * @throws Exception
      */
     public function __construct($value)
     {
         if (!is_numeric($value)) {
-            throw new Parser\Exception('Numeric node requires an argument of type number, "' . gettype($value) . '" given.');
+            throw new Exception('Numeric node requires an argument of type number, "' . gettype($value) . '" given.');
         }
         $this->value = $value + 0;
     }
@@ -39,7 +40,7 @@ class NumericNode extends AbstractNode
      * Return the value associated to the syntax tree.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return number the value stored in this node/subtree.
+     * @return float|integer the value stored in this node/subtree.
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
@@ -49,7 +50,7 @@ class NumericNode extends AbstractNode
     /**
      * Getter for value
      *
-     * @return number The value of this node
+     * @return float|integer The value of this node
      */
     public function getValue()
     {
@@ -60,11 +61,11 @@ class NumericNode extends AbstractNode
      * NumericNode does not allow adding child nodes, so this will always throw an exception.
      *
      * @param NodeInterface $childNode The sub node to add
-     * @throws Parser\Exception
+     * @throws Exception
      * @return void
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): void
     {
-        throw new Parser\Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
+        throw new Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
     }
 }

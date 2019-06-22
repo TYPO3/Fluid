@@ -37,7 +37,7 @@ class ArrayNode extends AbstractNode
      * @param RenderingContextInterface $renderingContext
      * @return array An associative array with literal values
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): array
     {
         $arrayToBuild = [];
         foreach ($this->internalArray as $key => $value) {
@@ -51,7 +51,7 @@ class ArrayNode extends AbstractNode
      *
      * @return array
      */
-    public function getInternalArray()
+    public function getInternalArray(): array
     {
         return $this->internalArray;
     }

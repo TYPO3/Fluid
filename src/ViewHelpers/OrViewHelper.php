@@ -23,7 +23,7 @@ class OrViewHelper extends AbstractViewHelper
      *
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('content', 'mixed', 'Content to check if empty');
         $this->registerArgument('alternative', 'mixed', 'Alternative if content is empty');
@@ -51,7 +51,7 @@ class OrViewHelper extends AbstractViewHelper
             $content = $alternative;
         }
 
-        if (false === empty($content)) {
+        if (!empty($content)) {
             $content = null !== $arguments ? vsprintf($content, $arguments) : $content;
         }
 

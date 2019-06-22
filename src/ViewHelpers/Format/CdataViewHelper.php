@@ -59,7 +59,7 @@ class CdataViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('value', 'mixed', 'The value to output');
     }
@@ -74,7 +74,7 @@ class CdataViewHelper extends AbstractViewHelper
         array $arguments,
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
-    ) {
+    ): string {
         return sprintf('<![CDATA[%s]]>', $renderChildrenClosure());
     }
 }

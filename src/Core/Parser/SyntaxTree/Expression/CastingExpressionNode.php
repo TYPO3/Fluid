@@ -19,7 +19,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @var array
      */
     protected static $validTypes = [
-        'integer', 'boolean', 'string', 'float', 'array', 'DateTime'
+        'integer', 'boolean', 'string', 'float', 'array', \DateTime::class
     ];
 
     /**
@@ -45,7 +45,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param array $matches
      * @return integer|float
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches)
     {
         $expression = trim($expression, '{}');
         list ($variable, $type) = explode(' as ', $expression);
@@ -70,7 +70,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param string $type
      * @return mixed
      */
-    protected static function convert($variable, $type)
+    protected static function convert($variable, string $type)
     {
         $value = null;
         if ($type === 'integer') {
@@ -81,7 +81,7 @@ class CastingExpressionNode extends AbstractExpressionNode
             $value = (string) $variable;
         } elseif ($type === 'float') {
             $value = (float) $variable;
-        } elseif ($type === 'DateTime') {
+        } elseif ($type === \DateTime::class) {
             $value = self::convertToDateTime($variable);
         } elseif ($type === 'array') {
             $value = (array) self::convertToArray($variable);
@@ -105,7 +105,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param mixed $variable
      * @return array
      */
-    protected static function convertToArray($variable)
+    protected static function convertToArray($variable): array
     {
         if (is_array($variable)) {
             return $variable;

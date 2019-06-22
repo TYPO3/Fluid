@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
 /**
@@ -17,7 +18,7 @@ class EscapingTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'escapeChildren can be disabled in template' => [
@@ -37,7 +38,7 @@ class EscapingTest extends BaseFunctionalTestCase
                 [],
                 [],
                 [],
-                'TYPO3Fluid\\Fluid\\Core\\Parser\\Exception'
+                Exception::class
             ],
             'EscapeChildrenEnabledAndEscapeOutputDisabled: Tag syntax with children, properly encodes variable value' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',

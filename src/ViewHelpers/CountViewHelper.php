@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -49,7 +50,7 @@ class CountViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         parent::initializeArguments();
         $this->registerArgument('subject', 'array', 'Countable subject, array or \Countable');
@@ -59,7 +60,7 @@ class CountViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return integer
+     * @return mixed
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
@@ -67,7 +68,7 @@ class CountViewHelper extends AbstractViewHelper
         if ($countable === null) {
             return 0;
         } elseif (!$countable instanceof \Countable && !is_array($countable)) {
-            throw new ViewHelper\Exception(
+            throw new Exception(
                 sprintf(
                     'Subject given to f:count() is not countable (type: %s)',
                     is_object($countable) ? get_class($countable) : gettype($countable)

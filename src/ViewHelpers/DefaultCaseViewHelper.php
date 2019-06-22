@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -26,15 +27,15 @@ class DefaultCaseViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
-     * @return string the contents of this view helper if no other "Case" view helper of the surrounding switch view helper matches
-     * @throws ViewHelper\Exception
+     * @return mixed the contents of this view helper if no other "Case" view helper of the surrounding switch view helper matches
+     * @throws Exception
      * @api
      */
     public function render()
     {
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
-            throw new ViewHelper\Exception('The "default case" View helper can only be used within a switch View helper', 1368112037);
+            throw new Exception('The "default case" View helper can only be used within a switch View helper', 1368112037);
         }
         return $this->renderChildren();
     }
@@ -45,9 +46,9 @@ class DefaultCaseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         return '\'\'';
     }

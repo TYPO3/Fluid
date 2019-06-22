@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use PHPUnit\Framework\MockObject\MockObject;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -32,12 +33,12 @@ class ViewHelperNodeTest extends UnitTestCase
     protected $renderingContext;
 
     /**
-     * @var TemplateVariableContainer|\PHPUnit\Framework\MockObject\MockObject
+     * @var TemplateVariableContainer|MockObject
      */
     protected $templateVariableContainer;
 
     /**
-     * @var ViewHelperResolver|\PHPUnit\Framework\MockObject\MockObject
+     * @var ViewHelperResolver|MockObject
      */
     protected $mockViewHelperResolver;
 
@@ -59,10 +60,10 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function constructorSetsViewHelperAndArguments()
+    public function constructorSetsViewHelperAndArguments(): void
     {
         $arguments = ['foo' => 'bar'];
-        /** @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject $viewHelperNode */
+        /** @var ViewHelperNode|MockObject $viewHelperNode */
         $viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
 
         $this->assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
@@ -71,7 +72,7 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateCallsInvoker()
+    public function testEvaluateCallsInvoker(): void
     {
         $invoker = $this->getMock(ViewHelperInvoker::class, ['invoke']);
         $invoker->expects($this->once())->method('invoke')->willReturn('test');
@@ -84,7 +85,7 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testThrowsExceptionOnMissingRequiredArgument()
+    public function testThrowsExceptionOnMissingRequiredArgument(): void
     {
         $this->setExpectedException(ParserException::class);
         new ViewHelperNode($this->renderingContext, 'f', 'vh', ['notfoo' => false], new ParsingState());
@@ -93,9 +94,9 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function abortIfRequiredArgumentsAreMissingThrowsException()
+    public function abortIfRequiredArgumentsAreMissingThrowsException(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+        $this->expectException(ParserException::class);
 
         $expected = [
             new ArgumentDefinition('firstArgument', 'string', '', false),
@@ -110,7 +111,7 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists()
+    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists(): void
     {
         $expectedArguments = [
             new ArgumentDefinition('name1', 'string', 'desc', false),
@@ -130,7 +131,7 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function booleanArgumentsMustBeConvertedIntoBooleanNodes()
+    public function booleanArgumentsMustBeConvertedIntoBooleanNodes(): void
     {
         $argumentDefinitions = [
             'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),

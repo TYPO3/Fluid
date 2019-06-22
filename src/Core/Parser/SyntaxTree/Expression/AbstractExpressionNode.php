@@ -1,6 +1,7 @@
 <?php
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -35,9 +36,9 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      *
      * @param string $expression The original expression that created this node.
      * @param array $matches Matches extracted from expression
-     * @throws Parser\Exception
+     * @throws Exception
      */
-    public function __construct($expression, array $matches)
+    public function __construct(string $expression, array $matches)
     {
         $this->expression = trim($expression, " \t\n\r\0\x0b");
         $this->matches = $matches;
@@ -49,7 +50,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * @param RenderingContextInterface $renderingContext
      * @return string the text stored in this node/subtree.
      */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext): string
     {
         try {
             return static::evaluateExpression($renderingContext, $this->expression, $this->matches);
@@ -72,7 +73,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * @param TemplateCompiler $templateCompiler
      * @return array
      */
-    public function compile(TemplateCompiler $templateCompiler)
+    public function compile(TemplateCompiler $templateCompiler): array
     {
         $handlerClass = get_class($this);
         $expressionVariable = $templateCompiler->variableName('string');
@@ -96,7 +97,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      *
      * @return string
      */
-    public function getExpression()
+    public function getExpression(): string
     {
         return $this->expression;
     }
@@ -104,7 +105,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
     /**
      * @return array
      */
-    public function getMatches()
+    public function getMatches(): array
     {
         return $this->matches;
     }
@@ -113,7 +114,7 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * @param string $part
      * @return string
      */
-    protected static function trimPart($part)
+    protected static function trimPart(string $part): string
     {
         return trim($part, " \t\n\r\0\x0b{}");
     }
