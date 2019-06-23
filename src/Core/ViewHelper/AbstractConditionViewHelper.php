@@ -95,7 +95,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
     {
         return static::evaluateCondition($arguments);
     }
@@ -118,7 +118,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @return boolean
      * @api
      */
-    protected static function evaluateCondition(?array $arguments = null): bool
+    protected static function evaluateCondition(?array $arguments = null)
     {
         return isset($arguments['condition']) && (bool)($arguments['condition']);
     }
@@ -221,7 +221,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @param TemplateCompiler $compiler
      * @return string|null
      */
-    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
         $thenViewHelperEncountered = $elseViewHelperEncountered = false;
         foreach ($node->getChildNodes() as $childNode) {
