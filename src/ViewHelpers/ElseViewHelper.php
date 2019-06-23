@@ -50,7 +50,7 @@ class ElseViewHelper extends AbstractViewHelper
      * @return string the rendered string
      * @api
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderChildren();
     }

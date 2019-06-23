@@ -177,8 +177,8 @@ class VariableExtractor
      */
     protected function extractWithAccessor($subject, string $propertyName, ?string $accessor)
     {
-        if ($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject)
-            || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
+        if (($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject))
+            || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))
         ) {
             return $subject[$propertyName];
         } elseif (is_object($subject)) {

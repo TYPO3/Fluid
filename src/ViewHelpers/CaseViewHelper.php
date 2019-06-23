@@ -40,7 +40,7 @@ class CaseViewHelper extends AbstractViewHelper
      * @throws Exception
      * @api
      */
-    public function render(): string
+    public function render()
     {
         $value = $this->arguments['value'];
         $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();

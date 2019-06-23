@@ -62,7 +62,7 @@ class DisableViewHelper extends AbstractViewHelper
     /**
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         return $this->renderChildren();
     }

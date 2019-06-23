@@ -95,7 +95,7 @@ class WarmupViewHelper extends AbstractViewHelper
      *
      * @return string
      */
-    public function render(): string
+    public function render()
     {
         if (!$this->renderingContext->getTemplateCompiler()->isWarmupMode()) {
             return $this->renderChildren();

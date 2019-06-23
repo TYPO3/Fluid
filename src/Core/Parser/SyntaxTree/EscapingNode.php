@@ -43,9 +43,9 @@ class EscapingNode extends AbstractNode
     {
         $evaluated = $this->node->evaluate($renderingContext);
         if (is_string($evaluated) || (is_object($evaluated) && method_exists($evaluated, '__toString'))) {
-            return htmlspecialchars((string) $evaluated, ENT_QUOTES);
+            return htmlspecialchars($evaluated, ENT_QUOTES);
         }
-        return $evaluated;
+        return (string)$evaluated;
     }
 
     /**

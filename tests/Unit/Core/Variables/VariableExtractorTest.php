@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ArrayAccessDummy;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithProtectedGetter;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
@@ -77,7 +78,7 @@ class VariableExtractorTest extends UnitTestCase
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
-        $inArrayAccess = new StandardVariableProvider($inArray);
+        $inArrayAccess = new ArrayAccessDummy($inArray);
         $inPublic = (object) $inArray;
         $asArray = VariableExtractor::ACCESSOR_ARRAY;
         $asGetter = VariableExtractor::ACCESSOR_GETTER;
@@ -87,7 +88,7 @@ class VariableExtractorTest extends UnitTestCase
             [['inArray' => $inArray], 'inArray.user', [$asArray, $asArray]],
             [['inArray' => $inArray], 'inArray.user.name', [$asArray, $asArray, $asGetter]],
             [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.allIdentifiers', [$asArray, $asGetter]],
+            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.property', [$asArray, $asGetter]],
             [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
         ];
     }

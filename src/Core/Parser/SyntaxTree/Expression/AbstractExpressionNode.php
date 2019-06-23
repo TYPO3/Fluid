@@ -48,9 +48,9 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
      * Evaluates the expression stored in this node, in the context of $renderingcontext.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return string the text stored in this node/subtree.
+     * @return mixed
      */
-    public function evaluate(RenderingContextInterface $renderingContext): string
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         try {
             return static::evaluateExpression($renderingContext, $this->expression, $this->matches);

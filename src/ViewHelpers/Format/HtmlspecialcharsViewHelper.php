@@ -63,11 +63,11 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
     /**
      * Escapes special characters with their escaped counterparts as needed using PHPs htmlspecialchars() function.
      *
-     * @return string the altered string
+     * @return mixed the altered string or unaltered non-string-representable value
      * @see http://www.php.net/manual/function.htmlspecialchars.php
      * @api
      */
-    public function render(): string
+    public function render()
     {
         $value = $this->arguments['value'];
         $keepQuotes = $this->arguments['keepQuotes'];

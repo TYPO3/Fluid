@@ -40,7 +40,7 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
             ->setMethods(['evaluateChildNodes'])
             ->disableOriginalConstructor()
             ->getMock();
-        $node->expects($this->once())->method('evaluateChildNodes');
+        $node->expects($this->once())->method('evaluateChildNodes')->willReturn('foo');
         $compiler = new TemplateCompiler();
         $this->setExpectedException(StopCompilingChildrenException::class);
         $code = '';

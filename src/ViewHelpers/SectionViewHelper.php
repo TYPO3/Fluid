@@ -100,7 +100,7 @@ class SectionViewHelper extends AbstractViewHelper
      * @return string HTML String of all child nodes.
      * @api
      */
-    public function render(): string
+    public function render()
     {
         $content = '';
         if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {

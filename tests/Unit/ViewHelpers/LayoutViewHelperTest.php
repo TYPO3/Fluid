@@ -32,10 +32,11 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase
 
     public function testPostParseEvent(): void
     {
+        $nameNode = new TextNode('Default');
         $variableContainer = new StandardVariableProvider();
-        $node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', ['name' => 'test'], new ParsingState());
-        $result = LayoutViewHelper::postParseEvent($node, ['name' => 'test'], $variableContainer);
+        $node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', ['name' => $nameNode], new ParsingState());
+        $result = LayoutViewHelper::postParseEvent($node, ['name' => $nameNode], $variableContainer);
         $this->assertNull($result);
-        $this->assertEquals(new TextNode('Default'), $variableContainer->get('layoutName'));
+        $this->assertEquals($nameNode, $variableContainer->get('layoutName'));
     }
 }

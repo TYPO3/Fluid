@@ -93,9 +93,9 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function argumentsCanBeRegistered(): void
     {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
+        $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
 
-        $name = 'This is a name';
+        $name = 'name_something';
         $description = 'Example desc';
         $type = 'string';
         $isRequired = true;
@@ -103,56 +103,6 @@ class AbstractViewHelperTest extends UnitTestCase
 
         $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
         $this->assertEquals([$name => $expected], $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
-    }
-
-    /**
-     * @test
-     */
-    public function registeringTheSameArgumentNameAgainThrowsException(): void
-    {
-        $this->expectException(\Exception::class);
-
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
-
-        $name = 'shortName';
-        $description = 'Example desc';
-        $type = 'string';
-        $isRequired = true;
-
-        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-        $viewHelper->_call('registerArgument', $name, 'integer', $description, $isRequired);
-    }
-
-    /**
-     * @test
-     */
-    public function overrideArgumentOverwritesExistingArgumentDefinition(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
-
-        $name = 'argumentName';
-        $description = 'argument description';
-        $overriddenDescription = 'overwritten argument description';
-        $type = 'string';
-        $overriddenType = 'integer';
-        $isRequired = true;
-        $expected = new ArgumentDefinition($name, $overriddenType, $overriddenDescription, $isRequired);
-
-        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-        $viewHelper->_call('overrideArgument', $name, $overriddenType, $overriddenDescription, $isRequired);
-        $this->assertEquals($viewHelper->prepareArguments(), [$name => $expected], 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
-    }
-
-    /**
-     * @test
-     */
-    public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument(): void
-    {
-        $this->expectException(\Exception::class);
-
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
-
-        $viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', true);
     }
 
     /**
@@ -264,9 +214,9 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testRenderChildrenCallsRenderChildrenClosureIfSet(): string
+    public function testRenderChildrenCallsRenderChildrenClosureIfSet()
     {
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, [], [], '', false);
+        $viewHelper = $this->getMockForAbstractClass(AbstractViewHelper::class);
         $viewHelper->setRenderChildrenClosure(function (): string {
             return 'foobar';
         });
@@ -282,13 +232,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function testValidateArguments(ArgumentDefinition $argument, $value): void
     {
-        $viewHelper = $this->getAccessibleMock(
-            AbstractViewHelper::class,
-            ['hasArgument', 'prepareArguments'],
-            [],
-            '',
-            false
-        );
+        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['hasArgument', 'prepareArguments'])->getMockForAbstractClass();
         $viewHelper->expects($this->once())->method('prepareArguments')->willReturn(
             [$argument->getName() => $argument, 'second' => $argument]
         );
@@ -324,13 +268,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function testValidateArgumentsErrors(ArgumentDefinition $argument, $value): void
     {
-        $viewHelper = $this->getAccessibleMock(
-            AbstractViewHelper::class,
-            ['hasArgument', 'prepareArguments'],
-            [],
-            '',
-            false
-        );
+        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['hasArgument', 'prepareArguments'])->getMockForAbstractClass();
         $viewHelper->expects($this->once())->method('prepareArguments')->willReturn([$argument->getName() => $argument]);
         $viewHelper->expects($this->once())->method('hasArgument')->with($argument->getName())->willReturn(true);
         $viewHelper->setArguments([$argument->getName() => $value]);

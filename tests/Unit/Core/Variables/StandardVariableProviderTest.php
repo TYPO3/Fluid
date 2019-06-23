@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
  */
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ArrayAccessDummy;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -188,13 +189,13 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @param mixed $subject
+     * @param array $subject
      * @param string $path
-     * @param mixed $expected
+     * @param array $expected
      * @test
      * @dataProvider getAccessorsForPathTestValues
      */
-    public function testGetAccessorsForPath($subject, string $path, $expected): void
+    public function testGetAccessorsForPath(array $subject, string $path, array $expected): void
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getAccessorsForPath($path);
@@ -208,7 +209,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
-        $inArrayAccess = new StandardVariableProvider($inArray);
+        $inArrayAccess = new ArrayAccessDummy($inArray);
         $inPublic = (object) $inArray;
         $asArray = StandardVariableProvider::ACCESSOR_ARRAY;
         $asGetter = StandardVariableProvider::ACCESSOR_GETTER;
@@ -216,8 +217,8 @@ class StandardVariableProviderTest extends UnitTestCase
         return [
             [['inArray' => $inArray], 'inArray.user', [$asArray, $asArray]],
             [['inArray' => $inArray], 'inArray.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.allIdentifiers', [$asArray, $asGetter]],
+            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.user.name', [$asArray, $asArray, $asGetter]],
+            [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.foo', [$asArray, $asArray]],
             [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
         ];
     }

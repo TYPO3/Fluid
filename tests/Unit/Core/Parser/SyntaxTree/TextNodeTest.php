@@ -27,14 +27,4 @@ class TextNodeTest extends UnitTestCase
         $renderingContext = new RenderingContextFixture();
         $this->assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
     }
-
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfNoStringGiven(): void
-    {
-        $this->expectException(Exception::class);
-
-        new TextNode(123);
-    }
 }

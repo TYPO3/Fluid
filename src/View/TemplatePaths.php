@@ -245,11 +245,11 @@ class TemplatePaths
      *
      * @param string $controller
      * @param string $action
-     * @param string $format
-     * @return string|NULL
+     * @param string|null $format
+     * @return string|null
      * @api
      */
-    public function resolveTemplateFileForControllerAndActionAndFormat(string $controller, string $action, string $format = null): string
+    public function resolveTemplateFileForControllerAndActionAndFormat(string $controller, string $action, ?string $format = null): ?string
     {
         if ($this->templatePathAndFilename !== null) {
             return $this->templatePathAndFilename;

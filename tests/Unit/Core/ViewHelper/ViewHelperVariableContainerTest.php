@@ -126,15 +126,6 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     /**
      * @test
      */
-    public function addAllThrowsInvalidArgumentExceptionOnUnsupportedType(): void
-    {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->viewHelperVariableContainer->addAll('Foo\\Bar', new \DateTime('now'));
-    }
-
-    /**
-     * @test
-     */
     public function testSleepReturnsExpectedPropertyNames(): void
     {
         $subject = new ViewHelperVariableContainer();

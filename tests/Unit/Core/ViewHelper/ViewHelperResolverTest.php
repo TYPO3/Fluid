@@ -215,12 +215,13 @@ class ViewHelperResolverTest extends UnitTestCase
             ViewHelperResolver::class,
             ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName']
         );
+        $candidate = $this->getMockForAbstractClass(ViewHelperInterface::class);
         $resolver->expects($this->once())->method('resolveViewHelperClassName')->with('foo', 'bar')->willReturn('foobar');
         $resolver->expects($this->once())
             ->method('createViewHelperInstanceFromClassName')
             ->with('foobar')
-            ->willReturn($this->getMockForAbstractClass(ViewHelperInterface::class));
-        $this->assertEquals('baz', $resolver->createViewHelperInstance('foo', 'bar'));
+            ->willReturn($candidate);
+        $this->assertEquals($candidate, $resolver->createViewHelperInstance('foo', 'bar'));
     }
 
     /**

@@ -267,8 +267,8 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function extractWithAccessor($subject, string $propertyName, ?string $accessor)
     {
-        if ($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject)
-            || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
+        if (($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject))
+            || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))
         ) {
             return $subject[$propertyName];
         } elseif (is_object($subject)) {
@@ -289,11 +289,11 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param mixed $subject
      * @param string $propertyName
-     * @return string|NULL
+     * @return string|null
      */
     protected function detectAccessor($subject, string $propertyName): ?string
     {
-        if (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))) {
+        if (is_array($subject) || $subject instanceof \ArrayAccess) {
             return self::ACCESSOR_ARRAY;
         }
         if (is_object($subject)) {

@@ -464,8 +464,8 @@ class BooleanNodeTest extends UnitTestCase
         $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
         $rootNode = new RootNode();
         $rootNode->addChildNode(new ObjectAccessorNode('test'));
-        $rootNode->addChildNode(new TextNode(' == '));
-        $rootNode->addChildNode(new TextNode('\'somevalue\''));
+        #$rootNode->addChildNode(new TextNode(' == '));
+        $rootNode->addChildNode(new TextNode(' == \'somevalue\''));
         $this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
     }
 

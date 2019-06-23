@@ -123,7 +123,7 @@ class BooleanParser
         $this->context = $context;
         $this->expression = $expression;
         $this->cursor = 0;
-        return (bool) $this->parseOrToken();
+        return (bool)$this->parseOrToken();
     }
 
     /**

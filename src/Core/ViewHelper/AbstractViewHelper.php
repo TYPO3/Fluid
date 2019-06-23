@@ -162,14 +162,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @throws Exception
      * @api
      */
-    protected function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): AbstractViewHelper
+    public function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
-        if (array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception(
-                'Argument "' . $name . '" has already been defined, thus it should not be defined again.',
-                1253036401
-            );
-        }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
         return $this;
     }
@@ -188,16 +182,9 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @throws Exception
      * @api
      */
-    protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): AbstractViewHelper
+    protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
-        if (!array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception(
-                'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
-                1279212461
-            );
-        }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
-        return $this;
+        return $this->registerArgument($name, $type, $description, $required, $defaultValue);
     }
 
     /**
@@ -327,12 +314,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function prepareArguments(): array
     {
-        $thisClassName = get_class($this);
-        if (isset(self::$argumentDefinitionCache[$thisClassName])) {
-            $this->argumentDefinitions = self::$argumentDefinitionCache[$thisClassName];
-        } else {
+        if (empty($this->argumentDefinitions)) {
             $this->initializeArguments();
-            self::$argumentDefinitionCache[$thisClassName] = $this->argumentDefinitions;
         }
         return $this->argumentDefinitions;
     }
