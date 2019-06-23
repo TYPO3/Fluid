@@ -129,7 +129,7 @@ class BooleanParserTest extends UnitTestCase
 
             // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
             ['\'foo\' == 0', true],
-            ['1.1 >= foo', true],
+            ['1.1 >= \'foo\'', true],
             ['\'foo\' > 0', false],
 
             ['{foo}', true, ['foo' => true]],

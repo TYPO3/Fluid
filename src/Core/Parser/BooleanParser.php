@@ -123,7 +123,7 @@ class BooleanParser
         $this->context = $context;
         $this->expression = $expression;
         $this->cursor = 0;
-        return $this->parseOrToken();
+        return (bool) $this->parseOrToken();
     }
 
     /**
@@ -259,7 +259,7 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseBracketToken(): string
+    protected function parseBracketToken()
     {
         $t = $this->peek();
         if ($t === '(') {
