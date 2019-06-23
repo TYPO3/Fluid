@@ -50,7 +50,7 @@ class CountViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         parent::initializeArguments();
         $this->registerArgument('subject', 'array', 'Countable subject, array or \Countable');

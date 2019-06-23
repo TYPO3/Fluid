@@ -22,25 +22,25 @@ interface ViewHelperInterface
     /**
      * @return ArgumentDefinition[]
      */
-    public function prepareArguments(): array;
+    public function prepareArguments();
 
     /**
      * @param array $arguments
      * @return void
      */
-    public function setArguments(array $arguments): void;
+    public function setArguments(array $arguments);
 
     /**
      * @param NodeInterface[] $nodes
      * @return void
      */
-    public function setChildNodes(array $nodes): void;
+    public function setChildNodes(array $nodes);
 
     /**
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext): void;
+    public function setRenderingContext(RenderingContextInterface $renderingContext);
 
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
@@ -56,7 +56,7 @@ interface ViewHelperInterface
      *
      * @return void
      */
-    public function initialize(): void;
+    public function initialize();
 
     /**
      * Helper method which triggers the rendering of everything between the
@@ -72,7 +72,7 @@ interface ViewHelperInterface
      * @return void
      * @throws \InvalidArgumentException
      */
-    public function validateArguments(): void;
+    public function validateArguments();
 
     /**
      * Initialize all arguments. You need to override this method and call
@@ -80,7 +80,7 @@ interface ViewHelperInterface
      *
      * @return void
      */
-    public function initializeArguments(): void;
+    public function initializeArguments();
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -90,7 +90,7 @@ interface ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function handleAdditionalArguments(array $arguments): void;
+    public function handleAdditionalArguments(array $arguments);
 
     /**
      * Method which can be implemented in any ViewHelper if that ViewHelper desires
@@ -100,7 +100,7 @@ interface ViewHelperInterface
      * @param array $arguments
      * @return void
      */
-    public function validateAdditionalArguments(array $arguments): void;
+    public function validateAdditionalArguments(array $arguments);
 
     /**
      * Here follows a more detailed description of the arguments of this function:
@@ -153,7 +153,7 @@ interface ViewHelperInterface
      * @param TemplateCompiler $compiler
      * @return string|null
      */
-    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string;
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
 
     /**
      * Called when being inside a cached template.
@@ -161,5 +161,5 @@ interface ViewHelperInterface
      * @param \Closure $renderChildrenClosure
      * @return void
      */
-    public function setRenderChildrenClosure(\Closure $renderChildrenClosure): void;
+    public function setRenderChildrenClosure(\Closure $renderChildrenClosure);
 }

@@ -41,7 +41,7 @@ class ElseViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
     }

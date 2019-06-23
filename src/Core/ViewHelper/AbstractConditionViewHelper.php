@@ -40,7 +40,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     /**
      * Initializes the "then" and "else" arguments
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.');
         $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.');

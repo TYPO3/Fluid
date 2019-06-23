@@ -87,7 +87,7 @@ class GroupedForViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         parent::initializeArguments();
         $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);

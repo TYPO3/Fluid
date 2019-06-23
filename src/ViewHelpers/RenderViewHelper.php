@@ -87,7 +87,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 class RenderViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
-    
+
     /**
      * @var boolean
      */
@@ -96,7 +96,7 @@ class RenderViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         parent::initializeArguments();
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');

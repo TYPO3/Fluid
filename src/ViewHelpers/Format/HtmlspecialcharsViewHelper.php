@@ -51,7 +51,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         parent::initializeArguments();
         $this->registerArgument('value', 'string', 'Value to format');

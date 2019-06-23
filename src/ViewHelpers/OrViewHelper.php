@@ -23,7 +23,7 @@ class OrViewHelper extends AbstractViewHelper
      *
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         $this->registerArgument('content', 'mixed', 'Content to check if empty');
         $this->registerArgument('alternative', 'mixed', 'Alternative if content is empty');

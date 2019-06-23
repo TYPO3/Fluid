@@ -135,7 +135,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @return $this
      * @api
      */
-    public function assign(string $key, $value): ViewInterface
+    public function assign($key, $value): ViewInterface
     {
         $this->baseRenderingContext->getVariableProvider()->add($key, $value);
         return $this;

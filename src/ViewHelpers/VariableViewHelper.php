@@ -38,7 +38,7 @@ class VariableViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         $this->registerArgument('value', 'mixed', 'Value to assign. If not in arguments then taken from tag content');
         $this->registerArgument('name', 'string', 'Name of variable to create', true);

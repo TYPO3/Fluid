@@ -50,7 +50,7 @@ class DebugViewHelper extends AbstractViewHelper
     /**
      * @return void
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         parent::initializeArguments();
         $this->registerArgument('typeOnly', 'boolean', 'If TRUE, debugs only the type of variables', false, false);

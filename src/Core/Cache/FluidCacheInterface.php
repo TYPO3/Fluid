@@ -6,6 +6,8 @@ namespace TYPO3Fluid\Fluid\Core\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+
 /**
  * Interface FluidCacheInterface
  *
@@ -22,7 +24,7 @@ interface FluidCacheInterface
      * @param string $name
      * @return mixed
      */
-    public function get(string $name);
+    public function get($name);
 
     /**
      * Set or updates an entry identified by $name
@@ -32,7 +34,7 @@ interface FluidCacheInterface
      * @param mixed $value
      * @return void
      */
-    public function set(string $name, $value): void;
+    public function set($name, $value);
 
     /**
      * Flushes the cache either by entry or flushes
@@ -41,10 +43,10 @@ interface FluidCacheInterface
      * @param string|NULL $name
      * @return void
      */
-    public function flush(?string $name = null): void;
+    public function flush($name = null);
 
     /**
      * @return FluidCacheWarmerInterface
      */
-    public function getCacheWarmer(): FluidCacheWarmerInterface;
+    public function getCacheWarmer();
 }

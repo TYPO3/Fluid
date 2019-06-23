@@ -23,7 +23,7 @@ interface ViewInterface
      * @return ViewInterface an instance of $this, to enable chaining
      * @api
      */
-    public function assign(string $key, $value): ViewInterface;
+    public function assign($key, $value): self;
 
     /**
      * Add multiple variables to the view data collection
@@ -32,7 +32,7 @@ interface ViewInterface
      * @return ViewInterface an instance of $this, to enable chaining
      * @api
      */
-    public function assignMultiple(array $values): ViewInterface;
+    public function assignMultiple(array $values): self;
 
     /**
      * Renders the view

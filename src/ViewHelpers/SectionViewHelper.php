@@ -70,7 +70,7 @@ class SectionViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }

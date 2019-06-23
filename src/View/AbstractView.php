@@ -41,7 +41,7 @@ abstract class AbstractView implements ViewInterface
      * @return $this
      * @api
      */
-    public function assign(string $key, $value): ViewInterface
+    public function assign($key, $value): ViewInterface
     {
         $this->variables[$key] = $value;
         return $this;

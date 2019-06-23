@@ -34,7 +34,7 @@ trait CompileWithRenderStatic
     /**
      * @return \Closure
      */
-    protected abstract function buildRenderChildrenClosure(): callable;
+    protected abstract function buildRenderChildrenClosure();
 
     /**
      * @param string $argumentsName
@@ -50,7 +50,7 @@ trait CompileWithRenderStatic
         string &$initializationPhpCode,
         ViewHelperNode $node,
         TemplateCompiler $compiler
-    ): string {
+    ) {
         list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
             $this,
             $argumentsName,

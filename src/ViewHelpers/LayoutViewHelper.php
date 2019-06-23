@@ -37,7 +37,7 @@ class LayoutViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    public function initializeArguments(): void
+    public function initializeArguments()
     {
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
     }
