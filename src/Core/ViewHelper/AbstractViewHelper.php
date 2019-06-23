@@ -164,6 +164,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     public function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
+        if (array_key_exists($name, $this->argumentDefinitions)) {
+            throw new Exception(
+                'Argument "' . $name . '" has already been defined, thus it should not be defined again.',
+                1253036401
+            );
+        }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
         return $this;
     }
@@ -184,7 +190,14 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      */
     protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
-        return $this->registerArgument($name, $type, $description, $required, $defaultValue);
+        if (!array_key_exists($name, $this->argumentDefinitions)) {
+            throw new Exception(
+                'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
+                1279212461
+            );
+        }
+        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        return $this;
     }
 
     /**

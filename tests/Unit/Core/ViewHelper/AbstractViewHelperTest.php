@@ -104,6 +104,55 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
         $this->assertEquals([$name => $expected], $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
     }
+    /**
+     * @test
+     */
+    public function registeringTheSameArgumentNameAgainThrowsException(): void
+    {
+        $this->expectException(\Exception::class);
+
+        $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
+
+        $name = 'shortName';
+        $description = 'Example desc';
+        $type = 'string';
+        $isRequired = true;
+
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('registerArgument', $name, 'integer', $description, $isRequired);
+    }
+
+    /**
+     * @test
+     */
+    public function overrideArgumentOverwritesExistingArgumentDefinition(): void
+    {
+        $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
+
+        $name = 'argumentName';
+        $description = 'argument description';
+        $overriddenDescription = 'overwritten argument description';
+        $type = 'string';
+        $overriddenType = 'integer';
+        $isRequired = true;
+        $expected = new ArgumentDefinition($name, $overriddenType, $overriddenDescription, $isRequired);
+
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('overrideArgument', $name, $overriddenType, $overriddenDescription, $isRequired);
+        $this->assertEquals($viewHelper->prepareArguments(), [$name => $expected], 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
+    }
+
+    /**
+     * @test
+     */
+    public function overrideArgumentThrowsExceptionWhenTryingToOverwriteAnNonexistingArgument(): void
+    {
+        $this->expectException(\Exception::class);
+
+        $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
+
+        $viewHelper->_call('overrideArgument', 'argumentName', 'string', 'description', true);
+    }
 
     /**
      * @test
