@@ -278,7 +278,7 @@ class BooleanParser
      *
      * @return mixed
      */
-    protected function parseStringToken(): string
+    protected function parseStringToken()
     {
         $t = $this->peek();
         if ($t === '\'' || $t === '"') {
@@ -342,7 +342,7 @@ class BooleanParser
      * Evaluate an "not" comparison
      *
      * @param mixed $x
-     * @return boolean|string
+     * @return boolean
      */
     protected function evaluateNot($x): bool
     {
@@ -355,15 +355,15 @@ class BooleanParser
      * @param mixed $x
      * @param mixed $y
      * @param string $comparator
-     * @return boolean
+     * @return mixed
      */
-    protected function evaluateCompare($x, $y, string $comparator): bool
+    protected function evaluateCompare($x, $y, string $comparator)
     {
         // enfore strong comparison for comparing two objects
-        if ($comparator == '==' && is_object($x) && is_object($y)) {
+        if ($comparator === '==' && is_object($x) && is_object($y)) {
             $comparator = '===';
         }
-        if ($comparator == '!=' && is_object($x) && is_object($y)) {
+        if ($comparator === '!=' && is_object($x) && is_object($y)) {
             $comparator = '!==';
         }
 
@@ -442,11 +442,7 @@ class BooleanParser
             if ($this->compileToCode) {
                 return $x;
             }
-            if (mb_strpos($x, '.') !== false) {
-                return (float)$x;
-            } else {
-                return (int)$x;
-            }
+            return $x + 0;
         }
 
         if (trim(strtolower($x)) === 'true') {
@@ -469,10 +465,21 @@ class BooleanParser
         return trim($x, '\'"');
     }
 
-    public static function convertNodeToBoolean($value): bool {
-        if (is_object($value) && $value instanceof \Countable) {
+    /**
+     * Despite the name, does not actually convert to a boolean. Rather, detects if the
+     * $value is countable in which case it is reduced to a true/false based on whether
+     * or not it has any elements.
+     *
+     * Any other value type is returned directly without casting.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public static function convertNodeToBoolean($value)
+    {
+        if ($value instanceof \Countable) {
             return count($value) > 0;
         }
-        return false;
+        return $value;
     }
 }
