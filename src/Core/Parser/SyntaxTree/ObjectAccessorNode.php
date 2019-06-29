@@ -6,8 +6,10 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
@@ -30,15 +32,19 @@ class ObjectAccessorNode extends AbstractNode
     protected $accessors = [];
 
     /**
-     * Constructor. Takes an object path as input.
+     * Constructor. Takes an object path or null as input;
+     * if null is provided, the object path is determined by
+     * evaluating the child nodes - or the single child node
+     * is rendered directly if it is a ViewHelperNode.
      *
      * The first part of the object path has to be a variable in the
      * VariableProvider.
      *
-     * @param string $objectPath An Object Path, like object1.object2.object3
+     * @param string|null $objectPath An Object Path, like object1.object2.object3. If NULL, child nodes will be evaluated to generate a property path
+     *                                UNLESS the only child of the node is a ViewHelper, in which case, that ViewHelper is evaluated
      * @param array $accessors Optional list of accessor strategies; starting from beginning of dotted path. Incomplete allowed.
      */
-    public function __construct($objectPath, array $accessors = [])
+    public function __construct($objectPath = null, array $accessors = [])
     {
         $this->objectPath = $objectPath;
         $this->accessors = $accessors;
@@ -48,7 +54,7 @@ class ObjectAccessorNode extends AbstractNode
     /**
      * Internally used for building up cached templates; do not use directly!
      *
-     * @return string
+     * @return string|null
      */
     public function getObjectPath()
     {
@@ -64,7 +70,9 @@ class ObjectAccessorNode extends AbstractNode
     }
 
     /**
-     * Evaluate this node and return the correct object.
+     * Evaluate this node and return the correct object. If no object
+     * accessor path was provided, child nodes are evaluated. If a single
+     * child node exists and is a ViewHelper
      *
      * Handles each part (denoted by .) in $this->objectPath in the following order:
      * - call appropriate getter
@@ -79,7 +87,14 @@ class ObjectAccessorNode extends AbstractNode
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $objectPath = strtolower($this->objectPath);
+        $numberOfChildNodes = count($this->childNodes);
+        if ($this->objectPath !== null && $numberOfChildNodes > 0) {
+            throw new Exception('An ObjectAccessor can use either a string variable path or child nodes - but not both', 1559241805);
+        }
+        if ($numberOfChildNodes === 1 && $this->childNodes[0] instanceof ViewHelperInterface) {
+            return $this->childNodes[0]->evaluate($renderingContext);
+        }
+        $objectPath = strtolower($this->objectPath ?? $this->evaluateChildNodes($renderingContext));
         $variableProvider = $renderingContext->getVariableProvider();
         if ($objectPath === '_all') {
             return $variableProvider->getAll();

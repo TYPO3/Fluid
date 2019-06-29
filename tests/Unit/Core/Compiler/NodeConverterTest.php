@@ -20,8 +20,10 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
 /**
  * Class NodeConverterTest
@@ -47,7 +49,10 @@ class NodeConverterTest extends UnitTestCase
      */
     public function testConvertCallsExpectedMethod(NodeInterface $node, $expected)
     {
-        $instance = $this->getMock(NodeConverter::class, [$expected], [], '', false);
+        $templateCompiler = new TemplateCompiler();
+        $templateCompiler->setRenderingContext(new RenderingContextFixture());
+        $instance = $this->getMock(NodeConverter::class, [$expected], [$templateCompiler], true);
+        #$instance->setTemplateCompiler(new TemplateCompiler());
         $instance->expects($this->once())->method($expected);
         $instance->convert($node);
     }
@@ -58,6 +63,7 @@ class NodeConverterTest extends UnitTestCase
     public function getConvertMethodCallTestValues()
     {
         return [
+            [new CommentViewHelper(), 'convertViewHelperNode'],
             [$this->getMock(TextNode::class, [], [], '', false), 'convertTextNode'],
             [$this->getMock(ExpressionNodeInterface::class), 'convertExpressionNode'],
             [$this->getMock(NumericNode::class, [], [], '', false), 'convertNumericNode'],
@@ -158,7 +164,7 @@ class NodeConverterTest extends UnitTestCase
                 'TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper::renderStatic($arguments0, $renderChildrenClosure1, $renderingContext)'
             ],
             [$simpleRoot, '\'foobar\''],
-            [$multiRoot, '$output0'],
+            [$multiRoot, '\'foobarbaz\''],
             [new TextNode('test'), '\'test\''],
             [new NumericNode('3'), '3'],
             [new NumericNode('4.5'), '4.5'],

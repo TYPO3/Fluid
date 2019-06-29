@@ -115,7 +115,7 @@ abstract class Patterns
 		(
 			{                                 # Start of shorthand syntax
 				(?:                           # Shorthand syntax is either composed of...
-					[a-zA-Z0-9\|\->_:=,.()*+\^\/\%] # Various characters including math operations
+					[^\\s\\}\\{]             # Anything not whitespace or curly braces
 					|"(?:\\\"|[^"])*"         # Double-quoted strings
 					|\'(?:\\\\\'|[^\'])*\'    # Single-quoted strings
 					|(?R)                     # Other shorthand syntaxes inside, albeit not in a quoted string
@@ -160,7 +160,7 @@ abstract class Patterns
 			)?
 			(?P<AdditionalViewHelpers>                      # There can be more than one ViewHelper chained, by adding more -> and the ViewHelper (recursively)
 				(?:
-					\s*(?:->|\|)\s*
+					\s*(?P>Delimiter)\s*
 					(?P>ViewHelper)
 				)*
 			)

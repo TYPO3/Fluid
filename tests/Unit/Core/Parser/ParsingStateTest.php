@@ -50,7 +50,7 @@ class ParsingStateTest extends UnitTestCase
      */
     public function testGetIdentifierReturnsProperty()
     {
-        $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
+        $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false);
         $instance->_set('identifier', 'test');
         $this->assertEquals('test', $instance->getIdentifier());
     }
@@ -72,8 +72,8 @@ class ParsingStateTest extends UnitTestCase
     {
         $rootNode = new RootNode();
         $this->parsingState->pushNodeToStack($rootNode);
-        $this->assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
-        $this->assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
+        $this->assertSame($rootNode, $this->parsingState->getNodeFromStack(), 'Node returned from stack was not the right one.');
+        $this->assertSame($rootNode, $this->parsingState->popNodeFromStack(), 'Node popped from stack was not the right one.');
     }
 
     /**

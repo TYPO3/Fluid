@@ -104,29 +104,4 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
             $this->assertEquals('no', $output);
         }
     }
-
-    /**
-     * Perform a standard test on the source or stream provided,
-     * rendering it with $variables assigned and checking the
-     * output for presense of $expected values and confirming
-     * that none of the $notExpected values are present.
-     *
-     * Same as testTemplateCodeFixture() but includes a cache
-     * in the tests. Silently skipped if the test case does not
-     * return a valid cache.
-     *
-     * @param string|resource $sourceOrStream
-     * @param boolean $expected
-     * @param array $variables
-     * @test
-     * @dataProvider getTemplateCodeFixturesAndExpectations
-     */
-    public function testTemplateCodeFixtureWithCache($sourceOrStream, $expectation, array $variables = [])
-    {
-        if ($this->getCache()) {
-            $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, true);
-        } else {
-            $this->markTestSkipped('Cache-specific test skipped');
-        }
-    }
 }

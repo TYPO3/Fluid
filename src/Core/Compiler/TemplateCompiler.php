@@ -143,17 +143,13 @@ class TemplateCompiler
     public function has($identifier)
     {
         $identifier = $this->sanitizeIdentifier($identifier);
-
         if (isset($this->syntaxTreeInstanceCache[$identifier]) || class_exists($identifier, false)) {
             return true;
         }
         if (!$this->renderingContext->isCacheEnabled()) {
             return false;
         }
-        if (!empty($identifier)) {
-            return (boolean) $this->renderingContext->getCache()->get($identifier);
-        }
-        return false;
+        return (boolean) $this->renderingContext->getCache()->get($identifier);
     }
 
     /**
@@ -263,9 +259,9 @@ EOD;
      */
     protected function generateCodeForLayoutName($storedLayoutNameArgument)
     {
-        if ($storedLayoutNameArgument instanceof RootNode) {
-            list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
-            return $initialization . PHP_EOL . 'return ' . $execution;
+        if ($storedLayoutNameArgument instanceof NodeInterface) {
+            $converted = $this->nodeConverter->convert($storedLayoutNameArgument);
+            return $converted['initialization'] . PHP_EOL . 'return ' . $converted['execution'];
         } else {
             return 'return (string) \'' . $storedLayoutNameArgument . '\'';
         }
@@ -340,7 +336,7 @@ EOD;
      * @param NodeInterface $node
      * @return string
      */
-    public function wrapChildNodesInClosure(NodeInterface $node)
+    public function wrapChildNodesInClosure(NodeInterface $node): string
     {
         $closure = '';
         $closure .= 'function() use ($renderingContext, $self) {' . chr(10);
@@ -355,18 +351,23 @@ EOD;
      * Wraps one ViewHelper argument evaluation in a closure that can be
      * rendered by passing a rendering context.
      *
-     * @param ViewHelperNode $node
+     * @param NodeInterface $node
      * @param string $argumentName
      * @return string
      */
-    public function wrapViewHelperNodeArgumentEvaluationInClosure(ViewHelperNode $node, $argumentName)
+    public function wrapViewHelperNodeArgumentEvaluationInClosure(NodeInterface $node, string $argumentName): string
     {
-        $arguments = $node->getArguments();
-        $argument = $arguments[$argumentName];
+        $arguments = $node->getParsedArguments();
+        $argument = $arguments[$argumentName] ?? null;
+
         $closure = 'function() use ($renderingContext, $self) {' . chr(10);
-        $compiled = $this->nodeConverter->convert($argument);
-        $closure .= $compiled['initialization'] . chr(10);
-        $closure .= 'return ' . $compiled['execution'] . ';' . chr(10);
+        if (!$argument instanceof NodeInterface) {
+            $closure .= 'return ' . var_export($argument, true) . ';';
+        } elseif ($argument instanceof NodeInterface) {
+            $compiled = $this->nodeConverter->convert($argument);
+            $closure .= $compiled['initialization'] . chr(10);
+            $closure .= 'return ' . $compiled['execution'] . ';' . chr(10);
+        }
         $closure .= '}';
         return $closure;
     }

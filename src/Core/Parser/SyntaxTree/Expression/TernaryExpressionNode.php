@@ -51,6 +51,9 @@ class TernaryExpressionNode extends AbstractExpressionNode
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
         $negated = false;
+        if (count($parts) !== 3) {
+            throw new ExpressionException('A ternary condition must consist of exactly three parts, ' . count($parts) . ' found', 1559560324);
+        }
         list ($check, $then, $else) = $parts;
 
         if ($then === '') {

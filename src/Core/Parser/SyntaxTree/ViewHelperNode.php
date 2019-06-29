@@ -44,6 +44,21 @@ class ViewHelperNode extends AbstractNode
     protected $pointerTemplateCode = null;
 
     /**
+     * @var string
+     */
+    protected $namespace = '';
+
+    /**
+     * @var string
+     */
+    protected $identifier = '';
+
+    /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
+
+    /**
      * Constructor.
      *
      * @param RenderingContextInterface $renderingContext a RenderingContext, provided by invoker
@@ -55,6 +70,9 @@ class ViewHelperNode extends AbstractNode
     public function __construct(RenderingContextInterface $renderingContext, $namespace, $identifier, array $arguments, ParsingState $state)
     {
         $resolver = $renderingContext->getViewHelperResolver();
+        $this->renderingContext = $renderingContext;
+        $this->namespace = $namespace;
+        $this->identifier = $identifier;
         $this->arguments = $arguments;
         $this->viewHelperClassName = $resolver->resolveViewHelperClassName($namespace, $identifier);
         $this->uninitializedViewHelper = $resolver->createViewHelperInstanceFromClassName($this->viewHelperClassName);
@@ -64,14 +82,6 @@ class ViewHelperNode extends AbstractNode
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
         $this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
         $this->validateArguments($this->argumentDefinitions, $this->arguments);
-    }
-
-    /**
-     * @return ArgumentDefinition[]
-     */
-    public function getArgumentDefinitions()
-    {
-        return $this->argumentDefinitions;
     }
 
     /**
@@ -108,22 +118,22 @@ class ViewHelperNode extends AbstractNode
     /**
      * INTERNAL - only needed for compiling templates
      *
-     * @param string $argumentName
-     * @return ArgumentDefinition
+     * @return NodeInterface[]
      */
-    public function getArgumentDefinition($argumentName)
+    public function getParsedArguments()
     {
-        return $this->argumentDefinitions[$argumentName];
+        return $this->arguments;
     }
 
     /**
      * @param NodeInterface $childNode
-     * @return void
+     * @return self
      */
     public function addChildNode(NodeInterface $childNode)
     {
         parent::addChildNode($childNode);
         $this->uninitializedViewHelper->setChildNodes($this->childNodes);
+        return $this;
     }
 
     /**
@@ -166,7 +176,13 @@ class ViewHelperNode extends AbstractNode
         foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
             if (($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool')
                  && isset($argumentsObjectTree[$argumentName])) {
-                $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
+                if (!is_numeric($argumentsObjectTree[$argumentName])
+                    && !is_bool($argumentsObjectTree[$argumentName])
+                    && $argumentsObjectTree[$argumentName] !== null) {
+                    $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
+                } else {
+                    $argumentsObjectTree[$argumentName] = (bool)$argumentsObjectTree[$argumentName];
+                }
             }
         }
     }

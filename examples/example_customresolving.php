@@ -19,16 +19,20 @@ if (!defined('FLUID_CACHE_DIRECTORY')) {
     define('FLUID_CACHE_DIRECTORY', __DIR__ . '/cache/');
 }
 
-require __DIR__ . '/include/view_init.php';
+require 'include/autoload.php';
 require_once __DIR__ . '/include/class_customviewhelperresolver.php';
 require_once __DIR__ . '/include/class_customviewhelper.php';
+
+$context = new \TYPO3Fluid\Fluid\Core\Rendering\RenderingContext(new \TYPO3Fluid\Fluid\View\TemplateView());
+$context->setViewHelperResolver(new \TYPO3Fluid\Fluid\Tests\Example\CustomViewHelperResolver());
+
+require __DIR__ . '/include/view_init.php';
 
 // We tell the View to use our custom ViewHelperResolver for all class
 // and argument resolving operations. This class lets us use a ViewHelper
 // through the default namespace without that ViewHelper being in the
 // default package. The ViewHelper is added dynamically as `f:myLink`.
 // See CustomViewHelperResolver class for details.
-$view->getRenderingContext()->setViewHelperResolver(new \TYPO3Fluid\Fluid\Tests\Example\CustomViewHelperResolver());
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.

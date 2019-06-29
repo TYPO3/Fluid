@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\InlineViewHelper;
@@ -33,7 +34,7 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
     {
         $contextFixture = new RenderingContextFixture();
 
-        $parsedTemplateMock = $this->getMockBuilder(ParsedTemplateInterface::class)->getMock();
+        $parsedTemplateMock = $this->getMockBuilder(ParsingState::class)->getMock();
         $parsedTemplateMock->expects($this->once())->method('render')->with($contextFixture)->willReturn('bar');
 
         $parserMock = $this->getMockBuilder(TemplateParser::class)->setMethods(['parse'])->getMock();
@@ -41,7 +42,7 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
 
         $contextFixture->setTemplateParser($parserMock);
 
-        $result = InlineViewHelper::renderStatic([], function() { return 'foo'; }, $contextFixture);
+        $result = InlineViewHelper::renderStatic([], function(): string { return 'foo'; }, $contextFixture);
         $this->assertEquals('bar', $result);
     }
 }

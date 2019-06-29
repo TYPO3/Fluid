@@ -78,7 +78,7 @@ class SwitchViewHelper extends AbstractViewHelper
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $expression);
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'break', false);
 
-        $content = $this->retrieveContentFromChildNodes($this->viewHelperNode->getChildNodes());
+        $content = $this->retrieveContentFromChildNodes($this->childNodes);
 
         if ($variableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
             $variableContainer->remove(SwitchViewHelper::class, 'switchExpression');
@@ -125,7 +125,7 @@ class SwitchViewHelper extends AbstractViewHelper
      */
     protected function isDefaultCaseNode(NodeInterface $node)
     {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class);
+        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class) || $node instanceof DefaultCaseViewHelper;
     }
 
     /**
@@ -134,7 +134,7 @@ class SwitchViewHelper extends AbstractViewHelper
      */
     protected function isCaseNode(NodeInterface $node)
     {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class);
+        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class) || $node instanceof CaseViewHelper;
     }
 
     /**

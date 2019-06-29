@@ -7,6 +7,9 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -18,7 +21,7 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  *
  * @api
  */
-abstract class AbstractViewHelper implements ViewHelperInterface
+abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInterface
 {
 
     /**
@@ -51,7 +54,11 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected $arguments = [];
 
     /**
-     * Arguments array.
+     * @var array
+     */
+    protected $parsedArguments = [];
+
+    /**
      * @var NodeInterface[] array
      * @api
      */
@@ -100,6 +107,95 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @api
      */
     protected $escapeOutput = null;
+
+    /**
+     * @param array $arguments
+     * @param array|null $definitions
+     * @param ParsedTemplateInterface $parsedTemplate
+     * @param RenderingContextInterface $renderingContext
+     * @return NodeInterface
+     */
+    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
+    {
+        $this->renderingContext = $renderingContext;
+        $this->templateVariableContainer = $renderingContext->getVariableProvider();
+        $this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
+        $this->validateParsedArguments($arguments);
+        return $this->setParsedArguments($arguments, $definitions);
+    }
+
+    public function setParsedArguments(array $parsedArguments, ?array $definitions = null): NodeInterface
+    {
+        $this->parsedArguments = $this->createArguments($parsedArguments, $definitions);
+        return $this;
+    }
+
+    public function getParsedArguments(): array
+    {
+        return $this->parsedArguments;
+    }
+
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+        $this->setRenderingContext($renderingContext);
+
+        $arguments = $this->parsedArguments;
+        foreach ($this->prepareArguments() as $argumentName => $argumentDefinition) {
+            $argumentValue = $arguments[$argumentName] ?? null;
+            $arguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+        }
+        $this->setArguments($arguments);
+        return $this->initializeArgumentsAndRender();
+    }
+
+    /**
+     * @param NodeInterface[]|mixed[] $arguments
+     * @throws Exception
+     */
+    protected function validateParsedArguments(array $arguments)
+    {
+        $additionalArguments = [];
+        $argumentDefinitions = $this->prepareArguments();
+        foreach ($arguments as $argumentName => $value) {
+            if (!array_key_exists($argumentName, $argumentDefinitions)) {
+                $additionalArguments[$argumentName] = $value;
+            }
+        }
+        $this->validateAdditionalArguments($additionalArguments);
+    }
+
+    /**
+     * Creates arguments by padding with missing+optional arguments
+     * and casting or creating BooleanNode where appropriate. Input
+     * array may not contain all arguments - output array will.
+     *
+     * @param array $arguments
+     * @param array|null $definitions
+     * @return array
+     */
+    protected function createArguments(array $arguments, ?array $definitions = null): array
+    {
+        $definitions = $definitions ?? $this->prepareArguments();
+        $missingArguments = [];
+        foreach ($definitions as $name => $definition) {
+            $argument = &$arguments[$name] ?? null;
+            if ($definition->isRequired() && !isset($argument)) {
+                // Required but missing argument, causes failure (delayed, to report all missing arguments at once)
+                $missingArguments[] = $name;
+            } elseif (!isset($argument)) {
+                // Argument is optional (required filtered out above), fit it with the default value
+                $argument = $definition->getDefaultValue();
+            } elseif (($type = $definition->getType()) && ($type === 'bool' || $type === 'boolean')) {
+                // Cast the value or create a BooleanNode
+                $argument = is_bool($argument) || is_numeric($argument) ? (bool)$argument : new BooleanNode($argument);
+            }
+            $arguments[$name] = $argument;
+        }
+        if (!empty($missingArguments)) {
+            throw new \TYPO3Fluid\Fluid\Core\Parser\Exception('Required argument(s) not provided: ' . implode(', ', $missingArguments), 1558533510);
+        }
+        return $arguments;
+    }
 
     /**
      * @param array $arguments
@@ -301,7 +397,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
             $closure = $this->renderChildrenClosure;
             return $closure();
         }
-        return $this->viewHelperNode->evaluateChildNodes($this->renderingContext);
+        return ($this->viewHelperNode ?? $this)->evaluateChildNodes($this->renderingContext);
     }
 
     /**
@@ -355,7 +451,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                     if (!$this->isValidType($type, $value)) {
                         throw new \InvalidArgumentException(
                             'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
-                            $givenType . '" in view helper "' . get_class($this) . '".',
+                            $givenType . '" in view helper "' . get_class($this) . '". Value: ' . var_export($value, true),
                             1256475113
                         );
                     }

@@ -47,6 +47,7 @@ class MathExpressionNodeTest extends UnitTestCase
             ['4 / 2', [], 2],
             ['4 ^ 2', [], 16],
             ['a + 1', ['a' => 1], 2],
+            ['a + 1', ['a' => null], 1],
             ['1 + b', ['b' => 1], 2],
             ['a + b', ['a' => 1, 'b' => 1], 2],
         ];

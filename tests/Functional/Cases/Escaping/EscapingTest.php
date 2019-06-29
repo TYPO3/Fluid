@@ -117,11 +117,11 @@ class EscapingTest extends BaseFunctionalTestCase
                 ['<strong>Bla</strong>'],
                 ['&lt;strong&gt;Bla&lt;/strong&gt;'],
             ],
-            'EscapeChildrenDisabledAndEscapeOutputDisabled: Inline syntax with argument in quotes, does encode variable value (encoded before passed to VH)' => [
+            'EscapeChildrenDisabledAndEscapeOutputDisabled: Inline syntax with argument in quotes, does not encode variable value (argument escaping disabled)' => [
                 '{test:escapeChildrenDisabledAndEscapeOutputDisabled(content: \'{settings.test}\')}',
                 $this->variables,
-                ['&lt;strong&gt;Bla&lt;/strong&gt;'],
                 ['<strong>Bla</strong>'],
+                ['&lt;strong&gt;Bla&lt;/strong&gt;'],
             ],
             'EscapeChildrenDisabledAndEscapeOutputDisabled: Tag syntax with nested inline syntax and children rendering, does not encode variable value' => [
                 '<test:escapeChildrenDisabledAndEscapeOutputDisabled content="{settings.test -> test:escapeChildrenDisabledAndEscapeOutputDisabled()}" />',

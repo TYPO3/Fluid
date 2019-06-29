@@ -56,16 +56,11 @@ class ViewHelperInvoker
 
         try {
             foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
-                if (isset($arguments[$argumentName])) {
-                    /** @var NodeInterface|mixed $argumentValue */
-                    $argumentValue = $arguments[$argumentName];
-                    $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-                } else {
-                    $evaluatedArguments[$argumentName] = $argumentDefinition->getDefaultValue();
-                }
+                $argumentValue = $arguments[$argumentName] ?? $argumentDefinition->getDefaultValue();
+                $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
             }
             foreach ($arguments as $argumentName => $argumentValue) {
-                if (!array_key_exists($argumentName, $evaluatedArguments)) {
+                if (!isset($evaluatedArguments[$argumentName])) {
                     $undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
                 }
             }

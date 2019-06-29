@@ -193,7 +193,7 @@ class ParsingState implements ParsedTemplateInterface
     public function getLayoutName(RenderingContextInterface $renderingContext)
     {
         $layoutName = $this->variableContainer->get('layoutName');
-        return ($layoutName instanceof RootNode ? $layoutName->evaluate($renderingContext) : $layoutName);
+        return ($layoutName instanceof NodeInterface ? $layoutName->evaluate($renderingContext) : $layoutName);
     }
 
     /**

@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
 
 /**

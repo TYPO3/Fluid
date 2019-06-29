@@ -13,7 +13,9 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -36,7 +38,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class TemplateParserTest extends UnitTestCase
 {
-
     /**
      * @test
      */
@@ -291,12 +292,15 @@ class TemplateParserTest extends UnitTestCase
         );
         $context = new RenderingContextFixture();
         $templateParser->setRenderingContext($context);
-        $templateParser->expects($this->once())->method('parseArguments')
-            ->with(['arguments'])->will($this->returnValue(['parsedArguments']));
-        $templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')
+        $templateParser->expects($this->once())
+            ->method('parseArguments')
+            ->with('arguments')
+            ->willReturn(['parsedArguments']);
+        $templateParser->expects($this->once())
+            ->method('initializeViewHelperAndAddItToStack')
             ->with($mockState, 'namespaceIdentifier', 'methodIdentifier', ['parsedArguments']);
 
-        $templateParser->_call('openingViewHelperTagHandler', $mockState, 'namespaceIdentifier', 'methodIdentifier', ['arguments'], false, '');
+        $templateParser->_call('openingViewHelperTagHandler', $mockState, 'namespaceIdentifier', 'methodIdentifier', 'arguments', false, '');
     }
 
     /**
@@ -313,9 +317,10 @@ class TemplateParserTest extends UnitTestCase
             ['parseArguments', 'initializeViewHelperAndAddItToStack']
         );
         $node = $this->getMock(ViewHelperNode::class, ['dummy'], [], '', false);
+        $templateParser->expects($this->once())->method('parseArguments')->willReturn([]);
         $templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue($node));
 
-        $templateParser->_call('openingViewHelperTagHandler', $mockState, '', '', [], true, '');
+        $templateParser->_call('openingViewHelperTagHandler', $mockState, '', '', '', true, '');
     }
 
     /**
@@ -421,21 +426,29 @@ class TemplateParserTest extends UnitTestCase
     public function objectAccessorHandlerCallsInitializeViewHelperAndAddItToStackIfViewHelperSyntaxIsPresent()
     {
         $mockState = $this->getMock(ParsingState::class);
-        $mockState->expects($this->exactly(2))->method('popNodeFromStack')
-            ->will($this->returnValue($this->getMock(NodeInterface::class)));
-        $mockState->expects($this->exactly(2))->method('getNodeFromStack')
-            ->will($this->returnValue($this->getMock(NodeInterface::class)));
+        $mockState->expects($this->exactly(2))
+            ->method('popNodeFromStack')
+            ->willReturn($this->getMock(NodeInterface::class));
+        $mockState->expects($this->exactly(2))
+            ->method('getNodeFromStack')
+            ->willReturn($this->getMock(NodeInterface::class));
 
         $templateParser = $this->getAccessibleMock(
             TemplateParser::class,
             ['recursiveArrayHandler', 'initializeViewHelperAndAddItToStack']
         );
-        $templateParser->expects($this->at(0))->method('recursiveArrayHandler')
-            ->with('format: "H:i"')->will($this->returnValue(['format' => 'H:i']));
-        $templateParser->expects($this->at(1))->method('initializeViewHelperAndAddItToStack')
-            ->with($mockState, 'f', 'format.date', ['format' => 'H:i'])->will($this->returnValue(true));
-        $templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')
-            ->with($mockState, 'f', 'debug', [])->will($this->returnValue(true));
+        $templateParser->expects($this->at(0))
+            ->method('recursiveArrayHandler')
+            ->with('format: "H:i"')
+            ->willReturn(['format' => 'H:i']);
+        $templateParser->expects($this->at(1))
+            ->method('initializeViewHelperAndAddItToStack')
+            ->with($mockState, 'f', 'format.date', ['format' => 'H:i'])
+            ->willReturn($this->getMock(NodeInterface::class));
+        $templateParser->expects($this->at(2))
+            ->method('initializeViewHelperAndAddItToStack')
+            ->with($mockState, 'f', 'debug', [])
+            ->willReturn($this->getMock(NodeInterface::class));
 
         $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.date(format: "H:i")', '');
     }
@@ -542,14 +555,57 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @dataProvider argumentsStrings
-     * @param string $argumentsString
-     * @param array $expected
      */
-    public function parseArgumentsWorksAsExpected($argumentsString, array $expected)
+    public function parseArgumentsWorksWithSingleQuotedArgument(): void
     {
+        $node = new RootNode();
+        $node->addChildNode(new NumericNode(2));
+        $argumentsString = 'a="2"';
+        $expected = ['a' => $node];
+
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
-        $templateParser->expects($this->any())->method('buildArgumentObjectTree')->will($this->returnArgument(0));
+        $templateParser->expects($this->once())->method('buildArgumentObjectTree')->willReturn($node);
+
+        $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString));
+    }
+
+    /**
+     * @test
+     */
+    public function parseArgumentsWorksWithTwoQuotedArguments(): void
+    {
+        $node1 = new RootNode();
+        $node1->addChildNode(new NumericNode(2));
+        $node2 = new RootNode();
+        $node2->addChildNode(new TextNode('foobar \\\' with \\\" quotes'));
+
+        $argumentsString = 'a="2" b="foobar \' with \\" quotes"';
+        $expected = [
+            'a' => $node1,
+            'b' => $node2,
+        ];
+
+        $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
+        $templateParser->expects($this->at(0))->method('buildArgumentObjectTree')->willReturn($node1);
+        $templateParser->expects($this->at(1))->method('buildArgumentObjectTree')->willReturn($node2);
+
+        $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString));
+    }
+
+    /**
+     * @test
+     */
+    public function parseArgumentsWorksWithSingleArrayArgument(): void
+    {
+        $node = new RootNode();
+        $node->addChildNode(new ArrayNode(['number' => new NumericNode(362525200)]));
+        $argumentsString = ' arguments="{number : 362525200}"';
+        $expected = [
+            'arguments' => $node,
+        ];
+
+        $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
+        $templateParser->expects($this->once())->method('buildArgumentObjectTree')->willReturn($node);
 
         $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString));
     }
@@ -573,19 +629,25 @@ class TemplateParserTest extends UnitTestCase
      */
     public function buildArgumentObjectTreeBuildsObjectTreeForComlexString()
     {
+        $rootNode = new RootNode();
+
         $objectTree = $this->getMock(ParsingState::class);
-        $objectTree->expects($this->once())->method('getRootNode')->will($this->returnValue('theRootNode'));
+        $objectTree->expects($this->once())->method('getRootNode')->willReturn($rootNode);
 
         $templateParser = $this->getAccessibleMock(
             TemplateParser::class,
             ['splitTemplateAtDynamicTags', 'buildObjectTree']
         );
-        $templateParser->expects($this->at(0))->method('splitTemplateAtDynamicTags')
-            ->with('a <very> {complex} string')->will($this->returnValue(['split string']));
-        $templateParser->expects($this->at(1))->method('buildObjectTree')
-            ->with(['split string'])->will($this->returnValue($objectTree));
+        $templateParser->expects($this->at(0))
+            ->method('splitTemplateAtDynamicTags')
+            ->with('a <very> {complex} string')
+            ->willReturn(['split string']);
+        $templateParser->expects($this->at(1))
+            ->method('buildObjectTree')
+            ->with(['split string'])
+            ->willReturn($objectTree);
 
-        $this->assertEquals('theRootNode', $templateParser->_call('buildArgumentObjectTree', 'a <very> {complex} string'));
+        $this->assertEquals($rootNode, $templateParser->_call('buildArgumentObjectTree', 'a <very> {complex} string'));
     }
 
     /**

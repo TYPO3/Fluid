@@ -7,8 +7,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface;
@@ -78,12 +78,21 @@ class TemplateParser
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
+     * @return self
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
         $this->configuration = $renderingContext->buildParserConfiguration();
+        return $this;
+    }
+
+    /**
+     * @return Configuration
+     */
+    public function getConfiguration()
+    {
+        return $this->configuration;
     }
 
     /**
@@ -129,18 +138,25 @@ class TemplateParser
      */
     public function parse($templateString, $templateIdentifier = null)
     {
+        $templateIdentifier = $templateIdentifier ?? 'source_' . sha1($templateString);
         if (!is_string($templateString)) {
             throw new Exception('Parse requires a template string as argument, ' . gettype($templateString) . ' given.', 1224237899);
         }
-        try {
-            $this->reset();
 
-            $templateString = $this->preProcessTemplateSource($templateString);
-
-            $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
-            $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
-        } catch (Exception $error) {
-            throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
+        $this->reset();
+        $templateString = $this->preProcessTemplateSource($templateString);
+        if ($this->configuration->isFeatureEnabled(Configuration::FEATURE_SEQUENCER)) {
+            $source = new Source($templateString);
+            $contexts = new Contexts();
+            $sequencer = new Sequencer($this->renderingContext, $this->getParsingState(), $contexts, $source, $this->escapingEnabled);
+            $parsingState = $sequencer->sequence();
+        } else {
+            try {
+                $splitTemplate = $this->splitTemplateAtDynamicTags($templateString);
+                $parsingState = $this->buildObjectTree($splitTemplate, self::CONTEXT_OUTSIDE_VIEWHELPER_ARGUMENTS);
+            } catch (Exception $error) {
+                throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
+            }
         }
         $this->parsedTemplates[$templateIdentifier] = $parsingState;
         return $parsingState;

@@ -69,6 +69,12 @@ class MathExpressionNode extends AbstractExpressionNode
      */
     protected static function evaluateOperation($left, $operator, $right)
     {
+        if (!is_numeric($left)) {
+            $left = 0;
+        }
+        if (!is_numeric($right)) {
+            $right = 0;
+        }
         if ($operator === '%') {
             return $left % $right;
         } elseif ($operator === '-') {

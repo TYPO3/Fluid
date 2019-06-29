@@ -12,20 +12,53 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 class Configuration
 {
+    public const FEATURE_PARSING = 'parsing';
+    public const FEATURE_ESCAPING = 'escaping';
+    public const FEATURE_SEQUENCER = 'sequencer';
 
     /**
      * Generic interceptors registered with the configuration.
      *
-     * @var \SplObjectStorage[]
+     * @var array
      */
     protected $interceptors = [];
 
     /**
      * Escaping interceptors registered with the configuration.
      *
-     * @var \SplObjectStorage[]
+     * @var array
      */
     protected $escapingInterceptors = [];
+
+    /**
+     * @var array
+     */
+    protected $features = [
+        self::FEATURE_PARSING => true,
+        self::FEATURE_ESCAPING => true,
+        self::FEATURE_SEQUENCER => true,
+    ];
+
+    /**
+     * @param string $feature
+     * @param string|int|bool|null $state
+     * @return bool
+     */
+    public function setFeatureState(string $feature, $state): bool
+    {
+        $previous = $this->features[$feature];
+        if (is_bool($state) || is_numeric($state) || is_null($state)) {
+            $this->features[$feature] = (bool)$state;
+        } elseif (is_string($state)) {
+            $this->features[$feature] = in_array(strtolower($state), ['on', 'true', 'enabled']);
+        }
+        return $previous;
+    }
+
+    public function isFeatureEnabled(string $feature): bool
+    {
+        return $this->features[$feature];
+    }
 
     /**
      * Adds an interceptor to apply to values coming from object accessors.
@@ -60,12 +93,10 @@ class Configuration
     {
         foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
             if (!isset($interceptorArray[$interceptionPoint])) {
-                $interceptorArray[$interceptionPoint] = new \SplObjectStorage();
+                $interceptorArray[$interceptionPoint] = [];
             }
-            $interceptors = $interceptorArray[$interceptionPoint];
-            if (!$interceptors->contains($interceptor)) {
-                $interceptors->attach($interceptor);
-            }
+            $interceptorClass = get_class($interceptor);
+            $interceptorArray[$interceptionPoint][$interceptorClass] = $interceptor;
         }
     }
 
@@ -73,21 +104,21 @@ class Configuration
      * Returns all interceptors for a given Interception Point.
      *
      * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
-     * @return InterceptorInterface[]
+     * @return array
      */
     public function getInterceptors($interceptionPoint)
     {
-        return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : new \SplObjectStorage();
+        return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : [];
     }
 
     /**
      * Returns all escaping interceptors for a given Interception Point.
      *
      * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
-     * @return InterceptorInterface[]
+     * @return array
      */
     public function getEscapingInterceptors($interceptionPoint)
     {
-        return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : new \SplObjectStorage();
+        return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : [];
     }
 }

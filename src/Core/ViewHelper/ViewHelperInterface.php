@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -16,8 +17,16 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * Implemented by all ViewHelpers
  */
-interface ViewHelperInterface
+interface ViewHelperInterface extends  NodeInterface
 {
+    /**
+     * @param array $arguments
+     * @param array|null $definitions
+     * @param ParsedTemplateInterface $parsedTemplate
+     * @param RenderingContextInterface $renderingContext
+     * @return NodeInterface
+     */
+    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface;
 
     /**
      * @return ArgumentDefinition[]
@@ -29,12 +38,6 @@ interface ViewHelperInterface
      * @return void
      */
     public function setArguments(array $arguments);
-
-    /**
-     * @param NodeInterface[] $nodes
-     * @return void
-     */
-    public function setChildNodes(array $nodes);
 
     /**
      * @param RenderingContextInterface $renderingContext
@@ -162,4 +165,22 @@ interface ViewHelperInterface
      * @return void
      */
     public function setRenderChildrenClosure(\Closure $renderChildrenClosure);
+
+    /**
+     * Returns whether the escaping interceptors should be disabled or enabled for the render-result of children of this ViewHelper
+     *
+     * Note: This method is no public API, use $this->escapeChildren instead!
+     *
+     * @return boolean
+     */
+    public function isChildrenEscapingEnabled();
+
+    /**
+     * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
+     *
+     * Note: This method is no public API, use $this->escapeOutput instead!
+     *
+     * @return boolean
+     */
+    public function isOutputEscapingEnabled();
 }

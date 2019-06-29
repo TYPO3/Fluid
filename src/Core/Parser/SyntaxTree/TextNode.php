@@ -58,6 +58,12 @@ class TextNode extends AbstractNode
         return $this->text;
     }
 
+    public function appendText(string $text): self
+    {
+        $this->text .= $text;
+        return $this;
+    }
+
     /**
      * @return string
      */

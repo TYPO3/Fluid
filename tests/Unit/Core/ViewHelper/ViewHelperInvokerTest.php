@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
@@ -45,9 +47,14 @@ class ViewHelperInvokerTest extends UnitTestCase
      */
     public function getInvocationTestValues()
     {
+        $exception = new Exception('test');
+        $fixtureViewHelper = $this->getMockBuilder(ViewHelperInterface::class)->getMock();
+        $fixtureViewHelper->expects($this->once())->method('prepareArguments')->willReturn([]);
+        $fixtureViewHelper->expects($this->once())->method('initializeArgumentsAndRender')->willThrowException($exception);
         return [
             [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo', null],
             [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar'], 'add1' => 'baz', 'add2' => 'zap'], 'foo', null],
+            [$fixtureViewHelper, [], null, Exception::class],
         ];
     }
 }

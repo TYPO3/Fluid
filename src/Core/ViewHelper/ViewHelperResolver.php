@@ -39,11 +39,33 @@ class ViewHelperResolver
     ];
 
     /**
+     * @var array
+     */
+    protected $aliases = [];
+
+    /**
      * @return array
      */
     public function getNamespaces()
     {
         return $this->namespaces;
+    }
+
+    /**
+     * Adds an alias of a ViewHelper, allowing you to call for example
+     *
+     * @param string $alias
+     * @param string $namespace
+     * @param string $identifier
+     */
+    public function addViewHelperAlias(string $alias, string $namespace, string $identifier)
+    {
+        $this->aliases[$alias] = [$namespace, $identifier];
+    }
+
+    public function isAliasRegistered(string $alias): bool
+    {
+        return isset($this->aliases[$alias]);
     }
 
     /**
@@ -237,20 +259,24 @@ class ViewHelperResolver
      * If no ViewHelper class can be detected in any of the added
      * PHP namespaces a Fluid Parser Exception is thrown.
      *
-     * @param string $namespaceIdentifier
+     * @param string|null $namespaceIdentifier
      * @param string $methodIdentifier
      * @return string|NULL
      * @throws ParserException
      */
     public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
     {
+        if (empty($namespaceIdentifier) && isset($this->aliases[$methodIdentifier])) {
+            list ($namespaceIdentifier, $methodIdentifier) = $this->aliases[$methodIdentifier];
+        }
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
             $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
             $actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
             if (false === class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
                 throw new ParserException(sprintf(
                     'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
-                    'Based on your spelling, the system would load the class "%s", however this class does not exist.',
+                    'Based on your spelling, the system would load the class "%s", however this class does not exist. ' .
+                    'We looked in the following namespaces: ' . implode(', ', $this->namespaces[$namespaceIdentifier] ?? ['none']) . '.',
                     $namespaceIdentifier,
                     $methodIdentifier,
                     $resolvedViewHelperClassName

@@ -1,4 +1,4 @@
 {
   "layout": "Default.json",
-  "output": <f:render section="Main" />
+  "output": `{f:render(section="Main")}`
 }

@@ -6,8 +6,11 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
@@ -75,6 +78,20 @@ class SectionViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
+    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
+    {
+        parent::postParse($arguments, $definitions, $parsedTemplate, $renderingContext);
+        $variableContainer = $parsedTemplate->getVariableContainer();
+        /** @var TextNode $nameArgument */
+        $nameArgument = $arguments['name'];
+        $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
+        $sections = $variableContainer->get('1457379500_sections') ?: [];
+        $sections[$sectionName] = clone $this;
+        $variableContainer->add('1457379500_sections', $sections);
+        $this->childNodes = [];
+        return new TextNode('');
+    }
+
     /**
      * Save the associated ViewHelper node in a static public class variable.
      * called directly after the ViewHelper was built.
@@ -88,7 +105,7 @@ class SectionViewHelper extends AbstractViewHelper
     {
         /** @var $nameArgument TextNode */
         $nameArgument = $arguments['name'];
-        $sectionName = $nameArgument->getText();
+        $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
         $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
         $sections[$sectionName] = $node;
         $variableContainer['1457379500_sections'] = $sections;
@@ -103,8 +120,8 @@ class SectionViewHelper extends AbstractViewHelper
     public function render()
     {
         $content = '';
-        if ($this->viewHelperVariableContainer->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
-            $this->viewHelperVariableContainer->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
+        if ($this->renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+            $this->renderingContext->getViewHelperVariableContainer()->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
             $content = $this->renderChildren();
         }
         return $content;
