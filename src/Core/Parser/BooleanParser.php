@@ -369,7 +369,11 @@ class BooleanParser
             $comparator = '!==';
         }
 
-        if ($this->compileToCode === true) {
+        if ($this->compileToCode) {
+            if ($comparator === '%' && (!is_numeric($x) || !is_numeric($y))) {
+                return '0';
+            }
+
             return sprintf('(%s %s %s)', $x, $comparator, $y);
         }
 
@@ -407,7 +411,12 @@ class BooleanParser
                 break;
 
             case '%':
-                $x = ($x % $y);
+                if (!is_numeric($x) || !is_numeric($y)) {
+                    $x = 0;
+                } else {
+                    $x = (($x + 0) % ($y + 0));
+                }
+
                 break;
         }
         return $x;
@@ -435,11 +444,7 @@ class BooleanParser
             if ($this->compileToCode === true) {
                 return $x;
             }
-            if (mb_strpos($x, '.') !== false) {
-                return (float)$x;
-            } else {
-                return (int)$x;
-            }
+            return $x + 0;
         }
 
         if (trim(strtolower($x)) === 'true') {
@@ -462,8 +467,19 @@ class BooleanParser
         return trim($x, '\'"');
     }
 
-    public static function convertNodeToBoolean($value) {
-        if (is_object($value) && $value instanceof \Countable) {
+    /**
+     * Despite the name, does not actually convert to a boolean. Rather, detects if the
+     * $value is countable in which case it is reduced to a true/false based on whether
+     * or not it has any elements.
+     *
+     * Any other value type is returned directly without casting.
+     *
+     * @param mixed $value
+     * @return mixed
+     */
+    public static function convertNodeToBoolean($value)
+    {
+        if ($value instanceof \Countable) {
             return count($value) > 0;
         }
         return $value;
