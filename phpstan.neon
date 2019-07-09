@@ -1,0 +1,8 @@
+includes:
+    - vendor/phpstan/phpstan/conf/config.level1.neon
+
+parameters:
+    excludes_analyse:
+        - src/Core/Compiler/ViewHelperNodeProxy.php
+        - tests/Unit/ViewHelpers/Fixtures/ConstraintSyntaxTreeNode.php
+

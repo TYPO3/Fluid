@@ -545,7 +545,7 @@ class Sequencer
                         $childNodeToAdd = new ObjectAccessorNode($potentialAccessor);
                         $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd; //$node ?? (is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode($potentialAccessor));
                     }
-                    unset($namespace, $method, $potentialAccessor, $key);
+                    $potentialAccessor = $namespace = $method = $key = null;
                     break;
 
                 case Splitter::BYTE_PARENTHESIS_START:
@@ -556,7 +556,7 @@ class Sequencer
                     $text .= '(';
                     if (!$hasColon || ($hasWhitespace && !$hasPass)) {
                         $this->splitter->switch($this->contexts->protected);
-                        unset($namespace, $method);
+                        $namespace = $method = null;
                         break;
                     }
 
@@ -580,7 +580,7 @@ class Sequencer
                         $node->addChildNode($childNodeToAdd);
                     }
                     $text .= ')';
-                    unset($potentialAccessor);
+                    $potentialAccessor = null;
                     break;
 
                 case Splitter::BYTE_INLINE_END:
