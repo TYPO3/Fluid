@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -55,6 +56,17 @@ class MathExpressionNode extends AbstractExpressionNode
                 $operator = $part;
             } else {
                 $part = static::getTemplateVariableOrValueItself($part, $renderingContext);
+
+                if (!is_string($operator)) {
+                    throw new Exception(
+                        sprintf(
+                            'Invalid operator type (%s) given, it must be a valid string, e.g. "==" or ">"!',
+                            gettype($operator)
+                        ),
+                        1561121432
+                    );
+                }
+
                 $result = self::evaluateOperation($result, $operator, $part);
             }
         }
