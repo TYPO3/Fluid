@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -61,9 +62,9 @@ class ElseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string|NULL
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         return '\'\'';
     }

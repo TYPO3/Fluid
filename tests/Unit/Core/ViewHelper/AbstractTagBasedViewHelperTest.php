@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -18,6 +19,10 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 class AbstractTagBasedViewHelperTest extends UnitTestCase
 {
 
+    /**
+     * @var MockObject|mixed
+     */
+    public $viewHelper;
     public function setUp(): void
     {
         $this->viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, ['dummy'], [], '', false);
@@ -27,14 +32,11 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testConstructorSetsTagBuilder()
+    public function testConstructorSetsTagBuilder(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractTagBasedViewHelper::class,
-            ['dummy'],
-            [],
-            '',
-            true
+            ['dummy']
         );
         $this->assertAttributeInstanceOf(TagBuilder::class, 'tag', $viewHelper);
     }
@@ -42,7 +44,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSetTagBuilderSetsTagBuilder()
+    public function testSetTagBuilderSetsTagBuilder(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractTagBasedViewHelper::class,
@@ -59,7 +61,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testRenderCallsRenderOnTagBuilder()
+    public function testRenderCallsRenderOnTagBuilder(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractTagBasedViewHelper::class,
@@ -77,7 +79,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractTagBasedViewHelper::class,
@@ -94,9 +96,9 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function oneTagAttributeIsRenderedCorrectly()
+    public function oneTagAttributeIsRenderedCorrectly(): void
     {
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
+        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
         $mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
         $this->viewHelper->setTagBuilder($mockTagBuilder);
 
@@ -109,9 +111,9 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function additionalTagAttributesAreRenderedCorrectly()
+    public function additionalTagAttributesAreRenderedCorrectly(): void
     {
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
+        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
         $mockTagBuilder->expects($this->once())->method('addAttribute')->with('foo', 'bar');
         $this->viewHelper->setTagBuilder($mockTagBuilder);
 
@@ -124,9 +126,9 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function dataAttributesAreRenderedCorrectly()
+    public function dataAttributesAreRenderedCorrectly(): void
     {
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
+        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
         $mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('data-foo', 'bar');
         $mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('data-baz', 'foos');
         $this->viewHelper->setTagBuilder($mockTagBuilder);
@@ -139,7 +141,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testValidateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments()
+    public function testValidateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractTagBasedViewHelper::class,
@@ -156,7 +158,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testHandleAdditionalArgumentsSetsTagAttributesForDataArguments()
+    public function testHandleAdditionalArgumentsSetsTagAttributesForDataArguments(): void
     {
         $viewHelper = $this->getAccessibleMock(
             AbstractTagBasedViewHelper::class,
@@ -176,9 +178,9 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function standardTagAttributesAreRegistered()
+    public function standardTagAttributesAreRegistered(): void
     {
-        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
+        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
         $mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');
         $mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('dir', 'dirAttribute');
         $mockTagBuilder->expects($this->at(2))->method('addAttribute')->with('id', 'idAttribute');

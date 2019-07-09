@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -66,7 +67,7 @@ class SwitchViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @return string the rendered string
+     * @return mixed the rendered string
      * @api
      */
     public function render()
@@ -123,7 +124,7 @@ class SwitchViewHelper extends AbstractViewHelper
      * @param NodeInterface $node
      * @return boolean
      */
-    protected function isDefaultCaseNode(NodeInterface $node)
+    protected function isDefaultCaseNode(NodeInterface $node): bool
     {
         return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class) || $node instanceof DefaultCaseViewHelper;
     }
@@ -132,7 +133,7 @@ class SwitchViewHelper extends AbstractViewHelper
      * @param NodeInterface $node
      * @return boolean
      */
-    protected function isCaseNode(NodeInterface $node)
+    protected function isCaseNode(NodeInterface $node): bool
     {
         return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class) || $node instanceof CaseViewHelper;
     }
@@ -142,7 +143,7 @@ class SwitchViewHelper extends AbstractViewHelper
      *
      * @return void
      */
-    protected function backupSwitchState()
+    protected function backupSwitchState(): void
     {
         if ($this->renderingContext->getViewHelperVariableContainer()->exists(SwitchViewHelper::class, 'switchExpression')) {
             $this->backupSwitchExpression = $this->renderingContext->getViewHelperVariableContainer()->get(SwitchViewHelper::class, 'switchExpression');
@@ -157,12 +158,12 @@ class SwitchViewHelper extends AbstractViewHelper
      *
      * @return void
      */
-    protected function restoreSwitchState()
+    protected function restoreSwitchState(): void
     {
         if ($this->backupSwitchExpression !== null) {
             $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $this->backupSwitchExpression);
         }
-        if ($this->backupBreakState !== false) {
+        if ($this->backupBreakState) {
             $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', true);
         }
     }
@@ -178,9 +179,9 @@ class SwitchViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
             'switch ($arguments[\'expression\']) {' . PHP_EOL;
@@ -195,8 +196,7 @@ class SwitchViewHelper extends AbstractViewHelper
                 $phpCode .= sprintf(
                     'case call_user_func(%s): return call_user_func(%s);',
                     $valueClosure,
-                    $childrenClosure,
-                    $compiler->getNodeConverter()->convert($childNode)
+                    $childrenClosure
                 ) . PHP_EOL;
             }
         }

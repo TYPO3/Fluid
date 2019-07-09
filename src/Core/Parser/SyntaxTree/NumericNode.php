@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -6,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -17,20 +18,20 @@ class NumericNode extends AbstractNode
 
     /**
      * Contents of the numeric node
-     * @var number
+     * @var float|int
      */
     protected $value;
 
     /**
      * Constructor.
      *
-     * @param string|number $value value to store in this numericNode
-     * @throws Parser\Exception
+     * @param mixed $value value to store in this numericNode
+     * @throws Exception
      */
     public function __construct($value)
     {
         if (!is_numeric($value)) {
-            throw new Parser\Exception('Numeric node requires an argument of type number, "' . gettype($value) . '" given.');
+            throw new Exception('Numeric node requires an argument of type number, "' . gettype($value) . '" given.');
         }
         $this->value = $value + 0;
     }
@@ -39,7 +40,7 @@ class NumericNode extends AbstractNode
      * Return the value associated to the syntax tree.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return number the value stored in this node/subtree.
+     * @return float|integer the value stored in this node/subtree.
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
@@ -49,7 +50,7 @@ class NumericNode extends AbstractNode
     /**
      * Getter for value
      *
-     * @return number The value of this node
+     * @return float|integer The value of this node
      */
     public function getValue()
     {
@@ -60,11 +61,11 @@ class NumericNode extends AbstractNode
      * NumericNode does not allow adding child nodes, so this will always throw an exception.
      *
      * @param NodeInterface $childNode The sub node to add
-     * @throws Parser\Exception
-     * @return self
+     * @throws Exception
+     * @return NodeInterface
      */
-    public function addChildNode(NodeInterface $childNode)
+    public function addChildNode(NodeInterface $childNode): NodeInterface
     {
-        throw new Parser\Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
+        throw new Exception('Numeric nodes may not contain child nodes, tried to add "' . get_class($childNode) . '".');
     }
 }

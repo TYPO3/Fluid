@@ -1,5 +1,6 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+declare(strict_types=1);
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -25,7 +26,7 @@ class MathExpressionNodeTest extends UnitTestCase
      * @param array $variables
      * @param mixed $expected
      */
-    public function testEvaluateExpression($expression, array $variables, $expected)
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -37,7 +38,7 @@ class MathExpressionNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateExpressionTestValues()
+    public function getEvaluateExpressionTestValues(): array
     {
         return [
             ['1 + 1', [], 2],

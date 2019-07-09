@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -47,7 +48,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(RenderViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything());
@@ -64,7 +65,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testThrowsInvalidArgumentExceptionWhenNoTargetSpecifiedIfOptionalIsFalse()
+    public function testThrowsInvalidArgumentExceptionWhenNoTargetSpecifiedIfOptionalIsFalse(): void
     {
         $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
         $this->subject->setArguments([
@@ -84,7 +85,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testThrowsInvalidArgumentExceptionOnInvalidDelegateType()
+    public function testThrowsInvalidArgumentExceptionOnInvalidDelegateType(): void
     {
         $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
         $this->subject->setArguments([
@@ -104,7 +105,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderWithDelegate()
+    public function testRenderWithDelegate(): void
     {
         $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
         $this->subject->setArguments([
@@ -124,7 +125,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderWithRenderable()
+    public function testRenderWithRenderable(): void
     {
         $renderable = $this->getMockBuilder(RenderableInterface::class)->getMockForAbstractClass();
         $renderable->expects($this->once())->method('render')->willReturn('rendered by fixture');
@@ -149,7 +150,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
      * @param array $arguments
      * @param string|NULL $expectedViewMethod
      */
-    public function testRender(array $arguments, $expectedViewMethod)
+    public function testRender(array $arguments, ?string $expectedViewMethod): void
     {
         if ($expectedViewMethod !== null) {
             $this->view->expects($this->once())->method($expectedViewMethod)->willReturn(null);
@@ -162,7 +163,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderTestValues()
+    public function getRenderTestValues(): array
     {
         return [
             [
@@ -187,7 +188,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderWithDefautReturnsDefaultIfContentEmpty()
+    public function testRenderWithDefautReturnsDefaultIfContentEmpty(): void
     {
         $this->view->expects($this->once())->method('renderPartial')->willReturn('');
         $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
@@ -210,7 +211,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderSupportsContentAs()
+    public function testRenderSupportsContentAs(): void
     {
         $variables = ['foo' => 'bar', 'foobar' => 'tagcontent-foobar'];
         $this->view->expects($this->once())->method('renderPartial')->with('test1', 'test2', $variables, true)->willReturn('baz');

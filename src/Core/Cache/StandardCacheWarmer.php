@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Cache;
 
 /*
@@ -69,7 +70,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * @param RenderingContextInterface $renderingContext
      * @return FluidCacheWarmupResult
      */
-    public function warm(RenderingContextInterface $renderingContext)
+    public function warm(RenderingContextInterface $renderingContext): FluidCacheWarmupResult
     {
         $renderingContext->getTemplateCompiler()->enterWarmupMode();
         $result = new FluidCacheWarmupResult();
@@ -106,7 +107,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * @param RenderingContextInterface $renderingContext
      * @return FluidCacheWarmupResult
      */
-    protected function warmupTemplateRootPaths(RenderingContextInterface $renderingContext)
+    protected function warmupTemplateRootPaths(RenderingContextInterface $renderingContext): FluidCacheWarmupResult
     {
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
@@ -121,7 +122,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                             $templateFile,
                             $paths->getTemplateIdentifier(
                                 $controllerName,
-                                substr($templateFile, $pathCutoffPoint, $formatCutoffPoint)
+                                substr($templateFile, $pathCutoffPoint, $formatCutoffPoint) ?: 'Default'
                             ),
                             $renderingContext
                         );
@@ -135,7 +136,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                         $templateFile,
                         $paths->getTemplateIdentifier(
                             'Default',
-                            substr($templateFile, $pathCutoffPoint, $formatCutoffPoint)
+                            substr($templateFile, $pathCutoffPoint, $formatCutoffPoint) ?: 'Default'
                         ),
                         $renderingContext
                     );
@@ -159,7 +160,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * @param RenderingContextInterface $renderingContext
      * @return FluidCacheWarmupResult
      */
-    protected function warmupPartialRootPaths(RenderingContextInterface $renderingContext)
+    protected function warmupPartialRootPaths(RenderingContextInterface $renderingContext): FluidCacheWarmupResult
     {
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
@@ -173,7 +174,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                     $paths->setFormat($format);
                     $state = $this->warmSingleFile(
                         $partialFile,
-                        $paths->getPartialIdentifier(substr($partialFile, $pathCutoffPoint, $formatCutoffPoint)),
+                        $paths->getPartialIdentifier(substr($partialFile, $pathCutoffPoint, $formatCutoffPoint) ?: 'Default'),
                         $renderingContext
                     );
                     $result->add($state, $partialFile);
@@ -196,7 +197,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * @param RenderingContextInterface $renderingContext
      * @return FluidCacheWarmupResult
      */
-    protected function warmupLayoutRootPaths(RenderingContextInterface $renderingContext)
+    protected function warmupLayoutRootPaths(RenderingContextInterface $renderingContext): FluidCacheWarmupResult
     {
         $result = new FluidCacheWarmupResult();
         $paths = $renderingContext->getTemplatePaths();
@@ -210,7 +211,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                     $paths->setFormat($format);
                     $state = $this->warmSingleFile(
                         $layoutFile,
-                        $paths->getLayoutIdentifier(substr($layoutFile, $pathCutoffPoint, $formatCutoffPoint)),
+                        $paths->getLayoutIdentifier(substr($layoutFile, $pathCutoffPoint, $formatCutoffPoint) ?: 'Default'),
                         $renderingContext
                     );
                     $result->add($state, $layoutFile);
@@ -226,9 +227,9 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * directories encountered, as an array.
      *
      * @param array $templateRootPaths
-     * @return \Generator
+     * @return iterable
      */
-    protected function detectControllerNamesInTemplateRootPaths(array $templateRootPaths)
+    protected function detectControllerNamesInTemplateRootPaths(array $templateRootPaths): iterable
     {
         foreach ($templateRootPaths as $templateRootPath) {
             foreach ((array) glob(rtrim($templateRootPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $pathName) {
@@ -255,7 +256,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * @param RenderingContextInterface $renderingContext
      * @return ParsedTemplateInterface
      */
-    protected function warmSingleFile($templatePathAndFilename, $identifier, RenderingContextInterface $renderingContext)
+    protected function warmSingleFile(string $templatePathAndFilename, string $identifier, RenderingContextInterface $renderingContext): ParsedTemplateInterface
     {
         $parsedTemplate = new FailedCompilingState();
         $parsedTemplate->setVariableProvider($renderingContext->getVariableProvider());
@@ -307,7 +308,6 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
             $parsedTemplate->setFailureReason(
                 sprintf(
                     'General error: %s line %s threw %s (code: %d)',
-                    get_class($error),
                     $error->getFile(),
                     $error->getLine(),
                     $error->getMessage(),
@@ -325,10 +325,10 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      * @param string $templatePathAndFilename
      * @return \Closure
      */
-    protected function createClosure($templatePathAndFilename)
+    protected function createClosure(string $templatePathAndFilename): \Closure
     {
         return function(TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
-            return file_get_contents($templatePathAndFilename, FILE_TEXT);
+            return file_get_contents($templatePathAndFilename);
         };
     }
 }

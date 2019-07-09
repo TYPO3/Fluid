@@ -6,12 +6,14 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Exception;
+
 /**
  * Exception thrown to stop the template compiling process
  *
  * @api
  */
-class StopCompilingException extends \TYPO3Fluid\Fluid\Core\Exception
+class StopCompilingException extends Exception
 {
 
 }

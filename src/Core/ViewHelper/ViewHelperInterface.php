@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -48,7 +49,7 @@ interface ViewHelperInterface extends  NodeInterface
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
-     * @return string the rendered ViewHelper.
+     * @return mixed the rendered ViewHelper.
      */
     public function initializeArgumentsAndRender();
 
@@ -122,7 +123,7 @@ interface ViewHelperInterface extends  NodeInterface
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return string the resulting string which is directly shown
+     * @return mixed the resulting string which is directly shown
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext);
 
@@ -154,9 +155,9 @@ interface ViewHelperInterface extends  NodeInterface
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler);
 
     /**
      * Called when being inside a cached template.
@@ -173,7 +174,7 @@ interface ViewHelperInterface extends  NodeInterface
      *
      * @return boolean
      */
-    public function isChildrenEscapingEnabled();
+    public function isChildrenEscapingEnabled(): bool;
 
     /**
      * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
@@ -182,5 +183,5 @@ interface ViewHelperInterface extends  NodeInterface
      *
      * @return boolean
      */
-    public function isOutputEscapingEnabled();
+    public function isOutputEscapingEnabled(): bool;
 }

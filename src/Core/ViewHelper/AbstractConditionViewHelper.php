@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -45,8 +46,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.', false);
-        $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.', false);
+        $this->registerArgument('then', 'mixed', 'Value to be returned if the condition if met.');
+        $this->registerArgument('else', 'mixed', 'Value to be returned if the condition if not met.');
     }
 
     /**
@@ -54,7 +55,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * Method which only gets called if the template is not compiled. For static calling,
      * the then/else nodes are converted to closures and condition evaluation closures.
      *
-     * @return string the rendered string
+     * @return mixed
      * @api
      */
     public function render()
@@ -117,11 +118,11 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * be a warning if someone considers changing this method signature!
      *
      * @deprecated Deprecated in favor of ClassName::verdict($arguments, renderingContext), will no longer be called in 3.0
-     * @param array|NULL $arguments
-     * @return boolean
+     * @param array|null $arguments
+     * @return bool
      * @api
      */
-    protected static function evaluateCondition($arguments = null)
+    protected static function evaluateCondition(array $arguments = null)
     {
         return isset($arguments['condition']) && (bool)($arguments['condition']);
     }
@@ -230,9 +231,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         $thenViewHelperEncountered = $elseViewHelperEncountered = false;
         foreach ($node->getChildNodes() as $childNode) {

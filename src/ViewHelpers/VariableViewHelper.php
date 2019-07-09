@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -48,7 +49,7 @@ class VariableViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return null
+     * @return mixed
      */
     public static function renderStatic(
         array $arguments,

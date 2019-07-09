@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
 /*
@@ -39,7 +40,7 @@ class TestViewHelper extends AbstractViewHelper
      *
      * @param array $arguments
      */
-    public function handleAdditionalArguments(array $arguments)
+    public function handleAdditionalArguments(array $arguments): void
     {
         $filtered = [];
         foreach ($arguments as $name => $value) {

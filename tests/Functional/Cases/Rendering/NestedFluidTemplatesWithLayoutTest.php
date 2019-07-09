@@ -1,6 +1,13 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
+declare(strict_types=1);
+namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
@@ -25,7 +32,7 @@ class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
      *
      * @return FluidCacheInterface
      */
-    protected function getCache()
+    protected function getCache(): FluidCacheInterface
     {
         return new SimpleFileCache(sys_get_temp_dir());
     }
@@ -33,7 +40,7 @@ class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Nested template rendering with different layout paths' => [
@@ -60,7 +67,7 @@ class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, $expectedException = null, $withCache = false)
+    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, ?string $expectedException = null, bool $withCache = false): void
     {
         $view = $this->getView();
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
@@ -78,14 +85,14 @@ class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
         $output = trim($view->render());
 
         foreach ($expected as $expectedValue) {
-            if (is_string($expectedValue) === true) {
+            if (is_string($expectedValue)) {
                 $this->assertStringContainsString($expectedValue, $output);
             } else {
                 $this->assertEquals($expectedValue, $output);
             }
         }
         foreach ($notExpected as $notExpectedValue) {
-            if (is_string($notExpectedValue) === true) {
+            if (is_string($notExpectedValue)) {
                 $this->assertStringNotContainsString($notExpectedValue, $output);
             } else {
                 $this->assertNotEquals($notExpectedValue, $output);

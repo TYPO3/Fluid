@@ -1,5 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
@@ -13,7 +19,7 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         $user1 = new UserWithToString('foobar');
         $user2 = new UserWithToString('foobar');

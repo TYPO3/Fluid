@@ -1,5 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -16,9 +22,9 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      * If your test case requires a cache, override this
      * method and return an instance.
      *
-     * @return FluidCacheInterface
+     * @return FluidCacheInterface|null
      */
-    protected function getCache()
+    protected function getCache(): ?FluidCacheInterface
     {
         return null;
     }
@@ -29,7 +35,7 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      *
      * @return ViewInterface
      */
-    protected function getView($withCache = false)
+    protected function getView($withCache = false): TemplateView
     {
         $view = new TemplateView();
         $cache = $this->getCache();
@@ -71,7 +77,7 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      *
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [];
     }
@@ -89,16 +95,16 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixture($source, $expected, array $variables = [], $withCache = false)
+    public function testTemplateCodeFixture($source, bool $expected, array $variables = [], bool $withCache = false): void
     {
         $source = '<f:if condition="' . $source . '" then="yes" else="no" />';
-        $view = $this->getView(false);
+        $view = $this->getView();
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->assignMultiple($variables);
         $output = $view->render();
         $this->assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
 
-        if ($expected === true) {
+        if ($expected) {
             $this->assertEquals('yes', $output);
         } else {
             $this->assertEquals('no', $output);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
 
 /*
@@ -19,7 +20,7 @@ class ParserRuntimeOnlyTest extends UnitTestCase
     /**
      * @test
      */
-    public function testRenderReturnsNull()
+    public function testRenderReturnsNull(): void
     {
         $instance = $this->getMockBuilder(ParserRuntimeOnly::class)->getMockForTrait();
         $result = $instance->render();
@@ -29,11 +30,11 @@ class ParserRuntimeOnlyTest extends UnitTestCase
     /**
      * @test
      */
-    public function testCompileReturnsEmptyString()
+    public function testCompileReturnsEmptyString(): void
     {
         $trait = $this->getMockBuilder(ParserRuntimeOnly::class)->getMockForTrait();
         $init = '';
-        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], false, false);
         $result = $trait->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
         $this->assertNull($result);
     }

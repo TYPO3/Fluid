@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -19,21 +20,11 @@ class TextNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsSameStringAsGivenInConstructor()
+    public function renderReturnsSameStringAsGivenInConstructor(): void
     {
         $string = 'I can work quite effectively in a train!';
         $node = new TextNode($string);
         $renderingContext = new RenderingContextFixture();
         $this->assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
-    }
-
-    /**
-     * @test
-     */
-    public function constructorThrowsExceptionIfNoStringGiven()
-    {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
-
-        new TextNode(123);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\Interceptor;
 
 /*
@@ -44,7 +45,7 @@ class Escape implements InterceptorInterface
      * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
      * @return NodeInterface
      */
-    public function process(NodeInterface $node, $interceptorPosition, ParsingState $parsingState)
+    public function process(NodeInterface $node, int $interceptorPosition, ParsingState $parsingState): NodeInterface
     {
         $viewHelper = $node instanceof ViewHelperNode ? $node->getUninitializedViewHelper() : $node;
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
@@ -75,7 +76,7 @@ class Escape implements InterceptorInterface
      *
      * @return array Array of INTERCEPT_* constants
      */
-    public function getInterceptionPoints()
+    public function getInterceptionPoints(): array
     {
         return [
             InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,

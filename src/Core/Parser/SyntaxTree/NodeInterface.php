@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -27,7 +28,7 @@ interface NodeInterface
      *
      * @return array<\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface> A list of nodes
      */
-    public function getChildNodes();
+    public function getChildNodes(): array;
 
     /**
      * @param NodeInterface[] $childNodes
@@ -41,7 +42,7 @@ interface NodeInterface
      * @param NodeInterface $childNode The sub node to add
      * @return self
      */
-    public function addChildNode(NodeInterface $childNode);
+    public function addChildNode(NodeInterface $childNode): self;
 
     /**
      * Evaluates the node - can return not only strings, but arbitary objects.

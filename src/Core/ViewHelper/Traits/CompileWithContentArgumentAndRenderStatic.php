@@ -1,5 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
@@ -60,9 +66,9 @@ trait CompileWithContentArgumentAndRenderStatic
      * @return string
      */
     public function compile(
-        $argumentsName,
-        $closureName,
-        &$initializationPhpCode,
+        string $argumentsName,
+        string $closureName,
+        string &$initializationPhpCode,
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
@@ -116,7 +122,7 @@ trait CompileWithContentArgumentAndRenderStatic
     /**
      * @return string
      */
-    protected function resolveContentArgumentName()
+    protected function resolveContentArgumentName(): string
     {
         if (empty($this->contentArgumentName)) {
             $registeredArguments = call_user_func_array([$this, 'prepareArguments'], []);

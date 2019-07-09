@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Cache;
 
 /*
@@ -31,7 +32,7 @@ class SimpleFileCache implements FluidCacheInterface
     /**
      * @param string $directory
      */
-    public function __construct($directory = self::DIRECTORY_DEFAULT)
+    public function __construct(string $directory = self::DIRECTORY_DEFAULT)
     {
         $this->directory = rtrim($directory, '/') . '/';
     }
@@ -44,7 +45,7 @@ class SimpleFileCache implements FluidCacheInterface
      *
      * @return FluidCacheWarmerInterface
      */
-    public function getCacheWarmer()
+    public function getCacheWarmer(): FluidCacheWarmerInterface
     {
         return new StandardCacheWarmer();
     }
@@ -58,7 +59,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @param string $name
      * @return boolean
      */
-    public function get($name)
+    public function get($name): bool
     {
         if (class_exists($name)) {
             return true;
@@ -80,7 +81,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @return void
      * @throws \RuntimeException
      */
-    public function set($name, $value)
+    public function set($name, $value): void
     {
         if (!file_exists(rtrim($this->directory, '/'))) {
             throw new \RuntimeException(sprintf('Invalid Fluid cache directory - %s does not exist!', $this->directory));
@@ -95,7 +96,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @param string|NULL $name
      * @return void
      */
-    public function flush($name = null)
+    public function flush($name = null): void
     {
         if ($name !== null) {
             $this->flushByName($name);
@@ -111,7 +112,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @codeCoverageIgnore
      * @return array
      */
-    protected function getCachedFilenames()
+    protected function getCachedFilenames(): array
     {
         return glob($this->directory . '*.php');
     }
@@ -120,7 +121,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @param string $name
      * @return void
      */
-    protected function flushByName($name)
+    protected function flushByName(string $name): void
     {
         $this->flushByFilename($this->getCachedFilePathAndFilename($name));
     }
@@ -129,7 +130,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @param string $filename
      * @return void
      */
-    protected function flushByFilename($filename)
+    protected function flushByFilename(string $filename): void
     {
         unlink($filename);
     }
@@ -138,7 +139,7 @@ class SimpleFileCache implements FluidCacheInterface
      * @param string $identifier
      * @return string
      */
-    protected function getCachedFilePathAndFilename($identifier)
+    protected function getCachedFilePathAndFilename(string $identifier): string
     {
         return $this->directory . $identifier . '.php';
     }

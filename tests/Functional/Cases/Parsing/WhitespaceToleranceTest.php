@@ -1,5 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Parsing;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
@@ -17,7 +23,7 @@ class WhitespaceToleranceTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Normal expected whitespace tolerance' => [

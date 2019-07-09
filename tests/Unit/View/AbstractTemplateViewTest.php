@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 /*
@@ -9,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -39,7 +41,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     protected $viewHelperVariableContainer;
 
     /**
-     * @var TemplateVariableContainer
+     * @var VariableProviderInterface
      */
     protected $templateVariableContainer;
 
@@ -62,7 +64,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetRenderingContextReturnsExpectedRenderingContext()
+    public function testGetRenderingContextReturnsExpectedRenderingContext(): void
     {
         $result = $this->view->getRenderingContext();
         $this->assertSame($this->renderingContext, $result);
@@ -71,7 +73,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetViewHelperResolverReturnsExpectedViewHelperResolver()
+    public function testGetViewHelperResolverReturnsExpectedViewHelperResolver(): void
     {
         $viewHelperResolver = $this->getMock(ViewHelperResolver::class);
         $this->renderingContext->setViewHelperResolver($viewHelperResolver);
@@ -82,7 +84,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignAddsValueToTemplateVariableContainer()
+    public function assignAddsValueToTemplateVariableContainer(): void
     {
         $this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
         $this->templateVariableContainer->expects($this->at(1))->method('add')->with('bar', 'BarValue');
@@ -95,7 +97,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignCanOverridePreviouslyAssignedValues()
+    public function assignCanOverridePreviouslyAssignedValues(): void
     {
         $this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
         $this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValueOverridden');
@@ -107,7 +109,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignMultipleAddsValuesToTemplateVariableContainer()
+    public function assignMultipleAddsValuesToTemplateVariableContainer(): void
     {
         $this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
         $this->templateVariableContainer->expects($this->at(1))->method('add')->with('bar', 'BarValue');
@@ -121,7 +123,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignMultipleCanOverridePreviouslyAssignedValues()
+    public function assignMultipleCanOverridePreviouslyAssignedValues(): void
     {
         $this->templateVariableContainer->expects($this->at(0))->method('add')->with('foo', 'FooValue');
         $this->templateVariableContainer->expects($this->at(1))->method('add')->with('foo', 'FooValueOverridden');
@@ -137,7 +139,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      * @param boolean $compiled
      * @test
      */
-    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown($compiled)
+    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(bool $compiled): void
     {
         $parsedTemplate = $this->getMockForAbstractClass(
             AbstractCompiledTemplate::class,
@@ -171,7 +173,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getRenderSectionExceptionTestValues()
+    public function getRenderSectionExceptionTestValues(): array
     {
         return [
             [true],
@@ -185,7 +187,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      * @param boolean $exists
      * @test
      */
-    public function testRenderSectionOnCompiledTemplate($exists)
+    public function testRenderSectionOnCompiledTemplate(bool $exists): void
     {
         if ($exists) {
             $sectionMethodName = 'section_' . sha1('Section');
@@ -220,7 +222,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getRenderSectionCompiledTestValues()
+    public function getRenderSectionCompiledTestValues(): array
     {
         return [
             [true],

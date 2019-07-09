@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -21,7 +22,7 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
     /**
      * @var string
      */
-    protected $failureReason;
+    protected $failureReason = '';
 
     /**
      * @var string[]
@@ -31,7 +32,7 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
     /**
      * @return string
      */
-    public function getFailureReason()
+    public function getFailureReason(): string
     {
         return $this->failureReason;
     }
@@ -40,7 +41,7 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
      * @param string $failureReason
      * @return void
      */
-    public function setFailureReason($failureReason)
+    public function setFailureReason(string $failureReason): void
     {
         $this->failureReason = $failureReason;
     }
@@ -48,7 +49,7 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
     /**
      * @return array
      */
-    public function getMitigations()
+    public function getMitigations(): array
     {
         return $this->mitigations;
     }
@@ -56,7 +57,7 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
     /**
      * @param array $mitigations
      */
-    public function setMitigations(array $mitigations)
+    public function setMitigations(array $mitigations): void
     {
         $this->mitigations = $mitigations;
     }
@@ -65,7 +66,7 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
      * @param string $mitigation
      * @return void
      */
-    public function addMitigation($mitigation)
+    public function addMitigation(string $mitigation): void
     {
         $this->mitigations[] = $mitigation;
     }

@@ -1,5 +1,6 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+declare(strict_types=1);
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -31,7 +32,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
      * @param string $expression
      * @param mixed $expected
      */
-    public function testTernaryExpressionDetection($expression, $expected)
+    public function testTernaryExpressionDetection(string $expression, $expected): void
     {
         $result = preg_match_all(TernaryExpressionNode::$detectionExpression, $expression, $matches, PREG_SET_ORDER);
         $this->assertEquals($expected, count($matches) > 0);
@@ -40,7 +41,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getTernaryExpressionDetection()
+    public function getTernaryExpressionDetection(): array
     {
         return [
             ['{true ? foo : bar}', true],
@@ -68,7 +69,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
      * @param array $variables
      * @param mixed $expected
      */
-    public function testEvaluateExpression($expression, array $variables, $expected)
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -80,7 +81,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateExpressionTestValues()
+    public function getEvaluateExpressionTestValues(): array
     {
         return [
             ['1 ? 2 : 3', [], 2],

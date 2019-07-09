@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
 
 /*
@@ -6,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
@@ -22,22 +24,22 @@ class EscapeTest extends UnitTestCase
 {
 
     /**
-     * @var Escape|\PHPUnit\Framework\MockObject\MockObject
+     * @var Escape|MockObject
      */
     protected $escapeInterceptor;
 
     /**
-     * @var AbstractViewHelper|\PHPUnit\Framework\MockObject\MockObject
+     * @var AbstractViewHelper|MockObject
      */
     protected $mockViewHelper;
 
     /**
-     * @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject
+     * @var ViewHelperNode|MockObject
      */
     protected $mockNode;
 
     /**
-     * @var ParsingState|\PHPUnit\Framework\MockObject\MockObject
+     * @var ParsingState|MockObject
      */
     protected $mockParsingState;
 
@@ -53,7 +55,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processDoesNotDisableEscapingInterceptorByDefault()
+    public function processDoesNotDisableEscapingInterceptorByDefault(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
         $this->mockViewHelper->expects($this->once())->method('isChildrenEscapingEnabled')->will($this->returnValue(true));
@@ -67,7 +69,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processDisablesEscapingInterceptorIfViewHelperDisablesIt()
+    public function processDisablesEscapingInterceptorIfViewHelperDisablesIt(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
         $this->mockViewHelper->expects($this->once())->method('isChildrenEscapingEnabled')->will($this->returnValue(false));
@@ -81,7 +83,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore()
+    public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
         $this->mockViewHelper->expects($this->any())->method('isOutputEscapingEnabled')->will($this->returnValue(false));
@@ -97,10 +99,10 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processWrapsCurrentViewHelperInEscapeNode()
+    public function processWrapsCurrentViewHelperInEscapeNode(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
-        $mockNode = $this->getMock(ObjectAccessorNode::class, [], [], '', false);
+        $mockNode = $this->getMock(ObjectAccessorNode::class, [], [], false, false);
         $actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
         $this->assertInstanceOf(EscapingNode::class, $actualResult);
     }

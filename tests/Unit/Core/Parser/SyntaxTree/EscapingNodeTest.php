@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -20,7 +21,7 @@ class EscapingNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEscapesNodeInConstructor()
+    public function testEscapesNodeInConstructor(): void
     {
         $string = '<strong>escape me</strong>';
         $childNode = new TextNode($string);
@@ -32,7 +33,7 @@ class EscapingNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEscapesNodeOverriddenWithAddChildNode()
+    public function testEscapesNodeOverriddenWithAddChildNode(): void
     {
         $string1 = '<strong>escape me</strong>';
         $string2 = '<strong>no, escape me!</strong>';

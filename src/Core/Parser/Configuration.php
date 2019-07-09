@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -66,7 +67,7 @@ class Configuration
      * @param InterceptorInterface $interceptor
      * @return void
      */
-    public function addInterceptor(InterceptorInterface $interceptor)
+    public function addInterceptor(InterceptorInterface $interceptor): void
     {
         $this->addInterceptorToArray($interceptor, $this->interceptors);
     }
@@ -77,7 +78,7 @@ class Configuration
      * @param InterceptorInterface $interceptor
      * @return void
      */
-    public function addEscapingInterceptor(InterceptorInterface $interceptor)
+    public function addEscapingInterceptor(InterceptorInterface $interceptor): void
     {
         $this->addInterceptorToArray($interceptor, $this->escapingInterceptors);
     }
@@ -89,7 +90,7 @@ class Configuration
      * @param \SplObjectStorage[] $interceptorArray
      * @return void
      */
-    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray)
+    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray): void
     {
         foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
             if (!isset($interceptorArray[$interceptionPoint])) {
@@ -106,7 +107,7 @@ class Configuration
      * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return array
      */
-    public function getInterceptors($interceptionPoint)
+    public function getInterceptors(int $interceptionPoint): array
     {
         return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : [];
     }
@@ -117,7 +118,7 @@ class Configuration
      * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return array
      */
-    public function getEscapingInterceptors($interceptionPoint)
+    public function getEscapingInterceptors(int $interceptionPoint): array
     {
         return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : [];
     }

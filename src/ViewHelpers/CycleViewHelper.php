@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -7,9 +8,10 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
  * This ViewHelper cycles through the specified values.
@@ -100,9 +102,9 @@ class CycleViewHelper extends AbstractViewHelper
     /**
      * @param mixed $values
      * @return array
-     * @throws ViewHelper\Exception
+     * @throws Exception
      */
-    protected static function initializeValues($values)
+    protected static function initializeValues($values): array
     {
         if (is_array($values)) {
             return array_values($values);
@@ -112,15 +114,15 @@ class CycleViewHelper extends AbstractViewHelper
             return iterator_to_array($values, false);
         }
 
-        throw new ViewHelper\Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+        throw new Exception('CycleViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
     }
 
     /**
      * @param string $as
-     * @param ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
+     * @param ViewHelperVariableContainer $viewHelperVariableContainer
      * @return integer
      */
-    protected static function initializeIndex($as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer)
+    protected static function initializeIndex(string $as, ViewHelperVariableContainer $viewHelperVariableContainer): int
     {
         $index = 0;
         if ($viewHelperVariableContainer->exists(static::class, $as)) {

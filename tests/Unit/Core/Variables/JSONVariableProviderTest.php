@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
@@ -37,7 +38,7 @@ class JSONVariableProviderTest extends UnitTestCase
      * @param string $input
      * @param array $expected
      */
-    public function testOperability($input, array $expected)
+    public function testOperability(string $input, array $expected): void
     {
         $provider = new JSONVariableProvider();
         $provider->setSource($input);
@@ -49,7 +50,7 @@ class JSONVariableProviderTest extends UnitTestCase
         }
     }
 
-    public function getOperabilityTestValues()
+    public function getOperabilityTestValues(): array
     {
         return [
             ['{}', []],

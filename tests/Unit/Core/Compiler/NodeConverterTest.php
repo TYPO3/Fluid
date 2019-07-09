@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -20,7 +21,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
@@ -34,7 +34,7 @@ class NodeConverterTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSetVariableCounter()
+    public function testSetVariableCounter(): void
     {
         $instance = new NodeConverter(new TemplateCompiler());
         $instance->setVariableCounter(10);
@@ -47,7 +47,7 @@ class NodeConverterTest extends UnitTestCase
      * @param NodeInterface $node
      * @param string $expected
      */
-    public function testConvertCallsExpectedMethod(NodeInterface $node, $expected)
+    public function testConvertCallsExpectedMethod(NodeInterface $node, string $expected): void
     {
         $templateCompiler = new TemplateCompiler();
         $templateCompiler->setRenderingContext(new RenderingContextFixture());
@@ -60,19 +60,20 @@ class NodeConverterTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getConvertMethodCallTestValues()
+    public function getConvertMethodCallTestValues(): array
     {
         return [
             [new CommentViewHelper(), 'convertViewHelperNode'],
-            [$this->getMock(TextNode::class, [], [], '', false), 'convertTextNode'],
+            [$this->getMock(TextNode::class, [], [], false, false), 'convertTextNode'],
+            [$this->getMock(TextNode::class, [], [], false, false), 'convertTextNode'],
             [$this->getMock(ExpressionNodeInterface::class), 'convertExpressionNode'],
-            [$this->getMock(NumericNode::class, [], [], '', false), 'convertNumericNode'],
-            [$this->getMock(ViewHelperNode::class, [], [], '', false), 'convertViewHelperNode'],
-            [$this->getMock(ObjectAccessorNode::class, [], [], '', false), 'convertObjectAccessorNode'],
-            [$this->getMock(ArrayNode::class, [], [], '', false), 'convertArrayNode'],
-            [$this->getMock(RootNode::class, [], [], '', false), 'convertListOfSubNodes'],
-            [$this->getMock(BooleanNode::class, [], [], '', false), 'convertBooleanNode'],
-            [$this->getMock(EscapingNode::class, [], [], '', false), 'convertEscapingNode'],
+            [$this->getMock(NumericNode::class, [], [], false, false), 'convertNumericNode'],
+            [$this->getMock(ViewHelperNode::class, [], [], false, false), 'convertViewHelperNode'],
+            [$this->getMock(ObjectAccessorNode::class, [], [], false, false), 'convertObjectAccessorNode'],
+            [$this->getMock(ArrayNode::class, [], [], false, false), 'convertArrayNode'],
+            [$this->getMock(RootNode::class, [], [], false, false), 'convertListOfSubNodes'],
+            [$this->getMock(BooleanNode::class, [], [false], true, false), 'convertBooleanNode'],
+            [$this->getMock(EscapingNode::class, [], [], false, false), 'convertEscapingNode'],
         ];
     }
 
@@ -82,7 +83,7 @@ class NodeConverterTest extends UnitTestCase
      * @param NodeInterface $node
      * @param string $expected
      */
-    public function testConvert(NodeInterface $node, $expected)
+    public function testConvert(NodeInterface $node, string $expected): void
     {
         $instance = new NodeConverter(new TemplateCompiler());
         $result = $instance->convert($node);
@@ -92,7 +93,7 @@ class NodeConverterTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getConvertTestValues()
+    public function getConvertTestValues(): array
     {
         $treeBooleanRoot = new RootNode();
         $treeBooleanRoot->addChildNode(new TextNode('1'));

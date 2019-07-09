@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -6,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -20,7 +20,7 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArguments()
+    public function testInitializeArguments(): void
     {
         $instance = $this->getMockBuilder(InlineViewHelper::class)->setMethods(['registerArgument'])->getMock();
         $instance->expects($this->at(0))->method('registerArgument')->with('code', 'string', $this->anything());
@@ -30,7 +30,7 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCallsExpectedDelegationMethodFromRenderStatic()
+    public function testCallsExpectedDelegationMethodFromRenderStatic(): void
     {
         $contextFixture = new RenderingContextFixture();
 

@@ -1,5 +1,6 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+declare(strict_types=1);
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -23,7 +24,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateDelegatesToEvaluateExpression()
+    public function testEvaluateDelegatesToEvaluteExpression(): void
     {
         $subject = new CastingExpressionNode('{test as string}', ['{test as string}', '{test as string}']);
         $view = new TemplateView();
@@ -36,7 +37,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateInvalidExpressionThrowsException()
+    public function testEvaluateInvalidExpressionThrowsException(): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -63,7 +64,7 @@ class CastingExpressionNodeTest extends UnitTestCase
      * @param array $variables
      * @param mixed $expected
      */
-    public function testEvaluateExpression($expression, array $variables, $expected)
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
@@ -75,7 +76,7 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateExpressionTestValues()
+    public function getEvaluateExpressionTestValues(): array
     {
         $arrayIterator = new \ArrayIterator(['foo', 'bar']);
         $toArrayObject = new UserWithToArray('foobar');
@@ -85,7 +86,7 @@ class CastingExpressionNodeTest extends UnitTestCase
             ['myvariable as integer', ['myvariable' => 321], 321],
             ['myinteger as string', ['myinteger' => 111], '111'],
             ['myinteger as boolean', ['myinteger' => 1], true],
-            ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', 90000)],
+            ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', '90000')],
             ['mydate as DateTime', ['mydate' => 'January'], new \DateTime('January')],
             ['mystring as array', ['mystring' => 'foo,bar'], ['foo', 'bar']],
             ['mystring as array', ['mystring' => 'foo , bar'], ['foo', 'bar']],

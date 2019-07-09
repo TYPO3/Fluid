@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -18,7 +19,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArguments()
+    public function testInitializeArguments(): void
     {
         $instance = $this->getMock(OrViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), false, '');
@@ -34,7 +35,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
      * @param array $arguments
      * @param mixed $expected
      */
-    public function testRender($arguments, $expected)
+    public function testRender(array $arguments, $expected): void
     {
         $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
         $instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
@@ -47,7 +48,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderTestValues()
+    public function getRenderTestValues(): array
     {
         return [
             [['arguments' => null, 'content' => 'alt', 'alternative' => 'alternative'], 'alt'],
@@ -61,7 +62,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
      * @param array $arguments
      * @param mixed $expected
      */
-    public function testRenderAlternative($arguments, $expected)
+    public function testRenderAlternative(array $arguments, $expected): void
     {
         $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
         $instance->expects($this->once())->method('renderChildren')->willReturn(null);
@@ -75,7 +76,7 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderAlternativeTestValues()
+    public function getRenderAlternativeTestValues(): array
     {
         return [
             [['arguments' => null, 'alternative' => 'alternative'], 'alternative'],

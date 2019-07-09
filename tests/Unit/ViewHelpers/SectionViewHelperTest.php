@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -15,7 +16,6 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Testcase for SectionViewHelper
- *
  */
 class SectionViewHelperTest extends UnitTestCase
 {
@@ -23,11 +23,11 @@ class SectionViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function sectionIsAddedToParseVariableContainer()
+    public function sectionIsAddedToParseVariableContainer(): void
     {
         $section = new SectionViewHelper();
 
-        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], false, false);
         $viewHelperArguments = [
             'name' => new TextNode('sectionName')
         ];

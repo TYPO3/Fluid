@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
@@ -30,7 +31,7 @@ class RawViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function viewHelperDeactivatesEscapingInterceptor()
+    public function viewHelperDeactivatesEscapingInterceptor(): void
     {
         $this->assertFalse($this->viewHelper->isOutputEscapingEnabled());
     }
@@ -38,7 +39,7 @@ class RawViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsUnmodifiedValueIfSpecified()
+    public function renderReturnsUnmodifiedValueIfSpecified(): void
     {
         $value = 'input value " & äöüß@';
         $this->viewHelper->expects($this->never())->method('renderChildren');
@@ -50,7 +51,7 @@ class RawViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsUnmodifiedChildNodesIfNoValueIsSpecified()
+    public function renderReturnsUnmodifiedChildNodesIfNoValueIsSpecified(): void
     {
         $childNodes = 'input value " & äöüß@';
         $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue($childNodes));

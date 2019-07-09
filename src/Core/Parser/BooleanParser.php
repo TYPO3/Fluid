@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -28,7 +29,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  *                      parseBracketToken: takes care of any '()' parts and restarts the cycle
  *                          parseStringToken: takes care of any strings
  *                              evaluateTerm: evaluate terms from true/false/numeric/context
- *
  */
 class BooleanParser
 {
@@ -88,7 +88,7 @@ class BooleanParser
      * the expression that needs to be focused on next. This cursor is changed
      * by the consume method, by "consuming" part of the expression.
      *
-     * @var integer
+     * @var int
      */
     protected $cursor = 0;
 
@@ -97,14 +97,14 @@ class BooleanParser
      *
      * @var string
      */
-    protected $expression;
+    protected $expression = '';
 
     /**
      * Context containing all variables that are references in the expression
      *
      * @var array
      */
-    protected $context;
+    protected $context = [];
 
     /**
      * Switch to enable compiling
@@ -120,12 +120,12 @@ class BooleanParser
      * @param array $context containing variables that can be used in the expression
      * @return boolean
      */
-    public function evaluate($expression, $context)
+    public function evaluate(string $expression, array $context): bool
     {
         $this->context = $context;
         $this->expression = $expression;
         $this->cursor = 0;
-        return $this->parseOrToken();
+        return (bool)$this->parseOrToken();
     }
 
     /**
@@ -134,7 +134,7 @@ class BooleanParser
      * @param string $expression to be parsed
      * @return string
      */
-    public function compile($expression)
+    public function compile(string $expression): string
     {
         $this->expression = $expression;
         $this->cursor = 0;
@@ -149,10 +149,10 @@ class BooleanParser
      * @param boolean $includeWhitespace return surrounding whitespace with token
      * @return string
      */
-    protected function peek($includeWhitespace = false)
+    protected function peek(bool $includeWhitespace = false): string
     {
         preg_match(static::TOKENREGEX, mb_substr($this->expression, $this->cursor), $matches);
-        if ($includeWhitespace === true) {
+        if ($includeWhitespace) {
             return $matches[0];
         }
         return $matches[1];
@@ -165,7 +165,7 @@ class BooleanParser
      * @param string $string
      * @return void
      */
-    protected function consume($string)
+    protected function consume(string $string): void
     {
         if (mb_strlen($string) === 0) {
             return;
@@ -186,7 +186,7 @@ class BooleanParser
             $this->consume($token);
             $y = $this->parseAndToken();
 
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 $x = '(' . $x . ' || ' . $y . ')';
                 continue;
             }
@@ -208,7 +208,7 @@ class BooleanParser
             $this->consume($token);
             $y = $this->parseCompareToken();
 
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 $x = '(' . $x . ' && ' . $y . ')';
                 continue;
             }
@@ -246,7 +246,7 @@ class BooleanParser
             $this->consume('!');
             $x = $this->parseNotToken();
 
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 return '!(' . $x . ')';
             }
             return $this->evaluateNot($x);
@@ -293,7 +293,7 @@ class BooleanParser
             }
             $this->consume($stringIdentifier);
             $string .= $stringIdentifier;
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 return $string;
             }
             return $this->evaluateTerm($string, $this->context);
@@ -323,7 +323,7 @@ class BooleanParser
      * @param mixed $y
      * @return boolean
      */
-    protected function evaluateAnd($x, $y)
+    protected function evaluateAnd($x, $y): bool
     {
         return $x && $y;
     }
@@ -335,7 +335,7 @@ class BooleanParser
      * @param mixed $y
      * @return boolean
      */
-    protected function evaluateOr($x, $y)
+    protected function evaluateOr($x, $y): bool
     {
         return $x || $y;
     }
@@ -344,9 +344,9 @@ class BooleanParser
      * Evaluate an "not" comparison
      *
      * @param mixed $x
-     * @return boolean|string
+     * @return boolean
      */
-    protected function evaluateNot($x)
+    protected function evaluateNot($x): bool
     {
         return !$x;
     }
@@ -357,15 +357,15 @@ class BooleanParser
      * @param mixed $x
      * @param mixed $y
      * @param string $comparator
-     * @return boolean|string
+     * @return mixed
      */
-    protected function evaluateCompare($x, $y, $comparator)
+    protected function evaluateCompare($x, $y, string $comparator)
     {
         // enfore strong comparison for comparing two objects
-        if ($comparator == '==' && is_object($x) && is_object($y)) {
+        if ($comparator === '==' && is_object($x) && is_object($y)) {
             $comparator = '===';
         }
-        if ($comparator == '!=' && is_object($x) && is_object($y)) {
+        if ($comparator === '!=' && is_object($x) && is_object($y)) {
             $comparator = '!==';
         }
 
@@ -419,7 +419,7 @@ class BooleanParser
 
                 break;
         }
-        return $x;
+        return (bool)$x;
     }
 
     /**
@@ -431,36 +431,36 @@ class BooleanParser
      * @param array $context
      * @return mixed
      */
-    protected function evaluateTerm($x, $context)
+    protected function evaluateTerm(string $x, array $context)
     {
         if (isset($context[$x]) || (mb_strpos($x, '{') === 0 && mb_substr($x, -1) === '}')) {
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 return BooleanParser::class . '::convertNodeToBoolean($context["' . trim($x, '{}') . '"])';
             }
             return self::convertNodeToBoolean($context[trim($x, '{}')]);
         }
 
         if (is_numeric($x)) {
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 return $x;
             }
             return $x + 0;
         }
 
         if (trim(strtolower($x)) === 'true') {
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 return 'TRUE';
             }
             return true;
         }
         if (trim(strtolower($x)) === 'false') {
-            if ($this->compileToCode === true) {
+            if ($this->compileToCode) {
                 return 'FALSE';
             }
             return false;
         }
 
-        if ($this->compileToCode === true) {
+        if ($this->compileToCode) {
             return '"' . trim($x, '\'"') . '"';
         }
 

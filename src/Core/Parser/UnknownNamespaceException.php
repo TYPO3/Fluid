@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -11,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  *
  * @api
  */
-class UnknownNamespaceException extends \TYPO3Fluid\Fluid\Core\Parser\Exception
+class UnknownNamespaceException extends Exception
 {
 
 }

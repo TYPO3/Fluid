@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 /*
@@ -67,8 +68,8 @@ class PrintfViewHelper extends AbstractViewHelper
      *
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
-     * @param \TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface $renderingContext
-     * @return string
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {

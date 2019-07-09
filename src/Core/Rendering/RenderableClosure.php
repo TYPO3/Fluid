@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -20,7 +21,7 @@ class RenderableClosure extends AbstractRenderable
      * @param \Closure $closure
      * @return RenderableClosure
      */
-    public function setClosure(\Closure $closure)
+    public function setClosure(\Closure $closure): RenderableClosure
     {
         $this->closure = $closure;
         return $this;

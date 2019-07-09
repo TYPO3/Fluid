@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -92,7 +93,7 @@ class IfViewHelper extends AbstractConditionViewHelper
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    public static function verdict(array $arguments, RenderingContextInterface $renderingContext)
+    public static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
     {
         return (bool)$arguments['condition'];
     }

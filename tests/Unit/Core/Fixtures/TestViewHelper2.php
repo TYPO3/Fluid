@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
 /*
@@ -29,7 +30,7 @@ class TestViewHelper2 extends AbstractViewHelper
      *
      * @return void
      */
-    public function render()
+    public function render(): void
     {
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
@@ -16,7 +17,7 @@ class PrintfViewHelperTest extends ViewHelperBaseTestcase
 {
 
     /**
-     * @var \TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper
+     * @var PrintfViewHelper
      */
     protected $viewHelper;
 
@@ -30,7 +31,7 @@ class PrintfViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperCanUseArrayAsArgument()
+    public function viewHelperCanUseArrayAsArgument(): void
     {
         $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%04d-%02d-%02d'));
         $this->viewHelper->setArguments(['value' => null, 'arguments' => ['year' => 2009, 'month' => 4, 'day' => 5]]);
@@ -41,7 +42,7 @@ class PrintfViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperCanSwapMultipleArguments()
+    public function viewHelperCanSwapMultipleArguments(): void
     {
         $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%2$s %1$d %3$s %2$s'));
         $this->viewHelper->setArguments(['value' => null, 'arguments' => [123, 'foo', 'bar']]);

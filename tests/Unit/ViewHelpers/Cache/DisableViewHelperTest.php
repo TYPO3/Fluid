@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
 
 /*
@@ -21,7 +22,7 @@ class DisableViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderCallsRenderChildren()
+    public function testRenderCallsRenderChildren(): void
     {
         $subject = $this->getMockBuilder(DisableViewHelper::class)->setMethods(['renderChildren'])->getMock();
         $subject->expects($this->once())->method('renderChildren')->willReturn('test');
@@ -31,7 +32,7 @@ class DisableViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompile()
+    public function testCompile(): void
     {
         $subject = new DisableViewHelper();
         $subject->setRenderingContext(new RenderingContextFixture());

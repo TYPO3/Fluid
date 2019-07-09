@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -48,7 +49,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function convertToBooleanProperlyConvertsValuesOfTypeBoolean()
+    public function convertToBooleanProperlyConvertsValuesOfTypeBoolean(): void
     {
         $this->assertFalse(BooleanNode::convertToBoolean(false, $this->renderingContext));
         $this->assertTrue(BooleanNode::convertToBoolean(true, $this->renderingContext));
@@ -57,7 +58,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function convertToBooleanProperlyConvertsValuesOfTypeString()
+    public function convertToBooleanProperlyConvertsValuesOfTypeString(): void
     {
         $this->assertFalse(BooleanNode::convertToBoolean('', $this->renderingContext));
         $this->assertFalse(BooleanNode::convertToBoolean('false', $this->renderingContext));
@@ -68,12 +69,12 @@ class BooleanNodeTest extends UnitTestCase
     }
 
     /**
-     * @param float $number
+     * @param mixed $number
      * @param boolean $expected
      * @test
      * @dataProvider getNumericBooleanTestValues
      */
-    public function convertToBooleanProperlyConvertsNumericValues($number, $expected)
+    public function convertToBooleanProperlyConvertsNumericValues($number, bool $expected): void
     {
         $this->assertEquals($expected, BooleanNode::convertToBoolean($number, $this->renderingContext));
     }
@@ -81,7 +82,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getNumericBooleanTestValues()
+    public function getNumericBooleanTestValues(): array
     {
         return [
             [0, false],
@@ -96,7 +97,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function convertToBooleanProperlyConvertsValuesOfTypeArray()
+    public function convertToBooleanProperlyConvertsValuesOfTypeArray(): void
     {
         $this->assertFalse(BooleanNode::convertToBoolean([], $this->renderingContext));
 
@@ -107,7 +108,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function convertToBooleanProperlyConvertsObjects()
+    public function convertToBooleanProperlyConvertsObjects(): void
     {
         $this->assertFalse(BooleanNode::convertToBoolean(null, $this->renderingContext));
 
@@ -117,7 +118,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEvaluateComparatorTestValues()
+    public function getEvaluateComparatorTestValues(): array
     {
         $user1 = new UserWithToString('foobar');
         $user2 = new UserWithToString('foobar');
@@ -154,7 +155,7 @@ class BooleanNodeTest extends UnitTestCase
      * @param NodeInterface $node
      * @param boolean $expected
      */
-    public function testCreateFromNodeAndEvaluate(NodeInterface $node, $expected)
+    public function testCreateFromNodeAndEvaluate(NodeInterface $node, bool $expected): void
     {
         $result = BooleanNode::createFromNodeAndEvaluate($node, $this->renderingContext);
         $this->assertEquals($expected, $result);
@@ -163,7 +164,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getCreateFromNodeAndEvaluateTestValues()
+    public function getCreateFromNodeAndEvaluateTestValues(): array
     {
         return [
             '1 && 1' => [new TextNode('1 && 1'), true],
@@ -183,7 +184,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingNestedComparisonsWorks()
+    public function comparingNestedComparisonsWorks(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('('));
@@ -199,7 +200,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingEqualNumbersReturnsTrue()
+    public function comparingEqualNumbersReturnsTrue(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
@@ -213,7 +214,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingUnequalNumbersReturnsFalse()
+    public function comparingUnequalNumbersReturnsFalse(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
@@ -227,7 +228,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingEqualIdentityReturnsTrue()
+    public function comparingEqualIdentityReturnsTrue(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
@@ -241,7 +242,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingUnequalIdentityReturnsFalse()
+    public function comparingUnequalIdentityReturnsFalse(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new NumericNode('0'));
@@ -255,7 +256,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function notEqualReturnsFalseIfNumbersAreEqual()
+    public function notEqualReturnsFalseIfNumbersAreEqual(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
@@ -269,7 +270,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function notEqualReturnsTrueIfNumbersAreNotEqual()
+    public function notEqualReturnsTrueIfNumbersAreNotEqual(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('5'));
@@ -283,7 +284,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function oddNumberModulo2ReturnsTrue()
+    public function oddNumberModulo2ReturnsTrue(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('43'));
@@ -297,7 +298,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function evenNumberModulo2ReturnsFalse()
+    public function evenNumberModulo2ReturnsFalse(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('42'));
@@ -311,7 +312,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function greaterThanReturnsTrueIfNumberIsReallyGreater()
+    public function greaterThanReturnsTrueIfNumberIsReallyGreater(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -325,7 +326,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function greaterThanReturnsFalseIfNumberIsEqual()
+    public function greaterThanReturnsFalseIfNumberIsEqual(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -339,7 +340,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater()
+    public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -353,7 +354,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function greaterOrEqualsReturnsTrueIfNumberIsEqual()
+    public function greaterOrEqualsReturnsTrueIfNumberIsEqual(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -365,7 +366,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function greaterOrEqualsReturnFalseIfNumberIsSmaller()
+    public function greaterOrEqualsReturnFalseIfNumberIsSmaller(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -377,7 +378,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function lessThanReturnsTrueIfNumberIsReallyless()
+    public function lessThanReturnsTrueIfNumberIsReallyless(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('9'));
@@ -389,7 +390,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function lessThanReturnsFalseIfNumberIsEqual()
+    public function lessThanReturnsFalseIfNumberIsEqual(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -401,7 +402,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function lessOrEqualsReturnsTrueIfNumberIsReallyLess()
+    public function lessOrEqualsReturnsTrueIfNumberIsReallyLess(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('9'));
@@ -413,7 +414,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function lessOrEqualsReturnsTrueIfNumberIsEqual()
+    public function lessOrEqualsReturnsTrueIfNumberIsEqual(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('10'));
@@ -425,7 +426,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function lessOrEqualsReturnFalseIfNumberIsBigger()
+    public function lessOrEqualsReturnFalseIfNumberIsBigger(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('11'));
@@ -437,7 +438,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber()
+    public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('11 <= -2.1'));
@@ -448,7 +449,7 @@ class BooleanNodeTest extends UnitTestCase
      * @param array $variables
      * @return RenderingContext
      */
-    protected function getDummyRenderingContextWithVariables(array $variables)
+    protected function getDummyRenderingContextWithVariables(array $variables): RenderingContextInterface
     {
         $context = $this->renderingContext;
         $context->setVariableProvider(new StandardVariableProvider($variables));
@@ -459,20 +460,20 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingVariableWithMatchedQuotedString()
+    public function comparingVariableWithMatchedQuotedString(): void
     {
         $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
         $rootNode = new RootNode();
         $rootNode->addChildNode(new ObjectAccessorNode('test'));
-        $rootNode->addChildNode(new TextNode(' == '));
-        $rootNode->addChildNode(new TextNode('\'somevalue\''));
+        #$rootNode->addChildNode(new TextNode(' == '));
+        $rootNode->addChildNode(new TextNode(' == \'somevalue\''));
         $this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $renderingContext));
     }
 
     /**
      * @test
      */
-    public function comparingVariableWithUnmatchedQuotedString()
+    public function comparingVariableWithUnmatchedQuotedString(): void
     {
         $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
         $rootNode = new RootNode();
@@ -485,7 +486,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingNotEqualsVariableWithMatchedQuotedString()
+    public function comparingNotEqualsVariableWithMatchedQuotedString(): void
     {
         $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
         $rootNode = new RootNode();
@@ -498,7 +499,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingNotEqualsVariableWithUnmatchedQuotedString()
+    public function comparingNotEqualsVariableWithUnmatchedQuotedString(): void
     {
         $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
         $rootNode = new RootNode();
@@ -511,7 +512,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function comparingEqualsVariableWithMatchedQuotedStringInSingleTextNode()
+    public function comparingEqualsVariableWithMatchedQuotedStringInSingleTextNode(): void
     {
         $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
         $rootNode = new RootNode();
@@ -523,7 +524,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function notEqualReturnsFalseIfComparingMatchingStrings()
+    public function notEqualReturnsFalseIfComparingMatchingStrings(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' != "stringA"'));
@@ -533,7 +534,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function notEqualReturnsTrueIfComparingNonMatchingStrings()
+    public function notEqualReturnsTrueIfComparingNonMatchingStrings(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' != \'stringB\''));
@@ -543,7 +544,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function equalsReturnsFalseIfComparingNonMatchingStrings()
+    public function equalsReturnsFalseIfComparingNonMatchingStrings(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == \'stringB\''));
@@ -553,7 +554,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function equalsReturnsTrueIfComparingMatchingStrings()
+    public function equalsReturnsTrueIfComparingMatchingStrings(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == "stringA"'));
@@ -563,7 +564,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function equalsReturnsTrueIfComparingMatchingStringsWithEscapedQuotes()
+    public function equalsReturnsTrueIfComparingMatchingStringsWithEscapedQuotes(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'\\\'stringA\\\'\' == \'\\\'stringA\\\'\''));
@@ -573,7 +574,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function equalsReturnsFalseIfComparingStringWithNonZero()
+    public function equalsReturnsFalseIfComparingStringWithNonZero(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == 42'));
@@ -583,7 +584,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function equalsReturnsTrueIfComparingStringWithZero()
+    public function equalsReturnsTrueIfComparingStringWithZero(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == 0'));
@@ -593,7 +594,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function equalsReturnsFalseIfComparingStringZeroWithZero()
+    public function equalsReturnsFalseIfComparingStringZeroWithZero(): void
     {
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'0\' == 0'));
@@ -603,7 +604,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectsAreComparedStrictly()
+    public function objectsAreComparedStrictly(): void
     {
         $object1 = new \stdClass();
         $object2 = new \stdClass();
@@ -627,7 +628,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectsAreComparedStrictlyInUnequalComparison()
+    public function objectsAreComparedStrictlyInUnequalComparison(): void
     {
         $object1 = new \stdClass();
         $object2 = new \stdClass();
@@ -654,7 +655,7 @@ class BooleanNodeTest extends UnitTestCase
      * @test
      * @dataProvider getStandardInputTypes
      */
-    public function acceptsStandardTypesAsInput($input, $expected)
+    public function acceptsStandardTypesAsInput($input, bool $expected): void
     {
         $node = new BooleanNode($input);
         $this->assertEquals($expected, $node->evaluate($this->renderingContext));
@@ -663,7 +664,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getStandardInputTypes()
+    public function getStandardInputTypes(): array
     {
         return [
             [0, false],

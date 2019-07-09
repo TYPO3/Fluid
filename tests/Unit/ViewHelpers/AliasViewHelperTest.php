@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -18,7 +19,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(AliasViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('map', 'array', $this->anything(), true);
@@ -28,7 +29,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderAddsSingleValueToTemplateVariableContainerAndRemovesItAfterRendering()
+    public function renderAddsSingleValueToTemplateVariableContainerAndRemovesItAfterRendering(): void
     {
         $viewHelper = new AliasViewHelper();
 
@@ -36,7 +37,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
             ViewHelperNode::class,
             ['evaluateChildNodes'],
             [],
-            '',
+            false,
             false
         );
         $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
@@ -50,7 +51,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderAddsMultipleValuesToTemplateVariableContainerAndRemovesThemAfterRendering()
+    public function renderAddsMultipleValuesToTemplateVariableContainerAndRemovesThemAfterRendering(): void
     {
         $viewHelper = new AliasViewHelper();
 
@@ -58,7 +59,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
             ViewHelperNode::class,
             ['evaluateChildNodes'],
             [],
-            '',
+            false,
             false
         );
         $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
@@ -72,7 +73,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderDoesNotTouchTemplateVariableContainerAndReturnsChildNodesIfMapIsEmpty()
+    public function renderDoesNotTouchTemplateVariableContainerAndReturnsChildNodesIfMapIsEmpty(): void
     {
         $viewHelper = new AliasViewHelper();
 
@@ -80,7 +81,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
             ViewHelperNode::class,
             ['evaluateChildNodes'],
             [],
-            '',
+            false,
             false
         );
         $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));

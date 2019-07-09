@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\View;
 
 /*
@@ -23,7 +24,7 @@ interface ViewInterface
      * @return ViewInterface an instance of $this, to enable chaining
      * @api
      */
-    public function assign($key, $value);
+    public function assign($key, $value): self;
 
     /**
      * Add multiple variables to the view data collection
@@ -32,12 +33,12 @@ interface ViewInterface
      * @return ViewInterface an instance of $this, to enable chaining
      * @api
      */
-    public function assignMultiple(array $values);
+    public function assignMultiple(array $values): self;
 
     /**
      * Renders the view
      *
-     * @return string The rendered view
+     * @return mixed The rendered view
      * @api
      */
     public function render();
@@ -48,19 +49,19 @@ interface ViewInterface
      * @param string $sectionName Name of section to render
      * @param array $variables The variables to use
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string rendered template for the section
+     * @return mixed rendered template for the section
      * @throws InvalidSectionException
      */
-    public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false);
+    public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false);
 
     /**
      * Renders a partial.
      *
      * @param string $partialName
-     * @param string $sectionName
+     * @param string|null $sectionName
      * @param array $variables
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
-     * @return string
+     * @return mixed
      */
-    public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false);
+    public function renderPartial(string $partialName, ?string $sectionName, array $variables, bool $ignoreUnknown = false);
 }

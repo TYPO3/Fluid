@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -18,7 +19,7 @@ class ArgumentDefinitionTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectStoresDataCorrectly()
+    public function objectStoresDataCorrectly(): void
     {
         $name = 'This is a name';
         $description = 'Example desc';

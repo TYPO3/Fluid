@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * EXAMPLE: MVC pattern used with TYPO3.Fluid

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * EXAMPLE: Static string caching of template code

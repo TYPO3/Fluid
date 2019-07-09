@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
@@ -16,6 +17,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
  */
 class ConstraintSyntaxTreeNode extends ViewHelperNode
 {
+    /**
+     * @var VariableProviderInterface|mixed
+     */
+    public $variableContainer;
     public $callProtocol = [];
 
     public function __construct(VariableProviderInterface $variableContainer)

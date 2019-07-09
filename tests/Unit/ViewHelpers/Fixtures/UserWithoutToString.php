@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
@@ -20,7 +21,7 @@ class UserWithoutToString
     /**
      * @param string $name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -28,7 +29,7 @@ class UserWithoutToString
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -36,7 +37,7 @@ class UserWithoutToString
     /**
      * @return boolean
      */
-    public function isNamed()
+    public function isNamed(): bool
     {
         return !empty($this->name);
     }
@@ -44,7 +45,7 @@ class UserWithoutToString
     /**
      * @return boolean
      */
-    public function hasHasAccessor()
+    public function hasHasAccessor(): bool
     {
         return !empty($this->name);
     }
@@ -52,7 +53,7 @@ class UserWithoutToString
     /**
      * @return boolean
      */
-    public function isIsAccessor()
+    public function isIsAccessor(): bool
     {
         return !empty($this->name);
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -7,8 +8,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
@@ -76,7 +77,7 @@ class ForViewHelper extends AbstractViewHelper
         parent::initializeArguments();
         $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
-        $this->registerArgument('key', 'string', 'Variable to assign array key to', false);
+        $this->registerArgument('key', 'string', 'Variable to assign array key to');
         $this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', false, false);
         $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
     }
@@ -85,8 +86,8 @@ class ForViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return string
-     * @throws ViewHelper\Exception
+     * @return mixed
+     * @throws Exception
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
@@ -95,7 +96,7 @@ class ForViewHelper extends AbstractViewHelper
             return '';
         }
         if (is_object($arguments['each']) && !$arguments['each'] instanceof \Traversable) {
-            throw new ViewHelper\Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
+            throw new Exception('ForViewHelper only supports arrays and objects implementing \Traversable interface', 1248728393);
         }
 
         if ($arguments['reverse'] === true) {

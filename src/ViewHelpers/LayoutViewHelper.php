@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -72,7 +73,7 @@ class LayoutViewHelper extends AbstractViewHelper
         ViewHelperNode $node,
         array $arguments,
         VariableProviderInterface $variableContainer
-    ) {
+    ): void {
         if (isset($arguments['name'])) {
             $layoutNameNode = $arguments['name'];
         } else {

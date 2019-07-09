@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -27,7 +28,7 @@ abstract class AbstractRenderable implements RenderableInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -36,7 +37,7 @@ abstract class AbstractRenderable implements RenderableInterface
      * @param string $name
      * @return RenderableClosure
      */
-    public function setName($name)
+    public function setName(string $name): RenderableInterface
     {
         $this->name = $name;
         return $this;
@@ -46,7 +47,7 @@ abstract class AbstractRenderable implements RenderableInterface
      * @param NodeInterface $node
      * @return RenderableClosure
      */
-    public function setNode(NodeInterface $node)
+    public function setNode(NodeInterface $node): RenderableInterface
     {
         $this->node = $node;
         return $this;
@@ -55,7 +56,7 @@ abstract class AbstractRenderable implements RenderableInterface
     /**
      * @return NodeInterface
      */
-    public function getNode()
+    public function getNode(): NodeInterface
     {
         return $this->node ? $this->node : new TextNode(sprintf('%s (%s)', static::class, $this->name));
     }

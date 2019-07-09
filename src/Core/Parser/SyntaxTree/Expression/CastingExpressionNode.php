@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -18,7 +19,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @var array
      */
     protected static $validTypes = [
-        'integer', 'boolean', 'string', 'float', 'array', 'DateTime'
+        'integer', 'boolean', 'string', 'float', 'array', \DateTime::class
     ];
 
     /**
@@ -40,13 +41,12 @@ class CastingExpressionNode extends AbstractExpressionNode
 
     public function __construct($expression, array $matches)
     {
-        $this->expression = trim($expression, '{}');
-        $this->matches = $matches;
-        list (, $type) = explode(' as ', $this->expression);
+        parent::__construct($expression, $matches);
+        list (, $type) = explode(' as ', trim($this->expression, '{}'));
         if (!in_array($type, self::$validTypes)) {
             throw new ExpressionException(
                 sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
+                    'Invalid target conversion type "%s" specified in casting expression "%s".',
                     $type,
                     $this->expression
                 ),
@@ -61,14 +61,14 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param array $matches
      * @return integer|float
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches)
     {
         $expression = trim($expression, '{}');
         list ($variable, $type) = explode(' as ', $expression);
         if (!in_array($type, self::$validTypes)) {
             throw new ExpressionException(
                 sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
+                    'Invalid target conversion type "%s" specified in casting expression "%s".',
                     $type,
                     $expression
                 ),
@@ -84,7 +84,7 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param string $type
      * @return mixed
      */
-    protected static function convert($variable, $type)
+    protected static function convert($variable, string $type)
     {
         $value = null;
         if ($type === 'integer') {
@@ -95,7 +95,7 @@ class CastingExpressionNode extends AbstractExpressionNode
             $value = (string) $variable;
         } elseif ($type === 'float') {
             $value = (float) $variable;
-        } elseif ($type === 'DateTime') {
+        } elseif ($type === \DateTime::class) {
             $value = self::convertToDateTime($variable);
         } elseif ($type === 'array') {
             $value = (array) self::convertToArray($variable);
@@ -109,17 +109,17 @@ class CastingExpressionNode extends AbstractExpressionNode
      */
     protected static function convertToDateTime($variable)
     {
-        if (preg_match_all('/[a-z]+/i', $variable)) {
+        if (is_string($variable) && preg_match_all('/[a-z]+/i', $variable)) {
             return new \DateTime($variable);
         }
-        return \DateTime::createFromFormat('U', (integer) $variable);
+        return \DateTime::createFromFormat('U', (string) $variable);
     }
 
     /**
      * @param mixed $variable
      * @return array
      */
-    protected static function convertToArray($variable)
+    protected static function convertToArray($variable): array
     {
         if (is_array($variable)) {
             return $variable;

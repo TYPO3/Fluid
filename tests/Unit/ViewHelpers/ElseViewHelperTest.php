@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
@@ -18,7 +20,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(ElseViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything());
@@ -28,7 +30,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderRendersChildren()
+    public function renderRendersChildren(): void
     {
         $viewHelper = $this->getMock(ElseViewHelper::class, ['renderChildren']);
 
@@ -40,10 +42,10 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompilesToEmptyString()
+    public function testCompilesToEmptyString(): void
     {
         $viewHelper = new ElseViewHelper();
-        $node = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $node = $this->getMock(ViewHelperNode::class, [], [], false, false);
         $compiler = $this->getMock(TemplateCompiler::class);
         $init = '';
         $result = $viewHelper->compile('', '', $init, $node, $compiler);

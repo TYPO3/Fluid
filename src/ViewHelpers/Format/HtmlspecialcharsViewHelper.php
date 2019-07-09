@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 /*
@@ -63,7 +64,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
     /**
      * Escapes special characters with their escaped counterparts as needed using PHPs htmlspecialchars() function.
      *
-     * @return string the altered string
+     * @return mixed the altered string or unaltered non-string-representable value
      * @see http://www.php.net/manual/function.htmlspecialchars.php
      * @api
      */
@@ -94,9 +95,9 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
     {
         $valueVariableName = $compiler->variableName('value');
         $initializationPhpCode .= sprintf('%1$s = (%2$s[\'value\'] !== NULL ? %2$s[\'value\'] : %3$s());', $valueVariableName, $argumentsName, $closureName) . chr(10);

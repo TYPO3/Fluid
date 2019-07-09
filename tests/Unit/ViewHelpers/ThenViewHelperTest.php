@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
@@ -18,7 +20,7 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderRendersChildren()
+    public function renderRendersChildren(): void
     {
         $viewHelper = $this->getMock(ThenViewHelper::class, ['renderChildren']);
 
@@ -30,11 +32,11 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCompileReturnsEmptyString()
+    public function testCompileReturnsEmptyString(): void
     {
         $section = new ThenViewHelper();
         $init = '';
-        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], false, false);
         $result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
         $this->assertEquals('\'\'', $result);
     }

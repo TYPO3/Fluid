@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
@@ -29,12 +30,12 @@ class ExamplesTest extends BaseTestCase
      * @param array $expectedOutputs
      * @param string $expectedException
      */
-    public function testExampleScriptFileWithoutCache($script, array $expectedOutputs, $expectedException = null)
+    public function testExampleScriptFileWithoutCache(string $script, array $expectedOutputs, string $expectedException = null): void
     {
         if ($expectedException !== null) {
             $this->setExpectedException($expectedException);
         }
-        $this->runExampleScriptTest($script, $expectedOutputs, false);
+        $this->runExampleScriptTest($script, $expectedOutputs, '');
     }
 
     /**
@@ -43,7 +44,7 @@ class ExamplesTest extends BaseTestCase
      * @param array $expectedOutputs
      * @param string $expectedException
      */
-    public function testExampleScriptFileWithCache($script, array $expectedOutputs, $expectedException = null)
+    public function testExampleScriptFileWithCache(string $script, array $expectedOutputs, string $expectedException = null): void
     {
         if ($expectedException !== null) {
             $this->setExpectedException($expectedException);
@@ -58,23 +59,23 @@ class ExamplesTest extends BaseTestCase
      * @param array $expectedOutputs
      * @param string $FLUID_CACHE_DIRECTORY
      */
-    protected function runExampleScriptTest($script, array $expectedOutputs, $FLUID_CACHE_DIRECTORY)
+    protected function runExampleScriptTest(string $script, array $expectedOutputs, string $FLUID_CACHE_DIRECTORY): void
     {
         $scriptFile = __DIR__ . '/../../examples/' . $script;
-        $self = $this;
-        $this->setOutputCallback(function ($output) use ($self, $expectedOutputs) {
-            foreach ($expectedOutputs as $expectedOutput) {
-                $self->assertContains($expectedOutput, $output);
-            }
-        });
+        ob_start();
         include $scriptFile;
+        $output = ob_get_contents();
+        ob_end_clean();
+        foreach ($expectedOutputs as $expectedOutput) {
+            $this->assertStringContainsString($expectedOutput, $output);
+        }
         unset($FLUID_CACHE_DIRECTORY);
     }
 
     /**
      * @return array
      */
-    public function getExampleScriptTestValues()
+    public function getExampleScriptTestValues(): array
     {
         return [
             'example_conditions.php' => [

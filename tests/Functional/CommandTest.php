@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
@@ -29,7 +30,7 @@ class CommandTest extends BaseTestCase
      * @param array $mustNotContain
      * @dataProvider getCommandTestValues
      */
-    public function testCommand($argumentString, array $mustContain, array $mustNotContain)
+    public function testCommand(string $argumentString, array $mustContain, array $mustNotContain): void
     {
         $bin = realpath(__DIR__ . '/../../bin/fluid');
         $command = sprintf($argumentString, $bin);
@@ -45,13 +46,13 @@ class CommandTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getCommandTestValues()
+    public function getCommandTestValues(): array
     {
         $dummyVariablesFile = realpath(__DIR__ . '/Fixtures/Variables/DummyVariables.json');
         return [
-            ['%s --help', ['Use the CLI utility in the following modes'], ['Exception']],
+            ['%s --help', ['Use the CLI utility in the following modes'], [\Exception::class]],
             ['echo "Hello world!" | %s', ['Hello world!'], ['Exeption']],
-            ['echo "{foo}" | %s --variables "{\\"foo\\": \\"bar\\"}"', ['bar'], ['Exception', 'foo']],
+            ['echo "{foo}" | %s --variables "{\\"foo\\": \\"bar\\"}"', ['bar'], [\Exception::class, 'foo']],
         ];
     }
 }

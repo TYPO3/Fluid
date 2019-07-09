@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -82,7 +83,6 @@ class SectionViewHelper extends AbstractViewHelper
     {
         parent::postParse($arguments, $definitions, $parsedTemplate, $renderingContext);
         $variableContainer = $parsedTemplate->getVariableContainer();
-        /** @var TextNode $nameArgument */
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
         $sections = $variableContainer->get('1457379500_sections') ?: [];
@@ -97,18 +97,18 @@ class SectionViewHelper extends AbstractViewHelper
      * called directly after the ViewHelper was built.
      *
      * @param ViewHelperNode $node
-     * @param TextNode[] $arguments
+     * @param array $arguments
      * @param VariableProviderInterface $variableContainer
      * @return void
      */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
+    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer): void
     {
-        /** @var $nameArgument TextNode */
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
-        $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
+
+        $sections = $variableContainer->get('1457379500_sections') ?: [];
         $sections[$sectionName] = $node;
-        $variableContainer['1457379500_sections'] = $sections;
+        $variableContainer->add('1457379500_sections', $sections);
     }
 
     /**

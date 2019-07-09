@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -8,10 +9,8 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -65,7 +64,7 @@ class TemplateCompiler
      * Cannot be reversed once done - should only be used from within
      * FluidCacheWarmerInterface implementations!
      */
-    public function enterWarmupMode()
+    public function enterWarmupMode(): void
     {
         $this->mode = static::MODE_WARMUP;
     }
@@ -73,15 +72,15 @@ class TemplateCompiler
     /**
      * Returns TRUE only if the TemplateCompiler is in warmup mode.
      */
-    public function isWarmupMode()
+    public function isWarmupMode(): bool
     {
         return $this->mode === static::MODE_WARMUP;
     }
 
     /**
-     * @return ParsedTemplateInterface|NULL
+     * @return ParsedTemplateInterface|null
      */
-    public function getCurrentlyProcessingState()
+    public function getCurrentlyProcessingState(): ?ParsedTemplateInterface
     {
         return $this->currentlyProcessingState;
     }
@@ -90,7 +89,7 @@ class TemplateCompiler
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->renderingContext = $renderingContext;
     }
@@ -98,7 +97,7 @@ class TemplateCompiler
     /**
      * @return RenderingContextInterface
      */
-    public function getRenderingContext()
+    public function getRenderingContext(): RenderingContextInterface
     {
         return $this->renderingContext;
     }
@@ -107,7 +106,7 @@ class TemplateCompiler
      * @param NodeConverter $nodeConverter
      * @return void
      */
-    public function setNodeConverter(NodeConverter $nodeConverter)
+    public function setNodeConverter(NodeConverter $nodeConverter): void
     {
         $this->nodeConverter = $nodeConverter;
     }
@@ -115,7 +114,7 @@ class TemplateCompiler
     /**
      * @return NodeConverter
      */
-    public function getNodeConverter()
+    public function getNodeConverter(): NodeConverter
     {
         return $this->nodeConverter;
     }
@@ -123,7 +122,7 @@ class TemplateCompiler
     /**
      * @return void
      */
-    public function disable()
+    public function disable(): void
     {
         throw new StopCompilingException('Compiling stopped');
     }
@@ -131,7 +130,7 @@ class TemplateCompiler
     /**
      * @return boolean
      */
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return !$this->renderingContext->isCacheEnabled();
     }
@@ -140,9 +139,12 @@ class TemplateCompiler
      * @param string $identifier
      * @return boolean
      */
-    public function has($identifier)
+    public function has(string $identifier): bool
     {
         $identifier = $this->sanitizeIdentifier($identifier);
+        if (!$identifier) {
+            return false;
+        }
         if (isset($this->syntaxTreeInstanceCache[$identifier]) || class_exists($identifier, false)) {
             return true;
         }
@@ -156,7 +158,7 @@ class TemplateCompiler
      * @param string $identifier
      * @return ParsedTemplateInterface
      */
-    public function get($identifier)
+    public function get(string $identifier): ParsedTemplateInterface
     {
         $identifier = $this->sanitizeIdentifier($identifier);
 
@@ -180,7 +182,7 @@ class TemplateCompiler
      *
      * @return void
      */
-    public function reset()
+    public function reset(): void
     {
         $this->currentlyProcessingState = null;
     }
@@ -190,7 +192,7 @@ class TemplateCompiler
      * @param ParsingState $parsingState
      * @return string|null
      */
-    public function store($identifier, ParsingState $parsingState)
+    public function store(string $identifier, ParsingState $parsingState): ?string
     {
         if ($this->isDisabled()) {
             $parsingState->setCompilable(false);
@@ -225,14 +227,14 @@ class TemplateCompiler
 
 %s {
 
-public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext): string {
 \$self = \$this;
 %s;
 }
-public function hasLayout() {
+public function hasLayout(): bool {
 return %s;
 }
-public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
+public function addCompiledNamespaces(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext): void {
 \$renderingContext->getViewHelperResolver()->addNamespaces(%s);
 }
 
@@ -257,7 +259,7 @@ EOD;
      * @param RootNode|string $storedLayoutNameArgument
      * @return string
      */
-    protected function generateCodeForLayoutName($storedLayoutNameArgument)
+    protected function generateCodeForLayoutName($storedLayoutNameArgument): string
     {
         if ($storedLayoutNameArgument instanceof NodeInterface) {
             $converted = $this->nodeConverter->convert($storedLayoutNameArgument);
@@ -271,7 +273,7 @@ EOD;
      * @param ParsingState $parsingState
      * @return string
      */
-    protected function generateSectionCodeFromParsingState(ParsingState $parsingState)
+    protected function generateSectionCodeFromParsingState(ParsingState $parsingState): string
     {
         $generatedRenderFunctions = '';
         if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
@@ -279,7 +281,7 @@ EOD;
             foreach ($sections as $sectionName => $sectionRootNode) {
                 $generatedRenderFunctions .= $this->generateCodeForSection(
                     $this->nodeConverter->convertListOfSubNodes($sectionRootNode),
-                    'section_' . sha1($sectionName),
+                    'section_' . sha1((string)$sectionName),
                     'section ' . $sectionName
                 );
             }
@@ -294,7 +296,7 @@ EOD;
      * @param string $identifier
      * @return string the sanitized identifier
      */
-    protected function sanitizeIdentifier($identifier)
+    protected function sanitizeIdentifier(string $identifier): ?string
     {
         return preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
     }
@@ -305,7 +307,7 @@ EOD;
      * @param string $comment
      * @return string
      */
-    protected function generateCodeForSection(array $converted, $expectedFunctionName, $comment)
+    protected function generateCodeForSection(array $converted, string $expectedFunctionName, string $comment): string
     {
         $templateCode = <<<EOD
 /**
@@ -327,7 +329,7 @@ EOD;
      * @param string $prefix
      * @return string
      */
-    public function variableName($prefix)
+    public function variableName(string $prefix): string
     {
         return $this->nodeConverter->variableName($prefix);
     }
@@ -355,7 +357,7 @@ EOD;
      * @param string $argumentName
      * @return string
      */
-    public function wrapViewHelperNodeArgumentEvaluationInClosure(NodeInterface $node, string $argumentName): string
+    public function wrapViewHelperNodeArgumentEvaluationInClosure(NodeInterface $node, string $argumentName)
     {
         $arguments = $node->getParsedArguments();
         $argument = $arguments[$argumentName] ?? null;

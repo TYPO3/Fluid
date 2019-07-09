@@ -1,5 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
@@ -12,16 +18,14 @@ class TernaryConditionsTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         $someObject = new \stdClass();
         $someObject->someString = 'bar';
         $someObject->someInt = 1337;
         $someObject->someFloat = 13.37;
         $someObject->someBoolean = true;
-        $someArray = [
-            'foo' => 'bar'
-        ];
+
         return [
             [
                 '{true ? \'yes\' : \'no\'}',

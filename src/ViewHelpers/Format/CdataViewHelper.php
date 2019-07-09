@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 /*
@@ -66,7 +67,7 @@ class CdataViewHelper extends AbstractViewHelper
 
     /**
      * @param array $arguments
-     * @param callable $renderChildrenClosure
+     * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      * @return string
      */

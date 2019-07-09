@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
 /*
@@ -11,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
  */
 class ClassWithMagicGetter
 {
-    public function __call($name, $arguments)
+    public function __call($name, $arguments): ?string
     {
         if ($name === 'getTest') {
             return 'test result';

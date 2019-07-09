@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -20,7 +21,7 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testThrowsExceptionIfUsedOutsideSwitch()
+    public function testThrowsExceptionIfUsedOutsideSwitch(): void
     {
         $viewHelper = new DefaultCaseViewHelper();
         $this->injectDependenciesIntoViewHelper($viewHelper);
@@ -31,11 +32,11 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testCallsRenderChildrenWhenUsedInsideSwitch()
+    public function testCallsRenderChildrenWhenUsedInsideSwitch(): void
     {
         $viewHelper = $this->getAccessibleMock(DefaultCaseViewHelper::class, ['renderChildren']);
         $viewHelper->expects($this->once())->method('renderChildren');
-        $renderingContext = $this->getMock(RenderingContext::class, ['getViewHelperVariableContainer'], [], '', false);
+        $renderingContext = $this->getMock(RenderingContext::class, ['getViewHelperVariableContainer'], [], false, false);
         $variableContainer = $this->getMock(ViewHelperVariableContainer::class, ['exists']);
         $variableContainer->expects($this->once())->method('exists')->willReturn(true);
         $renderingContext->expects($this->once())->method('getViewHelperVariableContainer')->willReturn($variableContainer);

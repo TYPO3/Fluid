@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -6,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -13,7 +15,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for NumericNode
- *
  */
 class NumericNodeTest extends UnitTestCase
 {
@@ -31,7 +32,7 @@ class NumericNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsProperIntegerGivenInConstructor()
+    public function renderReturnsProperIntegerGivenInConstructor(): void
     {
         $string = '1';
         $node = new NumericNode($string);
@@ -41,7 +42,7 @@ class NumericNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderReturnsProperFloatGivenInConstructor()
+    public function renderReturnsProperFloatGivenInConstructor(): void
     {
         $string = '1.1';
         $node = new NumericNode($string);
@@ -51,18 +52,18 @@ class NumericNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function constructorThrowsExceptionIfNoNumericGiven()
+    public function constructorThrowsExceptionIfNoNumericGiven(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+        $this->expectException(Exception::class);
         new NumericNode('foo');
     }
 
     /**
      * @test
      */
-    public function addChildNodeThrowsException()
+    public function addChildNodeThrowsException(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+        $this->expectException(Exception::class);
 
         $node = new NumericNode('1');
         $node->addChildNode(clone $node);

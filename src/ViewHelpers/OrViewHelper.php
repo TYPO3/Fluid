@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -51,7 +52,7 @@ class OrViewHelper extends AbstractViewHelper
             $content = $alternative;
         }
 
-        if (false === empty($content)) {
+        if (!empty($content)) {
             $content = null !== $arguments ? vsprintf($content, $arguments) : $content;
         }
 

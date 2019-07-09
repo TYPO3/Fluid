@@ -1,5 +1,11 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Compiler;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
@@ -78,11 +84,11 @@ class ViewHelperCompiler
      */
     public function compileWithCallToStaticMethod(
         ViewHelperInterface $viewHelper,
-        $argumentsName,
-        $renderChildrenClosureName,
-        $method = self::RENDER_STATIC,
+        string $argumentsName,
+        string $renderChildrenClosureName,
+        string $method = self::RENDER_STATIC,
         $onClass = null
-    ) {
+    ): array {
         $onClass = $onClass ?: get_class($viewHelper);
         return [
             self::DEFAULT_INIT,

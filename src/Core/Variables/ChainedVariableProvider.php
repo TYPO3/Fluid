@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /*
@@ -26,13 +27,14 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
      */
     public function __construct(array $variableProviders = [])
     {
+        parent::__construct([]);
         $this->variableProviders = $variableProviders;
     }
 
     /**
      * @return array
      */
-    public function getAll()
+    public function getAll(): array
     {
         $merged = [];
         foreach (array_reverse($this->variableProviders) as $provider) {
@@ -45,7 +47,7 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
      * @param string $identifier
      * @return mixed
      */
-    public function get($identifier)
+    public function get(string $identifier)
     {
         if (array_key_exists($identifier, $this->variables)) {
             return $this->variables[$identifier];
@@ -64,7 +66,7 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
      * @param array $accessors
      * @return mixed|null
      */
-    public function getByPath($path, array $accessors = [])
+    public function getByPath(string $path, array $accessors = [])
     {
         $value = VariableExtractor::extract($this->variables, $path, $accessors);
         if ($value !== null) {
@@ -82,7 +84,7 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
     /**
      * @return array
      */
-    public function getAllIdentifiers()
+    public function getAllIdentifiers(): array
     {
         $merged = parent::getAllIdentifiers();
         foreach ($this->variableProviders as $provider) {
@@ -92,10 +94,10 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
     }
 
     /**
-     * @param array|\ArrayAccess $variables
-     * @return ChainedVariableProvider
+     * @param array $variables
+     * @return VariableProviderInterface
      */
-    public function getScopeCopy($variables)
+    public function getScopeCopy(array $variables): VariableProviderInterface
     {
         $clone = clone $this;
         $clone->setSource($variables);

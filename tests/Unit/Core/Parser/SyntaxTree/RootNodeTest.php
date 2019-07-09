@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -13,7 +14,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for RootNode
- *
  */
 class RootNodeTest extends UnitTestCase
 {
@@ -21,7 +21,7 @@ class RootNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateCallsEvaluateChildNodes()
+    public function testEvaluateCallsEvaluateChildNodes(): void
     {
         $view = new TemplateView();
         $subject = $this->getMock(RootNode::class, ['evaluateChildNodes']);

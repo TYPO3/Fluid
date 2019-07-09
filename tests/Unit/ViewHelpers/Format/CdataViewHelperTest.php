@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
@@ -22,12 +23,12 @@ class CdataViewHelperTest extends ViewHelperBaseTestcase
      * @param string $expected
      * @dataProvider getRenderTestValues
      */
-    public function testRender($arguments, $tagContent, $expected)
+    public function testRender(array $arguments, ?string $tagContent, string $expected): void
     {
         $instance = new CdataViewHelper();
         $instance->setArguments($arguments);
         $instance->setRenderingContext(new RenderingContextFixture());
-        $instance->setRenderChildrenClosure(function () use ($tagContent) {
+        $instance->setRenderChildrenClosure(function () use ($tagContent): ?string {
             return $tagContent;
         });
         $this->assertEquals($expected, $instance->initializeArgumentsAndRender());
@@ -36,7 +37,7 @@ class CdataViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderTestValues()
+    public function getRenderTestValues(): array
     {
         return [
             [[], 'test1', '<![CDATA[test1]]>'],

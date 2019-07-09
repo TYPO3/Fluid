@@ -1,5 +1,11 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
+declare(strict_types=1);
+namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
@@ -43,7 +49,7 @@ class RecursiveSectionRenderingTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Recursive section rendering clones variable storage and restores after loop ends' => [

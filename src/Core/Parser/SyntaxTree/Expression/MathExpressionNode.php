@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -38,7 +39,7 @@ class MathExpressionNode extends AbstractExpressionNode
      * @param array $matches
      * @return integer|float
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
+    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches)
     {
         // Split the expression on all recognized operators
         $matches = [];
@@ -60,7 +61,7 @@ class MathExpressionNode extends AbstractExpressionNode
                 if (!is_string($operator)) {
                     throw new Exception(
                         sprintf(
-                            'Invalid operator type (%s) given, it must be a valid string, e.g. "==" or ">"!',
+                            'Invalid operator type (%s) given, it must be a valid string, e.g. "+" or "-"!',
                             gettype($operator)
                         ),
                         1561121432
@@ -79,7 +80,7 @@ class MathExpressionNode extends AbstractExpressionNode
      * @param integer|float $right
      * @return integer|float
      */
-    protected static function evaluateOperation($left, $operator, $right)
+    protected static function evaluateOperation($left, string $operator, $right)
     {
         if (!is_numeric($left)) {
             $left = 0;

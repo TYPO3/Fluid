@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper;
 
 /**
@@ -14,7 +17,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
 {
 
     /**
-     * @var \TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper
+     * @var GroupedForViewHelper
      */
     protected $viewHelper;
 
@@ -28,7 +31,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsEmptyStringIfObjectIsNull()
+    public function renderReturnsEmptyStringIfObjectIsNull(): void
     {
         $this->viewHelper->setArguments(['each' => null, 'as' => 'foo', 'groupBy' => 'bar', 'groupKey' => null]);
         $this->assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
@@ -37,7 +40,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsEmptyStringIfObjectIsEmptyArray()
+    public function renderReturnsEmptyStringIfObjectIsEmptyArray(): void
     {
         $this->viewHelper->setArguments(['each' => [], 'as' => 'foo', 'groupBy' => 'bar', 'groupKey' => null]);
         $this->assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
@@ -46,9 +49,9 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable()
+    public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class);
+        $this->expectException(Exception::class);
 
         $object = new \stdClass();
         $this->viewHelper->setArguments(
@@ -61,7 +64,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsMultidimensionalArrayAndPreservesKeys()
+    public function renderGroupsMultidimensionalArrayAndPreservesKeys(): void
     {
         $photoshop = ['name' => 'Adobe Photoshop', 'license' => 'commercial'];
         $typo3 = ['name' => 'TYPO3', 'license' => 'GPL'];
@@ -81,7 +84,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsMultidimensionalArrayObjectAndPreservesKeys()
+    public function renderGroupsMultidimensionalArrayObjectAndPreservesKeys(): void
     {
         $photoshop = ['name' => 'Adobe Photoshop', 'license' => 'commercial'];
         $typo3 = ['name' => 'TYPO3', 'license' => 'GPL'];
@@ -101,7 +104,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsArrayOfObjectsAndPreservesKeys()
+    public function renderGroupsArrayOfObjectsAndPreservesKeys(): void
     {
         $photoshop = new \stdClass();
         $photoshop->name = 'Adobe Photoshop';
@@ -131,7 +134,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsIteratorOfObjectsAndPreservesKeys()
+    public function renderGroupsIteratorOfObjectsAndPreservesKeys(): void
     {
         $photoshop = new \stdClass();
         $photoshop->name = 'Adobe Photoshop';
@@ -163,7 +166,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsMultidimensionalArrayByObjectKey()
+    public function renderGroupsMultidimensionalArrayByObjectKey(): void
     {
         $customer1 = new \stdClass();
         $customer1->name = 'Anton Abel';
@@ -187,7 +190,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsMultidimensionalArrayByPropertyPath()
+    public function renderGroupsMultidimensionalArrayByPropertyPath(): void
     {
         $customer1 = new \stdClass();
         $customer1->name = 'Anton Abel';
@@ -216,7 +219,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsMultidimensionalObjectByObjectKey()
+    public function renderGroupsMultidimensionalObjectByObjectKey(): void
     {
         $customer1 = new \stdClass();
         $customer1->name = 'Anton Abel';
@@ -248,7 +251,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderGroupsMultidimensionalObjectByDateTimeObject()
+    public function renderGroupsMultidimensionalObjectByDateTimeObject(): void
     {
         $date1 = new \DateTime('2010-07-01');
         $date2 = new \DateTime('2010-07-04');
@@ -276,7 +279,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function groupingByAKeyThatDoesNotExistCreatesASingleGroup()
+    public function groupingByAKeyThatDoesNotExistCreatesASingleGroup(): void
     {
         $photoshop = ['name' => 'Adobe Photoshop', 'license' => 'commercial'];
         $typo3 = ['name' => 'TYPO3', 'license' => 'GPL'];
@@ -294,9 +297,9 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionWhenPassingOneDimensionalArraysToEach()
+    public function renderThrowsExceptionWhenPassingOneDimensionalArraysToEach(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class);
+        $this->expectException(Exception::class);
 
         $values = ['some', 'simple', 'array'];
 

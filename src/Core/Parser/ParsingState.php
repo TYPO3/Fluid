@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -6,11 +7,12 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\View;
+use TYPO3Fluid\Fluid\View\Exception;
 
 /**
  * Stores all information relevant for one parsing pass - that is, the root node,
@@ -23,7 +25,7 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * @var string
      */
-    protected $identifier;
+    protected $identifier = '';
 
     /**
      * Root node reference
@@ -63,7 +65,7 @@ class ParsingState implements ParsedTemplateInterface
      * @param string $identifier
      * @return void
      */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }
@@ -71,7 +73,7 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
@@ -82,7 +84,7 @@ class ParsingState implements ParsedTemplateInterface
      * @param VariableProviderInterface $variableContainer
      * @return void
      */
-    public function setVariableProvider(VariableProviderInterface $variableContainer)
+    public function setVariableProvider(VariableProviderInterface $variableContainer): void
     {
         $this->variableContainer = $variableContainer;
     }
@@ -93,7 +95,7 @@ class ParsingState implements ParsedTemplateInterface
      * @param NodeInterface $rootNode
      * @return void
      */
-    public function setRootNode(RootNode $rootNode)
+    public function setRootNode(RootNode $rootNode): void
     {
         $this->rootNode = $rootNode;
     }
@@ -103,7 +105,7 @@ class ParsingState implements ParsedTemplateInterface
      *
      * @return NodeInterface The root node
      */
-    public function getRootNode()
+    public function getRootNode(): RootNode
     {
         return $this->rootNode;
     }
@@ -112,7 +114,7 @@ class ParsingState implements ParsedTemplateInterface
      * Render the parsed template with rendering context
      *
      * @param RenderingContextInterface $renderingContext The rendering context to use
-     * @return string Rendered string
+     * @return mixed Rendered string
      */
     public function render(RenderingContextInterface $renderingContext)
     {
@@ -126,7 +128,7 @@ class ParsingState implements ParsedTemplateInterface
      * @param NodeInterface $node Node to push to node stack
      * @return void
      */
-    public function pushNodeToStack(NodeInterface $node)
+    public function pushNodeToStack(NodeInterface $node): void
     {
         array_push($this->nodeStack, $node);
     }
@@ -134,21 +136,21 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * Get the top stack element, without removing it.
      *
-     * @return NodeInterface the top stack element.
+     * @return ?NodeInterface the top stack element.
      */
-    public function getNodeFromStack()
+    public function getNodeFromStack(): ?NodeInterface
     {
-        return $this->nodeStack[count($this->nodeStack) - 1];
+        return end($this->nodeStack) ?: null;
     }
 
     /**
      * Pop the top stack element (=remove it) and return it back.
      *
-     * @return NodeInterface the top stack element, which was removed.
+     * @return NodeInterface|null the top stack element, which was removed.
      */
-    public function popNodeFromStack()
+    public function popNodeFromStack(): ?NodeInterface
     {
-        return array_pop($this->nodeStack);
+        return array_pop($this->nodeStack) ?: null;
     }
 
     /**
@@ -156,7 +158,7 @@ class ParsingState implements ParsedTemplateInterface
      *
      * @return integer Number of elements on the node stack (i.e. number of currently open Fluid tags)
      */
-    public function countNodeStack()
+    public function countNodeStack(): int
     {
         return count($this->nodeStack);
     }
@@ -166,7 +168,7 @@ class ParsingState implements ParsedTemplateInterface
      *
      * @return VariableProviderInterface The variable container or NULL if none has been set yet
      */
-    public function getVariableContainer()
+    public function getVariableContainer(): VariableProviderInterface
     {
         return $this->variableContainer;
     }
@@ -176,7 +178,7 @@ class ParsingState implements ParsedTemplateInterface
      *
      * @return boolean
      */
-    public function hasLayout()
+    public function hasLayout(): bool
     {
         return $this->variableContainer->exists('layoutName');
     }
@@ -188,9 +190,9 @@ class ParsingState implements ParsedTemplateInterface
      *
      * @param RenderingContextInterface $renderingContext
      * @return string
-     * @throws View\Exception
+     * @throws Exception
      */
-    public function getLayoutName(RenderingContextInterface $renderingContext)
+    public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
         $layoutName = $this->variableContainer->get('layoutName');
         return ($layoutName instanceof NodeInterface ? $layoutName->evaluate($renderingContext) : $layoutName);
@@ -200,14 +202,14 @@ class ParsingState implements ParsedTemplateInterface
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void
     {
     }
 
     /**
      * @return boolean
      */
-    public function isCompilable()
+    public function isCompilable(): bool
     {
         return $this->compilable;
     }
@@ -215,7 +217,7 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * @param boolean $compilable
      */
-    public function setCompilable($compilable)
+    public function setCompilable(bool $compilable): void
     {
         $this->compilable = $compilable;
     }
@@ -223,7 +225,7 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * @return boolean
      */
-    public function isCompiled()
+    public function isCompiled(): bool
     {
         return false;
     }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers;
 
 /*
@@ -9,6 +10,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
+/**
+ * Fixture ViewHelper with arguments of all basic types.
+ */
 class CViewHelper extends AbstractViewHelper
 {
     protected $escapeChildren = false;

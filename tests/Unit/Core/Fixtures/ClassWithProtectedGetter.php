@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -11,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 class ClassWithProtectedGetter
 {
 
-    protected function getTest()
+    protected function getTest(): string
     {
         return 'test result';
     }

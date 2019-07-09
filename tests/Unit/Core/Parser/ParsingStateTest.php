@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -38,7 +39,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSetIdentifierSetsProperty()
+    public function testSetIdentifierSetsProperty(): void
     {
         $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
         $instance->setIdentifier('test');
@@ -48,7 +49,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetIdentifierReturnsProperty()
+    public function testGetIdentifierReturnsProperty(): void
     {
         $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false);
         $instance->_set('identifier', 'test');
@@ -58,7 +59,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function setRootNodeCanBeReadOutAgain()
+    public function setRootNodeCanBeReadOutAgain(): void
     {
         $rootNode = new RootNode();
         $this->parsingState->setRootNode($rootNode);
@@ -68,7 +69,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function pushAndGetFromStackWorks()
+    public function pushAndGetFromStackWorks(): void
     {
         $rootNode = new RootNode();
         $this->parsingState->pushNodeToStack($rootNode);
@@ -79,7 +80,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function renderCallsTheRightMethodsOnTheRootNode()
+    public function renderCallsTheRightMethodsOnTheRootNode(): void
     {
         $renderingContext = new RenderingContextFixture();
         $rootNode = $this->getMock(RootNode::class);
@@ -92,7 +93,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetLayoutName()
+    public function testGetLayoutName(): void
     {
         $this->parsingState->setVariableProvider(new StandardVariableProvider(['layoutName' => 'test']));
         $result = $this->parsingState->getLayoutName(new RenderingContextFixture());
@@ -102,7 +103,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSetCompilableSetsProperty()
+    public function testSetCompilableSetsProperty(): void
     {
         $this->parsingState->setCompilable(false);
         $this->assertAttributeEquals(false, 'compilable', $this->parsingState);

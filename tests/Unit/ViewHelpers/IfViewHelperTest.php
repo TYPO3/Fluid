@@ -1,10 +1,12 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
 
@@ -16,20 +18,20 @@ class IfViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function viewHelperRendersThenChildIfConditionIsTrue()
+    public function viewHelperRendersThenChildIfConditionIsTrue(): void
     {
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMockForAbstractClass();
-        $actualResult = IfViewHelper::renderStatic(['condition' => true, 'then' => 'THEN', 'else' => 'ELSE'], function() {}, $context);
+        $actualResult = IfViewHelper::renderStatic(['condition' => true, 'then' => 'THEN', 'else' => 'ELSE'], function(): void {}, $context);
         $this->assertEquals('THEN', $actualResult);
     }
 
     /**
      * @test
      */
-    public function viewHelperRendersElseChildIfConditionIsFalse()
+    public function viewHelperRendersElseChildIfConditionIsFalse(): void
     {
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMockForAbstractClass();
-        $actualResult = IfViewHelper::renderStatic(['condition' => false, 'then' => 'THEN', 'else' => 'ELSE'], function() {}, $context);
+        $actualResult = IfViewHelper::renderStatic(['condition' => false, 'then' => 'THEN', 'else' => 'ELSE'], function(): void {}, $context);
         $this->assertEquals('ELSE', $actualResult);
     }
 }

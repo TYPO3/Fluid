@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -26,13 +27,13 @@ interface RenderingContextInterface
     /**
      * @return ErrorHandlerInterface
      */
-    public function getErrorHandler();
+    public function getErrorHandler(): ErrorHandlerInterface;
 
     /**
      * @param ErrorHandlerInterface $errorHandler
      * @return void
      */
-    public function setErrorHandler(ErrorHandlerInterface $errorHandler);
+    public function setErrorHandler(ErrorHandlerInterface $errorHandler): void;
 
     /**
      * Injects the template variable container containing all variables available through ObjectAccessors
@@ -52,36 +53,36 @@ interface RenderingContextInterface
      *
      * @return VariableProviderInterface The Template Variable Container
      */
-    public function getVariableProvider();
+    public function getVariableProvider(): VariableProviderInterface;
 
     /**
      * Get the ViewHelperVariableContainer
      *
      * @return ViewHelperVariableContainer
      */
-    public function getViewHelperVariableContainer();
+    public function getViewHelperVariableContainer(): ViewHelperVariableContainer;
 
     /**
      * @return ViewHelperResolver
      */
-    public function getViewHelperResolver();
+    public function getViewHelperResolver(): ViewHelperResolver;
 
     /**
      * @param ViewHelperResolver $viewHelperResolver
      * @return void
      */
-    public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver);
+    public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver): void;
 
     /**
      * @return ViewHelperInvoker
      */
-    public function getViewHelperInvoker();
+    public function getViewHelperInvoker(): ViewHelperInvoker;
 
     /**
      * @param ViewHelperInvoker $viewHelperInvoker
      * @return void
      */
-    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker);
+    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker): void;
 
     /**
      * Inject the Template Parser
@@ -89,34 +90,34 @@ interface RenderingContextInterface
      * @param TemplateParser $templateParser The template parser
      * @return void
      */
-    public function setTemplateParser(TemplateParser $templateParser);
+    public function setTemplateParser(TemplateParser $templateParser): void;
 
     /**
      * @return TemplateParser
      */
-    public function getTemplateParser();
+    public function getTemplateParser(): TemplateParser;
 
     /**
      * @param TemplateCompiler $templateCompiler
      * @return void
      */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler);
+    public function setTemplateCompiler(TemplateCompiler $templateCompiler): void;
 
     /**
      * @return TemplateCompiler
      */
-    public function getTemplateCompiler();
+    public function getTemplateCompiler(): TemplateCompiler;
 
     /**
      * @return TemplatePaths
      */
-    public function getTemplatePaths();
+    public function getTemplatePaths(): TemplatePaths;
 
     /**
      * @param TemplatePaths $templatePaths
      * @return void
      */
-    public function setTemplatePaths(TemplatePaths $templatePaths);
+    public function setTemplatePaths(TemplatePaths $templatePaths): void;
 
     /**
      * Delegation: Set the cache used by this View's compiler
@@ -124,17 +125,17 @@ interface RenderingContextInterface
      * @param FluidCacheInterface $cache
      * @return void
      */
-    public function setCache(FluidCacheInterface $cache);
+    public function setCache(FluidCacheInterface $cache): void;
 
     /**
      * @return FluidCacheInterface
      */
-    public function getCache();
+    public function getCache(): FluidCacheInterface;
 
     /**
      * @return boolean
      */
-    public function isCacheEnabled();
+    public function isCacheEnabled(): bool;
 
     /**
      * Delegation: Set TemplateProcessor instances in the parser
@@ -143,23 +144,23 @@ interface RenderingContextInterface
      * @param TemplateProcessorInterface[] $templateProcessors
      * @return void
      */
-    public function setTemplateProcessors(array $templateProcessors);
+    public function setTemplateProcessors(array $templateProcessors): void;
 
     /**
      * @return TemplateProcessorInterface[]
      */
-    public function getTemplateProcessors();
+    public function getTemplateProcessors(): array;
 
     /**
      * @return array
      */
-    public function getExpressionNodeTypes();
+    public function getExpressionNodeTypes(): array;
 
     /**
      * @param array $expressionNodeTypes
      * @return void
      */
-    public function setExpressionNodeTypes(array $expressionNodeTypes);
+    public function setExpressionNodeTypes(array $expressionNodeTypes): void;
 
     /**
      * Build parser configuration

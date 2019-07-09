@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\View;
 
 /*
@@ -24,7 +25,7 @@ abstract class AbstractView implements ViewInterface
     /**
      * Renders the view
      *
-     * @return string The rendered view
+     * @return mixed The rendered view
      * @api
      */
     public function render()
@@ -41,7 +42,7 @@ abstract class AbstractView implements ViewInterface
      * @return $this
      * @api
      */
-    public function assign($key, $value)
+    public function assign($key, $value): ViewInterface
     {
         $this->variables[$key] = $value;
         return $this;
@@ -54,7 +55,7 @@ abstract class AbstractView implements ViewInterface
      * @return AbstractView an instance of $this, to enable chaining
      * @api
      */
-    public function assignMultiple(array $values)
+    public function assignMultiple(array $values): ViewInterface
     {
         foreach ($values as $key => $value) {
             $this->assign($key, $value);

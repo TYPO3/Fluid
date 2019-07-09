@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -94,7 +95,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      *
      * Note: If this is NULL the value of $this->escapingInterceptorEnabled is considered for backwards compatibility
      *
-     * @var boolean
+     * @var boolean|null
      * @api
      */
     protected $escapeChildren = null;
@@ -103,7 +104,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * Specifies whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
      * @see isOutputEscapingEnabled()
      *
-     * @var boolean
+     * @var boolean|null
      * @api
      */
     protected $escapeOutput = null;
@@ -201,7 +202,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @param array $arguments
      * @return void
      */
-    public function setArguments(array $arguments)
+    public function setArguments(array $arguments): void
     {
         $this->arguments = $arguments;
     }
@@ -224,23 +225,23 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      *
      * @return boolean
      */
-    public function isChildrenEscapingEnabled()
+    public function isChildrenEscapingEnabled(): bool
     {
         if ($this->escapeChildren === null) {
             // Disable children escaping automatically, if output escaping is on anyway.
             return !$this->isOutputEscapingEnabled();
         }
-        return $this->escapeChildren;
+        return $this->escapeChildren !== false;
     }
 
     /**
      * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
      *
-     * Note: This method is no public API, use $this->escapeChildren instead!
+     * Note: This method is no public API, use $this->escapeOutput instead!
      *
      * @return boolean
      */
-    public function isOutputEscapingEnabled()
+    public function isOutputEscapingEnabled(): bool
     {
         return $this->escapeOutput !== false;
     }
@@ -254,11 +255,11 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
-     * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+     * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
         if (array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
@@ -280,11 +281,11 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
-     * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
+     * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
         if (!array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
@@ -315,11 +316,12 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * This is PURELY INTERNAL! Never override this method!!
      *
      * @param NodeInterface[] $childNodes
-     * @return void
+     * @return NodeInterface
      */
     public function setChildNodes(array $childNodes)
     {
         $this->childNodes = $childNodes;
+        return $this;
     }
 
     /**
@@ -336,7 +338,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     /**
      * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
      *
-     * @return string the rendered ViewHelper.
+     * @return mixed the rendered ViewHelper.
      */
     public function initializeArgumentsAndRender()
     {
@@ -349,7 +351,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     /**
      * Call the render() method and handle errors.
      *
-     * @return string the rendered ViewHelper
+     * @return mixed the rendered ViewHelper
      * @throws Exception
      */
     protected function callRenderMethod()
@@ -423,12 +425,8 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     public function prepareArguments()
     {
-        $thisClassName = get_class($this);
-        if (isset(self::$argumentDefinitionCache[$thisClassName])) {
-            $this->argumentDefinitions = self::$argumentDefinitionCache[$thisClassName];
-        } else {
+        if (empty($this->argumentDefinitions)) {
             $this->initializeArguments();
-            self::$argumentDefinitionCache[$thisClassName] = $this->argumentDefinitions;
         }
         return $this->argumentDefinitions;
     }
@@ -467,7 +465,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @param mixed $value
      * @return boolean
      */
-    protected function isValidType($type, $value)
+    protected function isValidType(string $type, $value): bool
     {
         if ($type === 'object') {
             if (!is_object($value)) {
@@ -535,7 +533,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @return boolean TRUE if $argumentName is found, FALSE otherwise
      * @api
      */
-    protected function hasArgument($argumentName)
+    protected function hasArgument(string $argumentName): bool
     {
         return isset($this->arguments[$argumentName]);
     }
@@ -590,9 +588,9 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string
+     * @return string|null
      */
-    public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
+    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
         return sprintf(
             '%s::renderStatic(%s, %s, $renderingContext)',

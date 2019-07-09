@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -50,7 +51,7 @@ class NodeConverter
      * @param integer $variableCounter
      * @return void
      */
-    public function setVariableCounter($variableCounter)
+    public function setVariableCounter(int $variableCounter): void
     {
         $this->variableCounter = $variableCounter;
     }
@@ -64,7 +65,7 @@ class NodeConverter
      * @return array two-element array, see above
      * @throws Exception
      */
-    public function convert(NodeInterface $node)
+    public function convert(NodeInterface $node): array
     {
         switch (true) {
             case $node instanceof TextNode:
@@ -117,7 +118,7 @@ class NodeConverter
      * @param EscapingNode $node
      * @return array
      */
-    protected function convertEscapingNode(EscapingNode $node)
+    protected function convertEscapingNode(EscapingNode $node): array
     {
         $configuration = $this->convert($node->getNode());
         $configuration['execution'] = sprintf(
@@ -134,7 +135,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertTextNode(TextNode $node)
+    protected function convertTextNode(TextNode $node): array
     {
         return [
             'initialization' => '',
@@ -147,7 +148,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertNumericNode(NumericNode $node)
+    protected function convertNumericNode(NumericNode $node): array
     {
         return [
             'initialization' => '',
@@ -180,7 +181,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertViewHelperNode(ViewHelperNode $node)
+    protected function convertViewHelperNode(ViewHelperNode $node): array
     {
         $initializationPhpCode = '// Rendering ViewHelper ' . $node->getViewHelperClassName() . chr(10);
 
@@ -247,11 +248,10 @@ class NodeConverter
         } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
             $convertedViewHelperExecutionCode = '\'' . $stopCompilingChildrenException->getReplacementString() . '\'';
         }
-        $initializationArray = [
+        return [
             'initialization' => $initializationPhpCode,
             'execution' => $convertedViewHelperExecutionCode === null ? 'NULL' : $convertedViewHelperExecutionCode
         ];
-        return $initializationArray;
     }
 
     /**
@@ -259,7 +259,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertObjectAccessorNode(ObjectAccessorNode $node)
+    protected function convertObjectAccessorNode(ObjectAccessorNode $node): array
     {
         $arrayVariableName = $this->variableName('array');
         $accessors = $node->getAccessors();
@@ -307,7 +307,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertArrayNode(ArrayNode $node)
+    protected function convertArrayNode(ArrayNode $node): array
     {
         return $this->convertArray($node->getInternalArray());
     }
@@ -363,7 +363,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    public function convertListOfSubNodes(NodeInterface $node)
+    public function convertListOfSubNodes(NodeInterface $node): array
     {
         switch (count($node->getChildNodes())) {
             case 0:
@@ -399,7 +399,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertExpressionNode(ExpressionNodeInterface $node)
+    protected function convertExpressionNode(ExpressionNodeInterface $node): array
     {
         return $node->compile($this->templateCompiler);
     }
@@ -409,7 +409,7 @@ class NodeConverter
      * @return array
      * @see convert()
      */
-    protected function convertBooleanNode(BooleanNode $node)
+    protected function convertBooleanNode(BooleanNode $node): array
     {
         $stack = $this->convertArrayNode(new ArrayNode($node->getStack()));
         $initializationPhpCode = '// Rendering Boolean node' . chr(10);
@@ -441,7 +441,7 @@ class NodeConverter
      * @param string $text
      * @return string
      */
-    protected function escapeTextForUseInSingleQuotes($text)
+    protected function escapeTextForUseInSingleQuotes(string $text): string
     {
         return str_replace(['\\', '\''], ['\\\\', '\\\''], $text);
     }
@@ -452,7 +452,7 @@ class NodeConverter
      * @param string $prefix
      * @return string
      */
-    public function variableName($prefix)
+    public function variableName(string $prefix): string
     {
         return '$' . $prefix . $this->variableCounter++;
     }

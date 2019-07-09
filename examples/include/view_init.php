@@ -2,7 +2,7 @@
 // Define a cache directory if one is not set
 $FLUID_CACHE_DIRECTORY = !isset($FLUID_CACHE_DIRECTORY) ? __DIR__ . '/../cache/' : $FLUID_CACHE_DIRECTORY;
 
-include 'autoload.php';
+require 'autoload.php';
 
 // Initializing the View: rendering in Fluid takes place through a View instance
 // which contains a RenderingContext that in turn contains things like definitions
@@ -44,7 +44,7 @@ if ($FLUID_CACHE_DIRECTORY) {
  * @return void
  */
 if (!function_exists('example_output')) {
-    function example_output($content)
+    function example_output($content): void
     {
         $content = trim($content);
         echo PHP_EOL . $content . PHP_EOL . PHP_EOL;

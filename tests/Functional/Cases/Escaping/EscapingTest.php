@@ -1,6 +1,13 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
 /**
@@ -17,7 +24,7 @@ class EscapingTest extends BaseFunctionalTestCase
     /**
      * @return array
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'escapeChildren can be disabled in template' => [
@@ -37,7 +44,7 @@ class EscapingTest extends BaseFunctionalTestCase
                 [],
                 [],
                 [],
-                'TYPO3Fluid\\Fluid\\Core\\Parser\\Exception'
+                Exception::class
             ],
             'EscapeChildrenEnabledAndEscapeOutputDisabled: Tag syntax with children, properly encodes variable value' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',
@@ -87,13 +94,13 @@ class EscapingTest extends BaseFunctionalTestCase
                 ['<strong>Bla</strong>'],
                 ['&lt;strong&gt;Bla&lt;/strong&gt;'],
             ],
-            'EscapeChildrenDisabledAndEscapeOutputDisabled: Tag syntax with children, properly encodes variable value' => [
+            'EscapeChildrenDisabledAndEscapeOutputDisabled: Tag syntax with children, does not encode variable value' => [
                 '<test:escapeChildrenDisabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputDisabled>',
                 $this->variables,
                 ['<strong>Bla</strong>'],
                 ['&lt;strong&gt;Bla&lt;/strong&gt;'],
             ],
-            'EscapeChildrenDisabledAndEscapeOutputDisabled: Inline syntax with children, properly encodes variable value' => [
+            'EscapeChildrenDisabledAndEscapeOutputDisabled: Inline syntax with children, does not encode variable value' => [
                 '{settings.test -> test:escapeChildrenDisabledAndEscapeOutputDisabled()}',
                 $this->variables,
                 ['<strong>Bla</strong>'],

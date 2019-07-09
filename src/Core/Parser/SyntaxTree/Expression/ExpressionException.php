@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -6,11 +7,13 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+
 /**
  * An ExpressionNode evaluation Exception
  *
  * @api
  */
-class ExpressionException extends \TYPO3Fluid\Fluid\Core\Parser\Exception
+class ExpressionException extends Exception
 {
 }

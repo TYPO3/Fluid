@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -80,7 +81,7 @@ class TemplateParser
      * @param RenderingContextInterface $renderingContext
      * @return self
      */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
+    public function setRenderingContext(RenderingContextInterface $renderingContext): TemplateParser
     {
         $this->renderingContext = $renderingContext;
         $this->configuration = $renderingContext->buildParserConfiguration();
@@ -101,7 +102,7 @@ class TemplateParser
      *
      * @return array
      */
-    public function getCurrentParsingPointers()
+    public function getCurrentParsingPointers(): array
     {
         return [$this->pointerLineNumber, $this->pointerLineCharacter, $this->pointerTemplateCode];
     }
@@ -109,7 +110,7 @@ class TemplateParser
     /**
      * @return boolean
      */
-    public function isEscapingEnabled()
+    public function isEscapingEnabled(): bool
     {
         return $this->escapingEnabled;
     }
@@ -118,7 +119,7 @@ class TemplateParser
      * @param boolean $escapingEnabled
      * @return void
      */
-    public function setEscapingEnabled($escapingEnabled)
+    public function setEscapingEnabled(bool $escapingEnabled): void
     {
         $this->escapingEnabled = (boolean) $escapingEnabled;
     }
@@ -133,10 +134,10 @@ class TemplateParser
      *
      * @param string $templateString The template to parse as a string
      * @param string|null $templateIdentifier If the template has an identifying string it can be passed here to improve error reporting.
-     * @return ParsingState Parsed template
+     * @return ParsedTemplateInterface Parsed template
      * @throws Exception
      */
-    public function parse($templateString, $templateIdentifier = null)
+    public function parse(string $templateString, ?string $templateIdentifier = null): ParsedTemplateInterface
     {
         $templateIdentifier = $templateIdentifier ?? 'source_' . sha1($templateString);
         if (!is_string($templateString)) {
@@ -165,9 +166,9 @@ class TemplateParser
     /**
      * @param \Exception $error
      * @param string $templateIdentifier
-     * @throws \Exception
+     * @return Exception
      */
-    public function createParsingRelatedExceptionWithContext(\Exception $error, $templateIdentifier)
+    public function createParsingRelatedExceptionWithContext(\Exception $error, string $templateIdentifier): Exception
     {
         list ($line, $character, $templateCode) = $this->getCurrentParsingPointers();
         $exceptionClass = get_class($error);
@@ -191,7 +192,7 @@ class TemplateParser
      * @param \Closure $templateSourceClosure Closure which returns the template source if needed
      * @return ParsedTemplateInterface
      */
-    public function getOrParseAndStoreTemplate($templateIdentifier, $templateSourceClosure)
+    public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure): ParsedTemplateInterface
     {
         $compiler = $this->renderingContext->getTemplateCompiler();
         if (isset($this->parsedTemplates[$templateIdentifier])) {
@@ -219,7 +220,7 @@ class TemplateParser
      * @param \Closure $templateSourceClosure
      * @return ParsedTemplateInterface
      */
-    protected function parseTemplateSource($templateIdentifier, $templateSourceClosure)
+    protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ParsedTemplateInterface
     {
         $parsedTemplate = $this->parse(
             $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
@@ -237,7 +238,7 @@ class TemplateParser
      * @param string $templateSource
      * @return string
      */
-    protected function preProcessTemplateSource($templateSource)
+    protected function preProcessTemplateSource(string $templateSource): string
     {
         foreach ($this->renderingContext->getTemplateProcessors() as $templateProcessor) {
             $templateSource = $templateProcessor->preProcessSource($templateSource);
@@ -250,7 +251,7 @@ class TemplateParser
      *
      * @return void
      */
-    protected function reset()
+    protected function reset(): void
     {
         $this->escapingEnabled = true;
         $this->pointerLineNumber = 1;
@@ -263,7 +264,7 @@ class TemplateParser
      * @param string $templateString Template string to split.
      * @return array Splitted template
      */
-    protected function splitTemplateAtDynamicTags($templateString)
+    protected function splitTemplateAtDynamicTags(string $templateString): iterable
     {
         return preg_split(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateString, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
     }
@@ -273,10 +274,10 @@ class TemplateParser
      *
      * @param array $splitTemplate The split template, so that every tag with a namespace declaration is already a seperate array element.
      * @param integer $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
-     * @return ParsingState
+     * @return ParsedTemplateInterface
      * @throws Exception
      */
-    protected function buildObjectTree(array $splitTemplate, $context)
+    protected function buildObjectTree(array $splitTemplate, int $context): ParsedTemplateInterface
     {
         $state = $this->getParsingState();
         $previousBlock = '';
@@ -289,7 +290,7 @@ class TemplateParser
                 $this->pointerTemplateCode = $templateElement;
             }
             $this->pointerLineNumber += substr_count($templateElement, PHP_EOL);
-            $this->pointerLineCharacter = strlen(substr($previousBlock, strrpos($previousBlock, PHP_EOL))) + 1;
+            $this->pointerLineCharacter = strlen(substr($previousBlock, strrpos($previousBlock, PHP_EOL) ?: 0) ?: $previousBlock) + 1;
             $previousBlock = $templateElement;
             $matchedVariables = [];
 
@@ -299,7 +300,7 @@ class TemplateParser
                     $matchedVariables['NamespaceIdentifier'],
                     $matchedVariables['MethodIdentifier'],
                     $matchedVariables['Attributes'],
-                    ($matchedVariables['Selfclosing'] === '' ? false : true),
+                    ($matchedVariables['Selfclosing'] !== ''),
                     $templateElement
                 )) {
                     continue;
@@ -335,7 +336,7 @@ class TemplateParser
      * @param string $templateElement The template code containing the ViewHelper call
      * @return NodeInterface|null
      */
-    protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing, $templateElement)
+    protected function openingViewHelperTagHandler(ParsingState $state, string $namespaceIdentifier, string $methodIdentifier, string $arguments, bool $selfclosing, string $templateElement): ?NodeInterface
     {
         $viewHelperNode = $this->initializeViewHelperAndAddItToStack(
             $state,
@@ -346,7 +347,7 @@ class TemplateParser
 
         if ($viewHelperNode) {
             $viewHelperNode->setPointerTemplateCode($templateElement);
-            if ($selfclosing === true) {
+            if ($selfclosing) {
                 $state->popNodeFromStack();
                 $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER, $state);
                 // This needs to be called here because closingViewHelperTagHandler() is not triggered for self-closing tags
@@ -368,7 +369,7 @@ class TemplateParser
      * @return null|NodeInterface An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
      * @throws Exception
      */
-    protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree)
+    protected function initializeViewHelperAndAddItToStack(ParsingState $state, string $namespaceIdentifier, string $methodIdentifier, array $argumentsObjectTree): ?NodeInterface
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
@@ -414,7 +415,7 @@ class TemplateParser
      * @return boolean whether the viewHelper was found and added to the stack or not
      * @throws Exception
      */
-    protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier)
+    protected function closingViewHelperTagHandler(ParsingState $state, string $namespaceIdentifier, string $methodIdentifier): bool
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
         if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
@@ -455,7 +456,7 @@ class TemplateParser
      * @param string $additionalViewHelpersString
      * @return void
      */
-    protected function objectAccessorHandler(ParsingState $state, $objectAccessorString, $delimiter, $viewHelperString, $additionalViewHelpersString)
+    protected function objectAccessorHandler(ParsingState $state, string $objectAccessorString, string $delimiter, string $viewHelperString, string $additionalViewHelpersString): void
     {
         $viewHelperString .= $additionalViewHelpersString;
         $numberOfViewHelpers = 0;
@@ -507,7 +508,7 @@ class TemplateParser
      * @param ParsingState $state the parsing state
      * @return void
      */
-    protected function callInterceptor(NodeInterface & $node, $interceptionPoint, ParsingState $state)
+    protected function callInterceptor(NodeInterface & $node, int $interceptionPoint, ParsingState $state): void
     {
         if ($this->configuration === null) {
             return;
@@ -534,7 +535,7 @@ class TemplateParser
      * @param string $argumentsString All arguments as string
      * @return array An associative array of objects, where the key is the argument name.
      */
-    protected function parseArguments($argumentsString)
+    protected function parseArguments(string $argumentsString): iterable
     {
         $argumentsObjectTree = [];
         $matches = [];
@@ -559,9 +560,9 @@ class TemplateParser
      * no { or < is found, then we just return a TextNode.
      *
      * @param string $argumentString
-     * @return SyntaxTree\NodeInterface the corresponding argument object tree.
+     * @return NodeInterface the corresponding argument object tree.
      */
-    protected function buildArgumentObjectTree($argumentString)
+    protected function buildArgumentObjectTree(string $argumentString): NodeInterface
     {
         if (strpos($argumentString, '{') === false && strpos($argumentString, '<') === false) {
             if (is_numeric($argumentString)) {
@@ -570,12 +571,11 @@ class TemplateParser
             return new TextNode($argumentString);
         }
         $splitArgument = $this->splitTemplateAtDynamicTags($argumentString);
-        $rootNode = $this->buildObjectTree($splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS)->getRootNode();
-        return $rootNode;
+        return $this->buildObjectTree($splitArgument, self::CONTEXT_INSIDE_VIEWHELPER_ARGUMENTS)->getRootNode();
     }
 
     /**
-     * Removes escapings from a given argument string and trims the outermost
+     * Removes escaping from a given argument string and trims the outermost
      * quotes.
      *
      * This method is meant as a helper for regular expression results.
@@ -583,7 +583,7 @@ class TemplateParser
      * @param string $quotedValue Value to unquote
      * @return string Unquoted value
      */
-    public function unquoteString($quotedValue)
+    public function unquoteString(string $quotedValue): string
     {
         $value = $quotedValue;
         if ($value === '') {
@@ -607,7 +607,7 @@ class TemplateParser
      * @param integer $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      * @return void
      */
-    protected function textAndShorthandSyntaxHandler(ParsingState $state, $text, $context)
+    protected function textAndShorthandSyntaxHandler(ParsingState $state, string $text, int $context): void
     {
         $sections = preg_split(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         if ($sections === false) {
@@ -638,7 +638,7 @@ class TemplateParser
                     $detectionExpression = $expressionNodeTypeClassName::$detectionExpression;
                     $matchedVariables = [];
                     preg_match_all($detectionExpression, $section, $matchedVariables, PREG_SET_ORDER);
-                    if (is_array($matchedVariables) === true) {
+                    if (is_array($matchedVariables)) {
                         foreach ($matchedVariables as $matchedVariableSet) {
                             $expressionStartPosition = strpos($section, $matchedVariableSet[0]);
                             /** @var ExpressionNodeInterface $expressionNode */
@@ -687,7 +687,7 @@ class TemplateParser
      * @param NodeInterface[] $arrayText The array as string.
      * @return void
      */
-    protected function arrayHandler(ParsingState $state, $arrayText)
+    protected function arrayHandler(ParsingState $state, array $arrayText): void
     {
         $arrayNode = new ArrayNode($arrayText);
         $state->getNodeFromStack()->addChildNode($arrayNode);
@@ -707,7 +707,7 @@ class TemplateParser
      * @return NodeInterface[] the array node built up
      * @throws Exception
      */
-    protected function recursiveArrayHandler($arrayText)
+    protected function recursiveArrayHandler(string $arrayText): iterable
     {
         $matches = [];
         $arrayToBuild = [];
@@ -737,7 +737,7 @@ class TemplateParser
      * @param string $text
      * @return void
      */
-    protected function textHandler(ParsingState $state, $text)
+    protected function textHandler(ParsingState $state, string $text): void
     {
         $node = new TextNode($text);
         $this->callInterceptor($node, InterceptorInterface::INTERCEPT_TEXT, $state);
@@ -747,7 +747,7 @@ class TemplateParser
     /**
      * @return ParsingState
      */
-    protected function getParsingState()
+    protected function getParsingState(): ParsingState
     {
         $rootNode = new RootNode();
         $variableProvider = $this->renderingContext->getVariableProvider();

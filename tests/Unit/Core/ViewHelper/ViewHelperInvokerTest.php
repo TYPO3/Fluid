@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -10,7 +11,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
@@ -22,18 +22,17 @@ class ViewHelperInvokerTest extends UnitTestCase
 {
 
     /**
-     * @param string $viewHelperClassName
+     * @param string|ViewHelperInterface $viewHelperClassName
      * @param array $arguments
      * @param mixed $expectedOutput
      * @param string|NULL $expectedException
      * @test
      * @dataProvider getInvocationTestValues
      */
-    public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException)
+    public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, ?string $expectedException): void
     {
         $view = new TemplateView();
-        $resolver = new ViewHelperResolver();
-        $invoker = new ViewHelperInvoker($resolver);
+        $invoker = new ViewHelperInvoker();
         $renderingContext = new RenderingContext($view);
         if ($expectedException) {
             $this->setExpectedException($expectedException);
@@ -45,7 +44,7 @@ class ViewHelperInvokerTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getInvocationTestValues()
+    public function getInvocationTestValues(): array
     {
         $exception = new Exception('test');
         $fixtureViewHelper = $this->getMockBuilder(ViewHelperInterface::class)->getMock();

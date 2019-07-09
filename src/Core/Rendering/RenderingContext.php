@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -68,12 +69,12 @@ class RenderingContext implements RenderingContextInterface
     protected $templatePaths;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $controllerName;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $controllerAction;
 
@@ -129,35 +130,42 @@ class RenderingContext implements RenderingContextInterface
     public function __construct(ViewInterface $view)
     {
         $this->view = $view;
-        $this->setTemplateParser(new TemplateParser());
-        $this->setTemplateCompiler(new TemplateCompiler());
-        $this->setTemplatePaths(new TemplatePaths());
+        $this->initialize();
+    }
+
+    public function initialize(): void
+    {
+        $this->setTemplateParser($this->templateParser ?? new TemplateParser());
+        $this->setTemplateCompiler($this->templateCompiler ?? new TemplateCompiler());
+        $this->setTemplatePaths($this->templatePaths ?? new TemplatePaths());
         $this->setTemplateProcessors(
+            empty($this->templateProcessors) ?
             [
                 new EscapingModifierTemplateProcessor(),
                 new PassthroughSourceModifierTemplateProcessor(),
                 new NamespaceDetectionTemplateProcessor()
-            ]
+            ] : $this->templateProcessors
         );
-        $this->setViewHelperResolver(new ViewHelperResolver());
-        $this->setViewHelperInvoker(new ViewHelperInvoker());
-        $this->setViewHelperVariableContainer(new ViewHelperVariableContainer());
-        $this->setVariableProvider(new StandardVariableProvider());
+        $this->setViewHelperResolver($this->viewHelperResolver ?? new ViewHelperResolver());
+        $this->setViewHelperInvoker($this->viewHelperInvoker ?? new ViewHelperInvoker());
+        $this->setViewHelperVariableContainer($this->viewHelperVariableContainer ?? new ViewHelperVariableContainer());
+        $this->setVariableProvider($this->variableProvider ?? new StandardVariableProvider());
+        $this->setErrorHandler($this->errorHandler ?? new StandardErrorHandler());
     }
 
     /**
      * @return ErrorHandlerInterface
      */
-    public function getErrorHandler()
+    public function getErrorHandler(): ErrorHandlerInterface
     {
-        return isset($this->errorHandler) ? $this->errorHandler : new StandardErrorHandler();
+        return $this->errorHandler;
     }
 
     /**
      * @param ErrorHandlerInterface $errorHandler
      * @return void
      */
-    public function setErrorHandler(ErrorHandlerInterface $errorHandler)
+    public function setErrorHandler(ErrorHandlerInterface $errorHandler): void
     {
         $this->errorHandler = $errorHandler;
     }
@@ -168,7 +176,7 @@ class RenderingContext implements RenderingContextInterface
      *
      * @param VariableProviderInterface $variableProvider The template variable container to set
      */
-    public function setVariableProvider(VariableProviderInterface $variableProvider)
+    public function setVariableProvider(VariableProviderInterface $variableProvider): void
     {
         $this->variableProvider = $variableProvider;
     }
@@ -178,7 +186,7 @@ class RenderingContext implements RenderingContextInterface
      *
      * @return VariableProviderInterface The Template Variable Container
      */
-    public function getVariableProvider()
+    public function getVariableProvider(): VariableProviderInterface
     {
         return $this->variableProvider;
     }
@@ -186,7 +194,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return ViewHelperResolver
      */
-    public function getViewHelperResolver()
+    public function getViewHelperResolver(): ViewHelperResolver
     {
         return $this->viewHelperResolver;
     }
@@ -195,7 +203,7 @@ class RenderingContext implements RenderingContextInterface
      * @param ViewHelperResolver $viewHelperResolver
      * @return void
      */
-    public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver)
+    public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver): void
     {
         $this->viewHelperResolver = $viewHelperResolver;
     }
@@ -203,7 +211,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return ViewHelperInvoker
      */
-    public function getViewHelperInvoker()
+    public function getViewHelperInvoker(): ViewHelperInvoker
     {
         return $this->viewHelperInvoker;
     }
@@ -212,7 +220,7 @@ class RenderingContext implements RenderingContextInterface
      * @param ViewHelperInvoker $viewHelperInvoker
      * @return void
      */
-    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker)
+    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker): void
     {
         $this->viewHelperInvoker = $viewHelperInvoker;
     }
@@ -220,7 +228,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return TemplatePaths
      */
-    public function getTemplatePaths()
+    public function getTemplatePaths(): TemplatePaths
     {
         return $this->templatePaths;
     }
@@ -229,7 +237,7 @@ class RenderingContext implements RenderingContextInterface
      * @param TemplatePaths $templatePaths
      * @return void
      */
-    public function setTemplatePaths(TemplatePaths $templatePaths)
+    public function setTemplatePaths(TemplatePaths $templatePaths): void
     {
         $this->templatePaths = $templatePaths;
     }
@@ -240,7 +248,7 @@ class RenderingContext implements RenderingContextInterface
      * @param ViewHelperVariableContainer $viewHelperVariableContainer
      * @return void
      */
-    public function setViewHelperVariableContainer(ViewHelperVariableContainer $viewHelperVariableContainer)
+    public function setViewHelperVariableContainer(ViewHelperVariableContainer $viewHelperVariableContainer): void
     {
         $this->viewHelperVariableContainer = $viewHelperVariableContainer;
     }
@@ -250,7 +258,7 @@ class RenderingContext implements RenderingContextInterface
      *
      * @return ViewHelperVariableContainer
      */
-    public function getViewHelperVariableContainer()
+    public function getViewHelperVariableContainer(): ViewHelperVariableContainer
     {
         return $this->viewHelperVariableContainer;
     }
@@ -261,7 +269,7 @@ class RenderingContext implements RenderingContextInterface
      * @param TemplateParser $templateParser The template parser
      * @return void
      */
-    public function setTemplateParser(TemplateParser $templateParser)
+    public function setTemplateParser(TemplateParser $templateParser): void
     {
         $this->templateParser = $templateParser;
         $this->templateParser->setRenderingContext($this);
@@ -270,7 +278,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return TemplateParser
      */
-    public function getTemplateParser()
+    public function getTemplateParser(): TemplateParser
     {
         return $this->templateParser;
     }
@@ -279,7 +287,7 @@ class RenderingContext implements RenderingContextInterface
      * @param TemplateCompiler $templateCompiler
      * @return void
      */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler)
+    public function setTemplateCompiler(TemplateCompiler $templateCompiler): void
     {
         $this->templateCompiler = $templateCompiler;
         $this->templateCompiler->setRenderingContext($this);
@@ -288,7 +296,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return TemplateCompiler
      */
-    public function getTemplateCompiler()
+    public function getTemplateCompiler(): TemplateCompiler
     {
         return $this->templateCompiler;
     }
@@ -299,7 +307,7 @@ class RenderingContext implements RenderingContextInterface
      * @param FluidCacheInterface $cache
      * @return void
      */
-    public function setCache(FluidCacheInterface $cache)
+    public function setCache(FluidCacheInterface $cache): void
     {
         $this->cache = $cache;
     }
@@ -307,7 +315,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return FluidCacheInterface
      */
-    public function getCache()
+    public function getCache(): FluidCacheInterface
     {
         return $this->cache;
     }
@@ -315,7 +323,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return boolean
      */
-    public function isCacheEnabled()
+    public function isCacheEnabled(): bool
     {
         return $this->cache instanceof FluidCacheInterface;
     }
@@ -327,7 +335,7 @@ class RenderingContext implements RenderingContextInterface
      * @param TemplateProcessorInterface[] $templateProcessors
      * @return void
      */
-    public function setTemplateProcessors(array $templateProcessors)
+    public function setTemplateProcessors(array $templateProcessors): void
     {
         $this->templateProcessors = $templateProcessors;
         foreach ($this->templateProcessors as $templateProcessor) {
@@ -338,7 +346,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return TemplateProcessorInterface[]
      */
-    public function getTemplateProcessors()
+    public function getTemplateProcessors(): array
     {
         return $this->templateProcessors;
     }
@@ -346,7 +354,7 @@ class RenderingContext implements RenderingContextInterface
     /**
      * @return string
      */
-    public function getExpressionNodeTypes()
+    public function getExpressionNodeTypes(): array
     {
         return $this->expressionNodeTypes;
     }
@@ -355,7 +363,7 @@ class RenderingContext implements RenderingContextInterface
      * @param array $expressionNodeTypes
      * @return void
      */
-    public function setExpressionNodeTypes(array $expressionNodeTypes)
+    public function setExpressionNodeTypes(array $expressionNodeTypes): void
     {
         $this->expressionNodeTypes = $expressionNodeTypes;
     }
@@ -378,7 +386,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getControllerName()
     {
-        return $this->controllerName;
+        return $this->controllerName ?? 'Default';
     }
 
     /**
@@ -395,7 +403,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getControllerAction()
     {
-        return $this->controllerAction;
+        return $this->controllerAction ?? 'Default';
     }
 
     /**

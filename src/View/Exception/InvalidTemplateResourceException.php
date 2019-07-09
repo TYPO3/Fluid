@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\View\Exception;
 
 /*
@@ -6,13 +7,13 @@ namespace TYPO3Fluid\Fluid\View\Exception;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\View;
+use TYPO3Fluid\Fluid\View\Exception;
 
 /**
  * An "Invalid Template Resource" exception
  *
  * @api
  */
-class InvalidTemplateResourceException extends View\Exception
+class InvalidTemplateResourceException extends Exception
 {
 }

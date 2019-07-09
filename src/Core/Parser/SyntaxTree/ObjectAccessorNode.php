@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -44,7 +45,7 @@ class ObjectAccessorNode extends AbstractNode
      *                                UNLESS the only child of the node is a ViewHelper, in which case, that ViewHelper is evaluated
      * @param array $accessors Optional list of accessor strategies; starting from beginning of dotted path. Incomplete allowed.
      */
-    public function __construct($objectPath = null, array $accessors = [])
+    public function __construct(string $objectPath, array $accessors = [])
     {
         $this->objectPath = $objectPath;
         $this->accessors = $accessors;
@@ -56,7 +57,7 @@ class ObjectAccessorNode extends AbstractNode
      *
      * @return string|null
      */
-    public function getObjectPath()
+    public function getObjectPath(): string
     {
         return $this->objectPath;
     }
@@ -64,7 +65,7 @@ class ObjectAccessorNode extends AbstractNode
     /**
      * @return array
      */
-    public function getAccessors()
+    public function getAccessors(): iterable
     {
         return $this->accessors;
     }

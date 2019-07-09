@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -8,8 +9,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
-use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
@@ -113,7 +114,7 @@ class GroupedForViewHelper extends AbstractViewHelper
         }
         if (is_object($each)) {
             if (!$each instanceof \Traversable) {
-                throw new ViewHelper\Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface', 1253108907);
+                throw new Exception('GroupedForViewHelper only supports arrays and objects implementing \Traversable interface', 1253108907);
             }
             $each = iterator_to_array($each);
         }
@@ -138,9 +139,9 @@ class GroupedForViewHelper extends AbstractViewHelper
      * @param array $elements The array / traversable object to be grouped
      * @param string $groupBy Group by this property
      * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
-     * @throws ViewHelper\Exception
+     * @throws Exception
      */
-    protected static function groupElements(array $elements, $groupBy)
+    protected static function groupElements(array $elements, string $groupBy): array
     {
         $extractor = new VariableExtractor();
         $groups = ['keys' => [], 'values' => []];
@@ -150,7 +151,7 @@ class GroupedForViewHelper extends AbstractViewHelper
             } elseif (is_object($value)) {
                 $currentGroupIndex = $extractor->getByPath($value, $groupBy);
             } else {
-                throw new ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
+                throw new Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
             }
             $currentGroupKeyValue = $currentGroupIndex;
             if ($currentGroupIndex instanceof \DateTime) {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -7,8 +8,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
@@ -59,7 +60,7 @@ class CountViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return integer
+     * @return mixed
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
@@ -67,7 +68,7 @@ class CountViewHelper extends AbstractViewHelper
         if ($countable === null) {
             return 0;
         } elseif (!$countable instanceof \Countable && !is_array($countable)) {
-            throw new ViewHelper\Exception(
+            throw new Exception(
                 sprintf(
                     'Subject given to f:count() is not countable (type: %s, value: %s)',
                     is_object($countable) ? get_class($countable) : gettype($countable),

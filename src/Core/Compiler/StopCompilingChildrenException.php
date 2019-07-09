@@ -1,10 +1,13 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+use TYPO3Fluid\Fluid\Core\Exception;
 
 /**
  * Exception thrown to stop the template compiling process
@@ -25,7 +28,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  *
  * @api
  */
-class StopCompilingChildrenException extends \TYPO3Fluid\Fluid\Core\Exception
+class StopCompilingChildrenException extends Exception
 {
 
     /**
@@ -36,7 +39,7 @@ class StopCompilingChildrenException extends \TYPO3Fluid\Fluid\Core\Exception
     /**
      * @return string
      */
-    public function getReplacementString()
+    public function getReplacementString(): string
     {
         return $this->replacementString;
     }
@@ -44,7 +47,7 @@ class StopCompilingChildrenException extends \TYPO3Fluid\Fluid\Core\Exception
     /**
      * @param string $replacementString
      */
-    public function setReplacementString($replacementString)
+    public function setReplacementString(string $replacementString): void
     {
         $this->replacementString = $replacementString;
     }

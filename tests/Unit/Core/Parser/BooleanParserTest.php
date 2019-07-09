@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -8,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -35,7 +37,7 @@ class BooleanParserTest extends UnitTestCase
      * @param string $comparison
      * @param boolean $expected
      */
-    public function testSomeEvaluations($comparison, $expected, $variables = [])
+    public function testSomeEvaluations(string $comparison, bool $expected, $variables = []): void
     {
         $parser = new BooleanParser();
         $this->assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
@@ -49,7 +51,7 @@ class BooleanParserTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getSomeEvaluationTestValues()
+    public function getSomeEvaluationTestValues(): array
     {
         return [
             ['(1 && false) || false || \'foobar\' == \'foobar\'', true],
@@ -129,7 +131,7 @@ class BooleanParserTest extends UnitTestCase
 
             // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
             ['\'foo\' == 0', true],
-            ['1.1 >= foo', true],
+            ['1.1 >= \'foo\'', true],
             ['\'foo\' > 0', false],
 
             ['{foo}', true, ['foo' => true]],

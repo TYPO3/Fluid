@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -55,7 +56,7 @@ class TagBuilder
      * @param string $tagContent content of the tag to be rendered
      * @api
      */
-    public function __construct($tagName = '', $tagContent = '')
+    public function __construct(string $tagName = '', string $tagContent = '')
     {
         $this->setTagName($tagName);
         $this->setContent($tagContent);
@@ -68,7 +69,7 @@ class TagBuilder
      * @return void
      * @api
      */
-    public function setTagName($tagName)
+    public function setTagName(string $tagName): void
     {
         $this->tagName = $tagName;
     }
@@ -79,7 +80,7 @@ class TagBuilder
      * @return string tag name of the tag to be rendered
      * @api
      */
-    public function getTagName()
+    public function getTagName(): string
     {
         return $this->tagName;
     }
@@ -87,11 +88,11 @@ class TagBuilder
     /**
      * Sets the content of the tag
      *
-     * @param string $tagContent content of the tag to be rendered
+     * @param string|null $tagContent content of the tag to be rendered
      * @return void
      * @api
      */
-    public function setContent($tagContent)
+    public function setContent(?string $tagContent): void
     {
         $this->content = $tagContent;
     }
@@ -102,7 +103,7 @@ class TagBuilder
      * @return string content of the tag to be rendered
      * @api
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -113,7 +114,7 @@ class TagBuilder
      * @return boolean TRUE if tag contains text, otherwise FALSE
      * @api
      */
-    public function hasContent()
+    public function hasContent(): bool
     {
         return $this->content !== '' && $this->content !== null;
     }
@@ -125,7 +126,7 @@ class TagBuilder
      * @param boolean $forceClosingTag
      * @api
      */
-    public function forceClosingTag($forceClosingTag)
+    public function forceClosingTag(bool $forceClosingTag): void
     {
         $this->forceClosingTag = $forceClosingTag;
     }
@@ -137,7 +138,7 @@ class TagBuilder
      * @return boolean TRUE if the tag has an attribute with the given name, otherwise FALSE
      * @api
      */
-    public function hasAttribute($attributeName)
+    public function hasAttribute(string $attributeName): bool
     {
         return array_key_exists($attributeName, $this->attributes);
     }
@@ -146,10 +147,10 @@ class TagBuilder
      * Get an attribute from the $attributes-collection
      *
      * @param string $attributeName name of the attribute
-     * @return string The attribute value or NULL if the attribute is not registered
+     * @return mixed The attribute value or NULL if the attribute is not registered
      * @api
      */
-    public function getAttribute($attributeName)
+    public function getAttribute(string $attributeName)
     {
         if (!$this->hasAttribute($attributeName)) {
             return null;
@@ -163,7 +164,7 @@ class TagBuilder
      * @return array Attributes indexed by attribute name
      * @api
      */
-    public function getAttributes()
+    public function getAttributes(): array
     {
         return $this->attributes;
     }
@@ -172,11 +173,11 @@ class TagBuilder
      * @param boolean $ignoreEmptyAttributes
      * @return void
      */
-    public function ignoreEmptyAttributes($ignoreEmptyAttributes)
+    public function ignoreEmptyAttributes(bool $ignoreEmptyAttributes): void
     {
         $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
         if ($ignoreEmptyAttributes) {
-            $this->attributes = array_filter($this->attributes, function ($item) { return trim((string) $item) !== ''; });
+            $this->attributes = array_filter($this->attributes, function ($item): bool { return trim((string) $item) !== ''; });
         }
     }
 
@@ -184,19 +185,20 @@ class TagBuilder
      * Adds an attribute to the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be added to the tag
-     * @param string $attributeValue attribute value
+     * @param mixed $attributeValue attribute value
      * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute value
      * @return void
      * @api
      */
-    public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = true)
+    public function addAttribute(string $attributeName, $attributeValue, bool $escapeSpecialCharacters = true): void
     {
         if ($attributeName === 'data' && (is_array($attributeValue) || $attributeValue instanceof \Traversable)) {
             foreach ($attributeValue as $name => $value) {
                 $this->addAttribute('data-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
-            if (trim((string) $attributeValue) === '' && $this->ignoreEmptyAttributes) {
+            $attributeValue = (string) $attributeValue;
+            if (trim($attributeValue) === '' && $this->ignoreEmptyAttributes) {
                 return;
             }
             if ($escapeSpecialCharacters) {
@@ -210,14 +212,14 @@ class TagBuilder
      * Adds attributes to the $attributes-collection
      *
      * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
-     * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute values#
+     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values#
      * @return void
      * @api
      */
-    public function addAttributes(array $attributes, $escapeSpecialCharacters = true)
+    public function addAttributes(array $attributes, bool $escapeSpecialCharacters = true): void
     {
         foreach ($attributes as $attributeName => $attributeValue) {
-            $this->addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters);
+            $this->addAttribute($attributeName, (string) $attributeValue, $escapeSpecialCharacters);
         }
     }
 
@@ -228,7 +230,7 @@ class TagBuilder
      * @return void
      * @api
      */
-    public function removeAttribute($attributeName)
+    public function removeAttribute(string $attributeName): void
     {
         unset($this->attributes[$attributeName]);
     }
@@ -239,7 +241,7 @@ class TagBuilder
      * @return void
      * @api
      */
-    public function reset()
+    public function reset(): void
     {
         $this->tagName = '';
         $this->content = '';
@@ -253,7 +255,7 @@ class TagBuilder
      * @return string
      * @api
      */
-    public function render()
+    public function render(): string
     {
         if (empty($this->tagName)) {
             return '';

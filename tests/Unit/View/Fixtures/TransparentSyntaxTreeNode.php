@@ -1,5 +1,6 @@
 <?php
-namespace TYPO3Fluid\Fluid\View\Fixture;
+declare(strict_types=1);
+namespace TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".

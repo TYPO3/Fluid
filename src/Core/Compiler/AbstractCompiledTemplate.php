@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -9,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
  * Abstract Fluid Compiled template.
@@ -22,7 +24,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
      * @param string $identifier
      * @return void
      */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         // void, ignored.
     }
@@ -30,7 +32,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return static::class;
     }
@@ -40,7 +42,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
      *
      * @return VariableProviderInterface
      */
-    public function getVariableContainer()
+    public function getVariableContainer(): VariableProviderInterface
     {
         return new StandardVariableProvider();
     }
@@ -49,7 +51,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
      * Render the parsed template with rendering context
      *
      * @param RenderingContextInterface $renderingContext The rendering context to use
-     * @return string Rendered string
+     * @return mixed Rendered string
      */
     public function render(RenderingContextInterface $renderingContext)
     {
@@ -59,7 +61,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     /**
      * @return boolean
      */
-    public function isCompilable()
+    public function isCompilable(): bool
     {
         return false;
     }
@@ -67,7 +69,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     /**
      * @return boolean
      */
-    public function isCompiled()
+    public function isCompiled(): bool
     {
         return true;
     }
@@ -75,7 +77,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     /**
      * @return boolean
      */
-    public function hasLayout()
+    public function hasLayout(): bool
     {
         return false;
     }
@@ -84,7 +86,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
      * @param RenderingContextInterface $renderingContext
      * @return string
      */
-    public function getLayoutName(RenderingContextInterface $renderingContext)
+    public function getLayoutName(RenderingContextInterface $renderingContext): string
     {
         return '';
     }
@@ -93,7 +95,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
      * @param RenderingContextInterface $renderingContext
      * @return void
      */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
+    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void
     {
     }
 }

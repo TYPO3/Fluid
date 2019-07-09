@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -71,8 +72,8 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false);
-        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false);
+        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.');
+        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
     }
 
     /**
@@ -97,14 +98,14 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 
         if ($this->hasArgument('data') && is_array($this->arguments['data'])) {
             foreach ($this->arguments['data'] as $dataAttributeKey => $dataAttributeValue) {
-                $this->tag->addAttribute('data-' . $dataAttributeKey, $dataAttributeValue);
+                $this->tag->addAttribute('data-' . $dataAttributeKey, (string) $dataAttributeValue);
             }
         }
 
         if (isset(self::$tagAttributes[get_class($this)])) {
             foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
                 if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
-                    $this->tag->addAttribute($attributeName, $this->arguments[$attributeName]);
+                    $this->tag->addAttribute($attributeName, (string) $this->arguments[$attributeName]);
                 }
             }
         }
@@ -121,7 +122,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @return void
      * @api
      */
-    protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
+    protected function registerTagAttribute(string $name, string $type, string $description, bool $required = false, $defaultValue = null)
     {
         $this->registerArgument($name, $type, $description, $required, $defaultValue);
         self::$tagAttributes[get_class($this)][$name] = $name;

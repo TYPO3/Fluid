@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -29,7 +30,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsNumberOfElementsInAnArray()
+    public function renderReturnsNumberOfElementsInAnArray(): void
     {
         $this->viewHelper->expects($this->never())->method('renderChildren');
         $expectedResult = 3;
@@ -42,7 +43,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsNumberOfElementsInAnArrayObject()
+    public function renderReturnsNumberOfElementsInAnArrayObject(): void
     {
         $this->viewHelper->expects($this->never())->method('renderChildren');
         $expectedResult = 2;
@@ -55,7 +56,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsZeroIfGivenArrayIsEmpty()
+    public function renderReturnsZeroIfGivenArrayIsEmpty(): void
     {
         $this->viewHelper->expects($this->never())->method('renderChildren');
         $expectedResult = 0;
@@ -68,10 +69,11 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull()
+    public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull(): void
     {
-        $this->viewHelper->expects($this->once())->method('renderChildren')
-            ->will($this->returnValue(['foo', 'baz', 'bar']));
+        $this->viewHelper->expects($this->once())
+            ->method('renderChildren')
+            ->willReturn(['foo', 'baz', 'bar']);
         $expectedResult = 3;
         $this->arguments = ['subject' => null];
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -82,10 +84,11 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull()
+    public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull(): void
     {
-        $this->viewHelper->expects($this->once())->method('renderChildren')
-            ->will($this->returnValue(null));
+        $this->viewHelper->expects($this->once())
+            ->method('renderChildren')
+            ->willReturn(null);
         $this->viewHelper->setArguments(['subject' => null]);
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
         $expectedResult = 0;
@@ -96,7 +99,7 @@ class CountViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfGivenSubjectIsNotCountable()
+    public function renderThrowsExceptionIfGivenSubjectIsNotCountable(): void
     {
         $this->viewHelper->expects($this->never())->method('renderChildren');
         $this->viewHelper->setRenderingContext(new RenderingContextFixture());

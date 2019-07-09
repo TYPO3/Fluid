@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -23,7 +24,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments()
+    public function testInitializeArgumentsRegistersExpectedArguments(): void
     {
         $instance = $this->getMock(LayoutViewHelper::class, ['registerArgument']);
         $instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
@@ -35,8 +36,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestcase
         $nameNode = new TextNode('Default');
         $variableContainer = new StandardVariableProvider();
         $node = new ViewHelperNode(new RenderingContextFixture(), 'f', 'layout', ['name' => $nameNode], new ParsingState());
-        $result = LayoutViewHelper::postParseEvent($node, ['name' => $nameNode], $variableContainer);
-        $this->assertNull($result);
+        LayoutViewHelper::postParseEvent($node, ['name' => $nameNode], $variableContainer);
         $this->assertEquals($nameNode, $variableContainer->get('layoutName'));
     }
 }

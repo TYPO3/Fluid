@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -21,7 +22,7 @@ class StopCompilingChildrenExceptionTest extends UnitTestCase
      * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testGetter($property, $value)
+    public function testGetter(string $property, $value): void
     {
         $subject = $this->getAccessibleMock(StopCompilingChildrenException::class, ['dummy']);
         $subject->_set($property, $value);
@@ -35,7 +36,7 @@ class StopCompilingChildrenExceptionTest extends UnitTestCase
      * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testSetter($property, $value)
+    public function testSetter(string $property, $value): void
     {
         $subject = $this->getAccessibleMock(StopCompilingChildrenException::class, ['dummy']);
         $subject->_set($property, $value);
@@ -47,7 +48,7 @@ class StopCompilingChildrenExceptionTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPropertyTestValues()
+    public function getPropertyTestValues(): array
     {
         return [
             ['replacementString', 'test replacement string'],

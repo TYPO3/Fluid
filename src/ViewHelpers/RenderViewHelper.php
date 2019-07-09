@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -87,7 +88,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 class RenderViewHelper extends AbstractViewHelper
 {
     use CompileWithRenderStatic;
-    
+
     /**
      * @var boolean
      */
@@ -119,7 +120,7 @@ class RenderViewHelper extends AbstractViewHelper
         $variables = (array) $arguments['arguments'];
         $optional = (boolean) $arguments['optional'];
         $delegate = $arguments['delegate'];
-        /** @var RenderableInterface $renderable */
+        /** @var RenderableInterface|null $renderable */
         $renderable = $arguments['renderable'];
         $tagContent = $renderChildrenClosure();
         if ($arguments['contentAs']) {

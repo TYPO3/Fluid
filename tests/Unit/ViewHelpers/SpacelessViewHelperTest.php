@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -20,10 +21,10 @@ class SpacelessViewHelperTest extends ViewHelperBaseTestcase
      * @dataProvider getRenderStaticData
      * @test
      */
-    public function testRenderStatic($input, $expected)
+    public function testRenderStatic(string $input, string $expected): void
     {
         $context = $this->getMock(RenderingContextInterface::class);
-        $this->assertEquals($expected, SpacelessViewHelper::renderStatic([], function () use ($input) {
+        $this->assertEquals($expected, SpacelessViewHelper::renderStatic([], function () use ($input): string {
             return $input;
         }, $context));
     }
@@ -31,7 +32,7 @@ class SpacelessViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @return array
      */
-    public function getRenderStaticData()
+    public function getRenderStaticData(): array
     {
         return [
             'extra whitespace between tags' => ['<div>foo</div>  <div>bar</div>', '<div>foo</div><div>bar</div>'],

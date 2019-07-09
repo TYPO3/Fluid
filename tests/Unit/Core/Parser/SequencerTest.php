@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -965,7 +966,7 @@ class SequencerTest extends UnitTestCase
         $parserConfiguration = new Configuration();
         $parserConfiguration->setFeatureState(Configuration::FEATURE_SEQUENCER, true);
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMock();
-        $templateParser = $this->getMockBuilder(TemplateParser::class, ['getConfiguration'])->getMock();
+        $templateParser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getConfiguration'])->getMock();
         $templateParser->expects($this->any())->method('getConfiguration')->willReturn($parserConfiguration);
         $templateParser->setRenderingContext($context);
         $context->setViewHelperResolver($viewHelperResolver);

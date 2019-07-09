@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\TemplateProcessor;
 
 /*
@@ -23,7 +24,7 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
      * @param string $expectedSource
      * @dataProvider getTestValues
      */
-    public function testExtractsExpectedNamespaces($templateSource, array $expectedNamespaces, $expectedSource)
+    public function testExtractsExpectedNamespaces(string $templateSource, array $expectedNamespaces, string $expectedSource): void
     {
         $renderingContext = new RenderingContextFixture();
         $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['addNamespace'])->getMock();
@@ -43,7 +44,7 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getTestValues()
+    public function getTestValues(): array
     {
         return [
             'does nothing with empty templates' => [
