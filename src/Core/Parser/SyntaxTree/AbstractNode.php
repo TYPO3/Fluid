@@ -7,13 +7,16 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Abstract node in the syntax tree which has been built.
  */
-abstract class AbstractNode implements NodeInterface
+abstract class AbstractNode extends AbstractComponent implements NodeInterface
 {
 
     /**
@@ -23,13 +26,18 @@ abstract class AbstractNode implements NodeInterface
      */
     protected $childNodes = [];
 
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    {
+        return $this->evaluate($renderingContext);
+    }
+
     /**
      * @param NodeInterface[] $childNodes
      * @return NodeInterface
      */
     public function setChildNodes(array $childNodes)
     {
-        $this->childNodes = $childNodes;
+        $this->children = $childNodes;
         return $this;
     }
 
@@ -96,18 +104,18 @@ abstract class AbstractNode implements NodeInterface
      */
     public function flatten(bool $extractNode = false)
     {
-        if (empty($this->childNodes) && $extractNode) {
+        if (empty($this->children) && $extractNode) {
             return null;
         }
-        $nodesCounted = count($this->childNodes);
+        $nodesCounted = count($this->children);
         if ($nodesCounted === 1) {
             if ($extractNode) {
-                if ($this->childNodes[0] instanceof TextNode) {
-                    $text = $this->childNodes[0]->getText();
+                if ($this->children[0] instanceof TextNode) {
+                    $text = $this->children[0]->getText();
                     return is_numeric($text) ? $text + 0 : $text;
                 }
             }
-            return $this->childNodes[0];
+            return $this->children[0];
         }
         return $this;
     }
@@ -120,7 +128,12 @@ abstract class AbstractNode implements NodeInterface
      */
     public function getChildNodes(): array
     {
-        return $this->childNodes;
+        return $this->children;
+    }
+
+    public function addChild(ComponentInterface $component): ComponentInterface
+    {
+        return $this->addChildNode($component);
     }
 
     /**
@@ -136,10 +149,11 @@ abstract class AbstractNode implements NodeInterface
             foreach ($childNode->getChildNodes() as $node) {
                 $this->addChildNode($node);
             }
-        } elseif ($childNode instanceof TextNode && ($last = end($this->childNodes)) && $last instanceof TextNode) {
+        } elseif ($childNode instanceof TextNode && ($last = end($this->children)) && $last instanceof TextNode) {
             $last->appendText($childNode->getText());
         } else {
-            $this->childNodes[] = $childNode;
+            $this->children[] = $childNode;
+
         }
         return $this;
     }

@@ -114,31 +114,31 @@ class Sequencer
                 case Splitter::BYTE_INLINE:
                     $node = $this->state->getNodeFromStack();
                     if ($this->splitter->index > 1 && $this->source->bytes[$this->splitter->index - 1] === Splitter::BYTE_BACKSLASH) {
-                        $node->addChildNode(new TextNode(substr($captured, 0, -1) . '{'));
+                        $node->addChild(new TextNode(substr($captured, 0, -1) . '{'));
                         break;
                     }
                     if ($captured !== null) {
-                        $node->addChildNode(new TextNode($captured));
+                        $node->addChild(new TextNode($captured));
                     }
-                    $node->addChildNode($this->sequenceInlineNodes(false));
+                    $node->addChild($this->sequenceInlineNodes(false));
                     $this->splitter->switch($this->contexts->root);
                     break;
 
                 case Splitter::BYTE_TAG:
                     if ($captured !== null) {
-                        $this->state->getNodeFromStack()->addChildNode(new TextNode($captured));
+                        $this->state->getNodeFromStack()->addChild(new TextNode($captured));
                     }
 
                     $childNode = $this->sequenceTagNode();
                     $this->splitter->switch($this->contexts->root);
                     if ($childNode) {
-                        $this->state->getNodeFromStack()->addChildNode($childNode);
+                        $this->state->getNodeFromStack()->addChild($childNode);
                     }
                     break;
 
                 case Splitter::BYTE_NULL:
                     if ($captured !== null) {
-                        $this->state->getNodeFromStack()->addChildNode(new TextNode($captured));
+                        $this->state->getNodeFromStack()->addChild(new TextNode($captured));
                     }
                     break;
             }
@@ -254,8 +254,8 @@ class Sequencer
                 case Splitter::BYTE_INLINE:
                     $contextBefore = $this->splitter->context;
                     $collected = $this->sequenceInlineNodes(isset($namespace) && isset($method));
-                    $node->addChildNode(new TextNode($text));
-                    $node->addChildNode($collected);
+                    $node->addChild(new TextNode($text));
+                    $node->addChild($collected);
                     $text = '';
                     $this->splitter->switch($contextBefore);
                     break;
@@ -326,7 +326,7 @@ class Sequencer
                         if ($this->splitter->context->context === Context::CONTEXT_DEAD || !$this->resolver->isAliasRegistered((string) $method)) {
                             return $node->addChildNode(new TextNode($text))->flatten();
                         }
-                    } elseif ($this->resolver->isNamespaceIgnored((string)$namespace)) {
+                    } elseif ($this->resolver->isNamespaceIgnored((string) $namespace)) {
                         return $node->addChildNode(new TextNode($text))->flatten();
                     }
 
@@ -373,14 +373,18 @@ class Sequencer
 
                     $viewHelperNode = $viewHelperNode ?? $this->resolver->createViewHelperInstanceFromClassName($expectedClass);
 
+                    $viewHelperNode->onOpen(
+                        $this->renderingContext,
+                        $viewHelperNode->createArgumentDefinitions()->assignAll($arguments)
+                    );
+
                     if (!$closing) {
-                        $viewHelperNode->postParse($arguments, $definitions, $this->state, $this->renderingContext);
                         $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
                         $this->state->pushNodeToStack($viewHelperNode);
                         return null;
                     }
 
-                    $viewHelperNode = $viewHelperNode->postParse($arguments, $definitions, $this->state, $this->renderingContext);
+                    $viewHelperNode = $viewHelperNode->onClose($this->renderingContext);
 
                     if ($viewHelperNode instanceof ViewHelperInterface) {
                         // The node may have been replaced with a different node type by the post-parsing event.
@@ -423,7 +427,7 @@ class Sequencer
                         // Forcibly disable escaping OFF as default decision for whether or not to escape an argument.
                         $this->escapingEnabled = false;
 
-                        $definitions = $this->resolver->getArgumentDefinitionsForViewHelper($viewHelperNode);
+                        $definitions = $viewHelperNode->createArgumentDefinitions()->getDefinitions();
                         $this->splitter->switch($this->contexts->attributes);
                         break;
                     } else {
@@ -525,7 +529,7 @@ class Sequencer
                         }
                     } else {
                         $childNodeToAdd = $this->sequenceInlineNodes($allowArray);
-                        $node = isset($node) ? $node->addChildNode($childNodeToAdd) : (new RootNode())->addChildNode($childNodeToAdd);
+                        $node = isset($node) ? $node->addChild($childNodeToAdd) : (new RootNode())->addChild($childNodeToAdd);
                     }
                     break;
 
@@ -540,8 +544,8 @@ class Sequencer
                 // Note that backticks do not support escapes (they are a new feature that does not require escaping).
                 case Splitter::BYTE_BACKTICK:
                     if ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
-                        $node->addChildNode(new TextNode($text));
-                        $node->addChildNode($this->sequenceQuotedNode()->flatten());
+                        $node->addChild(new TextNode($text));
+                        $node->addChild($this->sequenceQuotedNode()->flatten());
                         $text = '';
                         break;
                     }
@@ -649,11 +653,16 @@ class Sequencer
                     $potentialAccessor = $potentialAccessor ?? $captured;
                     $text .=  $this->source->source[$this->splitter->index - 1];
                     if ($node instanceof ViewHelperInterface) {
-                        $node->postParse($arguments, $definitions, $this->state, $this->renderingContext);
+                        $node->onOpen(
+                            $this->renderingContext,
+                            $node->createArgumentDefinitions()->assignAll($arguments)
+                        )->onClose(
+                            $this->renderingContext
+                        );
                     }
                     if (isset($potentialAccessor)) {
                         $childNodeToAdd = new ObjectAccessorNode($potentialAccessor);
-                        $node = isset($node) ? $node->addChildNode($childNodeToAdd) : $childNodeToAdd; //$node ?? (is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode($potentialAccessor));
+                        $node = isset($node) ? $node->addChild($childNodeToAdd) : $childNodeToAdd; //$node ?? (is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode($potentialAccessor));
                     }
                     $potentialAccessor = $namespace = $method = $key = null;
                     break;
@@ -675,19 +684,19 @@ class Sequencer
                     $childNodeToAdd = $node;
                     try {
                         $node = $this->resolver->createViewHelperInstance($namespace, $method);
-                        $definitions = $this->resolver->getArgumentDefinitionsForViewHelper($node);
+                        $definitions = $node->createArgumentDefinitions()->getDefinitions();
                         $this->callInterceptor($node, Escape::INTERCEPT_OPENING_VIEWHELPER);
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         throw $this->splitter->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
                     $this->splitter->switch($this->contexts->array);
-                    $arguments = $this->sequenceArrayNode($definitions)->getInternalArray();
+                    $arguments = $this->sequenceArrayNode((array) $definitions)->getInternalArray();
                     $this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
                             $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                         }
-                        $node->addChildNode($childNodeToAdd);
+                        $node->addChild($childNodeToAdd);
                     }
                     $text .= ')';
                     $potentialAccessor = null;
@@ -712,7 +721,12 @@ class Sequencer
                     } elseif ($callDetected) {
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
                         // in which case there is no further syntax to come.
-                        $node = $node->postParse($arguments, $definitions, $this->state, $this->renderingContext);
+                        $node = $node->onOpen(
+                            $this->renderingContext,
+                            $node->createArgumentDefinitions()->assignAll($arguments)
+                        )->onClose(
+                            $this->renderingContext
+                        );
                         $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_ACCESSOR) {
                         // If we are currently in "accessor" context we can now add the accessor by stripping the collected text.
@@ -744,7 +758,7 @@ class Sequencer
                         }
                         if (isset($node)) {
                             $this->callInterceptor($childNodeToAdd, $interceptionPoint);
-                            $node = $node->addChildNode($childNodeToAdd);
+                            $node = $node->addChild($childNodeToAdd);
                         } else {
                             $node = $childNodeToAdd;
                         }
@@ -766,8 +780,13 @@ class Sequencer
                         // we look for the alias used and create a ViewHelperNode with no arguments.
                         $childNodeToAdd = $node;
                         $node = $this->resolver->createViewHelperInstance(null, $potentialAccessor);
-                        $node->addChildNode($childNodeToAdd);
-                        $node = $node->postParse($arguments, $definitions, $this->state, $this->renderingContext);
+                        $node->addChild($childNodeToAdd);
+                        $node = $node->onOpen(
+                            $this->renderingContext,
+                            $node->createArgumentDefinitions()->assignAll($arguments)
+                        )->onClose(
+                            $this->renderingContext
+                        );
                         $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } else {
                         # TODO: should this be an error case, or should it result in a TextNode?
@@ -793,11 +812,11 @@ class Sequencer
     }
 
     /**
-     * @param ArgumentDefinition[] $definitions
+     * @param ArgumentDefinition[]|null $definitions
      * @param bool $numeric
      * @return ArrayNode
      */
-    protected function sequenceArrayNode(array $definitions = null, bool $numeric = false): ArrayNode
+    protected function sequenceArrayNode(?array $definitions = null, bool $numeric = false): ArrayNode
     {
         $array = [];
 
@@ -965,10 +984,10 @@ class Sequencer
                         // Array start "[" only triggers array sequencing if it is the very first byte in the quoted
                         // string - otherwise, it is added as part of the text.
                         $this->splitter->switch($this->contexts->array);
-                        $node->addChildNode($this->sequenceArrayNode(null, $allowArray));
+                        $node->addChild($this->sequenceArrayNode(null, $allowArray));
                         $this->splitter->switch($this->contexts->quoted);
                     } else {
-                        $node->addChildNode(new TextNode($captured . '['));
+                        $node->addChild(new TextNode($captured . '['));
                     }
                     break;
 
@@ -980,10 +999,10 @@ class Sequencer
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
                         $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
-                        $node->addChildNode($childNode);
+                        $node->addChild($childNode);
                     }
 
-                    $node->addChildNode($this->sequenceInlineNodes());
+                    $node->addChild($this->sequenceInlineNodes());
                     $this->splitter->switch($this->contexts->quoted);
                     break;
 
@@ -992,10 +1011,10 @@ class Sequencer
                     ++$countedEscapes;
                     if ($next === $startingByte || $next === Splitter::BYTE_BACKSLASH) {
                         if ($captured !== null) {
-                            $node->addChildNode(new TextNode($captured));
+                            $node->addChild(new TextNode($captured));
                         }
                     } else {
-                        $node->addChildNode(new TextNode($captured . str_repeat('\\', $countedEscapes)));
+                        $node->addChild(new TextNode($captured . str_repeat('\\', $countedEscapes)));
                         $countedEscapes = 0;
                     }
                     break;
@@ -1009,14 +1028,14 @@ class Sequencer
                     if ($symbol !== $startingByte || $countedEscapes !== $leadingEscapes) {
                         $childNode = new TextNode($captured . chr($symbol));
                         $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
-                        $node->addChildNode($childNode);
+                        $node->addChild($childNode);
                         $countedEscapes = 0; // If number of escapes do not match expected, reset the counter
                         break;
                     }
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
                         $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
-                        $node->addChildNode($childNode);
+                        $node->addChild($childNode);
                     }
                     $this->splitter->switch($contextToRestore);
                     return $node;

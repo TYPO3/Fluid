@@ -50,7 +50,7 @@ class AbstractNodeTest extends UnitTestCase
     public function setChildNodesSetsNodesAndReturnsSelf(): void
     {
         $return = $this->abstractNode->setChildNodes([$this->childNode]);
-        $this->assertAttributeEquals([$this->childNode], 'childNodes', $this->abstractNode);
+        $this->assertAttributeEquals([$this->childNode], 'children', $this->abstractNode);
         $this->assertSame($this->abstractNode, $return);
     }
 

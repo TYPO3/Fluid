@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -69,9 +70,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $variableContainer->expects($this->at(0))->method('remove')->with(SwitchViewHelper::class, 'switchExpression');
         $variableContainer->expects($this->at(1))->method('remove')->with(SwitchViewHelper::class, 'break');
         $context->setViewHelperVariableContainer($variableContainer);
-        $this->viewHelper->setRenderingContext($context);
-        $this->viewHelper->setArguments(['expression' => 'switchExpression']);
-        $output = $this->viewHelper->initializeArgumentsAndRender();
+        $output = $this->viewHelper->execute($context, (new ArgumentCollection())->assignAll(['expression' => 'switchExpression']));
         $this->assertEquals('', $output);
     }
 
@@ -87,13 +86,12 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $context = new RenderingContextFixture();
         $context->getVariableProvider()->setSource($variables);
         $instance = new SwitchViewHelper();
-        $instance->setParsedArguments(['expression' => $variables['switchExpression']]);
 
         foreach ($childNodes as $childNode) {
             $instance->addChildNode($childNode);
         }
 
-        $result = $instance->evaluate($context);
+        $result = $instance->execute($context, (new ArgumentCollection())->assignAll(['expression' => $variables['switchExpression']]));
         $this->assertEquals($expected, $result);
     }
 
@@ -102,11 +100,10 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function getRetrieveContentFromChildNodesTestValues(): array
     {
-        $matchingNode = (new CaseViewHelper())->addChildNode(new TextNode('foo'));
-        $matchingNode->setParsedArguments(['value' => 'foo']);
+        $context = new RenderingContextFixture();
+        $matchingNode = (new CaseViewHelper())->addChildNode(new TextNode('foo'))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']));
 
-        $notMatchingNode = (new CaseViewHelper())->addChildNode(new TextNode(''));
-        $notMatchingNode->setParsedArguments(['value' => 'bar']);
+        $notMatchingNode = (new CaseViewHelper())->addChildNode(new TextNode(''))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']));
 
         $defaultCaseNode = (new DefaultCaseViewHelper())->addChildNode(new TextNode('default'));
 
@@ -130,11 +127,9 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     {
         $context = new RenderingContextFixture();
 
-        $instance = new SwitchViewHelper();
-        $instance->setParsedArguments(['expression' => 'foo']);
+        $instance = (new SwitchViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['expression' => 'foo']));
 
-        $matchingCaseViewHelper = (new CaseViewHelper())->addChildNode(new TextNode('foo-childcontent'));
-        $matchingCaseViewHelper->setParsedArguments(['value' => 'foo']);
+        $matchingCaseViewHelper = (new CaseViewHelper())->addChildNode(new TextNode('foo-childcontent'))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']));
 
         $untouchedViewHelper = $this->getMockBuilder(DefaultCaseViewHelper::class)->setMethods(['evaluate'])->getMock();
         $untouchedViewHelper->expects($this->never())->method('evaluate');

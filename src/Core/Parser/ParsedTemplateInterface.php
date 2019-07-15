@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
  * This interface is returned by \TYPO3Fluid\Fluid\Core\Parser\TemplateParser->parse()
@@ -38,13 +37,6 @@ interface ParsedTemplateInterface extends ComponentInterface
     public function render(RenderingContextInterface $renderingContext);
 
     /**
-     * Returns a variable container used in the PostParse Facet.
-     *
-     * @return VariableProviderInterface
-     */
-    public function getVariableContainer(): VariableProviderInterface;
-
-    /**
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
      * If no layout is defined, this returns NULL
      * This requires the current rendering context in order to be able to evaluate the layout name
@@ -53,11 +45,4 @@ interface ParsedTemplateInterface extends ComponentInterface
      * @return string
      */
     public function getLayoutName(RenderingContextInterface $renderingContext): ?string;
-
-    /**
-     * Returns TRUE if the current template has a template defined via <f:layout name="..." />
-     *
-     * @return boolean
-     */
-    public function hasLayout(): bool;
 }

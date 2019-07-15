@@ -7,8 +7,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
@@ -33,17 +33,33 @@ class HtmlViewHelper extends AbstractViewHelper
 
     protected $shouldRenderTag = true;
 
-    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
+    protected $namespaces = [];
+
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $argumentCollection = null): ComponentInterface
     {
         $this->shouldRenderTag = ($arguments['data-namespace-typo3-fluid'] ?? null) === 'true';
+        $arguments = $argumentCollection->readAll();
+        $resolver = $renderingContext->getViewHelperResolver();
         foreach ($arguments as $name => $value) {
             $parts = explode(':', $name);
             if ($parts[0] === 'xmlns' && isset($parts[1]) && strncmp('http://typo3.org/ns/', $value, 20) === 0) {
-                $renderingContext->getViewHelperResolver()->addNamespace($parts[1], str_replace('/', '\\', substr($value, 20)));
+                $namespace = $resolver->resolvePhpNamespaceFromFluidNamespace($value);
+                $resolver->addNamespace($parts[1], $namespace);
+                $this->namespaces[$parts[1]][] = $namespace;
                 unset($arguments[$name]);
             }
         }
-        $this->setParsedArguments($arguments);
+        return $this;
+    }
+
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
+    {
+        $resolver = $renderingContext->getViewHelperResolver();
+        foreach ($this->namespaces as $identifier => $namespaces) {
+            foreach ($namespaces as $namespace) {
+                $resolver->removeNamespace($identifier, $namespace);
+            }
+        }
         return $this;
     }
 

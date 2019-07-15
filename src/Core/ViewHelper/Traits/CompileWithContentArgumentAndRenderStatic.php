@@ -48,7 +48,7 @@ trait CompileWithContentArgumentAndRenderStatic
     public function render()
     {
         return static::renderStatic(
-            $this->arguments,
+            $this->arguments ?? [],
             $this->buildRenderChildrenClosure(),
             $this->renderingContext
         );
@@ -65,7 +65,7 @@ trait CompileWithContentArgumentAndRenderStatic
     protected function buildRenderChildrenClosure()
     {
         $argumentName = $this->resolveContentArgumentName();
-        $arguments = $this->arguments;
+        $arguments = $this->arguments ?? [];
         if (!empty($argumentName) && isset($arguments[$argumentName])) {
             $renderChildrenClosure = function () use ($arguments, $argumentName) {
                 return $arguments[$argumentName];

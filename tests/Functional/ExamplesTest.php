@@ -81,13 +81,6 @@ class ExamplesTest extends BaseTestCase
                     '\'thisstring\' != \'thatstring\' === TRUE'
                 ]
             ],
-            'example_customresolving.php' => [
-                'example_customresolving.php',
-                [
-                    var_export(['foo' => 'bar'], true),
-                    var_export(['bar' => 'foo'], true),
-                ]
-            ],
             'example_format.php' => [
                 'example_format.php',
                 [
@@ -231,9 +224,9 @@ class ExamplesTest extends BaseTestCase
                 'example_errorhandling.php',
                 [
                     'View error: The Fluid template files',
-                    'Section rendering error: Section "DoesNotExist" does not exist. Section rendering is mandatory; "optional" is false.',
+                    'View error: Child with name "DoesNotExist" not found',
                     'error: Undeclared argument',
-                    'error: The ViewHelper "<f:invalid>" could not be resolved.',
+                    'error: The ViewHelper "<f:invalid>" could not be resolved',
                 ]
             ]
         ];

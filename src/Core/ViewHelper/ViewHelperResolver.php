@@ -134,6 +134,11 @@ class ViewHelperResolver
         }
     }
 
+    public function removeNamespace(string $identifier, $phpNamespace): void
+    {
+
+    }
+
     /**
      * Resolves the PHP namespace based on the Fluid xmlns namespace,
      * which can be either a URL matching the Patterns::NAMESPACEPREFIX
@@ -329,20 +334,5 @@ class ViewHelperResolver
     public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
     {
         return new $viewHelperClassName();
-    }
-
-    /**
-     * Return an array of ArgumentDefinition instances which describe
-     * the arguments that the ViewHelper supports. By default, the
-     * arguments are simply fetched from the ViewHelper - but custom
-     * implementations can if necessary add/remove/replace arguments
-     * which will be passed to the ViewHelper.
-     *
-     * @param ViewHelperInterface $viewHelper
-     * @return ArgumentDefinition[]
-     */
-    public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper): array
-    {
-        return $viewHelper->prepareArguments();
     }
 }

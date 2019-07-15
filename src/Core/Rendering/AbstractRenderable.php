@@ -7,13 +7,15 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 
 /**
  * Class AbstractRenderable
  */
-abstract class AbstractRenderable implements RenderableInterface
+abstract class AbstractRenderable extends AbstractComponent implements RenderableInterface
 {
     /**
      * @var string
@@ -24,6 +26,11 @@ abstract class AbstractRenderable implements RenderableInterface
      * @var NodeInterface
      */
     protected $node;
+
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    {
+        return $this->render($renderingContext);
+    }
 
     /**
      * @return string

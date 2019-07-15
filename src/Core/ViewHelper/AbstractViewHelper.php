@@ -7,7 +7,9 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
@@ -20,20 +22,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInterface
 {
-
-    /**
-     * Stores all \TYPO3Fluid\Fluid\ArgumentDefinition instances
-     * @var ArgumentDefinition[]
-     */
-    protected $argumentDefinitions = [];
-
-    /**
-     * Arguments array.
-     * @var array
-     * @api
-     */
-    protected $arguments = [];
-
     /**
      * @var array
      */
@@ -70,23 +58,44 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     protected $escapeOutput = null;
 
     /**
-     * @param array $arguments
-     * @param array|null $definitions
-     * @param ParsedTemplateInterface $parsedTemplate
+     * Execute via Component API implementation.
+     *
      * @param RenderingContextInterface $renderingContext
-     * @return NodeInterface
+     * @param ArgumentCollectionInterface|null $arguments
+     * @return mixed
+     * @api
      */
-    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $this->renderingContext = $renderingContext;
-        $this->validateParsedArguments($arguments);
-        return $this->setParsedArguments($arguments, $definitions);
+        $this->setRenderingContext($renderingContext);
+        if ($arguments) {
+            $this->arguments = (array) $arguments->evaluate($renderingContext);
+        } else {
+            $this->arguments = $this->parsedArguments;
+            foreach ($this->arguments as $name => $value) {
+                $this->arguments[$name] = $value instanceof ComponentInterface ? $value->execute($renderingContext) : $value;
+            }
+        }
+        return $this->initializeArgumentsAndRender();
     }
 
-    public function setParsedArguments(array $parsedArguments, ?array $definitions = null): NodeInterface
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @param ArgumentCollectionInterface|null $arguments
+     * @return ComponentInterface
+     */
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
     {
-        $this->parsedArguments = $this->createArguments($parsedArguments, $definitions);
+        $definitions = $this->prepareArguments();
+        $this->parsedArguments = $this->createInternalArguments($arguments ? $arguments->readAll() : $this->parsedArguments, $definitions);
+        $this->renderingContext = $renderingContext;
+        $this->validateParsedArguments($this->parsedArguments, $definitions);
         return $this;
+    }
+
+    public function createArgumentDefinitions(): ArgumentCollectionInterface
+    {
+        return new ArgumentCollection($this->prepareArguments());
     }
 
     public function getParsedArguments(): array
@@ -94,29 +103,16 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
         return $this->parsedArguments;
     }
 
-    public function evaluate(RenderingContextInterface $renderingContext)
-    {
-        $this->setRenderingContext($renderingContext);
-
-        $arguments = $this->parsedArguments;
-        foreach ($this->prepareArguments() as $argumentName => $argumentDefinition) {
-            $argumentValue = $arguments[$argumentName] ?? null;
-            $arguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-        }
-        $this->setArguments($arguments);
-        return $this->initializeArgumentsAndRender();
-    }
-
     /**
      * @param NodeInterface[]|mixed[] $arguments
+     * @param ArgumentDefinition[] $argumentDefinitions
      * @throws Exception
      */
-    protected function validateParsedArguments(array $arguments)
+    protected function validateParsedArguments(array $arguments, array $argumentDefinitions)
     {
         $additionalArguments = [];
-        $argumentDefinitions = $this->prepareArguments();
         foreach ($arguments as $argumentName => $value) {
-            if (!array_key_exists($argumentName, $argumentDefinitions)) {
+            if (!isset($argumentDefinitions[$argumentName])) {
                 $additionalArguments[$argumentName] = $value;
             }
         }
@@ -132,7 +128,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @param array|null $definitions
      * @return array
      */
-    protected function createArguments(array $arguments, ?array $definitions = null): array
+    protected function createInternalArguments(array $arguments, ?array $definitions = null): array
     {
         $definitions = $definitions ?? $this->prepareArguments();
         $missingArguments = [];
@@ -303,16 +299,21 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
         if (method_exists($this, 'renderStatic')) {
             // Method is safe to call - will not recurse through ViewHelperInvoker via the default
             // implementation of renderStatic() on this class.
-            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext]);
+            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments ?? [], $this->buildRenderChildrenClosure(), $this->renderingContext]);
         }
         throw new Exception(
             sprintf(
                 'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
-                'Exceuting this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
+                'Executing this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
                 '"renderStatic()" on your ViewHelper class',
                 get_class($this)
             )
         );
+    }
+
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+        return $this->execute($renderingContext);
     }
 
     /**

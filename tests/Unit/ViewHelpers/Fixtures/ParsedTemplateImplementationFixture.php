@@ -7,6 +7,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -16,6 +19,15 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 {
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
+    {
+        return $this;
+    }
+
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
+    {
+        return $this;
+    }
 
     public function setIdentifier($identifier): void
     {
@@ -47,11 +59,6 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
         // stub
     }
 
-    public function hasLayout(): bool
-    {
-        // stub
-    }
-
     public function isCompilable(): bool
     {
         // stub
@@ -61,4 +68,45 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
     {
         // stub
     }
+
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    {
+        // TODO: Implement execute() method.
+    }
+
+    public function addArgumentDefinition(ArgumentDefinitionInterface $definition): ComponentInterface
+    {
+        return $this;
+    }
+
+    public function createArgumentDefinitions(): ArgumentCollectionInterface
+    {
+        // TODO: Implement createArgumentDefinitions() method.
+    }
+
+    public function getName(): ?string
+    {
+        // TODO: Implement getName() method.
+    }
+
+    public function getArguments(): ?ArgumentCollectionInterface
+    {
+        // TODO: Implement getArguments() method.
+    }
+
+    public function addChild(ComponentInterface $component): ComponentInterface
+    {
+        return $this;
+    }
+
+    public function getNamedChild(string $name): ComponentInterface
+    {
+        return $this;
+    }
+
+    public function getChildren(): iterable
+    {
+        // TODO: Implement getChildren() method.
+    }
+
 }

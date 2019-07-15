@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use phpDocumentor\Reflection\DocBlock\Tag;
 use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -100,7 +101,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
 
         $arguments = ['data' => ['foo' => 'bar', 'baz' => 'foos']];
         $this->viewHelper->setArguments($arguments);
-        $this->viewHelper->postParse($arguments, null, new ParsingState(), new RenderingContextFixture());
+        $this->viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($arguments));
         $this->viewHelper->initializeArgumentsAndRender();
     }
 

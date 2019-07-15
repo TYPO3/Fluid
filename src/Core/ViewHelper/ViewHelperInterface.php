@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -18,15 +17,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ViewHelperInterface extends NodeInterface
 {
-    /**
-     * @param array $arguments
-     * @param array|null $definitions
-     * @param ParsedTemplateInterface $parsedTemplate
-     * @param RenderingContextInterface $renderingContext
-     * @return NodeInterface
-     */
-    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface;
-
     /**
      * @return ArgumentDefinition[]
      */

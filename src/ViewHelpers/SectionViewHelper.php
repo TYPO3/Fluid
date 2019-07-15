@@ -7,12 +7,10 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\SectionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
  * A ViewHelper to declare sections in templates for later use with e.g. the RenderViewHelper.
@@ -58,8 +56,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  */
 class SectionViewHelper extends AbstractViewHelper
 {
-    use ParserRuntimeOnly;
-
     /**
      * @var boolean
      */
@@ -76,17 +72,10 @@ class SectionViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
-    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        parent::postParse($arguments, $definitions, $parsedTemplate, $renderingContext);
-        $variableContainer = $parsedTemplate->getVariableContainer();
-        $nameArgument = $arguments['name'];
-        $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
-        $sections = $variableContainer->get('1457379500_sections') ?: [];
-        $sections[$sectionName] = clone $this;
-        $variableContainer->add('1457379500_sections', $sections);
-        $this->childNodes = [];
-        return new TextNode('');
+        $name = $this->parsedArguments['name'];
+        return new SectionNode((string) ($name instanceof ComponentInterface ? $name->execute($renderingContext) : $name), $this->children);
     }
 
     /**

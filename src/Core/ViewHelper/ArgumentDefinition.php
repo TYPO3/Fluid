@@ -7,10 +7,12 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
+
 /**
  * Argument definition of each view helper argument
  */
-class ArgumentDefinition
+class ArgumentDefinition implements ArgumentDefinitionInterface
 {
     /**
      * Name of argument

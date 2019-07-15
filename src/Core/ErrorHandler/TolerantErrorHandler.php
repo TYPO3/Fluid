@@ -11,7 +11,6 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 use TYPO3Fluid\Fluid\View\Exception as ViewException;
-use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
 /**
  * Class TolerantErrorHandler
@@ -58,9 +57,6 @@ class TolerantErrorHandler implements ErrorHandlerInterface
      */
     public function handleViewError(ViewException $error): string
     {
-        if ($error instanceof InvalidSectionException) {
-            return 'Section rendering error: ' . $error->getMessage() . ' Section rendering is mandatory; "optional" is false.';
-        }
         return 'View error: ' . $error->getMessage();
     }
 }

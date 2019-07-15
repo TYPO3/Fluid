@@ -7,12 +7,10 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\LayoutNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
  * With this tag, you can select a layout to be used for the current template.
@@ -30,7 +28,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  */
 class LayoutViewHelper extends AbstractViewHelper
 {
-    use ParserRuntimeOnly;
+    /**
+     * @var string|null
+     */
+    protected $name = 'Layout';
 
     /**
      * Initialize arguments
@@ -43,17 +44,8 @@ class LayoutViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
     }
 
-    public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        parent::postParse($arguments, $definitions, $parsedTemplate, $renderingContext);
-        $variableContainer = $parsedTemplate->getVariableContainer();
-        if (isset($arguments['name'])) {
-            $layoutNameNode = $arguments['name'];
-        } else {
-            $layoutNameNode = 'Default';
-        }
-
-        $variableContainer->add('layoutName', $layoutNameNode);
-        return new TextNode('');
+        return new LayoutNode($this->parsedArguments['name']);
     }
 }

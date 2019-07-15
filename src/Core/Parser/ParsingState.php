@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
@@ -20,7 +22,7 @@ use TYPO3Fluid\Fluid\View\Exception;
  * and the current stack of open nodes (nodeStack) and a variable container used
  * for PostParseFacets.
  */
-class ParsingState implements ParsedTemplateInterface
+class ParsingState extends AbstractNode implements ParsedTemplateInterface
 {
 
     /**
@@ -50,17 +52,16 @@ class ParsingState implements ParsedTemplateInterface
      */
     protected $variableContainer;
 
-    /**
-     * The layout name of the current template or NULL if the template does not contain a layout definition
-     *
-     * @var AbstractNode
-     */
-    protected $layoutNameNode;
+    public function __construct()
+    {
+        $this->rootNode = new RootNode();
+        $this->nodeStack[] = $this->rootNode;
+    }
 
-    /**
-     * @var boolean
-     */
-    protected $compilable = true;
+    public function getNamedChild(string $name): ComponentInterface
+    {
+        return $this->rootNode->getNamedChild($name);
+    }
 
     /**
      * @var boolean
@@ -116,6 +117,11 @@ class ParsingState implements ParsedTemplateInterface
         return $this->rootNode;
     }
 
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+        return $this->render($renderingContext);
+    }
+
     /**
      * Render the parsed template with rendering context
      *
@@ -136,7 +142,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function pushNodeToStack(NodeInterface $node): void
     {
-        array_push($this->nodeStack, $node);
+        $this->nodeStack[] = $node;
     }
 
     /**
@@ -180,27 +186,21 @@ class ParsingState implements ParsedTemplateInterface
     }
 
     /**
-     * Returns TRUE if the current template has a template defined via <f:layout name="..." />
-     *
-     * @return boolean
-     */
-    public function hasLayout(): bool
-    {
-        return $this->variableContainer->exists('layoutName');
-    }
-
-    /**
      * Returns the name of the layout that is defined within the current template via <f:layout name="..." />
      * If no layout is defined, this returns NULL
      * This requires the current rendering context in order to be able to evaluate the layout name
      *
      * @param RenderingContextInterface $renderingContext
-     * @return string
+     * @return string|null
      * @throws Exception
      */
     public function getLayoutName(RenderingContextInterface $renderingContext): ?string
     {
-        $layoutName = $this->variableContainer->get('layoutName');
-        return ($layoutName instanceof NodeInterface ? $layoutName->evaluate($renderingContext) : $layoutName);
+        try {
+            $layoutName = $this->rootNode->getNamedChild('layoutName');
+            return $layoutName->execute($renderingContext);
+        } catch (ChildNotFoundException $exception) {
+            return null;
+        }
     }
 }

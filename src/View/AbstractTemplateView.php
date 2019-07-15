@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -170,12 +172,14 @@ abstract class AbstractTemplateView extends AbstractView
             return $error->getSource();
         }
 
-        if (!$parsedTemplate->hasLayout()) {
-            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->render($this->baseRenderingContext);
-            $this->stopRendering();
-        } else {
-            $layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
+        try {
+            $layoutName = $parsedTemplate->getNamedChild('layoutName')->execute($renderingContext);
+        } catch (ChildNotFoundException $exception) {
+            $layoutName = null;
+        }
+
+        if ($layoutName) {
+            //$layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
@@ -188,6 +192,10 @@ abstract class AbstractTemplateView extends AbstractView
             }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
             $output = $parsedLayout->render($this->baseRenderingContext);
+            $this->stopRendering();
+        } else {
+            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
+            $output = $parsedTemplate->render($this->baseRenderingContext);
             $this->stopRendering();
         }
 
@@ -225,25 +233,18 @@ abstract class AbstractTemplateView extends AbstractView
                 return $renderingContext->getErrorHandler()->handleViewError($error);
             }
             return '';
-        } catch (InvalidSectionException $error) {
-            if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($error);
-            }
-            return '';
         } catch (Exception $error) {
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
 
-        $sections = $parsedTemplate->getVariableContainer()->get('1457379500_sections');
-        if (!isset($sections[$sectionName])) {
-            if ($ignoreUnknown) {
-                return '';
+        try {
+            $section = $parsedTemplate->getNamedChild($sectionName);
+        } catch (ChildNotFoundException $exception) {
+            if (!$ignoreUnknown) {
+                return $renderingContext->getErrorHandler()->handleViewError($exception);
             }
-            return $renderingContext->getErrorHandler()->handleViewError(
-                new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
-            );
+            return '';
         }
-        $section = $sections[$sectionName];
 
         $renderingContext->getViewHelperVariableContainer()->add(
             SectionViewHelper::class,
@@ -252,7 +253,7 @@ abstract class AbstractTemplateView extends AbstractView
         );
 
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-        $output = $section->evaluate($renderingContext);
+        $output = $section->execute($renderingContext, (new ArgumentCollection())->assignAll($variables));
         $this->stopRendering();
 
         return $output;

@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
@@ -70,57 +71,36 @@ class AbstractViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testPostParseCallsExpectedFunctions()
+    public function testOnOpenCallsExpectedFunctions()
     {
         $argumentDefinitions = [
             'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
         ];
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['setParsedArguments', 'validateAdditionalArguments', 'prepareArguments']);
+        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['validateParsedArguments', 'prepareArguments'])->getMockForAbstractClass();
         $expectedArguments = [
             'foo' => 'foovalue',
             'undeclared' => 'some',
         ];
-        $additionalArguments = ['undeclared' => 'some'];
-        $viewHelper->expects($this->atLeastOnce())->method('prepareArguments')->willReturn($argumentDefinitions);
-        $viewHelper->expects($this->atLeastOnce())->method('setParsedArguments')->with($expectedArguments);
-        $viewHelper->expects($this->atLeastOnce())->method('validateAdditionalArguments')->with($additionalArguments);
-        $viewHelper->postParse($expectedArguments, null, new ParsingState(), new RenderingContextFixture());
+        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn($argumentDefinitions);
+        $viewHelper->expects($this->once())->method('validateParsedArguments')->with($expectedArguments);
+        $viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection($argumentDefinitions))->assignAll($expectedArguments));
     }
 
     /**
      * @test
      */
-    public function testEvaluateCallsExpectedFunctions()
+    public function testExecuteCallsExpectedFunctions()
     {
-        $argumentDefinitions = [
-            'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
-        ];
         $viewHelper = $this->getAccessibleMock(
             AbstractViewHelper::class,
-            ['prepareArguments', 'setArguments', 'initializeArgumentsAndRender', 'validateAdditionalArguments']
+            ['initializeArgumentsAndRender']
         );
         $expectedArguments = [
             'foo' => 'foovalue',
             'undeclared' => 'some',
         ];
-        $viewHelper->expects($this->atLeastOnce())->method('prepareArguments')->willReturn($argumentDefinitions);
-        $viewHelper->expects($this->once())->method('setArguments')->with($expectedArguments);
-        $viewHelper->setParsedArguments($expectedArguments);
-        $viewHelper->evaluate(new RenderingContextFixture());
-    }
-
-    /**
-     * @test
-     */
-    public function testSetParsedArgumentsThrowsErrorOnMissingRequiredArgument()
-    {
-        $argumentDefinitions = [
-            'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
-        ];
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments']);
-        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn($argumentDefinitions);
-        $this->setExpectedException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
-        $viewHelper->setParsedArguments([]);
+        $viewHelper->expects($this->once())->method('initializeArgumentsAndRender');
+        $viewHelper->execute(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($expectedArguments));
     }
 
     /**
@@ -128,16 +108,16 @@ class AbstractViewHelperTest extends UnitTestCase
      * @param array $parsedArguments
      * @param array $expectedArguments
      */
-    public function testSetParsedArgumentsCreatesExpectedArguments(array $parsedArguments, array $expectedArguments)
+    public function testOnOpenCreatesExpectedArguments(array $parsedArguments, array $expectedArguments)
     {
         $argumentDefinitions = [
             'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
             'bar' => new ArgumentDefinition('bar', 'string', 'Bar', false, 'bardefault'),
             'boo' => new ArgumentDefinition('boo', 'boolean', 'Boo', false, false),
         ];
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments']);
+        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['prepareArguments'])->getMockForAbstractClass();
         $viewHelper->expects($this->once())->method('prepareArguments')->willReturn($argumentDefinitions);
-        $viewHelper->setParsedArguments($parsedArguments);
+        $viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection($argumentDefinitions))->assignAll($parsedArguments));
         $this->assertAttributeEquals($expectedArguments, 'parsedArguments', $viewHelper);
     }
 
@@ -145,12 +125,12 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         return [
             'missing optional argument, static nodes' => [
-                ['foo' => new TextNode('foovalue')],
+                ['foo' => 'foovalue'],
                 ['foo' => 'foovalue', 'bar' => 'bardefault', 'boo' => false],
             ],
             'with optional argument, static nodes' => [
-                ['foo' => new TextNode('foovalue'), 'bar' => 1],
-                ['foo' => 'foovalue', 'bar' => '1', 'boo' => false],
+                ['foo' => 'foovalue', 'bar' => 1],
+                ['foo' => 'foovalue', 'bar' => 1, 'boo' => false],
             ],
             'with optional argument, dynamic nodes' => [
                 ['foo' => new ObjectAccessorNode('foovariable')],
@@ -158,7 +138,7 @@ class AbstractViewHelperTest extends UnitTestCase
             ],
             'with optional boolean argument, static values' => [
                 ['foo' => 'foostatic', 'boo' => 1],
-                ['foo' => 'foostatic', 'bar' => 'bardefault', 'boo' => true],
+                ['foo' => 'foostatic', 'bar' => 'bardefault', 'boo' => 1],
             ],
         ];
     }

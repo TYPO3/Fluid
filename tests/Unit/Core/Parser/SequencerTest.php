@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -23,9 +25,11 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\LayoutNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\SectionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -268,325 +272,325 @@ class SequencerTest extends UnitTestCase
                 '<tag>x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag>x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag>x</tag>')),
             ],
             'simple open+close non-active tag with hardcoded attribute in root context' => [
                 '<tag attr="foo">x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag attr="foo">x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag attr="foo">x</tag>')),
             ],
             'simple open+close non-active tag with object accessor attribute value in root context' => [
                 '<tag attr="{string}">x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag attr="'))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('">x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag attr="'))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('">x</tag>')),
             ],
             'simple open+close non-active tag with value-less object accessor attribute in root context' => [
                 '<tag {string}>x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('>x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('>x</tag>')),
             ],
             'simple open+close non-active tag with object accessor attribute name in root context' => [
                 '<tag {string}="foo">x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('="foo">x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('="foo">x</tag>')),
             ],
             'simple open+close non-active tag with object accessor attribute name and value in root context' => [
                 '<tag {string}="{string}">x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('="'))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('">x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('="'))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('">x</tag>')),
             ],
             'simple open+close non-active tag with unquoted object accessor attribute name and value in root context' => [
                 '<tag {string}={string}>x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('='))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('>x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('='))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('>x</tag>')),
             ],
             'simple open+close non-active tag with unquoted object accessor attribute name and static value in root context' => [
                 '<tag {string}=1>x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('=1>x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('=1>x</tag>')),
             ],
             'simple open+close non-active tag with value-less unquoted object accessor attribute name in root context' => [
                 '<tag {string}>x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode('>x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode('>x</tag>')),
             ],
             'simple tag with inline ViewHelper and legacy pass to other ViewHelper as string argument value' => [
                 '<tag s="{f:c() -> f:c()}">x</tag>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag s="'))->addChildNode((new CViewHelper())->postParse([], null, $state, $context)->addChildNode((new CViewHelper())->postParse([], null, $state, $context)))->addChildNode(new TextNode('">x</tag>')),
+                (new RootNode())->addChild(new TextNode('<tag s="'))->addChild((new CViewHelper())->onOpen($context)->addChild((new CViewHelper())->onOpen($context)))->addChild(new TextNode('">x</tag>')),
             ],
             'self-closed non-active, two value-less static attributes' => [
                 '<tag static1 static2 />',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag static1 static2 />')),
+                (new RootNode())->addChild(new TextNode('<tag static1 static2 />')),
             ],
             'self-closed non-active, space before closing tag, tag in root context' => [
                 '<tag />',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag />')),
+                (new RootNode())->addChild(new TextNode('<tag />')),
             ],
             'self-closed non-active, no space before closing tag, tag in root context' => [
                 '<tag/>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag/>')),
+                (new RootNode())->addChild(new TextNode('<tag/>')),
             ],
             'self-closed non-active, dynamic tag name, no space before closing tag, tag in root context' => [
                 '<{tag}/>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<'))->addChildNode(new ObjectAccessorNode('tag'))->addChildNode(new TextNode('/>')),
+                (new RootNode())->addChild(new TextNode('<'))->addChild(new ObjectAccessorNode('tag'))->addChild(new TextNode('/>')),
             ],
             'simple open+close active tag in root context' => [
                 '<f:c>x</f:c>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->addChildNode(new TextNode('x'))->postParse([], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->addChild(new TextNode('x'))->onOpen($context)),
             ],
             'simple open+close active tag with string parameter in root context' => [
                 '<f:c s="foo">x</f:c>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->addChildNode(new TextNode('x'))->postParse(['s' => 'foo'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->addChild(new TextNode('x'))->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'foo']))),
             ],
             'self-closed active tag, space before tag close, in root context' => [
                 '<f:c />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse([], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context)),
             ],
             'self-closed active tag, no space before tag close, in root context' => [
                 '<f:c/>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse([], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context)),
             ],
             'self-closed active tag with hardcoded string argument' => [
                 '<f:c s="foo" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'foo']))),
             ],
             'self-closed active tag with hardcoded string argument with backslash that must not be removed/ignored' => [
                 '<f:c s="foo\\bar" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo\\bar'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'foo\\bar']))),
             ],
             'self-closed active tag with hardcoded string argument with multiple backslashes that must not be removed/ignored' => [
                 '<f:c s="foo\\bar\\\\baz" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo\\bar\\\\baz'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'foo\\bar\\\\baz']))),
             ],
             'self-closed active tag with hardcoded string and integer arguments' => [
                 '<f:c s="foo" i="1" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'foo', 'i' => 1], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'foo', 'i' => 1]))),
             ],
             'self-closed active tag with object accessor string argument in string argument' => [
                 '<f:c s="{string}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('string')], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => new ObjectAccessorNode('string')]))),
             ],
             'self-closed active tag with object accessor string argument with string before accessor in string argument' => [
                 '<f:c s="before {string}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new TextNode('before '))->addChildNode(new ObjectAccessorNode('string'))], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('string'))]))),
             ],
             'self-closed active tag with object accessor string argument with string after accessor in string argument' => [
                 '<f:c s="{string} after" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode(' after'))], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => (new RootNode())->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode(' after'))]))),
             ],
             'self-closed active tag with object accessor string argument with string before and after accessor in string argument' => [
                 '<f:c s="before {string} after" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => (new RootNode())->addChildNode(new TextNode('before '))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new TextNode(' after'))], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('string'))->addChild(new TextNode(' after'))]))),
             ],
             'self-closed active tag with string argument containing different quotes inside in string argument' => [
                 '<f:c s="before \'quoted\' after" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'before \'quoted\' after'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'before \'quoted\' after']))),
             ],
             'self-closed active tag with string argument containing escaped same type quotes inside in string argument' => [
                 '<f:c s="before \\"quoted\\" after" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'before "quoted" after'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'before "quoted" after']))),
             ],
             'self-closed active tag with array argument with single unquoted element in array argument' => [
                 '<f:c a="{foo:bar}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar')])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar')])]))),
             ],
             'self-closed active tag with array argument with two unquoted elements with comma and space in array argument' => [
                 '<f:c a="{foo:bar, baz:honk}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar'), 'baz' => new ObjectAccessorNode('honk')])], null, $state, $context), $context),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar'), 'baz' => new ObjectAccessorNode('honk')])]))),
             ],
             'self-closed active tag with array argument with two unquoted elements with comma without space in array argument' => [
                 '<f:c a="{foo:bar,baz:honk}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar'), 'baz' => new ObjectAccessorNode('honk')])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('bar'), 'baz' => new ObjectAccessorNode('honk')])]))),
             ],
             'self-closed active tag with array argument with single double-quoted element (no escaping) in array argument' => [
                 '<f:c a="{foo:"bar"}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 'bar'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
             ],
             'self-closed active tag with array argument with single single-quoted element (no escaping) in array argument' => [
                 '<f:c a="{foo:\'bar\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 'bar'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
             ],
             'self-closed active tag with array argument with single integer element in array argument' => [
                 '<f:c a="{foo:1}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted string values in array argument' => [
                 '<f:c a="{1: \'foo\', 2: \'bar\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => 'foo', 2 => 'bar'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => 'foo', 2 => 'bar'])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted integer values in array argument' => [
                 '<f:c a="{1: \'0\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => 0, 2 => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => 0, 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted inline legacy pass without spaces as array argument' => [
                 '<f:c a="{1: \'{foo->f:c()}\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted inline legacy pass with spaces as array argument' => [
                 '<f:c a="{1: \'{foo -> f:c()}\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted inline pipe pass without spaces as array argument' => [
                 '<f:c a="{1: \'{foo|f:c()}\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted inline pipe pass with spaces as array argument' => [
                 '<f:c a="{1: \'{foo | f:c()}\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => (new CViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('foo')), 2 => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with object accessor values in array argument' => [
                 '<f:c a="{1: foo.bar, 2: baz.buzz}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([1 => new ObjectAccessorNode('foo.bar'), 2 => new ObjectAccessorNode('baz.buzz')])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => new ObjectAccessorNode('foo.bar'), 2 => new ObjectAccessorNode('baz.buzz')])]))),
             ],
             'self-closed active tag with array argument with double-quoted key and single integer element in array argument' => [
                 '<f:c a="{"foo":1}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 1])]))),
             ],
             'self-closed active tag with array argument with square brackets and single double-quoted string element in array argument' => [
                 '<f:c a="["foo"]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo'])]))),
             ],
             'self-closed active tag with array argument with square brackets and single double-quoted object accessor element in array argument' => [
                 '<f:c a="["{foo}"]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ObjectAccessorNode('foo')])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo')])]))),
             ],
             'self-closed active tag with array argument with square brackets and two-element ECMA literal array in array argument' => [
                 '<f:c a="[{foo, bar}]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ArrayNode(['foo' => new ObjectAccessorNode('foo'), 'bar' => new ObjectAccessorNode('bar')])])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ArrayNode(['foo' => new ObjectAccessorNode('foo'), 'bar' => new ObjectAccessorNode('bar')])])]))),
             ],
             'self-closed active tag with square brackets array argument with double-quoted key and single integer element in root context' => [
                 '<f:c a="["foo":1]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 1])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 1])]))),
             ],
             'self-closed active tag with square brackets array argument with sub-array element with quoted key and object accessor value in root context' => [
                 '<f:c a="[foo:[baz:\'foo\']]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ArrayNode(['baz' => 'foo'])])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ArrayNode(['baz' => 'foo'])])]))),
             ],
             'self-closed active tag with square brackets array argument with sub-array element with escaped and quoted key and object accessor value in root context' => [
                 '<f:c a="[foo:[baz:\\\'foo\\\']]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ArrayNode(['baz' => 'foo'])])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ArrayNode(['baz' => 'foo'])])]))),
             ],
             'self-closed active tag with square brackets array argument with multiple sub-array values in root context' => [
                 '<f:c a="[["foo", "bar"], ["baz", "buzz"]]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ArrayNode(['foo', 'bar']), new ArrayNode(['baz', 'buzz'])])], null, $state, $context))
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ArrayNode(['foo', 'bar']), new ArrayNode(['baz', 'buzz'])])])))
             ],
             'self-closed active tag with string argument with square bracket start not at first position in root context' => [
                 '<f:c s="my [a:b]" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => 'my [a:b]'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => 'my [a:b]']))),
             ],
             'self-closed active tag with value-less ECMA literal shorthand argument in root context' => [
                 '<f:c s/>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('s')], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => new ObjectAccessorNode('s')]))),
             ],
             'self-closed active tag with two value-less ECMA literal shorthand arguments in root context' => [
                 '<f:c s i/>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('s'), 'i' => new ObjectAccessorNode('i')], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => new ObjectAccessorNode('s'), 'i' => new ObjectAccessorNode('i')]))),
             ],
             'simple open + close active tag with value-less ECMA literal shorthand argument in root context' => [
                 '<f:c s>x</f:c>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('s')], null, $state, $context)->addChildNode(new TextNode('x'))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => new ObjectAccessorNode('s')]))->addChild(new TextNode('x'))),
             ],
             'simple open + close active tag with two value-less ECMA literal shorthand arguments in root context' => [
                 '<f:c s i>x</f:c>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['s' => new ObjectAccessorNode('s'), 'i' => new ObjectAccessorNode('i')], null, $state, $context)->addChildNode(new TextNode('x'))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => new ObjectAccessorNode('s'), 'i' => new ObjectAccessorNode('i')]))->addChild(new TextNode('x'))),
             ],
 
             /* INLINE */
@@ -594,171 +598,171 @@ class SequencerTest extends UnitTestCase
                 '{foo}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new ObjectAccessorNode('foo')),
+                (new RootNode())->addChild(new ObjectAccessorNode('foo')),
             ],
             'accessor with dynamic part last in inline in root context' => [
                 '{foo.{bar}}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new ObjectAccessorNode('foo.{bar}')),
+                (new RootNode())->addChild(new ObjectAccessorNode('foo.{bar}')),
             ],
             'simple inline with text before in root context' => [
                 'before {foo}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('before '))->addChildNode(new ObjectAccessorNode('foo')),
+                (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('foo')),
             ],
             'simple inline with text after in root context' => [
                 '{foo} after',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new ObjectAccessorNode('foo'))->addChildNode(new TextNode(' after')),
+                (new RootNode())->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode(' after')),
             ],
             'simple inline with text before and after in root context' => [
                 'before {foo} after',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('before '))->addChildNode(new ObjectAccessorNode('foo'))->addChildNode(new TextNode(' after')),
+                (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode(' after')),
             ],
             'escaped inline with text before and after in root context' => [
                 'before \\{foo} after',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('before {foo} after')),
+                (new RootNode())->addChild(new TextNode('before {foo} after')),
             ],
             'simple inline ViewHelper without arguments in root context' => [
                 '{f:c()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse([], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context)),
             ],
             'simple inline ViewHelper with single hardcoded integer argument in root context' => [
                 '{f:c(i: 1)}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => 1], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1]))),
             ],
             'simple inline ViewHelper with single hardcoded integer argument using tag attribute syntax in root context' => [
                 '{f:c(i="1")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => 1], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1]))),
             ],
             'simple inline ViewHelper with single value-less hardcoded integer argument using tag attribute syntax in root context' => [
                 '{f:c(i)}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => new ObjectAccessorNode('i')], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => new ObjectAccessorNode('i')]))),
             ],
             'simple inline ViewHelper with two comma separated value-less hardcoded integer argument in root context' => [
                 '{f:c(i, s)}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => new ObjectAccessorNode('i'), 's' => new ObjectAccessorNode('s')], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => new ObjectAccessorNode('i'), 's' => new ObjectAccessorNode('s')]))),
             ],
             'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax without commas in root context' => [
                 '{f:c(i="1" s="foo")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => 1, 's' => 'foo'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
             ],
             'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax with comma in root context' => [
                 '{f:c(i="1", s="foo")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => 1, 's' => 'foo'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
             ],
             'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax with comma and tailing comma in root context' => [
                 '{f:c(i="1", s="foo",)}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['i' => 1, 's' => 'foo'], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
             ],
             'simple inline ViewHelper with square brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
                 '{f:c(a="[foo="bar"]")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 'bar'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
             ],
             'simple inline ViewHelper with square brackets array argument with implied numeric keys with comma in root context' => [
                 '{f:c(a="[foo, bar]")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])]))),
             ],
             'simple inline ViewHelper with square brackets array argument with two items using implied numeric keys with quoted values using comma in root context' => [
                 '{f:c(a="["foo", "bar"]")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo', 'bar'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo', 'bar'])]))),
             ],
             'simple inline ViewHelper with curly braces array argument with explicit numeric keys in root context' => [
                 '{f:c(a="{0: foo, 1: bar}")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])]))),
             ],
             'simple inline ViewHelper with curly braces array argument with redundant escapes in root context' => [
                 '{f:c(a: {0: \\\'foo\\\'})}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo'])]))),
             ],
             'simple inline ViewHelper with curly braces array argument with incorrect number of redundant escapes in root context' => [
                 '{f:c(a: \'{0: \\\\\'{f:c(a: {foo})}\\\\\'}\')}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode([(new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('foo')])], null, $state, $context)])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([(new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('foo')])]))])]))),
             ],
             'simple inline ViewHelper with curly brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
                 '{f:c(a="{foo="bar"}")}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode(['foo' => 'bar'])], null, $state, $context)),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
             ],
             'simple inline ViewHelper with value pipe in root context' => [
                 '{string | f:c()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('string'))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('string'))),
             ],
             /*
             'simple inline ViewHelper with multiple values pipe in root context' => [
                 '{{string}{string}{string} | f:c()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new CViewHelper())->postParse([], $state)->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new ObjectAccessorNode('string'))->addChildNode(new ObjectAccessorNode('string'))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen([], $state)->addChild(new ObjectAccessorNode('string'))->addChild(new ObjectAccessorNode('string'))->addChild(new ObjectAccessorNode('string'))),
             ],
             */
             'simple inline ViewHelper with value pipe to ViewHelper alias in root context' => [
                 '{string | raw}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('string'))),
+                (new RootNode())->addChild((new RawViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('string'))),
             ],
             'simple tag ViewHelper with tag content being ViewHelper alias' => [
                 '<raw>{string}</raw>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('string'))),
+                (new RootNode())->addChild((new RawViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('string'))),
             ],
             'simple tag ViewHelper with tag argument being ViewHelper alias' => [
                 '<raw value="{string}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->postParse(['value' => new ObjectAccessorNode('string')], null, $state, $context)),
+                (new RootNode())->addChild((new RawViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => new ObjectAccessorNode('string')]))),
             ],
             'aliased ViewHelper supports namespaced attributes' => [
                 '<html foo:bar="string">test</html>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new HtmlViewHelper())->postParse(['foo:bar' => 'string'], null, $state, $context)->addChildNode(new TextNode('test'))),
+                (new RootNode())->addChild((new HtmlViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['foo:bar' => 'string']))->addChild(new TextNode('test'))),
             ],
             'html pseudo ViewHelper supports namespace registration' => [
-                '<html foo:bar="http://typo3.org/ns/Foo/Bar/ViewHelpers">test</html>',
+                '<html xmlns:foo="http://typo3.org/ns/Foo/Bar/ViewHelpers">test</html>',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new HtmlViewHelper())->postParse(['xmlns:foo' => 'http://typo3.org/ns/Foo/Bar/ViewHelpers'], null, $state, $context)->addChildNode(new TextNode('test'))),
+                (new RootNode())->addChild((new HtmlViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['xmlns:foo' => 'http://typo3.org/ns/Foo/Bar/ViewHelpers']))->addChild(new TextNode('test'))),
             ],
 
             /* INLINE PASS OF ARRAY */
@@ -766,31 +770,31 @@ class SequencerTest extends UnitTestCase
                 '{["foo": "bar"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->addChildNode(new ArrayNode(['foo' => 'bar']))),
+                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo' => 'bar']))),
             ],
             'inline ViewHelper with single-item implied numeric index array in square brackets piped value in root context' => [
                 '{["bar"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->addChildNode(new ArrayNode(['bar']))),
+                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['bar']))),
             ],
             'inline ViewHelper with multi-item implied numeric index array in square brackets piped value in root context' => [
                 '{["foo", "bar", "baz"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->addChildNode(new ArrayNode(['foo', 'bar', 'baz']))),
+                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo', 'bar', 'baz']))),
             ],
             'inline ViewHelper with multi-item implied numeric index array with tailing comma in square brackets piped value in root context' => [
                 '{["foo", "bar", "baz", ] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->addChildNode(new ArrayNode(['foo', 'bar', 'baz']))),
+                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo', 'bar', 'baz']))),
             ],
             'inline ViewHelper with multi-item associative index array with space-separated key and value pairs in root context' => [
                 '{[foo "foo", bar "bar"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChildNode((new RawViewHelper())->addChildNode(new ArrayNode(['foo' => 'foo', 'bar' => 'bar']))),
+                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo' => 'foo', 'bar' => 'bar']))),
             ],
 
             /* PROTECTED INLINE */
@@ -798,49 +802,49 @@ class SequencerTest extends UnitTestCase
                 '{foo.\{bar}}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new ObjectAccessorNode('foo.{bar}')),
+                (new RootNode())->addChild(new ObjectAccessorNode('foo.{bar}')),
             ],
             'inline syntax with comma when array is not allowed is detected as possible expression that becomes TextNode' => [
                 '{foo, bar, baz}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{foo, bar, baz}')),
+                (new RootNode())->addChild(new TextNode('{foo, bar, baz}')),
             ],
             'complex inline syntax not detected as Fluid in root context' => [
                 '{string - with < raw || something}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{string - with < raw || something}')),
+                (new RootNode())->addChild(new TextNode('{string - with < raw || something}')),
             ],
             'complex inline syntax with sub-accessor-like syntax not detected as Fluid in root context' => [
                 '{string with < raw {notFluid} || something}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{string with < raw {notFluid} || something}')),
+                (new RootNode())->addChild(new TextNode('{string with < raw {notFluid} || something}')),
             ],
             'likely JS syntax not detected as Fluid in root context' => [
                 '{"object": "something"}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{"object": "something"}')),
+                (new RootNode())->addChild(new TextNode('{"object": "something"}')),
             ],
             'likely CSS syntax not detected as Fluid in root context' => [
                 'something { background-color: #000000; }',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('something { background-color: #000000; }')),
+                (new RootNode())->addChild(new TextNode('something { background-color: #000000; }')),
             ],
             'likely JS syntax not detected as Fluid in inactive attribute value' => [
                 '<tag prop="if(x.y[f.z].v){w.l.h=(this.o[this.s].v);}" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<tag prop="if(x.y[f.z].v){w.l.h=(this.o[this.s].v);}" />')),
+                (new RootNode())->addChild(new TextNode('<tag prop="if(x.y[f.z].v){w.l.h=(this.o[this.s].v);}" />')),
             ],
             'empty inline renders as plaintext curly brace pair' => [
                 '{}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{}'))
+                (new RootNode())->addChild(new TextNode('{}'))
             ],
 
             /* BACKTICK EXPLICIT VARIABLES */
@@ -848,7 +852,7 @@ class SequencerTest extends UnitTestCase
                 'something { background-color: `{color}`; }',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('something { background-color: '))->addChildNode(new ObjectAccessorNode('color'))->addChildNode(new TextNode('; }')),
+                (new RootNode())->addChild(new TextNode('something { background-color: '))->addChild(new ObjectAccessorNode('color'))->addChild(new TextNode('; }')),
             ],
 
             /* EXPRESSIONS */
@@ -856,37 +860,37 @@ class SequencerTest extends UnitTestCase
                 '{inline something foo}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{inline something foo}'))
+                (new RootNode())->addChild(new TextNode('{inline something foo}'))
             ],
             'inline that might be an expression node with parenthesis' => [
                 '{inline (something) foo}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('{inline (something) foo}'))
+                (new RootNode())->addChild(new TextNode('{inline (something) foo}'))
             ],
             'inline math expression with spaces is detected as expression' => [
                 '{i + 1}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new MathExpressionNode(['i', '+', '1']))
+                (new RootNode())->addChild(new MathExpressionNode(['i', '+', '1']))
             ],
             'inline math expression without spaces is not detected as expression' => [
                 '{i+1}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new ObjectAccessorNode('i+1'))
+                (new RootNode())->addChild(new ObjectAccessorNode('i+1'))
             ],
             'casting expression is recognized as expression' => [
                 '{i as string}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new CastingExpressionNode(['i', 'as', 'string']))
+                (new RootNode())->addChild(new CastingExpressionNode(['i', 'as', 'string']))
             ],
             'expression error with tolerant error handler is created as TextNode' => [
                 '{i as invalid}',
                 $this->createContext(TolerantErrorHandler::class),
                 false,
-                (new RootNode())->addChildNode(new TextNode('Invalid expression: Invalid target conversion type "invalid" specified in casting expression "{i as invalid}".'))
+                (new RootNode())->addChild(new TextNode('Invalid expression: Invalid target conversion type "invalid" specified in casting expression "{i as invalid}".'))
             ],
 
             /* CDATA and PCDATA */
@@ -894,13 +898,13 @@ class SequencerTest extends UnitTestCase
                 '<[CDATA[{notparsed}]]>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<[CDATA[{notparsed}]]>'))
+                (new RootNode())->addChild(new TextNode('<[CDATA[{notparsed}]]>'))
             ],
             'pcdata node becomes text node without parsing content' => [
                 '<[PCDATA[{notparsed}]]>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('<[PCDATA[{notparsed}]]>'))
+                (new RootNode())->addChild(new TextNode('<[PCDATA[{notparsed}]]>'))
             ],
 
             /* STRUCTURAL */
@@ -908,19 +912,19 @@ class SequencerTest extends UnitTestCase
                 '<f:layout />',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('')),
+                (new RootNode())->addChild(new LayoutNode('')),
             ],
             'layout node with layout name' => [
                 '<f:layout name="Default" />',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('')),
+                (new RootNode())->addChild(new LayoutNode('Default')),
             ],
             'section with name' => [
                 '<f:section  name="Default">DefaultSection</f:section>',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new TextNode('')),
+                (new RootNode())->addChild((new SectionNode('Default', [new TextNode('DefaultSection')]))),
             ],
         ];
     }
@@ -966,7 +970,6 @@ class SequencerTest extends UnitTestCase
     public function stressTestOneThousandArrayItems()
     {
         $context = $this->createContext();
-        $state = $this->createState();
         $thousandRandomArrayItemsInline = '{f:c(a: {';
         $thousandRandomArray = [];
         $chars = str_split('abcdef1234567890');
@@ -984,7 +987,7 @@ class SequencerTest extends UnitTestCase
             $thousandRandomArray[$key] = $value;
         }
         $thousandRandomArrayItemsInline .= '})}';
-        $expectedRootNode = (new RootNode())->addChildNode((new CViewHelper())->postParse(['a' => new ArrayNode($thousandRandomArray)], null, $state, $context));
+        $expectedRootNode = (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode($thousandRandomArray)])));
         $this->createsExpectedNodeStructure($thousandRandomArrayItemsInline, $context, false, $expectedRootNode);
     }
 
@@ -1000,11 +1003,11 @@ class SequencerTest extends UnitTestCase
         $node = $expectedRootNode;
         for ($i = 0; $i < 100; $i++) {
             $childNode = new RawViewHelper();
-            $node->addChildNode($childNode);
+            $node->addChild($childNode);
             $template .= '| f:format.raw() ';
             $node = $childNode;
         }
-        $node->addChildNode(new ObjectAccessorNode('foo'));
+        $node->addChild(new ObjectAccessorNode('foo'));
         $template .= '}';
 
         $this->createsExpectedNodeStructure($template, $context, false, $expectedRootNode);
@@ -1029,7 +1032,7 @@ class SequencerTest extends UnitTestCase
             'escapes object accessors in root context' => [
                 '{foo}',
                 $context,
-                (new RootNode())->addChildNode((new EscapingNode(new ObjectAccessorNode('foo')))),
+                (new RootNode())->addChild((new EscapingNode(new ObjectAccessorNode('foo')))),
             ],
         ];
     }
@@ -1060,15 +1063,12 @@ class SequencerTest extends UnitTestCase
         $context->expects($this->any())->method('getVariableProvider')->willReturn($variableProvider);
         $context->expects($this->any())->method('getErrorHandler')->willReturn($errorHandler);
         $context->expects($this->any())->method('getExpressionNodeTypes')->willReturn([MathExpressionNode::class, CastingExpressionNode::class, TernaryExpressionNode::class]);
-        $context->expects($this->any())->method('getTemplateProcessors')->willReturn([]);
         return $context;
     }
 
     protected function createState(): ParsingState
     {
         $state = new ParsingState();
-        $state->setRootNode(new RootNode());
-        $state->pushNodeToStack($state->getRootNode());
         return $state;
     }
 
@@ -1080,7 +1080,7 @@ class SequencerTest extends UnitTestCase
             $passedArguments = $subject->getParsedArguments();
             foreach ($passedArguments as $name => $argument) {
                 if (isset($expectedArguments[$name])) {
-                    if ($argument instanceof NodeInterface && $expectedArguments[$name] instanceof NodeInterface) {
+                    if ($argument instanceof ComponentInterface && $expectedArguments[$name] instanceof ComponentInterface) {
                         $this->assertNodeEquals($argument, $expectedArguments[$name], $path . '.argument@' . $name);
                     } else {
                         $this->assertSame($expectedArguments[$name], $argument, 'Arguments at path ' . $path . '.argument@' . $name . ' did not match');
@@ -1101,8 +1101,8 @@ class SequencerTest extends UnitTestCase
             $this->assertEquals($expected, $subject, 'Expression matches are not equal at path ' . $path);
         }
 
-        $children = $subject->getChildNodes();
-        $expectedChildren = $expected->getChildNodes();
+        $children = $subject->getChildren();
+        $expectedChildren = $expected->getChildren();
         if (count($children) !== count($expectedChildren)) {
             $this->fail('Nodes have an unequal number of child nodes. Got ' . count($children) . ', expected ' . count($expectedChildren) . '. Path: ' . $path);
         }

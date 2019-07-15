@@ -139,18 +139,8 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(): void
     {
-        $parsedTemplate = $this->getMockForAbstractClass(
-            ParsingState::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['getVariableContainer']
-        );
-        $parsedTemplate->expects($this->any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(
-            ['sections' => []]
-        ));
+        $parsedTemplate = $this->getMockBuilder(ParsingState::class)->setMethods(['getNamedChild'])->getMock();
+        $parsedTemplate->expects($this->any())->method('getNamedChild')->willThrowException(new InvalidSectionException('...'));
         $view = $this->getMockForAbstractClass(
             AbstractTemplateView::class,
             [],
@@ -165,53 +155,5 @@ class AbstractTemplateViewTest extends UnitTestCase
         $view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
         $this->setExpectedException(InvalidSectionException::class);
         $view->renderSection('Missing');
-    }
-
-    /**
-     * @test
-     * @dataProvider getRenderSectionCompiledTestValues
-     * @param boolean $exists
-     * @test
-     */
-    public function testRenderSectionOnCompiledTemplate(bool $exists): void
-    {
-        if ($exists) {
-            $sectionMethodName = 'section_' . sha1('Section');
-        } else {
-            $sectionMethodName = 'test';
-        }
-        $parsedTemplate = $this->getMockForAbstractClass(
-            ParsingState::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['getVariableContainer', $sectionMethodName]
-        );
-        $view = $this->getMockForAbstractClass(
-            AbstractTemplateView::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['getCurrentParsedTemplate', 'getCurrentRenderingType', 'getCurrentRenderingContext']
-        );
-        $view->expects($this->atLeastOnce())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
-        $view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
-        $view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-        $view->renderSection('Section', [], true);
-    }
-
-    /**
-     * @return array
-     */
-    public function getRenderSectionCompiledTestValues(): array
-    {
-        return [
-            [true],
-            [false]
-        ];
     }
 }
