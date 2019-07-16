@@ -7,12 +7,13 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Node in the syntax tree.
  */
-interface NodeInterface
+interface NodeInterface extends ComponentInterface
 {
 
     /**

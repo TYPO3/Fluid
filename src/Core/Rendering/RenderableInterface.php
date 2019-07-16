@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 
 /**
@@ -17,7 +18,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
  * ViewHelperNode (during parse time only) and RenderingContext
  * during rendering wether template is compiled or not.
  */
-interface RenderableInterface
+interface RenderableInterface extends ComponentInterface
 {
     /**
      * Returns the name of this Renderable - name must also be passed in constructor.

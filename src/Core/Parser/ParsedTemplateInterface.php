@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
@@ -14,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  * This interface is returned by \TYPO3Fluid\Fluid\Core\Parser\TemplateParser->parse()
  * method and is a parsed template
  */
-interface ParsedTemplateInterface
+interface ParsedTemplateInterface extends ComponentInterface
 {
 
     /**
