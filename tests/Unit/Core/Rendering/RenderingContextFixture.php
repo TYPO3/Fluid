@@ -200,6 +200,7 @@ class RenderingContextFixture implements RenderingContextInterface
     public function setTemplateParser(TemplateParser $templateParser): void
     {
         $this->templateParser = $templateParser;
+        $this->templateParser->setRenderingContext($this);
     }
 
     /**
@@ -269,7 +270,7 @@ class RenderingContextFixture implements RenderingContextInterface
      *
      * @return Configuration
      */
-    public function buildParserConfiguration(): Configuration
+    public function getParserConfiguration(): Configuration
     {
         return new Configuration();
     }

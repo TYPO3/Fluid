@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\TemplateProcessor;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
@@ -27,13 +28,14 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     public function testSetsEscapingToExpectedValueAndStripsModifier(string $templateSource, bool $expected): void
     {
         $subject = new EscapingModifierTemplateProcessor();
-        $context = new RenderingContextFixture();
-        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['setEscapingEnabled'])->getMock();
-        if (!$expected) {
-            $parser->expects($this->once())->method('setEscapingEnabled')->with(false);
-        } else {
-            $parser->expects($this->never())->method('setEscapingEnabled');
-        }
+
+        $configuration = $this->getMockBuilder(Configuration::class)->setMethods(['setFeatureState'])->getMock();
+        $configuration->expects($this->once())->method('setFeatureState')->with(Configuration::FEATURE_ESCAPING, $expected);
+
+        $context = $this->getMockBuilder(RenderingContextFixture::class)->setMethods(['getParserConfiguration'])->getMock();
+        $context->expects($this->once())->method('getParserConfiguration')->willReturn($configuration);
+
+        $parser = new TemplateParser();
         $context->setTemplateParser($parser);
         $subject->setRenderingContext($context);
         $processedSource = $subject->preProcessSource($templateSource);
@@ -46,7 +48,6 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     public function getEscapingTestValues(): array
     {
         return [
-            ['', true],
             ['{escaping on}', true],
             ['{escaping = on}', true],
             ['{escaping=on}', true],
@@ -69,10 +70,6 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     public function testThrowsExceptionOnMultipleDefinitions(string $templateSource): void
     {
         $subject = new EscapingModifierTemplateProcessor();
-        $context = new RenderingContextFixture();
-        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['setEscapingEnabled'])->getMock();
-        $context->setTemplateParser($parser);
-        $subject->setRenderingContext($context);
         $this->setExpectedException(Exception::class);
         $subject->preProcessSource($templateSource);
     }

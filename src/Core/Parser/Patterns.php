@@ -77,38 +77,6 @@ abstract class Patterns
         '/^<\/(?P<NamespaceIdentifier>[a-zA-Z0-9\\.]*):(?P<MethodIdentifier>[a-zA-Z0-9\\.]+)\s*>$/';
 
     /**
-     * This regular expression splits the tag arguments into its parts
-     */
-    static public $SPLIT_PATTERN_TAGARGUMENTS = '/
-		(?:                                              #
-			\s*                                          #
-			(?P<Argument>                                # The attribute name
-				[a-zA-Z0-9:-]+                           #
-			)                                            #
-			\s*                                          #
-			=                                            # =
-			\s*                                          #
-			(?>                                          # If we have found an argument, we will not back-track (That does the Atomic Bracket)
-				(?P<ValueQuoted>                         # either...
-					(?:"(?:\\\"|[^"])*")                 # a double-quoted string
-					|(?:\'(?:\\\\\'|[^\'])*\')           # or a single quoted string
-				)
-			)\s*
-		)
-		/xs';
-
-    /**
-     * This pattern detects the escaping modifier
-     */
-    static public $SCAN_PATTERN_ESCAPINGMODIFIER = '/{escapingEnabled\s*=\s*(?P<enabled>true|false)\s*}/i';
-
-    /**
-     * This pattern detects CDATA sections and outputs the text between opening
-     * and closing CDATA.
-     */
-    static public $SCAN_PATTERN_CDATA = '/^<!\[CDATA\[(.*?)\]\]>$/s';
-
-    /**
      * Pattern which splits the shorthand syntax into different tokens. The
      * "shorthand syntax" is everything like {...}
      */
@@ -192,61 +160,4 @@ abstract class Patterns
 		\)                                          # Closing parameter brackets of ViewHelper
 		/x';
 
-    /**
-     * Pattern which detects the array/object syntax like in JavaScript, so it
-     * detects strings like:
-     * {object: value, object2: {nested: array}, object3: "Some string"}
-     *
-     * THIS IS ALMOST THE SAME AS IN SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS
-     */
-    static public $SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS = '/^
-		(?P<Recursion>                                             # Start the recursive part of the regular expression - describing the array syntax
-			{                                                      # Each array needs to start with {
-				(?P<Array>                                         # Start sub-match
-					(?:
-						\s*(
-							[a-zA-Z0-9\\-_]+                       # Unquoted key
-							|"(?:\\\"|[^"])+"                      # Double quoted key, supporting more characters like dots and square brackets
-							|\'(?:\\\\\'|[^\'])+\'                 # Single quoted key, supporting more characters like dots and square brackets
-						)
-						\s*[:=]\s*                                 # Key|Value delimiter : or =
-						(?:                                        # Possible value options:
-							"(?:\\\"|[^"])*"                       # Double quoted string
-							|\'(?:\\\\\'|[^\'])*\'                 # Single quoted string
-							|[a-zA-Z0-9\-_.]+                      # variable identifiers
-							|(?P>Recursion)                        # Another sub-array
-						)                                          # END possible value options
-						\s*,?                                      # There might be a , to separate different parts of the array
-					)*                                             # The above cycle is repeated for all array elements
-				)                                                  # End array sub-match
-			}                                                      # Each array ends with }
-		)$/x';
-
-    /**
-     * This pattern splits an array into its parts, each part consists of a key and a value.
-     * It is quite similar to the pattern above.
-     * Note that this pattern can be used on strings with or without surrounding curly brackets.
-     */
-    static public $SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS = '/
-		(?P<ArrayPart>                                                      # Start sub-match of one key and value pair
-			(?P<Key>                                                        # The arry key
-				 [a-zA-Z0-9_-]+                                             # Unquoted
-				|"(?:\\\\"|[^"])+"                                          # Double quoted
-				|\'(?:\\\\\'|[^\'])+\'                                      # Single quoted
-			)
-			\\s*[:=]\\s*                                                    # Key|Value delimiter : or =
-			(?:                                                             # BEGIN Possible value options
-				(?P<QuotedString>                                           # Quoted string
-					 "(?:\\\\"|[^"])*"
-					|\'(?:\\\\\'|[^\'])*\'
-				)
-				|(?P<VariableIdentifier>
-					(?:(?=[^,{}\.]*[a-zA-Z])[a-zA-Z0-9_-]*)                 # variable identifiers must contain letters (otherwise they are hardcoded numbers)
-					(?:\\.[a-zA-Z0-9_-]+)*                                  # but in sub key access only numbers are fine (foo.55)
-				)
-				|(?P<Number>[0-9]+(?:\\.[0-9]+)?)                           # A hardcoded Number (also possibly with decimals)
-				|\\{\\s*(?P<Subarray>(?:(?P>ArrayPart)\\s*,?\\s*)+)\\s*\\}  # Another sub-array
-			)                                                               # END possible value options
-		)\\s*(?=\\z|,|\\})                                                  # An array part sub-match ends with either a comma, a closing curly bracket or end of string
-	/x';
 }

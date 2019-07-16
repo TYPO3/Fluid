@@ -228,10 +228,12 @@ class SequencerTest extends UnitTestCase
         RootNode $expectedRootNode
     ) {
         $parser = new TemplateParser();
-        $parser->setEscapingEnabled($escapingEnabled);
+        $configuration = new Configuration();
+        $configuration->setFeatureState(Configuration::FEATURE_ESCAPING, $escapingEnabled);
+        $configuration->addEscapingInterceptor(new Escape());
         $parser->setRenderingContext($context);
         $context->setTemplateParser($parser);
-        $node = $parser->parse($template)->getRootNode();
+        $node = $parser->parse($template, $configuration)->getRootNode();
         $this->assertNodeEquals($node, $expectedRootNode);
     }
 
@@ -939,7 +941,6 @@ class SequencerTest extends UnitTestCase
     public function getEscapingTestValues(): array
     {
         $context = $this->createContext();
-        $context->getTemplateParser()->getConfiguration()->addEscapingInterceptor(new Escape());
         return [
             'escapes object accessors in root context' => [
                 '{foo}',
@@ -964,13 +965,12 @@ class SequencerTest extends UnitTestCase
         $viewHelperResolver->addNamespace('f', 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Core\\Parser\\Fixtures\\ViewHelpers');
         $viewHelperResolver->addViewHelperAlias('raw', 'f', 'format.raw');
         $parserConfiguration = new Configuration();
-        $parserConfiguration->setFeatureState(Configuration::FEATURE_SEQUENCER, true);
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMock();
         $templateParser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getConfiguration'])->getMock();
         $templateParser->expects($this->any())->method('getConfiguration')->willReturn($parserConfiguration);
         $templateParser->setRenderingContext($context);
         $context->setViewHelperResolver($viewHelperResolver);
-        $context->expects($this->any())->method('buildParserConfiguration')->willReturn($parserConfiguration);
+        $context->expects($this->any())->method('getParserConfiguration')->willReturn($parserConfiguration);
         $context->expects($this->any())->method('getTemplateParser')->willReturn($templateParser);
         $context->expects($this->any())->method('getViewHelperResolver')->willReturn($viewHelperResolver);
         $context->expects($this->any())->method('getVariableProvider')->willReturn($variableProvider);

@@ -12,6 +12,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
  * source code.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -60,9 +61,10 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
         } elseif ($matches === []) {
             return $templateSource;
         }
-        if (strtolower($matches[0][2]) === 'false' || strtolower($matches[0][2]) === 'off') {
-            $this->renderingContext->getTemplateParser()->setEscapingEnabled(false);
-        }
+        $this->renderingContext->getTemplateParser()->getConfiguration()->setFeatureState(
+            Configuration::FEATURE_ESCAPING,
+            !(strtolower($matches[0][2]) === 'false' || strtolower($matches[0][2]) === 'off')
+        );
 
         return str_replace($matches[0][0], '', $templateSource);
     }

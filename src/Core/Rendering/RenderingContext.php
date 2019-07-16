@@ -89,6 +89,11 @@ class RenderingContext implements RenderingContextInterface
     protected $templateParser;
 
     /**
+     * @var Configuration
+     */
+    protected $parserConfiguration;
+
+    /**
      * @var TemplateProcessorInterface[]
      */
     protected $templateProcessors = [];
@@ -317,12 +322,14 @@ class RenderingContext implements RenderingContextInterface
      *
      * @return Configuration
      */
-    public function buildParserConfiguration()
+    public function getParserConfiguration(): Configuration
     {
-        $parserConfiguration = new Configuration();
-        $escapeInterceptor = new Escape();
-        $parserConfiguration->addEscapingInterceptor($escapeInterceptor);
-        return $parserConfiguration;
+        if (!isset($this->parserConfiguration)) {
+            $this->parserConfiguration = new Configuration();
+            $escapeInterceptor = new Escape();
+            $this->parserConfiguration->addEscapingInterceptor($escapeInterceptor);
+        }
+        return $this->parserConfiguration;
     }
 
     /**

@@ -176,17 +176,6 @@ class PatternsTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSPLIT_PATTERN_TAGARGUMENTS(): void
-    {
-        $pattern = Patterns::$SPLIT_PATTERN_TAGARGUMENTS;
-        $source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\' data-foo="bar"';
-        $this->assertEquals(preg_match_all($pattern, $source, $matches, PREG_SET_ORDER), 4, 'The SPLIT_PATTERN_TAGARGUMENTS does not match correctly.');
-        $this->assertEquals('data-foo', $matches[3]['Argument']);
-    }
-
-    /**
-     * @test
-     */
     public function testSPLIT_PATTERN_SHORTHANDSYNTAX(): void
     {
         $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, ['f']);
@@ -345,18 +334,6 @@ class PatternsTest extends UnitTestCase
     }
 
     /**
-     * @param string $string
-     * @dataProvider dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
-     * @test
-     */
-    public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS(string $string): void
-    {
-        $success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
-        $this->assertTrue($success);
-        $this->assertSame($string, $matches[0]);
-    }
-
-    /**
      * @return array
      */
     public function dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS(): array
@@ -366,97 +343,6 @@ class PatternsTest extends UnitTestCase
             ['string' => '{"": "bar"}'],
             ['string' => '{\'\': "bar"}'],
         ];
-    }
-
-    /**
-     * @param string $string
-     * @dataProvider dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
-     * @test
-     */
-    public function SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS_doesNotMatchInvalidSyntax(string $string): void
-    {
-        $success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
-        $this->assertFalse($success);
-    }
-
-    /**
-     * @test
-     */
-    public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS(): void
-    {
-        $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
-
-        $source = '{a: b, e: {c:d, "e#":f, \'g\': "h"}}';
-        $success = preg_match_all($pattern, $source, $matches, PREG_SET_ORDER) > 0;
-
-        $expected = [
-            0 => [
-                0 => 'a: b',
-                'ArrayPart' => 'a: b',
-                1 => 'a: b',
-                'Key' => 'a',
-                2 => 'a',
-                'QuotedString' => '',
-                3 => '',
-                'VariableIdentifier' => 'b',
-                4 => 'b'
-            ],
-            1 => [
-                0 => 'e: {c:d, "e#":f, \'g\': "h"}',
-                'ArrayPart' => 'e: {c:d, "e#":f, \'g\': "h"}',
-                1 => 'e: {c:d, "e#":f, \'g\': "h"}',
-                'Key' => 'e',
-                2 => 'e',
-                'QuotedString' => '',
-                3 => '',
-                'VariableIdentifier' => '',
-                4 => '',
-                'Number' => '',
-                5 => '',
-                'Subarray' => 'c:d, "e#":f, \'g\': "h"',
-                6 => 'c:d, "e#":f, \'g\': "h"'
-            ]
-        ];
-        $this->assertTrue($success);
-        $this->assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
-    }
-
-    /**
-     * @test
-     */
-    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesQuotedKeys(): void
-    {
-        $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
-
-        $source = '{"a": b, \'c\': d}';
-        $success = preg_match_all($pattern, $source, $matches, PREG_SET_ORDER) > 0;
-
-        $expected = [
-            0 => [
-                0 => '"a": b',
-                'ArrayPart' => '"a": b',
-                1 => '"a": b',
-                'Key' => '"a"',
-                2 => '"a"',
-                'QuotedString' => '',
-                3 => '',
-                'VariableIdentifier' => 'b',
-                4 => 'b'
-            ],
-            1 => [
-                0 => '\'c\': d',
-                'ArrayPart' => '\'c\': d',
-                1 => '\'c\': d',
-                'Key' => '\'c\'',
-                2 => '\'c\'',
-                'QuotedString' => '',
-                3 => '',
-                'VariableIdentifier' => 'd',
-                4 => 'd'
-            ]
-        ];
-        $this->assertTrue($success);
-        $this->assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
     }
 
     /**
@@ -565,24 +451,6 @@ class PatternsTest extends UnitTestCase
     }
 
     /**
-     * @param string $expression
-     * @param array $expected
-     * @dataProvider dataProviderValidArrayExpressionsBeginningAndEndingOnDigits()
-     * @test
-     */
-    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesKeysEndingInDigits(string $expression, array $expected): void
-    {
-        $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
-        $success = preg_match_all($pattern, $expression, $matches, PREG_SET_ORDER) > 0;
-        $this->assertTrue($success);
-        $this->assertEquals(
-            $expected,
-            $matches,
-            'The regular expression splitting the array apart does not work!'
-        );
-    }
-
-    /**
      * @return array
      */
     public function dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS(): array
@@ -592,31 +460,6 @@ class PatternsTest extends UnitTestCase
             ['string' => '{"": "bar"}'],
             ['string' => '{\'\': "bar"}'],
         ];
-    }
-
-    /**
-     * @param string $string
-     * @dataProvider dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS()
-     * @test
-     */
-    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_doesNotMatchInvalidSyntax(string $string): void
-    {
-        $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
-        $success = preg_match_all($pattern, $string, $matches, PREG_SET_ORDER) > 0;
-        $this->assertFalse($success);
-    }
-
-    /**
-     * Test the SCAN_PATTERN_CDATA which should detect <![CDATA[...]]> (with no leading or trailing spaces!)
-     *
-     * @test
-     */
-    public function testSCAN_PATTERN_CDATA(): void
-    {
-        $pattern = Patterns::$SCAN_PATTERN_CDATA;
-        $this->assertEquals(preg_match($pattern, '<!-- Test -->'), 0, 'The SCAN_PATTERN_CDATA matches a comment, but it should not.');
-        $this->assertEquals(preg_match($pattern, '<![CDATA[This is some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a simple CDATA string.');
-        $this->assertEquals(preg_match($pattern, '<![CDATA[This is<bla:test> some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a CDATA string with tags inside..');
     }
 
     /**

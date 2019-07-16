@@ -138,7 +138,7 @@ interface RenderingContextInterface
      *
      * @return Configuration
      */
-    public function buildParserConfiguration();
+    public function getParserConfiguration(): Configuration;
 
     /**
      * @return string

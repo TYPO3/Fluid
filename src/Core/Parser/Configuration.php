@@ -15,7 +15,6 @@ class Configuration
 {
     public const FEATURE_PARSING = 'parsing';
     public const FEATURE_ESCAPING = 'escaping';
-    public const FEATURE_SEQUENCER = 'sequencer';
 
     /**
      * Generic interceptors registered with the configuration.
@@ -37,7 +36,6 @@ class Configuration
     protected $features = [
         self::FEATURE_PARSING => true,
         self::FEATURE_ESCAPING => true,
-        self::FEATURE_SEQUENCER => true,
     ];
 
     /**

@@ -89,12 +89,12 @@ class Sequencer
         ParsingState $state,
         Contexts $contexts,
         Source $source,
-        bool $escapingEnabled = true
+        ?Configuration $configuration = null
     ) {
-        $this->escapingEnabled = $escapingEnabled;
         $this->renderingContext = $renderingContext;
         $this->resolver = $renderingContext->getViewHelperResolver();
-        $this->configuration = $renderingContext->buildParserConfiguration();
+        $this->configuration = $configuration ?? $renderingContext->getParserConfiguration();
+        $this->escapingEnabled = $this->configuration->isFeatureEnabled(Configuration::FEATURE_ESCAPING);
         $this->state = clone $state;
         $this->contexts = $contexts;
         $this->source = $source;

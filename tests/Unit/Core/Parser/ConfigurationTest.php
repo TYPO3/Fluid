@@ -35,9 +35,6 @@ class ConfigurationTest extends UnitTestCase
     {
         return [
             [
-                Configuration::FEATURE_SEQUENCER, 'on', true,
-            ],
-            [
                 Configuration::FEATURE_ESCAPING, 'false', false,
             ],
             [
