@@ -7,10 +7,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\CountableIterator;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 
 /**
@@ -35,22 +37,15 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderExecutesTheLoopCorrectly(): void
     {
         $viewHelper = new ForViewHelper();
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
         $this->arguments['each'] = [0, 1, 2, 3];
         $this->arguments['as'] = 'innerVariable';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            ['innerVariable' => 0],
-            ['innerVariable' => 1],
-            ['innerVariable' => 2],
-            ['innerVariable' => 3]
-        ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals($output, '0123', 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -59,28 +54,17 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderPreservesKeys(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = ['key1' => 'value1', 'key2' => 'value2'];
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['key'] = 'someKey';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'value1',
-                'someKey' => 'key1'
-            ],
-            [
-                'innerVariable' => 'value2',
-                'someKey' => 'key2'
-            ]
-        ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals($output, 'key1value1key2value2', 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -119,24 +103,16 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderIteratesElementsInReverseOrderIfReverseIsTrue(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = [0, 1, 2, 3];
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['reverse'] = true;
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            ['innerVariable' => 3],
-            ['innerVariable' => 2],
-            ['innerVariable' => 1],
-            ['innerVariable' => 0]
-        ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals($output, '3210', 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -145,35 +121,27 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderIteratesElementsInReverseOrderIfReverseIsTrueAndObjectIsIterator(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = new \ArrayIterator([0, 1, 2, 3]);
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['reverse'] = true;
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            ['innerVariable' => 3],
-            ['innerVariable' => 2],
-            ['innerVariable' => 1],
-            ['innerVariable' => 0]
-        ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals($output, '3210', 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
      * @test
      * @dataProvider reverseDataProvider
      */
-    public function renderPreservesKeysIfReverseIsTrue(array $each, array $expectedCallProtocol): void
+    public function renderPreservesKeysIfReverseIsTrue(array $each, string $expected): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = $each;
         $this->arguments['as'] = 'innerVariable';
@@ -181,10 +149,9 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $this->arguments['reverse'] = true;
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals($expected, $output, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -198,16 +165,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                     'key1' => 'value1',
                     'key2' => 'value2',
                 ],
-                [
-                    [
-                        'innerVariable' => 'value2',
-                        'someKey' => 'key2',
-                    ],
-                    [
-                        'innerVariable' => 'value1',
-                        'someKey' => 'key1',
-                    ],
-                ],
+                'key2value2key1value1',
             ],
             'numeric keys' => [
                 [
@@ -215,20 +173,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                     'value2',
                     'value3',
                 ],
-                [
-                    [
-                        'innerVariable' => 'value3',
-                        'someKey' => 2,
-                    ],
-                    [
-                        'innerVariable' => 'value2',
-                        'someKey' => 1,
-                    ],
-                    [
-                        'innerVariable' => 'value1',
-                        'someKey' => 0,
-                    ],
-                ],
+                '2value31value20value1',
             ],
         ];
     }
@@ -239,32 +184,17 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function keyContainsNumericalIndexIfTheGivenArrayDoesNotHaveAKey(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = ['foo', 'bar', 'baz'];
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['key'] = 'someKey';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'foo',
-                'someKey' => 0
-            ],
-            [
-                'innerVariable' => 'bar',
-                'someKey' => 1
-            ],
-            [
-                'innerVariable' => 'baz',
-                'someKey' => 2
-            ]
-        ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertSame('0foo1bar2baz', $output, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -292,21 +222,15 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderIteratesThroughElementsOfTraversableObjects(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = new \ArrayObject(['key1' => 'value1', 'key2' => 'value2']);
         $this->arguments['as'] = 'innerVariable';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            ['innerVariable' => 'value1'],
-            ['innerVariable' => 'value2']
-        ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals('value1value2', $output, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -315,28 +239,17 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderPreservesKeyWhenIteratingThroughElementsOfObjectsThatImplementIteratorInterface(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = new \ArrayIterator(['key1' => 'value1', 'key2' => 'value2']);
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['key'] = 'someKey';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'value1',
-                'someKey' => 'key1'
-            ],
-            [
-                'innerVariable' => 'value2',
-                'someKey' => 'key2'
-            ]
-        ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertEquals('key1value1key2value2', $output, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -345,15 +258,15 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function keyContainsTheNumericalIndexWhenIteratingThroughElementsOfObjectsOfTyeSplObjectStorage(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $splObjectStorageObject = new \SplObjectStorage();
-        $object1 = new \stdClass();
+        $object1 = new UserWithToString('foo');
         $splObjectStorageObject->attach($object1);
-        $object2 = new \stdClass();
+        $object2 = new UserWithToString('bar');
         $splObjectStorageObject->attach($object2, 'foo');
-        $object3 = new \stdClass();
+        $object3 = new UserWithToString('baz');
         $splObjectStorageObject->offsetSet($object3, 'bar');
 
         $this->arguments['each'] = $splObjectStorageObject;
@@ -361,24 +274,9 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $this->arguments['key'] = 'someKey';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => $object1,
-                'someKey' => 0
-            ],
-            [
-                'innerVariable' => $object2,
-                'someKey' => 1
-            ],
-            [
-                'innerVariable' => $object3,
-                'someKey' => 2
-            ]
-        ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertSame('0foo1bar2baz', $output, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -387,56 +285,16 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function iterationDataIsAddedToTemplateVariableContainerIfIterationArgumentIsSet(): void
     {
         $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
+        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = ['foo' => 'bar', 'Flow' => 'Fluid', 'TYPO3' => 'rocks'];
         $this->arguments['as'] = 'innerVariable';
         $this->arguments['iteration'] = 'iteration';
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
+        $output = $viewHelper->initializeArgumentsAndRender();
 
-        $expectedCallProtocol = [
-            [
-                'innerVariable' => 'bar',
-                'iteration' => [
-                    'index' => 0,
-                    'cycle' => 1,
-                    'total' => 3,
-                    'isFirst' => true,
-                    'isLast' => false,
-                    'isEven' => false,
-                    'isOdd' => true
-                ]
-            ],
-            [
-                'innerVariable' => 'Fluid',
-                'iteration' => [
-                    'index' => 1,
-                    'cycle' => 2,
-                    'total' => 3,
-                    'isFirst' => false,
-                    'isLast' => false,
-                    'isEven' => true,
-                    'isOdd' => false
-                ]
-            ],
-            [
-                'innerVariable' => 'rocks',
-                'iteration' => [
-                    'index' => 2,
-                    'cycle' => 3,
-                    'total' => 3,
-                    'isFirst' => false,
-                    'isLast' => true,
-                    'isEven' => false,
-                    'isOdd' => true
-                ]
-            ]
-        ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        $this->assertSame('barFluidrocks', $output, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**

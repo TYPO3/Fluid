@@ -100,6 +100,7 @@ class SwitchViewHelper extends AbstractViewHelper
     {
         $content = null;
         $defaultCaseViewHelperNode = null;
+        $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
         foreach ($childNodes as $childNode) {
             if ($this->isDefaultCaseNode($childNode)) {
                 $defaultCaseViewHelperNode = $childNode;
@@ -108,7 +109,7 @@ class SwitchViewHelper extends AbstractViewHelper
                 continue;
             }
             $content = $childNode->evaluate($this->renderingContext);
-            if ($this->viewHelperVariableContainer->get(SwitchViewHelper::class, 'break') === true) {
+            if ($viewHelperVariableContainer->get(SwitchViewHelper::class, 'break') === true) {
                 $defaultCaseViewHelperNode = null;
                 break;
             }

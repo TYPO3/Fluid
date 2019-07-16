@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\ViewHelpers\AliasViewHelper;
 
@@ -32,20 +34,12 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function renderAddsSingleValueToTemplateVariableContainerAndRemovesItAfterRendering(): void
     {
         $viewHelper = new AliasViewHelper();
-
-        $mockViewHelperNode = $this->getMock(
-            ViewHelperNode::class,
-            ['evaluateChildNodes'],
-            [],
-            false,
-            false
-        );
-        $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('someAlias'));
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($mockViewHelperNode);
         $viewHelper->setArguments(['map' => ['someAlias' => 'someValue']]);
-        $viewHelper->render();
+        $output = $viewHelper->render();
+        $this->assertSame('someValue', $output);
     }
 
     /**
@@ -54,20 +48,13 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function renderAddsMultipleValuesToTemplateVariableContainerAndRemovesThemAfterRendering(): void
     {
         $viewHelper = new AliasViewHelper();
-
-        $mockViewHelperNode = $this->getMock(
-            ViewHelperNode::class,
-            ['evaluateChildNodes'],
-            [],
-            false,
-            false
-        );
-        $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('someAlias'));
+        $viewHelper->addChildNode(new ObjectAccessorNode('someOtherAlias'));
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($mockViewHelperNode);
         $viewHelper->setArguments(['map' => ['someAlias' => 'someValue', 'someOtherAlias' => 'someOtherValue']]);
-        $viewHelper->render();
+        $output = $viewHelper->render();
+        $this->assertSame('someValuesomeOtherValue', $output);
     }
 
     /**
@@ -76,19 +63,9 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function renderDoesNotTouchTemplateVariableContainerAndReturnsChildNodesIfMapIsEmpty(): void
     {
         $viewHelper = new AliasViewHelper();
-
-        $mockViewHelperNode = $this->getMock(
-            ViewHelperNode::class,
-            ['evaluateChildNodes'],
-            [],
-            false,
-            false
-        );
-        $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
+        $viewHelper->addChildNode(new TextNode('foo'));
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($mockViewHelperNode);
-
         $viewHelper->setArguments(['map' => []]);
         $this->assertEquals('foo', $viewHelper->render());
     }

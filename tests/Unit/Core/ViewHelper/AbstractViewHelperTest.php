@@ -84,9 +84,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->expects($this->atLeastOnce())->method('prepareArguments')->willReturn($argumentDefinitions);
         $viewHelper->expects($this->atLeastOnce())->method('setParsedArguments')->with($expectedArguments);
         $viewHelper->expects($this->atLeastOnce())->method('validateAdditionalArguments')->with($additionalArguments);
-        #$viewHelper->expects($this->once())->method('setArguments')->with($expectedArguments);
         $viewHelper->postParse($expectedArguments, null, new ParsingState(), new RenderingContextFixture());
-        #$viewHelper->evaluate(new RenderingContextFixture());
     }
 
     /**
@@ -337,27 +335,6 @@ class AbstractViewHelperTest extends UnitTestCase
         $expectedOutput = 'Output';
         $actualOutput = $viewHelper->initializeArgumentsAndRender(['argument1' => 'value1']);
         $this->assertEquals($expectedOutput, $actualOutput);
-    }
-
-    /**
-     * @test
-     */
-    public function setRenderingContextShouldSetInnerVariables(): void
-    {
-        $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
-        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
-
-        $view = new TemplateView();
-        $renderingContext = new RenderingContext($view);
-        $renderingContext->setVariableProvider($templateVariableContainer);
-        $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
-
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
-
-        $viewHelper->setRenderingContext($renderingContext);
-
-        $this->assertSame($viewHelper->_get('templateVariableContainer'), $templateVariableContainer);
-        $this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
     }
 
     /**

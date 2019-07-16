@@ -32,22 +32,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     protected $argumentDefinitions = [];
 
     /**
-     * Cache of argument definitions; the key is the ViewHelper class name, and the
-     * value is the array of argument definitions.
-     *
-     * In our benchmarks, this cache leads to a 40% improvement when using a certain
-     * ViewHelper class many times throughout the rendering process.
-     * @var array
-     */
-    static private $argumentDefinitionCache = [];
-
-    /**
-     * Current view helper node
-     * @var ViewHelperNode
-     */
-    protected $viewHelperNode;
-
-    /**
      * Arguments array.
      * @var array
      * @api
@@ -60,19 +44,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     protected $parsedArguments = [];
 
     /**
-     * @var NodeInterface[] array
-     * @api
-     */
-    protected $childNodes = [];
-
-    /**
-     * Current variable container reference.
-     * @var VariableProviderInterface
-     * @api
-     */
-    protected $templateVariableContainer;
-
-    /**
      * @var RenderingContextInterface
      */
     protected $renderingContext;
@@ -81,13 +52,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @var \Closure
      */
     protected $renderChildrenClosure = null;
-
-    /**
-     * ViewHelper Variable Container
-     * @var ViewHelperVariableContainer
-     * @api
-     */
-    protected $viewHelperVariableContainer;
 
     /**
      * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
@@ -119,8 +83,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     public function postParse(array $arguments, ?array $definitions, ParsedTemplateInterface $parsedTemplate, RenderingContextInterface $renderingContext): NodeInterface
     {
         $this->renderingContext = $renderingContext;
-        $this->templateVariableContainer = $renderingContext->getVariableProvider();
-        $this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
         $this->validateParsedArguments($arguments);
         return $this->setParsedArguments($arguments, $definitions);
     }
@@ -214,8 +176,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
-        $this->templateVariableContainer = $renderingContext->getVariableProvider();
-        $this->viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
     }
 
     /**
@@ -295,19 +255,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
         }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
         return $this;
-    }
-
-    /**
-     * Sets all needed attributes needed for the rendering. Called by the
-     * framework. Populates $this->viewHelperNode.
-     * This is PURELY INTERNAL! Never override this method!!
-     *
-     * @param ViewHelperNode $node View Helper node to be set.
-     * @return void
-     */
-    public function setViewHelperNode(ViewHelperNode $node)
-    {
-        $this->viewHelperNode = $node;
     }
 
     /**
@@ -399,7 +346,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
             $closure = $this->renderChildrenClosure;
             return $closure();
         }
-        return ($this->viewHelperNode ?? $this)->evaluateChildNodes($this->renderingContext);
+        return $this->evaluateChildNodes($this->renderingContext);
     }
 
     /**
