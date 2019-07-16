@@ -50,7 +50,6 @@ class ViewHelperInvoker
             $viewHelper = $viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassNameOrInstance);
         }
         $expectedViewHelperArguments = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
-
         // Rendering process
         $evaluatedArguments = [];
         $undeclaredArguments = [];

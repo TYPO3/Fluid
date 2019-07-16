@@ -98,17 +98,6 @@ interface RenderingContextInterface
     public function getTemplateParser(): TemplateParser;
 
     /**
-     * @param TemplateCompiler $templateCompiler
-     * @return void
-     */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler): void;
-
-    /**
-     * @return TemplateCompiler
-     */
-    public function getTemplateCompiler(): TemplateCompiler;
-
-    /**
      * @return TemplatePaths
      */
     public function getTemplatePaths(): TemplatePaths;
@@ -118,24 +107,6 @@ interface RenderingContextInterface
      * @return void
      */
     public function setTemplatePaths(TemplatePaths $templatePaths): void;
-
-    /**
-     * Delegation: Set the cache used by this View's compiler
-     *
-     * @param FluidCacheInterface $cache
-     * @return void
-     */
-    public function setCache(FluidCacheInterface $cache): void;
-
-    /**
-     * @return FluidCacheInterface
-     */
-    public function getCache(): FluidCacheInterface;
-
-    /**
-     * @return boolean
-     */
-    public function isCacheEnabled(): bool;
 
     /**
      * Delegation: Set TemplateProcessor instances in the parser

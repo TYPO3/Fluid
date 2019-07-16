@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -22,7 +23,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
-use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -41,28 +41,9 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceIgnored()
+    public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceNotValid(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
-        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(true);
-        $context = new RenderingContextFixture();
-        $context->setViewHelperResolver($resolver);
-        $templateParser = new TemplateParser();
-        $templateParser->setRenderingContext($context);
-        $method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render', []]);
-        $this->assertNull($result);
-    }
-
-    /**
-     * @test
-     */
-    public function testInitializeViewHelperAndAddItToStackThrowsExceptionIfNamespaceInvalid()
-    {
-        $this->setExpectedException(UnknownNamespaceException::class);
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored', 'isNamespaceValid']);
-        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(false);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid']);
         $resolver->expects($this->once())->method('isNamespaceValid')->willReturn(false);
         $context = new RenderingContextFixture();
         $context->setViewHelperResolver($resolver);
@@ -77,28 +58,9 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceIgnored()
+    public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceNotValid(): void
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
-        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(true);
-        $context = new RenderingContextFixture();
-        $context->setViewHelperResolver($resolver);
-        $templateParser = new TemplateParser();
-        $templateParser->setRenderingContext($context);
-        $method = new \ReflectionMethod($templateParser, 'closingViewHelperTagHandler');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render']);
-        $this->assertFalse($result);
-    }
-
-    /**
-     * @test
-     */
-    public function testClosingViewHelperTagHandlerThrowsExceptionIfNamespaceInvalid()
-    {
-        $this->setExpectedException(UnknownNamespaceException::class);
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid', 'isNamespaceIgnored']);
-        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(false);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid']);
         $resolver->expects($this->once())->method('isNamespaceValid')->willReturn(false);
         $context = new RenderingContextFixture();
         $context->setViewHelperResolver($resolver);
@@ -113,7 +75,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testPublicGetAndSetEscapingEnabledWorks()
+    public function testPublicGetAndSetEscapingEnabledWorks(): void
     {
         $subject = new TemplateParser();
         $default = $subject->isEscapingEnabled();
@@ -124,7 +86,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testBuildObjectTreeThrowsExceptionOnUnclosedViewHelperTag()
+    public function testBuildObjectTreeThrowsExceptionOnUnclosedViewHelperTag(): void
     {
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setVariableProvider(new StandardVariableProvider());
@@ -139,7 +101,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testParseCallsPreProcessOnTemplateProcessors()
+    public function testParseCallsPreProcessOnTemplateProcessors(): void
     {
         $templateParser = new TemplateParser();
         $processor1 = $this->getMockForAbstractClass(
@@ -162,44 +124,7 @@ class TemplateParserTest extends UnitTestCase
         $this->assertEquals('final', $result);
     }
 
-    /**
-     * @test
-     */
-    public function getOrParseAndStoreTemplateSetsAndStoresUncompilableStateInCache()
-    {
-        $parsedTemplate = new ParsingState();
-        $parsedTemplate->setCompilable(true);
-        $templateParser = $this->getMock(TemplateParser::class, ['parse']);
-        $templateParser->expects($this->once())->method('parse')->willReturn($parsedTemplate);
-        $context = new RenderingContextFixture();
-        $compiler = $this->getMock(TemplateCompiler::class, ['store', 'get', 'has', 'isUncompilable']);
-        $compiler->expects($this->never())->method('get');
-        $compiler->expects($this->at(0))->method('has')->willReturn(false);
-        $compiler->expects($this->at(1))->method('store')->willThrowException(new StopCompilingException());
-        $compiler->expects($this->at(2))->method('store');
-        $context->setTemplateCompiler($compiler);
-        $context->setVariableProvider(new StandardVariableProvider());
-        $templateParser->setRenderingContext($context);
-        $result = $templateParser->getOrParseAndStoreTemplate('fake-foo-baz', function ($a, $b) {
-            return 'test';
-        });
-        $this->assertSame($parsedTemplate, $result);
-        $this->assertFalse($parsedTemplate->isCompilable());
-    }
-
-    /**
-     * @test
-     */
-    public function parseThrowsExceptionWhenStringArgumentMissing()
-    {
-        $this->expectException(\Exception::class);
-        $templateParser = new TemplateParser();
-        $templateParser->parse(123);
-    }
-
-    /**
-     */
-    public function quotedStrings()
+    public function quotedStrings(): array
     {
         return [
             ['"no quotes here"', 'no quotes here'],
@@ -215,15 +140,13 @@ class TemplateParserTest extends UnitTestCase
      * @dataProvider quotedStrings
      * @test
      */
-    public function unquoteStringReturnsUnquotedStrings($quoted, $unquoted)
+    public function unquoteStringReturnsUnquotedStrings($quoted, $unquoted): void
     {
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
         $this->assertEquals($unquoted, $templateParser->_call('unquoteString', $quoted));
     }
 
-    /**
-     */
-    public function templatesToSplit()
+    public function templatesToSplit(): array
     {
         return [
             ['TemplateParserTestFixture01-shorthand'],
@@ -236,9 +159,9 @@ class TemplateParserTest extends UnitTestCase
      * @dataProvider templatesToSplit
      * @test
      */
-    public function splitTemplateAtDynamicTagsReturnsCorrectlySplitTemplate($templateName)
+    public function splitTemplateAtDynamicTagsReturnsCorrectlySplitTemplate($templateName): void
     {
-        $template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html', FILE_TEXT);
+        $template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html');
         $expectedResult = require __DIR__ . '/Fixtures/' . $templateName . '-split.php';
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
         $this->assertSame($expectedResult, $templateParser->_call('splitTemplateAtDynamicTags', $template), 'Filed for ' . $templateName);
@@ -247,7 +170,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function buildObjectTreeCreatesRootNodeAndSetsUpParsingState()
+    public function buildObjectTreeCreatesRootNodeAndSetsUpParsingState(): void
     {
         $context = new RenderingContextFixture();
         $context->setVariableProvider(new StandardVariableProvider());
@@ -260,7 +183,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function buildObjectTreeDelegatesHandlingOfTemplateElements()
+    public function buildObjectTreeDelegatesHandlingOfTemplateElements(): void
     {
         $templateParser = $this->getAccessibleMock(
             TemplateParser::class,
@@ -282,7 +205,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function openingViewHelperTagHandlerDelegatesViewHelperInitialization()
+    public function openingViewHelperTagHandlerDelegatesViewHelperInitialization(): void
     {
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->never())->method('popNodeFromStack');
@@ -306,7 +229,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function openingViewHelperTagHandlerPopsNodeFromStackForSelfClosingTags()
+    public function openingViewHelperTagHandlerPopsNodeFromStackForSelfClosingTags(): void
     {
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($this->getMock(NodeInterface::class)));
@@ -316,7 +239,7 @@ class TemplateParserTest extends UnitTestCase
             TemplateParser::class,
             ['parseArguments', 'initializeViewHelperAndAddItToStack']
         );
-        $node = $this->getMock(ViewHelperNode::class, ['dummy'], [], '', false);
+        $node = $this->getMock(ViewHelperNode::class, ['dummy'], [], false, false);
         $templateParser->expects($this->once())->method('parseArguments')->willReturn([]);
         $templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue($node));
 
@@ -326,7 +249,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @__test
      */
-    public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassDoesNotExisit()
+    public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassDoesNotExisit(): void
     {
         $this->expectException(\Exception::class);
 
@@ -347,7 +270,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @__test
      */
-    public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassNameIsWronglyCased()
+    public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassNameIsWronglyCased(): void
     {
         $this->expectException(\Exception::class);
 
@@ -368,10 +291,10 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @__test
      */
-    public function initializeViewHelperAndAddItToStackCreatesRequestedViewHelperAndViewHelperNode()
+    public function initializeViewHelperAndAddItToStackCreatesRequestedViewHelperAndViewHelperNode(): void
     {
         $mockViewHelper = $this->getMock(AbstractViewHelper::class);
-        $mockViewHelperNode = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $mockViewHelperNode = $this->getMock(ViewHelperNode::class, [], [], false, false);
 
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('pushNodeToStack')->with($this->anything());
@@ -391,11 +314,11 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function closingViewHelperTagHandlerThrowsExceptionBecauseOfClosingTagWhichWasNeverOpened()
+    public function closingViewHelperTagHandlerThrowsExceptionBecauseOfClosingTagWhichWasNeverOpened(): void
     {
         $this->expectException(\Exception::class);
 
-        $mockNodeOnStack = $this->getMock(NodeInterface::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(NodeInterface::class, [], [], false, false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
 
@@ -408,11 +331,11 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function closingViewHelperTagHandlerThrowsExceptionBecauseOfWrongTagNesting()
+    public function closingViewHelperTagHandlerThrowsExceptionBecauseOfWrongTagNesting(): void
     {
         $this->expectException(\Exception::class);
 
-        $mockNodeOnStack = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(ViewHelperNode::class, [], [], false, false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
@@ -423,7 +346,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectAccessorHandlerCallsInitializeViewHelperAndAddItToStackIfViewHelperSyntaxIsPresent()
+    public function objectAccessorHandlerCallsInitializeViewHelperAndAddItToStackIfViewHelperSyntaxIsPresent(): void
     {
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->exactly(2))
@@ -456,9 +379,9 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function objectAccessorHandlerCreatesObjectAccessorNodeWithExpectedValueAndAddsItToStack()
+    public function objectAccessorHandlerCreatesObjectAccessorNodeWithExpectedValueAndAddsItToStack(): void
     {
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockNodeOnStack->expects($this->once())->method('addChildNode')->with($this->anything());
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -471,7 +394,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function valuesFromObjectAccessorsAreRunThroughEscapingInterceptorsByDefault()
+    public function valuesFromObjectAccessorsAreRunThroughEscapingInterceptorsByDefault(): void
     {
         $objectAccessorNodeInterceptor = $this->getMock(InterceptorInterface::class);
         $objectAccessorNodeInterceptor->expects($this->once())->method('process')
@@ -483,7 +406,7 @@ class TemplateParserTest extends UnitTestCase
             ->with(InterceptorInterface::INTERCEPT_OBJECTACCESSOR)
             ->will($this->returnValue([$objectAccessorNodeInterceptor]));
 
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
 
@@ -496,15 +419,13 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function valuesFromObjectAccessorsAreNotRunThroughEscapingInterceptorsIfEscapingIsDisabled()
+    public function valuesFromObjectAccessorsAreNotRunThroughEscapingInterceptorsIfEscapingIsDisabled(): void
     {
-        $objectAccessorNode = $this->getMock(ObjectAccessorNode::class, [], [], '', false);
-
         $parserConfiguration = $this->getMock(Configuration::class);
         $parserConfiguration->expects($this->any())->method('getInterceptors')->will($this->returnValue([]));
         $parserConfiguration->expects($this->never())->method('getEscapingInterceptors');
 
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
 
@@ -519,9 +440,9 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function valuesFromObjectAccessorsAreRunThroughInterceptors()
+    public function valuesFromObjectAccessorsAreRunThroughInterceptors(): void
     {
-        $objectAccessorNode = $this->getMock(ObjectAccessorNode::class, [], [], '', false);
+        $objectAccessorNode = $this->getMock(ObjectAccessorNode::class, [], [], false, false);
         $objectAccessorNodeInterceptor = $this->getMock(InterceptorInterface::class);
         $objectAccessorNodeInterceptor->expects($this->once())->method('process')
             ->with($this->anything())->will($this->returnArgument(0));
@@ -531,7 +452,7 @@ class TemplateParserTest extends UnitTestCase
         $parserConfiguration->expects($this->once())->method('getInterceptors')
             ->with(InterceptorInterface::INTERCEPT_OBJECTACCESSOR)->willReturn([$objectAccessorNodeInterceptor]);
 
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->willReturn($mockNodeOnStack);
 
@@ -542,9 +463,7 @@ class TemplateParserTest extends UnitTestCase
         $templateParser->_call('objectAccessorHandler', $mockState, 'objectAccessorString', '', '', '');
     }
 
-    /**
-     */
-    public function argumentsStrings()
+    public function argumentsStrings(): array
     {
         return [
             ['a="2"', ['a' => '2']],
@@ -613,7 +532,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function buildArgumentObjectTreeReturnsTextNodeForSimplyString()
+    public function buildArgumentObjectTreeReturnsTextNodeForSimplyString(): void
     {
 
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
@@ -627,7 +546,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function buildArgumentObjectTreeBuildsObjectTreeForComlexString()
+    public function buildArgumentObjectTreeBuildsObjectTreeForComplexString(): void
     {
         $rootNode = new RootNode();
 
@@ -653,7 +572,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function textAndShorthandSyntaxHandlerDelegatesAppropriately()
+    public function textAndShorthandSyntaxHandlerDelegatesAppropriately(): void
     {
         $mockState = $this->getMock(ParsingState::class, ['getNodeFromStack']);
         $mockState->expects($this->any())->method('getNodeFromStack')->willReturn(new RootNode());
@@ -678,9 +597,9 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function arrayHandlerAddsArrayNodeWithProperContentToStack()
+    public function arrayHandlerAddsArrayNodeWithProperContentToStack(): void
     {
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockNodeOnStack->expects($this->once())->method('addChildNode')->with($this->anything());
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -695,9 +614,7 @@ class TemplateParserTest extends UnitTestCase
         $templateParser->_call('arrayHandler', $mockState, ['arrayText']);
     }
 
-    /**
-     */
-    public function arrayTexts()
+    public function arrayTexts(): array
     {
         return [
             [
@@ -715,7 +632,7 @@ class TemplateParserTest extends UnitTestCase
      * @__test
      * @dataProvider arrayTexts
      */
-    public function recursiveArrayHandlerReturnsExpectedArray($arrayText, $expectedArray)
+    public function recursiveArrayHandlerReturnsExpectedArray($arrayText, $expectedArray): void
     {
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
         $templateParser->expects($this->any())->method('buildArgumentObjectTree')->willReturnArgument(0);
@@ -725,9 +642,9 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function textNodesAreRunThroughEscapingInterceptorsByDefault()
+    public function textNodesAreRunThroughEscapingInterceptorsByDefault(): void
     {
-        $textNode = $this->getMock(TextNode::class, [], [], '', false);
+        $textNode = $this->getMock(TextNode::class, [], [], false, false);
         $textInterceptor = $this->getMock(InterceptorInterface::class);
         $textInterceptor->expects($this->once())->method('process')->with($this->anything())->willReturnArgument(0);
 
@@ -736,7 +653,7 @@ class TemplateParserTest extends UnitTestCase
             ->with(InterceptorInterface::INTERCEPT_TEXT)->will($this->returnValue([$textInterceptor]));
         $parserConfiguration->expects($this->any())->method('getInterceptors')->will($this->returnValue([]));
 
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockNodeOnStack->expects($this->once())->method('addChildNode')->with($this->anything());
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -750,13 +667,13 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function textNodesAreNotRunThroughEscapingInterceptorsIfEscapingIsDisabled()
+    public function textNodesAreNotRunThroughEscapingInterceptorsIfEscapingIsDisabled(): void
     {
         $parserConfiguration = $this->getMock(Configuration::class);
         $parserConfiguration->expects($this->never())->method('getEscapingInterceptors');
         $parserConfiguration->expects($this->any())->method('getInterceptors')->will($this->returnValue([]));
 
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockNodeOnStack->expects($this->once())->method('addChildNode')->with($this->anything());
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -774,7 +691,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function textNodesAreRunThroughInterceptors()
+    public function textNodesAreRunThroughInterceptors(): void
     {
         $textInterceptor = $this->getMock(InterceptorInterface::class);
         $textInterceptor->expects($this->once())->method('process')->with($this->anything())->will($this->returnArgument(0));
@@ -784,7 +701,7 @@ class TemplateParserTest extends UnitTestCase
             ->with(InterceptorInterface::INTERCEPT_TEXT)->will($this->returnValue([$textInterceptor]));
         $parserConfiguration->expects($this->any())->method('getEscapingInterceptors')->will($this->returnValue([]));
 
-        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], '', false);
+        $mockNodeOnStack = $this->getMock(AbstractNode::class, [], [], false, false);
         $mockNodeOnStack->expects($this->once())->method('addChildNode')->with($this->anything());
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -802,7 +719,7 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getExampleScriptTestValues()
+    public function getExampleScriptTestValues(): array
     {
         return [
             [

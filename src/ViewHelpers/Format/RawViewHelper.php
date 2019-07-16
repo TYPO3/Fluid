@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
@@ -77,26 +76,5 @@ class RawViewHelper extends AbstractViewHelper
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         return $renderChildrenClosure();
-    }
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string|null
-     */
-    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler): ?string
-    {
-        $contentArgumentName = $this->resolveContentArgumentName();
-        return sprintf(
-            'isset(%s[\'%s\']) ? %s[\'%s\'] : %s()',
-            $argumentsName,
-            $contentArgumentName,
-            $argumentsName,
-            $contentArgumentName,
-            $closureName
-        );
     }
 }

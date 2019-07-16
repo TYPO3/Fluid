@@ -11,7 +11,6 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -457,22 +456,6 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->setRenderingContext(new RenderingContextFixture());
         $this->setExpectedException(Exception::class);
         $viewHelper->validateAdditionalArguments(['foo' => 'bar']);
-    }
-
-    /**
-     * @test
-     */
-    public function testCompileReturnsAndAssignsExpectedPhpCode(): void
-    {
-        $view = new TemplateView();
-        $context = new RenderingContext($view);
-        $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
-        $node = new ViewHelperNode($context, 'f', 'comment', [], new ParsingState());
-        $init = '';
-        $compiler = new TemplateCompiler();
-        $result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
-        $this->assertEmpty($init);
-        $this->assertEquals(get_class($viewHelper) . '::renderStatic(foobar, baz, $renderingContext)', $result);
     }
 
     /**

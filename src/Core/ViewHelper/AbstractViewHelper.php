@@ -579,28 +579,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     }
 
     /**
-     * You only should override this method *when you absolutely know what you
-     * are doing*, and really want to influence the generated PHP code during
-     * template compilation directly.
-     *
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string|null
-     */
-    public function compile(string $argumentsName, string $closureName, string &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
-    {
-        return sprintf(
-            '%s::renderStatic(%s, %s, $renderingContext)',
-            get_class($this),
-            $argumentsName,
-            $closureName
-        );
-    }
-
-    /**
      * Default implementation of static rendering; useful API method if your ViewHelper
      * when compiled is able to render itself statically to increase performance. This
      * default implementation will simply delegate to the ViewHelperInvoker.

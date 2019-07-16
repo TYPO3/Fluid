@@ -17,31 +17,15 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 abstract class BaseFunctionalTestCase extends UnitTestCase
 {
-
-    /**
-     * If your test case requires a cache, override this
-     * method and return an instance.
-     *
-     * @return FluidCacheInterface|null
-     */
-    protected function getCache(): ?FluidCacheInterface
-    {
-        return null;
-    }
-
     /**
      * If your test case requires a custom View instance
      * return the instance from this method.
      *
      * @return ViewInterface
      */
-    protected function getView($withCache = false): TemplateView
+    protected function getView(): TemplateView
     {
         $view = new TemplateView();
-        $cache = $this->getCache();
-        if ($cache && $withCache) {
-            $view->getRenderingContext()->setCache($cache);
-        }
         return $view;
     }
 
@@ -126,34 +110,6 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
             } else {
                 $this->assertNotEquals($notExpectedValue, $output);
             }
-        }
-    }
-
-    /**
-     * Perform a standard test on the source or stream provided,
-     * rendering it with $variables assigned and checking the
-     * output for presense of $expected values and confirming
-     * that none of the $notExpected values are present.
-     *
-     * Same as testTemplateCodeFixture() but includes a cache
-     * in the tests. Silently skipped if the test case does not
-     * return a valid cache.
-     *
-     * @param string|resource $sourceOrStream
-     * @param array $variables
-     * @param array $expected
-     * @param array $notExpected
-     * @param string|NULL $expectedException
-     * @test
-     * @dataProvider getTemplateCodeFixturesAndExpectations
-     */
-    public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, ?string $expectedException = null): void
-    {
-        if ($this->getCache()) {
-            $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
-            $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
-        } else {
-            $this->assertTrue(true);
         }
     }
 }

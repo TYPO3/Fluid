@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -135,22 +136,18 @@ class AbstractTemplateViewTest extends UnitTestCase
 
     /**
      * @test
-     * @dataProvider getRenderSectionExceptionTestValues
-     * @param boolean $compiled
-     * @test
      */
-    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(bool $compiled): void
+    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(): void
     {
         $parsedTemplate = $this->getMockForAbstractClass(
-            AbstractCompiledTemplate::class,
+            ParsingState::class,
             [],
             '',
             false,
             false,
             true,
-            ['isCompiled', 'getVariableContainer']
+            ['getVariableContainer']
         );
-        $parsedTemplate->expects($this->once())->method('isCompiled')->willReturn($compiled);
         $parsedTemplate->expects($this->any())->method('getVariableContainer')->willReturn(new StandardVariableProvider(
             ['sections' => []]
         ));
@@ -171,17 +168,6 @@ class AbstractTemplateViewTest extends UnitTestCase
     }
 
     /**
-     * @return array
-     */
-    public function getRenderSectionExceptionTestValues(): array
-    {
-        return [
-            [true],
-            [false]
-        ];
-    }
-
-    /**
      * @test
      * @dataProvider getRenderSectionCompiledTestValues
      * @param boolean $exists
@@ -195,15 +181,14 @@ class AbstractTemplateViewTest extends UnitTestCase
             $sectionMethodName = 'test';
         }
         $parsedTemplate = $this->getMockForAbstractClass(
-            AbstractCompiledTemplate::class,
+            ParsingState::class,
             [],
             '',
             false,
             false,
             true,
-            ['isCompiled', 'getVariableContainer', $sectionMethodName]
+            ['getVariableContainer', $sectionMethodName]
         );
-        $parsedTemplate->expects($this->once())->method('isCompiled')->willReturn(true);
         $view = $this->getMockForAbstractClass(
             AbstractTemplateView::class,
             [],

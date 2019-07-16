@@ -73,11 +73,6 @@ class TemplateParser
     protected $pointerTemplateCode = null;
 
     /**
-     * @var ParsedTemplateInterface[]
-     */
-    protected $parsedTemplates = [];
-
-    /**
      * @param RenderingContextInterface $renderingContext
      * @return self
      */
@@ -159,7 +154,6 @@ class TemplateParser
                 throw $this->createParsingRelatedExceptionWithContext($error, $templateIdentifier);
             }
         }
-        $this->parsedTemplates[$templateIdentifier] = $parsingState;
         return $parsingState;
     }
 
@@ -194,25 +188,7 @@ class TemplateParser
      */
     public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure): ParsedTemplateInterface
     {
-        $compiler = $this->renderingContext->getTemplateCompiler();
-        if (isset($this->parsedTemplates[$templateIdentifier])) {
-            $parsedTemplate = $this->parsedTemplates[$templateIdentifier];
-        } elseif ($compiler->has($templateIdentifier)) {
-            $parsedTemplate = $compiler->get($templateIdentifier);
-            if ($parsedTemplate instanceof UncompilableTemplateInterface) {
-                $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
-            }
-        } else {
-            $parsedTemplate = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
-            try {
-                $compiler->store($templateIdentifier, $parsedTemplate);
-            } catch (StopCompilingException $stop) {
-                $this->renderingContext->getErrorHandler()->handleCompilerError($stop);
-                $parsedTemplate->setCompilable(false);
-                $compiler->store($templateIdentifier, $parsedTemplate);
-            }
-        }
-        return $parsedTemplate;
+        return $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
     }
 
     /**
@@ -227,7 +203,6 @@ class TemplateParser
             $templateIdentifier
         );
         $parsedTemplate->setIdentifier($templateIdentifier);
-        $this->parsedTemplates[$templateIdentifier] = $parsedTemplate;
         return $parsedTemplate;
     }
 

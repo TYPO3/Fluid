@@ -1,7 +1,4 @@
 <?php
-// Define a cache directory if one is not set
-$FLUID_CACHE_DIRECTORY = !isset($FLUID_CACHE_DIRECTORY) ? __DIR__ . '/../cache/' : $FLUID_CACHE_DIRECTORY;
-
 require 'autoload.php';
 
 // Initializing the View: rendering in Fluid takes place through a View instance
@@ -29,12 +26,6 @@ $paths->setLayoutRootPaths([
 $paths->setPartialRootPaths([
     __DIR__ . '/../Resources/Private/Partials/'
 ]);
-
-if ($FLUID_CACHE_DIRECTORY) {
-    // Configure View's caching to use ./examples/cache/ as caching directory.
-    $view->setCache(new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($FLUID_CACHE_DIRECTORY));
-}
-
 
 /**
  * Tiny helper that outputs a plain string in a nice way,

@@ -60,39 +60,6 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
     }
 
     /**
-     * Compiles the ExpressionNode, returning an array with
-     * exactly two keys which contain strings:
-     *
-     * - "initialization" which contains variable initializations
-     * - "execution" which contains the execution (that uses the variables)
-     *
-     * The expression and matches can be read from the local
-     * instance - and the RenderingContext and other APIs
-     * can be accessed via the TemplateCompiler.
-     *
-     * @param TemplateCompiler $templateCompiler
-     * @return array
-     */
-    public function compile(TemplateCompiler $templateCompiler): array
-    {
-        $handlerClass = get_class($this);
-        $expressionVariable = $templateCompiler->variableName('string');
-        $matchesVariable = $templateCompiler->variableName('array');
-        $initializationPhpCode = sprintf('// Rendering %s node' . chr(10), $handlerClass);
-        $initializationPhpCode .= sprintf('%s = \'%s\';', $expressionVariable, $this->getExpression()) . chr(10);
-        $initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), true)) . chr(10);
-        return [
-            'initialization' => $initializationPhpCode,
-            'execution' => sprintf(
-                '\%s::evaluateExpression($renderingContext, %s, %s)',
-                $handlerClass,
-                $expressionVariable,
-                $matchesVariable
-            )
-        ];
-    }
-
-    /**
      * Getter for returning the expression before parsing.
      *
      * @return string

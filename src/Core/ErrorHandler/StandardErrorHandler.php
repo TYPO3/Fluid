@@ -56,15 +56,6 @@ class StandardErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @param StopCompilingException $error
-     * @return string
-     */
-    public function handleCompilerError(StopCompilingException $error): string
-    {
-        return '';
-    }
-
-    /**
      * @param \TYPO3Fluid\Fluid\View\Exception $error
      * @throws \TYPO3Fluid\Fluid\View\Exception
      * @return void

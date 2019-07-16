@@ -39,22 +39,6 @@ interface ExpressionNodeInterface extends NodeInterface
     public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches);
 
     /**
-     * Compiles the ExpressionNode, returning an array with
-     * exactly two keys which contain strings:
-     *
-     * - "initialization" which contains variable initializations
-     * - "execution" which contains the execution (that uses the variables)
-     *
-     * The expression and matches can be read from the local
-     * instance - and the RenderingContext and other APIs
-     * can be accessed via the TemplateCompiler.
-     *
-     * @param TemplateCompiler $templateCompiler
-     * @return array
-     */
-    public function compile(TemplateCompiler $templateCompiler): array;
-
-    /**
      * Getter for returning the expression before parsing.
      *
      * @return string

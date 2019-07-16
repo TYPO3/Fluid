@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -106,63 +105,5 @@ class TernaryExpressionNode extends AbstractExpressionNode
             }
         }
         return $context;
-    }
-
-    /**
-     * Compiles the ExpressionNode, returning an array with
-     * exactly two keys which contain strings:
-     *
-     * - "initialization" which contains variable initializations
-     * - "execution" which contains the execution (that uses the variables)
-     *
-     * The expression and matches can be read from the local
-     * instance - and the RenderingContext and other APIs
-     * can be accessed via the TemplateCompiler.
-     *
-     * @param TemplateCompiler $templateCompiler
-     * @return string
-     */
-    public function compile(TemplateCompiler $templateCompiler): array
-    {
-        $parts = preg_split('/([\?:])/s', $this->getExpression());
-        $parts = array_map([__CLASS__, 'trimPart'], $parts);
-        list ($check, $then, $else) = $parts;
-
-        if ($then === '') {
-            $then = $check{0} === '!' ? $else : $check;
-        }
-
-        $matchesVariable = $templateCompiler->variableName('array');
-        $initializationPhpCode = '// Rendering TernaryExpression node' . chr(10);
-        $initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), true)) . chr(10);
-
-        $parser = new BooleanParser();
-        $compiledExpression = $parser->compile($check);
-        $functionName = $templateCompiler->variableName('ternaryExpression');
-        $initializationPhpCode .= sprintf(
-            '%s = function($context, $renderingContext) {
-				if (%s::convertToBoolean(' . $compiledExpression . ', $renderingContext) === TRUE) {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				} else {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				}
-			};' . chr(10),
-            $functionName,
-            BooleanNode::class,
-            static::class,
-            var_export($then, true),
-            static::class,
-            var_export($else, true)
-        );
-
-        return [
-            'initialization' => $initializationPhpCode,
-            'execution' => sprintf(
-                '%s(%s::gatherContext($renderingContext, %s[1]), $renderingContext)',
-                $functionName,
-                static::class,
-                $matchesVariable
-            )
-        ];
     }
 }

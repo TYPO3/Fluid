@@ -670,6 +670,7 @@ class TemplatePaths
         if (!array_key_exists($partialKey, $this->resolvedIdentifiers[self::NAME_PARTIALS])) {
             $partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
             $prefix = 'partial_' . $partialName;
+            $prefix = str_replace('/', '__', $prefix);
             $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey] = $this->createIdentifierForFile($partialPathAndFilename, $prefix);
         }
         return $this->resolvedIdentifiers[self::NAME_PARTIALS][$partialKey];

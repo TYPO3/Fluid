@@ -78,9 +78,7 @@ class RenderingContextTest extends UnitTestCase
             ['controllerAction', 'foobar-controllerAction'],
             ['expressionNodeTypes', ['Foo', 'Bar']],
             ['templatePaths', $this->getMock(TemplatePaths::class)],
-            ['cache', $this->getMock(SimpleFileCache::class)],
             ['templateParser', $this->getMock(TemplateParser::class)],
-            ['templateCompiler', $this->getMock(TemplateCompiler::class)],
             ['templateProcessors', [$this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)]]
         ];
     }
@@ -103,16 +101,5 @@ class RenderingContextTest extends UnitTestCase
         $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
         $this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
         $this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
-    }
-
-    /**
-     * @test
-     */
-    public function testIsCacheEnabled(): void
-    {
-        $subject = new RenderingContext($this->getMock(TemplateView::class));
-        $this->assertFalse($subject->isCacheEnabled());
-        $subject->setCache($this->getMock(SimpleFileCache::class));
-        $this->assertTrue($subject->isCacheEnabled());
     }
 }

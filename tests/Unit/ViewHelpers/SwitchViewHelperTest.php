@@ -8,13 +8,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper;
@@ -150,75 +147,5 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $method->setAccessible(true);
         $result = $method->invokeArgs($instance, [[$breakingMatchingCaseNode, $defaultCaseNode]]);
         $this->assertEquals('foo-childcontent', $result);
-    }
-
-    /**
-     * @param ViewHelperNode $node
-     * @param string $expectedCode
-     * @param string $expectedInitialization
-     * @test
-     * @dataProvider getCompileTestValues
-     */
-    public function compileGeneratesExpectedPhpCode(ViewHelperNode $node, string $expectedCode, string $expectedInitialization): void
-    {
-        $viewHelper = new SwitchViewHelper();
-        $compiler = new TemplateCompiler();
-        $initializationCode = '';
-        $code = $viewHelper->compile('$arguments', 'closure', $initializationCode, $node, $compiler);
-        $this->assertEquals($expectedCode, $code);
-        $this->assertEquals($expectedInitialization, $initializationCode);
-    }
-
-    /**
-     * @return array
-     */
-    public function getCompileTestValues(): array
-    {
-        $renderingContext = new RenderingContext($this->getMock(TemplateView::class, ['dummy'], [], false, false));
-        $parsingState = new ParsingState();
-        $emptySwitchNode = new ViewHelperNode(
-            $renderingContext,
-            'f',
-            'switch',
-            ['expression' => new TextNode('test-expression')],
-            $parsingState
-        );
-        $withDefaultCaseOnly = clone $emptySwitchNode;
-        $withDefaultCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'defaultCase', [], $parsingState));
-        $withSingleCaseOnly = clone $emptySwitchNode;
-        $withSingleCaseOnly->addChildNode(new ViewHelperNode($renderingContext, 'f', 'case', ['value' => new TextNode('foo')], $parsingState));
-        return [
-            'Empty switch statement' => [
-                $emptySwitchNode,
-                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . chr(10) .
-                'switch ($arguments[\'expression\']) {' .
-                chr(10) . '}' . chr(10) .
-                '}, array($arguments))',
-                ''
-            ],
-            'With default case only' => [
-                $withDefaultCaseOnly,
-                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . chr(10) .
-                'switch ($arguments[\'expression\']) {' . chr(10) .
-                'default: return call_user_func(function() use ($renderingContext, $self) {' . chr(10) .
-                'return NULL;' . chr(10) .
-                '});' . chr(10) .
-                '}' . chr(10) . '}, array($arguments))',
-                ''
-            ],
-            'With single case only' => [
-                $withSingleCaseOnly,
-                'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . chr(10) .
-                'switch ($arguments[\'expression\']) {' . chr(10) .
-                'case call_user_func(function() use ($renderingContext, $self) {' . chr(10) .
-                chr(10) .
-                'return \'foo\';' . chr(10) .
-                '}): return call_user_func(function() use ($renderingContext, $self) {' . chr(10) .
-                'return NULL;' . chr(10) .
-                '});' . chr(10) .
-                '}' . chr(10) . '}, array($arguments))',
-                ''
-            ],
-        ];
     }
 }

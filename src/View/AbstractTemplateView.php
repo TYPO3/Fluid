@@ -77,17 +77,6 @@ abstract class AbstractTemplateView extends AbstractView
     }
 
     /**
-     * Sets the cache to use in RenderingContext.
-     *
-     * @param FluidCacheInterface $cache
-     * @return void
-     */
-    public function setCache(FluidCacheInterface $cache): void
-    {
-        $this->baseRenderingContext->setCache($cache);
-    }
-
-    /**
      * Gets the TemplatePaths instance from RenderingContext
      *
      * @return TemplatePaths
@@ -247,43 +236,28 @@ abstract class AbstractTemplateView extends AbstractView
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
 
-        if ($parsedTemplate->isCompiled()) {
-            $methodNameOfSection = 'section_' . sha1($sectionName);
-            if (!method_exists($parsedTemplate, $methodNameOfSection)) {
-                if ($ignoreUnknown) {
-                    return '';
-                } else {
-                    return $renderingContext->getErrorHandler()->handleViewError(
-                        new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
-                    );
-                }
+        $sections = $parsedTemplate->getVariableContainer()->get('1457379500_sections');
+        if (!isset($sections[$sectionName])) {
+            if ($ignoreUnknown) {
+                return '';
             }
-            $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-            $output = $parsedTemplate->$methodNameOfSection($renderingContext);
-            $this->stopRendering();
-        } else {
-            $sections = $parsedTemplate->getVariableContainer()->get('1457379500_sections');
-            if (!isset($sections[$sectionName])) {
-                if ($ignoreUnknown) {
-                    return '';
-                }
-                return $renderingContext->getErrorHandler()->handleViewError(
-                    new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
-                );
-            }
-            /** @var $section ViewHelperNode */
-            $section = $sections[$sectionName];
-
-            $renderingContext->getViewHelperVariableContainer()->add(
-                SectionViewHelper::class,
-                'isCurrentlyRenderingSection',
-                true
+            return $renderingContext->getErrorHandler()->handleViewError(
+                new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
             );
-
-            $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-            $output = $section->evaluate($renderingContext);
-            $this->stopRendering();
         }
+        /** @var $section ViewHelperNode */
+        $section = $sections[$sectionName];
+
+        $renderingContext->getViewHelperVariableContainer()->add(
+            SectionViewHelper::class,
+            'isCurrentlyRenderingSection',
+            true
+        );
+
+        $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
+        $output = $section->evaluate($renderingContext);
+        $this->stopRendering();
+        #}
 
         return $output;
     }
@@ -355,7 +329,6 @@ abstract class AbstractTemplateView extends AbstractView
      */
     protected function stopRendering(): void
     {
-        $this->getCurrentRenderingContext()->getTemplateCompiler()->reset();
         array_pop($this->renderingStack);
     }
 
@@ -379,7 +352,7 @@ abstract class AbstractTemplateView extends AbstractView
     {
         $currentRendering = end($this->renderingStack);
         $renderingContext = $this->getCurrentRenderingContext();
-        $parsedTemplate = $currentRendering['parsedTemplate'] ? $currentRendering['parsedTemplate'] : $renderingContext->getTemplateCompiler()->getCurrentlyProcessingState();
+        $parsedTemplate = $currentRendering['parsedTemplate'] ?? null;
         if ($parsedTemplate) {
             return $parsedTemplate;
         }
@@ -393,9 +366,6 @@ abstract class AbstractTemplateView extends AbstractView
                 return $paths->getTemplateSource($controllerName, $actionName);
             }
         );
-        if ($parsedTemplate->isCompiled()) {
-            $parsedTemplate->addCompiledNamespaces($this->baseRenderingContext);
-        }
         return $parsedTemplate;
     }
 

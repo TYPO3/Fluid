@@ -17,32 +17,15 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
  */
 abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
 {
-
-    /**
-     * If your test case requires a cache, override this
-     * method and return an instance.
-     *
-     * @return FluidCacheInterface|null
-     */
-    protected function getCache(): ?FluidCacheInterface
-    {
-        return null;
-    }
-
     /**
      * If your test case requires a custom View instance
      * return the instance from this method.
      *
      * @return ViewInterface
      */
-    protected function getView($withCache = false): TemplateView
+    protected function getView(): TemplateView
     {
-        $view = new TemplateView();
-        $cache = $this->getCache();
-        if ($cache && $withCache) {
-            $view->getRenderingContext()->setCache($cache);
-        }
-        return $view;
+        return new TemplateView();
     }
 
     /**

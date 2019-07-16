@@ -7,10 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Compiler\ViewHelperCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-
 /**
  * Class CompilableWithRenderStatic
  *
@@ -41,28 +37,4 @@ trait CompileWithRenderStatic
      * @return \Closure
      */
     protected abstract function buildRenderChildrenClosure();
-
-    /**
-     * @param string $argumentsName
-     * @param string $closureName
-     * @param string $initializationPhpCode
-     * @param ViewHelperNode $node
-     * @param TemplateCompiler $compiler
-     * @return string
-     */
-    public function compile(
-        string $argumentsName,
-        string $closureName,
-        string &$initializationPhpCode,
-        ViewHelperNode $node,
-        TemplateCompiler $compiler
-    ) {
-        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
-            $this,
-            $argumentsName,
-            $closureName
-        );
-        $initializationPhpCode .= $initialization;
-        return $execution;
-    }
 }

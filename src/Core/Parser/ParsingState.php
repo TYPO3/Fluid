@@ -62,6 +62,11 @@ class ParsingState implements ParsedTemplateInterface
     protected $compilable = true;
 
     /**
+     * @var boolean
+     */
+    protected $compiled = false;
+
+    /**
      * @param string $identifier
      * @return void
      */
@@ -196,37 +201,5 @@ class ParsingState implements ParsedTemplateInterface
     {
         $layoutName = $this->variableContainer->get('layoutName');
         return ($layoutName instanceof NodeInterface ? $layoutName->evaluate($renderingContext) : $layoutName);
-    }
-
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return void
-     */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void
-    {
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCompilable(): bool
-    {
-        return $this->compilable;
-    }
-
-    /**
-     * @param boolean $compilable
-     */
-    public function setCompilable(bool $compilable): void
-    {
-        $this->compilable = $compilable;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCompiled(): bool
-    {
-        return false;
     }
 }

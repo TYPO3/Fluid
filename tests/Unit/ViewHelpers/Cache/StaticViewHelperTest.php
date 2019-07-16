@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\Cache\StaticViewHelper;
 
@@ -28,23 +26,5 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
         $subject = $this->getMockBuilder(StaticViewHelper::class)->setMethods(['renderChildren'])->getMock();
         $subject->expects($this->once())->method('renderChildren')->willReturn('test');
         $this->assertEquals('test', $subject->render());
-    }
-
-    /**
-     * @test
-     */
-    public function testCompile(): void
-    {
-        $subject = new StaticViewHelper();
-        $subject->setRenderingContext(new RenderingContextFixture());
-        $node = $this->getMockBuilder(ViewHelperNode::class)
-            ->setMethods(['evaluateChildNodes'])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $node->expects($this->once())->method('evaluateChildNodes')->willReturn('foo');
-        $compiler = new TemplateCompiler();
-        $this->setExpectedException(StopCompilingChildrenException::class);
-        $code = '';
-        $subject->compile('test', 'test', $code, $node, $compiler);
     }
 }

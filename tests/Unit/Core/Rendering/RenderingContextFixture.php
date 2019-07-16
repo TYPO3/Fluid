@@ -58,19 +58,9 @@ class RenderingContextFixture implements RenderingContextInterface
     public $templateParser;
 
     /**
-     * @var TemplateCompiler
-     */
-    public $templateCompiler;
-
-    /**
      * @var TemplatePaths
      */
     public $templatePaths;
-
-    /**
-     * @var FluidCacheInterface
-     */
-    public $cache;
 
     /**
      * @var TemplateProcessorInterface[]
@@ -93,11 +83,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public $controllerAction = 'Default';
 
     /**
-     * @var boolean
-     */
-    public $cacheDisabled = false;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -108,9 +93,7 @@ class RenderingContextFixture implements RenderingContextInterface
         $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
         $this->viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, ['dummy']);
         $this->templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
-        $this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, ['dummy']);
         $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
-        $this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
     }
 
     public function initialize()
@@ -228,23 +211,6 @@ class RenderingContextFixture implements RenderingContextInterface
     }
 
     /**
-     * @param TemplateCompiler $templateCompiler
-     * @return void
-     */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler): void
-    {
-        $this->templateCompiler = $templateCompiler;
-    }
-
-    /**
-     * @return TemplateCompiler
-     */
-    public function getTemplateCompiler(): TemplateCompiler
-    {
-        return $this->templateCompiler;
-    }
-
-    /**
      * @return TemplatePaths
      */
     public function getTemplatePaths(): TemplatePaths
@@ -259,33 +225,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public function setTemplatePaths(TemplatePaths $templatePaths): void
     {
         $this->templatePaths = $templatePaths;
-    }
-
-    /**
-     * Delegation: Set the cache used by this View's compiler
-     *
-     * @param FluidCacheInterface $cache
-     * @return void
-     */
-    public function setCache(FluidCacheInterface $cache): void
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @return FluidCacheInterface
-     */
-    public function getCache(): FluidCacheInterface
-    {
-        return $this->cache;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCacheEnabled(): bool
-    {
-        return !$this->cacheDisabled;
     }
 
     /**

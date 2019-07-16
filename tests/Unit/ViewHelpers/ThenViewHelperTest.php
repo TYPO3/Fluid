@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 
 /**
@@ -27,17 +26,5 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
         $viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
         $actualResult = $viewHelper->render();
         $this->assertEquals('foo', $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function testCompileReturnsEmptyString(): void
-    {
-        $section = new ThenViewHelper();
-        $init = '';
-        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], false, false);
-        $result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
-        $this->assertEquals('\'\'', $result);
     }
 }

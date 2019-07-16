@@ -45,17 +45,6 @@ interface ErrorHandlerInterface
     public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error): string;
 
     /**
-     * Can be implemented to handle "cannot compile" errors in
-     * desired ways (normally this simply disables the compiling,
-     * but if your application deems compiler errors fatal then
-     * you can throw a different exception type here).
-     *
-     * @param StopCompilingException $error
-     * @return string
-     */
-    public function handleCompilerError(StopCompilingException $error): string;
-
-    /**
      * @param \TYPO3Fluid\Fluid\View\Exception $error
      * @return string
      */

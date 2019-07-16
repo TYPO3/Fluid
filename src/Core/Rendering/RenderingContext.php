@@ -89,16 +89,6 @@ class RenderingContext implements RenderingContextInterface
     protected $templateParser;
 
     /**
-     * @var TemplateCompiler
-     */
-    protected $templateCompiler;
-
-    /**
-     * @var FluidCacheInterface
-     */
-    protected $cache;
-
-    /**
      * @var TemplateProcessorInterface[]
      */
     protected $templateProcessors = [];
@@ -136,7 +126,6 @@ class RenderingContext implements RenderingContextInterface
     public function initialize(): void
     {
         $this->setTemplateParser($this->templateParser ?? new TemplateParser());
-        $this->setTemplateCompiler($this->templateCompiler ?? new TemplateCompiler());
         $this->setTemplatePaths($this->templatePaths ?? new TemplatePaths());
         $this->setTemplateProcessors(
             empty($this->templateProcessors) ?
@@ -281,51 +270,6 @@ class RenderingContext implements RenderingContextInterface
     public function getTemplateParser(): TemplateParser
     {
         return $this->templateParser;
-    }
-
-    /**
-     * @param TemplateCompiler $templateCompiler
-     * @return void
-     */
-    public function setTemplateCompiler(TemplateCompiler $templateCompiler): void
-    {
-        $this->templateCompiler = $templateCompiler;
-        $this->templateCompiler->setRenderingContext($this);
-    }
-
-    /**
-     * @return TemplateCompiler
-     */
-    public function getTemplateCompiler(): TemplateCompiler
-    {
-        return $this->templateCompiler;
-    }
-
-    /**
-     * Delegation: Set the cache used by this View's compiler
-     *
-     * @param FluidCacheInterface $cache
-     * @return void
-     */
-    public function setCache(FluidCacheInterface $cache): void
-    {
-        $this->cache = $cache;
-    }
-
-    /**
-     * @return FluidCacheInterface
-     */
-    public function getCache(): FluidCacheInterface
-    {
-        return $this->cache;
-    }
-
-    /**
-     * @return boolean
-     */
-    public function isCacheEnabled(): bool
-    {
-        return $this->cache instanceof FluidCacheInterface;
     }
 
     /**

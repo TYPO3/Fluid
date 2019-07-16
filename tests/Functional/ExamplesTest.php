@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use org\bovigo\vfs\vfsStream;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
 /**
@@ -15,43 +14,18 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
  */
 class ExamplesTest extends BaseTestCase
 {
-
-    /**
-     * @return void
-     */
-    public static function setUpBeforeClass(): void
-    {
-        vfsStream::setup('fakecache/');
-    }
-
     /**
      * @dataProvider getExampleScriptTestValues
      * @param string $script
      * @param array $expectedOutputs
      * @param string $expectedException
      */
-    public function testExampleScriptFileWithoutCache(string $script, array $expectedOutputs, string $expectedException = null): void
+    public function testExampleScriptFile(string $script, array $expectedOutputs, string $expectedException = null): void
     {
         if ($expectedException !== null) {
             $this->setExpectedException($expectedException);
         }
         $this->runExampleScriptTest($script, $expectedOutputs, '');
-    }
-
-    /**
-     * @dataProvider getExampleScriptTestValues
-     * @param string $script
-     * @param array $expectedOutputs
-     * @param string $expectedException
-     */
-    public function testExampleScriptFileWithCache(string $script, array $expectedOutputs, string $expectedException = null): void
-    {
-        if ($expectedException !== null) {
-            $this->setExpectedException($expectedException);
-        }
-        $cache = vfsStream::url('fakecache/');
-        $this->runExampleScriptTest($script, $expectedOutputs, $cache);
-        $this->runExampleScriptTest($script, $expectedOutputs, $cache);
     }
 
     /**

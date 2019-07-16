@@ -55,31 +55,9 @@ interface ParsedTemplateInterface extends ComponentInterface
     public function getLayoutName(RenderingContextInterface $renderingContext): ?string;
 
     /**
-     * Method generated on compiled templates to add ViewHelper namespaces which were defined in-template
-     * and add those to the ones already defined in the ViewHelperResolver.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return void
-     */
-    public function addCompiledNamespaces(RenderingContextInterface $renderingContext): void;
-
-    /**
      * Returns TRUE if the current template has a template defined via <f:layout name="..." />
      *
      * @return boolean
      */
     public function hasLayout(): bool;
-
-    /**
-     * If the template contains constructs which prevent the compiler from compiling the template
-     * correctly, isCompilable() will return FALSE.
-     *
-     * @return boolean TRUE if the template can be compiled
-     */
-    public function isCompilable(): bool;
-
-    /**
-     * @return boolean TRUE if the template is already compiled, FALSE otherwise
-     */
-    public function isCompiled(): bool;
 }

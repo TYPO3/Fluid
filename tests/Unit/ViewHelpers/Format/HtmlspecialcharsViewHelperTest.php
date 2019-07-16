@@ -7,14 +7,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
-use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper
@@ -169,63 +167,6 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * __test
-     *
-     * @dataProvider dataProvider
-     */
-    public function compileTests($value, array $options, $expectedResult): void
-    {
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-        $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
-
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-        $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
-        $mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
-
-        $arguments = [
-            'value' => $value,
-            'keepQuotes' => (boolean) (isset($options['keepQuotes']) && $options['keepQuotes'] ? $options['keepQuotes'] : false),
-            'encoding' => 'UTF-8',
-            'doubleEncode' => (boolean) (isset($options['doubleEncode']) ? $options['doubleEncode'] : true),
-        ];
-        $arguments = array_merge($arguments, $options);
-        $initializationPhpCode = '$arguments = ' . var_export($arguments, true) . ';' . chr(10);
-        $compiledPhpCode = $this->viewHelper->compile('$arguments', 'NULL', $initializationPhpCode, $mockSyntaxTreeNode, $mockTemplateCompiler);
-        $result = null;
-        eval($initializationPhpCode . '$result = ' . $compiledPhpCode . ';');
-        $this->assertSame($expectedResult, $result);
-    }
-
-    /**
-     * __test
-     *
-     * @dataProvider dataProvider
-     */
-    public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult): void
-    {
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-        $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
-
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-        $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
-        $mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
-
-        $renderChildrenClosureName = uniqid('renderChildren');
-        $arguments = [
-            'value' => null,
-            'keepQuotes' => (boolean) isset($options['keepQuotes']) && $options['keepQuotes'],
-            'encoding' => isset($options['keepQuotes']) ? $options['keepQuotes'] : 'UTF-8',
-            'doubleEncode' => (boolean) isset($options['doubleEncode']) && $options['doubleEncode'],
-        ];
-        $arguments = array_merge($arguments, $options);
-        $initializationPhpCode = 'function ' . $renderChildrenClosureName . '() { return ' . var_export($value, true) . '; }; ' . chr(10) . '$arguments = ' . var_export($arguments, true) . ';' . chr(10);
-        $compiledPhpCode = $this->viewHelper->compile('$arguments', $renderChildrenClosureName, $initializationPhpCode, $mockSyntaxTreeNode, $mockTemplateCompiler);
-        $result = null;
-        eval($initializationPhpCode . '$result = ' . $compiledPhpCode . ';');
-        $this->assertSame($expectedResult, $result);
-    }
-
-    /**
-     * __test
      */
     public function renderConvertsObjectsToStrings(): void
     {
@@ -245,43 +186,5 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelper->setArguments(['value' => $user]);
         $actualResult = $this->viewHelper->initializeArgumentsAndRender();
         $this->assertSame($user, $actualResult);
-    }
-
-    /**
-     * __test
-     */
-    public function compileConvertsObjectsToStrings(): void
-    {
-        /** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-        $mockSyntaxTreeNode = $this->getMockBuilder(AbstractNode::class)->disableOriginalConstructor()->getMock();
-
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-        $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
-        $mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
-
-        $initializationPhpCode = '$arguments = array("value" => new \TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString("Xaver <b>Cross-Site</b>"), "keepQuotes" => FALSE, "encoding" => "UTF-8", "doubleEncode" => TRUE);' . chr(10);
-        $compiledPhpCode = $this->viewHelper->compile('$arguments', 'NULL', $initializationPhpCode, $mockSyntaxTreeNode, $mockTemplateCompiler);
-        $result = null;
-        eval($initializationPhpCode . '$result = ' . $compiledPhpCode . ';');
-        $this->assertSame('Xaver &lt;b&gt;Cross-Site&lt;/b&gt;', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function compileDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString(): void
-    {
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
-        $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
-
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
-        $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
-        $mockTemplateCompiler->expects($this->once())->method('variableName')->with('value')->will($this->returnValue('$value123'));
-
-        $initializationPhpCode = '$arguments = array("value" => new \TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString("Xaver <b>Cross-Site</b>"), "keepQuotes" => FALSE, "encoding" => "UTF-8", "doubleEncode" => TRUE);' . chr(10);
-        $compiledPhpCode = $this->viewHelper->compile('$arguments', 'NULL', $initializationPhpCode, $mockSyntaxTreeNode, $mockTemplateCompiler);
-        $result = null;
-        eval($initializationPhpCode . '$result = ' . $compiledPhpCode . ';');
-        $this->assertEquals(new UserWithoutToString("Xaver <b>Cross-Site</b>"), $result);
     }
 }

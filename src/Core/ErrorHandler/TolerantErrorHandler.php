@@ -52,15 +52,6 @@ class TolerantErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @param StopCompilingException $error
-     * @return string
-     */
-    public function handleCompilerError(StopCompilingException $error): string
-    {
-        return '';
-    }
-
-    /**
      * @param \TYPO3Fluid\Fluid\View\Exception $error
      * @return string
      */
