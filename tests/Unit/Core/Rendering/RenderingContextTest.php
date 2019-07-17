@@ -7,14 +7,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -73,7 +70,6 @@ class RenderingContextTest extends UnitTestCase
         return [
             ['variableProvider', new StandardVariableProvider(['foo' => 'bar'])],
             ['viewHelperResolver', $this->getMock(ViewHelperResolver::class)],
-            ['viewHelperInvoker', $this->getMock(ViewHelperInvoker::class)],
             ['controllerName', 'foobar-controllerName'],
             ['controllerAction', 'foobar-controllerAction'],
             ['expressionNodeTypes', ['Foo', 'Bar']],

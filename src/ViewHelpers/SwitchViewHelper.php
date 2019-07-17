@@ -48,6 +48,11 @@ class SwitchViewHelper extends AbstractViewHelper
     protected $escapeOutput = false;
 
     /**
+     * @var boolean
+     */
+    protected $escapeChildren = false;
+
+    /**
      * @var mixed
      */
     protected $backupSwitchExpression = null;
@@ -79,7 +84,7 @@ class SwitchViewHelper extends AbstractViewHelper
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $expression);
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'break', false);
 
-        $content = $this->retrieveContentFromChildNodes($this->childNodes);
+        $content = $this->retrieveContentFromChildNodes($this->getChildNodes());
 
         if ($variableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
             $variableContainer->remove(SwitchViewHelper::class, 'switchExpression');
@@ -99,44 +104,22 @@ class SwitchViewHelper extends AbstractViewHelper
     protected function retrieveContentFromChildNodes(array $childNodes)
     {
         $content = null;
-        $defaultCaseViewHelperNode = null;
-        $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
+        $variableContainer = $this->renderingContext->getViewHelperVariableContainer();
+
         foreach ($childNodes as $childNode) {
-            if ($this->isDefaultCaseNode($childNode)) {
-                $defaultCaseViewHelperNode = $childNode;
-            }
-            if (!$this->isCaseNode($childNode)) {
+
+            if (!$childNode instanceof CaseViewHelper && !$childNode instanceof DefaultCaseViewHelper) {
                 continue;
             }
-            $content = $childNode->evaluate($this->renderingContext);
-            if ($viewHelperVariableContainer->get(SwitchViewHelper::class, 'break') === true) {
-                $defaultCaseViewHelperNode = null;
+
+            if ($variableContainer->get(SwitchViewHelper::class, 'break') === true) {
                 break;
             }
+
+            $content = $childNode->evaluate($this->renderingContext);
         }
 
-        if ($defaultCaseViewHelperNode !== null) {
-            $content = $defaultCaseViewHelperNode->evaluate($this->renderingContext);
-        }
         return $content;
-    }
-
-    /**
-     * @param NodeInterface $node
-     * @return boolean
-     */
-    protected function isDefaultCaseNode(NodeInterface $node): bool
-    {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class) || $node instanceof DefaultCaseViewHelper;
-    }
-
-    /**
-     * @param NodeInterface $node
-     * @return boolean
-     */
-    protected function isCaseNode(NodeInterface $node): bool
-    {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class) || $node instanceof CaseViewHelper;
     }
 
     /**
@@ -164,8 +147,8 @@ class SwitchViewHelper extends AbstractViewHelper
         if ($this->backupSwitchExpression !== null) {
             $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $this->backupSwitchExpression);
         }
-        if ($this->backupBreakState) {
-            $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', true);
+        if ($this->backupBreakState !== null) {
+            $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', $this->backupBreakState);
         }
     }
 }

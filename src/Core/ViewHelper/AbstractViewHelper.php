@@ -538,20 +538,34 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         $viewHelperClassName = get_called_class();
-        return $renderingContext->getViewHelperInvoker()->invoke($viewHelperClassName, $arguments, $renderingContext, $renderChildrenClosure);
-    }
+        $viewHelperResolver = $renderingContext->getViewHelperResolver();
+        $viewHelper = $viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassName);
+        $expectedViewHelperArguments = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
+        // Rendering process
+        $evaluatedArguments = [];
+        $undeclaredArguments = [];
 
-    /**
-     * Save the associated ViewHelper node in a static public class variable.
-     * called directly after the ViewHelper was built.
-     *
-     * @param ViewHelperNode $node
-     * @param TextNode[] $arguments
-     * @param VariableProviderInterface $variableContainer
-     * @return void
-     */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
-    {
+        try {
+            foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
+                $argumentValue = $arguments[$argumentName] ?? $argumentDefinition->getDefaultValue();
+                $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+            }
+            foreach ($arguments as $argumentName => $argumentValue) {
+                if (!isset($evaluatedArguments[$argumentName])) {
+                    $undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
+                }
+            }
+
+            if ($renderChildrenClosure !== null) {
+                $viewHelper->setRenderChildrenClosure($renderChildrenClosure);
+            }
+            $viewHelper->setRenderingContext($renderingContext);
+            $viewHelper->setArguments($evaluatedArguments);
+            $viewHelper->handleAdditionalArguments($undeclaredArguments);
+        } catch (Exception $error) {
+            return $renderingContext->getErrorHandler()->handleViewHelperError($error);
+        }
+        return $viewHelper->initializeArgumentsAndRender();
     }
 
     /**

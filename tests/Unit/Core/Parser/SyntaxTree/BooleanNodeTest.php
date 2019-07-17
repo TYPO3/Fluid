@@ -27,12 +27,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class BooleanNodeTest extends UnitTestCase
 {
-
-    /**
-     * @var ViewHelperNode
-     */
-    protected $viewHelperNode;
-
     /**
      * @var RenderingContextInterface
      */

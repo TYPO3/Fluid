@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\View\Exception;
 
@@ -171,11 +172,11 @@ class ParsingState implements ParsedTemplateInterface
     /**
      * Returns a variable container which will be then passed to the postParseFacet.
      *
-     * @return VariableProviderInterface The variable container or NULL if none has been set yet
+     * @return VariableProviderInterface|null The variable container or NULL if none has been set yet
      */
     public function getVariableContainer(): VariableProviderInterface
     {
-        return $this->variableContainer;
+        return $this->variableContainer ?? new StandardVariableProvider();
     }
 
     /**

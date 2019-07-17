@@ -53,6 +53,6 @@ class CaseViewHelper extends AbstractViewHelper
             $viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'break', true);
             return $this->renderChildren();
         }
-        return '';
+        return null;
     }
 }

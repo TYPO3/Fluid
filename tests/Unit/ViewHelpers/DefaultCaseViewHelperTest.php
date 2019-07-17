@@ -38,7 +38,7 @@ class DefaultCaseViewHelperTest extends ViewHelperBaseTestcase
         $viewHelper->expects($this->once())->method('renderChildren');
         $renderingContext = $this->getMock(RenderingContext::class, ['getViewHelperVariableContainer'], [], false, false);
         $variableContainer = $this->getMock(ViewHelperVariableContainer::class, ['exists']);
-        $variableContainer->expects($this->once())->method('exists')->willReturn(true);
+        $variableContainer->expects($this->atLeastOnce())->method('exists')->willReturn(true);
         $renderingContext->expects($this->once())->method('getViewHelperVariableContainer')->willReturn($variableContainer);
         $viewHelper->_set('renderingContext', $renderingContext);
         $viewHelper->render();

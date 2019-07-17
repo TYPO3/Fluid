@@ -8,8 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  */
 
 use PHPUnit\Framework\MockObject\Generator;
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -17,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
@@ -46,11 +43,6 @@ class RenderingContextFixture implements RenderingContextInterface
      * @var ViewHelperResolver
      */
     public $viewHelperResolver;
-
-    /**
-     * @var ViewHelperInvoker
-     */
-    public $viewHelperInvoker;
 
     /**
      * @var TemplateParser
@@ -91,7 +83,6 @@ class RenderingContextFixture implements RenderingContextInterface
         $this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
         $this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, ['dummy']);
         $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
-        $this->viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, ['dummy']);
         $this->templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
         $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
     }
@@ -172,23 +163,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver): void
     {
         $this->viewHelperResolver = $viewHelperResolver;
-    }
-
-    /**
-     * @return ViewHelperInvoker
-     */
-    public function getViewHelperInvoker(): ViewHelperInvoker
-    {
-        return $this->viewHelperInvoker;
-    }
-
-    /**
-     * @param ViewHelperInvoker $viewHelperInvoker
-     * @return void
-     */
-    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker): void
-    {
-        $this->viewHelperInvoker = $viewHelperInvoker;
     }
 
     /**

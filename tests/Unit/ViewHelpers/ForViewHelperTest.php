@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\CountableIterator;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
@@ -24,7 +22,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function setUp(): void
     {
         parent::setUp();
-
 
         $this->arguments['reverse'] = null;
         $this->arguments['key'] = null;

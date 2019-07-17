@@ -96,7 +96,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $view->assignMultiple($variables);
-        $output = trim($view->render());
+        $output = trim((string)$view->render());
         foreach ($expected as $expectedValue) {
             if (is_string($expectedValue)) {
                 $this->assertStringContainsString($expectedValue, $output);

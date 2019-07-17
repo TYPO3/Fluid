@@ -23,7 +23,6 @@ use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\PassthroughSourceModifierTemp
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
@@ -57,11 +56,6 @@ class RenderingContext implements RenderingContextInterface
      * @var ViewHelperResolver
      */
     protected $viewHelperResolver;
-
-    /**
-     * @var ViewHelperInvoker
-     */
-    protected $viewHelperInvoker;
 
     /**
      * @var TemplatePaths
@@ -141,7 +135,6 @@ class RenderingContext implements RenderingContextInterface
             ] : $this->templateProcessors
         );
         $this->setViewHelperResolver($this->viewHelperResolver ?? new ViewHelperResolver());
-        $this->setViewHelperInvoker($this->viewHelperInvoker ?? new ViewHelperInvoker());
         $this->setViewHelperVariableContainer($this->viewHelperVariableContainer ?? new ViewHelperVariableContainer());
         $this->setVariableProvider($this->variableProvider ?? new StandardVariableProvider());
         $this->setErrorHandler($this->errorHandler ?? new StandardErrorHandler());
@@ -200,23 +193,6 @@ class RenderingContext implements RenderingContextInterface
     public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver): void
     {
         $this->viewHelperResolver = $viewHelperResolver;
-    }
-
-    /**
-     * @return ViewHelperInvoker
-     */
-    public function getViewHelperInvoker(): ViewHelperInvoker
-    {
-        return $this->viewHelperInvoker;
-    }
-
-    /**
-     * @param ViewHelperInvoker $viewHelperInvoker
-     * @return void
-     */
-    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker): void
-    {
-        $this->viewHelperInvoker = $viewHelperInvoker;
     }
 
     /**

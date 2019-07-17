@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
@@ -27,15 +28,10 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     protected $viewHelper;
 
-    /**
-     * @var ViewHelperNode
-     */
-    protected $viewHelperNode;
-
     public function setUp(): void
     {
         parent::setUp();
-        $this->viewHelper = $this->getMockBuilder(SwitchViewHelper::class)->setMethods(['renderChildren'])->getMock();
+        $this->viewHelper = $this->getMockBuilder(SwitchViewHelper::class)->setMethods(['dummy'])->getMock();
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
     }
 
@@ -52,8 +48,13 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderSetsSwitchExpressionInViewHelperVariableContainer(): void
     {
-        $switchExpression = new \stdClass();
-        $this->viewHelper->setArguments(['expression' => $switchExpression]);
+        $context = new RenderingContextFixture();
+        $variableContainer = $this->getMockBuilder(ViewHelperVariableContainer::class)->setMethods(['addOrUpdate'])->getMock();
+        $variableContainer->expects($this->at(0))->method('addOrUpdate')->with(SwitchViewHelper::class, 'switchExpression', 'switchExpression');
+        $variableContainer->expects($this->at(1))->method('addOrUpdate')->with(SwitchViewHelper::class, 'break', false);
+        $context->setViewHelperVariableContainer($variableContainer);
+        $this->viewHelper->setRenderingContext($context);
+        $this->viewHelper->setArguments(['expression' => 'switchExpression']);
         $output = $this->viewHelper->initializeArgumentsAndRender();
         $this->assertEquals('', $output);
     }
@@ -63,6 +64,12 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderRemovesSwitchExpressionFromViewHelperVariableContainerAfterInvocation(): void
     {
+        $context = new RenderingContextFixture();
+        $variableContainer = $this->getMockBuilder(ViewHelperVariableContainer::class)->setMethods(['remove'])->getMock();
+        $variableContainer->expects($this->at(0))->method('remove')->with(SwitchViewHelper::class, 'switchExpression');
+        $variableContainer->expects($this->at(1))->method('remove')->with(SwitchViewHelper::class, 'break');
+        $context->setViewHelperVariableContainer($variableContainer);
+        $this->viewHelper->setRenderingContext($context);
         $this->viewHelper->setArguments(['expression' => 'switchExpression']);
         $output = $this->viewHelper->initializeArgumentsAndRender();
         $this->assertEquals('', $output);
@@ -77,17 +84,16 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function retrieveContentFromChildNodesProcessesChildNodesCorrectly(array $childNodes, array $variables, $expected): void
     {
-        $instance = $this->getAccessibleMock(SwitchViewHelper::class, ['dummy']);
         $context = new RenderingContextFixture();
-        $context->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', false);
-        foreach ($variables as $name => $value) {
-            $context->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, $name, $value);
+        $context->getVariableProvider()->setSource($variables);
+        $instance = new SwitchViewHelper();
+        $instance->setParsedArguments(['expression' => $variables['switchExpression']]);
+
+        foreach ($childNodes as $childNode) {
+            $instance->addChildNode($childNode);
         }
-        $instance->_set('viewHelperVariableContainer', $context->getViewHelperVariableContainer());
-        $instance->_set('renderingContext', $context);
-        $method = new \ReflectionMethod(SwitchViewHelper::class, 'retrieveContentFromChildNodes');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($instance, [$childNodes]);
+
+        $result = $instance->evaluate($context);
         $this->assertEquals($expected, $result);
     }
 
@@ -96,53 +102,47 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function getRetrieveContentFromChildNodesTestValues(): array
     {
-        $matchingNode = $this->getMock(ViewHelperNode::class, ['evaluate', 'getViewHelperClassName'], [], false, false);
-        $matchingNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
-        $matchingNode->method('evaluate')->willReturn('foo');
-        $notMatchingNode = $this->getMock(ViewHelperNode::class, ['evaluate', 'getViewHelperClassName'], [], false, false);
-        $notMatchingNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
-        $notMatchingNode->method('evaluate')->willReturn('');
-        $notMatchingNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
-        $defaultCaseNode = $this->getMock(ViewHelperNode::class, ['evaluate', 'getViewHelperClassName'], [], false, false);
-        $defaultCaseNode->method('evaluate')->willReturn('default');
-        $defaultCaseNode->method('getViewHelperClassName')->willReturn(DefaultCaseViewHelper::class);
-        $textNode = $this->getMock(TextNode::class, [], [], false, false);
-        $objectAccessorNode = $this->getMock(ObjectAccessorNode::class, [], [], false, false);
+        $matchingNode = (new CaseViewHelper())->addChildNode(new TextNode('foo'));
+        $matchingNode->setParsedArguments(['value' => 'foo']);
+
+        $notMatchingNode = (new CaseViewHelper())->addChildNode(new TextNode(''));
+        $notMatchingNode->setParsedArguments(['value' => 'bar']);
+
+        $defaultCaseNode = (new DefaultCaseViewHelper())->addChildNode(new TextNode('default'));
+
+        $textNode = new TextNode('TEXT');
+        $objectAccessorNode = new ObjectAccessorNode('void');
+
         return [
             'empty switch' => [[], ['switchExpression' => false], null],
-            'single case matching' => [[clone $matchingNode], ['switchExpression' => 'foo'], 'foo'],
-            'two case without break' => [[clone $matchingNode, clone $notMatchingNode], ['switchExpression' => 'foo'], ''],
-            'single case not matching with default last' => [[clone $matchingNode, clone $defaultCaseNode], ['switchExpression' => 'bar'], 'default'],
-            'skips non-ViewHelper nodes' => [[$textNode, $objectAccessorNode, clone $matchingNode], ['switchExpression' => 'foo'], 'foo']
+            'single case matching' => [[$matchingNode], ['switchExpression' => 'foo'], 'foo'],
+            'two case with matching first' => [[$matchingNode, $notMatchingNode], ['switchExpression' => 'foo'], 'foo'],
+            'two case with matching last' => [[$notMatchingNode, $matchingNode], ['switchExpression' => 'foo'], 'foo'],
+            'single case not matching with default last' => [[$notMatchingNode, $defaultCaseNode], ['switchExpression' => 'foo'], 'default'],
+            'skips non-ViewHelper nodes' => [[$textNode, $objectAccessorNode, $matchingNode], ['switchExpression' => 'foo'], 'foo']
         ];
     }
 
     /**
      * @test
      */
-    public function retrieveContentFromChildNodesReturnsBreaksOnBreak(): void
+    public function retrieveContentFromChildNodesBreaksOnBreak(): void
     {
-        $instance = $this->getAccessibleMock(SwitchViewHelper::class, ['dummy']);
         $context = new RenderingContextFixture();
-        $context->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'foo');
-        $context->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', false);
-        $instance->_set('viewHelperVariableContainer', $context->getViewHelperVariableContainer());
-        $instance->_set('renderingContext', $context);
-        $matchingCaseViewHelper = new CaseViewHelper();
-        $matchingCaseViewHelper->setRenderChildrenClosure(function (): string {
-            return 'foo-childcontent';
-        });
-        $breakingMatchingCaseNode = $this->getAccessibleMock(ViewHelperNode::class, ['getViewHelperClassName', 'getUninitializedViewHelper'], [], '', false);
-        $breakingMatchingCaseNode->_set('arguments', ['value' => 'foo']);
-        $breakingMatchingCaseNode->_set('uninitializedViewHelper', $matchingCaseViewHelper);
-        $breakingMatchingCaseNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
-        $defaultCaseNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate'], [], false, false);
-        $defaultCaseNode->method('getViewHelperClassName')->willReturn(DefaultCaseViewHelper::class);
-        $defaultCaseNode->expects($this->never())->method('evaluate');
 
-        $method = new \ReflectionMethod(SwitchViewHelper::class, 'retrieveContentFromChildNodes');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($instance, [[$breakingMatchingCaseNode, $defaultCaseNode]]);
+        $instance = new SwitchViewHelper();
+        $instance->setParsedArguments(['expression' => 'foo']);
+
+        $matchingCaseViewHelper = (new CaseViewHelper())->addChildNode(new TextNode('foo-childcontent'));
+        $matchingCaseViewHelper->setParsedArguments(['value' => 'foo']);
+
+        $untouchedViewHelper = $this->getMockBuilder(DefaultCaseViewHelper::class)->setMethods(['evaluate'])->getMock();
+        $untouchedViewHelper->expects($this->never())->method('evaluate');
+
+        $instance->addChildNode($matchingCaseViewHelper);
+        $instance->addChildNode($untouchedViewHelper);
+
+        $result = $instance->evaluate($context);
         $this->assertEquals('foo-childcontent', $result);
     }
 }

@@ -7,14 +7,11 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
@@ -72,17 +69,6 @@ interface RenderingContextInterface
      * @return void
      */
     public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver): void;
-
-    /**
-     * @return ViewHelperInvoker
-     */
-    public function getViewHelperInvoker(): ViewHelperInvoker;
-
-    /**
-     * @param ViewHelperInvoker $viewHelperInvoker
-     * @return void
-     */
-    public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker): void;
 
     /**
      * Inject the Template Parser

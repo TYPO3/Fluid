@@ -93,25 +93,6 @@ class SectionViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Save the associated ViewHelper node in a static public class variable.
-     * called directly after the ViewHelper was built.
-     *
-     * @param ViewHelperNode $node
-     * @param array $arguments
-     * @param VariableProviderInterface $variableContainer
-     * @return void
-     */
-    public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer): void
-    {
-        $nameArgument = $arguments['name'];
-        $sectionName = $nameArgument instanceof TextNode ? $nameArgument->getText() : $nameArgument;
-
-        $sections = $variableContainer->get('1457379500_sections') ?: [];
-        $sections[$sectionName] = $node;
-        $variableContainer->add('1457379500_sections', $sections);
-    }
-
-    /**
      * Rendering directly returns all child nodes.
      *
      * @return string HTML String of all child nodes.

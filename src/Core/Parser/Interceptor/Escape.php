@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * An interceptor adding the "Htmlspecialchars" viewhelper to the suitable places.
@@ -47,10 +48,8 @@ class Escape implements InterceptorInterface
      */
     public function process(NodeInterface $node, int $interceptorPosition, ParsingState $parsingState): NodeInterface
     {
-        $viewHelper = $node instanceof ViewHelperNode ? $node->getUninitializedViewHelper() : $node;
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
-            /** @var ViewHelperNode $node */
-            if (!$viewHelper->isChildrenEscapingEnabled()) {
+            if (!$node->isChildrenEscapingEnabled()) {
                 $this->childrenEscapingEnabled = false;
                 $this->viewHelperNodesWhichDisableTheInterceptor[] = $node;
             }
@@ -61,8 +60,8 @@ class Escape implements InterceptorInterface
                     $this->childrenEscapingEnabled = true;
                 }
             }
-            /** @var ViewHelperNode $node */
-            if ($this->childrenEscapingEnabled && $viewHelper->isOutputEscapingEnabled()) {
+
+            if ($this->childrenEscapingEnabled && $node->isOutputEscapingEnabled()) {
                 $node = new EscapingNode($node);
             }
         } elseif ($this->childrenEscapingEnabled && ($node instanceof ObjectAccessorNode || $node instanceof ExpressionNodeInterface)) {

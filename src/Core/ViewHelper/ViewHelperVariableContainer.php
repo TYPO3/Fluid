@@ -110,7 +110,7 @@ class ViewHelperVariableContainer
      */
     public function getAll(string $viewHelperName, $default = null): array
     {
-        return array_key_exists($viewHelperName, $this->objects) ? $this->objects[$viewHelperName] : $default;
+        return isset($this->objects[$viewHelperName]) ? $this->objects[$viewHelperName] : $default;
     }
 
     /**

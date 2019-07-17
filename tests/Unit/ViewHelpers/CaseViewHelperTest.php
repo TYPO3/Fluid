@@ -64,10 +64,10 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function renderReturnsAnEmptyStringIfTheSpecifiedValueIsNotEqualToTheSwitchExpression(): void
+    public function renderReturnsNullIfTheSpecifiedValueIsNotEqualToTheSwitchExpression(): void
     {
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $this->viewHelper->setArguments(['value' => 'someOtherValue']);
-        $this->assertSame('', $this->viewHelper->initializeArgumentsAndRender());
+        $this->assertSame(null, $this->viewHelper->initializeArgumentsAndRender());
     }
 }
