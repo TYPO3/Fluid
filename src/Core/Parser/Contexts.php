@@ -26,6 +26,9 @@ class Contexts
     public $tag;
 
     /** @var Context */
+    public $data;
+
+    /** @var Context */
     public $array;
 
     /** @var Context */
@@ -52,7 +55,10 @@ class Contexts
         $this->inline = new Context(Context::CONTEXT_INLINE, "(->[]|{}:,=|\\\t\n\r\0'\"` ");
 
         // Tag: entered into when a detected tag has a namespace operator in tag name
-        $this->tag = new Context(Context::CONTEXT_TAG, ">:{ /\t\n\r\0");
+        $this->tag = new Context(Context::CONTEXT_TAG, "[>:{ /\t\n\r\0");
+
+        // P/CDATA: entered into when a detected tag starts with [CDATA[ or [PCDATA[ - exclusively matches termination brackets and end of tag.
+        $this->data = new Context(Context::CONTEXT_DATA, ']>');
 
         // Parenthesis context: aware of separators, key/value assignments, the end of a parenthesis and quotation marks. Is used for both
         // parenthesis arguments for inline syntax and tag attribute arguments for tag syntax.

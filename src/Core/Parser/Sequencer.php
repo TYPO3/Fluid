@@ -158,9 +158,26 @@ class Sequencer
         return $this->state;
     }
 
-    /**
-     * @return NodeInterface|null
-     */
+    protected function sequenceCharacterData(string $text): NodeInterface
+    {
+        $capturedClosingBrackets = 0;
+        $this->splitter->switch($this->contexts->data);
+        $this->splitter->sequence->next();
+        foreach ($this->splitter->sequence as $symbol => $captured) {
+            $text .= $captured;
+            if ($symbol === Splitter::BYTE_ARRAY_END) {
+                $text .= ']';
+                ++$capturedClosingBrackets;
+            } elseif ($symbol === Splitter::BYTE_TAG_END && $capturedClosingBrackets === 2) {
+                $text .= '>';
+                break;
+            } else {
+                $capturedClosingBrackets = 0;
+            }
+        }
+        return new TextNode($text);
+    }
+
     protected function sequenceTagNode(): ?NodeInterface
     {
         $arguments = [];
@@ -180,6 +197,15 @@ class Sequencer
         foreach ($this->splitter->sequence as $symbol => $captured) {
             $text .= $captured;
             switch ($symbol) {
+                case Splitter::BYTE_ARRAY_START:
+                    // Possible P/CDATA section. Check text explicitly for match, if matched, begin parsing-insensitive
+                    // pass through sequenceCharacterDataNode()
+                    $text .= '[';
+                    if ($text === '<[CDATA[' || $text === '<[PCDATA[') {
+                        return $this->sequenceCharacterData($text);
+                    }
+                    break;
+
                 case Splitter::BYTE_INLINE:
                     $contextBefore = $this->splitter->context;
                     $collected = $this->sequenceInlineNodes(isset($namespace) && isset($method));

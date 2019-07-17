@@ -854,6 +854,20 @@ class SequencerTest extends UnitTestCase
                 (new RootNode())->addChildNode(new TextNode('Invalid expression: Invalid target conversion type "invalid" specified in casting expression "{i as invalid}".'))
             ],
 
+            /* CDATA and PCDATA */
+            'cdata node becomes text node without parsing content' => [
+                '<[CDATA[{notparsed}]]>',
+                $context,
+                false,
+                (new RootNode())->addChildNode(new TextNode('<[CDATA[{notparsed}]]>'))
+            ],
+            'pcdata node becomes text node without parsing content' => [
+                '<[PCDATA[{notparsed}]]>',
+                $context,
+                false,
+                (new RootNode())->addChildNode(new TextNode('<[PCDATA[{notparsed}]]>'))
+            ],
+
             /* STRUCTURAL */
             'layout node with empty layout name' => [
                 '<f:layout />',
