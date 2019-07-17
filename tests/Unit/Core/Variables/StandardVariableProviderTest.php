@@ -285,8 +285,8 @@ class StandardVariableProviderTest extends UnitTestCase
     public function testExtractCallsMagicMethodGetters()
     {
         $provider = new StandardVariableProvider();
-        $provider->setSource(new ClassWithMagicGetter());
-        $result = $provider->get('test');
+        $provider->setSource(['object' => new ClassWithMagicGetter()]);
+        $result = $provider->get('object.test');
         $this->assertEquals('test result', $result);
     }
 
@@ -296,8 +296,8 @@ class StandardVariableProviderTest extends UnitTestCase
     public function testExtractReturnsNullOnProtectedGetters()
     {
         $provider = new StandardVariableProvider();
-        $provider->setSource(new ClassWithProtectedGetter());
-        $result = $provider->get('test');
+        $provider->setSource(['object' => new ClassWithProtectedGetter()]);
+        $result = $provider->get('object.test');
         $this->assertEquals(null, $result);
     }
 }
