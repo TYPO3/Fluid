@@ -53,9 +53,9 @@ class EscapeTest extends UnitTestCase
         $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
         $this->mockViewHelper->expects($this->once())->method('isChildrenEscapingEnabled')->will($this->returnValue(true));
 
-        $this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        $this->assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
         $this->escapeInterceptor->process($this->mockViewHelper, $interceptorPosition, $this->mockParsingState);
-        $this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        $this->assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
     }
 
     /**
@@ -66,9 +66,9 @@ class EscapeTest extends UnitTestCase
         $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
         $this->mockViewHelper->expects($this->once())->method('isChildrenEscapingEnabled')->will($this->returnValue(false));
 
-        $this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        $this->assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
         $this->escapeInterceptor->process($this->mockViewHelper, $interceptorPosition, $this->mockParsingState);
-        $this->assertFalse($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        $this->assertSame(1, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
     }
 
     /**
@@ -77,13 +77,12 @@ class EscapeTest extends UnitTestCase
     public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
-        $this->mockViewHelper->expects($this->any())->method('isOutputEscapingEnabled')->will($this->returnValue(false));
+        $this->mockViewHelper->expects($this->once())->method('isOutputEscapingEnabled')->will($this->returnValue(false));
 
-        $this->escapeInterceptor->_set('childrenEscapingEnabled', false);
-        $this->escapeInterceptor->_set('viewHelperNodesWhichDisableTheInterceptor', [$this->mockViewHelper]);
+        $this->escapeInterceptor->_set('viewHelperNodesWhichDisableTheInterceptor', 1);
 
         $this->escapeInterceptor->process($this->mockViewHelper, $interceptorPosition, $this->mockParsingState);
-        $this->assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        $this->assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
     }
 
     /**
