@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
@@ -7,8 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
  */
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithProtectedGetter;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ArrayAccessDummy;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -23,15 +23,11 @@ class StandardVariableProviderTest extends UnitTestCase
      */
     protected $variableProvider;
 
-    /**
-     */
     public function setUp(): void
     {
         $this->variableProvider = $this->getMock(StandardVariableProvider::class, ['dummy']);
     }
 
-    /**
-     */
     public function tearDown(): void
     {
         unset($this->variableProvider);
@@ -39,10 +35,10 @@ class StandardVariableProviderTest extends UnitTestCase
 
     /**
      * @dataProvider getOperabilityTestValues
-     * @param string $input
+     * @param array $input
      * @param array $expected
      */
-    public function testOperability($input, array $expected)
+    public function testOperability(array $input, array $expected): void
     {
         $provider = new StandardVariableProvider();
         $provider->setSource($input);
@@ -57,7 +53,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getOperabilityTestValues()
+    public function getOperabilityTestValues(): array
     {
         return [
             [[], []],
@@ -68,7 +64,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSupportsDottedPath()
+    public function testSupportsDottedPath(): void
     {
         $provider = new StandardVariableProvider();
         $provider->setSource(['foo' => ['bar' => 'baz']]);
@@ -79,17 +75,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function testUnsetAsArrayAccess()
-    {
-        $this->variableProvider->add('variable', 'test');
-        unset($this->variableProvider['variable']);
-        $this->assertFalse($this->variableProvider->exists('variable'));
-    }
-
-    /**
-     * @test
-     */
-    public function addedObjectsCanBeRetrievedAgain()
+    public function addedObjectsCanBeRetrievedAgain(): void
     {
         $object = 'StringObject';
         $this->variableProvider->add('variable', $object);
@@ -99,29 +85,17 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function addedObjectsCanBeRetrievedAgainUsingArrayAccess()
-    {
-        $object = 'StringObject';
-        $this->variableProvider['variable'] = $object;
-        $this->assertSame($this->variableProvider->get('variable'), $object);
-        $this->assertSame($this->variableProvider['variable'], $object);
-    }
-
-    /**
-     * @test
-     */
-    public function addedObjectsExistInArray()
+    public function addedObjectsExistInArray(): void
     {
         $object = 'StringObject';
         $this->variableProvider->add('variable', $object);
         $this->assertTrue($this->variableProvider->exists('variable'));
-        $this->assertTrue(isset($this->variableProvider['variable']));
     }
 
     /**
      * @test
      */
-    public function addedObjectsExistInAllIdentifiers()
+    public function addedObjectsExistInAllIdentifiers(): void
     {
         $object = 'StringObject';
         $this->variableProvider->add('variable', $object);
@@ -131,7 +105,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function gettingNonexistentValueReturnsNull()
+    public function gettingNonexistentValueReturnsNull(): void
     {
         $result = $this->variableProvider->get('nonexistent');
         $this->assertNull($result);
@@ -140,7 +114,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function removeReallyRemovesVariables()
+    public function removeReallyRemovesVariables(): void
     {
         $this->variableProvider->add('variable', 'string1');
         $this->variableProvider->remove('variable');
@@ -151,7 +125,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function getAllShouldReturnAllVariables()
+    public function getAllShouldReturnAllVariables(): void
     {
         $this->variableProvider->add('name', 'Simon');
         $this->assertSame(['name' => 'Simon'], $this->variableProvider->getAll());
@@ -160,17 +134,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSleepReturnsExpectedPropertyNames()
-    {
-        $subject = new StandardVariableProvider();
-        $properties = $subject->__sleep();
-        $this->assertContains('variables', $properties);
-    }
-
-    /**
-     * @test
-     */
-    public function testGetScopeCopyReturnsCopyWithSettings()
+    public function testGetScopeCopyReturnsCopyWithSettings(): void
     {
         $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
         $copy = $subject->getScopeCopy(['bar' => 'foo']);
@@ -184,7 +148,7 @@ class StandardVariableProviderTest extends UnitTestCase
      * @test
      * @dataProvider getPathTestValues
      */
-    public function testGetByPath($subject, $path, $expected)
+    public function testGetByPath($subject, string $path, $expected): void
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getByPath($path);
@@ -194,7 +158,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPathTestValues()
+    public function getPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $unnamedUser = new UserWithoutToString('');
@@ -216,13 +180,13 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @param mixed $subject
+     * @param array $subject
      * @param string $path
-     * @param mixed $expected
+     * @param array $expected
      * @test
      * @dataProvider getAccessorsForPathTestValues
      */
-    public function testGetAccessorsForPath($subject, $path, $expected)
+    public function testGetAccessorsForPath(array $subject, string $path, array $expected): void
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getAccessorsForPath($path);
@@ -232,11 +196,11 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getAccessorsForPathTestValues()
+    public function getAccessorsForPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
-        $inArrayAccess = new StandardVariableProvider($inArray);
+        $inArrayAccess = new ArrayAccessDummy($inArray);
         $inPublic = (object) $inArray;
         $asArray = StandardVariableProvider::ACCESSOR_ARRAY;
         $asGetter = StandardVariableProvider::ACCESSOR_GETTER;
@@ -244,8 +208,8 @@ class StandardVariableProviderTest extends UnitTestCase
         return [
             [['inArray' => $inArray], 'inArray.user', [$asArray, $asArray]],
             [['inArray' => $inArray], 'inArray.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.allIdentifiers', [$asArray, $asGetter]],
+            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.user.name', [$asArray, $asArray, $asGetter]],
+            [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.foo', [$asArray, $asArray]],
             [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
         ];
     }
@@ -253,12 +217,12 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @param mixed $subject
      * @param string $path
-     * @param string $accessor
+     * @param string|null $accessor
      * @param mixed $expected
      * @test
      * @dataProvider getExtractRedectAccessorTestValues
      */
-    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected)
+    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, string $path, ?string $accessor, $expected): void
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getByPath($path, [$accessor]);
@@ -268,7 +232,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getExtractRedectAccessorTestValues()
+    public function getExtractRedectAccessorTestValues(): array
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],
@@ -277,27 +241,5 @@ class StandardVariableProviderTest extends UnitTestCase
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_GETTER, 'test'],
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_ASSERTER, 'test'],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function testExtractCallsMagicMethodGetters()
-    {
-        $provider = new StandardVariableProvider();
-        $provider->setSource(['object' => new ClassWithMagicGetter()]);
-        $result = $provider->get('object.test');
-        $this->assertEquals('test result', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testExtractReturnsNullOnProtectedGetters()
-    {
-        $provider = new StandardVariableProvider();
-        $provider->setSource(['object' => new ClassWithProtectedGetter()]);
-        $result = $provider->get('object.test');
-        $this->assertEquals(null, $result);
     }
 }

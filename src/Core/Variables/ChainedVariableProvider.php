@@ -68,7 +68,7 @@ class ChainedVariableProvider extends StandardVariableProvider implements Variab
      */
     public function getByPath(string $path, array $accessors = [])
     {
-        $value = VariableExtractor::extract($this->variables, $path, $accessors);
+        $value = parent::getByPath($path, $accessors);
         if ($value !== null) {
             return $value;
         }

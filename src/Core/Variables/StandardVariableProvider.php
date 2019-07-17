@@ -41,11 +41,10 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     public function getScopeCopy(array $variables): VariableProviderInterface
     {
-        if (!array_key_exists('settings', $variables) && array_key_exists('settings', $this->variables)) {
+        if (!isset($variables['settings']) && isset($this->variables['settings'])) {
             $variables['settings'] = $this->variables['settings'];
         }
-        $className = get_class($this);
-        return new $className($variables);
+        return new static($variables);
     }
 
     /**
@@ -143,9 +142,7 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     public function remove(string $identifier): void
     {
-        if (array_key_exists($identifier, $this->variables)) {
-            unset($this->variables[$identifier]);
-        }
+        unset($this->variables[$identifier]);
     }
 
     /**
@@ -167,17 +164,7 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     public function exists(string $identifier): bool
     {
-        return array_key_exists($identifier, $this->variables);
-    }
-
-    /**
-     * Clean up for serializing.
-     *
-     * @return string[]
-     */
-    public function __sleep(): array
-    {
-        return ['variables'];
+        return isset($this->variables[$identifier]);
     }
 
     /**
@@ -255,7 +242,7 @@ class StandardVariableProvider implements VariableProviderInterface
         } elseif ($accessor === self::ACCESSOR_ASSERTER) {
             return ($class !== false && $this->isExtractableThroughAsserter($subject, $propertyName));
         } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
-            return ($class !== false && property_exists($subject, $propertyName));
+            return ($class !== false && isset($subject->$propertyName));
         }
         return false;
     }
@@ -268,7 +255,7 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function extractWithAccessor($subject, string $propertyName, ?string $accessor)
     {
-        if (($accessor === self::ACCESSOR_ARRAY && is_array($subject) && array_key_exists($propertyName, $subject))
+        if (($accessor === self::ACCESSOR_ARRAY && is_array($subject) && isset($subject[$propertyName]))
             || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName))
         ) {
             return $subject[$propertyName];
@@ -277,7 +264,7 @@ class StandardVariableProvider implements VariableProviderInterface
                 return call_user_func_array([$subject, 'get' . ucfirst($propertyName)], []);
             } elseif ($accessor === self::ACCESSOR_ASSERTER) {
                 return $this->extractThroughAsserter($subject, $propertyName);
-            } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
+            } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && isset($subject->$propertyName)) {
                 return $subject->$propertyName;
             }
         }
