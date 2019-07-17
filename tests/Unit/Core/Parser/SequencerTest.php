@@ -10,9 +10,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
+use TYPO3Fluid\Fluid\Core\Parser\Contexts;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
+use TYPO3Fluid\Fluid\Core\Parser\Sequencer;
+use TYPO3Fluid\Fluid\Core\Parser\Source;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
@@ -176,6 +180,11 @@ class SequencerTest extends UnitTestCase
                 '{foo as invalid}',
                 $context,
                 1559248372
+            ],
+            'Unterminated feature toggle' => [
+                '{@parsing not terminated',
+                $context,
+                1563383038
             ],
         ];
     }
@@ -893,6 +902,41 @@ class SequencerTest extends UnitTestCase
     /**
      * @test
      */
+    public function featureToggleParsingOffThrowsPassthroughException()
+    {
+        $configuration = $this->getMockBuilder(Configuration::class)->getMock();
+        $sequencer = new Sequencer(
+            $this->createContext(),
+            $this->createState(),
+            new Contexts(),
+            new Source('{@parsing off}'),
+            $configuration
+        );
+        $this->setExpectedException(PassthroughSourceException::class);
+        $sequencer->sequence();
+    }
+
+    /**
+     * @test
+     */
+    public function featureToggleEscapingOffSetsFeatureStateAvoidsOutput()
+    {
+        $configuration = $this->getMockBuilder(Configuration::class)->setMethods(['setFeatureState'])->getMock();
+        $sequencer = new Sequencer(
+            $this->createContext(),
+            $this->createState(),
+            new Contexts(),
+            new Source('{@escaping off} kept text'),
+            $configuration
+        );
+        $configuration->expects($this->once())->method('setFeatureState')->with(Configuration::FEATURE_ESCAPING, 'off');
+        $state = $sequencer->sequence();
+        $this->assertEquals(' kept text', $state->getRootNode()->flatten(true));
+    }
+
+    /**
+     * @test
+     */
     public function stressTestOneThousandArrayItems()
     {
         $context = $this->createContext();
@@ -997,6 +1041,8 @@ class SequencerTest extends UnitTestCase
     protected function createState(): ParsingState
     {
         $state = new ParsingState();
+        $state->setRootNode(new RootNode());
+        $state->pushNodeToStack($state->getRootNode());
         return $state;
     }
 

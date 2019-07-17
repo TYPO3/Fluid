@@ -28,23 +28,16 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         return [
             'escapeChildren can be disabled in template' => [
-                '{escapingEnabled=false}<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',
+                '{@escaping false}<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',
                 $this->variables,
                 ['<strong>Bla</strong>'],
                 ['&lt;strong&gt;Bla&lt;/strong&gt;'],
             ],
             'escapeOutput can be disabled in template' => [
-                '{escapingEnabled=false}<test:escapeChildrenDisabledAndEscapeOutputEnabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputEnabled>',
+                '{@escaping false}<test:escapeChildrenDisabledAndEscapeOutputEnabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputEnabled>',
                 $this->variables,
                 ['<strong>Bla</strong>'],
                 ['&lt;strong&gt;Bla&lt;/strong&gt;'],
-            ],
-            'Disabling escaping twice in template throws parsing exception' => [
-                '{escapingEnabled=false}<test:escapeChildrenDisabledAndEscapeOutputEnabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputEnabled>{escapingEnabled=false}',
-                [],
-                [],
-                [],
-                Exception::class
             ],
             'EscapeChildrenEnabledAndEscapeOutputDisabled: Tag syntax with children, properly encodes variable value' => [
                 '<test:escapeChildrenEnabledAndEscapeOutputDisabled>{settings.test}</test:escapeChildrenEnabledAndEscapeOutputDisabled>',

@@ -23,6 +23,8 @@ class Context
     public const CONTEXT_PROTECTED = 7;
     public const CONTEXT_ACCESSOR = 8;
     public const CONTEXT_DATA = 9;
+    public const CONTEXT_TOGGLE = 10;
+    public const CONTEXT_EMPTY = 11;
 
     public $context = self::CONTEXT_ROOT;
     public $primaryMask = 0;

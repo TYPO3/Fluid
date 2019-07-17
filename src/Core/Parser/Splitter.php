@@ -68,6 +68,7 @@ class Splitter
     public const BYTE_SLASH = 47; // The "/" character
     public const BYTE_BACKSLASH = 92; // The "\" character
     public const BYTE_BACKTICK = 96; // The "`" character
+    public const BYTE_AT = 64; // The "@" character
     public const MAP_SHIFT = 64;
     public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
     public const MASK_WHITESPACE = 0 | self::MASK_LINEBREAKS | (1 << self::BYTE_WHITESPACE_SPACE) | (1 << self::BYTE_WHITESPACE_TAB);
@@ -186,7 +187,7 @@ class Splitter
             if ($byte < 64 && ($this->primaryMask & (1 << $byte))) {
                 yield $byte => $captured;
                 $captured = null;
-            } elseif ($byte > 64 && $byte < 128 && ($this->secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
+            } elseif ($byte >= 64 && $byte < 128 && ($this->secondaryMask & (1 << ($byte - static::MAP_SHIFT)))) {
                 yield $byte => $captured;
                 $captured = null;
             } else {

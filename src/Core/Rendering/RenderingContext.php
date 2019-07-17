@@ -7,8 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -17,9 +15,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\PassthroughSourceModifierTemplateProcessor;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -129,8 +125,6 @@ class RenderingContext implements RenderingContextInterface
         $this->setTemplateProcessors(
             empty($this->templateProcessors) ?
             [
-                new EscapingModifierTemplateProcessor(),
-                new PassthroughSourceModifierTemplateProcessor(),
                 new NamespaceDetectionTemplateProcessor()
             ] : $this->templateProcessors
         );

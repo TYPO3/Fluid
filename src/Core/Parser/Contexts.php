@@ -29,6 +29,9 @@ class Contexts
     public $data;
 
     /** @var Context */
+    public $toggle;
+
+    /** @var Context */
     public $array;
 
     /** @var Context */
@@ -46,19 +49,25 @@ class Contexts
     /** @var Context */
     public $accessor;
 
+    /** @var Context */
+    public $empty;
+
     public function __construct()
     {
         // Root context: aware of tag start or inline start only.
         $this->root = new Context(Context::CONTEXT_ROOT, '{<');
 
         // Inline context: aware of array syntax, sub-inline syntax, inline VH syntax, and arguments enclosed by parenthesis by looking for parenthesis start
-        $this->inline = new Context(Context::CONTEXT_INLINE, "(->[]|{}:,=|\\\t\n\r\0'\"` ");
+        $this->inline = new Context(Context::CONTEXT_INLINE, "@(->[]|{}:,=|\\\t\n\r\0'\"` ");
 
         // Tag: entered into when a detected tag has a namespace operator in tag name
         $this->tag = new Context(Context::CONTEXT_TAG, "[>:{ /\t\n\r\0");
 
         // P/CDATA: entered into when a detected tag starts with [CDATA[ or [PCDATA[ - exclusively matches termination brackets and end of tag.
         $this->data = new Context(Context::CONTEXT_DATA, ']>');
+
+        // Fluid feature toggles: an inline prefixed with at sign, e.g. {@escaping off}, which supports only whitespace and ending curly brace symbols.
+        $this->toggle = new Context(Context::CONTEXT_TOGGLE, ' }');
 
         // Parenthesis context: aware of separators, key/value assignments, the end of a parenthesis and quotation marks. Is used for both
         // parenthesis arguments for inline syntax and tag attribute arguments for tag syntax.
@@ -78,5 +87,8 @@ class Contexts
 
         // Inline accessor mode: identical to protected context but identifiable under its own name to distinguish it from protected
         $this->accessor = new Context(Context::CONTEXT_ACCESSOR, '{}`');
+
+        // Empty: matches no characters, only possible yield is BYTE_NULL.
+        $this->empty = new Context(Context::CONTEXT_EMPTY, '');
     }
 }

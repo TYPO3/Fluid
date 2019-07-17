@@ -178,6 +178,45 @@ class Sequencer
         return new TextNode($text);
     }
 
+    /**
+     * Sequence a Fluid feature toggle node. Does not return
+     * any node, only toggles various features of the Fluid
+     * parser configuration or assigns context parameters
+     * like namespaces.
+     *
+     * For backwards compatibility we allow the toggle name
+     * to be passed, which is used in an explicit check when
+     * sequencing inline nodes to detect if a {namespace ...}
+     * node was encountered, in which case, this is not known
+     * until the "toggle" has already been captured.
+     *
+     * @param string|null $toggle
+     */
+    protected function sequenceToggleInstruction(?string $toggle = null): void
+    {
+        $this->splitter->switch($this->contexts->toggle);
+        $this->splitter->sequence->next();
+        $flag = null;
+        foreach ($this->splitter->sequence as $symbol => $captured) {
+            switch ($symbol) {
+                case Splitter::BYTE_WHITESPACE_SPACE:
+                    $toggle = $toggle ?? $captured;
+                    break;
+                case Splitter::BYTE_INLINE_END:
+                    $this->configuration->setFeatureState($toggle, $captured ?? true);
+
+                    // Re-read the parser configuration and react accordingly to any flags that may have changed.
+                    $this->escapingEnabled = $this->configuration->isFeatureEnabled(Configuration::FEATURE_ESCAPING);
+                    if (!$this->configuration->isFeatureEnabled(Configuration::FEATURE_PARSING)) {
+                        throw (new PassthroughSourceException('Source must be represented as raw string', 1563379852))
+                            ->setSource((string)$this->sequenceRemainderAsText());
+                    }
+                    return;
+            }
+        }
+        throw $this->splitter->createErrorAtPosition('Unterminated feature toggle', 1563383038);
+    }
+
     protected function sequenceTagNode(): ?NodeInterface
     {
         $arguments = [];
@@ -411,12 +450,16 @@ class Sequencer
         $arguments = [];
         $ignoredEndingBraces = 0;
         $countedEscapes = 0;
-
         $this->splitter->switch($this->contexts->inline);
         $this->splitter->sequence->next();
         foreach ($this->splitter->sequence as $symbol => $captured) {
             $text .= $captured;
             switch ($symbol) {
+                case Splitter::BYTE_AT:
+                    $this->sequenceToggleInstruction();
+                    return new TextNode('');
+                    break;
+
                 case Splitter::BYTE_BACKSLASH:
                     // Increase the number of counted escapes (is passed to sequenceNode() in the "QUOTE" cases and reset
                     // after the quoted string is extracted).
@@ -547,6 +590,15 @@ class Sequencer
                         $node = $node ?? new RootNode();
                         $this->splitter->switch($this->contexts->protected);
                         break;
+                    }
+                    if ($captured === 'namespace') {
+                        // Special case: we catch namespace definitions with {namespace xyz=foo} syntax here, although
+                        // the proper way with current code is to use {@namespace xyz=foo}. We have this case here since
+                        // it is relatively cheap (only happens when we see a space inside inline and a straight-up
+                        // string comparison with strict types enabled). We then return an empty TextNode which is
+                        // ignored by the parent node when attached so we don't create any output.
+                        $this->sequenceToggleInstruction('namespace');
+                        return new TextNode('');
                     }
                     $key = $key ?? $captured;
                     $hasWhitespace = true;
@@ -940,6 +992,23 @@ class Sequencer
         }
 
         throw $this->splitter->createErrorAtPosition('Unterminated expression inside quotes', 1557700793);
+    }
+
+    /**
+     * Dead-end sequencing; if parsing is switched off it cannot be switched on again,
+     * and the remainder of the template source must be sequenced as dead text.
+     *
+     * @return string|null
+     */
+    protected function sequenceRemainderAsText(): ?string
+    {
+        $this->splitter->sequence->next();
+        $this->splitter->switch($this->contexts->empty);
+        $source = null;
+        foreach ($this->splitter->sequence as $symbol => $captured) {
+            $source .= $captured;
+        }
+        return $source;
     }
 
     /**

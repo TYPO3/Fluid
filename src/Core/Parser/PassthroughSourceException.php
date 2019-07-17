@@ -33,9 +33,11 @@ class PassthroughSourceException extends Exception
 
     /**
      * @param string $source
+     * @return self
      */
-    public function setSource(string $source): void
+    public function setSource(string $source): self
     {
         $this->source = $source;
+        return $this;
     }
 }
