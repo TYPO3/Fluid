@@ -21,6 +21,7 @@ interface InterceptorInterface
     const INTERCEPT_TEXT = 3;
     const INTERCEPT_OBJECTACCESSOR = 4;
     const INTERCEPT_EXPRESSION = 5;
+    const INTERCEPT_SELFCLOSING_VIEWHELPER = 6;
 
     /**
      * The interceptor can process the given node at will and must return a node

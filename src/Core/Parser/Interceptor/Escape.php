@@ -50,6 +50,10 @@ class Escape implements InterceptorInterface
             if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
                 $node = new EscapingNode($node);
             }
+        } elseif ($interceptorPosition === InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER) {
+            if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
+                $node = new EscapingNode($node);
+            }
         } elseif ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && ($node instanceof ObjectAccessorNode || $node instanceof ExpressionNodeInterface)) {
             $node = new EscapingNode($node);
         }
@@ -66,6 +70,7 @@ class Escape implements InterceptorInterface
         return [
             InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,
             InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER,
+            InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER,
             InterceptorInterface::INTERCEPT_OBJECTACCESSOR,
             InterceptorInterface::INTERCEPT_EXPRESSION,
         ];

@@ -369,7 +369,10 @@ class Sequencer
                     if ($viewHelperNode instanceof ViewHelperInterface) {
                         // The node may have been replaced with a different node type by the post-parsing event.
                         // Only when it has not been changed do we need to call the interceptor.
-                        $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER);
+                        $this->callInterceptor(
+                            $viewHelperNode,
+                            $selfClosing ? InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER : InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
+                        );
                     }
 
                     return $viewHelperNode;
@@ -681,7 +684,7 @@ class Sequencer
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
                         // in which case there is no further syntax to come.
                         $node = $node->postParse($arguments, $definitions, $this->state, $this->renderingContext);
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_ACCESSOR) {
                         // If we are currently in "accessor" context we can now add the accessor by stripping the collected text.
                         $node = new ObjectAccessorNode(substr($text, 1, -1));
@@ -736,7 +739,7 @@ class Sequencer
                         $node = $this->resolver->createViewHelperInstance(null, $potentialAccessor);
                         $node->addChildNode($childNodeToAdd);
                         $node = $node->postParse($arguments, $definitions, $this->state, $this->renderingContext);
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } else {
                         # TODO: should this be an error case, or should it result in a TextNode?
                         throw $this->splitter->createErrorAtPosition(
