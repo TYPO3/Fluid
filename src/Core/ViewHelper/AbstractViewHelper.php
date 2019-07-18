@@ -286,8 +286,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     public function initializeArgumentsAndRender()
     {
         $this->validateArguments();
-        $this->initialize();
-
         return $this->callRenderMethod();
     }
 
@@ -302,10 +300,10 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
         if (method_exists($this, 'render')) {
             return call_user_func([$this, 'render']);
         }
-        if ((new \ReflectionMethod($this, 'renderStatic'))->getDeclaringClass()->getName() !== AbstractViewHelper::class) {
+        if (method_exists($this, 'renderStatic')) {
             // Method is safe to call - will not recurse through ViewHelperInvoker via the default
             // implementation of renderStatic() on this class.
-            return static::renderStatic($this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext);
+            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext]);
         }
         throw new Exception(
             sprintf(
@@ -318,25 +316,13 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     }
 
     /**
-     * Initializes the view helper before invoking the render method.
-     *
-     * Override this method to solve tasks before the view helper content is rendered.
-     *
-     * @return void
-     * @api
-     */
-    public function initialize()
-    {
-    }
-
-    /**
      * Helper method which triggers the rendering of everything between the
      * opening and the closing tag.
      *
      * @return mixed The finally rendered child nodes.
      * @api
      */
-    public function renderChildren()
+    protected function renderChildren()
     {
         if ($this->renderChildrenClosure !== null) {
             $closure = $this->renderChildrenClosure;
@@ -464,7 +450,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      * @return void
      * @api
      */
-    public function initializeArguments()
+    protected function initializeArguments()
     {
     }
 
@@ -531,49 +517,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     public function validateAdditionalArgument(string $argumentName): bool
     {
         return false;
-    }
-
-    /**
-     * Default implementation of static rendering; useful API method if your ViewHelper
-     * when compiled is able to render itself statically to increase performance. This
-     * default implementation will simply delegate to the ViewHelperInvoker.
-     *
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
-    {
-        $viewHelperClassName = get_called_class();
-        $viewHelperResolver = $renderingContext->getViewHelperResolver();
-        $viewHelper = $viewHelperResolver->createViewHelperInstanceFromClassName($viewHelperClassName);
-        $expectedViewHelperArguments = $viewHelperResolver->getArgumentDefinitionsForViewHelper($viewHelper);
-        // Rendering process
-        $evaluatedArguments = [];
-        $undeclaredArguments = [];
-
-        try {
-            foreach ($expectedViewHelperArguments as $argumentName => $argumentDefinition) {
-                $argumentValue = $arguments[$argumentName] ?? $argumentDefinition->getDefaultValue();
-                $evaluatedArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-            }
-            foreach ($arguments as $argumentName => $argumentValue) {
-                if (!isset($evaluatedArguments[$argumentName])) {
-                    $undeclaredArguments[$argumentName] = $argumentValue instanceof NodeInterface ? $argumentValue->evaluate($renderingContext) : $argumentValue;
-                }
-            }
-
-            if ($renderChildrenClosure !== null) {
-                $viewHelper->setRenderChildrenClosure($renderChildrenClosure);
-            }
-            $viewHelper->setRenderingContext($renderingContext);
-            $viewHelper->setArguments($evaluatedArguments);
-            $viewHelper->handleAdditionalArguments($undeclaredArguments);
-        } catch (Exception $error) {
-            return $renderingContext->getErrorHandler()->handleViewHelperError($error);
-        }
-        return $viewHelper->initializeArgumentsAndRender();
     }
 
     /**

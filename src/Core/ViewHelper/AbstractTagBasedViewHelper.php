@@ -52,17 +52,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      */
     public function __construct()
     {
-        $this->setTagBuilder(new TagBuilder($this->tagName));
-    }
-
-    /**
-     * @param TagBuilder $tag
-     * @return void
-     */
-    public function setTagBuilder(TagBuilder $tag)
-    {
-        $this->tag = $tag;
-        $this->tag->setTagName($this->tagName);
+        $this->tag = new TagBuilder($this->tagName);
     }
 
     /**
@@ -76,22 +66,9 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
     }
 
-    /**
-     * Sets the tag name to $this->tagName.
-     * Additionally, sets all tag attributes which were registered in
-     * $this->tagAttributes and additionalArguments.
-     *
-     * Will be invoked just before the render method.
-     *
-     * @return void
-     * @api
-     */
-    public function initialize()
+    public function initializeArgumentsAndRender()
     {
-        parent::initialize();
-        $this->tag->reset();
-        $this->tag->setTagName($this->tagName);
-
+        $this->validateArguments();
         if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
             $this->tag->addAttributes($this->arguments['additionalAttributes']);
         }
@@ -109,6 +86,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
                 }
             }
         }
+        return $this->callRenderMethod();
     }
 
     /**

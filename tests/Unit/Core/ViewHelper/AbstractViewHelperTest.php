@@ -329,8 +329,7 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['validateArguments', 'initialize', 'callRenderMethod']);
         $viewHelper->expects($this->at(0))->method('validateArguments');
-        $viewHelper->expects($this->at(1))->method('initialize');
-        $viewHelper->expects($this->at(2))->method('callRenderMethod')->will($this->returnValue('Output'));
+        $viewHelper->expects($this->at(1))->method('callRenderMethod')->will($this->returnValue('Output'));
 
         $expectedOutput = 'Output';
         $actualOutput = $viewHelper->initializeArgumentsAndRender(['argument1' => 'value1']);
@@ -346,7 +345,9 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->setRenderChildrenClosure(function (): string {
             return 'foobar';
         });
-        $result = $viewHelper->renderChildren();
+        $method = new \ReflectionMethod($viewHelper, 'renderChildren');
+        $method->setAccessible(true);
+        $result = $method->invoke($viewHelper);
         $this->assertEquals('foobar', $result);
     }
 
