@@ -310,7 +310,11 @@ class Sequencer
 
                     $this->escapingEnabled = $escapingEnabledBackup;
 
-                    if (!isset($namespace) || !isset($method) || $this->splitter->context->context === Context::CONTEXT_DEAD || $this->resolver->isNamespaceIgnored($namespace)) {
+                    if (!isset($namespace)) {
+                        if ($this->splitter->context->context === Context::CONTEXT_DEAD || !$this->resolver->isAliasRegistered((string) $method)) {
+                            return $node->addChildNode(new TextNode($text))->flatten();
+                        }
+                    } elseif ($this->resolver->isNamespaceIgnored((string)$namespace)) {
                         return $node->addChildNode(new TextNode($text))->flatten();
                     }
 
@@ -393,7 +397,8 @@ class Sequencer
                             }
                             $key = $captured;
                         }
-                    } elseif (isset($namespace)) {
+                    } elseif (isset($namespace) || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
+
                         $method = $captured;
 
                         try {

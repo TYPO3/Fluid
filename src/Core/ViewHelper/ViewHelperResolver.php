@@ -266,18 +266,31 @@ class ViewHelperResolver
             list ($namespaceIdentifier, $methodIdentifier) = $this->aliases[$methodIdentifier];
         }
         if (!isset($this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier])) {
-            $resolvedViewHelperClassName = $this->resolveViewHelperName($namespaceIdentifier, $methodIdentifier);
-            $actualViewHelperClassName = implode('\\', array_map('ucfirst', explode('.', $resolvedViewHelperClassName)));
-            if (!class_exists($actualViewHelperClassName) || $actualViewHelperClassName === false) {
+            $actualViewHelperClassName = false;
+
+            $explodedViewHelperName = explode('.', $methodIdentifier);
+            $className = implode('\\', array_map('ucfirst', $explodedViewHelperName));
+            $className .= 'ViewHelper';
+
+            if (!empty($this->namespaces[$namespaceIdentifier])) {
+                foreach (array_reverse($this->namespaces[$namespaceIdentifier]) as $namespace) {
+                    $name = $namespace . '\\' . $className;
+                    if (class_exists($name)) {
+                        $actualViewHelperClassName = $name;
+                    }
+                }
+            }
+
+            if ($actualViewHelperClassName === false) {
                 throw new Exception(sprintf(
                     'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
-                    'Based on your spelling, the system would load the class "%s", however this class does not exist. ' .
-                    'We looked in the following namespaces: ' . implode(', ', $this->namespaces[$namespaceIdentifier] ?? ['none']) . '.',
+                    'We looked in the following namespaces: %s.',
                     $namespaceIdentifier,
                     $methodIdentifier,
-                    $resolvedViewHelperClassName
+                    implode(', ', $this->namespaces[$namespaceIdentifier] ?? ['none'])
                 ), 1407060572);
             }
+
             $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier] = $actualViewHelperClassName;
         }
         return $this->resolvedViewHelperClassNames[$namespaceIdentifier][$methodIdentifier];
@@ -328,31 +341,5 @@ class ViewHelperResolver
     public function getArgumentDefinitionsForViewHelper(ViewHelperInterface $viewHelper): array
     {
         return $viewHelper->prepareArguments();
-    }
-
-    /**
-     * Resolve a viewhelper name.
-     *
-     * @param string $namespaceIdentifier Namespace identifier for the view helper.
-     * @param string $methodIdentifier Method identifier, might be hierarchical like "link.url"
-     * @return string The fully qualified class name of the viewhelper
-     */
-    protected function resolveViewHelperName(string $namespaceIdentifier, string $methodIdentifier): string
-    {
-        $explodedViewHelperName = explode('.', $methodIdentifier);
-        if (count($explodedViewHelperName) > 1) {
-            $className = implode('\\', array_map('ucfirst', $explodedViewHelperName));
-        } else {
-            $className = ucfirst($explodedViewHelperName[0]);
-        }
-        $className .= 'ViewHelper';
-
-        $namespaces = (array) $this->namespaces[$namespaceIdentifier];
-
-        do {
-            $name = rtrim(array_pop($namespaces), '\\') . '\\' . $className;
-        } while (!class_exists($name) && count($namespaces));
-
-        return $name;
     }
 }

@@ -735,6 +735,18 @@ class SequencerTest extends UnitTestCase
                 false,
                 (new RootNode())->addChildNode((new RawViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('string'))),
             ],
+            'simple tag ViewHelper with tag content being ViewHelper alias' => [
+                '<raw>{string}</raw>',
+                $context,
+                false,
+                (new RootNode())->addChildNode((new RawViewHelper())->postParse([], null, $state, $context)->addChildNode(new ObjectAccessorNode('string'))),
+            ],
+            'simple tag ViewHelper with tag argument being ViewHelper alias' => [
+                '<raw value="{string}" />',
+                $context,
+                false,
+                (new RootNode())->addChildNode((new RawViewHelper())->postParse(['value' => new ObjectAccessorNode('string')], null, $state, $context)),
+            ],
 
             /* INLINE PASS OF ARRAY */
             'inline ViewHelper with single-item quoted static key and value associative array in square brackets piped value in root context' => [

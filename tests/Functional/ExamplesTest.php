@@ -234,7 +234,6 @@ class ExamplesTest extends BaseTestCase
                     'Section rendering error: Section "DoesNotExist" does not exist. Section rendering is mandatory; "optional" is false.',
                     'error: Undeclared argument',
                     'error: The ViewHelper "<f:invalid>" could not be resolved.',
-                    'Based on your spelling, the system would load the class "TYPO3Fluid\Fluid\ViewHelpers\InvalidViewHelper", however this class does not exist. We looked in the following namespaces: TYPO3Fluid\\Fluid\\ViewHelpers.',
                 ]
             ]
         ];

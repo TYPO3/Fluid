@@ -82,33 +82,6 @@ class ViewHelperResolverTest extends UnitTestCase
     /**
      * @test
      */
-    public function testResolveViewHelperClassNameSupportsMultipleNamespaces(): void
-    {
-        $resolver = $this->getAccessibleMock(ViewHelperResolver::class, ['dummy']);
-        $resolver->_set('namespaces', [
-            'f' => [
-                'TYPO3Fluid\\Fluid\\ViewHelpers',
-                'Foo\\Bar'
-            ]
-        ]);
-        $result = $resolver->_call('resolveViewHelperName', 'f', 'render');
-        $this->assertEquals(RenderViewHelper::class, $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testResolveViewHelperClassNameTrimsBackslashSuffixFromNamespace(): void
-    {
-        $resolver = $this->getAccessibleMock(ViewHelperResolver::class, ['dummy']);
-        $resolver->_set('namespaces', ['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers\\']]);
-        $result = $resolver->_call('resolveViewHelperName', 'f', 'render');
-        $this->assertEquals(RenderViewHelper::class, $result);
-    }
-
-    /**
-     * @test
-     */
     public function testAddNamespaceWithString(): void
     {
         $resolver = $this->getMock(ViewHelperResolver::class, ['dummy']);
