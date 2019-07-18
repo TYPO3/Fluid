@@ -7,9 +7,10 @@ namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
+use TYPO3Fluid\Fluid\View\Exception as ViewException;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -46,21 +47,21 @@ class StandardErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error
-     * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
+     * @param ViewHelperException $error
      * @return void
+     * @throws ViewHelperException
      */
-    public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error): string
+    public function handleViewHelperError(ViewHelperException $error): string
     {
         throw $error;
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\View\Exception $error
-     * @throws \TYPO3Fluid\Fluid\View\Exception
+     * @param ViewException $error
      * @return void
+     * @throws ViewException
      */
-    public function handleViewError(\TYPO3Fluid\Fluid\View\Exception $error): string
+    public function handleViewError(ViewException $error): string
     {
         throw $error;
     }

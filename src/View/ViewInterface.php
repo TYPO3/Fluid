@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
+
 /**
  * Interface of a view
  *

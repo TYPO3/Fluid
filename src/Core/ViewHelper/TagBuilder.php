@@ -212,7 +212,7 @@ class TagBuilder
      * Adds attributes to the $attributes-collection
      *
      * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
-     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values#
+     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values
      * @return void
      * @api
      */

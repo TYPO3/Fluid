@@ -44,7 +44,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class AliasViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**

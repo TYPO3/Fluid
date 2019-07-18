@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
@@ -100,6 +99,6 @@ class ObjectAccessorNode extends AbstractNode
         if ($objectPath === '_all') {
             return $variableProvider->getAll();
         }
-        return VariableExtractor::extract($variableProvider, $this->objectPath, $this->accessors);
+        return $variableProvider->getByPath($this->objectPath, $this->accessors);
     }
 }

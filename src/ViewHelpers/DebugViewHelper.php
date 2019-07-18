@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
@@ -158,12 +158,13 @@ class DebugViewHelper extends AbstractViewHelper
                 'UNIXTIME' => (integer) $variable->format('U')
             ];
         } else {
+            $provider = new StandardVariableProvider(['object' => $variable]);
             $reflection = new \ReflectionObject($variable);
             $properties = $reflection->getProperties();
             $output = [];
             foreach ($properties as $property) {
                 $propertyName = $property->getName();
-                $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
+                $output[$propertyName] = $provider->get('object.' . $propertyName);
             }
             return $output;
         }

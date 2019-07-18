@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
-use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 
 /**
  * Class ViewHelperResolver
@@ -23,7 +22,6 @@ use TYPO3Fluid\Fluid\Core\Parser\Patterns;
  */
 class ViewHelperResolver
 {
-
     /**
      * @var array
      */

@@ -7,9 +7,10 @@ namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
+use TYPO3Fluid\Fluid\View\Exception as ViewException;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
 /**
@@ -43,19 +44,19 @@ class TolerantErrorHandler implements ErrorHandlerInterface
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error
+     * @param ViewHelperException $error
      * @return string
      */
-    public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error): string
+    public function handleViewHelperError(ViewHelperException $error): string
     {
         return 'ViewHelper error: ' . $error->getMessage() . ' - Offending code: ';
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\View\Exception $error
+     * @param ViewException $error
      * @return string
      */
-    public function handleViewError(\TYPO3Fluid\Fluid\View\Exception $error): string
+    public function handleViewError(ViewException $error): string
     {
         if ($error instanceof InvalidSectionException) {
             return 'Section rendering error: ' . $error->getMessage() . ' Section rendering is mandatory; "optional" is false.';

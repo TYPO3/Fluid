@@ -7,10 +7,8 @@ namespace TYPO3Fluid\Fluid\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -245,7 +243,6 @@ abstract class AbstractTemplateView extends AbstractView
                 new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
             );
         }
-        /** @var $section ViewHelperNode */
         $section = $sections[$sectionName];
 
         $renderingContext->getViewHelperVariableContainer()->add(
@@ -257,7 +254,6 @@ abstract class AbstractTemplateView extends AbstractView
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
         $output = $section->evaluate($renderingContext);
         $this->stopRendering();
-        #}
 
         return $output;
     }

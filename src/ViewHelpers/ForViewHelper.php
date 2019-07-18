@@ -61,7 +61,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class ForViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**
