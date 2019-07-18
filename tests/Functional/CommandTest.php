@@ -1,5 +1,5 @@
 <?php
-namespace FluidTYPO3Fluid\Flux\Tests\Unit\Functional;
+namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -18,7 +18,7 @@ class CommandTest extends BaseTestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         vfsStream::setup('fakecache/');
     }
@@ -35,10 +35,10 @@ class CommandTest extends BaseTestCase
         $command = sprintf($argumentString, $bin);
         $output = shell_exec($command);
         foreach ($mustContain as $mustContainString) {
-            $this->assertContains($mustContainString, $output);
+            $this->assertStringContainsString($mustContainString, $output);
         }
         foreach ($mustNotContain as $mustNotContainString) {
-            $this->assertNotContains($mustNotContainString, $output);
+            $this->assertStringNotContainsString($mustNotContainString, $output);
         }
     }
 

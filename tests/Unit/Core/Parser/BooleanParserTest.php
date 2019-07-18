@@ -24,7 +24,7 @@ class BooleanParserTest extends UnitTestCase
     /**
      * Setup fixture
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
     }

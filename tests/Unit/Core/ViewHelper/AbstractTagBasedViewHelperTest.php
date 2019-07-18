@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 class AbstractTagBasedViewHelperTest extends UnitTestCase
 {
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, ['dummy'], [], '', false);
         $this->viewHelper->setRenderingContext(new RenderingContextFixture());

@@ -125,6 +125,8 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
     {
         if ($this->getCache()) {
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, true);
+        } else {
+            $this->markTestSkipped('Cache-specific test skipped');
         }
     }
 }

@@ -6,6 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\Generator;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
@@ -100,7 +101,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function __construct()
     {
-        $mockBuilder = new \PHPUnit_Framework_MockObject_Generator();
+        $mockBuilder = new Generator();
         $this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
         $this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, ['dummy']);
         $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
