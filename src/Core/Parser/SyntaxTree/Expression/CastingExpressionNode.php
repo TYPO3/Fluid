@@ -22,61 +22,42 @@ class CastingExpressionNode extends AbstractExpressionNode
         'integer', 'boolean', 'string', 'float', 'array', \DateTime::class
     ];
 
-    /**
-     * Pattern which detects ternary conditions written in shorthand
-     * syntax, e.g. {some.variable as integer}. The right-hand side
-     * of the expression can also be a variable containing the type
-     * of the variable.
-     */
-    public static $detectionExpression = '/
-		(
-			{                                # Start of shorthand syntax
-				(?:                          # Math expression is composed of...
-					[_a-zA-Z0-9.]+            # Template variable object access path
-					[\s]+as[\s]+             # A single space, then "as", then a single space
-					[_a-zA-Z0-9.\s]+          # Casting-to-type side
-				)
-			}                                # End of shorthand syntax
-		)/x';
-
-    public function __construct($expression, array $matches)
+    public function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
     {
-        parent::__construct($expression, $matches);
-        list (, $type) = explode(' as ', trim($this->expression, '{}'));
-        if (!in_array($type, self::$validTypes)) {
+        if (!in_array($parts[2], self::$validTypes)) {
             throw new ExpressionException(
                 sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression "%s".',
-                    $type,
-                    $this->expression
+                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
+                    $parts[2],
+                    implode(' ', $parts)
                 ),
                 1559248372
             );
         }
+        return static::convert(static::getTemplateVariableOrValueItself($parts[0], $renderingContext), $parts[2]);
     }
 
     /**
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @param array $matches
-     * @return integer|float
+     * Requires exactly three parts: X as Y. Match a size of 3 parts
+     * and verify the middle part is string "as".
+     *
+     * @param array $parts
+     * @return bool
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches)
+    public static function matches(array $parts): bool
     {
-        $expression = trim($expression, '{}');
-        list ($variable, $type) = explode(' as ', $expression);
-        if (!in_array($type, self::$validTypes)) {
+        $valid = !isset($parts[3]) && ($parts[1] ?? null) === 'as';
+        if ($valid && !in_array($parts[2], self::$validTypes)) {
             throw new ExpressionException(
                 sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression "%s".',
-                    $type,
-                    $expression
+                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
+                    $parts[2],
+                    implode(' ', $parts)
                 ),
                 1559248372
             );
         }
-        $variable = static::getTemplateVariableOrValueItself($variable, $renderingContext);
-        return self::convert($variable, $type);
+        return $valid;
     }
 
     /**

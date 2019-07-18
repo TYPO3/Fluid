@@ -15,44 +15,30 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class MathExpressionNode extends AbstractExpressionNode
 {
-
     /**
-     * Pattern which detects the mathematical expressions with either
-     * object accessor expressions or numbers on left and right hand
-     * side of a mathematical operator inside curly braces, e.g.:
+     * Possible operators, sorted by likely frequency of use to make
+     * the strpos() check work as fast as possible for the most common
+     * use cases.
      *
-     * {variable * 10}, {100 / variable}, {variable + variable2} etc.
+     * @var string
      */
-    public static $detectionExpression = '/
-		(
-			{                                # Start of shorthand syntax
-				(?:                          # Math expression is composed of...
-					[_a-zA-Z0-9\.]+(?:[\s]?[*+\^\/\%\-]{1}[\s]?[_a-zA-Z0-9\.]+)+   # Various math expressions left and right sides with any spaces
-					|(?R)                    # Other expressions inside
-				)+
-			}                                # End of shorthand syntax
-		)/x';
+    protected static $operators = '+-*/%^';
 
     /**
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @param array $matches
-     * @return integer|float
+     * @param array $parts
+     * @return bool
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches)
+    public static function matches(array $parts): bool
     {
-        // Split the expression on all recognized operators
-        $matches = [];
-        preg_match_all('/([+\-*\^\/\%]|[_a-zA-Z0-9\.]+)/s', $expression, $matches);
-        $matches[0] = array_map('trim', $matches[0]);
-        // Like the BooleanNode, we dumb down the processing logic to not apply
-        // any special precedence on the priority of operators. We simply process
-        // them in order.
-        $result = array_shift($matches[0]);
-        $result = static::getTemplateVariableOrValueItself($result, $renderingContext);
+        return isset($parts[2]) && strpos(static::$operators, $parts[1]) !== false;
+    }
+
+    public function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
+    {
+        $result = static::getTemplateVariableOrValueItself(array_shift($parts), $renderingContext);
         $operator = null;
-        $operators = ['*', '^', '-', '+', '/', '%'];
-        foreach ($matches[0] as $part) {
+        $operators = str_split(static::$operators);
+        foreach ($parts as $part) {
             if (in_array($part, $operators)) {
                 $operator = $part;
             } else {
@@ -71,7 +57,7 @@ class MathExpressionNode extends AbstractExpressionNode
                 $result = self::evaluateOperation($result, $operator, $part);
             }
         }
-        return $result;
+        return $result + 0;
     }
 
     /**

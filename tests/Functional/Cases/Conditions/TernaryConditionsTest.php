@@ -28,112 +28,34 @@ class TernaryConditionsTest extends BaseFunctionalTestCase
 
         return [
             [
-                '{true ? \'yes\' : \'no\'}',
-                [],
+                '{foo ? \'yes\' : \'no\'}',
+                ['foo' => 'bar'],
                 ['yes'],
                 ['no']
             ],
             [
-                '{true ? 1 : 2}',
-                [],
+                '{foo ? \'yes\' : \'no\'}',
+                ['foo' => false],
+                ['no'],
+                ['yes']
+            ],
+            [
+                '{foo ? 1 : 2}',
+                ['foo' => true],
                 [1],
                 [2]
             ],
             [
-                '{true ? foo : \'bar\'}',
-                ['foo' => 'bar'],
+                '{foo ? 1 : 2}',
+                ['foo' => true],
+                [1],
+                [2]
+            ],
+            [
+                '{foo ?: \'bar\'}',
+                ['foo' => false],
                 ['bar'],
                 ['foo']
-            ],
-            [
-                '{(true) ? \'yes\' : \'no\'}',
-                [],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(true || false) ? \'yes\' : \'no\'}',
-                [],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(false || false) ? \'yes\' : \'no\'}',
-                [],
-                ['no'],
-                ['yes']
-            ],
-            [
-                '{foo ? \'yes\' : \'no\'}',
-                ['foo' => true],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{foo ? \'yes\' : \'no\'}',
-                ['foo' => false],
-                ['no'],
-                ['yes']
-            ],
-            [
-                '{!foo ? \'yes\' : \'no\'}',
-                ['foo' => false],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(foo || false) ? \'yes\' : \'no\'}',
-                ['foo' => true],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(foo || false) ? \'yes\' : \'no\'}',
-                ['foo' => false],
-                ['no'],
-                ['yes']
-            ],
-            [
-                '{(foo.bar || false) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => true]],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(foo.bar && false) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => true]],
-                ['no'],
-                ['yes']
-            ],
-            [
-                '{(foo.bar > 10) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => 11]],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(foo.bar < 10) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => 11]],
-                ['no'],
-                ['yes']
-            ],
-            [
-                '{(foo.bar < 10) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => 11]],
-                ['no'],
-                ['yes']
-            ],
-            [
-                '{(foo.bar % 10) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => 11]],
-                ['yes'],
-                ['no']
-            ],
-            [
-                '{(foo.bar % 10) ? \'yes\' : \'no\'}',
-                ['foo' => ['bar' => 10]],
-                ['no'],
-                ['yes']
             ],
         ];
     }

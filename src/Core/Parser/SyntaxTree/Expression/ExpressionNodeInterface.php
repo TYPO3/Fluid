@@ -16,37 +16,21 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ExpressionNodeInterface extends NodeInterface
 {
-
     /**
-     * Evaluates the expression by delegating it to the
-     * resolved ExpressionNode type.
+     * Evaluate the whitespace-split parts of the expression.
      *
      * @param RenderingContextInterface $renderingContext
+     * @param iterable $parts
      * @return mixed
      */
-    public function evaluate(RenderingContextInterface $renderingContext);
+    public function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts);
 
     /**
-     * Evaluate expression, static version. Should return
-     * the exact same value as evaluate() but should be
-     * able to do so in a statically called context.
+     * Must return TRUE if the parts (split to array by inline
+     * tokens and spaces) matches the type of expression.
      *
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @param array $matches
-     * @return mixed
+     * @param array $parts
+     * @return bool
      */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches);
-
-    /**
-     * Getter for returning the expression before parsing.
-     *
-     * @return string
-     */
-    public function getExpression(): string;
-
-    /**
-     * @return array
-     */
-    public function getMatches(): array;
+    public static function matches(array $parts): bool;
 }

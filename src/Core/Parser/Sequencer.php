@@ -451,6 +451,7 @@ class Sequencer
         $isArray = false;
         $array = [];
         $arguments = [];
+        $parts = [];
         $ignoredEndingBraces = 0;
         $countedEscapes = 0;
         $this->splitter->switch($this->contexts->inline);
@@ -577,6 +578,10 @@ class Sequencer
                     $namespace = $captured;
                     $key = $key ?? $captured;
                     $isArray = $isArray || ($allowArray && is_numeric($key));
+                    if ($captured !== null) {
+                        $parts[] = $captured;
+                    }
+                    $parts[] = ':';
                     break;
 
                 case Splitter::BYTE_WHITESPACE_SPACE:
@@ -585,6 +590,14 @@ class Sequencer
                 case Splitter::BYTE_WHITESPACE_TAB:
                     // If we already collected some whitespace we must enter protected context.
                     $text .= $this->source->source[$this->splitter->index - 1];
+
+                    if ($captured !== null) {
+                        // Store a captured part: a whitespace inside inline syntax will engage the expression matching
+                        // that occurs when the node is closed. Allows matching the various parts to create the appropriate
+                        // node type.
+                        $parts[] = $captured;
+                    }
+
                     if ($hasWhitespace && !$hasPass && !$allowArray) {
                         // Protection mode: this very limited context does not allow tags or inline syntax, and will
                         // protect things like CSS and JS - and will only enter a more reactive context if encountering
@@ -696,22 +709,22 @@ class Sequencer
                         // has to be executed.
                         $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
                         $childNodeToAdd = new TextNode($text);
-                        foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
-                            $matchedVariables = [];
-                            // TODO: rewrite expression nodes to receive a sub-Splitter that lets the expression node
-                            // consume a symbol+capture sequence and either match or ignore it; then use the already
-                            // consumed (possibly halted mid-way through iterator!) sequence to achieve desired behavior.
-                            preg_match_all($expressionNodeTypeClassName::$detectionExpression, $text, $matchedVariables, PREG_SET_ORDER);
-                            foreach ($matchedVariables as $matchedVariableSet) {
-                                try {
-                                    $childNodeToAdd = new $expressionNodeTypeClassName($matchedVariableSet[0], $matchedVariableSet, $this->state);
+                        $parts[] = $captured;
+                        try {
+                            foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
+                                if ($expressionNodeTypeClassName::matches($parts)) {
                                     $interceptionPoint = InterceptorInterface::INTERCEPT_EXPRESSION;
-                                } catch (ExpressionException $error) {
-                                    $childNodeToAdd = new TextNode($this->renderingContext->getErrorHandler()->handleExpressionError($error));
-                                    $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
+                                    $childNodeToAdd = new $expressionNodeTypeClassName($parts);
+                                    break;
                                 }
-                                break;
                             }
+                        } catch (ExpressionException $exception) {
+                            // ErrorHandler will either return a string or throw the exception anew, depending on the
+                            // exact implementation of ErrorHandlerInterface. When it returns a string we use that as
+                            // text content of a new TextNode so the message is output as part of the rendered result.
+                            $childNodeToAdd = new TextNode(
+                                $this->renderingContext->getErrorHandler()->handleExpressionError($exception)
+                            );
                         }
                         if (isset($node)) {
                             $this->callInterceptor($childNodeToAdd, $interceptionPoint);

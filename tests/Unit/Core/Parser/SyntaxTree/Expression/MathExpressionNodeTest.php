@@ -28,10 +28,11 @@ class MathExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
+        $parts = explode(' ', $expression);
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-        $result = MathExpressionNode::evaluateExpression($renderingContext, $expression, []);
+        $result = (new MathExpressionNode($parts))->evaluate($renderingContext);
         $this->assertEquals($expected, $result);
     }
 
@@ -61,6 +62,6 @@ class MathExpressionNodeTest extends UnitTestCase
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
         $renderingContext->setVariableProvider(new StandardVariableProvider([]));
-        MathExpressionNode::evaluateExpression($renderingContext, '1 gabbagabbahey 1', []);
+        (new MathExpressionNode(['1', 'gabbagabbahey', '1']))->evaluate($renderingContext);
     }
 }

@@ -82,8 +82,8 @@ class Contexts
         // Dead tag: continues indexing until the tag ends or an inline expression is encountered
         $this->dead = new Context(Context::CONTEXT_DEAD, '>{');
 
-        // Inline protection mode: reacts to backtick and curly brace start and end, but ignores nested curly braces. Backtick enters quoted context.
-        $this->protected = new Context(Context::CONTEXT_PROTECTED, '{}`');
+        // Inline protection mode: reacts to backtick and curly brace start and end, but ignores nested curly braces. Backtick enters quoted context. Still allows expressions to match.
+        $this->protected = new Context(Context::CONTEXT_PROTECTED, ' {}`');
 
         // Inline accessor mode: identical to protected context but identifiable under its own name to distinguish it from protected
         $this->accessor = new Context(Context::CONTEXT_ACCESSOR, '{}`');

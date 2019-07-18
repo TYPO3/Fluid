@@ -20,20 +20,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  */
 class CastingExpressionNodeTest extends UnitTestCase
 {
-
-    /**
-     * @test
-     */
-    public function testEvaluateDelegatesToEvaluteExpression(): void
-    {
-        $subject = new CastingExpressionNode('{test as string}', ['{test as string}', '{test as string}']);
-        $view = new TemplateView();
-        $context = new RenderingContext($view);
-        $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
-        $result = $subject->evaluate($context);
-        $this->assertSame('10', $result);
-    }
-
     /**
      * @test
      */
@@ -43,19 +29,7 @@ class CastingExpressionNodeTest extends UnitTestCase
         $renderingContext = new RenderingContext($view);
         $renderingContext->setVariableProvider(new StandardVariableProvider());
         $this->setExpectedException(ExpressionException::class);
-        (new CastingExpressionNode('suchaninvalidexpression as 1', []))->evaluate($renderingContext);
-    }
-
-    /**
-     * @test
-     */
-    public function testStaticEvaluateInvalidTypeThrowsException()
-    {
-        $view = new TemplateView();
-        $renderingContext = new RenderingContext($view);
-        $renderingContext->setVariableProvider(new StandardVariableProvider());
-        $this->setExpectedException(ExpressionException::class);
-        CastingExpressionNode::evaluateExpression($renderingContext, 'myvar as invalidtype', []);
+        (new CastingExpressionNode(['suchaninvalidexpression', 'as', '1']))->evaluate($renderingContext);
     }
 
     /**
@@ -66,10 +40,11 @@ class CastingExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateExpression(string $expression, array $variables, $expected): void
     {
+        $parts = explode(' ', $expression);
         $view = new TemplateView();
         $renderingContext = new RenderingContext($view);
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-        $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
+        $result = (new CastingExpressionNode($parts))->evaluate($renderingContext);
         $this->assertEquals($expected, $result);
     }
 

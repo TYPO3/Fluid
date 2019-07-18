@@ -22,6 +22,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
@@ -842,7 +843,7 @@ class SequencerTest extends UnitTestCase
                 '{i + 1}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new MathExpressionNode('{i + 1}', ['{i + 1}', '{i + 1}']))
+                (new RootNode())->addChildNode(new MathExpressionNode(['i', '+', '1']))
             ],
             'inline math expression without spaces is not detected as expression' => [
                 '{i+1}',
@@ -854,7 +855,7 @@ class SequencerTest extends UnitTestCase
                 '{i as string}',
                 $context,
                 false,
-                (new RootNode())->addChildNode(new CastingExpressionNode('{i as string}', ['{i as string}', '{i as string}']))
+                (new RootNode())->addChildNode(new CastingExpressionNode(['i', 'as', 'string']))
             ],
             'expression error with tolerant error handler is created as TextNode' => [
                 '{i as invalid}',
@@ -1033,7 +1034,7 @@ class SequencerTest extends UnitTestCase
         $context->expects($this->any())->method('getViewHelperResolver')->willReturn($viewHelperResolver);
         $context->expects($this->any())->method('getVariableProvider')->willReturn($variableProvider);
         $context->expects($this->any())->method('getErrorHandler')->willReturn($errorHandler);
-        $context->expects($this->any())->method('getExpressionNodeTypes')->willReturn([MathExpressionNode::class, CastingExpressionNode::class]);
+        $context->expects($this->any())->method('getExpressionNodeTypes')->willReturn([MathExpressionNode::class, CastingExpressionNode::class, TernaryExpressionNode::class]);
         $context->expects($this->any())->method('getTemplateProcessors')->willReturn([]);
         return $context;
     }
@@ -1072,7 +1073,7 @@ class SequencerTest extends UnitTestCase
         } elseif ($subject instanceof ArrayNode) {
             $this->assertEquals($expected->getInternalArray(), $subject->getInternalArray(), 'Arrays do not match at path ' . $path);
         } elseif ($subject instanceof ExpressionNodeInterface) {
-            $this->assertEquals($expected->getMatches(), $subject->getMatches(), 'Expression matches are not equal at path ' . $path);
+            $this->assertEquals($expected, $subject, 'Expression matches are not equal at path ' . $path);
         }
 
         $children = $subject->getChildNodes();

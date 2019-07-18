@@ -7,8 +7,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -17,59 +15,80 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TernaryExpressionNode extends AbstractExpressionNode
 {
-
     /**
-     * Pattern which detects ternary conditions written in shorthand
-     * syntax, e.g. {checkvar ? thenvar : elsevar}.
+     * Matches possibilities:
+     *
+     * - {foo ? bar : baz}
+     * - {foo ?: baz}
+     *
+     * But not:
+     *
+     * - {?bar:baz}
+     * - {foo?bar:baz}
+     * - {foo ?? bar}
+     * - {foo ? bar : baz : more}
+     *
+     * And so on.
+     *
+     * @param array $parts
+     * @return bool
      */
-    public static $detectionExpression = '/
-		(
-			{                                                               # Start of shorthand syntax
-				(?:                                                         # Math expression is composed of...
-					[\\!_a-zA-Z0-9.\(\)\!\|\&\\\'\'\"\=\<\>\%\s\{\}\:\,]+    # Check variable side
-					[\s]?\?[\s]?
-					[_a-zA-Z0-9.\s\'\"\\.]*                                  # Then variable side, optional
-					[\s]?:[\s]?
-					[_a-zA-Z0-9.\s\'\"\\.]+                                  # Else variable side
-				)
-			}                                                               # End of shorthand syntax
-		)/x';
-
-    /**
-     * Filter out variable names form expression
-     */
-    protected static $variableDetection = '/[^\'_a-zA-Z0-9\.\\\\]{0,1}([_a-zA-Z0-9\.\\\\]*)[^\']{0,1}/';
-
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @param array $matches
-     * @return mixed
-     */
-    public static function evaluateExpression(RenderingContextInterface $renderingContext, string $expression, array $matches): string
+    public static function matches(array $parts): bool
     {
-        $parts = preg_split('/([\?:])/s', $expression);
-        $parts = array_map([__CLASS__, 'trimPart'], $parts);
+        return isset($parts[2]) && ($parts[1] === '?' && (($parts[2] ?? null) === ':' && !isset($parts[4])) || ($parts[3] ?? null) === ':' && !isset($parts[5]));
+    }
+
+    public function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
+    {
+        $check = null;
+        $then = null;
+        $else = null;
+        $expression = '';
+        foreach ($parts as $part) {
+            $expression .= $part . ' ';
+            if ($part === ':' && $then === null) {
+                $then = $check;
+                continue;
+            }
+
+            if ($check === null) {
+                $check = $part;
+                continue;
+            }
+
+            if ($part === '?' || $part === ':') {
+                continue;
+            }
+
+            if ($then === null) {
+                $then = $part;
+                continue;
+            }
+
+            if ($else === null) {
+                $else = $part;
+                break;
+            }
+        }
+
         $negated = false;
-        if (count($parts) !== 3) {
-            throw new ExpressionException('A ternary condition must consist of exactly three parts, ' . count($parts) . ' found', 1559560324);
+        if (!is_numeric($check)) {
+            if ($check[0] === '!') {
+                $check = substr($check, 1);
+                $negated = true;
+            }
+            $check = static::getTemplateVariableOrValueItself($check, $renderingContext);
         }
-        list ($check, $then, $else) = $parts;
 
-        if ($then === '') {
-            $then = $check{0} === '!' ? $else : $check;
+        if (!is_numeric($then)) {
+            $then = static::getTemplateVariableOrValueItself($then, $renderingContext);
         }
 
-        $context = static::gatherContext($renderingContext, $expression);
-
-        $parser = new BooleanParser();
-        $checkResult = $parser->evaluate($check, $context);
-
-        if ($checkResult) {
-            return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
-        } else {
-            return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
+        if (!is_numeric($else)) {
+            $else = static::getTemplateVariableOrValueItself($else, $renderingContext);
         }
+
+        return $negated ? (!$check ? $then : $else) : ($check ? $then : $else);
     }
 
     /**
@@ -84,26 +103,5 @@ class TernaryExpressionNode extends AbstractExpressionNode
             return $renderingContext->getTemplateParser()->unquoteString($suspect);
         }
         return $suspect;
-    }
-
-    /**
-     * Gather all context variables used in the expression
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @return array
-     */
-    public static function gatherContext(RenderingContextInterface $renderingContext, string $expression): array
-    {
-        $context = [];
-        if (preg_match_all(static::$variableDetection, $expression, $matches) > 0) {
-            foreach ($matches[1] as $variable) {
-                if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable)) {
-                    continue;
-                }
-                $context[$variable] = static::getTemplateVariableOrValueItself($variable, $renderingContext);
-            }
-        }
-        return $context;
     }
 }

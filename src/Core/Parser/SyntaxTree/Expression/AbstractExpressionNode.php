@@ -18,30 +18,14 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
  */
 abstract class AbstractExpressionNode extends AbstractNode implements ExpressionNodeInterface
 {
-
-    /**
-     * Contents of the text node
-     *
-     * @var string
-     */
-    protected $expression;
-
     /**
      * @var array
      */
-    protected $matches = [];
+    protected $parts = [];
 
-    /**
-     * Constructor.
-     *
-     * @param string $expression The original expression that created this node.
-     * @param array $matches Matches extracted from expression
-     * @throws Exception
-     */
-    public function __construct(string $expression, array $matches)
+    public function __construct(iterable $parts)
     {
-        $this->expression = trim($expression, " \t\n\r\0\x0b");
-        $this->matches = $matches;
+        $this->parts = $parts;
     }
 
     /**
@@ -53,37 +37,10 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         try {
-            return static::evaluateExpression($renderingContext, $this->expression, $this->matches);
+            return $this->evaluateParts($renderingContext, $this->parts);
         } catch (ExpressionException $exception) {
             return $renderingContext->getErrorHandler()->handleExpressionError($exception);
         }
-    }
-
-    /**
-     * Getter for returning the expression before parsing.
-     *
-     * @return string
-     */
-    public function getExpression(): string
-    {
-        return $this->expression;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMatches(): array
-    {
-        return $this->matches;
-    }
-
-    /**
-     * @param string $part
-     * @return string
-     */
-    protected static function trimPart(string $part): string
-    {
-        return trim($part, " \t\n\r\0\x0b{}");
     }
 
     /**
