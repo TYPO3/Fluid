@@ -203,8 +203,13 @@ class Sequencer
                     $toggle = $toggle ?? $captured;
                     break;
                 case Splitter::BYTE_INLINE_END:
-                    $this->configuration->setFeatureState($toggle, $captured ?? true);
+                    if ($toggle === 'namespace') {
+                        $parts = explode('=', (string) $captured);
+                        $this->resolver->addNamespace($parts[0], $parts[1] ?? null);
+                        return;
+                    }
 
+                    $this->configuration->setFeatureState($toggle, $captured ?? true);
                     // Re-read the parser configuration and react accordingly to any flags that may have changed.
                     $this->escapingEnabled = $this->configuration->isFeatureEnabled(Configuration::FEATURE_ESCAPING);
                     if (!$this->configuration->isFeatureEnabled(Configuration::FEATURE_PARSING)) {
@@ -230,6 +235,7 @@ class Sequencer
         $selfClosing = false;
         $closing = false;
         $escapingEnabledBackup = $this->escapingEnabled;
+        $viewHelperNode = null;
 
         $this->splitter->switch($this->contexts->tag);
         $this->splitter->sequence->next();
@@ -255,11 +261,11 @@ class Sequencer
                     break;
 
                 case Splitter::BYTE_SEPARATOR_EQUALS:
-                    $key = $key ?? $captured;
+                    $key = $key . $captured;
                     $text .= '=';
-                    if ($key === null) {
+                    if ($key === '') {
                         throw $this->splitter->createErrorAtPosition('Unexpected equals sign without preceding attribute/key name', 1561039838);
-                    } elseif ($definitions !== null && !isset($definitions[$key])) {
+                    } elseif ($definitions !== null && !isset($definitions[$key]) && !$viewHelperNode->validateAdditionalArgument($key)) {
                         $error = $this->splitter->createUnsupportedArgumentError($key, $definitions);
                         $content = $this->renderingContext->getErrorHandler()->handleParserError($error);
                         return new TextNode($content);
@@ -301,7 +307,13 @@ class Sequencer
 
                 case Splitter::BYTE_SEPARATOR_COLON:
                     $text .= ':';
-                    $namespace = $namespace ?? $captured;
+                    if (!$method) {
+                        // If we haven't encountered a method yet, then $method won't be set, and we can assign NS now
+                        $namespace = $namespace ?? $captured;
+                    } else {
+                        // If we do have a method this means we encountered a colon as part of an attribute name
+                        $key = $key ?? ($captured . ':');
+                    }
                     break;
 
                 case Splitter::BYTE_TAG_END:
@@ -362,7 +374,7 @@ class Sequencer
                     $viewHelperNode = $viewHelperNode ?? $this->resolver->createViewHelperInstanceFromClassName($expectedClass);
 
                     if (!$closing) {
-                        $viewHelperNode->setParsedArguments($arguments);
+                        $viewHelperNode->postParse($arguments, $definitions, $this->state, $this->renderingContext);
                         $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
                         $this->state->pushNodeToStack($viewHelperNode);
                         return null;
@@ -398,7 +410,6 @@ class Sequencer
                             $key = $captured;
                         }
                     } elseif (isset($namespace) || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
-
                         $method = $captured;
 
                         try {

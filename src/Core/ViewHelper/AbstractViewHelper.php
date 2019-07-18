@@ -526,6 +526,18 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     }
 
     /**
+     * Validate a single undeclared argument - see validateAdditionalArguments
+     * for more information.
+     *
+     * @param string $argumentName
+     * @return bool
+     */
+    public function validateAdditionalArgument(string $argumentName): bool
+    {
+        return false;
+    }
+
+    /**
      * Default implementation of static rendering; useful API method if your ViewHelper
      * when compiled is able to render itself statically to increase performance. This
      * default implementation will simply delegate to the ViewHelperInvoker.

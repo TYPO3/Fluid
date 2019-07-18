@@ -35,6 +35,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers\CViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\HtmlViewHelper;
 
 
 /**
@@ -746,6 +747,18 @@ class SequencerTest extends UnitTestCase
                 $context,
                 false,
                 (new RootNode())->addChildNode((new RawViewHelper())->postParse(['value' => new ObjectAccessorNode('string')], null, $state, $context)),
+            ],
+            'aliased ViewHelper supports namespaced attributes' => [
+                '<html foo:bar="string">test</html>',
+                $context,
+                false,
+                (new RootNode())->addChildNode((new HtmlViewHelper())->postParse(['foo:bar' => 'string'], null, $state, $context)->addChildNode(new TextNode('test'))),
+            ],
+            'html pseudo ViewHelper supports namespace registration' => [
+                '<html foo:bar="http://typo3.org/ns/Foo/Bar/ViewHelpers">test</html>',
+                $context,
+                false,
+                (new RootNode())->addChildNode((new HtmlViewHelper())->postParse(['xmlns:foo' => 'http://typo3.org/ns/Foo/Bar/ViewHelpers'], null, $state, $context)->addChildNode(new TextNode('test'))),
             ],
 
             /* INLINE PASS OF ARRAY */

@@ -122,12 +122,6 @@ class RenderingContext implements RenderingContextInterface
     {
         $this->setTemplateParser($this->templateParser ?? new TemplateParser());
         $this->setTemplatePaths($this->templatePaths ?? new TemplatePaths());
-        $this->setTemplateProcessors(
-            empty($this->templateProcessors) ?
-            [
-                new NamespaceDetectionTemplateProcessor()
-            ] : $this->templateProcessors
-        );
         $this->setViewHelperResolver($this->viewHelperResolver ?? new ViewHelperResolver());
         $this->setViewHelperVariableContainer($this->viewHelperVariableContainer ?? new ViewHelperVariableContainer());
         $this->setVariableProvider($this->variableProvider ?? new StandardVariableProvider());

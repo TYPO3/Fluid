@@ -42,7 +42,10 @@ class ViewHelperResolver
     /**
      * @var array
      */
-    protected $aliases = [];
+    protected $aliases = [
+        'html' => ['f', 'html'],
+        'raw' => ['f', 'format.raw'],
+    ];
 
     /**
      * @return array
@@ -146,13 +149,15 @@ class ViewHelperResolver
      */
     public function resolvePhpNamespaceFromFluidNamespace(string $fluidNamespace): string
     {
+        $prefix = 'http://typo3.org/ns/';
+        $suffix = '/ViewHelpers';
         $namespace = $fluidNamespace;
-        $suffixLength = strlen(Patterns::NAMESPACESUFFIX);
-        $phpNamespaceSuffix = str_replace('/', '\\', Patterns::NAMESPACESUFFIX);
+        $suffixLength = strlen($suffix);
+        $phpNamespaceSuffix = str_replace('/', '\\', $suffix);
         $extractedSuffix = substr($fluidNamespace, 0 - $suffixLength);
-        if (strpos($fluidNamespace, Patterns::NAMESPACEPREFIX) === 0 && $extractedSuffix === Patterns::NAMESPACESUFFIX) {
+        if (strpos($fluidNamespace, $prefix) === 0 && $extractedSuffix === $suffix) {
             // convention assumed: URL starts with prefix and ends with suffix
-            $namespace = substr($fluidNamespace, strlen(Patterns::NAMESPACEPREFIX));
+            $namespace = substr($fluidNamespace, strlen($prefix));
         }
         $namespace = str_replace('/', '\\', $namespace);
         if (substr($namespace, 0 - strlen($phpNamespaceSuffix)) !== $phpNamespaceSuffix) {
