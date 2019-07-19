@@ -6,6 +6,7 @@ use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -84,8 +85,40 @@ abstract class AbstractComponent implements ComponentInterface
         throw new ChildNotFoundException(sprintf('Child with name "%s" not found', $name), 1562757835);
     }
 
+    /**
+     * @return ComponentInterface[]
+     */
     public function getChildren(): iterable
     {
         return $this->children;
+    }
+
+    /**
+     * Returns one of the following:
+     *
+     * - Itself, if there is more than one child node and one or more nodes are not TextNode or NumericNode
+     * - A plain value if there is a single child node of type TextNode or NumericNode
+     * - The one child node if there is only a single child node not of type TextNode or NumericNode
+     * - Null if there are no child nodes at all.
+     *
+     * @param bool $extractNode If TRUE, will extract the value of a single node if the node type contains a scalar value
+     * @return ComponentInterface|string|int|float|null
+     */
+    public function flatten(bool $extractNode = false)
+    {
+        if (empty($this->children) && $extractNode) {
+            return null;
+        }
+        $nodesCounted = count($this->children);
+        if ($nodesCounted === 1) {
+            if ($extractNode) {
+                if ($this->children[0] instanceof TextNode) {
+                    $text = $this->children[0]->getText();
+                    return is_numeric($text) ? $text + 0 : $text;
+                }
+            }
+            return $this->children[0];
+        }
+        return $this;
     }
 }

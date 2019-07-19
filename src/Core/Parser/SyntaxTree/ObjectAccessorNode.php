@@ -92,7 +92,7 @@ class ObjectAccessorNode extends AbstractNode
             throw new Exception('An ObjectAccessor can use either a string variable path or child nodes - but not both', 1559241805);
         }
         if ($numberOfChildNodes === 1 && $this->childNodes[0] instanceof ViewHelperInterface) {
-            return $this->childNodes[0]->evaluate($renderingContext);
+            return $this->childNodes[0]->execute($renderingContext);
         }
         $objectPath = strtolower($this->objectPath ?? $this->evaluateChildNodes($renderingContext));
         $variableProvider = $renderingContext->getVariableProvider();

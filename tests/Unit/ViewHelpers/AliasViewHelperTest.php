@@ -34,7 +34,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function renderAddsSingleValueToTemplateVariableContainerAndRemovesItAfterRendering(): void
     {
         $viewHelper = new AliasViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someAlias'));
+        $viewHelper->addChild(new ObjectAccessorNode('someAlias'));
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->setArguments(['map' => ['someAlias' => 'someValue']]);
@@ -48,8 +48,8 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function renderAddsMultipleValuesToTemplateVariableContainerAndRemovesThemAfterRendering(): void
     {
         $viewHelper = new AliasViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someAlias'));
-        $viewHelper->addChildNode(new ObjectAccessorNode('someOtherAlias'));
+        $viewHelper->addChild(new ObjectAccessorNode('someAlias'));
+        $viewHelper->addChild(new ObjectAccessorNode('someOtherAlias'));
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->setArguments(['map' => ['someAlias' => 'someValue', 'someOtherAlias' => 'someOtherValue']]);
@@ -63,7 +63,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function renderDoesNotTouchTemplateVariableContainerAndReturnsChildNodesIfMapIsEmpty(): void
     {
         $viewHelper = new AliasViewHelper();
-        $viewHelper->addChildNode(new TextNode('foo'));
+        $viewHelper->addChild(new TextNode('foo'));
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->setArguments(['map' => []]);

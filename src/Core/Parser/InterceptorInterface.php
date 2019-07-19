@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 
 /**
  * An interceptor interface. Interceptors are used in the parsing stage to change
@@ -27,12 +27,12 @@ interface InterceptorInterface
      * The interceptor can process the given node at will and must return a node
      * that will be used in place of the given node.
      *
-     * @param NodeInterface $node
+     * @param ComponentInterface $node
      * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
      * @param ParsingState $parsingState the parsing state
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    public function process(NodeInterface $node, int $interceptorPosition, ParsingState $parsingState): NodeInterface;
+    public function process(ComponentInterface $node, int $interceptorPosition, ParsingState $parsingState): ComponentInterface;
 
     /**
      * The interceptor should define at which interception positions it wants to be called.

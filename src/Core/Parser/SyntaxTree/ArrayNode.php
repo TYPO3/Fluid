@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -42,7 +43,7 @@ class ArrayNode extends AbstractNode
     {
         $arrayToBuild = [];
         foreach ($this->internalArray as $key => $value) {
-            $arrayToBuild[$key] = $value instanceof NodeInterface ? $value->evaluate($renderingContext) : $value;
+            $arrayToBuild[$key] = $value instanceof ComponentInterface ? $value->execute($renderingContext) : $value;
         }
         return $arrayToBuild;
     }

@@ -7,13 +7,13 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Interface for shorthand expression node types
  */
-interface ExpressionNodeInterface extends NodeInterface
+interface ExpressionNodeInterface extends ComponentInterface
 {
     /**
      * Evaluate the whitespace-split parts of the expression.

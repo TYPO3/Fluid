@@ -12,7 +12,6 @@ use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -104,7 +103,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     }
 
     /**
-     * @param NodeInterface[]|mixed[] $arguments
+     * @param ComponentInterface[]|mixed[] $arguments
      * @param ArgumentDefinition[] $argumentDefinitions
      * @throws Exception
      */
@@ -246,20 +245,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
             );
         }
         $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
-        return $this;
-    }
-
-    /**
-     * Sets all needed attributes needed for the rendering. Called by the
-     * framework. Populates $this->viewHelperNode.
-     * This is PURELY INTERNAL! Never override this method!!
-     *
-     * @param NodeInterface[] $childNodes
-     * @return NodeInterface
-     */
-    public function setChildNodes(array $childNodes)
-    {
-        $this->childNodes = $childNodes;
         return $this;
     }
 

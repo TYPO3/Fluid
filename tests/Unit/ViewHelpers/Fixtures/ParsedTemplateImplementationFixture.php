@@ -19,6 +19,11 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 {
+    public function flatten(bool $extractNode = false)
+    {
+        // TODO: Implement flatten() method.
+    }
+
     public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
     {
         return $this;

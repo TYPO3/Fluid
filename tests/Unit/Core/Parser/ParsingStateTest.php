@@ -84,7 +84,7 @@ class ParsingStateTest extends UnitTestCase
     {
         $renderingContext = new RenderingContextFixture();
         $rootNode = $this->getMock(RootNode::class);
-        $rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
+        $rootNode->expects($this->once())->method('execute')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
         $this->parsingState->setRootNode($rootNode);
         $renderedValue = $this->parsingState->render($renderingContext);
         $this->assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
@@ -95,7 +95,7 @@ class ParsingStateTest extends UnitTestCase
      */
     public function testGetLayoutName(): void
     {
-        $this->parsingState->setRootNode((new RootNode())->addChildNode(new LayoutNode('test')));
+        $this->parsingState->setRootNode((new RootNode())->addChild(new LayoutNode('test')));
         $result = $this->parsingState->getLayoutName(new RenderingContextFixture());
         $this->assertEquals('test', $result);
     }

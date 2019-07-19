@@ -26,7 +26,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\LayoutNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\SectionNode;
@@ -1072,7 +1071,7 @@ class SequencerTest extends UnitTestCase
         return $state;
     }
 
-    protected function assertNodeEquals(NodeInterface $subject, NodeInterface $expected, string $path = '')
+    protected function assertNodeEquals(ComponentInterface $subject, ComponentInterface $expected, string $path = '')
     {
         $this->assertInstanceOf(get_class($expected), $subject, 'Node types not as expected at path: ' . $path);
         if ($subject instanceof ViewHelperInterface) {

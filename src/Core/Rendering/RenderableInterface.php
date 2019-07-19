@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 
 /**
  * This interface is implemented by objects which can be rendered
@@ -42,15 +41,15 @@ interface RenderableInterface extends ComponentInterface
      * default implementation these nodes are evaluated by render() and extracted
      * by the NodeConverter
      *
-     * @param NodeInterface $node
+     * @param ComponentInterface $node
      * @return RenderableInterface
      */
-    public function setNode(NodeInterface $node): RenderableInterface;
+    public function setNode(ComponentInterface $node): RenderableInterface;
 
     /**
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    public function getNode(): NodeInterface;
+    public function getNode(): ComponentInterface;
 
     /**
      * @param RenderingContextInterface $renderingContext

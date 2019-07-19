@@ -7,10 +7,10 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -158,7 +158,7 @@ class Sequencer
         return $this->state;
     }
 
-    protected function sequenceCharacterData(string $text): NodeInterface
+    protected function sequenceCharacterData(string $text): ComponentInterface
     {
         $capturedClosingBrackets = 0;
         $this->splitter->switch($this->contexts->data);
@@ -222,7 +222,7 @@ class Sequencer
         throw $this->splitter->createErrorAtPosition('Unterminated feature toggle', 1563383038);
     }
 
-    protected function sequenceTagNode(): ?NodeInterface
+    protected function sequenceTagNode(): ?ComponentInterface
     {
         $arguments = [];
         $definitions = null;
@@ -324,10 +324,10 @@ class Sequencer
 
                     if (!isset($namespace)) {
                         if ($this->splitter->context->context === Context::CONTEXT_DEAD || !$this->resolver->isAliasRegistered((string) $method)) {
-                            return $node->addChildNode(new TextNode($text))->flatten();
+                            return $node->addChild(new TextNode($text))->flatten();
                         }
                     } elseif ($this->resolver->isNamespaceIgnored((string) $namespace)) {
-                        return $node->addChildNode(new TextNode($text))->flatten();
+                        return $node->addChild(new TextNode($text))->flatten();
                     }
 
                     try {
@@ -453,9 +453,9 @@ class Sequencer
 
     /**
      * @param bool $allowArray
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    protected function sequenceInlineNodes(bool $allowArray = true): NodeInterface
+    protected function sequenceInlineNodes(bool $allowArray = true): ComponentInterface
     {
         $text = '{';
         $node = null;
@@ -1065,11 +1065,11 @@ class Sequencer
     /**
      * Call all interceptors registered for a given interception point.
      *
-     * @param NodeInterface $node The syntax tree node which can be modified by the interceptors.
+     * @param ComponentInterface $node The syntax tree node which can be modified by the interceptors.
      * @param integer $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
      * @return void
      */
-    protected function callInterceptor(NodeInterface &$node, $interceptionPoint)
+    protected function callInterceptor(ComponentInterface &$node, $interceptionPoint)
     {
         if ($this->escapingEnabled) {
             /** @var $interceptor InterceptorInterface */

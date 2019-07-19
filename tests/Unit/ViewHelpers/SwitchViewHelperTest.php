@@ -88,7 +88,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $instance = new SwitchViewHelper();
 
         foreach ($childNodes as $childNode) {
-            $instance->addChildNode($childNode);
+            $instance->addChild($childNode);
         }
 
         $result = $instance->execute($context, (new ArgumentCollection())->assignAll(['expression' => $variables['switchExpression']]));
@@ -101,11 +101,11 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     public function getRetrieveContentFromChildNodesTestValues(): array
     {
         $context = new RenderingContextFixture();
-        $matchingNode = (new CaseViewHelper())->addChildNode(new TextNode('foo'))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']));
+        $matchingNode = (new CaseViewHelper())->addChild(new TextNode('foo'))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']));
 
-        $notMatchingNode = (new CaseViewHelper())->addChildNode(new TextNode(''))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']));
+        $notMatchingNode = (new CaseViewHelper())->addChild(new TextNode(''))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']));
 
-        $defaultCaseNode = (new DefaultCaseViewHelper())->addChildNode(new TextNode('default'));
+        $defaultCaseNode = (new DefaultCaseViewHelper())->addChild(new TextNode('default'));
 
         $textNode = new TextNode('TEXT');
         $objectAccessorNode = new ObjectAccessorNode('void');
@@ -129,13 +129,13 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
 
         $instance = (new SwitchViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['expression' => 'foo']));
 
-        $matchingCaseViewHelper = (new CaseViewHelper())->addChildNode(new TextNode('foo-childcontent'))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']));
+        $matchingCaseViewHelper = (new CaseViewHelper())->addChild(new TextNode('foo-childcontent'))->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']));
 
         $untouchedViewHelper = $this->getMockBuilder(DefaultCaseViewHelper::class)->setMethods(['evaluate'])->getMock();
         $untouchedViewHelper->expects($this->never())->method('evaluate');
 
-        $instance->addChildNode($matchingCaseViewHelper);
-        $instance->addChildNode($untouchedViewHelper);
+        $instance->addChild($matchingCaseViewHelper);
+        $instance->addChild($untouchedViewHelper);
 
         $result = $instance->evaluate($context);
         $this->assertEquals('foo-childcontent', $result);

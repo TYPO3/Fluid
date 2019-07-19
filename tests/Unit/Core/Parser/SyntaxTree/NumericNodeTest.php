@@ -36,7 +36,7 @@ class NumericNodeTest extends UnitTestCase
     {
         $string = '1';
         $node = new NumericNode($string);
-        $this->assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+        $this->assertEquals($node->execute($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
     /**
@@ -46,7 +46,7 @@ class NumericNodeTest extends UnitTestCase
     {
         $string = '1.1';
         $node = new NumericNode($string);
-        $this->assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+        $this->assertEquals($node->execute($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
     /**
@@ -61,11 +61,11 @@ class NumericNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function addChildNodeThrowsException(): void
+    public function addChildThrowsException(): void
     {
         $this->expectException(Exception::class);
 
         $node = new NumericNode('1');
-        $node->addChildNode(clone $node);
+        $node->addChild(clone $node);
     }
 }

@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -81,7 +81,7 @@ class SwitchViewHelper extends AbstractViewHelper
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $expression);
         $variableContainer->addOrUpdate(SwitchViewHelper::class, 'break', false);
 
-        $content = $this->retrieveContentFromChildNodes($this->getChildNodes());
+        $content = $this->retrieveContentFromChildNodes($this->getChildren());
 
         if ($variableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
             $variableContainer->remove(SwitchViewHelper::class, 'switchExpression');
@@ -95,7 +95,7 @@ class SwitchViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param NodeInterface[] $childNodes
+     * @param ComponentInterface[] $childNodes
      * @return mixed
      */
     protected function retrieveContentFromChildNodes(array $childNodes)
@@ -113,7 +113,7 @@ class SwitchViewHelper extends AbstractViewHelper
                 break;
             }
 
-            $content = $childNode->evaluate($this->renderingContext);
+            $content = $childNode->execute($this->renderingContext);
         }
 
         return $content;

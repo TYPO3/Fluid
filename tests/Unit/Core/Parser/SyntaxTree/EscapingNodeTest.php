@@ -38,7 +38,7 @@ class EscapingNodeTest extends UnitTestCase
         $string1 = '<strong>escape me</strong>';
         $string2 = '<strong>no, escape me!</strong>';
         $node = new EscapingNode(new TextNode($string1));
-        $node->addChildNode(new TextNode($string2));
+        $node->addChild(new TextNode($string2));
         $renderingContext = new RenderingContextFixture();
         $this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
     }

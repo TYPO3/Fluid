@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -19,16 +20,16 @@ class EscapingNode extends AbstractNode
     /**
      * Node to be escaped
      *
-     * @var NodeInterface
+     * @var ComponentInterface
      */
     protected $node;
 
     /**
      * Constructor.
      *
-     * @param NodeInterface $node
+     * @param ComponentInterface $node
      */
-    public function __construct(NodeInterface $node)
+    public function __construct(ComponentInterface $node)
     {
         $this->node = $node;
     }
@@ -41,7 +42,7 @@ class EscapingNode extends AbstractNode
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $evaluated = $this->node->evaluate($renderingContext);
+        $evaluated = $this->node->execute($renderingContext);
         if (is_string($evaluated) || (is_object($evaluated) && method_exists($evaluated, '__toString'))) {
             return htmlspecialchars((string) $evaluated, ENT_QUOTES);
         }
@@ -49,9 +50,9 @@ class EscapingNode extends AbstractNode
     }
 
     /**
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    public function getNode(): NodeInterface
+    public function getNode(): ComponentInterface
     {
         return $this->node;
     }
@@ -59,11 +60,11 @@ class EscapingNode extends AbstractNode
     /**
      * NumericNode does not allow adding child nodes, so this will always throw an exception.
      *
-     * @param NodeInterface $childNode The sub node to add
+     * @param ComponentInterface $childNode The sub node to add
      * @throws Exception
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    public function addChildNode(NodeInterface $childNode): NodeInterface
+    public function addChild(ComponentInterface $childNode): ComponentInterface
     {
         $this->node = $childNode;
         return $this;

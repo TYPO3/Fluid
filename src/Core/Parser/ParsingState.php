@@ -10,7 +10,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -99,7 +98,7 @@ class ParsingState extends AbstractNode implements ParsedTemplateInterface
     /**
      * Set root node of this parsing state.
      *
-     * @param NodeInterface $rootNode
+     * @param RootNode $rootNode
      * @return void
      */
     public function setRootNode(RootNode $rootNode): void
@@ -110,7 +109,7 @@ class ParsingState extends AbstractNode implements ParsedTemplateInterface
     /**
      * Get root node of this parsing state.
      *
-     * @return NodeInterface The root node
+     * @return RootNode The root node
      */
     public function getRootNode(): RootNode
     {
@@ -130,17 +129,17 @@ class ParsingState extends AbstractNode implements ParsedTemplateInterface
      */
     public function render(RenderingContextInterface $renderingContext)
     {
-        return $this->getRootNode()->evaluate($renderingContext);
+        return $this->getRootNode()->execute($renderingContext);
     }
 
     /**
      * Push a node to the node stack. The node stack holds all currently open
      * templating tags.
      *
-     * @param NodeInterface $node Node to push to node stack
+     * @param ComponentInterface $node Node to push to node stack
      * @return void
      */
-    public function pushNodeToStack(NodeInterface $node): void
+    public function pushNodeToStack(ComponentInterface $node): void
     {
         $this->nodeStack[] = $node;
     }
@@ -150,7 +149,7 @@ class ParsingState extends AbstractNode implements ParsedTemplateInterface
      *
      * @return ?NodeInterface the top stack element.
      */
-    public function getNodeFromStack(): ?NodeInterface
+    public function getNodeFromStack(): ?ComponentInterface
     {
         return end($this->nodeStack) ?: null;
     }
@@ -158,9 +157,9 @@ class ParsingState extends AbstractNode implements ParsedTemplateInterface
     /**
      * Pop the top stack element (=remove it) and return it back.
      *
-     * @return NodeInterface|null the top stack element, which was removed.
+     * @return ComponentInterface|null the top stack element, which was removed.
      */
-    public function popNodeFromStack(): ?NodeInterface
+    public function popNodeFromStack(): ?ComponentInterface
     {
         return array_pop($this->nodeStack) ?: null;
     }

@@ -18,6 +18,6 @@ class StandardRenderable extends AbstractRenderable
      */
     public function render(RenderingContextInterface $renderingContext)
     {
-        return $this->getNode()->evaluate($renderingContext);
+        return $this->getNode()->execute($renderingContext);
     }
 }

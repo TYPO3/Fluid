@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * Implemented by all ViewHelpers
  */
-interface ViewHelperInterface extends NodeInterface
+interface ViewHelperInterface extends ComponentInterface
 {
     /**
      * @return ArgumentDefinition[]

@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
@@ -116,9 +116,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         }
 
         $elseViewHelperEncountered = false;
-        foreach ($this->getChildNodes() as $childNode) {
+        foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof ThenViewHelper) {
-                $data = $childNode->evaluate($this->renderingContext);
+                $data = $childNode->execute($this->renderingContext);
                 return $data;
             }
             if ($childNode instanceof ElseViewHelper) {
@@ -148,18 +148,18 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             return $this->arguments['else'];
         }
 
-        /** @var ViewHelperNode|NULL $elseNode */
+        /** @var ComponentInterface|null $elseNode */
         $elseNode = null;
-        foreach ($this->getChildNodes() as $childNode) {
+        foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof ElseViewHelper) {
                 $arguments = $childNode->getParsedArguments();
                 if (isset($arguments['if'])) {
                     $condition = $arguments['if'];
-                    if ($condition instanceof NodeInterface) {
-                        $condition = $condition->evaluate($this->renderingContext);
+                    if ($condition instanceof ComponentInterface) {
+                        $condition = $condition->execute($this->renderingContext);
                     }
                     if ((bool)$condition === true) {
-                        return $childNode->evaluate($this->renderingContext);
+                        return $childNode->execute($this->renderingContext);
                     }
                 } else {
                     $elseNode = $childNode;
@@ -167,6 +167,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             }
         }
 
-        return $elseNode instanceof NodeInterface ? $elseNode->evaluate($this->renderingContext) : '';
+        return $elseNode instanceof ComponentInterface ? $elseNode->execute($this->renderingContext) : '';
     }
 }

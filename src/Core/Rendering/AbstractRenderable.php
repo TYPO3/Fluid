@@ -9,7 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 
 /**
@@ -23,7 +23,7 @@ abstract class AbstractRenderable extends AbstractComponent implements Renderabl
     protected $name;
 
     /**
-     * @var NodeInterface
+     * @var ComponentInterface
      */
     protected $node;
 
@@ -51,19 +51,19 @@ abstract class AbstractRenderable extends AbstractComponent implements Renderabl
     }
 
     /**
-     * @param NodeInterface $node
+     * @param ComponentInterface $node
      * @return RenderableClosure
      */
-    public function setNode(NodeInterface $node): RenderableInterface
+    public function setNode(ComponentInterface $node): RenderableInterface
     {
         $this->node = $node;
         return $this;
     }
 
     /**
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    public function getNode(): NodeInterface
+    public function getNode(): ComponentInterface
     {
         return $this->node ? $this->node : new TextNode(sprintf('%s (%s)', static::class, $this->name));
     }

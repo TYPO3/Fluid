@@ -34,7 +34,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderExecutesTheLoopCorrectly(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = [0, 1, 2, 3];
         $this->arguments['as'] = 'innerVariable';
@@ -51,8 +51,8 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderPreservesKeys(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = ['key1' => 'value1', 'key2' => 'value2'];
         $this->arguments['as'] = 'innerVariable';
@@ -100,7 +100,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderIteratesElementsInReverseOrderIfReverseIsTrue(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = [0, 1, 2, 3];
         $this->arguments['as'] = 'innerVariable';
@@ -118,7 +118,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderIteratesElementsInReverseOrderIfReverseIsTrueAndObjectIsIterator(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = new \ArrayIterator([0, 1, 2, 3]);
         $this->arguments['as'] = 'innerVariable';
@@ -137,8 +137,8 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderPreservesKeysIfReverseIsTrue(array $each, string $expected): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = $each;
         $this->arguments['as'] = 'innerVariable';
@@ -181,8 +181,8 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function keyContainsNumericalIndexIfTheGivenArrayDoesNotHaveAKey(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = ['foo', 'bar', 'baz'];
         $this->arguments['as'] = 'innerVariable';
@@ -219,7 +219,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderIteratesThroughElementsOfTraversableObjects(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = new \ArrayObject(['key1' => 'value1', 'key2' => 'value2']);
         $this->arguments['as'] = 'innerVariable';
@@ -236,8 +236,8 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderPreservesKeyWhenIteratingThroughElementsOfObjectsThatImplementIteratorInterface(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = new \ArrayIterator(['key1' => 'value1', 'key2' => 'value2']);
         $this->arguments['as'] = 'innerVariable';
@@ -255,8 +255,8 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function keyContainsTheNumericalIndexWhenIteratingThroughElementsOfObjectsOfTyeSplObjectStorage(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('someKey'));
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('someKey'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $splObjectStorageObject = new \SplObjectStorage();
         $object1 = new UserWithToString('foo');
@@ -282,7 +282,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function iterationDataIsAddedToTemplateVariableContainerIfIterationArgumentIsSet(): void
     {
         $viewHelper = new ForViewHelper();
-        $viewHelper->addChildNode(new ObjectAccessorNode('innerVariable'));
+        $viewHelper->addChild(new ObjectAccessorNode('innerVariable'));
 
         $this->arguments['each'] = ['foo' => 'bar', 'Flow' => 'Fluid', 'TYPO3' => 'rocks'];
         $this->arguments['as'] = 'innerVariable';

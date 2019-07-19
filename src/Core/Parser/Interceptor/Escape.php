@@ -7,11 +7,11 @@ namespace TYPO3Fluid\Fluid\Core\Parser\Interceptor;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 
 /**
@@ -31,12 +31,12 @@ class Escape implements InterceptorInterface
      * Adds a ViewHelper node using the Format\HtmlspecialcharsViewHelper to the given node.
      * If "escapingInterceptorEnabled" in the ViewHelper is FALSE, will disable itself inside the ViewHelpers body.
      *
-     * @param NodeInterface $node
+     * @param ComponentInterface $node
      * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
      * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
-     * @return NodeInterface
+     * @return ComponentInterface
      */
-    public function process(NodeInterface $node, int $interceptorPosition, ParsingState $parsingState): NodeInterface
+    public function process(ComponentInterface $node, int $interceptorPosition, ParsingState $parsingState): ComponentInterface
     {
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
             if (!$node->isChildrenEscapingEnabled()) {

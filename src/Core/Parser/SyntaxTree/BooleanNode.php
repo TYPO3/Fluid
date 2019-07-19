@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -19,12 +20,12 @@ class BooleanNode extends AbstractNode
     /**
      * Stack of expression nodes to be evaluated
      *
-     * @var NodeInterface[]
+     * @var ComponentInterface[]
      */
     protected $childNodes = [];
 
     /**
-     * @var NodeInterface
+     * @var ComponentInterface
      */
     protected $node;
 
@@ -43,7 +44,7 @@ class BooleanNode extends AbstractNode
         // groupers from the text parts of the expression. All other nodes
         // we leave intact for later processing
         if ($input instanceof RootNode) {
-            $this->stack = $input->getChildNodes();
+            $this->stack = $input->getChildren();
         } elseif (is_array($input)) {
             $this->stack = $input;
         } else {
@@ -69,11 +70,11 @@ class BooleanNode extends AbstractNode
     }
 
     /**
-     * @param NodeInterface $node
+     * @param ComponentInterface $node
      * @param RenderingContextInterface $renderingContext
      * @return boolean
      */
-    public static function createFromNodeAndEvaluate(NodeInterface $node, RenderingContextInterface $renderingContext): bool
+    public static function createFromNodeAndEvaluate(ComponentInterface $node, RenderingContextInterface $renderingContext): bool
     {
         $booleanNode = new BooleanNode($node);
         return $booleanNode->evaluate($renderingContext);
@@ -109,7 +110,7 @@ class BooleanNode extends AbstractNode
         foreach ($expressionParts as $key => $expressionPart) {
             if ($expressionPart instanceof TextNode || is_string($expressionPart)) {
                 $merged[] = $expressionPart instanceof TextNode ? $expressionPart->getText() : $expressionPart;
-            } elseif ($expressionPart instanceof NodeInterface) {
+            } elseif ($expressionPart instanceof ComponentInterface) {
                 $merged[] = '{node' . $key . '}';
             } else {
                 $merged[] = '{node' . $key . '}';
@@ -129,8 +130,8 @@ class BooleanNode extends AbstractNode
     {
         $context = [];
         foreach ($expressionParts as $key => $expressionPart) {
-            if ($expressionPart instanceof NodeInterface) {
-                $context['node' . $key] = $expressionPart->evaluate($renderingContext);
+            if ($expressionPart instanceof ComponentInterface) {
+                $context['node' . $key] = $expressionPart->execute($renderingContext);
             } else {
                 $context['node' . $key] = $expressionPart;
             }
