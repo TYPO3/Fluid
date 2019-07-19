@@ -58,8 +58,6 @@ class TemplateParser
      */
     public function parse(string $templateString, ?Configuration $configuration = null): ParsedTemplateInterface
     {
-        $templateString = $this->preProcessTemplateSource($templateString);
-
         $source = new Source($templateString);
         $contexts = new Contexts();
         $sequencer = new Sequencer(
@@ -97,21 +95,6 @@ class TemplateParser
         );
         $parsedTemplate->setIdentifier($templateIdentifier);
         return $parsedTemplate;
-    }
-
-    /**
-     * Pre-process the template source, making all registered TemplateProcessors
-     * do what they need to do with the template source before it is parsed.
-     *
-     * @param string $templateSource
-     * @return string
-     */
-    protected function preProcessTemplateSource(string $templateSource): string
-    {
-        foreach ($this->renderingContext->getTemplateProcessors() as $templateProcessor) {
-            $templateSource = $templateProcessor->preProcessSource($templateSource);
-        }
-        return $templateSource;
     }
 
     /**

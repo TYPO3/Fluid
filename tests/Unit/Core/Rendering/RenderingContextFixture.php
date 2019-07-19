@@ -12,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -53,11 +52,6 @@ class RenderingContextFixture implements RenderingContextInterface
      * @var TemplatePaths
      */
     public $templatePaths;
-
-    /**
-     * @var TemplateProcessorInterface[]
-     */
-    public $templateProcessors = [];
 
     /**
      * @var array
@@ -200,26 +194,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public function setTemplatePaths(TemplatePaths $templatePaths): void
     {
         $this->templatePaths = $templatePaths;
-    }
-
-    /**
-     * Delegation: Set TemplateProcessor instances in the parser
-     * through a public API.
-     *
-     * @param TemplateProcessorInterface[] $templateProcessors
-     * @return void
-     */
-    public function setTemplateProcessors(array $templateProcessors): void
-    {
-        $this->templateProcessors = $templateProcessors;
-    }
-
-    /**
-     * @return TemplateProcessorInterface[]
-     */
-    public function getTemplateProcessors(): array
-    {
-        return $this->templateProcessors;
     }
 
     /**

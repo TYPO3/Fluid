@@ -8,9 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -21,32 +18,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class TemplateParserTest extends UnitTestCase
 {
-    /**
-     * @test
-     */
-    public function testParseCallsPreProcessOnTemplateProcessors(): void
-    {
-        $templateParser = new TemplateParser();
-        $processor1 = $this->getMockForAbstractClass(
-            TemplateProcessorInterface::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['preProcessSource']
-        );
-        $processor2 = clone $processor1;
-        $processor1->expects($this->once())->method('preProcessSource')->with('source1')->willReturn('source2');
-        $processor2->expects($this->once())->method('preProcessSource')->with('source2')->willReturn('final');
-        $context = new RenderingContextFixture();
-        $context->setTemplateProcessors([$processor1, $processor2]);
-        $context->setVariableProvider(new StandardVariableProvider());
-        $templateParser->setRenderingContext($context);
-        $result = $templateParser->parse('source1')->render($context);
-        $this->assertEquals('final', $result);
-    }
-
     public function quotedStrings(): array
     {
         return [

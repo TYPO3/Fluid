@@ -15,8 +15,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -82,11 +80,6 @@ class RenderingContext implements RenderingContextInterface
      * @var Configuration
      */
     protected $parserConfiguration;
-
-    /**
-     * @var TemplateProcessorInterface[]
-     */
-    protected $templateProcessors = [];
 
     /**
      * List of class names implementing ExpressionNodeInterface
@@ -239,29 +232,6 @@ class RenderingContext implements RenderingContextInterface
     public function getTemplateParser(): TemplateParser
     {
         return $this->templateParser;
-    }
-
-    /**
-     * Delegation: Set TemplateProcessor instances in the parser
-     * through a public API.
-     *
-     * @param TemplateProcessorInterface[] $templateProcessors
-     * @return void
-     */
-    public function setTemplateProcessors(array $templateProcessors): void
-    {
-        $this->templateProcessors = $templateProcessors;
-        foreach ($this->templateProcessors as $templateProcessor) {
-            $templateProcessor->setRenderingContext($this);
-        }
-    }
-
-    /**
-     * @return TemplateProcessorInterface[]
-     */
-    public function getTemplateProcessors(): array
-    {
-        return $this->templateProcessors;
     }
 
     /**

@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
-use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
@@ -75,7 +74,6 @@ class RenderingContextTest extends UnitTestCase
             ['expressionNodeTypes', ['Foo', 'Bar']],
             ['templatePaths', $this->getMock(TemplatePaths::class)],
             ['templateParser', $this->getMock(TemplateParser::class)],
-            ['templateProcessors', [$this->getMock(TemplateProcessorInterface::class), $this->getMock(TemplateProcessorInterface::class)]]
         ];
     }
 
