@@ -7,8 +7,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderableInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -103,7 +104,7 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');
         $this->registerArgument('partial', 'string', 'Partial to render, with or without section');
         $this->registerArgument('delegate', 'string', 'Optional PHP class name of a permanent, included-in-app ParsedTemplateInterface implementation to override partial/section');
-        $this->registerArgument('renderable', RenderableInterface::class, 'Instance of a RenderableInterface implementation to be rendered');
+        $this->registerArgument('renderable', ComponentInterface::class, 'Instance of a ComponentInterface implementation to be rendered');
         $this->registerArgument('arguments', 'array', 'Array of variables to be transferred. Use {_all} for all variables', false, []);
         $this->registerArgument('optional', 'boolean', 'If TRUE, considers the *section* optional. Partial never is.', false, false);
         $this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist');
@@ -120,7 +121,7 @@ class RenderViewHelper extends AbstractViewHelper
         $variables = (array) $arguments['arguments'];
         $optional = (boolean) $arguments['optional'];
         $delegate = $arguments['delegate'];
-        /** @var RenderableInterface|null $renderable */
+        /** @var ComponentInterface|null $renderable */
         $renderable = $arguments['renderable'];
         $tagContent = $renderChildrenClosure();
         if ($arguments['contentAs']) {
@@ -130,7 +131,7 @@ class RenderViewHelper extends AbstractViewHelper
         $view = $renderingContext->getViewHelperVariableContainer()->getView();
         $content = '';
         if ($renderable) {
-            $content = $renderable->render($renderingContext);
+            $content = $renderable->execute($renderingContext, (new ArgumentCollection())->assignAll($variables));
         } elseif ($delegate !== null) {
             if (!is_a($delegate, ParsedTemplateInterface::class, true)) {
                 throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));

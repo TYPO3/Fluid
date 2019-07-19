@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderableInterface;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ParsedTemplateImplementationFixture;
@@ -54,7 +54,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
         $instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything());
         $instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything());
         $instance->expects($this->at(2))->method('registerArgument')->with('delegate', 'string', $this->anything());
-        $instance->expects($this->at(3))->method('registerArgument')->with('renderable', RenderableInterface::class, $this->anything());
+        $instance->expects($this->at(3))->method('registerArgument')->with('renderable', ComponentInterface::class, $this->anything());
         $instance->expects($this->at(4))->method('registerArgument')->with('arguments', 'array', $this->anything(), false, []);
         $instance->expects($this->at(5))->method('registerArgument')->with('optional', 'boolean', $this->anything(), false, false);
         $instance->expects($this->at(6))->method('registerArgument')->with('default', 'mixed', $this->anything());
@@ -125,10 +125,10 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderWithRenderable(): void
+    public function testRenderWithComponent(): void
     {
-        $renderable = $this->getMockBuilder(RenderableInterface::class)->getMockForAbstractClass();
-        $renderable->expects($this->once())->method('render')->willReturn('rendered by fixture');
+        $renderable = $this->getMockBuilder(ComponentInterface::class)->getMockForAbstractClass();
+        $renderable->expects($this->once())->method('execute')->willReturn('rendered by fixture');
         $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
         $this->subject->setArguments([
             'partial' => null,
