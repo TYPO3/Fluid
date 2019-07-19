@@ -37,6 +37,26 @@ abstract class AbstractComponent implements ComponentInterface
 
     protected $argumentDefinitions = [];
 
+    /**
+     * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
+     * @see isChildrenEscapingEnabled()
+     *
+     * Note: If this is NULL the value of $this->escapingInterceptorEnabled is considered for backwards compatibility
+     *
+     * @var boolean|null
+     * @api
+     */
+    protected $escapeChildren = null;
+
+    /**
+     * Specifies whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
+     * @see isOutputEscapingEnabled()
+     *
+     * @var boolean|null
+     * @api
+     */
+    protected $escapeOutput = null;
+
     public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
     {
         $this->arguments = $arguments;
@@ -120,5 +140,33 @@ abstract class AbstractComponent implements ComponentInterface
             return $this->children[0];
         }
         return $this;
+    }
+
+    /**
+     * Returns whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
+     *
+     * Note: This method is no public API, use $this->escapeChildren instead!
+     *
+     * @return boolean
+     */
+    public function isChildrenEscapingEnabled(): bool
+    {
+        if ($this->escapeChildren === null) {
+            // Disable children escaping automatically, if output escaping is on anyway.
+            return !$this->isOutputEscapingEnabled();
+        }
+        return $this->escapeChildren !== false;
+    }
+
+    /**
+     * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
+     *
+     * Note: This method is no public API, use $this->escapeOutput instead!
+     *
+     * @return boolean
+     */
+    public function isOutputEscapingEnabled(): bool
+    {
+        return $this->escapeOutput !== false;
     }
 }
