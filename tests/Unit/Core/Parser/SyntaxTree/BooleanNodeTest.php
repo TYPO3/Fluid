@@ -10,7 +10,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -238,7 +237,7 @@ class BooleanNodeTest extends UnitTestCase
     public function comparingUnequalIdentityReturnsFalse(): void
     {
         $rootNode = new RootNode();
-        $rootNode->addChild(new NumericNode('0'));
+        $rootNode->addChild(new TextNode('0'));
         $rootNode->addChild(new TextNode('==='));
         $rootNode->addChild(new BooleanNode(false));
 
