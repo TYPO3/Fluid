@@ -164,7 +164,7 @@ class TagBuilder
      * @return array Attributes indexed by attribute name
      * @api
      */
-    public function getAttributes(): array
+    public function getAttributes(): iterable
     {
         return $this->attributes;
     }
@@ -211,12 +211,12 @@ class TagBuilder
     /**
      * Adds attributes to the $attributes-collection
      *
-     * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
+     * @param iterable $attributes collection of attributes to add. key = attribute name, value = attribute value
      * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values
      * @return void
      * @api
      */
-    public function addAttributes(array $attributes, bool $escapeSpecialCharacters = true): void
+    public function addAttributes(iterable $attributes, bool $escapeSpecialCharacters = true): void
     {
         foreach ($attributes as $attributeName => $attributeValue) {
             $this->addAttribute($attributeName, (string) $attributeValue, $escapeSpecialCharacters);
