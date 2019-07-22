@@ -36,7 +36,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
         $context->setTemplateParser($parser);
         $subject->setRenderingContext($context);
         $processedSource = $subject->preProcessSource($templateSource);
-        $this->assertNotContains('{escaping', $processedSource);
+        $this->assertStringNotContainsString('{escaping', $processedSource);
     }
 
     /**

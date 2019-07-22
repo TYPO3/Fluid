@@ -188,10 +188,10 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function parseThrowsExceptionWhenStringArgumentMissing()
     {
+        $this->expectException(\Exception::class);
         $templateParser = new TemplateParser();
         $templateParser->parse(123);
     }
@@ -320,10 +320,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @__test
-     * @expectedException Exception
      */
     public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassDoesNotExisit()
     {
+        $this->expectException(\Exception::class);
+
         $mockState = $this->getMock(ParsingState::class);
 
         $templateParser = $this->getAccessibleMock(
@@ -340,10 +341,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @__test
-     * @expectedException Exception
      */
     public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassNameIsWronglyCased()
     {
+        $this->expectException(\Exception::class);
+
         $mockState = $this->getMock(ParsingState::class);
 
         $templateParser = $this->getAccessibleMock(
@@ -383,10 +385,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function closingViewHelperTagHandlerThrowsExceptionBecauseOfClosingTagWhichWasNeverOpened()
     {
+        $this->expectException(\Exception::class);
+
         $mockNodeOnStack = $this->getMock(NodeInterface::class, [], [], '', false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -399,10 +402,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function closingViewHelperTagHandlerThrowsExceptionBecauseOfWrongTagNesting()
     {
+        $this->expectException(\Exception::class);
+
         $mockNodeOnStack = $this->getMock(ViewHelperNode::class, [], [], '', false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));

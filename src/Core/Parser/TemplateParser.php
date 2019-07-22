@@ -594,6 +594,11 @@ class TemplateParser
     protected function textAndShorthandSyntaxHandler(ParsingState $state, $text, $context)
     {
         $sections = preg_split(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        if ($sections === false) {
+            // String $text was not possible to split; we must return a text node with the full text instead.
+            $this->textHandler($state, $text);
+            return;
+        }
         foreach ($sections as $section) {
             $matchedVariables = [];
             $expressionNode = null;
