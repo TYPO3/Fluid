@@ -55,7 +55,6 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     {
         $templateSource = $this->replaceCdataSectionsByEmptyLines($templateSource);
         $templateSource = $this->registerNamespacesFromTemplateSource($templateSource);
-        $this->throwExceptionsForUnhandledNamespaces($templateSource);
         return $templateSource;
     }
 
@@ -125,70 +124,35 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
                         substr($templateSource, strrpos($templateSource, $closingTag) + strlen($closingTag));
                 }
             } else {
-                if (!empty($namespaces)) {
-                    $namespaceAttributesToRemove = [];
-                    foreach ($namespaces as $namespace) {
-                        if (!$viewHelperResolver->isNamespaceIgnored($namespace[1])) {
-                            $namespaceAttributesToRemove[] = preg_quote($namespace[1], '/') . '="' . preg_quote($namespace[2], '/') . '"';
-                        }
+                $namespaceAttributesToRemove = [];
+                foreach ($namespaces as $namespace) {
+                    if (!$viewHelperResolver->isNamespaceIgnored($namespace[1])) {
+                        $namespaceAttributesToRemove[] = preg_quote($namespace[1], '/') . '="' . preg_quote($namespace[2], '/') . '"';
                     }
-                    if (count($namespaceAttributesToRemove)) {
-                        $matchWithRemovedNamespaceAttributes = preg_replace('/(?:\\s*+xmlns:(?:' . implode('|', $namespaceAttributesToRemove) . ')\\s*+)++/', ' ', $matches[0]);
-                        $templateSource = str_replace($matches[0], $matchWithRemovedNamespaceAttributes, $templateSource);
-                    }
+                }
+                if (count($namespaceAttributesToRemove)) {
+                    $matchWithRemovedNamespaceAttributes = preg_replace('/(?:\\s*+xmlns:(?:' . implode('|', $namespaceAttributesToRemove) . ')\\s*+)++/', ' ', $matches[0]);
+                    $templateSource = str_replace($matches[0], $matchWithRemovedNamespaceAttributes, $templateSource);
                 }
             }
         }
 
         preg_match_all(static::NAMESPACE_DECLARATION, $templateSource, $namespaces);
-        foreach ($namespaces['identifier'] as $key => $identifier) {
-            $namespace = $namespaces['phpNamespace'][$key];
-            if (strlen($namespace) === 0) {
-                $namespace = null;
+        if (!empty($namespaces['identifier'])) {
+            // There are no namespace declarations using curly-brace syntax.
+            foreach ($namespaces['identifier'] as $key => $identifier) {
+                $namespace = $namespaces['phpNamespace'][$key];
+                if (strlen($namespace) === 0) {
+                    $namespace = null;
+                }
+                $viewHelperResolver->addNamespace($identifier, $namespace);
             }
-            $viewHelperResolver->addNamespace($identifier, $namespace);
-        }
-        foreach ($namespaces[0] as $removal) {
-            $templateSource = str_replace($removal, '', $templateSource);
+            foreach ($namespaces[0] as $removal) {
+                $templateSource = str_replace($removal, '', $templateSource);
+            }
+
         }
 
         return $templateSource;
-    }
-
-    /**
-     * Throw an UnknownNamespaceException for any unknown and not ignored
-     * namespace inside the template string
-     *
-     * @param string $templateSource
-     * @return void
-     */
-    public function throwExceptionsForUnhandledNamespaces($templateSource)
-    {
-        $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
-        $splitTemplate = preg_split(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, $templateSource, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        foreach ($splitTemplate as $templateElement) {
-            if (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
-                if (!$viewHelperResolver->isNamespaceValidOrIgnored($matchedVariables['NamespaceIdentifier'])) {
-                    throw new UnknownNamespaceException('Unknown Namespace: ' . htmlspecialchars($matchedVariables[0]));
-                }
-                continue;
-            } elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
-                continue;
-            }
-
-            $sections = preg_split(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, $templateElement, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-            foreach ($sections as $section) {
-                if (preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS, $section, $matchedVariables) > 0) {
-                    preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $section, $shorthandViewHelpers, PREG_SET_ORDER);
-                    if (is_array($shorthandViewHelpers) === true) {
-                        foreach ($shorthandViewHelpers as $shorthandViewHelper) {
-                            if (!$viewHelperResolver->isNamespaceValidOrIgnored($shorthandViewHelper['NamespaceIdentifier'])) {
-                                throw new UnknownNamespaceException('Unknown Namespace: ' . $shorthandViewHelper['NamespaceIdentifier']);
-                            }
-                        }
-                    }
-                }
-            }
-        }
     }
 }
