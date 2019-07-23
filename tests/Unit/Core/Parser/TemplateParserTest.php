@@ -20,6 +20,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
+use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -39,9 +40,28 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceNotValid()
+    public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceIgnored()
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid']);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(true);
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+        $templateParser = new TemplateParser();
+        $templateParser->setRenderingContext($context);
+        $method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render', []]);
+        $this->assertNull($result);
+    }
+
+    /**
+     * @test
+     */
+    public function testInitializeViewHelperAndAddItToStackThrowsExceptionIfNamespaceInvalid()
+    {
+        $this->setExpectedException(UnknownNamespaceException::class);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored', 'isNamespaceValid']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(false);
         $resolver->expects($this->once())->method('isNamespaceValid')->willReturn(false);
         $context = new RenderingContextFixture();
         $context->setViewHelperResolver($resolver);
@@ -56,9 +76,28 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceNotValid()
+    public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceIgnored()
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid']);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(true);
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+        $templateParser = new TemplateParser();
+        $templateParser->setRenderingContext($context);
+        $method = new \ReflectionMethod($templateParser, 'closingViewHelperTagHandler');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render']);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function testClosingViewHelperTagHandlerThrowsExceptionIfNamespaceInvalid()
+    {
+        $this->setExpectedException(UnknownNamespaceException::class);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid', 'isNamespaceIgnored']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(false);
         $resolver->expects($this->once())->method('isNamespaceValid')->willReturn(false);
         $context = new RenderingContextFixture();
         $context->setViewHelperResolver($resolver);
