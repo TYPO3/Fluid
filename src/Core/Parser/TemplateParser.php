@@ -355,8 +355,11 @@ class TemplateParser
     protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree)
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
-        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+        if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return null;
+        }
+        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
         }
         try {
             $currentViewHelperNode = new ViewHelperNode(
@@ -398,8 +401,11 @@ class TemplateParser
     protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier)
     {
         $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
-        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+        if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
             return false;
+        }
+        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
         }
         $lastStackElement = $state->popNodeFromStack();
         if (!($lastStackElement instanceof ViewHelperNode)) {
