@@ -41,37 +41,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 class Splitter
 {
-    public const MAX_NAMESPACE_LENGTH = 10;
-
     public const BYTE_NULL = 0; // Zero-byte for terminating documents
-    public const BYTE_INLINE = 123; // The "{" character indicating an inline expression started
-    public const BYTE_INLINE_END = 125; // The "}" character indicating an inline expression ended
-    public const BYTE_PIPE = 124; // The "|" character indicating an inline expression pass operation
-    public const BYTE_MINUS = 45; // The "-" character (for legacy pass operations)
-    public const BYTE_TAG = 60; // The "<" character indicating a tag has started
-    public const BYTE_TAG_END = 62; // The ">" character indicating a tag has ended
-    public const BYTE_TAG_CLOSE = 47; // The "/" character indicating a tag is a closing tag
-    public const BYTE_QUOTE_DOUBLE = 34; // The " (standard double-quote) character
-    public const BYTE_QUOTE_SINGLE = 39; // The ' (standard single-quote) character
-    public const BYTE_WHITESPACE_SPACE = 32; // A standard space character
-    public const BYTE_WHITESPACE_TAB = 9; // A standard carriage-return character
-    public const BYTE_WHITESPACE_RETURN = 13; // A standard tab character
-    public const BYTE_WHITESPACE_EOL = 10; // A standard (UNIX) line-break character
-    public const BYTE_SEPARATOR_EQUALS = 61; // The "=" character
-    public const BYTE_SEPARATOR_COLON = 58; // The ":" character
-    public const BYTE_SEPARATOR_COMMA = 44; // The "," character
-    public const BYTE_SEPARATOR_PIPE = 124; // The "|" character
-    public const BYTE_PARENTHESIS_START = 40; // The "(" character
-    public const BYTE_PARENTHESIS_END = 41; // The ")" character
-    public const BYTE_ARRAY_START = 91; // The "[" character
-    public const BYTE_ARRAY_END = 93; // The "]" character
-    public const BYTE_SLASH = 47; // The "/" character
-    public const BYTE_BACKSLASH = 92; // The "\" character
-    public const BYTE_BACKTICK = 96; // The "`" character
-    public const BYTE_AT = 64; // The "@" character
     public const MAP_SHIFT = 64;
-    public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
-    public const MASK_WHITESPACE = 0 | self::MASK_LINEBREAKS | (1 << self::BYTE_WHITESPACE_SPACE) | (1 << self::BYTE_WHITESPACE_TAB);
 
     /** @var Source */
     public $source;
@@ -82,9 +53,6 @@ class Splitter
     /** @var Contexts */
     public $contexts;
 
-    /** @var \NoRewindIterator */
-    public $sequence;
-
     public $index = 0;
     private $primaryMask = 0;
     private $secondaryMask = 0;
@@ -94,57 +62,6 @@ class Splitter
         $this->source = $source;
         $this->contexts = $contexts;
         $this->switch($contexts->root);
-        $this->sequence = $this->parse();
-    }
-
-    /**
-     * Creates a dump, starting from the first line break before $position,
-     * to the next line break from $position, counting the lines and characters
-     * and inserting a marker pointing to the exact offending character.
-     *
-     * Is not very efficient - but adds bug tracing information. Should only
-     * be called when exceptions are raised during sequencing.
-     *
-     * @param Position $position
-     * @return string
-     */
-    public function extractSourceDumpOfLineAtPosition(Position $position): string
-    {
-        $lines = $this->countCharactersMatchingMask(Splitter::MASK_LINEBREAKS, 1, $position->index) + 1;
-        $offset = $this->findBytePositionBeforeOffset(Splitter::MASK_LINEBREAKS, $position->index);
-        $line = substr(
-            $this->source->source,
-            $offset,
-            $this->findBytePositionAfterOffset(Splitter::MASK_LINEBREAKS, $position->index)
-        );
-        $character = $position->index - $offset - 1;
-        $string = 'Line ' . $lines . ' character ' . $character . PHP_EOL;
-        $string .= PHP_EOL;
-        $string .= str_repeat(' ', max($character, 0)) . 'v' . PHP_EOL;
-        $string .= trim($line) . PHP_EOL;
-        $string .= str_repeat(' ', max($character, 0)) . '^' . PHP_EOL;
-        return $string;
-    }
-
-    public function createErrorAtPosition(string $message, int $code): SequencingException
-    {
-        $position = new Position($this->context, $this->index);
-        $error = new SequencingException($message, $code);
-        $error->setExcerpt($this->extractSourceDumpOfLineAtPosition($position));
-        $error->setByte($this->source->bytes[$this->index] ?? 0);
-        return $error;
-    }
-
-    public function createUnsupportedArgumentError(string $argument, array $definitions): SequencingException
-    {
-        return $this->createErrorAtPosition(
-            sprintf(
-                'Undeclared argument: %s. Valid arguments are: %s',
-                $argument,
-                implode(', ', array_keys($definitions))
-            ),
-            1558298976
-        );
     }
 
     /**
@@ -168,7 +85,7 @@ class Splitter
      *
      * @return \NoRewindIterator|string[]|null[]
      */
-    public function createGenerator(): \Generator
+    protected function createGenerator(): \Generator
     {
         $bytes = &$this->source->bytes;
         $source = &$this->source->source;
@@ -207,39 +124,5 @@ class Splitter
         $this->primaryMask = $context->primaryMask;
         $this->secondaryMask = $context->secondaryMask;
         return $previous ?? $context;
-    }
-
-    public function countCharactersMatchingMask(int $primaryMask, int $offset, int $length): int
-    {
-        $bytes = &$this->source->bytes;
-        $counted = 0;
-        for ($index = $offset; $index < $this->source->length; $index++) {
-            if (($primaryMask & (1 << $bytes[$index])) && $bytes[$index] < 64) {
-                $counted++;
-            }
-        }
-        return $counted;
-    }
-
-    public function findBytePositionBeforeOffset(int $primaryMask, int $offset): int
-    {
-        $bytes = &$this->source->bytes;
-        for ($index = min($offset, $this->source->length); $index > 0; $index--) {
-            if (($primaryMask & (1 << $bytes[$index])) && $bytes[$index] < 64) {
-                return $index;
-            }
-        }
-        return 0;
-    }
-
-    public function findBytePositionAfterOffset(int $primaryMask, int $offset): int
-    {
-        $bytes = &$this->source->bytes;
-        for ($index = $offset; $index < $this->source->length; $index++) {
-            if (($primaryMask & (1 << $bytes[$index])) && $bytes[$index] < 64) {
-                return $index;
-            }
-        }
-        return max($this->source->length, $offset);
     }
 }
