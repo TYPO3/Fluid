@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -17,19 +19,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class ThenViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
-    /**
-     * Just render everything.
-     *
-     * @return string the rendered string
-     * @api
-     */
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        return $this->renderChildren();
+        return $this->evaluateChildren($renderingContext);
     }
 }

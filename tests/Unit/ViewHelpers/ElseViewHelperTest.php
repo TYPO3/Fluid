@@ -7,34 +7,21 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 
 /**
  * Testcase for ElseViewHelper
  */
-class ElseViewHelperTest extends ViewHelperBaseTestcase
+class ElseViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @test
-     */
-    public function testInitializeArgumentsRegistersExpectedArguments(): void
+    public function getStandardTestValues(): array
     {
-        $instance = $this->getMock(ElseViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything());
-        $instance->initializeArguments();
-    }
-
-    /**
-     * @test
-     */
-    public function renderRendersChildren(): void
-    {
-        $viewHelper = $this->getMock(ElseViewHelper::class, ['renderChildren']);
-
-        $viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-        $actualResult = $viewHelper->render();
-        $this->assertEquals('foo', $actualResult);
+        $context = new RenderingContextFixture();
+        return [
+            'renders child content when no condition is set' => ['foo', $context, null, [new TextNode('foo')]],
+            'renders child content when condition is true' => ['foo', $context, ['if' => true], [new TextNode('foo')]],
+            'does not render child content when condition is false' => [null, $context, ['if' => false], [new TextNode('foo')]],
+        ];
     }
 }

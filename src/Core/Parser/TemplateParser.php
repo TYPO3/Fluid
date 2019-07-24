@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -53,31 +54,28 @@ class TemplateParser
      *
      * @param string $templateString The template to parse as a string
      * @param Configuration|null Template parsing configuration to use
-     * @return ParsedTemplateInterface Parsed template
+     * @return ComponentInterface Parsed template
      * @throws Exception
      */
-    public function parse(string $templateString, ?Configuration $configuration = null): ParsedTemplateInterface
+    public function parse(string $templateString, ?Configuration $configuration = null): ComponentInterface
     {
         $source = new Source($templateString);
         $contexts = new Contexts();
         $sequencer = new Sequencer(
             $this->renderingContext,
-            $this->getParsingState(),
             $contexts,
             $source,
             $configuration ?? $this->configuration
         );
-        $parsingState = $sequencer->sequence();
-
-        return $parsingState;
+        return $sequencer->sequence();
     }
 
     /**
      * @param string $templateIdentifier
      * @param \Closure $templateSourceClosure Closure which returns the template source if needed
-     * @return ParsedTemplateInterface
+     * @return ComponentInterface
      */
-    public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure): ParsedTemplateInterface
+    public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure): ComponentInterface
     {
         return $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
     }
@@ -85,15 +83,15 @@ class TemplateParser
     /**
      * @param string $templateIdentifier
      * @param \Closure $templateSourceClosure
-     * @return ParsedTemplateInterface
+     * @return ComponentInterface
      */
-    protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ParsedTemplateInterface
+    protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ComponentInterface
     {
         $parsedTemplate = $this->parse(
             $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
             $this->renderingContext->getParserConfiguration()
         );
-        $parsedTemplate->setIdentifier($templateIdentifier);
+        //$parsedTemplate->setIdentifier($templateIdentifier);
         return $parsedTemplate;
     }
 
@@ -118,16 +116,5 @@ class TemplateParser
             $value = str_replace("\\'", "'", preg_replace('/(^\'|\'$)/', '', $quotedValue));
         }
         return str_replace('\\\\', '\\', $value);
-    }
-
-    /**
-     * @return ParsingState
-     */
-    protected function getParsingState(): ParsingState
-    {
-        $variableProvider = $this->renderingContext->getVariableProvider();
-        $state = new ParsingState();
-        $state->setVariableProvider($variableProvider->getScopeCopy($variableProvider->getAll()));
-        return $state;
     }
 }

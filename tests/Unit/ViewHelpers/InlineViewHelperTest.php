@@ -7,42 +7,22 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\ViewHelpers\InlineViewHelper;
 
 /**
  * Class InlineViewHelperTest
  */
-class InlineViewHelperTest extends ViewHelperBaseTestcase
+class InlineViewHelperTest extends ViewHelperBaseTestCase
 {
-    /**
-     * @test
-     */
-    public function testInitializeArguments(): void
+    public function getStandardTestValues(): array
     {
-        $instance = $this->getMockBuilder(InlineViewHelper::class)->setMethods(['registerArgument'])->getMock();
-        $instance->expects($this->at(0))->method('registerArgument')->with('code', 'string', $this->anything());
-        $instance->initializeArguments();
-    }
-
-    /**
-     * @test
-     */
-    public function testCallsExpectedDelegationMethodFromRenderStatic(): void
-    {
-        $contextFixture = new RenderingContextFixture();
-
-        $parsedTemplateMock = $this->getMockBuilder(ParsingState::class)->getMock();
-        $parsedTemplateMock->expects($this->once())->method('render')->with($contextFixture)->willReturn('bar');
-
-        $parserMock = $this->getMockBuilder(TemplateParser::class)->setMethods(['parse'])->getMock();
-        $parserMock->expects($this->once())->method('parse')->with('foo')->willReturn($parsedTemplateMock);
-
-        $contextFixture->setTemplateParser($parserMock);
-
-        $result = InlineViewHelper::renderStatic([], function(): string { return 'foo'; }, $contextFixture);
-        $this->assertEquals('bar', $result);
+        $context = new RenderingContextFixture();
+        $context->setTemplateParser(new TemplateParser());
+        $context->setVariableProvider(new StandardVariableProvider(['variable' => 'rendered']));
+        return [
+            'executes sub-fluid code' => ['rendered', $context, ['code' => '{variable}']],
+        ];
     }
 }

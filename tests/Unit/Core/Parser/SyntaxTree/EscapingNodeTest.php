@@ -27,7 +27,7 @@ class EscapingNodeTest extends UnitTestCase
         $childNode = new TextNode($string);
         $node = new EscapingNode($childNode);
         $renderingContext = new RenderingContextFixture();
-        $this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string, ENT_QUOTES));
+        $this->assertEquals($node->execute($renderingContext), htmlspecialchars($string, ENT_QUOTES));
     }
 
     /**
@@ -40,6 +40,6 @@ class EscapingNodeTest extends UnitTestCase
         $node = new EscapingNode(new TextNode($string1));
         $node->addChild(new TextNode($string2));
         $renderingContext = new RenderingContextFixture();
-        $this->assertEquals($node->evaluate($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
+        $this->assertEquals($node->execute($renderingContext), htmlspecialchars($string2, ENT_QUOTES));
     }
 }

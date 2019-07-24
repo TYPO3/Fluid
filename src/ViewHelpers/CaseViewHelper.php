@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
@@ -33,15 +35,11 @@ class CaseViewHelper extends AbstractViewHelper
         $this->registerArgument('value', 'mixed', 'Value to match in this case', true);
     }
 
-    /**
-     * @return string the contents of this view helper if $value equals the expression of the surrounding switch view helper, otherwise an empty string
-     * @throws Exception
-     * @api
-     */
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $value = $this->arguments['value'];
-        $viewHelperVariableContainer = $this->renderingContext->getViewHelperVariableContainer();
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
+        $value = $arguments['value'];
+        $viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
         if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
             throw new Exception('The "case" View helper can only be used within a switch View helper', 1368112037);
         }
@@ -50,7 +48,7 @@ class CaseViewHelper extends AbstractViewHelper
         // non-type-safe comparison by intention
         if ($switchExpression == $value) {
             $viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'break', true);
-            return $this->renderChildren();
+            return $this->evaluateChildren($renderingContext);
         }
         return null;
     }

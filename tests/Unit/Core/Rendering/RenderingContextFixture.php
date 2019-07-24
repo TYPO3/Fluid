@@ -17,6 +17,9 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
 
 /**
  * Class RenderingContextFixture
@@ -56,7 +59,11 @@ class RenderingContextFixture implements RenderingContextInterface
     /**
      * @var array
      */
-    public $expressionNodeTypes = [];
+    public $expressionNodeTypes = [
+        MathViewHelper::class,
+        CastViewHelper::class,
+        IfViewHelper::class,
+    ];
 
     /**
      * @var string

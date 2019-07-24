@@ -1,20 +1,30 @@
 <?php
 declare(strict_types=1);
-namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
+namespace TYPO3Fluid\Fluid\ViewHelpers\Expression;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Math Expression Syntax Node - is a container for numeric values.
+ * Math Expression ViewHelper, seconds as expression type
  */
-class MathExpressionNode extends AbstractExpressionNode
+class MathViewHelper extends AbstractViewHelper implements ExpressionComponentInterface
 {
+    protected $parts = [];
+
+    public function __construct(iterable $parts = [])
+    {
+        $this->parts = $parts;
+    }
+
     /**
      * Possible operators, sorted by likely frequency of use to make
      * the strpos() check work as fast as possible for the most common
@@ -23,6 +33,13 @@ class MathExpressionNode extends AbstractExpressionNode
      * @var string
      */
     protected static $operators = '+-*/%^';
+
+    protected function initializeArguments()
+    {
+        $this->registerArgument('a', 'mixed', 'Numeric first value to calculate', true);
+        $this->registerArgument('b', 'mixed', 'Numeric first value to calculate', true);
+        $this->registerArgument('operator', 'string', 'Operator to use, e.g. +, -, %', true);
+    }
 
     /**
      * @param array $parts
@@ -33,16 +50,19 @@ class MathExpressionNode extends AbstractExpressionNode
         return isset($parts[2]) && strpos(static::$operators, $parts[1]) !== false;
     }
 
-    public function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $result = static::getTemplateVariableOrValueItself(array_shift($parts), $renderingContext);
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
+        $parts = empty($this->parts) ? [$arguments['a'], $arguments['operator'], $arguments['b']] : $this->parts;
+        $variable = array_shift($parts);
+        $result = $renderingContext->getVariableProvider()->get($variable) ?? $variable;
         $operator = null;
         $operators = str_split(static::$operators);
         foreach ($parts as $part) {
             if (in_array($part, $operators)) {
                 $operator = $part;
             } else {
-                $part = static::getTemplateVariableOrValueItself($part, $renderingContext);
+                $part = $renderingContext->getVariableProvider()->get($part) ?? $part;
 
                 if (!is_string($operator)) {
                     throw new Exception(

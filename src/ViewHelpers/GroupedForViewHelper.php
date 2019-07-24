@@ -7,11 +7,11 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Grouped loop view helper.
@@ -76,8 +76,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class GroupedForViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var boolean
      */
@@ -95,14 +93,9 @@ class GroupedForViewHelper extends AbstractViewHelper
         $this->registerArgument('groupKey', 'string', 'The name of the variable to store the current group', false, 'groupKey');
     }
 
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $each = $arguments['each'];
         $as = $arguments['as'];
         $groupBy = $arguments['groupBy'];
@@ -124,7 +117,7 @@ class GroupedForViewHelper extends AbstractViewHelper
         foreach ($groups['values'] as $currentGroupIndex => $group) {
             $templateVariableContainer->add($groupKey, $groups['keys'][$currentGroupIndex]);
             $templateVariableContainer->add($as, $group);
-            $output .= $renderChildrenClosure();
+            $output .= $this->evaluateChildren($renderingContext);
             $templateVariableContainer->remove($groupKey);
             $templateVariableContainer->remove($as);
         }

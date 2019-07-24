@@ -7,10 +7,10 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -19,13 +19,8 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * @api
  */
-abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInterface
+abstract class AbstractViewHelper extends AbstractComponent
 {
-    /**
-     * @var array
-     */
-    protected $parsedArguments = [];
-
     /**
      * @var RenderingContextInterface
      */
@@ -37,6 +32,11 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     protected $renderChildrenClosure = null;
 
     /**
+     * @var array
+     */
+    protected $arguments = [];
+
+    /**
      * Execute via Component API implementation.
      *
      * @param RenderingContextInterface $renderingContext
@@ -46,16 +46,18 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $this->setRenderingContext($renderingContext);
-        if ($arguments) {
-            $this->arguments = (array) $arguments->evaluate($renderingContext);
-        } else {
-            $this->arguments = $this->parsedArguments;
-            foreach ($this->arguments as $name => $value) {
-                $this->arguments[$name] = $value instanceof ComponentInterface ? $value->execute($renderingContext) : $value;
-            }
+        $this->renderingContext = $renderingContext;
+        $this->arguments = ($arguments ?? $this->getArguments())->evaluate($renderingContext);
+        return $this->callRenderMethod();
+    }
+
+    public function getArguments(): ArgumentCollectionInterface
+    {
+        if ($this->parsedArguments === null) {
+            $this->parsedArguments = new ArgumentCollection();
+            $this->initializeArguments();
         }
-        return $this->initializeArgumentsAndRender();
+        return $this->parsedArguments;
     }
 
     /**
@@ -65,88 +67,10 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
     {
-        $definitions = $this->prepareArguments();
-        $this->parsedArguments = $this->createInternalArguments($arguments ? $arguments->readAll() : $this->parsedArguments, $definitions);
+        #$this->parsedArguments = $arguments; //$this->createInternalArguments($arguments ?? $this->getArgumentCollection());
+        $this->parsedArguments = $this->getArguments()->assignAll($arguments ? $arguments->readAll() : []);
         $this->renderingContext = $renderingContext;
-        $this->validateParsedArguments($this->parsedArguments, $definitions);
         return $this;
-    }
-
-    public function createArgumentDefinitions(): ArgumentCollectionInterface
-    {
-        return new ArgumentCollection($this->prepareArguments());
-    }
-
-    public function getParsedArguments(): array
-    {
-        return $this->parsedArguments;
-    }
-
-    /**
-     * @param ComponentInterface[]|mixed[] $arguments
-     * @param ArgumentDefinition[] $argumentDefinitions
-     * @throws Exception
-     */
-    protected function validateParsedArguments(array $arguments, array $argumentDefinitions)
-    {
-        $additionalArguments = [];
-        foreach ($arguments as $argumentName => $value) {
-            if (!isset($argumentDefinitions[$argumentName])) {
-                $additionalArguments[$argumentName] = $value;
-            }
-        }
-        $this->validateAdditionalArguments($additionalArguments);
-    }
-
-    /**
-     * Creates arguments by padding with missing+optional arguments
-     * and casting or creating BooleanNode where appropriate. Input
-     * array may not contain all arguments - output array will.
-     *
-     * @param array $arguments
-     * @param array|null $definitions
-     * @return array
-     */
-    protected function createInternalArguments(array $arguments, ?array $definitions = null): array
-    {
-        $definitions = $definitions ?? $this->prepareArguments();
-        $missingArguments = [];
-        foreach ($definitions as $name => $definition) {
-            $argument = &$arguments[$name] ?? null;
-            if ($definition->isRequired() && !isset($argument)) {
-                // Required but missing argument, causes failure (delayed, to report all missing arguments at once)
-                $missingArguments[] = $name;
-            } elseif (!isset($argument)) {
-                // Argument is optional (required filtered out above), fit it with the default value
-                $argument = $definition->getDefaultValue();
-            } elseif (($type = $definition->getType()) && ($type === 'bool' || $type === 'boolean')) {
-                // Cast the value or create a BooleanNode
-                $argument = is_bool($argument) || is_numeric($argument) ? (bool)$argument : new BooleanNode($argument);
-            }
-            $arguments[$name] = $argument;
-        }
-        if (!empty($missingArguments)) {
-            throw new \TYPO3Fluid\Fluid\Core\Parser\Exception('Required argument(s) not provided: ' . implode(', ', $missingArguments), 1558533510);
-        }
-        return $arguments;
-    }
-
-    /**
-     * @param array $arguments
-     * @return void
-     */
-    public function setArguments(array $arguments): void
-    {
-        $this->arguments = $arguments;
-    }
-
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return void
-     */
-    public function setRenderingContext(RenderingContextInterface $renderingContext)
-    {
-        $this->renderingContext = $renderingContext;
     }
 
     /**
@@ -164,13 +88,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     protected function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
-        if (array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception(
-                'Argument "' . $name . '" has already been defined, thus it should not be defined again.',
-                1253036401
-            );
-        }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        $this->getArguments()->addDefinition(new ArgumentDefinition($name, $type, $description, $required, $defaultValue));
         return $this;
     }
 
@@ -190,13 +108,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
-        if (!array_key_exists($name, $this->argumentDefinitions)) {
-            throw new Exception(
-                'Argument "' . $name . '" has not been defined, thus it can\'t be overridden.',
-                1279212461
-            );
-        }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        $this->getArguments()->addDefinition(new ArgumentDefinition($name, $type, $description, $required, $defaultValue));
         return $this;
     }
 
@@ -209,17 +121,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     public function setRenderChildrenClosure(\Closure $renderChildrenClosure)
     {
         $this->renderChildrenClosure = $renderChildrenClosure;
-    }
-
-    /**
-     * Initialize the arguments of the ViewHelper, and call the render() method of the ViewHelper.
-     *
-     * @return mixed the rendered ViewHelper.
-     */
-    public function initializeArgumentsAndRender()
-    {
-        $this->validateArguments();
-        return $this->callRenderMethod();
     }
 
     /**
@@ -236,7 +137,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
         if (method_exists($this, 'renderStatic')) {
             // Method is safe to call - will not recurse through ViewHelperInvoker via the default
             // implementation of renderStatic() on this class.
-            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments ?? [], $this->buildRenderChildrenClosure(), $this->renderingContext]);
+            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext]);
         }
         throw new Exception(
             sprintf(
@@ -246,11 +147,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
                 get_class($this)
             )
         );
-    }
-
-    public function evaluate(RenderingContextInterface $renderingContext)
-    {
-        return $this->execute($renderingContext);
     }
 
     /**
@@ -266,7 +162,7 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
             $closure = $this->renderChildrenClosure;
             return $closure();
         }
-        return $this->evaluateChildNodes($this->renderingContext);
+        return $this->evaluateChildren($this->renderingContext);
     }
 
     /**
@@ -280,105 +176,10 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     protected function buildRenderChildrenClosure()
     {
         $self = clone $this;
-        return function() use ($self) {
+        $renderChildrenClosure = function () use ($self) {
             return $self->renderChildren();
         };
-    }
-
-    /**
-     * Initialize all arguments and return them
-     *
-     * @return ArgumentDefinition[]
-     */
-    public function prepareArguments()
-    {
-        if (empty($this->argumentDefinitions)) {
-            $this->initializeArguments();
-        }
-        return $this->argumentDefinitions;
-    }
-
-    /**
-     * Validate arguments, and throw exception if arguments do not validate.
-     *
-     * @return void
-     * @throws \InvalidArgumentException
-     */
-    public function validateArguments()
-    {
-        $argumentDefinitions = $this->prepareArguments();
-        foreach ($argumentDefinitions as $argumentName => $registeredArgument) {
-            if ($this->hasArgument($argumentName)) {
-                $value = $this->arguments[$argumentName];
-                $type = $registeredArgument->getType();
-                if ($value !== $registeredArgument->getDefaultValue() && $type !== 'mixed') {
-                    $givenType = is_object($value) ? get_class($value) : gettype($value);
-                    if (!$this->isValidType($type, $value)) {
-                        throw new \InvalidArgumentException(
-                            'The argument "' . $argumentName . '" was registered with type "' . $type . '", but is of type "' .
-                            $givenType . '" in view helper "' . get_class($this) . '". Value: ' . var_export($value, true),
-                            1256475113
-                        );
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Check whether the defined type matches the value type
-     *
-     * @param string $type
-     * @param mixed $value
-     * @return boolean
-     */
-    protected function isValidType(string $type, $value): bool
-    {
-        if ($type === 'object') {
-            if (!is_object($value)) {
-                return false;
-            }
-        } elseif ($type === 'array' || substr($type, -2) === '[]') {
-            if (!is_array($value) && !$value instanceof \ArrayAccess && !$value instanceof \Traversable && !empty($value)) {
-                return false;
-            } elseif (substr($type, -2) === '[]') {
-                $firstElement = $this->getFirstElementOfNonEmpty($value);
-                if ($firstElement === null) {
-                    return true;
-                }
-                return $this->isValidType(substr($type, 0, -2), $firstElement);
-            }
-        } elseif ($type === 'string') {
-            if (is_object($value) && !method_exists($value, '__toString')) {
-                return false;
-            }
-        } elseif ($type === 'boolean' && !is_bool($value)) {
-            return false;
-        } elseif (class_exists($type) && $value !== null && !$value instanceof $type) {
-            return false;
-        } elseif (is_object($value) && !is_a($value, $type, true)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Return the first element of the given array, ArrayAccess or Traversable
-     * that is not empty
-     *
-     * @param mixed $value
-     * @return mixed
-     */
-    protected function getFirstElementOfNonEmpty($value)
-    {
-        if (is_array($value)) {
-            return reset($value);
-        } elseif ($value instanceof \Traversable) {
-            foreach ($value as $element) {
-                return $element;
-            }
-        }
-        return null;
+        return $renderChildrenClosure;
     }
 
     /**
@@ -392,6 +193,11 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
     {
     }
 
+    public function allowUndeclaredArgument(string $argumentName): bool
+    {
+        return false;
+    }
+
     /**
      * Tests if the given $argumentName is set, and not NULL.
      * The isset() test used fills both those requirements.
@@ -402,69 +208,6 @@ abstract class AbstractViewHelper extends AbstractNode implements ViewHelperInte
      */
     protected function hasArgument(string $argumentName): bool
     {
-        return isset($this->arguments[$argumentName]);
-    }
-
-    /**
-     * Default implementation of "handling" additional, undeclared arguments.
-     * In this implementation the behavior is to consistently throw an error
-     * about NOT supporting any additional arguments. This method MUST be
-     * overridden by any ViewHelper that desires this support and this inherited
-     * method must not be called, obviously.
-     *
-     * @throws Exception
-     * @param array $arguments
-     * @return void
-     */
-    public function handleAdditionalArguments(array $arguments)
-    {
-    }
-
-    /**
-     * Default implementation of validating additional, undeclared arguments.
-     * In this implementation the behavior is to consistently throw an error
-     * about NOT supporting any additional arguments. This method MUST be
-     * overridden by any ViewHelper that desires this support and this inherited
-     * method must not be called, obviously.
-     *
-     * @throws Exception
-     * @param array $arguments
-     * @return void
-     */
-    public function validateAdditionalArguments(array $arguments)
-    {
-        if (!empty($arguments)) {
-            throw new Exception(
-                sprintf(
-                    'Undeclared arguments passed to ViewHelper %s: %s. Valid arguments are: %s',
-                    get_class($this),
-                    implode(', ', array_keys($arguments)),
-                    implode(', ', array_keys($this->argumentDefinitions))
-                )
-            );
-        }
-    }
-
-    /**
-     * Validate a single undeclared argument - see validateAdditionalArguments
-     * for more information.
-     *
-     * @param string $argumentName
-     * @return bool
-     */
-    public function validateAdditionalArgument(string $argumentName): bool
-    {
-        return false;
-    }
-
-    /**
-     * Resets the ViewHelper state.
-     *
-     * Overwrite this method if you need to get a clean state of your ViewHelper.
-     *
-     * @return void
-     */
-    public function resetState()
-    {
+        return $this->getArguments()->offsetExists($argumentName);
     }
 }

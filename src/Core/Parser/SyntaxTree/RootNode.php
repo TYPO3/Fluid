@@ -7,21 +7,11 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
 
 /**
  * Root node of every syntax tree.
  */
-class RootNode extends AbstractNode
+class RootNode extends AbstractComponent
 {
-    /**
-     * Evaluate the root node, by evaluating the subtree.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed Evaluated subtree
-     */
-    public function evaluate(RenderingContextInterface $renderingContext)
-    {
-        return $this->evaluateChildNodes($renderingContext);
-    }
 }

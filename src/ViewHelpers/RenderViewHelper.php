@@ -8,11 +8,11 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * A ViewHelper to render a section, a partial, a specified section in a partial
@@ -88,8 +88,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class RenderViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var boolean
      */
@@ -111,11 +109,9 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
     }
 
-    /**
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $section = $arguments['section'];
         $partial = $arguments['partial'];
         $variables = (array) $arguments['arguments'];
@@ -123,7 +119,7 @@ class RenderViewHelper extends AbstractViewHelper
         $delegate = $arguments['delegate'];
         /** @var ComponentInterface|null $renderable */
         $renderable = $arguments['renderable'];
-        $tagContent = $renderChildrenClosure();
+        $tagContent = $this->evaluateChildren($renderingContext);
         if ($arguments['contentAs']) {
             $variables[$arguments['contentAs']] = $tagContent;
         }

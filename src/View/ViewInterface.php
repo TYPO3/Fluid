@@ -16,7 +16,6 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
  */
 interface ViewInterface
 {
-
     /**
      * Add a variable to the view data collection.
      * Can be chained, so $this->view->assign(..., ...)->assign(..., ...); is possible

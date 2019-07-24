@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -30,8 +31,9 @@ class CViewHelper extends AbstractViewHelper
         $this->registerArgument('return', 'bool', 'Return the arguments array, do not encode');
     }
 
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
+        $arguments = ($arguments ?? $this->getArguments())->evaluate($renderingContext);
         $data = [
             'string' => $arguments['s'],
             'int' => $arguments['i'],
@@ -39,7 +41,7 @@ class CViewHelper extends AbstractViewHelper
             'bool' => $arguments['b'],
             'array' => $arguments['a'],
             'datetime' => ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : null),
-            'child' => $renderChildrenClosure(),
+            'child' => $this->evaluateChildren($renderingContext),
         ];
         if ($arguments['return']) {
             return $data;

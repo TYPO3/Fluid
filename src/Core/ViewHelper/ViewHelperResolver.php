@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 
 /**
@@ -116,6 +117,7 @@ class ViewHelperResolver
         } elseif (isset($this->namespaces[$identifier]) && !in_array($phpNamespace, $this->namespaces[$identifier])) {
             $this->namespaces[$identifier][] = $phpNamespace;
         }
+        $this->resolvedViewHelperClassNames = [];
     }
 
     /**
@@ -136,7 +138,12 @@ class ViewHelperResolver
 
     public function removeNamespace(string $identifier, $phpNamespace): void
     {
-
+        if (($key = array_search($phpNamespace, $this->namespaces[$identifier]))) {
+            unset($this->namespaces[$identifier][$key]);
+            if (empty($this->namespaces[$identifier])) {
+                unset($this->namespaces[$identifier]);
+            }
+        }
     }
 
     /**
@@ -285,6 +292,7 @@ class ViewHelperResolver
                     $name = $namespace . '\\' . $className;
                     if (class_exists($name)) {
                         $actualViewHelperClassName = $name;
+                        break;
                     }
                 }
             }
@@ -314,9 +322,9 @@ class ViewHelperResolver
      *
      * @param string|null $namespace
      * @param string $viewHelperShortName
-     * @return ViewHelperInterface
+     * @return ComponentInterface
      */
-    public function createViewHelperInstance(?string $namespace, string $viewHelperShortName): ViewHelperInterface
+    public function createViewHelperInstance(?string $namespace, string $viewHelperShortName): ComponentInterface
     {
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
         return $this->createViewHelperInstanceFromClassName($className);
@@ -329,9 +337,9 @@ class ViewHelperResolver
      * injections etc. to be performed on the ViewHelper instance.
      *
      * @param string $viewHelperClassName
-     * @return ViewHelperInterface
+     * @return ComponentInterface
      */
-    public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ViewHelperInterface
+    public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ComponentInterface
     {
         return new $viewHelperClassName();
     }

@@ -7,24 +7,19 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 
 /**
  * Testcase for ElseViewHelper
  */
-class ThenViewHelperTest extends ViewHelperBaseTestcase
+class ThenViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @test
-     */
-    public function renderRendersChildren(): void
+    public function getStandardTestValues(): array
     {
-        $viewHelper = $this->getMock(ThenViewHelper::class, ['renderChildren']);
-
-        $viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
-        $actualResult = $viewHelper->render();
-        $this->assertEquals('foo', $actualResult);
+        $context = new RenderingContextFixture();
+        return [
+            'renders child nodes as output' => ['foo', $context, null, [new TextNode('foo')]],
+        ];
     }
 }

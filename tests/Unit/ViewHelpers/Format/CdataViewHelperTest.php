@@ -7,41 +7,21 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
-use TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestCase;
 
 /**
  * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\CdataViewHelper
  */
-class CdataViewHelperTest extends ViewHelperBaseTestcase
+class CdataViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @param array $arguments
-     * @param string|NULL $tagContent
-     * @param string $expected
-     * @dataProvider getRenderTestValues
-     */
-    public function testRender(array $arguments, ?string $tagContent, string $expected): void
+    public function getStandardTestValues(): array
     {
-        $instance = new CdataViewHelper();
-        $instance->setArguments($arguments);
-        $instance->setRenderingContext(new RenderingContextFixture());
-        $instance->setRenderChildrenClosure(function () use ($tagContent): ?string {
-            return $tagContent;
-        });
-        $this->assertEquals($expected, $instance->initializeArgumentsAndRender());
-    }
-
-    /**
-     * @return array
-     */
-    public function getRenderTestValues(): array
-    {
+        $context = new RenderingContextFixture();
         return [
-            [[], 'test1', '<![CDATA[test1]]>'],
-            [['value' => 'test2'], null, '<![CDATA[test2]]>'],
+            'wraps node in CDATA' => ['<![CDATA[foo]]>', $context, null, [new TextNode('foo')]],
+            'wraps multiple nodes in CDATA' => ['<![CDATA[foobar]]>', $context, null, [new TextNode('foo'), new TextNode('bar')]],
         ];
     }
 }

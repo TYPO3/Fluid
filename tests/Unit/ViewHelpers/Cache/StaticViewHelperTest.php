@@ -9,22 +9,21 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingChildrenException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\Cache\StaticViewHelper;
 
 /**
  * Testcase for StaticViewHelper
  */
-class StaticViewHelperTest extends ViewHelperBaseTestcase
+class StaticViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @test
-     */
-    public function testRenderCallsRenderChildren(): void
+    public function getStandardTestValues(): array
     {
-        $subject = $this->getMockBuilder(StaticViewHelper::class)->setMethods(['renderChildren'])->getMock();
-        $subject->expects($this->once())->method('renderChildren')->willReturn('test');
-        $this->assertEquals('test', $subject->render());
+        $context = new RenderingContextFixture();
+        return [
+            'converts multiple nodes to text' => ['foobar', $context, [], [new TextNode('foo'), new TextNode('bar')]],
+        ];
     }
 }

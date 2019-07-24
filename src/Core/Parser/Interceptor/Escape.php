@@ -8,10 +8,9 @@ namespace TYPO3Fluid\Fluid\Core\Parser\Interceptor;
  */
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 
 /**
@@ -33,10 +32,9 @@ class Escape implements InterceptorInterface
      *
      * @param ComponentInterface $node
      * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-     * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
      * @return ComponentInterface
      */
-    public function process(ComponentInterface $node, int $interceptorPosition, ParsingState $parsingState): ComponentInterface
+    public function process(ComponentInterface $node, int $interceptorPosition): ComponentInterface
     {
         if ($interceptorPosition === InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER) {
             if (!$node->isChildrenEscapingEnabled()) {
@@ -54,7 +52,7 @@ class Escape implements InterceptorInterface
             if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
                 $node = new EscapingNode($node);
             }
-        } elseif ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && ($node instanceof ObjectAccessorNode || $node instanceof ExpressionNodeInterface)) {
+        } elseif ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && ($node instanceof ExpressionComponentInterface || $node instanceof ObjectAccessorNode)) {
             $node = new EscapingNode($node);
         }
         return $node;

@@ -7,13 +7,15 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Text Syntax Tree Node - is a container for strings.
  */
-class TextNode extends AbstractNode
+class TextNode extends AbstractComponent
 {
 
     /**
@@ -37,14 +39,7 @@ class TextNode extends AbstractNode
         $this->text = $text;
     }
 
-    /**
-     * Return the text associated to the syntax tree. Text from child nodes is
-     * appended to the text in the node's own text.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return string the text stored in this node/subtree.
-     */
-    public function evaluate(RenderingContextInterface $renderingContext): string
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
         return $this->text;
     }

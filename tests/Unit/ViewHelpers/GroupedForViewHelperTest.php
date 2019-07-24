@@ -7,306 +7,47 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\ViewHelpers\GroupedForViewHelper;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 
 /**
- * Testcase for GroupedForViewHelperTest
+ * Testcase for GroupedForViewHelper
  */
-class GroupedForViewHelperTest extends ViewHelperBaseTestcase
+class GroupedForViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @var GroupedForViewHelper
-     */
-    protected $viewHelper;
-
-    public function setUp(): void
+    public function getStandardTestValues(): array
     {
-        parent::setUp();
-        $this->viewHelper = $this->getMock(GroupedForViewHelper::class, ['renderChildren']);
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsEmptyStringIfObjectIsNull(): void
-    {
-        $this->viewHelper->setArguments(['each' => null, 'as' => 'foo', 'groupBy' => 'bar', 'groupKey' => null]);
-        $this->assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsEmptyStringIfObjectIsEmptyArray(): void
-    {
-        $this->viewHelper->setArguments(['each' => [], 'as' => 'foo', 'groupBy' => 'bar', 'groupKey' => null]);
-        $this->assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
-    }
-
-    /**
-     * @test
-     */
-    public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable(): void
-    {
-        $this->expectException(Exception::class);
-
-        $object = new \stdClass();
-        $this->viewHelper->setArguments(
-            ['each' => $object, 'as' => 'innerVariable', 'groupBy' => 'someKey', 'groupKey' => null]
-        );
-        $output = $this->viewHelper->render();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsMultidimensionalArrayAndPreservesKeys(): void
-    {
-        $photoshop = ['name' => 'Adobe Photoshop', 'license' => 'commercial'];
-        $typo3 = ['name' => 'TYPO3', 'license' => 'GPL'];
-        $office = ['name' => 'Microsoft Office', 'license' => 'commercial'];
-        $drupal = ['name' => 'Drupal', 'license' => 'GPL'];
-        $wordpress = ['name' => 'Wordpress', 'license' => 'GPL'];
-
-        $products = ['photoshop' => $photoshop, 'typo3' => $typo3, 'office' => $office, 'drupal' => $drupal, 'wordpress' => $wordpress];
-
-        $this->viewHelper->setArguments(
-            ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsMultidimensionalArrayObjectAndPreservesKeys(): void
-    {
-        $photoshop = ['name' => 'Adobe Photoshop', 'license' => 'commercial'];
-        $typo3 = ['name' => 'TYPO3', 'license' => 'GPL'];
-        $office = ['name' => 'Microsoft Office', 'license' => 'commercial'];
-        $drupal = ['name' => 'Drupal', 'license' => 'GPL'];
-        $wordpress = ['name' => 'Wordpress', 'license' => 'GPL'];
-
-        $products = ['photoshop' => $photoshop, 'typo3' => $typo3, 'office' => $office, 'drupal' => $drupal, 'wordpress' => $wordpress];
-
-        $this->viewHelper->setArguments(
-            ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsArrayOfObjectsAndPreservesKeys(): void
-    {
-        $photoshop = new \stdClass();
-        $photoshop->name = 'Adobe Photoshop';
-        $photoshop->license = 'commercial';
-        $typo3 = new \stdClass();
-        $typo3->name = 'TYPO3';
-        $typo3->license = 'GPL';
-        $office = new \stdClass();
-        $office->name = 'Microsoft Office';
-        $office->license = 'commercial';
-        $drupal = new \stdClass();
-        $drupal->name = 'Drupal';
-        $drupal->license = 'GPL';
-        $wordpress = new \stdClass();
-        $wordpress->name = 'Wordpress';
-        $wordpress->license = 'GPL';
-
-        $products = ['photoshop' => $photoshop, 'typo3' => $typo3, 'office' => $office, 'drupal' => $drupal, 'wordpress' => $wordpress];
-
-        $this->viewHelper->setArguments(
-            ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsIteratorOfObjectsAndPreservesKeys(): void
-    {
-        $photoshop = new \stdClass();
-        $photoshop->name = 'Adobe Photoshop';
-        $photoshop->license = 'commercial';
-        $typo3 = new \stdClass();
-        $typo3->name = 'TYPO3';
-        $typo3->license = 'GPL';
-        $office = new \stdClass();
-        $office->name = 'Microsoft Office';
-        $office->license = 'commercial';
-        $drupal = new \stdClass();
-        $drupal->name = 'Drupal';
-        $drupal->license = 'GPL';
-        $wordpress = new \stdClass();
-        $wordpress->name = 'Wordpress';
-        $wordpress->license = 'GPL';
-
-        $products = new \ArrayIterator(
-            ['photoshop' => $photoshop, 'typo3' => $typo3, 'office' => $office, 'drupal' => $drupal, 'wordpress' => $wordpress]
-        );
-
-        $this->viewHelper->setArguments(
-            ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsMultidimensionalArrayByObjectKey(): void
-    {
-        $customer1 = new \stdClass();
-        $customer1->name = 'Anton Abel';
-
-        $customer2 = new \stdClass();
-        $customer2->name = 'Balthasar Bux';
-
-        $invoice1 = ['date' => new \DateTime('1980-12-13'), 'customer' => $customer1];
-        $invoice2 = ['date' => new \DateTime('2010-07-01'), 'customer' => $customer1];
-        $invoice3 = ['date' => new \DateTime('2010-07-04'), 'customer' => $customer2];
-
-        $invoices = ['invoice1' => $invoice1, 'invoice2' => $invoice2, 'invoice3' => $invoice3];
-
-        $this->viewHelper->setArguments(
-            ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'customer', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsMultidimensionalArrayByPropertyPath(): void
-    {
-        $customer1 = new \stdClass();
-        $customer1->name = 'Anton Abel';
-
-        $customer2 = new \stdClass();
-        $customer2->name = 'Balthasar Bux';
-
-        $invoice1 = new \stdClass();
-        $invoice1->customer = $customer1;
-
-        $invoice2 = new \stdClass();
-        $invoice2->customer = $customer1;
-
-        $invoice3 = new \stdClass();
-        $invoice3->customer = $customer2;
-
-        $invoices = ['invoice1' => $invoice1, 'invoice2' => $invoice2, 'invoice3' => $invoice3];
-
-        $this->viewHelper->setArguments(
-            ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'customer.name', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsMultidimensionalObjectByObjectKey(): void
-    {
-        $customer1 = new \stdClass();
-        $customer1->name = 'Anton Abel';
-
-        $customer2 = new \stdClass();
-        $customer2->name = 'Balthasar Bux';
-
-        $invoice1 = new \stdClass();
-        $invoice1->date = new \DateTime('1980-12-13');
-        $invoice1->customer = $customer1;
-
-        $invoice2 = new \stdClass();
-        $invoice2->date = new \DateTime('2010-07-01');
-        $invoice2->customer = $customer1;
-
-        $invoice3 = new \stdClass();
-        $invoice3->date = new \DateTime('2010-07-04');
-        $invoice3->customer = $customer2;
-
-        $invoices = ['invoice1' => $invoice1, 'invoice2' => $invoice2, 'invoice3' => $invoice3];
-
-        $this->viewHelper->setArguments(
-            ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'customer', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderGroupsMultidimensionalObjectByDateTimeObject(): void
-    {
-        $date1 = new \DateTime('2010-07-01');
-        $date2 = new \DateTime('2010-07-04');
-
-        $invoice1 = new \stdClass();
-        $invoice1->date = $date1;
-        $invoice1->id = 12340;
-
-        $invoice2 = new \stdClass();
-        $invoice2->date = $date1;
-        $invoice2->id = 12341;
-
-        $invoice3 = new \stdClass();
-        $invoice3->date = $date2;
-        $invoice3->id = 12342;
-
-        $invoices = ['invoice1' => $invoice1, 'invoice2' => $invoice2, 'invoice3' => $invoice3];
-        $this->viewHelper->setArguments(
-            ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'date', 'groupKey' => 'myGroupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function groupingByAKeyThatDoesNotExistCreatesASingleGroup(): void
-    {
-        $photoshop = ['name' => 'Adobe Photoshop', 'license' => 'commercial'];
-        $typo3 = ['name' => 'TYPO3', 'license' => 'GPL'];
-        $office = ['name' => 'Microsoft Office', 'license' => 'commercial'];
-
-        $products = ['photoshop' => $photoshop, 'typo3' => $typo3, 'office' => $office];
-
-        $this->viewHelper->setArguments(
-            ['each' => $products, 'as' => 'innerKey', 'groupBy' => 'NonExistingKey', 'groupKey' => 'groupKey']
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function renderThrowsExceptionWhenPassingOneDimensionalArraysToEach(): void
-    {
-        $this->expectException(Exception::class);
-
-        $values = ['some', 'simple', 'array'];
-
-        $this->viewHelper->setArguments(
-            ['each' => $values, 'as' => 'innerVariable', 'groupBy' => 'someKey', 'groupKey' => null]
-        );
-        $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        $context = new RenderingContextFixture();
+        $context->setVariableProvider(new StandardVariableProvider());
+        $forViewHelper = new ForViewHelper();
+        $forViewHelper->onOpen($context, $forViewHelper->getArguments()->assignAll(['each' => new ObjectAccessorNode('grouped'), 'as' => 'value']))->addChild(new ObjectAccessorNode('value.name'));
+        return [
+            'renders grouped elements from array' => [
+                'zxy',
+                $context,
+                ['each' => [['prop' => 1, 'name' => 'z'], ['prop' => 2, 'name' => 'y'], ['prop' => 1, 'name' => 'x']], 'as' => 'grouped', 'groupBy' => 'prop'],
+                [$forViewHelper],
+            ],
+            'renders grouped elements from iterator' => [
+                'zxy',
+                $context,
+                ['each' => new \ArrayIterator([['prop' => 1, 'name' => 'z'], ['prop' => 2, 'name' => 'y'], ['prop' => 1, 'name' => 'x']]), 'as' => 'grouped', 'groupBy' => 'prop'],
+                [$forViewHelper],
+            ],
+            'renders grouped elements from array with key' => [
+                'z1x1y2',
+                $context,
+                ['each' => [['prop' => 1, 'name' => 'z'], ['prop' => 2, 'name' => 'y'], ['prop' => 1, 'name' => 'x']], 'as' => 'grouped', 'groupBy' => 'prop', 'groupKey' => 'key'],
+                [(clone $forViewHelper)->addChild(new ObjectAccessorNode('key'))],
+            ],
+            'renders grouped elements from iterator with key' => [
+                'z1x1y2',
+                $context,
+                ['each' => new \ArrayIterator([['prop' => 1, 'name' => 'z'], ['prop' => 2, 'name' => 'y'], ['prop' => 1, 'name' => 'x']]), 'as' => 'grouped', 'groupBy' => 'prop', 'groupKey' => 'key'],
+                [(clone $forViewHelper)->addChild(new ObjectAccessorNode('key'))],
+            ],
+        ];
     }
 }

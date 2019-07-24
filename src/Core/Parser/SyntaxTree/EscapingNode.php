@@ -7,16 +7,16 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Escaping Node - wraps all content that must be escaped before output.
  */
-class EscapingNode extends AbstractNode
+class EscapingNode extends AbstractComponent
 {
-
     /**
      * Node to be escaped
      *
@@ -24,49 +24,23 @@ class EscapingNode extends AbstractNode
      */
     protected $node;
 
-    /**
-     * Constructor.
-     *
-     * @param ComponentInterface $node
-     */
     public function __construct(ComponentInterface $node)
     {
         $this->node = $node;
     }
 
-    /**
-     * Return the value associated to the syntax tree.
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function addChild(ComponentInterface $component): ComponentInterface
+    {
+        $this->node = $component;
+        return $this;
+    }
+
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
         $evaluated = $this->node->execute($renderingContext);
         if (is_string($evaluated) || (is_object($evaluated) && method_exists($evaluated, '__toString'))) {
             return htmlspecialchars((string) $evaluated, ENT_QUOTES);
         }
-        return (string)$evaluated;
-    }
-
-    /**
-     * @return ComponentInterface
-     */
-    public function getNode(): ComponentInterface
-    {
-        return $this->node;
-    }
-
-    /**
-     * NumericNode does not allow adding child nodes, so this will always throw an exception.
-     *
-     * @param ComponentInterface $childNode The sub node to add
-     * @throws Exception
-     * @return ComponentInterface
-     */
-    public function addChild(ComponentInterface $childNode): ComponentInterface
-    {
-        $this->node = $childNode;
-        return $this;
+        return (string) $evaluated;
     }
 }

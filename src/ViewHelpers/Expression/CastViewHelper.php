@@ -1,19 +1,24 @@
 <?php
 declare(strict_types=1);
-namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
+namespace TYPO3Fluid\Fluid\ViewHelpers\Expression;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Type Casting Node - allows casting a variable to native PHP types.
+ * Math Expression ViewHelper, seconds as expression type
  */
-class CastingExpressionNode extends AbstractExpressionNode
+class CastViewHelper extends AbstractViewHelper implements ExpressionComponentInterface
 {
+    protected $parts = [];
 
     /**
      * @var array
@@ -22,8 +27,9 @@ class CastingExpressionNode extends AbstractExpressionNode
         'integer', 'boolean', 'string', 'float', 'array', \DateTime::class
     ];
 
-    public function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
+    public function __construct(iterable $parts = [])
     {
+        $this->parts = $parts;
         if (!in_array($parts[2], self::$validTypes)) {
             throw new ExpressionException(
                 sprintf(
@@ -34,7 +40,28 @@ class CastingExpressionNode extends AbstractExpressionNode
                 1559248372
             );
         }
-        return static::convert(static::getTemplateVariableOrValueItself($parts[0], $renderingContext), $parts[2]);
+    }
+
+    protected function initializeArguments()
+    {
+        $this->registerArgument('subject', 'mixed', 'Numeric first value to calculate', true);
+        $this->registerArgument('as', 'string', 'Type to cast, valid values are: integer, boolean, string, float and array', true);
+    }
+
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    {
+        if (!empty($this->parts)) {
+            $parts = $this->parts;
+        } else {
+            $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
+            $parts = [$arguments['subject'], 'as', $arguments['as']];
+        }
+        return $this->evaluateParts($renderingContext, $parts);
+    }
+
+    protected function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
+    {
+        return static::convert($renderingContext->getVariableProvider()->get($parts[0]) ?? $parts[0], $parts[2]);
     }
 
     /**

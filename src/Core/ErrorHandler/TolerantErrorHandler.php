@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
+use TYPO3Fluid\Fluid\Core\Parser\ExpressionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 use TYPO3Fluid\Fluid\View\Exception as ViewException;
 

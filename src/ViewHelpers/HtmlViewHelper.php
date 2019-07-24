@@ -26,10 +26,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
  */
 class HtmlViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
+
+    protected $escapeChildren = true;
 
     protected $shouldRenderTag = true;
 
@@ -37,6 +36,7 @@ class HtmlViewHelper extends AbstractViewHelper
 
     public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $argumentCollection = null): ComponentInterface
     {
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $this->shouldRenderTag = ($arguments['data-namespace-typo3-fluid'] ?? null) === 'true';
         $arguments = $argumentCollection->readAll();
         $resolver = $renderingContext->getViewHelperResolver();
@@ -54,36 +54,24 @@ class HtmlViewHelper extends AbstractViewHelper
 
     public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        $resolver = $renderingContext->getViewHelperResolver();
-        foreach ($this->namespaces as $identifier => $namespaces) {
-            foreach ($namespaces as $namespace) {
-                $resolver->removeNamespace($identifier, $namespace);
-            }
-        }
         return $this;
     }
 
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $arguments = $this->arguments;
-        $content = $this->renderChildren();
+        $content = $this->evaluateChildren($renderingContext);
         if (!$this->shouldRenderTag) {
             return $content;
         }
 
         $tagBuilder = new TagBuilder('html');
-        $tagBuilder->addAttributes($arguments);
+        $tagBuilder->addAttributes($arguments->evaluate($renderingContext));
         $tagBuilder->setContent($content);
         return $tagBuilder->render();
     }
 
-    public function validateAdditionalArgument(string $argumentName): bool
+    public function allowUndeclaredArgument(string $argumentName): bool
     {
         return true;
-    }
-
-    public function validateAdditionalArguments(array $arguments)
-    {
-        // Allows any and all arbitrary arguments regardless of naming
     }
 }

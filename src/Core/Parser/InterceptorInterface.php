@@ -29,10 +29,9 @@ interface InterceptorInterface
      *
      * @param ComponentInterface $node
      * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-     * @param ParsingState $parsingState the parsing state
      * @return ComponentInterface
      */
-    public function process(ComponentInterface $node, int $interceptorPosition, ParsingState $parsingState): ComponentInterface;
+    public function process(ComponentInterface $node, int $interceptorPosition): ComponentInterface;
 
     /**
      * The interceptor should define at which interception positions it wants to be called.

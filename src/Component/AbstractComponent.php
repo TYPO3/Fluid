@@ -4,8 +4,9 @@ namespace TYPO3Fluid\Fluid\Component;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -31,13 +32,6 @@ abstract class AbstractComponent implements ComponentInterface
     protected $name;
 
     /**
-     * @var ArgumentCollectionInterface|null
-     */
-    protected $arguments;
-
-    protected $argumentDefinitions = [];
-
-    /**
      * Specifies whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
      * @see isChildrenEscapingEnabled()
      *
@@ -57,9 +51,14 @@ abstract class AbstractComponent implements ComponentInterface
      */
     protected $escapeOutput = null;
 
+    /**
+     * @var ArgumentCollectionInterface|null
+     */
+    protected $parsedArguments = null;
+
     public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
     {
-        $this->arguments = $arguments;
+        $this->parsedArguments = $this->parsedArguments ?? $arguments;
         return $this;
     }
 
@@ -73,25 +72,23 @@ abstract class AbstractComponent implements ComponentInterface
         return $this->name;
     }
 
-    public function addArgumentDefinition(ArgumentDefinitionInterface $definition): ComponentInterface
+    public function getArguments(): ArgumentCollectionInterface
     {
-        $this->argumentDefinitions[$definition->getName()] = $definition;
-        return $this;
-    }
-
-    public function createArgumentDefinitions(): ArgumentCollectionInterface
-    {
-        return new ArgumentCollection($this->argumentDefinitions);
-    }
-
-    public function getArguments(): ?ArgumentCollectionInterface
-    {
-        return $this->arguments;
+        return $this->parsedArguments ?? ($this->parsedArguments = new ArgumentCollection());
     }
 
     public function addChild(ComponentInterface $component): ComponentInterface
     {
-        $this->children[] = $component;
+        if ($component instanceof RootNode) {
+            // Assimilate child nodes instead of allowing a root node inside a root node.
+            foreach ($component->getChildren() as $node) {
+                $this->addChild($node);
+            }
+        } elseif ($component instanceof TextNode && ($last = end($this->children)) && $last instanceof TextNode) {
+            $last->appendText($component->getText());
+        } else {
+            $this->children[] = $component;
+        }
         return $this;
     }
 
@@ -100,6 +97,11 @@ abstract class AbstractComponent implements ComponentInterface
         foreach ($this->children as $child) {
             if ($child->getName() === $name) {
                 return $child;
+            }
+            try {
+                return $child->getNamedChild($name);
+            } catch (ChildNotFoundException $exception) {
+
             }
         }
         throw new ChildNotFoundException(sprintf('Child with name "%s" not found', $name), 1562757835);
@@ -168,5 +170,50 @@ abstract class AbstractComponent implements ComponentInterface
     public function isOutputEscapingEnabled(): bool
     {
         return $this->escapeOutput !== false;
+    }
+
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    {
+        return $this->evaluateChildren($renderingContext);
+    }
+
+    public function allowUndeclaredArgument(string $argumentName): bool
+    {
+        return true;
+    }
+
+    /**
+     * Evaluate all child nodes and return the evaluated results.
+     *
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
+     * @throws Exception
+     */
+    protected function evaluateChildren(RenderingContextInterface $renderingContext)
+    {
+        $evaluatedNodes = [];
+        foreach ($this->getChildren() as $childNode) {
+            $evaluatedNodes[] = $childNode->execute($renderingContext, $childNode->getArguments());
+        }
+        // Make decisions about what to actually return
+        if (empty($evaluatedNodes)) {
+            return null;
+        }
+        if (count($evaluatedNodes) === 1) {
+            return $evaluatedNodes[0];
+        }
+        return implode('', array_map([$this, 'castToString'], $evaluatedNodes));
+    }
+
+    /**
+     * @param mixed $value
+     * @return string
+     */
+    protected function castToString($value): string
+    {
+        if (is_object($value) && !method_exists($value, '__toString')) {
+            throw new Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
+        }
+        return (string) $value;
     }
 }

@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -41,15 +43,12 @@ class ElseViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
+        $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules', false, true);
     }
 
-    /**
-     * @return string the rendered string
-     * @api
-     */
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        return $this->renderChildren();
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
+        return $arguments['if'] ? $this->evaluateChildren($renderingContext) : null;
     }
 }

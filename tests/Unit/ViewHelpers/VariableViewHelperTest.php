@@ -7,36 +7,24 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\ViewHelpers\VariableViewHelper;
 
 /**
  * Testcase for VariableViewHelper
  */
-class VariableViewHelperTest extends ViewHelperBaseTestcase
+class VariableViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @test
-     */
-    public function registersArguments(): void
+    public function getStandardTestValues(): array
     {
-        $subject = new VariableViewHelper();
-        $subject->initializeArguments();
-        $this->assertAttributeNotEmpty('argumentDefinitions', $subject);
+        $context = new RenderingContextFixture();
+        $variableProvider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
+        $variableProvider->expects($this->atLeastOnce())->method('add')->with('foo');
+        $context->setVariableProvider($variableProvider);
+        return [
+            'assigns variable' => [null, $context, ['name' => 'foo']],
+            'suppresses child rendering' => [null, $context, ['name' => 'foo'], [new TextNode('foo')]],
+        ];
     }
-
-    /**
-     * @test
-     */
-    public function assignsVariableInVariableProvider(): void
-    {
-        $variableProvider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['add'])->getMock();
-        $variableProvider->expects($this->once())->method('add')->with('name', 'value');
-        $renderingContext = new RenderingContextFixture();
-        $renderingContext->setVariableProvider($variableProvider);
-        VariableViewHelper::renderStatic(['name' => 'name', 'value' => null], function(): string { return 'value'; }, $renderingContext);
-    }
-
 }

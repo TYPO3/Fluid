@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -139,8 +141,8 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(): void
     {
-        $parsedTemplate = $this->getMockBuilder(ParsingState::class)->setMethods(['getNamedChild'])->getMock();
-        $parsedTemplate->expects($this->any())->method('getNamedChild')->willThrowException(new InvalidSectionException('...'));
+        $parsedTemplate = $this->getMockBuilder(ComponentInterface::class)->setMethods(['getNamedChild'])->getMockForAbstractClass();
+        $parsedTemplate->expects($this->any())->method('getNamedChild')->willThrowException(new ChildNotFoundException('...'));
         $view = $this->getMockForAbstractClass(
             AbstractTemplateView::class,
             [],
@@ -153,7 +155,7 @@ class AbstractTemplateViewTest extends UnitTestCase
         $view->expects($this->once())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
         $view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
         $view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-        $this->setExpectedException(InvalidSectionException::class);
+        $this->setExpectedException(ChildNotFoundException::class);
         $view->renderSection('Missing');
     }
 }

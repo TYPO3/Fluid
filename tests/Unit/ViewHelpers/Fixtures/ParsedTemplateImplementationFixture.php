@@ -94,7 +94,7 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
         // TODO: Implement getName() method.
     }
 
-    public function getArguments(): ?ArgumentCollectionInterface
+    public function getArguments(): ArgumentCollectionInterface
     {
         // TODO: Implement getArguments() method.
     }
@@ -112,6 +112,21 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
     public function getChildren(): iterable
     {
         // TODO: Implement getChildren() method.
+    }
+
+    public function allowUndeclaredArgument(string $argumentName): bool
+    {
+        return true;
+    }
+
+    public function isChildrenEscapingEnabled(): bool
+    {
+        return true;
+    }
+
+    public function isOutputEscapingEnabled(): bool
+    {
+        return false;
     }
 
 }

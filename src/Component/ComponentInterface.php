@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Component;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -41,6 +40,7 @@ interface ComponentInterface
      * @return mixed
      */
     public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null);
+
     /**
      * Returns one of the following:
      *
@@ -55,29 +55,39 @@ interface ComponentInterface
     public function flatten(bool $extractNode = false);
 
     /**
-     * Adds a parameter to the parameterized component.
-     *
-     * @param ArgumentDefinitionInterface $definition
-     * @return ComponentInterface
-     */
-    public function addArgumentDefinition(ArgumentDefinitionInterface $definition): self;
-
-    /**
-     * Creates a collection of arguments based on parameter
-     * definitions of this component, ready to be filled with
-     * arguments that will be passed to evaluateWithArguments()
+     * Creates a (or returns a stored) collection of arguments based on parameter
+     * definitions of this component, ready to be filled with arguments that will
+     * be passed to execute()
      *
      * @return ArgumentCollectionInterface
      */
-    public function createArgumentDefinitions(): ArgumentCollectionInterface;
+    public function getArguments(): ArgumentCollectionInterface;
+
+    public function allowUndeclaredArgument(string $argumentName): bool;
 
     public function getName(): ?string;
-
-    public function getArguments(): ?ArgumentCollectionInterface;
 
     public function addChild(ComponentInterface $component): self;
 
     public function getNamedChild(string $name): ComponentInterface;
 
     public function getChildren(): iterable;
+
+    /**
+     * Returns whether the escaping interceptors should be disabled or enabled for the render-result of children of this ViewHelper
+     *
+     * Note: This method is no public API, use $this->escapeChildren instead!
+     *
+     * @return boolean
+     */
+    public function isChildrenEscapingEnabled(): bool;
+
+    /**
+     * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
+     *
+     * Note: This method is no public API, use $this->escapeOutput instead!
+     *
+     * @return boolean
+     */
+    public function isOutputEscapingEnabled(): bool;
 }

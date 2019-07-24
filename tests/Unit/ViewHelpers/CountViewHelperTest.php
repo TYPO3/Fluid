@@ -7,105 +7,21 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
 /**
  * Testcase for CountViewHelper
  */
-class CountViewHelperTest extends ViewHelperBaseTestcase
+class CountViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @var CountViewHelper
-     */
-    protected $viewHelper;
-
-    public function setUp(): void
+    public function getStandardTestValues(): array
     {
-        parent::setUp();
-        $this->viewHelper = $this->getAccessibleMock(CountViewHelper::class, ['renderChildren']);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsNumberOfElementsInAnArray(): void
-    {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $expectedResult = 3;
-        $this->arguments = ['subject' => ['foo', 'bar', 'Baz']];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsNumberOfElementsInAnArrayObject(): void
-    {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $expectedResult = 2;
-        $this->arguments = ['subject' => new \ArrayObject(['foo', 'bar'])];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsZeroIfGivenArrayIsEmpty(): void
-    {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $expectedResult = 0;
-        $this->arguments = ['subject' => []];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->render();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderUsesChildrenAsSubjectIfGivenSubjectIsNull(): void
-    {
-        $this->viewHelper->expects($this->once())
-            ->method('renderChildren')
-            ->willReturn(['foo', 'baz', 'bar']);
-        $expectedResult = 3;
-        $this->arguments = ['subject' => null];
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsZeroIfGivenSubjectIsNullAndRenderChildrenReturnsNull(): void
-    {
-        $this->viewHelper->expects($this->once())
-            ->method('renderChildren')
-            ->willReturn(null);
-        $this->viewHelper->setArguments(['subject' => null]);
-        $this->injectDependenciesIntoViewHelper($this->viewHelper);
-        $expectedResult = 0;
-        $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertSame($expectedResult, $actualResult);
-    }
-
-    /**
-     * @test
-     */
-    public function renderThrowsExceptionIfGivenSubjectIsNotCountable(): void
-    {
-        $this->viewHelper->expects($this->never())->method('renderChildren');
-        $this->viewHelper->setRenderingContext(new RenderingContextFixture());
-        $object = new \stdClass();
-        $this->viewHelper->setArguments(['subject' => $object]);
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->viewHelper->initializeArgumentsAndRender();
+        $context = new RenderingContextFixture();
+        return [
+            'returns count of simple array passed as argument' => [3, $context, ['subject' => ['foo', 'bar', 'baz']]],
+            'returns count of simple array passed as child node' => [3, $context, null, [new ArrayNode(['foo', 'bar', 'baz'])]],
+            'returns count of simple iterator passed as argument' => [3, $context, ['subject' => new \ArrayIterator(['foo', 'bar', 'baz'])]],
+        ];
     }
 }

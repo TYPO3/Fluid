@@ -7,10 +7,10 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  *
@@ -35,9 +35,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class DebugViewHelper extends AbstractViewHelper
 {
-
-    use CompileWithRenderStatic;
-
     /**
      * @var boolean
      */
@@ -59,16 +56,11 @@ class DebugViewHelper extends AbstractViewHelper
         $this->registerArgument('html', 'boolean', 'Render HTML. If FALSE, output is indented plaintext', false, false);
     }
 
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $typeOnly = $arguments['typeOnly'];
-        $expressionToExamine = $renderChildrenClosure();
+        $expressionToExamine = $this->evaluateChildren($renderingContext);
         if ($typeOnly === true) {
             return (is_object($expressionToExamine) ? get_class($expressionToExamine) : gettype($expressionToExamine));
         }
@@ -77,7 +69,6 @@ class DebugViewHelper extends AbstractViewHelper
         $levels = $arguments['levels'];
         return static::dumpVariable($expressionToExamine, $html, 1, $levels);
     }
-
 
     /**
      * @param mixed $variable

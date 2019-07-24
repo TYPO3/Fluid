@@ -9,36 +9,34 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Contexts;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\Sequencer;
 use TYPO3Fluid\Fluid\Core\Parser\Source;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\MathExpressionNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\LayoutNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\SectionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers\CViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\HtmlViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 
 /**
@@ -195,76 +193,209 @@ class SequencerTest extends UnitTestCase
     }
 
     /**
-     * @NOTtest
+     * @test
+     * @dataProvider getInlineWithoutViewHelpersTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
      */
-    public function temporaryNotWorkingCase()
+    public function sequencesInlineWithoutViewHelpers(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getInlineWithoutViewHelpersTestValues(): array
     {
-        /*
+        $context = $this->createContext();
+        return [
 
-        echo PHP_EOL;
-        echo PHP_EOL;
-        echo PHP_EOL;
-        echo PHP_EOL;
-
-        foreach ($this->getSequenceExpectations() as $label => $parts) {
-            #echo $label . ':';
-            #echo PHP_EOL;
-            echo $label . ':';
-            echo PHP_EOL;
-            echo PHP_EOL;
-            echo '* `' . $parts[0] . '`';
-            echo PHP_EOL;
-            echo PHP_EOL;
-            #echo PHP_EOL;
-        }
-        exit();
-        */
-        list ($template, $context, $expectedRootNode) = $this->getSequenceExpectations()['simple inline ViewHelper with multiple values pipe in root context'];
-        $parser = new TemplateParser();
-        $context->setTemplateParser($parser);
-        $parser->setRenderingContext($context);
-        $node = $parser->parse($template)->getRootNode();
-        $this->assertNodeEquals($node, $expectedRootNode);
+            /* INLINE */
+            'simple inline in root context' => [
+                '{foo}',
+                $context,
+                false,
+                (new RootNode())->addChild(new ObjectAccessorNode('foo')),
+            ],
+            'accessor with dynamic part last in inline in root context' => [
+                '{foo.{bar}}',
+                $context,
+                false,
+                (new RootNode())->addChild(new ObjectAccessorNode('foo.{bar}')),
+            ],
+            'simple inline with text before in root context' => [
+                'before {foo}',
+                $context,
+                false,
+                (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('foo')),
+            ],
+            'simple inline with text after in root context' => [
+                '{foo} after',
+                $context,
+                false,
+                (new RootNode())->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode(' after')),
+            ],
+            'simple inline with text before and after in root context' => [
+                'before {foo} after',
+                $context,
+                false,
+                (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode(' after')),
+            ],
+            'escaped inline with text before and after in root context' => [
+                'before \\{foo} after',
+                $context,
+                false,
+                (new RootNode())->addChild(new TextNode('before {foo} after')),
+            ],
+        ];
     }
 
     /**
      * @test
-     * @dataProvider getSequenceExpectations
+     * @dataProvider getInlineWithViewHelpersTestValues
      * @param string $template
      * @param RenderingContextInterface $context
      * @param bool $escapingEnabled
-     * @param RootNode $expectedRootNode
+     * @param ComponentInterface $expectedRootNode
      */
-    public function createsExpectedNodeStructure(
+    public function sequencesInlineWithViewHelpers(
         string $template,
         RenderingContextInterface $context,
         bool $escapingEnabled,
-        RootNode $expectedRootNode
+        ComponentInterface $expectedRootNode
     ) {
-        $parser = new TemplateParser();
-        $configuration = new Configuration();
-        $configuration->setFeatureState(Configuration::FEATURE_ESCAPING, $escapingEnabled);
-        $configuration->addEscapingInterceptor(new Escape());
-        $parser->setRenderingContext($context);
-        $context->setTemplateParser($parser);
-        $node = $parser->parse($template, $configuration)->getRootNode();
-        $this->assertNodeEquals($node, $expectedRootNode);
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
     }
 
-    public function getSequenceExpectations(): array
+    public function getInlineWithViewHelpersTestValues(): array
     {
-        $state = $this->createState();
         $context = $this->createContext();
-
         return [
 
-            /* EMPTY */
-            'empty source' => [
-                '',
+            'simple inline ViewHelper without arguments in root context' => [
+                '{f:c()}',
                 $context,
                 false,
-                new RootNode()
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context)),
             ],
+            'simple inline ViewHelper with single hardcoded integer argument in root context' => [
+                '{f:c(i: 1)}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1]))),
+            ],
+            'simple inline ViewHelper with single hardcoded integer argument using tag attribute syntax in root context' => [
+                '{f:c(i="1")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1]))),
+            ],
+            'simple inline ViewHelper with single value-less hardcoded integer argument using tag attribute syntax in root context' => [
+                '{f:c(i)}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => new ObjectAccessorNode('i')]))),
+            ],
+            'simple inline ViewHelper with two comma separated value-less hardcoded integer argument in root context' => [
+                '{f:c(i, s)}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => new ObjectAccessorNode('i'), 's' => new ObjectAccessorNode('s')]))),
+            ],
+            'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax without commas in root context' => [
+                '{f:c(i="1" s="foo")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
+            ],
+            'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax with comma in root context' => [
+                '{f:c(i="1", s="foo")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
+            ],
+            'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax with comma and tailing comma in root context' => [
+                '{f:c(i="1", s="foo",)}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
+            ],
+            'simple inline ViewHelper with square brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
+                '{f:c(a="[foo="bar"]")}',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['a' => new ArrayNode(['foo' => 'bar'])])),
+            ],
+            'simple inline ViewHelper with square brackets array argument with implied numeric keys with comma in root context' => [
+                '{f:c(a="[foo, bar]")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])]))),
+            ],
+            'simple inline ViewHelper with square brackets array argument with two items using implied numeric keys with quoted values using comma in root context' => [
+                '{f:c(a="["foo", "bar"]")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo', 'bar'])]))),
+            ],
+            'simple inline ViewHelper with curly braces array argument with explicit numeric keys in root context' => [
+                '{f:c(a="{0: foo, 1: bar}")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])]))),
+            ],
+            'simple inline ViewHelper with curly braces array argument with redundant escapes in root context' => [
+                '{f:c(a: {0: \\\'foo\\\'})}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo'])]))),
+            ],
+            'simple inline ViewHelper with curly braces array argument with incorrect number of redundant escapes in root context' => [
+                '{f:c(a: \'{0: \\\\\'{f:c(a: {foo})}\\\\\'}\')}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([(new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('foo')])]))])]))),
+            ],
+            'simple inline ViewHelper with curly brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
+                '{f:c(a="{foo="bar"}")}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
+            ],
+            'simple inline ViewHelper with value pipe in root context' => [
+                '{string | f:c()}',
+                $context,
+                false,
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('string'))),
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getInactiveTagsTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    public function sequencesInactiveTags(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getInactiveTagsTestValues(): array
+    {
+        $context = $this->createContext();
+        return [
 
             /* TAGS */
             'simple open+close non-active tag in root context' => [
@@ -351,11 +482,36 @@ class SequencerTest extends UnitTestCase
                 false,
                 (new RootNode())->addChild(new TextNode('<'))->addChild(new ObjectAccessorNode('tag'))->addChild(new TextNode('/>')),
             ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getActiveTagsTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    public function sequencesActiveTags(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getActiveTagsTestValues(): array
+    {
+        $context = $this->createContext();
+        return [
+
             'simple open+close active tag in root context' => [
                 '<f:c>x</f:c>',
                 $context,
                 false,
-                (new RootNode())->addChild((new CViewHelper())->addChild(new TextNode('x'))->onOpen($context)),
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, [], [new TextNode('x')])),
             ],
             'simple open+close active tag with string parameter in root context' => [
                 '<f:c s="foo">x</f:c>',
@@ -373,7 +529,7 @@ class SequencerTest extends UnitTestCase
                 '<f:c/>',
                 $context,
                 false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context)),
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class)),
             ],
             'self-closed active tag with hardcoded string argument' => [
                 '<f:c s="foo" />',
@@ -487,7 +643,7 @@ class SequencerTest extends UnitTestCase
                 '<f:c a="{1: \'{foo->f:c()}\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, ((new CViewHelper())->getArguments())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted inline legacy pass with spaces as array argument' => [
                 '<f:c a="{1: \'{foo -> f:c()}\', 2: \'1\'}" />',
@@ -499,7 +655,7 @@ class SequencerTest extends UnitTestCase
                 '<f:c a="{1: \'{foo|f:c()}\', 2: \'1\'}" />',
                 $context,
                 false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new CViewHelper())->getArguments()->assignAll(['a' => new ArrayNode([1 => (new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('foo')), 2 => 1])]))),
             ],
             'self-closed active tag with array argument with numeric non-sequential keys with quoted inline pipe pass with spaces as array argument' => [
                 '<f:c a="{1: \'{foo | f:c()}\', 2: \'1\'}" />',
@@ -559,7 +715,7 @@ class SequencerTest extends UnitTestCase
                 '<f:c a="[["foo", "bar"], ["baz", "buzz"]]" />',
                 $context,
                 false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ArrayNode(['foo', 'bar']), new ArrayNode(['baz', 'buzz'])])])))
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['a' => new ArrayNode([new ArrayNode(['foo', 'bar']), new ArrayNode(['baz', 'buzz'])])])),
             ],
             'self-closed active tag with string argument with square bracket start not at first position in root context' => [
                 '<f:c s="my [a:b]" />',
@@ -591,148 +747,86 @@ class SequencerTest extends UnitTestCase
                 false,
                 (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['s' => new ObjectAccessorNode('s'), 'i' => new ObjectAccessorNode('i')]))->addChild(new TextNode('x'))),
             ],
+        ];
+    }
 
-            /* INLINE */
-            'simple inline in root context' => [
-                '{foo}',
+    /**
+     * @test
+     * @dataProvider getInlineArrayPassTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    public function sequencesInlineArrayPass(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getInlineArrayPassTestValues(): array
+    {
+        $context = $this->createContext();
+        return [
+
+            /* INLINE PASS OF ARRAY */
+            'inline ViewHelper with single-item quoted static key and value associative array in square brackets piped value in root context' => [
+                '{["foo": "bar"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChild(new ObjectAccessorNode('foo')),
+                (new RootNode())->addChild($this->createViewHelper($context, RawViewHelper::class, [], [new ArrayNode(['foo' => 'bar'])])),
             ],
-            'accessor with dynamic part last in inline in root context' => [
-                '{foo.{bar}}',
+            'inline ViewHelper with single-item implied numeric index array in square brackets piped value in root context' => [
+                '{["bar"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChild(new ObjectAccessorNode('foo.{bar}')),
+                (new RootNode())->addChild($this->createViewHelper($context, RawViewHelper::class, [], [new ArrayNode(['bar'])])),
             ],
-            'simple inline with text before in root context' => [
-                'before {foo}',
+            'inline ViewHelper with multi-item implied numeric index array in square brackets piped value in root context' => [
+                '{["foo", "bar", "baz"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('foo')),
+                (new RootNode())->addChild($this->createViewHelper($context, RawViewHelper::class, [], [new ArrayNode(['foo', 'bar', 'baz'])])),
             ],
-            'simple inline with text after in root context' => [
-                '{foo} after',
+            'inline ViewHelper with multi-item implied numeric index array with tailing comma in square brackets piped value in root context' => [
+                '{["foo", "bar", "baz", ] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode(' after')),
+                (new RootNode())->addChild($this->createViewHelper($context, RawViewHelper::class, [], [new ArrayNode(['foo', 'bar', 'baz'])])),
             ],
-            'simple inline with text before and after in root context' => [
-                'before {foo} after',
+            'inline ViewHelper with multi-item associative index array with space-separated key and value pairs in root context' => [
+                '{[foo "foo", bar "bar"] | f:format.raw()}',
                 $context,
                 false,
-                (new RootNode())->addChild(new TextNode('before '))->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode(' after')),
+                (new RootNode())->addChild($this->createViewHelper($context, RawViewHelper::class, [], [new ArrayNode(['foo' => 'foo', 'bar' => 'bar'])])),
             ],
-            'escaped inline with text before and after in root context' => [
-                'before \\{foo} after',
-                $context,
-                false,
-                (new RootNode())->addChild(new TextNode('before {foo} after')),
-            ],
-            'simple inline ViewHelper without arguments in root context' => [
-                '{f:c()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context)),
-            ],
-            'simple inline ViewHelper with single hardcoded integer argument in root context' => [
-                '{f:c(i: 1)}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1]))),
-            ],
-            'simple inline ViewHelper with single hardcoded integer argument using tag attribute syntax in root context' => [
-                '{f:c(i="1")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1]))),
-            ],
-            'simple inline ViewHelper with single value-less hardcoded integer argument using tag attribute syntax in root context' => [
-                '{f:c(i)}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => new ObjectAccessorNode('i')]))),
-            ],
-            'simple inline ViewHelper with two comma separated value-less hardcoded integer argument in root context' => [
-                '{f:c(i, s)}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => new ObjectAccessorNode('i'), 's' => new ObjectAccessorNode('s')]))),
-            ],
-            'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax without commas in root context' => [
-                '{f:c(i="1" s="foo")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
-            ],
-            'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax with comma in root context' => [
-                '{f:c(i="1", s="foo")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
-            ],
-            'simple inline ViewHelper with two hardcoded arguments using tag attribute syntax with comma and tailing comma in root context' => [
-                '{f:c(i="1", s="foo",)}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['i' => 1, 's' => 'foo']))),
-            ],
-            'simple inline ViewHelper with square brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
-                '{f:c(a="[foo="bar"]")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
-            ],
-            'simple inline ViewHelper with square brackets array argument with implied numeric keys with comma in root context' => [
-                '{f:c(a="[foo, bar]")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])]))),
-            ],
-            'simple inline ViewHelper with square brackets array argument with two items using implied numeric keys with quoted values using comma in root context' => [
-                '{f:c(a="["foo", "bar"]")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo', 'bar'])]))),
-            ],
-            'simple inline ViewHelper with curly braces array argument with explicit numeric keys in root context' => [
-                '{f:c(a="{0: foo, 1: bar}")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([new ObjectAccessorNode('foo'), new ObjectAccessorNode('bar')])]))),
-            ],
-            'simple inline ViewHelper with curly braces array argument with redundant escapes in root context' => [
-                '{f:c(a: {0: \\\'foo\\\'})}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo'])]))),
-            ],
-            'simple inline ViewHelper with curly braces array argument with incorrect number of redundant escapes in root context' => [
-                '{f:c(a: \'{0: \\\\\'{f:c(a: {foo})}\\\\\'}\')}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode([(new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => new ObjectAccessorNode('foo')])]))])]))),
-            ],
-            'simple inline ViewHelper with curly brackets array argument using tag attribute syntax and array value using tag attribute syntax in root context' => [
-                '{f:c(a="{foo="bar"}")}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode(['foo' => 'bar'])]))),
-            ],
-            'simple inline ViewHelper with value pipe in root context' => [
-                '{string | f:c()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen($context)->addChild(new ObjectAccessorNode('string'))),
-            ],
-            /*
-            'simple inline ViewHelper with multiple values pipe in root context' => [
-                '{{string}{string}{string} | f:c()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new CViewHelper())->onOpen([], $state)->addChild(new ObjectAccessorNode('string'))->addChild(new ObjectAccessorNode('string'))->addChild(new ObjectAccessorNode('string'))),
-            ],
-            */
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getViewHelperAliasTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    public function sequencesViewHelperAliases(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getViewHelperAliasTestValues(): array
+    {
+        $context = $this->createContext();
+        return [
             'simple inline ViewHelper with value pipe to ViewHelper alias in root context' => [
                 '{string | raw}',
                 $context,
@@ -755,46 +849,56 @@ class SequencerTest extends UnitTestCase
                 '<html foo:bar="string">test</html>',
                 $context,
                 false,
-                (new RootNode())->addChild((new HtmlViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['foo:bar' => 'string']))->addChild(new TextNode('test'))),
+                (new RootNode())->addChild($this->createViewHelper($context, HtmlViewHelper::class, ['foo:bar' => 'string'], [new TextNode('test')])),
             ],
             'html pseudo ViewHelper supports namespace registration' => [
                 '<html xmlns:foo="http://typo3.org/ns/Foo/Bar/ViewHelpers">test</html>',
                 $context,
                 false,
-                (new RootNode())->addChild((new HtmlViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['xmlns:foo' => 'http://typo3.org/ns/Foo/Bar/ViewHelpers']))->addChild(new TextNode('test'))),
+                (new RootNode())->addChild($this->createViewHelper($context, HtmlViewHelper::class, ['xmlns:foo' => 'http://typo3.org/ns/Foo/Bar/ViewHelpers'])->addChild(new TextNode('test'))),
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getSequenceExpectations
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    public function createsExpectedNodeStructure(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getSequenceExpectations(): array
+    {
+        $context = $this->createContext();
+
+        return [
+
+            /* EMPTY */
+            'empty source' => [
+                '',
+                $context,
+                false,
+                new RootNode()
             ],
 
-            /* INLINE PASS OF ARRAY */
-            'inline ViewHelper with single-item quoted static key and value associative array in square brackets piped value in root context' => [
-                '{["foo": "bar"] | f:format.raw()}',
+            /*
+            'simple inline ViewHelper with multiple values pipe in root context' => [
+                '{{string}{string}{string} | f:c()}',
                 $context,
                 false,
-                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo' => 'bar']))),
+                (new RootNode())->addChild((new CViewHelper())->onOpen([], $state)->addChild(new ObjectAccessorNode('string'))->addChild(new ObjectAccessorNode('string'))->addChild(new ObjectAccessorNode('string'))),
             ],
-            'inline ViewHelper with single-item implied numeric index array in square brackets piped value in root context' => [
-                '{["bar"] | f:format.raw()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['bar']))),
-            ],
-            'inline ViewHelper with multi-item implied numeric index array in square brackets piped value in root context' => [
-                '{["foo", "bar", "baz"] | f:format.raw()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo', 'bar', 'baz']))),
-            ],
-            'inline ViewHelper with multi-item implied numeric index array with tailing comma in square brackets piped value in root context' => [
-                '{["foo", "bar", "baz", ] | f:format.raw()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo', 'bar', 'baz']))),
-            ],
-            'inline ViewHelper with multi-item associative index array with space-separated key and value pairs in root context' => [
-                '{[foo "foo", bar "bar"] | f:format.raw()}',
-                $context,
-                false,
-                (new RootNode())->addChild((new RawViewHelper())->addChild(new ArrayNode(['foo' => 'foo', 'bar' => 'bar']))),
-            ],
+            */
 
             /* PROTECTED INLINE */
             'inline syntax with explicitly escaped sub-syntax creates explicit accessor' => [
@@ -871,7 +975,7 @@ class SequencerTest extends UnitTestCase
                 '{i + 1}',
                 $context,
                 false,
-                (new RootNode())->addChild(new MathExpressionNode(['i', '+', '1']))
+                (new RootNode())->addChild(new MathViewHelper(['i', '+', '1']))
             ],
             'inline math expression without spaces is not detected as expression' => [
                 '{i+1}',
@@ -883,7 +987,7 @@ class SequencerTest extends UnitTestCase
                 '{i as string}',
                 $context,
                 false,
-                (new RootNode())->addChild(new CastingExpressionNode(['i', 'as', 'string']))
+                (new RootNode())->addChild(new CastViewHelper(['i', 'as', 'string']))
             ],
             'expression error with tolerant error handler is created as TextNode' => [
                 '{i as invalid}',
@@ -894,16 +998,16 @@ class SequencerTest extends UnitTestCase
 
             /* CDATA and PCDATA */
             'cdata node becomes text node without parsing content' => [
-                '<[CDATA[{notparsed}]]>',
+                '<![CDATA[{notparsed}]]>',
                 $context,
                 false,
-                (new RootNode())->addChild(new TextNode('<[CDATA[{notparsed}]]>'))
+                (new RootNode())->addChild(new TextNode('<![CDATA[{notparsed}]]>'))
             ],
             'pcdata node becomes text node without parsing content' => [
-                '<[PCDATA[{notparsed}]]>',
+                '<![PCDATA[{notparsed}]]>',
                 $context,
                 false,
-                (new RootNode())->addChild(new TextNode('<[PCDATA[{notparsed}]]>'))
+                (new RootNode())->addChild(new TextNode('<![PCDATA[{notparsed}]]>'))
             ],
 
             /* STRUCTURAL */
@@ -911,19 +1015,19 @@ class SequencerTest extends UnitTestCase
                 '<f:layout />',
                 $context,
                 false,
-                (new RootNode())->addChild(new LayoutNode('')),
+                (new RootNode())->addChild($this->createViewHelper($context, LayoutViewHelper::class)),
             ],
             'layout node with layout name' => [
                 '<f:layout name="Default" />',
                 $context,
                 false,
-                (new RootNode())->addChild(new LayoutNode('Default')),
+                (new RootNode())->addChild((new LayoutViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['name' => 'Default']))),
             ],
             'section with name' => [
                 '<f:section  name="Default">DefaultSection</f:section>',
                 $context,
                 false,
-                (new RootNode())->addChild((new SectionNode('Default', [new TextNode('DefaultSection')]))),
+                (new RootNode())->addChild((new SectionViewHelper())->onOpen($context, (new SectionViewHelper())->getArguments()->assignAll(['name' => 'Default']))->addChild(new TextNode('DefaultSection'))),
             ],
         ];
     }
@@ -936,7 +1040,6 @@ class SequencerTest extends UnitTestCase
         $configuration = $this->getMockBuilder(Configuration::class)->getMock();
         $sequencer = new Sequencer(
             $this->createContext(),
-            $this->createState(),
             new Contexts(),
             new Source('{@parsing off}'),
             $configuration
@@ -953,14 +1056,13 @@ class SequencerTest extends UnitTestCase
         $configuration = $this->getMockBuilder(Configuration::class)->setMethods(['setFeatureState'])->getMock();
         $sequencer = new Sequencer(
             $this->createContext(),
-            $this->createState(),
             new Contexts(),
             new Source('{@escaping off} kept text'),
             $configuration
         );
         $configuration->expects($this->once())->method('setFeatureState')->with(Configuration::FEATURE_ESCAPING, 'off');
         $state = $sequencer->sequence();
-        $this->assertEquals(' kept text', $state->getRootNode()->flatten(true));
+        $this->assertEquals(' kept text', $state->flatten(true));
     }
 
     /**
@@ -986,22 +1088,24 @@ class SequencerTest extends UnitTestCase
             $thousandRandomArray[$key] = $value;
         }
         $thousandRandomArrayItemsInline .= '})}';
-        $expectedRootNode = (new RootNode())->addChild((new CViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['a' => new ArrayNode($thousandRandomArray)])));
+        $viewHelper = new CViewHelper();
+        $expectedRootNode = (new RootNode())->addChild($viewHelper->onOpen($context, $viewHelper->getArguments()->assignAll(['a' => new ArrayNode($thousandRandomArray)])));
         $this->createsExpectedNodeStructure($thousandRandomArrayItemsInline, $context, false, $expectedRootNode);
     }
 
     /**
      * @test
      */
-    public function stressTestOneHundredInlinePasses()
+    public function stressTestFiftyInlinePasses()
     {
         $context = $this->createContext();
         $template = '{foo ';
 
         $expectedRootNode = new RootNode();
         $node = $expectedRootNode;
-        for ($i = 0; $i < 100; $i++) {
-            $childNode = new RawViewHelper();
+        for ($i = 0; $i < 50; $i++) {
+            #$childNode = new RawViewHelper();
+            $childNode = $this->createViewHelper($context, RawViewHelper::class);
             $node->addChild($childNode);
             $template .= '| f:format.raw() ';
             $node = $childNode;
@@ -1036,6 +1140,17 @@ class SequencerTest extends UnitTestCase
         ];
     }
 
+    protected function createViewHelper(RenderingContextInterface $context, string $viewHelperClassName, array $arguments = [], iterable $children = []): ComponentInterface
+    {
+        /** @var ComponentInterface $instance */
+        $instance = new $viewHelperClassName();
+        $instance->onOpen($context, $instance->getArguments()->assignAll($arguments));
+        foreach ($children as $child) {
+            $instance->addChild($child);
+        }
+        return $instance->onClose($context);
+    }
+
     protected function createContext(string $errorHandlerClass = StandardErrorHandler::class): RenderingContextInterface
     {
         $variableProvider = $this->getMockBuilder(VariableProviderInterface::class)->getMock();
@@ -1061,43 +1176,26 @@ class SequencerTest extends UnitTestCase
         $context->expects($this->any())->method('getViewHelperResolver')->willReturn($viewHelperResolver);
         $context->expects($this->any())->method('getVariableProvider')->willReturn($variableProvider);
         $context->expects($this->any())->method('getErrorHandler')->willReturn($errorHandler);
-        $context->expects($this->any())->method('getExpressionNodeTypes')->willReturn([MathExpressionNode::class, CastingExpressionNode::class, TernaryExpressionNode::class]);
+        $context->expects($this->any())->method('getExpressionNodeTypes')->willReturn([MathViewHelper::class, CastViewHelper::class, IfViewHelper::class]);
         return $context;
-    }
-
-    protected function createState(): ParsingState
-    {
-        $state = new ParsingState();
-        return $state;
     }
 
     protected function assertNodeEquals(ComponentInterface $subject, ComponentInterface $expected, string $path = '')
     {
         $this->assertInstanceOf(get_class($expected), $subject, 'Node types not as expected at path: ' . $path);
-        if ($subject instanceof ViewHelperInterface) {
-            $expectedArguments = $expected->getParsedArguments();
-            $passedArguments = $subject->getParsedArguments();
-            foreach ($passedArguments as $name => $argument) {
-                if (isset($expectedArguments[$name])) {
-                    if ($argument instanceof ComponentInterface && $expectedArguments[$name] instanceof ComponentInterface) {
-                        $this->assertNodeEquals($argument, $expectedArguments[$name], $path . '.argument@' . $name);
-                    } else {
-                        $this->assertSame($expectedArguments[$name], $argument, 'Arguments at path ' . $path . '.argument@' . $name . ' did not match');
-                    }
-                }
-                unset($expectedArguments[$name]);
-            }
-            if (!empty($expectedArguments)) {
-                $this->fail('ViewHelper did not receive expected arguments: ' . var_export($expectedArguments, true) . ' vs received ' . var_export($passedArguments, true));
-            }
-        } elseif ($subject instanceof ObjectAccessorNode) {
+        if ($subject instanceof ObjectAccessorNode) {
             $this->assertSame($expected->getObjectPath(), $subject->getObjectPath(), 'ObjectAccessors do not match at path ' . $path);
         } elseif ($subject instanceof TextNode) {
             $this->assertSame($expected->getText(), $subject->getText(), 'TextNodes do not match at path ' . $path);
         } elseif ($subject instanceof ArrayNode) {
             $this->assertEquals($expected->getInternalArray(), $subject->getInternalArray(), 'Arrays do not match at path ' . $path);
-        } elseif ($subject instanceof ExpressionNodeInterface) {
+        } elseif ($subject instanceof RootNode) {
+            //$this->assertEquals($expected->getChildren(), $subject->getChildren(), 'RootNode does not have expected children at path ' . $path);
+            // NO-OP; the assertion on children consistency is done below.
+        } elseif ($subject instanceof ExpressionComponentInterface) {
             $this->assertEquals($expected, $subject, 'Expression matches are not equal at path ' . $path);
+        } elseif ($subject instanceof ComponentInterface) {
+            $this->assertEquals($expected, $subject, 'Components do not match at path ' . $path);
         }
 
         $children = $subject->getChildren();
@@ -1107,7 +1205,30 @@ class SequencerTest extends UnitTestCase
         }
         foreach ($expectedChildren as $index => $expectedChild) {
             $child = $children[$index];
-            $this->assertNodeEquals($child, $expectedChild, get_class($subject) . '.child@' . $index);
+            $class = get_class($subject);
+            $this->assertNodeEquals($child, $expectedChild, substr($class, strrpos($class, '\\') + 1) . '.child@' . $index);
         }
+    }
+
+    /**
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    protected function performSequencerAssertions(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $parser = new TemplateParser();
+        $configuration = new Configuration();
+        $configuration->setFeatureState(Configuration::FEATURE_ESCAPING, $escapingEnabled);
+        $configuration->addEscapingInterceptor(new Escape());
+        $parser->setRenderingContext($context);
+        $context->setTemplateParser($parser);
+        $node = $parser->parse($template, $configuration);
+        $this->assertNodeEquals($node, $expectedRootNode);
     }
 }

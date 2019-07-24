@@ -7,10 +7,10 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 
 /**
@@ -51,8 +51,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
  */
 class CycleViewHelper extends AbstractViewHelper
 {
-    use CompileWithRenderStatic;
-
     /**
      * @var boolean
      */
@@ -68,18 +66,13 @@ class CycleViewHelper extends AbstractViewHelper
         $this->registerArgument('as', 'strong', 'The name of the iteration variable', true);
     }
 
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $values = $arguments['values'];
         $as = $arguments['as'];
         if ($values === null) {
-            return $renderChildrenClosure();
+            return $this->evaluateChildren($renderingContext);
         }
         $values = static::initializeValues($values);
         $index = static::initializeIndex($as, $renderingContext->getViewHelperVariableContainer());
@@ -87,7 +80,7 @@ class CycleViewHelper extends AbstractViewHelper
         $currentValue = isset($values[$index]) ? $values[$index] : null;
 
         $renderingContext->getVariableProvider()->add($as, $currentValue);
-        $output = $renderChildrenClosure();
+        $output = $this->evaluateChildren($renderingContext);
         $renderingContext->getVariableProvider()->remove($as);
 
         $index++;

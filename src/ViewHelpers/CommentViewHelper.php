@@ -7,8 +7,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
  * This ViewHelper prevents rendering of any content inside the tag
@@ -47,15 +48,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  */
 class CommentViewHelper extends AbstractViewHelper
 {
-    use ParserRuntimeOnly;
-
-    /**
-     * @var boolean
-     */
-    protected $escapeChildren = false;
-
-    /**
-     * @var boolean
-     */
-    protected $escapeOutput = false;
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    {
+        return null;
+    }
 }

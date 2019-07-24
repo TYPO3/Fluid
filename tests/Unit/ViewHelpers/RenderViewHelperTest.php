@@ -7,230 +7,33 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ParsedTemplateImplementationFixture;
 use TYPO3Fluid\Fluid\View\TemplateView;
-use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
 /**
  * Testcase for RenderViewHelper
  */
-class RenderViewHelperTest extends ViewHelperBaseTestcase
+class RenderViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @var RenderViewHelper
-     */
-    protected $subject;
-
-    /**
-     * @var TemplateView
-     */
-    protected $view;
-
-    /**
-     * @return void
-     */
-    public function setUp(): void
+    public function getStandardTestValues(): array
     {
-        parent::setUp();
-        $this->subject = $this->getMock(RenderViewHelper::class, ['renderChildren']);
-        $this->view = $this->getMock(TemplateView::class, ['renderPartial', 'renderSection']);
-        $this->view->setRenderingContext($this->renderingContext);
-        $container = new ViewHelperVariableContainer();
-        $container->setView($this->view);
-        $this->renderingContext->setViewHelperVariableContainer($container);
-        $this->subject->setRenderingContext($this->renderingContext);
-    }
-
-    /**
-     * @test
-     */
-    public function testInitializeArgumentsRegistersExpectedArguments(): void
-    {
-        $instance = $this->getMock(RenderViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('section', 'string', $this->anything());
-        $instance->expects($this->at(1))->method('registerArgument')->with('partial', 'string', $this->anything());
-        $instance->expects($this->at(2))->method('registerArgument')->with('delegate', 'string', $this->anything());
-        $instance->expects($this->at(3))->method('registerArgument')->with('renderable', ComponentInterface::class, $this->anything());
-        $instance->expects($this->at(4))->method('registerArgument')->with('arguments', 'array', $this->anything(), false, []);
-        $instance->expects($this->at(5))->method('registerArgument')->with('optional', 'boolean', $this->anything(), false, false);
-        $instance->expects($this->at(6))->method('registerArgument')->with('default', 'mixed', $this->anything());
-        $instance->expects($this->at(7))->method('registerArgument')->with('contentAs', 'string', $this->anything());
-        $instance->initializeArguments();
-    }
-
-    /**
-     * @test
-     */
-    public function testThrowsInvalidArgumentExceptionWhenNoTargetSpecifiedIfOptionalIsFalse(): void
-    {
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
-        $this->subject->setArguments([
-            'partial' => null,
-            'section' => null,
-            'delegate' => null,
-            'renderable' => null,
-            'arguments' => [],
-            'optional' => false,
-            'default' => null,
-            'contentAs' => null
-        ]);
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->subject->render();
-    }
-
-    /**
-     * @test
-     */
-    public function testThrowsInvalidArgumentExceptionOnInvalidDelegateType(): void
-    {
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
-        $this->subject->setArguments([
-            'partial' => null,
-            'section' => null,
-            'delegate' => RenderingContextFixture::class,
-            'renderable' => null,
-            'arguments' => [],
-            'optional' => false,
-            'default' => null,
-            'contentAs' => null
-        ]);
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->subject->render();
-    }
-
-    /**
-     * @test
-     */
-    public function testRenderWithDelegate(): void
-    {
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
-        $this->subject->setArguments([
-            'partial' => null,
-            'section' => null,
-            'delegate' => ParsedTemplateImplementationFixture::class,
-            'renderable' => null,
-            'arguments' => [],
-            'optional' => false,
-            'default' => null,
-            'contentAs' => null
-        ]);
-        $result = $this->subject->render();
-        $this->assertEquals('rendered by fixture', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testRenderWithComponent(): void
-    {
-        $renderable = $this->getMockBuilder(ComponentInterface::class)->getMockForAbstractClass();
-        $renderable->expects($this->once())->method('execute')->willReturn('rendered by fixture');
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
-        $this->subject->setArguments([
-            'partial' => null,
-            'section' => null,
-            'delegate' => null,
-            'renderable' => $renderable,
-            'arguments' => [],
-            'optional' => false,
-            'default' => null,
-            'contentAs' => null
-        ]);
-        $result = $this->subject->render();
-        $this->assertEquals('rendered by fixture', $result);
-    }
-
-    /**
-     * @test
-     * @dataProvider getRenderTestValues
-     * @param array $arguments
-     * @param string|NULL $expectedViewMethod
-     */
-    public function testRender(array $arguments, ?string $expectedViewMethod): void
-    {
-        if ($expectedViewMethod !== null) {
-            $this->view->expects($this->once())->method($expectedViewMethod)->willReturn(null);
-        }
-        $this->subject->setArguments($arguments);
-        $result = $this->subject->render();
-        $this->assertNull(null);
-    }
-
-    /**
-     * @return array
-     */
-    public function getRenderTestValues(): array
-    {
+        $context = new RenderingContextFixture();
+        $view = $this->getMockBuilder(TemplateView::class)->setMethods(['renderPartial', 'renderSection'])->getMock();
+        $view->expects($this->any())->method('renderSection')->willReturn('sectionRendered');
+        $view->expects($this->any())->method('renderPartial')->withConsecutive(
+            ['partial', null, [], false],
+            ['partial', 'section', [], false],
+            ['partial', 'section', ['foo' => 'bar'], false]
+        )->willReturnOnConsecutiveCalls('partialRendered', 'sectionRendered', 'renderedWithArguments');
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->setView($view);
+        $context->setViewHelperVariableContainer($viewHelperVariableContainer);
         return [
-            [
-                ['partial' => null, 'section' => 'foo-section', 'delegate' => null, 'renderable' => null, 'arguments' => [], 'optional' => false, 'default' => null, 'contentAs' => null],
-                null
-            ],
-            [
-                ['partial' => 'foo-partial', 'section' => null, 'delegate' => null, 'renderable' => null, 'arguments' => [], 'optional' => false, 'default' => null, 'contentAs' => null],
-                'renderPartial'
-            ],
-            [
-                ['partial' => 'foo-partial', 'section' => 'foo-section', 'delegate' => null, 'renderable' => null, 'arguments' => [], 'optional' => false, 'default' => null, 'contentAs' => null],
-                'renderPartial'
-            ],
-            [
-                ['partial' => null, 'section' => 'foo-section', 'delegate' => null, 'renderable' => null, 'arguments' => [], 'optional' => false, 'default' => null, 'contentAs' => null],
-                'renderSection'
-            ],
+            'renders section' => ['sectionRendered', $context, ['section' => 'section']],
+            'renders partial' => ['partialRendered', $context, ['partial' => 'partial']],
+            'renders section in partial' => ['sectionRendered', $context, ['section' => 'section', 'partial' => 'partial']],
+            'renders section in partial with arguments' => ['renderedWithArguments', $context, ['section' => 'section', 'partial' => 'partial', 'arguments' => ['foo' => 'bar']]],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function testRenderWithDefautReturnsDefaultIfContentEmpty(): void
-    {
-        $this->view->expects($this->once())->method('renderPartial')->willReturn('');
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn(null);
-        $this->subject->setArguments(
-            [
-                'partial' => 'test',
-                'section' => null,
-                'delegate' => null,
-                'renderable' => null,
-                'arguments' => [],
-                'optional' => true,
-                'default' => 'default-foobar',
-                'contentAs' => null
-            ]
-        );
-        $output = $this->subject->render();
-        $this->assertEquals('default-foobar', $output);
-    }
-
-    /**
-     * @test
-     */
-    public function testRenderSupportsContentAs(): void
-    {
-        $variables = ['foo' => 'bar', 'foobar' => 'tagcontent-foobar'];
-        $this->view->expects($this->once())->method('renderPartial')->with('test1', 'test2', $variables, true)->willReturn('baz');
-        $this->subject->expects($this->any())->method('renderChildren')->willReturn('tagcontent-foobar');
-        $this->subject->setArguments(
-            [
-                'partial' => 'test1',
-                'section' => 'test2',
-                'delegate' => null,
-                'renderable' => null,
-                'arguments' => [
-                    'foo' => 'bar'
-                ],
-                'optional' => true,
-                'default' => null,
-                'contentAs' => 'foobar'
-            ]
-        );
-        $output = $this->subject->render();
-        $this->assertEquals('baz', $output);
     }
 }

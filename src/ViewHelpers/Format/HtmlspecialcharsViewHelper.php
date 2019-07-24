@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -58,21 +60,15 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
         $this->registerArgument('doubleEncode', 'boolean', 'If FALSE html entities will not be encoded', false, true);
     }
 
-    /**
-     * Escapes special characters with their escaped counterparts as needed using PHPs htmlspecialchars() function.
-     *
-     * @return mixed the altered string or unaltered non-string-representable value
-     * @see http://www.php.net/manual/function.htmlspecialchars.php
-     * @api
-     */
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $value = $this->arguments['value'];
-        $keepQuotes = $this->arguments['keepQuotes'];
-        $encoding = $this->arguments['encoding'];
-        $doubleEncode = $this->arguments['doubleEncode'];
+        $arguments = ($arguments ?? $this->parsedArguments)->evaluate($renderingContext);
+        $value = $arguments['value'];
+        $keepQuotes = $arguments['keepQuotes'];
+        $encoding = $arguments['encoding'];
+        $doubleEncode = $arguments['doubleEncode'];
         if ($value === null) {
-            $value = $this->renderChildren();
+            $value = $this->evaluateChildren($renderingContext);
         }
 
         if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {

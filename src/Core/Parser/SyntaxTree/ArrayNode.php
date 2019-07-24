@@ -7,13 +7,15 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
  */
-class ArrayNode extends AbstractNode
+class ArrayNode extends AbstractComponent
 {
 
     /**
@@ -33,13 +35,7 @@ class ArrayNode extends AbstractNode
         $this->internalArray = $internalArray;
     }
 
-    /**
-     * Evaluate the array and return an evaluated array
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return array An associative array with literal values
-     */
-    public function evaluate(RenderingContextInterface $renderingContext): array
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $argumentCollection = null): array
     {
         $arrayToBuild = [];
         foreach ($this->internalArray as $key => $value) {

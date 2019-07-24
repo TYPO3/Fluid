@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -14,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * A node which is used inside boolean arguments
  */
-class BooleanNode extends AbstractNode
+class BooleanNode extends AbstractComponent
 {
 
     /**
@@ -60,24 +62,9 @@ class BooleanNode extends AbstractNode
         return $this->stack;
     }
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return boolean the boolean value
-     */
-    public function evaluate(RenderingContextInterface $renderingContext): bool
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): bool
     {
         return self::evaluateStack($renderingContext, $this->stack);
-    }
-
-    /**
-     * @param ComponentInterface $node
-     * @param RenderingContextInterface $renderingContext
-     * @return boolean
-     */
-    public static function createFromNodeAndEvaluate(ComponentInterface $node, RenderingContextInterface $renderingContext): bool
-    {
-        $booleanNode = new BooleanNode($node);
-        return $booleanNode->evaluate($renderingContext);
     }
 
     /**
@@ -89,7 +76,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return boolean the boolean value
      */
-    public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts): bool
+    protected static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts): bool
     {
         $expression = static::reconcatenateExpression($expressionParts);
         $context = static::gatherContext($renderingContext, $expressionParts);
@@ -104,7 +91,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return string
      */
-    public static function reconcatenateExpression(array $expressionParts): string
+    protected static function reconcatenateExpression(array $expressionParts): string
     {
         $merged = [];
         foreach ($expressionParts as $key => $expressionPart) {
@@ -126,7 +113,7 @@ class BooleanNode extends AbstractNode
      * @param array $expressionParts
      * @return array
      */
-    public static function gatherContext(RenderingContextInterface $renderingContext, array $expressionParts): array
+    protected static function gatherContext(RenderingContextInterface $renderingContext, array $expressionParts): array
     {
         $context = [];
         foreach ($expressionParts as $key => $expressionPart) {

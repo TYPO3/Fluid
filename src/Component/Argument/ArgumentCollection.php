@@ -8,6 +8,8 @@ namespace TYPO3Fluid\Fluid\Component\Argument;
  */
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -18,7 +20,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * Contains the API used for validating and converting arguments.
  */
-class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess
+class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess, \Iterator
 {
     /**
      * @var array
@@ -47,6 +49,7 @@ class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess
         foreach ($values as $name => $value) {
             $this->assign($name, $value);
         }
+        $this->createInternalArguments();
         return $this;
     }
 
@@ -61,6 +64,9 @@ class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess
 
     public function assign(string $name, $value): ArgumentCollectionInterface
     {
+        if (!$value instanceof BooleanNode && isset($this->definitions[$name]) && ($type = $this->definitions[$name]->getType()) && ($type === 'bool' || $type === 'boolean')) {
+            $value = is_bool($value) || is_numeric($value) || is_null($value) ? (bool) $value : new BooleanNode($value);
+        }
         $this->arguments[$name] = $value;
         return $this;
     }
@@ -107,4 +113,55 @@ class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess
         unset($this->arguments[$offset]);
     }
 
+    public function current()
+    {
+        return current($this->arguments);
+    }
+
+    public function next()
+    {
+        return next($this->arguments);
+    }
+
+    public function key()
+    {
+        return key($this->arguments);
+    }
+
+    public function valid()
+    {
+        return $this->current() !== false;
+    }
+
+    public function rewind()
+    {
+        reset($this->arguments);
+    }
+
+    /**
+     * Creates arguments by padding with missing+optional arguments
+     * and casting or creating BooleanNode where appropriate. Input
+     * array may not contain all arguments - output array will.
+     */
+    protected function createInternalArguments(): void
+    {
+        $missingArguments = [];
+        foreach ($this->definitions as $name => $definition) {
+            $argument = $this->arguments[$name] ?? null;
+            if ($definition->isRequired() && !isset($argument)) {
+                // Required but missing argument, causes failure (delayed, to report all missing arguments at once)
+                $missingArguments[] = $name;
+            } elseif (!isset($argument)) {
+                // Argument is optional (required filtered out above), fit it with the default value
+                $argument = $definition->getDefaultValue();
+            } elseif (($type = $definition->getType()) && ($type === 'bool' || $type === 'boolean')) {
+                // Cast the value or create a BooleanNode
+                $argument = is_bool($argument) || is_numeric($argument) || is_null($argument) ? (bool)$argument : new BooleanNode($argument);
+            }
+            $this->arguments[$name] = $argument;
+        }
+        if (!empty($missingArguments)) {
+            throw new Exception('Required argument(s) not provided: ' . implode(', ', $missingArguments), 1558533510);
+        }
+    }
 }

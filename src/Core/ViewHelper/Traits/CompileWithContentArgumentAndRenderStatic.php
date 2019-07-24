@@ -22,21 +22,26 @@ use TYPO3Fluid\Fluid\Core\Exception;
 trait CompileWithContentArgumentAndRenderStatic
 {
     /**
-     * Name of variable that contains the value to use
-     * instead of render children closure, if specified.
-     * If no name is provided here, the first variable
-     * registered in `initializeArguments` of the ViewHelper
-     * will be used.
-     *
-     * Note: it is significantly better practice to define
-     * this property in your ViewHelper class and so fix it
-     * to one particular argument instead of resolving,
-     * especially when your ViewHelper is called multiple
-     * times within an uncompiled template!
-     *
-     * @var string
+     * @return string
      */
-    protected $contentArgumentName;
+    protected function resolveContentArgumentName(): string
+    {
+        if (empty($this->contentArgumentName)) {
+            #$registeredArguments = call_user_func_array([$this, 'getArguments'], []);
+            $registeredArguments = $this->getArguments()->getDefinitions();
+            foreach ($registeredArguments as $registeredArgument) {
+                if (!$registeredArgument->isRequired()) {
+                    $this->contentArgumentName = $registeredArgument->getName();
+                    return $this->contentArgumentName;
+                }
+            }
+            throw new Exception(
+                sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
+                    'at least one registered and optional argument', __CLASS__)
+            );
+        }
+        return $this->contentArgumentName;
+    }
 
     /**
      * Default render method to render ViewHelper with
@@ -77,26 +82,5 @@ trait CompileWithContentArgumentAndRenderStatic
             };
         }
         return $renderChildrenClosure;
-    }
-
-    /**
-     * @return string
-     */
-    protected function resolveContentArgumentName(): string
-    {
-        if (empty($this->contentArgumentName)) {
-            $registeredArguments = call_user_func_array([$this, 'prepareArguments'], []);
-            foreach ($registeredArguments as $registeredArgument) {
-                if (!$registeredArgument->isRequired()) {
-                    $this->contentArgumentName = $registeredArgument->getName();
-                    return $this->contentArgumentName;
-                }
-            }
-            throw new Exception(
-                sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
-                'at least one registered and optional argument', __CLASS__)
-            );
-        }
-        return $this->contentArgumentName;
     }
 }

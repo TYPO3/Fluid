@@ -7,8 +7,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\SectionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -72,24 +72,19 @@ class SectionViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
-    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
     {
-        $name = $this->parsedArguments['name'];
-        return new SectionNode((string) ($name instanceof ComponentInterface ? $name->execute($renderingContext) : $name), $this->children);
+        parent::onOpen($renderingContext, $arguments);
+        $this->name = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext)['name'];
+        return $this;
     }
 
-    /**
-     * Rendering directly returns all child nodes.
-     *
-     * @return string HTML String of all child nodes.
-     * @api
-     */
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $content = '';
-        if ($this->renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
-            $this->renderingContext->getViewHelperVariableContainer()->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
-            $content = $this->renderChildren();
+        $content = null;
+        if ($renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+            $renderingContext->getViewHelperVariableContainer()->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
+            $content = $this->evaluateChildren($renderingContext);
         }
         return $content;
     }

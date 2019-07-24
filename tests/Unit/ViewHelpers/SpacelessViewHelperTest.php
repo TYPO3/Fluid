@@ -7,37 +7,19 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\ViewHelpers\SpacelessViewHelper;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 
 /**
  * Testcase for SpacelessViewHelper
  */
-class SpacelessViewHelperTest extends ViewHelperBaseTestcase
+class SpacelessViewHelperTest extends ViewHelperBaseTestCase
 {
-    /**
-     * @param string $input
-     * @param string $expected
-     * @dataProvider getRenderStaticData
-     * @test
-     */
-    public function testRenderStatic(string $input, string $expected): void
+    public function getStandardTestValues(): array
     {
-        $context = $this->getMock(RenderingContextInterface::class);
-        $this->assertEquals($expected, SpacelessViewHelper::renderStatic([], function () use ($input): string {
-            return $input;
-        }, $context));
-    }
-
-    /**
-     * @return array
-     */
-    public function getRenderStaticData(): array
-    {
+        $context = new RenderingContextFixture();
         return [
-            'extra whitespace between tags' => ['<div>foo</div>  <div>bar</div>', '<div>foo</div><div>bar</div>'],
-            'whitespace preserved in text node' => [PHP_EOL . '<div>' . PHP_EOL . 'foo</div>', '<div>' . PHP_EOL . 'foo</div>'],
-            'whitespace removed from non-text node' => [PHP_EOL . '<div>' . PHP_EOL . '<div>foo</div></div>', '<div><div>foo</div></div>']
+            'removes spaces' => ['foo', $context, null, [new TextNode('       foo        ')]],
         ];
     }
 }

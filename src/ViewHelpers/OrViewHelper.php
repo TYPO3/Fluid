@@ -7,16 +7,16 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
  * If content is empty use alternative text
  */
 class OrViewHelper extends AbstractViewHelper
 {
-    use CompileWithContentArgumentAndRenderStatic;
+    protected $contentArgumentName = 'content';
 
     /**
      * Initialize
@@ -30,29 +30,24 @@ class OrViewHelper extends AbstractViewHelper
         $this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
     }
 
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
+        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $alternative = $arguments['alternative'];
-        $arguments = (array) $arguments['arguments'];
+        $variables = (array) $arguments['arguments'];
 
         if (empty($arguments)) {
             $arguments = null;
         }
 
-        $content = $renderChildrenClosure();
+        $content = $arguments['content'] ?? $this->evaluateChildren($renderingContext);
 
         if (null === $content) {
             $content = $alternative;
         }
 
         if (!empty($content)) {
-            $content = null !== $arguments ? vsprintf($content, $arguments) : $content;
+            $content = !empty($variables) ? vsprintf($content, $variables) : $content;
         }
 
         return $content;

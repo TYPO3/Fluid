@@ -7,6 +7,9 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+
 /**
  * Tag based view helper.
  * Should be used as the base class for all view helpers which output simple tags, as it provides some
@@ -16,7 +19,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 {
-
     /**
      * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
      *
@@ -66,27 +68,39 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
     }
 
-    public function initializeArgumentsAndRender()
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
     {
-        $this->validateArguments();
-        if ($this->hasArgument('additionalAttributes') && is_array($this->arguments['additionalAttributes'])) {
-            $this->tag->addAttributes($this->arguments['additionalAttributes']);
+        $parameters = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
+        foreach ($parameters as $argumentName => $argumentValue) {
+            if (strpos($argumentName, 'data-') === 0) {
+                $this->tag->addAttribute($argumentName, $argumentValue);
+                unset($parameters[$argumentName]);
+            }
         }
 
-        if ($this->hasArgument('data') && is_array($this->arguments['data'])) {
-            foreach ($this->arguments['data'] as $dataAttributeKey => $dataAttributeValue) {
+        if (isset($parameters['additionalAttributes']) && is_array($parameters['additionalAttributes'])) {
+            $this->tag->addAttributes($parameters['additionalAttributes']);
+        }
+
+        if (isset($parameters['data']) && is_array($parameters['data'])) {
+            foreach ($parameters['data'] as $dataAttributeKey => $dataAttributeValue) {
                 $this->tag->addAttribute('data-' . $dataAttributeKey, (string) $dataAttributeValue);
             }
         }
 
         if (isset(self::$tagAttributes[get_class($this)])) {
             foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
-                if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
-                    $this->tag->addAttribute($attributeName, (string) $this->arguments[$attributeName]);
+                if ($this->hasArgument($attributeName) && $parameters[$attributeName] !== '') {
+                    $this->tag->addAttribute($attributeName, (string) $parameters[$attributeName]);
                 }
             }
         }
-        return $this->callRenderMethod();
+        return parent::execute($renderingContext, $arguments);
+    }
+
+    public function render()
+    {
+        return $this->tag->render();
     }
 
     /**
@@ -124,36 +138,5 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerTagAttribute('accesskey', 'string', 'Keyboard shortcut to access this element');
         $this->registerTagAttribute('tabindex', 'integer', 'Specifies the tab order of this element');
         $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
-    }
-
-    /**
-     * Handles additional arguments, sorting out any data-
-     * prefixed tag attributes and assigning them. Then passes
-     * the unassigned arguments to the parent class' method,
-     * which in the default implementation will throw an error
-     * about "undeclared argument used".
-     *
-     * @param array $arguments
-     * @return void
-     */
-    public function handleAdditionalArguments(array $arguments)
-    {
-        $unassigned = [];
-        foreach ($arguments as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
-                $this->tag->addAttribute($argumentName, $argumentValue);
-            } else {
-                $unassigned[$argumentName] = $argumentValue;
-            }
-        }
-        parent::handleAdditionalArguments($unassigned);
-    }
-
-    /**
-     * @return string
-     */
-    public function render()
-    {
-        return $this->tag->render();
     }
 }

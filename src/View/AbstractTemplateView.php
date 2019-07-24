@@ -8,8 +8,8 @@ namespace TYPO3Fluid\Fluid\View;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -191,11 +191,11 @@ abstract class AbstractTemplateView extends AbstractView
                 return $error->getSource();
             }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedLayout->render($this->baseRenderingContext);
+            $output = $parsedLayout->execute($this->baseRenderingContext);
             $this->stopRendering();
         } else {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->render($this->baseRenderingContext);
+            $output = $parsedTemplate->execute($this->baseRenderingContext);
             $this->stopRendering();
         }
 
@@ -299,7 +299,7 @@ abstract class AbstractTemplateView extends AbstractView
         if ($sectionName !== null) {
             $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
         } else {
-            $output = $parsedPartial->render($renderingContext);
+            $output = $parsedPartial->execute($renderingContext);
         }
         $this->stopRendering();
         return $output;
@@ -309,11 +309,11 @@ abstract class AbstractTemplateView extends AbstractView
      * Start a new nested rendering. Pushes the given information onto the $renderingStack.
      *
      * @param integer $type one of the RENDERING_* constants
-     * @param ParsedTemplateInterface $template
+     * @param ComponentInterface $template
      * @param RenderingContextInterface $context
      * @return void
      */
-    protected function startRendering(int $type, ParsedTemplateInterface $template, RenderingContextInterface $context): void
+    protected function startRendering(int $type, ComponentInterface $template, RenderingContextInterface $context): void
     {
         array_push($this->renderingStack, ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context]);
     }
@@ -343,9 +343,9 @@ abstract class AbstractTemplateView extends AbstractView
     /**
      * Get the parsed template which is currently being rendered or compiled.
      *
-     * @return ParsedTemplateInterface
+     * @return ComponentInterface
      */
-    protected function getCurrentParsedTemplate(): ParsedTemplateInterface
+    protected function getCurrentParsedTemplate(): ComponentInterface
     {
         $currentRendering = end($this->renderingStack);
         $renderingContext = $this->getCurrentRenderingContext();

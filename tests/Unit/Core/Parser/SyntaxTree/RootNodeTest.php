@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -17,15 +18,13 @@ use TYPO3Fluid\Fluid\View\TemplateView;
  */
 class RootNodeTest extends UnitTestCase
 {
-
     /**
      * @test
      */
     public function testEvaluateCallsEvaluateChildNodes(): void
     {
-        $view = new TemplateView();
-        $subject = $this->getMock(RootNode::class, ['evaluateChildNodes']);
-        $subject->expects($this->once())->method('evaluateChildNodes');
-        $subject->evaluate(new RenderingContext($view));
+        $subject = $this->getMock(RootNode::class, ['evaluateChildren']);
+        $subject->expects($this->once())->method('evaluateChildren');
+        $subject->execute(new RenderingContextFixture());
     }
 }

@@ -38,16 +38,13 @@ class TestViewHelper extends AbstractViewHelper
     /**
      * Handle any additional comments by ignoring them
      *
-     * @param array $arguments
+     * @param string $argumentName
+     * @return bool
      */
-    public function handleAdditionalArguments(array $arguments): void
+    public function allowUndeclaredArgument(string $argumentName): bool
     {
-        $filtered = [];
-        foreach ($arguments as $name => $value) {
-            if (isset($this->argumentDefinitions[$name])) {
-                $filtered[$name] = $value;
-            }
-        }
-        parent::handleAdditionalArguments($filtered);
+        return true;
     }
+
+
 }

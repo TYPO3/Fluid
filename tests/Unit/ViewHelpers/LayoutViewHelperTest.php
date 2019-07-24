@@ -7,27 +7,15 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
-
 /**
  * Testcase for LayoutViewHelper
  */
-class LayoutViewHelperTest extends ViewHelperBaseTestcase
+class LayoutViewHelperTest extends ViewHelperBaseTestCase
 {
-
-    /**
-     * @test
-     */
-    public function testInitializeArgumentsRegistersExpectedArguments(): void
+    public function getStandardTestValues(): array
     {
-        $instance = $this->getMock(LayoutViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('name', 'string', $this->anything());
-        $instance->initializeArguments();
+        return [
+            'returns layout name on execution' => ['layout', null, ['name' => 'layout']],
+        ];
     }
 }
