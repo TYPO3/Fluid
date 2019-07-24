@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
 
 /**

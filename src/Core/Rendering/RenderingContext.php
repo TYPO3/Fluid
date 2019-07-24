@@ -11,8 +11,6 @@ use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
-use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
-use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -20,6 +18,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\ViewInterface;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
 
 /**

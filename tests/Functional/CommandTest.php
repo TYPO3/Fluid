@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use org\bovigo\vfs\vfsStream;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
 /**
@@ -15,15 +14,6 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
  */
 class CommandTest extends BaseTestCase
 {
-
-    /**
-     * @return void
-     */
-    public static function setUpBeforeClass(): void
-    {
-        vfsStream::setup('fakecache/');
-    }
-
     /**
      * @param string $argumentString
      * @param array $mustContain
@@ -48,7 +38,6 @@ class CommandTest extends BaseTestCase
      */
     public function getCommandTestValues(): array
     {
-        $dummyVariablesFile = realpath(__DIR__ . '/Fixtures/Variables/DummyVariables.json');
         return [
             ['%s --help', ['Use the CLI utility in the following modes'], [\Exception::class]],
             ['echo "Hello world!" | %s', ['Hello world!'], ['Exeption']],

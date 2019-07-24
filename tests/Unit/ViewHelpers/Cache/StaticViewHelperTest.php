@@ -12,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestCase;
-use TYPO3Fluid\Fluid\ViewHelpers\Cache\StaticViewHelper;
 
 /**
  * Testcase for StaticViewHelper
