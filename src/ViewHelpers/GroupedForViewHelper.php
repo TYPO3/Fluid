@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -93,9 +93,8 @@ class GroupedForViewHelper extends AbstractViewHelper
         $this->registerArgument('groupKey', 'string', 'The name of the variable to store the current group', false, 'groupKey');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $each = $arguments['each'];
         $as = $arguments['as'];
         $groupBy = $arguments['groupBy'];

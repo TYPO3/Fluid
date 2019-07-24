@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
@@ -54,9 +54,8 @@ class CountViewHelper extends AbstractViewHelper
         $this->registerArgument('subject', 'array', 'Countable subject, array or \Countable');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $countable = $arguments['subject'] ?? $this->evaluateChildren($renderingContext);
         if ($countable === null) {
             return 0;

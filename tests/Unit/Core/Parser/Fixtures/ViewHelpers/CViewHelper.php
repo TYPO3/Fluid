@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -31,7 +31,7 @@ class CViewHelper extends AbstractViewHelper
         $this->registerArgument('return', 'bool', 'Return the arguments array, do not encode');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         $arguments = ($arguments ?? $this->getArguments())->evaluate($renderingContext);
         $data = [

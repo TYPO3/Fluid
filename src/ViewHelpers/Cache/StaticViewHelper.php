@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -74,7 +74,7 @@ class StaticViewHelper extends AbstractViewHelper
         return new TextNode($this->evaluateChildren($renderingContext));
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         return $this->evaluateChildren($renderingContext);
     }

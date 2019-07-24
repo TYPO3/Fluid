@@ -109,21 +109,12 @@ class IfViewHelper extends AbstractConditionViewHelper implements ExpressionComp
         if (!empty($this->parts)) {
             return $this->evaluateParts($this->renderingContext, $this->parts);
         }
-
-        if (static::verdict($this->arguments, $this->renderingContext)) {
-            return $this->renderThenChild();
-        }
-        return $this->renderElseChild();
+        return parent::render();
     }
 
-    /**
-     * @param array $arguments
-     * @param RenderingContextInterface $renderingContext
-     * @return bool
-     */
-    protected static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
+    protected function condition(): bool
     {
-        return (bool)$arguments['condition'];
+        return (bool) $this->arguments['condition'];
     }
 
     /**

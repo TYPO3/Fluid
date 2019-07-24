@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -58,10 +58,10 @@ class AliasViewHelper extends AbstractViewHelper
         $this->registerArgument('map', 'array', 'Array that specifies which variables should be mapped to which alias', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         $templateVariableContainer = $renderingContext->getVariableProvider();
-        $map = ($this->parsedArguments ?? $arguments)->evaluate($renderingContext)['map'];
+        $map = $this->arguments['map'];
         foreach ($map as $aliasName => $value) {
             $templateVariableContainer->add($aliasName, $value);
         }

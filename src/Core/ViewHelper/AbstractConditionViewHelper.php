@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 
@@ -54,24 +53,20 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      */
     public function render()
     {
-        if (static::verdict($this->arguments, $this->renderingContext)) {
+        if ($this->condition()) {
             return $this->renderThenChild();
         }
         return $this->renderElseChild();
     }
 
     /**
-     * Static method which can be overridden by subclasses. If a subclass
-     * requires a different decision then this method is the one to override
-     * and implement.
+     * Override this method for a custom decision whether or not to render the ViewHelper
      *
-     * @param array $arguments
-     * @param RenderingContextInterface $renderingContext
      * @return bool
      */
-    protected static function verdict(array $arguments, RenderingContextInterface $renderingContext): bool
+    protected function condition(): bool
     {
-        return isset($arguments['condition']) && (bool)($arguments['condition']);
+        return true;
     }
 
     /**
@@ -87,11 +82,10 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         if ($this->hasArgument('then')) {
             return $this->arguments['then'];
         }
-
         $elseViewHelperEncountered = false;
         foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof ThenViewHelper) {
-                $data = $childNode->execute($this->renderingContext);
+                $data = $childNode->execute($this->renderingContext, $childNode->getArguments()->setRenderingContext($this->arguments->getRenderingContext()));
                 return $data;
             }
             if ($childNode instanceof ElseViewHelper) {
@@ -100,8 +94,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         }
 
         if ($elseViewHelperEncountered) {
-            return '';
+            return null;
         }
+
         return $this->evaluateChildren($this->renderingContext);
     }
 
@@ -123,12 +118,13 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         $elseNode = null;
         foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof ElseViewHelper) {
-                if (($content = $childNode->execute($this->renderingContext)) !== null) {
-                    return $content;
+                $conditionArgument = $childNode->getArguments()['if'];
+                if ($conditionArgument) {
+                    return $childNode->execute($this->renderingContext, $childNode->getArguments()->setRenderingContext($this->arguments->getRenderingContext()));
                 }
             }
         }
 
-        return $elseNode instanceof ComponentInterface ? $elseNode->execute($this->renderingContext) : '';
+        return null;
     }
 }

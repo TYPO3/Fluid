@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -63,9 +63,8 @@ class RawViewHelper extends AbstractViewHelper
         $this->registerArgument('value', 'mixed', 'The value to output');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
-        return $arguments['value'] ?? $this->evaluateChildren($renderingContext);
+        return $this->arguments['value'] ?? $this->evaluateChildren($renderingContext);
     }
 }

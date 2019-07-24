@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Component;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -20,10 +20,10 @@ interface ComponentInterface
 {
     /**
      * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollectionInterface|null $arguments
+     * @param ArgumentCollection|null $arguments
      * @return self
      */
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): self;
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): self;
 
     /**
      * @param RenderingContextInterface $renderingContext
@@ -36,10 +36,10 @@ interface ComponentInterface
      * which contains a rendering context and arguments.
      *
      * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollectionInterface|null $arguments
+     * @param ArgumentCollection|null $arguments
      * @return mixed
      */
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null);
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null);
 
     /**
      * Returns one of the following:
@@ -59,9 +59,9 @@ interface ComponentInterface
      * definitions of this component, ready to be filled with arguments that will
      * be passed to execute()
      *
-     * @return ArgumentCollectionInterface
+     * @return ArgumentCollection
      */
-    public function getArguments(): ArgumentCollectionInterface;
+    public function getArguments(): ArgumentCollection;
 
     public function allowUndeclaredArgument(string $argumentName): bool;
 

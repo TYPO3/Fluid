@@ -21,7 +21,6 @@ class ElseViewHelperTest extends ViewHelperBaseTestCase
         return [
             'renders child content when no condition is set' => ['foo', $context, null, [new TextNode('foo')]],
             'renders child content when condition is true' => ['foo', $context, ['if' => true], [new TextNode('foo')]],
-            'does not render child content when condition is false' => [null, $context, ['if' => false], [new TextNode('foo')]],
         ];
     }
 }

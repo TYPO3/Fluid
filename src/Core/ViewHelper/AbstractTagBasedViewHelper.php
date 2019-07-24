@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -68,9 +68,9 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $parameters = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
+        $parameters = ($arguments ?? $this->getArguments())->setRenderingContext($renderingContext);
         foreach ($parameters as $argumentName => $argumentValue) {
             if (strpos($argumentName, 'data-') === 0) {
                 $this->tag->addAttribute($argumentName, $argumentValue);

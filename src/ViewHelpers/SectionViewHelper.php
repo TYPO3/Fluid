@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -72,19 +72,24 @@ class SectionViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): ComponentInterface
     {
         parent::onOpen($renderingContext, $arguments);
-        $this->name = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext)['name'];
+        $this->name = ($arguments ?? $this->getArguments())['name'];
         return $this;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         $content = null;
         if ($renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
+            $newVariables = $renderingContext->getVariableProvider()->getScopeCopy($arguments->getArrayCopy());
+
+            $newRenderingContext = clone $renderingContext;
+            $newRenderingContext->setVariableProvider($newVariables);
+
             $renderingContext->getViewHelperVariableContainer()->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
-            $content = $this->evaluateChildren($renderingContext);
+            $content = $this->evaluateChildren($newRenderingContext);
         }
         return $content;
     }

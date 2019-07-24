@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -50,9 +50,8 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         return isset($parts[2]) && strpos(static::$operators, $parts[1]) !== false;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $parts = empty($this->parts) ? [$arguments['a'], $arguments['operator'], $arguments['b']] : $this->parts;
         $variable = array_shift($parts);
         $result = $renderingContext->getVariableProvider()->get($variable) ?? $variable;

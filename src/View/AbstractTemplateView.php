@@ -173,13 +173,13 @@ abstract class AbstractTemplateView extends AbstractView
         }
 
         try {
-            $layoutName = $parsedTemplate->getNamedChild('layoutName')->execute($renderingContext);
+            $layoutNameNode = $parsedTemplate->getNamedChild('layoutName');
+            $layoutName = $layoutNameNode->execute($renderingContext, $layoutNameNode->getArguments()->setRenderingContext($renderingContext));
         } catch (ChildNotFoundException $exception) {
             $layoutName = null;
         }
 
         if ($layoutName) {
-            //$layoutName = $parsedTemplate->getLayoutName($this->baseRenderingContext);
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
@@ -195,7 +195,7 @@ abstract class AbstractTemplateView extends AbstractView
             $this->stopRendering();
         } else {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->execute($this->baseRenderingContext);
+            $output = $parsedTemplate->execute($this->baseRenderingContext, (new ArgumentCollection())->setRenderingContext($renderingContext));
             $this->stopRendering();
         }
 
@@ -218,9 +218,8 @@ abstract class AbstractTemplateView extends AbstractView
         if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
             // in case we render a layout right now, we will render a section inside a TEMPLATE.
             $renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
+            $variables = $renderingContext->getVariableProvider()->getAll();
         } else {
-            $renderingContext = clone $renderingContext;
-            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
             $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
         }
 
@@ -253,7 +252,7 @@ abstract class AbstractTemplateView extends AbstractView
         );
 
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-        $output = $section->execute($renderingContext, (new ArgumentCollection())->assignAll($variables));
+        $output = $section->execute($renderingContext, (new ArgumentCollection())->setRenderingContext($renderingContext)->assignAll($variables));
         $this->stopRendering();
 
         return $output;

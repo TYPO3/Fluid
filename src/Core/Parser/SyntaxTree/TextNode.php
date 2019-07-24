@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -39,7 +39,7 @@ class TextNode extends AbstractComponent
         $this->text = $text;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         return $this->text;
     }

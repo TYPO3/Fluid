@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -77,7 +77,7 @@ class ObjectAccessorNode extends AbstractComponent
         return $this->accessors;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         $children = $this->getChildren();
         $numberOfChildNodes = count($children);

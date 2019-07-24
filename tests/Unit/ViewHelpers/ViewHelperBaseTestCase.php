@@ -36,7 +36,7 @@ abstract class ViewHelperBaseTestCase extends UnitTestCase
         $renderingContext = $renderingContext ?? new RenderingContextFixture();
         $viewHelperClassName = str_replace('\\Tests\\Unit', '', substr(static::class, 0, -4));
         $viewHelper = new $viewHelperClassName();
-        $argumentCollection = ($viewHelper->getArguments())->assignAll($arguments ?? []);
+        $argumentCollection = $viewHelper->getArguments()->setRenderingContext($renderingContext)->assignAll($arguments ?? []);
         $viewHelper->onOpen($renderingContext, $argumentCollection);
         foreach ($children ?? [] as $child) {
             $viewHelper->addChild($child);

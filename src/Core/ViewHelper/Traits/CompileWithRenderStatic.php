@@ -27,7 +27,7 @@ trait CompileWithRenderStatic
     public function render()
     {
         return static::renderStatic(
-            $this->arguments,
+            $this->arguments->getArrayCopy(),
             $this->buildRenderChildrenClosure(),
             $this->renderingContext
         );

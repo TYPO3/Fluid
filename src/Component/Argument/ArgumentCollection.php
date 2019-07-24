@@ -20,7 +20,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *
  * Contains the API used for validating and converting arguments.
  */
-class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess, \Iterator
+class ArgumentCollection extends \ArrayObject
 {
     /**
      * @var array
@@ -28,15 +28,32 @@ class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess, \
     protected $arguments = [];
 
     /**
-     * @var ArgumentDefinitionInterface[]
+     * @var ArgumentDefinition[]
      */
     protected $definitions = [];
+
+    /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
 
     public function __construct(iterable $definitions = [])
     {
         foreach ($definitions as $definition) {
             $this->addDefinition($definition);
         }
+        parent::__construct();
+    }
+
+    public function setRenderingContext(RenderingContextInterface $renderingContext): self
+    {
+        $this->renderingContext = $renderingContext;
+        return $this;
+    }
+
+    public function getRenderingContext(): RenderingContextInterface
+    {
+        return $this->renderingContext;
     }
 
     public function getDefinitions(): iterable
@@ -44,98 +61,74 @@ class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess, \
         return $this->definitions;
     }
 
-    public function assignAll(iterable $values): ArgumentCollectionInterface
+    public function assignAll(iterable $values): ArgumentCollection
     {
         foreach ($values as $name => $value) {
-            $this->assign($name, $value);
+            $this[$name] = $value;
         }
-        $this->createInternalArguments();
         return $this;
     }
 
-    public function evaluate(RenderingContextInterface $renderingContext): iterable
+    public function assign(string $name, $value): ArgumentCollection
     {
-        $evaluated = [];
-        foreach ($this->readAll() as $key => $value) {
-            $evaluated[$key] = $value instanceof ComponentInterface ? $value->execute($renderingContext) : $value;
-        }
-        return $evaluated;
-    }
-
-    public function assign(string $name, $value): ArgumentCollectionInterface
-    {
-        if (!$value instanceof BooleanNode && isset($this->definitions[$name]) && ($type = $this->definitions[$name]->getType()) && ($type === 'bool' || $type === 'boolean')) {
-            $value = is_bool($value) || is_numeric($value) || is_null($value) ? (bool) $value : new BooleanNode($value);
-        }
-        $this->arguments[$name] = $value;
+        $this[$name] = $value;
         return $this;
     }
 
-    public function readAll(): iterable
+    public function getAllRaw(): iterable
     {
         return $this->arguments;
     }
 
-    public function addDefinition(ArgumentDefinitionInterface $definition): ArgumentCollectionInterface
+    public function getRaw(string $argumentName)
     {
-        $argumentName = $definition->getName();
-        $this->definitions[$argumentName] = $definition;
-        $this->arguments[$argumentName] = $definition->getDefaultValue();
-        return $this;
-    }
-
-    public function read(string $argumentName)
-    {
-        $value = $this->arguments[$argumentName] ?? null;
-        if ($value === null && isset($this->definitions[$argumentName])) {
-            $value = $this->definitions[$argumentName]->getDefaultValue();
-        }
+        $value = $this[$argumentName] ?? null;
         return $value;
     }
 
-    public function offsetExists($offset)
+    public function addDefinition(ArgumentDefinition $definition): ArgumentCollection
     {
-        return isset($this->arguments[$offset]);
+        $argumentName = $definition->getName();
+        $this->definitions[$argumentName] = $definition;
+        return $this;
+    }
+
+    public function offsetSet($index, $value)
+    {
+        if (!$value instanceof BooleanNode && isset($this->definitions[$index])) {
+            $type = $this->definitions[$index]->getType();
+            if ($type === 'bool' || $type === 'boolean') {
+                $value = is_bool($value) || is_numeric($value) || is_null($value) ? (bool) $value : new BooleanNode($value);
+            }
+        }
+        parent::offsetSet($index, $value);
     }
 
     public function offsetGet($offset)
     {
-        return $this->arguments[$offset] ?? null;
+        $exists = parent::offsetExists($offset);
+        $value = $exists ? parent::offsetGet($offset) : null;
+        if ($value instanceof ComponentInterface) {
+            return $value->execute($this->renderingContext, $value->getArguments()->setRenderingContext($this->renderingContext));
+        }
+        if (!$exists && isset($this->definitions[$offset])) {
+            return $this->definitions[$offset]->getDefaultValue();
+        }
+        return $value;
     }
 
-    public function offsetSet($offset, $value)
+    public function getArrayCopy()
     {
-        $this->arguments[$offset] = $value;
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->arguments[$offset]);
-    }
-
-    public function current()
-    {
-        return current($this->arguments);
-    }
-
-    public function next()
-    {
-        return next($this->arguments);
-    }
-
-    public function key()
-    {
-        return key($this->arguments);
-    }
-
-    public function valid()
-    {
-        return $this->current() !== false;
-    }
-
-    public function rewind()
-    {
-        reset($this->arguments);
+        $data = [];
+        foreach ($this as $key => $value) {
+            $data[$key] = $value instanceof ComponentInterface ? $value->execute($this->renderingContext, $value->getArguments()->setRenderingContext($this->renderingContext)) : $value;
+        }
+        foreach ($this->definitions as $name => $definition) {
+            if (!isset($data[$name])) {
+                $data[$name] = $definition->getDefaultValue();
+            }
+        }
+        return $data;
     }
 
     /**
@@ -143,25 +136,18 @@ class ArgumentCollection implements ArgumentCollectionInterface, \ArrayAccess, \
      * and casting or creating BooleanNode where appropriate. Input
      * array may not contain all arguments - output array will.
      */
-    protected function createInternalArguments(): void
+    public function validate(): self
     {
         $missingArguments = [];
         foreach ($this->definitions as $name => $definition) {
-            $argument = $this->arguments[$name] ?? null;
-            if ($definition->isRequired() && !isset($argument)) {
+            if ($definition->isRequired() && !parent::offsetExists($name)) {
                 // Required but missing argument, causes failure (delayed, to report all missing arguments at once)
                 $missingArguments[] = $name;
-            } elseif (!isset($argument)) {
-                // Argument is optional (required filtered out above), fit it with the default value
-                $argument = $definition->getDefaultValue();
-            } elseif (($type = $definition->getType()) && ($type === 'bool' || $type === 'boolean')) {
-                // Cast the value or create a BooleanNode
-                $argument = is_bool($argument) || is_numeric($argument) || is_null($argument) ? (bool)$argument : new BooleanNode($argument);
             }
-            $this->arguments[$name] = $argument;
         }
         if (!empty($missingArguments)) {
             throw new Exception('Required argument(s) not provided: ' . implode(', ', $missingArguments), 1558533510);
         }
+        return $this;
     }
 }

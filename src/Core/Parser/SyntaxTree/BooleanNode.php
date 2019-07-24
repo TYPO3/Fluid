@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -62,7 +62,7 @@ class BooleanNode extends AbstractComponent
         return $this->stack;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): bool
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): bool
     {
         return self::evaluateStack($renderingContext, $this->stack);
     }
@@ -118,7 +118,7 @@ class BooleanNode extends AbstractComponent
         $context = [];
         foreach ($expressionParts as $key => $expressionPart) {
             if ($expressionPart instanceof ComponentInterface) {
-                $context['node' . $key] = $expressionPart->execute($renderingContext);
+                $context['node' . $key] = $expressionPart->execute($renderingContext, $expressionPart->getArguments()->setRenderingContext($renderingContext));
             } else {
                 $context['node' . $key] = $expressionPart;
             }

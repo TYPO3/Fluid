@@ -99,7 +99,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $this->tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-baz', 'foos');
 
         $arguments = ['data' => ['foo' => 'bar', 'baz' => 'foos']];
-        $this->viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($arguments))->execute(new RenderingContextFixture());
+        $this->viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($arguments))->execute(new RenderingContextFixture(), $this->viewHelper->getArguments());
     }
 
     /**
@@ -133,6 +133,6 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $method->invoke($this->viewHelper);
 
         $context = new RenderingContextFixture();
-        $this->viewHelper->onOpen($context, (new ArgumentCollection())->assignAll($arguments))->execute($context);
+        $this->viewHelper->onOpen($context, (new ArgumentCollection())->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
     }
 }

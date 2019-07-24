@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
@@ -15,7 +16,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 
 /**
@@ -410,7 +410,7 @@ class Sequencer
                     if (!$closesNode) {
                         // If $closesNode is not-null this means onOpen called earlier when node got added to the stack.
                         // Hence, we only call this for nodes that are not a closing node (= opening or self-closing).
-                        $viewHelperNode->onOpen($this->renderingContext, $arguments);
+                        $viewHelperNode->onOpen($this->renderingContext, ($arguments ?? $viewHelperNode->getArguments())->validate());
                     }
 
                     if (!$closing) {
@@ -718,7 +718,7 @@ class Sequencer
                     $this->splitter->switch($this->contexts->array);
                     $node = $node->onOpen(
                         $this->renderingContext,
-                        $node->getArguments()->assignAll($this->sequenceArrayNode((array) $definitions)->getInternalArray())
+                        $arguments->assignAll($this->sequenceArrayNode((array) $definitions)->getInternalArray())->validate()
                     );
                     $this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
@@ -753,7 +753,7 @@ class Sequencer
                         // in which case there is no further syntax to come.
                         $node = $node->onOpen(
                             $this->renderingContext,
-                            $arguments
+                            $arguments->validate()
                         )->onClose(
                             $this->renderingContext
                         );
@@ -814,7 +814,7 @@ class Sequencer
                         $node = $node->onOpen(
                             $this->renderingContext,
                             //$node->getArgumentCollection()->assignAll($arguments)
-                            $arguments
+                            $arguments->validate()
                         );
                         $node->addChild($childNodeToAdd);
                         $node->onClose(

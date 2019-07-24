@@ -83,13 +83,12 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, ?string $expectedException = null, bool $withCache = false): void
+    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, ?string $expectedException = null): void
     {
         if (empty($expected) && empty($notExpected) && empty($expectedException)) {
             $this->fail('Test performs no assertions!');
         }
         if (!empty($expectedException)) {
-            //$this->setExpectedException($expectedException);
             $this->expectException($expectedException);
         }
         $view = $this->getView();

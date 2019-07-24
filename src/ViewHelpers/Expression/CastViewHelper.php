@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Expression;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -48,12 +48,11 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         $this->registerArgument('as', 'string', 'Type to cast, valid values are: integer, boolean, string, float and array', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         if (!empty($this->parts)) {
             $parts = $this->parts;
         } else {
-            $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
             $parts = [$arguments['subject'], 'as', $arguments['as']];
         }
         return $this->evaluateParts($renderingContext, $parts);

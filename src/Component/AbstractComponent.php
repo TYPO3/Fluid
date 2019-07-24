@@ -3,7 +3,6 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Component;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
@@ -52,13 +51,13 @@ abstract class AbstractComponent implements ComponentInterface
     protected $escapeOutput = null;
 
     /**
-     * @var ArgumentCollectionInterface|null
+     * @var ArgumentCollection|null
      */
-    protected $parsedArguments = null;
+    protected $arguments = null;
 
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): ComponentInterface
     {
-        $this->parsedArguments = $this->parsedArguments ?? $arguments;
+        $this->arguments = ($arguments ?? $this->getArguments())->setRenderingContext($renderingContext);
         return $this;
     }
 
@@ -72,9 +71,9 @@ abstract class AbstractComponent implements ComponentInterface
         return $this->name;
     }
 
-    public function getArguments(): ArgumentCollectionInterface
+    public function getArguments(): ArgumentCollection
     {
-        return $this->parsedArguments ?? ($this->parsedArguments = new ArgumentCollection());
+        return $this->arguments ?? ($this->arguments = new ArgumentCollection());
     }
 
     public function addChild(ComponentInterface $component): ComponentInterface
@@ -172,7 +171,7 @@ abstract class AbstractComponent implements ComponentInterface
         return $this->escapeOutput !== false;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         return $this->evaluateChildren($renderingContext);
     }
@@ -193,7 +192,7 @@ abstract class AbstractComponent implements ComponentInterface
     {
         $evaluatedNodes = [];
         foreach ($this->getChildren() as $childNode) {
-            $evaluatedNodes[] = $childNode->execute($renderingContext, $childNode->getArguments());
+            $evaluatedNodes[] = $childNode->execute($renderingContext, $childNode->getArguments()->setRenderingContext($renderingContext));
         }
         // Make decisions about what to actually return
         if (empty($evaluatedNodes)) {

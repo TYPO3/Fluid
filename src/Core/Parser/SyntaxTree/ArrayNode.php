@@ -8,7 +8,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -35,11 +35,11 @@ class ArrayNode extends AbstractComponent
         $this->internalArray = $internalArray;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $argumentCollection = null): array
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $argumentCollection = null): array
     {
         $arrayToBuild = [];
         foreach ($this->internalArray as $key => $value) {
-            $arrayToBuild[$key] = $value instanceof ComponentInterface ? $value->execute($renderingContext) : $value;
+            $arrayToBuild[$key] = $value instanceof ComponentInterface ? $value->execute($renderingContext, $value->getArguments()->setRenderingContext($renderingContext)) : $value;
         }
         return $arrayToBuild;
     }

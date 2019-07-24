@@ -8,8 +8,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 

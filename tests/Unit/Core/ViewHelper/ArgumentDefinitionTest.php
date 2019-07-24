@@ -7,11 +7,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
- * Testcase for \TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition
+ * Testcase for \TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition
  */
 class ArgumentDefinitionTest extends UnitTestCase
 {

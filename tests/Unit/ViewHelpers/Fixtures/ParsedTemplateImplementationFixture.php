@@ -7,8 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -24,7 +24,7 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
         // TODO: Implement flatten() method.
     }
 
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): ComponentInterface
     {
         return $this;
     }
@@ -74,17 +74,17 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
         // stub
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         // TODO: Implement execute() method.
     }
 
-    public function addArgumentDefinition(ArgumentDefinitionInterface $definition): ComponentInterface
+    public function addArgumentDefinition(ArgumentDefinition $definition): ComponentInterface
     {
         return $this;
     }
 
-    public function createArgumentDefinitions(): ArgumentCollectionInterface
+    public function createArgumentDefinitions(): ArgumentCollection
     {
         // TODO: Implement createArgumentDefinitions() method.
     }
@@ -94,7 +94,7 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
         // TODO: Implement getName() method.
     }
 
-    public function getArguments(): ArgumentCollectionInterface
+    public function getArguments(): ArgumentCollection
     {
         // TODO: Implement getArguments() method.
     }

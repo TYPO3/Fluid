@@ -8,9 +8,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -109,9 +107,8 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $section = $arguments['section'];
         $partial = $arguments['partial'];
         $variables = (array) $arguments['arguments'];
@@ -129,7 +126,7 @@ class RenderViewHelper extends AbstractViewHelper
         if ($renderable) {
             $content = $renderable->execute($renderingContext, (new ArgumentCollection())->assignAll($variables));
         } elseif ($delegate !== null) {
-            if (!is_a($delegate, ParsedTemplateInterface::class, true)) {
+            if (!is_a($delegate, ComponentInterface::class, true)) {
                 throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
             }
             $renderingContext = clone $renderingContext;

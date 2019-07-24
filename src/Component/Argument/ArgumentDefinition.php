@@ -1,18 +1,16 @@
 <?php
 declare(strict_types=1);
-namespace TYPO3Fluid\Fluid\Core\ViewHelper;
+namespace TYPO3Fluid\Fluid\Component\Argument;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinitionInterface;
-
 /**
  * Argument definition of each view helper argument
  */
-class ArgumentDefinition implements ArgumentDefinitionInterface
+class ArgumentDefinition
 {
     /**
      * Name of argument

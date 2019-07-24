@@ -7,10 +7,10 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use Closure;
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -26,50 +26,31 @@ abstract class AbstractViewHelper extends AbstractComponent
     protected $renderingContext;
 
     /**
-     * @var \Closure
+     * @var Closure
      */
     protected $renderChildrenClosure = null;
-
-    /**
-     * @var array
-     */
-    protected $arguments = [];
 
     /**
      * Execute via Component API implementation.
      *
      * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollectionInterface|null $arguments
+     * @param ArgumentCollection|null $arguments
      * @return mixed
      * @api
      */
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
-        $this->renderingContext = $renderingContext;
-        $this->arguments = ($arguments ?? $this->getArguments())->evaluate($renderingContext);
+        $this->renderingContext = $arguments->getRenderingContext() ?? $renderingContext;
         return $this->callRenderMethod();
     }
 
-    public function getArguments(): ArgumentCollectionInterface
+    public function getArguments(): ArgumentCollection
     {
-        if ($this->parsedArguments === null) {
-            $this->parsedArguments = new ArgumentCollection();
+        if ($this->arguments === null) {
+            $this->arguments = new ArgumentCollection();
             $this->initializeArguments();
         }
-        return $this->parsedArguments;
-    }
-
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollectionInterface|null $arguments
-     * @return ComponentInterface
-     */
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null): ComponentInterface
-    {
-        #$this->parsedArguments = $arguments; //$this->createInternalArguments($arguments ?? $this->getArgumentCollection());
-        $this->parsedArguments = $this->getArguments()->assignAll($arguments ? $arguments->readAll() : []);
-        $this->renderingContext = $renderingContext;
-        return $this;
+        return $this->arguments;
     }
 
     /**
@@ -114,10 +95,10 @@ abstract class AbstractViewHelper extends AbstractComponent
     /**
      * Called when being inside a cached template.
      *
-     * @param \Closure $renderChildrenClosure
+     * @param Closure $renderChildrenClosure
      * @return void
      */
-    public function setRenderChildrenClosure(\Closure $renderChildrenClosure)
+    public function setRenderChildrenClosure(Closure $renderChildrenClosure)
     {
         $this->renderChildrenClosure = $renderChildrenClosure;
     }
@@ -136,16 +117,9 @@ abstract class AbstractViewHelper extends AbstractComponent
         if (method_exists($this, 'renderStatic')) {
             // Method is safe to call - will not recurse through ViewHelperInvoker via the default
             // implementation of renderStatic() on this class.
-            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments, $this->buildRenderChildrenClosure(), $this->renderingContext]);
+            return call_user_func_array([static::class, 'renderStatic'], [$this->arguments->getArrayCopy(), $this->buildRenderChildrenClosure(), $this->arguments->getRenderingContext()]);
         }
-        throw new Exception(
-            sprintf(
-                'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
-                'Executing this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
-                '"renderStatic()" on your ViewHelper class',
-                get_class($this)
-            )
-        );
+        return $this->renderChildren();
     }
 
     /**
@@ -161,7 +135,7 @@ abstract class AbstractViewHelper extends AbstractComponent
             $closure = $this->renderChildrenClosure;
             return $closure();
         }
-        return $this->evaluateChildren($this->renderingContext);
+        return $this->evaluateChildren($this->arguments->getRenderingContext());
     }
 
     /**
@@ -170,7 +144,7 @@ abstract class AbstractViewHelper extends AbstractComponent
      *
      * No public API yet.
      *
-     * @return \Closure
+     * @return Closure
      */
     protected function buildRenderChildrenClosure()
     {

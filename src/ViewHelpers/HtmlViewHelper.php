@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollectionInterface;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -34,11 +34,10 @@ class HtmlViewHelper extends AbstractViewHelper
 
     protected $namespaces = [];
 
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $argumentCollection = null): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $argumentCollection = null): ComponentInterface
     {
-        $arguments = ($arguments ?? $this->parsedArguments ?? $this->getArguments())->evaluate($renderingContext);
         $this->shouldRenderTag = ($arguments['data-namespace-typo3-fluid'] ?? null) === 'true';
-        $arguments = $argumentCollection->readAll();
+        $arguments = $argumentCollection->getArrayCopy();
         $resolver = $renderingContext->getViewHelperResolver();
         foreach ($arguments as $name => $value) {
             $parts = explode(':', $name);
@@ -57,7 +56,7 @@ class HtmlViewHelper extends AbstractViewHelper
         return $this;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollectionInterface $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         $content = $this->evaluateChildren($renderingContext);
         if (!$this->shouldRenderTag) {
@@ -65,7 +64,7 @@ class HtmlViewHelper extends AbstractViewHelper
         }
 
         $tagBuilder = new TagBuilder('html');
-        $tagBuilder->addAttributes($arguments->evaluate($renderingContext));
+        $tagBuilder->addAttributes($arguments);
         $tagBuilder->setContent($content);
         return $tagBuilder->render();
     }

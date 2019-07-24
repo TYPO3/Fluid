@@ -8,11 +8,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefaultRenderStaticViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
@@ -73,7 +73,7 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
         $argumentDefinitions = [
             'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
         ];
-        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['validateParsedArguments', 'prepareArguments'])->getMockForAbstractClass();
+        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['dummy'])->getMockForAbstractClass();
         $expectedArguments = [
             'foo' => 'foovalue',
             'undeclared' => 'some',
@@ -96,7 +96,7 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
             'undeclared' => 'some',
         ];
         $viewHelper->expects($this->once())->method('callRenderMethod');
-        $viewHelper->execute(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($expectedArguments));
+        $viewHelper->execute(new RenderingContextFixture(), (new ArgumentCollection())->setRenderingContext(new RenderingContextFixture())->assignAll($expectedArguments));
     }
 
     /**
@@ -138,17 +138,17 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
     {
         $subject = new RenderMethodFreeViewHelper();
         $context = new RenderingContextFixture();
-        $this->assertSame('I was rendered', $subject->onOpen($context)->execute($context));
+        $this->assertSame('I was rendered', $subject->onOpen($context)->execute($context, $subject->getArguments()->setRenderingContext($context)));
     }
 
     /**
      * @test
      */
-    public function testCallRenderMethodOnViewHelperWithoutRenderMethodWithDefaultRenderStaticMethodThrowsException(): void
+    public function testCallRenderMethodOnViewHelperWithoutRenderMethodWithoutRenderStaticWithoutExecuteReturnsChildContent(): void
     {
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
+        $subject->addChild(new TextNode('foo'));
         $context = new RenderingContextFixture();
-        $this->setExpectedException(Exception::class);
-        $this->assertSame('I was rendered', $subject->onOpen($context)->execute($context));
+        $this->assertSame('foo', $subject->onOpen($context)->execute($context, $subject->getArguments()));
     }
 }
