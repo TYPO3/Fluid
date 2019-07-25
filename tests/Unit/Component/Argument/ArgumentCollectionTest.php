@@ -29,7 +29,10 @@ class ArgumentCollectionTest extends UnitTestCase
     public function evaluatesArgumentsOnArrayAccess(array $arguments, array $definitions = [], array $variables = [], ?array $expected = null): void
     {
         $expected = $expected ?? $arguments;
-        $subject = new ArgumentCollection($definitions);
+        $subject = new ArgumentCollection();
+        foreach ($definitions as $definition) {
+            $subject->addDefinition($definition);
+        }
         $subject->assignAll($arguments);
         if (!empty($variables)) {
             $context = new RenderingContextFixture();

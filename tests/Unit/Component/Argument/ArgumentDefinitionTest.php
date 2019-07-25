@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Component\Argument;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -25,7 +25,6 @@ class ArgumentDefinitionTest extends UnitTestCase
         $description = 'Example desc';
         $type = 'string';
         $isRequired = true;
-        $isMethodParameter = true;
         $argumentDefinition = new ArgumentDefinition($name, $type, $description, $isRequired, null);
 
         $this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');

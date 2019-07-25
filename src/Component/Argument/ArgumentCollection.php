@@ -23,11 +23,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 class ArgumentCollection extends \ArrayObject
 {
     /**
-     * @var array
-     */
-    protected $arguments = [];
-
-    /**
      * @var ArgumentDefinition[]
      */
     protected $definitions = [];
@@ -36,14 +31,6 @@ class ArgumentCollection extends \ArrayObject
      * @var RenderingContextInterface
      */
     protected $renderingContext;
-
-    public function __construct(iterable $definitions = [])
-    {
-        foreach ($definitions as $definition) {
-            $this->addDefinition($definition);
-        }
-        parent::__construct();
-    }
 
     public function setRenderingContext(RenderingContextInterface $renderingContext): self
     {
@@ -77,7 +64,7 @@ class ArgumentCollection extends \ArrayObject
 
     public function getAllRaw(): iterable
     {
-        return $this->arguments;
+        return parent::getArrayCopy();
     }
 
     public function getRaw(string $argumentName)
@@ -106,27 +93,21 @@ class ArgumentCollection extends \ArrayObject
 
     public function offsetGet($offset)
     {
-        $exists = parent::offsetExists($offset);
-        $value = $exists ? parent::offsetGet($offset) : null;
-        if ($value instanceof ComponentInterface) {
-            return $value->execute($this->renderingContext, $value->getArguments()->setRenderingContext($this->renderingContext));
-        }
-        if (!$exists && isset($this->definitions[$offset])) {
+        if (isset($this->definitions[$offset]) && !parent::offsetExists($offset)) {
             return $this->definitions[$offset]->getDefaultValue();
+        }
+        $value = parent::offsetGet($offset);
+        if ($value instanceof ComponentInterface) {
+            $value = $value->execute($this->renderingContext, $value->getArguments()->setRenderingContext($this->renderingContext));
         }
         return $value;
     }
 
-    public function getArrayCopy()
+    public function getArrayCopy(): array
     {
         $data = [];
-        foreach ($this as $key => $value) {
-            $data[$key] = $value instanceof ComponentInterface ? $value->execute($this->renderingContext, $value->getArguments()->setRenderingContext($this->renderingContext)) : $value;
-        }
-        foreach ($this->definitions as $name => $definition) {
-            if (!isset($data[$name])) {
-                $data[$name] = $definition->getDefaultValue();
-            }
+        foreach (parent::getArrayCopy() + $this->definitions as $name => $_) {
+            $data[$name] = $this[$name];
         }
         return $data;
     }
