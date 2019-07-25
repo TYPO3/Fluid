@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 /**
  * Array Syntax Tree Node. Handles JSON-like arrays.
  */
-class ArrayNode extends AbstractComponent
+class ArrayNode extends AbstractComponent implements \ArrayAccess
 {
 
     /**
@@ -30,7 +30,7 @@ class ArrayNode extends AbstractComponent
      *
      * @param array $internalArray Array to store
      */
-    public function __construct(array $internalArray)
+    public function __construct(array $internalArray = [])
     {
         $this->internalArray = $internalArray;
     }
@@ -53,4 +53,25 @@ class ArrayNode extends AbstractComponent
     {
         return $this->internalArray;
     }
+
+    public function offsetExists($offset): bool
+    {
+        return isset($this->internalArray[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        return $this->internalArray[$offset] ?? null;
+    }
+
+    public function offsetSet($offset, $value): void
+    {
+        $this->internalArray[$offset] = $value;
+    }
+
+    public function offsetUnset($offset): void
+    {
+        unset($this->internalArray[$offset]);
+    }
+
 }

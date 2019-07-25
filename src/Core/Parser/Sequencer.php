@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
@@ -187,7 +186,9 @@ class Sequencer
             );
         }
 
-        return array_pop($this->nodeStack);
+        $node = array_pop($this->nodeStack);
+        $node->getArguments()->setRenderingContext($this->renderingContext);
+        return $node;
     }
 
     protected function sequenceCharacterData(string $text): ComponentInterface
@@ -533,7 +534,8 @@ class Sequencer
                     // Sequence the node. Pass the "use numeric keys?" boolean based on the current byte. Only array
                     // start creates numeric keys. Inline start with keyless values creates ECMA style {foo:foo, bar:bar}
                     // from {foo, bar}.
-                    $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode(null, true);
+                    $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
+                    $this->sequenceArrayNode($node, true);
                     $this->splitter->switch($this->contexts->inline);
                     unset($key);
                     break;
@@ -557,7 +559,8 @@ class Sequencer
                         $captured = $key ?? $captured ?? $potentialAccessor;
                         // This is a sub-syntax following a colon - meaning it is an array.
                         if ($captured !== null) {
-                            $array[$key ?? $captured ?? 0] = $node = $this->sequenceArrayNode();
+                            $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
+                            $this->sequenceArrayNode($node);
                             $this->splitter->switch($this->contexts->inline);
                         }
                     } else {
@@ -710,16 +713,18 @@ class Sequencer
                     try {
                         $node = $this->resolver->createViewHelperInstance($namespace, $method);
                         $arguments = $node->getArguments();
-                        $definitions = $arguments->getDefinitions();
                         $this->callInterceptor($node, Escape::INTERCEPT_OPENING_VIEWHELPER);
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
                     $this->splitter->switch($this->contexts->array);
+                    $this->sequenceArrayNode($arguments);
+                    $arguments->validate()->setRenderingContext($this->renderingContext);
                     $node = $node->onOpen(
                         $this->renderingContext,
-                        $arguments->assignAll($this->sequenceArrayNode((array) $definitions)->getInternalArray())->validate()
+                        $arguments
                     );
+
                     $this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
@@ -810,10 +815,9 @@ class Sequencer
                         // we look for the alias used and create a ViewHelperNode with no arguments.
                         $childNodeToAdd = $node;
                         $node = $this->resolver->createViewHelperInstance(null, (string) $potentialAccessor);
-                        $arguments = $node->getArguments();
+                        $arguments = $node->getArguments()->setRenderingContext($this->renderingContext);
                         $node = $node->onOpen(
                             $this->renderingContext,
-                            //$node->getArgumentCollection()->assignAll($arguments)
                             $arguments->validate()
                         );
                         $node->addChild($childNodeToAdd);
@@ -845,13 +849,15 @@ class Sequencer
     }
 
     /**
-     * @param ArgumentDefinition[]|null $definitions
+     * @param \ArrayAccess $array
      * @param bool $numeric
-     * @return ArrayNode
      */
-    protected function sequenceArrayNode(?array $definitions = null, bool $numeric = false): ArrayNode
+    protected function sequenceArrayNode(\ArrayAccess &$array, bool $numeric = false): void
     {
-        $array = [];
+        $definitions = null;
+        if ($array instanceof ArgumentCollection) {
+            $definitions = $array->getDefinitions();
+        }
 
         $keyOrValue = null;
         $key = null;
@@ -892,7 +898,9 @@ class Sequencer
                     // the difference being that only the square bracket will cause third parameter ($numeric) passed to
                     // sequenceArrayNode() to be true, which in turn causes key-less items to be added with numeric indexes.
                     $key = $key ?? ++$itemCount;
-                    $array[$key] = $this->sequenceArrayNode(null, $symbol === self::BYTE_ARRAY_START);
+                    $arrayNode = new ArrayNode();
+                    $this->sequenceArrayNode($arrayNode, $symbol === self::BYTE_ARRAY_START);
+                    $array[$key] = $arrayNode;
                     $keyOrValue = null;
                     $key = null;
                     break;
@@ -972,7 +980,7 @@ class Sequencer
                         throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                     }
                     $this->escapingEnabled = $escapingEnabledBackup;
-                    return new ArrayNode($array);
+                    return;
             }
         }
 
@@ -1017,7 +1025,9 @@ class Sequencer
                         // Array start "[" only triggers array sequencing if it is the very first byte in the quoted
                         // string - otherwise, it is added as part of the text.
                         $this->splitter->switch($this->contexts->array);
-                        $node->addChild($this->sequenceArrayNode(null, true));
+                        $child = new ArrayNode();
+                        $this->sequenceArrayNode($child, true);
+                        $node->addChild($child);
                         $this->splitter->switch($this->contexts->quoted);
                     } else {
                         $node->addChild(new TextNode($captured . '['));
