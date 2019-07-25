@@ -250,7 +250,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testGetTemplateSourceReadsStreamWrappers(): void
     {
-        $fixture = __DIR__ . '/Fixtures/LayoutFixture.html';
+        $fixture = __FILE__;
         $className = $this->getSubjectClassName();
         $instance = new $className();
         $stream = fopen($fixture, 'r');
