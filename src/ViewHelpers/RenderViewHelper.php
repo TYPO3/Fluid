@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -98,8 +97,6 @@ class RenderViewHelper extends AbstractViewHelper
         parent::initializeArguments();
         $this->registerArgument('section', 'string', 'Section to render - combine with partial to render section in partial');
         $this->registerArgument('partial', 'string', 'Partial to render, with or without section');
-        $this->registerArgument('delegate', 'string', 'Optional PHP class name of a permanent, included-in-app ParsedTemplateInterface implementation to override partial/section');
-        $this->registerArgument('renderable', ComponentInterface::class, 'Instance of a ComponentInterface implementation to be rendered');
         $this->registerArgument('arguments', 'array', 'Array of variables to be transferred. Use {_all} for all variables', false, []);
         $this->registerArgument('optional', 'boolean', 'If TRUE, considers the *section* optional. Partial never is.', false, false);
         $this->registerArgument('default', 'mixed', 'Value (usually string) to be displayed if the section or partial does not exist');
@@ -113,9 +110,6 @@ class RenderViewHelper extends AbstractViewHelper
         $partial = $arguments['partial'];
         $variables = (array) $arguments['arguments'];
         $optional = (boolean) $arguments['optional'];
-        $delegate = $arguments['delegate'];
-        /** @var ComponentInterface|null $renderable */
-        $renderable = $arguments['renderable'];
         $tagContent = $this->evaluateChildren($renderingContext);
         if ($arguments['contentAs']) {
             $variables[$arguments['contentAs']] = $tagContent;
@@ -123,18 +117,7 @@ class RenderViewHelper extends AbstractViewHelper
 
         $view = $renderingContext->getViewHelperVariableContainer()->getView();
         $content = '';
-        if ($renderable) {
-            $newContext = clone $renderingContext;
-            $newContext->setVariableProvider($newContext->getVariableProvider()->getScopeCopy($variables));
-            $content = $renderable->evaluate($newContext);
-        } elseif ($delegate !== null) {
-            if (!is_a($delegate, ComponentInterface::class, true)) {
-                throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
-            }
-            $newContext = clone $renderingContext;
-            $newContext->getVariableProvider()->setSource($variables);
-            $content = (new $delegate())->evaluate($newContext);
-        } elseif ($partial !== null) {
+        if ($partial !== null) {
             $content = $view->renderPartial($partial, $section, $variables, $optional);
         } elseif ($section !== null) {
             $content = $view->renderSection($section, $variables, $optional);
