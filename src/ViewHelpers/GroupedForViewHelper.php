@@ -93,8 +93,9 @@ class GroupedForViewHelper extends AbstractViewHelper
         $this->registerArgument('groupKey', 'string', 'The name of the variable to store the current group', false, 'groupKey');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $each = $arguments['each'];
         $as = $arguments['as'];
         $groupBy = $arguments['groupBy'];

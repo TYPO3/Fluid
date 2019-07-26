@@ -35,11 +35,11 @@ class ArrayNode extends AbstractComponent implements \ArrayAccess
         $this->internalArray = $internalArray;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $argumentCollection = null): array
+    public function execute(RenderingContextInterface $renderingContext): array
     {
         $arrayToBuild = [];
         foreach ($this->internalArray as $key => $value) {
-            $arrayToBuild[$key] = $value instanceof ComponentInterface ? $value->execute($renderingContext, $value->getArguments()->setRenderingContext($renderingContext)) : $value;
+            $arrayToBuild[$key] = $value instanceof ComponentInterface ? $value->execute($renderingContext) : $value;
         }
         return $arrayToBuild;
     }

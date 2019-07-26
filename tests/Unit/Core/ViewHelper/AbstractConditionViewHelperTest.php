@@ -45,7 +45,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         $this->viewHelper->expects($this->any())->method('condition')->will($this->returnValue(true));
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context)->execute($context, $this->viewHelper->getArguments());
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('foo', $actualResult);
     }
 
@@ -60,7 +60,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         $this->viewHelper->expects($this->any())->method('condition')->will($this->returnValue(true));
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context)->execute($context, $this->viewHelper->getArguments());
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('ThenViewHelperResults', $actualResult);
     }
 
@@ -74,8 +74,9 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
             'then' => 'ThenArgument',
         ];
 
+        $this->viewHelper->getArguments()->assignAll($arguments);
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context, $this->viewHelper->getArguments()->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('ThenArgument', $actualResult);
     }
 
@@ -90,7 +91,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         $this->viewHelper->expects($this->never())->method('evaluateChildren')->will($this->returnValue('Child nodes'));
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context)->execute($context, $this->viewHelper->getArguments());
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('', $actualResult);
     }
 
@@ -118,7 +119,8 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         ];
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context, $this->viewHelper->getArguments()->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('ElseViewHelperResults', $actualResult);
     }
 
@@ -129,14 +131,15 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
     {
         $context = new RenderingContextFixture();
         $mockElseViewHelperNode = $this->getMock(ElseViewHelper::class, ['execute'], [], false, false);
-        $mockElseViewHelperNode->onOpen($context, $mockElseViewHelperNode->getArguments()->assignAll(['if' => false]));
+        $mockElseViewHelperNode->getArguments()->assignAll(['if' => false]);
+        $mockElseViewHelperNode->onOpen($context);
         $mockElseViewHelperNode->expects($this->never())->method('execute');
 
 
         $this->viewHelper->expects($this->any())->method('condition')->will($this->returnValue(false));
         $this->viewHelper->expects($this->any())->method('getChildren')->will($this->returnValue([$mockElseViewHelperNode]));
 
-        $actualResult = $this->viewHelper->onOpen($context)->execute($context, $this->viewHelper->getArguments());
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals(null, $actualResult);
     }
 
@@ -152,7 +155,8 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         ];
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context, $this->viewHelper->getArguments()->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('ThenArgument', $actualResult);
     }
 
@@ -164,7 +168,8 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         $arguments['else'] = 'ElseArgument';
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context, $this->viewHelper->getArguments()->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('ElseArgument', $actualResult);
     }
 
@@ -180,7 +185,8 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
         $arguments['else'] = 'ElseArgument';
 
         $context = new RenderingContextFixture();
-        $actualResult = $this->viewHelper->onOpen($context, $this->viewHelper->getArguments()->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $actualResult = $this->viewHelper->onOpen($context)->execute($context);
         $this->assertEquals('ElseArgument', $actualResult);
     }
 }

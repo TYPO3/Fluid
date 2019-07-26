@@ -74,7 +74,7 @@ class StaticViewHelper extends AbstractViewHelper
         return new TextNode($this->evaluateChildren($renderingContext));
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
         return $this->evaluateChildren($renderingContext);
     }

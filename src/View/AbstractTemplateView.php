@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
@@ -197,7 +196,7 @@ abstract class AbstractTemplateView extends AbstractView
             $this->stopRendering();
         } else {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->execute($this->baseRenderingContext, (new ArgumentCollection())->setRenderingContext($renderingContext));
+            $output = $parsedTemplate->execute($this->baseRenderingContext);
             $this->stopRendering();
         }
 
@@ -215,14 +214,15 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false)
     {
-        $renderingContext = $this->getCurrentRenderingContext();
 
         if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
             // in case we render a layout right now, we will render a section inside a TEMPLATE.
             $renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
-            $variables = $renderingContext->getVariableProvider()->getAll();
+            $renderingContext = $this->getCurrentRenderingContext();
         } else {
             $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
+            $renderingContext = clone $this->getCurrentRenderingContext();
+            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
         }
 
         try {
@@ -254,7 +254,7 @@ abstract class AbstractTemplateView extends AbstractView
         );
 
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-        $output = $section->execute($renderingContext, (new ArgumentCollection())->setRenderingContext($renderingContext)->assignAll($variables));
+        $output = $section->execute($renderingContext);
         $this->stopRendering();
 
         return $output;
@@ -296,11 +296,11 @@ abstract class AbstractTemplateView extends AbstractView
         } catch (Exception $error) {
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
-        $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
         $this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
         if ($sectionName !== null) {
             $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
         } else {
+            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
             $output = $parsedPartial->execute($renderingContext);
         }
         $this->stopRendering();

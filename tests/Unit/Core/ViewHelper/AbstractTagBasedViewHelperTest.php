@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  */
 
 use PHPUnit\Framework\MockObject\MockObject;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
@@ -74,7 +73,8 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $method->invokeArgs($this->viewHelper, ['foo', 'string', 'Description']);
         $arguments = ['foo' => 'bar'];
         $this->tagBuilder->expects($this->once())->method('render')->willReturn('foobar');
-        $output = $this->viewHelper->execute(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($arguments));
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $output = $this->viewHelper->execute(new RenderingContextFixture());
 
         $this->assertSame('foobar', $output);
     }
@@ -87,7 +87,8 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $this->tagBuilder->expects($this->once())->method('addAttributes')->with(['foo' => 'bar']);
 
         $arguments = ['additionalAttributes' => ['foo' => 'bar']];
-        $this->viewHelper->execute(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($arguments));
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $this->viewHelper->execute(new RenderingContextFixture());
     }
 
     /**
@@ -99,7 +100,8 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $this->tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-baz', 'foos');
 
         $arguments = ['data' => ['foo' => 'bar', 'baz' => 'foos']];
-        $this->viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection())->assignAll($arguments))->execute(new RenderingContextFixture(), $this->viewHelper->getArguments());
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $this->viewHelper->onOpen(new RenderingContextFixture())->execute(new RenderingContextFixture());
     }
 
     /**
@@ -133,6 +135,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $method->invoke($this->viewHelper);
 
         $context = new RenderingContextFixture();
-        $this->viewHelper->onOpen($context, (new ArgumentCollection())->assignAll($arguments))->execute($context, $this->viewHelper->getArguments());
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $this->viewHelper->onOpen($context)->execute($context);
     }
 }

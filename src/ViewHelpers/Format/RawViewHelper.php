@@ -63,8 +63,8 @@ class RawViewHelper extends AbstractViewHelper
         $this->registerArgument('value', 'mixed', 'The value to output');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
-        return $this->arguments['value'] ?? $this->evaluateChildren($renderingContext);
+        return $this->getArguments()->setRenderingContext($renderingContext)['value'] ?? $this->evaluateChildren($renderingContext);
     }
 }

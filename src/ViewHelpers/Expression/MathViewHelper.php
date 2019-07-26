@@ -50,8 +50,9 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         return isset($parts[2]) && strpos(static::$operators, $parts[1]) !== false;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $parts = empty($this->parts) ? [$arguments['a'], $arguments['operator'], $arguments['b']] : $this->parts;
         $variable = array_shift($parts);
         $result = $renderingContext->getVariableProvider()->get($variable) ?? $variable;

@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\TransparentComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
@@ -35,10 +34,10 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
 
     protected $namespaces = [];
 
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $argumentCollection = null): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
         $this->shouldRenderTag = ($arguments['data-namespace-typo3-fluid'] ?? null) === 'true';
-        $arguments = $argumentCollection->getArrayCopy();
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $resolver = $renderingContext->getViewHelperResolver();
         foreach ($arguments as $name => $value) {
             $parts = explode(':', $name);
@@ -57,7 +56,7 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
         return $this;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
         $content = $this->evaluateChildren($renderingContext);
         if (!$this->shouldRenderTag) {
@@ -65,7 +64,7 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
         }
 
         $tagBuilder = new TagBuilder('html');
-        $tagBuilder->addAttributes($arguments);
+        $tagBuilder->addAttributes($this->arguments->setRenderingContext($renderingContext)->getArrayCopy());
         $tagBuilder->setContent($content);
         return $tagBuilder->render();
     }

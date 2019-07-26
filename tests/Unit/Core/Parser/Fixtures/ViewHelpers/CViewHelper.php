@@ -31,9 +31,9 @@ class CViewHelper extends AbstractViewHelper
         $this->registerArgument('return', 'bool', 'Return the arguments array, do not encode');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
-        $arguments = ($arguments ?? $this->getArguments())->evaluate($renderingContext);
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $data = [
             'string' => $arguments['s'],
             'int' => $arguments['i'],

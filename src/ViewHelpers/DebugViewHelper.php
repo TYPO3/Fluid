@@ -56,8 +56,9 @@ class DebugViewHelper extends AbstractViewHelper
         $this->registerArgument('html', 'boolean', 'Render HTML. If FALSE, output is indented plaintext', false, false);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $typeOnly = $arguments['typeOnly'];
         $expressionToExamine = $this->evaluateChildren($renderingContext);
         if ($typeOnly === true) {

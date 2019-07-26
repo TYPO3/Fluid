@@ -411,7 +411,8 @@ class Sequencer
                     if (!$closesNode) {
                         // If $closesNode is not-null this means onOpen called earlier when node got added to the stack.
                         // Hence, we only call this for nodes that are not a closing node (= opening or self-closing).
-                        $viewHelperNode->onOpen($this->renderingContext, ($arguments ?? $viewHelperNode->getArguments())->validate());
+                        #$arguments->validate();
+                        $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
                     }
 
                     if (!$closing) {
@@ -720,10 +721,7 @@ class Sequencer
                     $this->splitter->switch($this->contexts->array);
                     $this->sequenceArrayNode($arguments);
                     $arguments->validate()->setRenderingContext($this->renderingContext);
-                    $node = $node->onOpen(
-                        $this->renderingContext,
-                        $arguments
-                    );
+                    $node = $node->onOpen($this->renderingContext);
 
                     $this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
@@ -756,12 +754,8 @@ class Sequencer
                     } elseif ($callDetected) {
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
                         // in which case there is no further syntax to come.
-                        $node = $node->onOpen(
-                            $this->renderingContext,
-                            $arguments->validate()
-                        )->onClose(
-                            $this->renderingContext
-                        );
+                        $arguments->validate();
+                        $node = $node->onOpen($this->renderingContext)->onClose($this->renderingContext);
                         $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_ACCESSOR) {
                         // If we are currently in "accessor" context we can now add the accessor by stripping the collected text.
@@ -815,11 +809,8 @@ class Sequencer
                         // we look for the alias used and create a ViewHelperNode with no arguments.
                         $childNodeToAdd = $node;
                         $node = $this->resolver->createViewHelperInstance(null, (string) $potentialAccessor);
-                        $arguments = $node->getArguments()->setRenderingContext($this->renderingContext);
-                        $node = $node->onOpen(
-                            $this->renderingContext,
-                            $arguments->validate()
-                        );
+                        $arguments = $node->getArguments()->validate()->setRenderingContext($this->renderingContext);
+                        $node = $node->onOpen($this->renderingContext);
                         $node->addChild($childNodeToAdd);
                         $node->onClose(
                             $this->renderingContext

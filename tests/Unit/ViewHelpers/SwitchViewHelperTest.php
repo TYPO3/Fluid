@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
@@ -21,53 +20,47 @@ class SwitchViewHelperTest extends ViewHelperBaseTestCase
     public function getStandardTestValues(): array
     {
         $context = new RenderingContextFixture();
+        $caseFoo = (new CaseViewHelper())->onOpen($context)->addChild(new TextNode('foo'));
+        $caseFoo->getArguments()->assignAll(['value' => 'foo']);
+        $caseBar = (new CaseViewHelper())->onOpen($context)->addChild(new TextNode('bar'));
+        $caseBar->getArguments()->assignAll(['value' => 'bar']);
+        $caseBaz = (new CaseViewHelper())->onOpen($context)->addChild(new TextNode('baz'));
+        $caseBaz->getArguments()->assignAll(['value' => 'baz']);
         return [
-            'returns null for empty switch' => [null, $context, ['expression' => 'foo']],
-            'returns matching case node content with single case node' => [
+            'null for empty switch' => [
+                null,
+                $context,
+                ['expression' => 'foo']
+            ],
+            'matching case node content with single case node' => [
                 'foo',
                 $context,
                 ['expression' => 'foo'],
-                [(new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']))->addChild(new TextNode('foo'))],
+                [$caseFoo],
             ],
-            'returns matching first case node content with multiple case nodes' => [
+            'matching first case node content with multiple case nodes' => [
                 'foo',
                 $context,
                 ['expression' => 'foo'],
-                [
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']))->addChild(new TextNode('foo')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']))->addChild(new TextNode('bar')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'baz']))->addChild(new TextNode('baz')),
-                ],
+                [$caseFoo, $caseBar, $caseBaz],
             ],
-            'returns matching last case node content with multiple case nodes' => [
+            'matching last case node content with multiple case nodes' => [
                 'foo',
                 $context,
                 ['expression' => 'foo'],
-                [
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']))->addChild(new TextNode('bar')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'baz']))->addChild(new TextNode('baz')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']))->addChild(new TextNode('foo')),
-                ],
+                [$caseBar, $caseBaz, $caseFoo],
             ],
-            'returns null for no matching case nodes without default case node' => [
+            'null for no matching case nodes without default case node' => [
                 null,
                 $context,
                 ['expression' => 'notfound'],
-                [
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']))->addChild(new TextNode('bar')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'baz']))->addChild(new TextNode('baz')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'foo']))->addChild(new TextNode('foo')),
-                ],
+                [$caseBar, $caseBaz, $caseFoo],
             ],
-            'returns default case node content for no matching case nodes' => [
+            'default case node content for no matching case nodes' => [
                 'foo',
                 $context,
                 ['expression' => 'notfound'],
-                [
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'bar']))->addChild(new TextNode('bar')),
-                    (new CaseViewHelper())->onOpen($context, (new ArgumentCollection())->assignAll(['value' => 'baz']))->addChild(new TextNode('baz')),
-                    (new DefaultCaseViewHelper())->addChild(new TextNode('foo')),
-                ],
+                [$caseBar, $caseBaz, (new DefaultCaseViewHelper())->addChild(new TextNode('foo'))],
             ],
         ];
     }

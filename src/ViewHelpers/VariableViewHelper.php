@@ -42,19 +42,9 @@ class VariableViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of variable to create', true);
     }
 
-    /**
-     * @param array $arguments
-     * @param \Closure $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
-     * @return mixed
-     */
-    public static function renderStatic(
-        array $arguments,
-        \Closure $renderChildrenClosure,
-        RenderingContextInterface $renderingContext
-    ) {
-        $value = $arguments['value'] ?? $renderChildrenClosure();
-        $renderingContext->getVariableProvider()->add($arguments['name'], $value);
+    public function execute(RenderingContextInterface $renderingContext)
+    {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
+        $renderingContext->getVariableProvider()->add($arguments['name'], $arguments['value'] ?? $this->evaluateChildren($renderingContext));
     }
-
 }

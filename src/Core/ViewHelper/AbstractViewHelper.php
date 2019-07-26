@@ -11,6 +11,7 @@ use Closure;
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -34,14 +35,20 @@ abstract class AbstractViewHelper extends AbstractComponent
      * Execute via Component API implementation.
      *
      * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollection|null $arguments
      * @return mixed
      * @api
      */
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
-        $this->renderingContext = $arguments->getRenderingContext() ?? $renderingContext;
+        $this->renderingContext = $renderingContext;
+        $this->getArguments()->setRenderingContext($renderingContext);
         return $this->callRenderMethod();
+    }
+
+    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
+    {
+        $this->getArguments()->setRenderingContext($renderingContext);
+        return parent::onOpen($renderingContext);
     }
 
     public function getArguments(): ArgumentCollection
@@ -135,7 +142,7 @@ abstract class AbstractViewHelper extends AbstractComponent
             $closure = $this->renderChildrenClosure;
             return $closure();
         }
-        return $this->evaluateChildren($this->arguments->getRenderingContext());
+        return $this->evaluateChildren($this->renderingContext);
     }
 
     /**

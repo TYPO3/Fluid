@@ -54,8 +54,9 @@ class CountViewHelper extends AbstractViewHelper
         $this->registerArgument('subject', 'array', 'Countable subject, array or \Countable');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $countable = $arguments['subject'] ?? $this->evaluateChildren($renderingContext);
         if ($countable === null) {
             return 0;

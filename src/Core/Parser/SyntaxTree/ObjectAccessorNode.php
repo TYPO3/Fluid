@@ -77,7 +77,7 @@ class ObjectAccessorNode extends AbstractComponent
         return $this->accessors;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
         $children = $this->getChildren();
         $numberOfChildNodes = count($children);

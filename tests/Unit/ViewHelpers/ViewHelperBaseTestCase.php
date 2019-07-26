@@ -36,8 +36,8 @@ abstract class ViewHelperBaseTestCase extends UnitTestCase
         $renderingContext = $renderingContext ?? new RenderingContextFixture();
         $viewHelperClassName = str_replace('\\Tests\\Unit', '', substr(static::class, 0, -4));
         $viewHelper = new $viewHelperClassName();
-        $argumentCollection = $viewHelper->getArguments()->setRenderingContext($renderingContext)->assignAll($arguments ?? []);
-        $viewHelper->onOpen($renderingContext, $argumentCollection);
+        $viewHelper->getArguments()->assignAll($arguments ?? []);
+        $viewHelper->onOpen($renderingContext);
         foreach ($children ?? [] as $child) {
             $viewHelper->addChild($child);
         }
@@ -45,10 +45,10 @@ abstract class ViewHelperBaseTestCase extends UnitTestCase
         if ($numberOfExecutions > 1) {
             $output = null;
             while (--$numberOfExecutions >= 0) {
-                $output .= $viewHelper->execute($renderingContext, $argumentCollection);
+                $output .= $viewHelper->execute($renderingContext);
             }
         } else {
-            $output = $viewHelper->execute($renderingContext, $argumentCollection);
+            $output = $viewHelper->execute($renderingContext);
         }
         if ($expectedOutput instanceof IsAnything) {
             // Semi-void case: redundant assertion to prevent an error; if the tested logic did not break that's consider a pass

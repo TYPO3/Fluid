@@ -58,10 +58,10 @@ class AliasViewHelper extends AbstractViewHelper
         $this->registerArgument('map', 'array', 'Array that specifies which variables should be mapped to which alias', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
         $templateVariableContainer = $renderingContext->getVariableProvider();
-        $map = $this->arguments['map'];
+        $map = $this->getArguments()->setRenderingContext($renderingContext)['map'];
         foreach ($map as $aliasName => $value) {
             $templateVariableContainer->add($aliasName, $value);
         }

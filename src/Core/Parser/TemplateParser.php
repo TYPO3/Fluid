@@ -59,15 +59,20 @@ class TemplateParser
      */
     public function parse(string $templateString, ?Configuration $configuration = null): ComponentInterface
     {
-        $source = new Source($templateString);
-        $contexts = new Contexts();
-        $sequencer = new Sequencer(
-            $this->renderingContext,
-            $contexts,
-            $source,
-            $configuration ?? $this->configuration
-        );
-        return $sequencer->sequence();
+        static $cache = [];
+        $checksum = sha1($templateString) . (string) ($configuration ?? $this->configuration)->isFeatureEnabled(Configuration::FEATURE_ESCAPING);
+        if (!isset($cache[$checksum])) {
+            $source = new Source($templateString);
+            $contexts = new Contexts();
+            $sequencer = new Sequencer(
+                $this->renderingContext,
+                $contexts,
+                $source,
+                $configuration ?? $this->configuration
+            );
+            $cache[$checksum] = $sequencer->sequence();
+        }
+        return $cache[$checksum];
     }
 
     /**

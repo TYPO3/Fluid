@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -107,8 +106,9 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $section = $arguments['section'];
         $partial = $arguments['partial'];
         $variables = (array) $arguments['arguments'];
@@ -124,14 +124,16 @@ class RenderViewHelper extends AbstractViewHelper
         $view = $renderingContext->getViewHelperVariableContainer()->getView();
         $content = '';
         if ($renderable) {
-            $content = $renderable->execute($renderingContext, (new ArgumentCollection())->assignAll($variables));
+            $newContext = clone $renderingContext;
+            $newContext->setVariableProvider($newContext->getVariableProvider()->getScopeCopy($variables));
+            $content = $renderable->execute($newContext);
         } elseif ($delegate !== null) {
             if (!is_a($delegate, ComponentInterface::class, true)) {
                 throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
             }
-            $renderingContext = clone $renderingContext;
-            $renderingContext->getVariableProvider()->setSource($variables);
-            $content = (new $delegate())->render($renderingContext);
+            $newContext = clone $renderingContext;
+            $newContext->getVariableProvider()->setSource($variables);
+            $content = (new $delegate())->execute($newContext);
         } elseif ($partial !== null) {
             $content = $view->renderPartial($partial, $section, $variables, $optional);
         } elseif ($section !== null) {

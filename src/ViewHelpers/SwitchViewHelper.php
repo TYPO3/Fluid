@@ -7,7 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -68,83 +68,17 @@ class SwitchViewHelper extends AbstractViewHelper
         $this->registerArgument('expression', 'mixed', 'Expression to switch', true);
     }
 
-    /**
-     * @return mixed the rendered string
-     * @api
-     */
-    public function render()
+    public function execute(RenderingContextInterface $renderingContext)
     {
-        $expression = $this->arguments['expression'];
-        $this->backupSwitchState();
-        $variableContainer = $this->renderingContext->getViewHelperVariableContainer();
-
-        $variableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $expression);
-        $variableContainer->addOrUpdate(SwitchViewHelper::class, 'break', false);
-
-        $content = $this->retrieveContentFromChildNodes($this->getChildren());
-
-        if ($variableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
-            $variableContainer->remove(SwitchViewHelper::class, 'switchExpression');
-        }
-        if ($variableContainer->exists(SwitchViewHelper::class, 'break')) {
-            $variableContainer->remove(SwitchViewHelper::class, 'break');
-        }
-
-        $this->restoreSwitchState();
-        return $content;
-    }
-
-    /**
-     * @param ComponentInterface[] $childNodes
-     * @return mixed
-     */
-    protected function retrieveContentFromChildNodes(array $childNodes)
-    {
+        $this->getArguments()->setRenderingContext($renderingContext);
         $content = null;
-        $variableContainer = $this->renderingContext->getViewHelperVariableContainer();
 
-        foreach ($childNodes as $childNode) {
-            if (!$childNode instanceof CaseViewHelper && !$childNode instanceof DefaultCaseViewHelper) {
-                continue;
-            }
-
-            $content = $childNode->execute($this->renderingContext);
-
-            if ($variableContainer->get(SwitchViewHelper::class, 'break') === true) {
+        foreach ($this->getChildren() as $childNode) {
+            if ($childNode instanceof DefaultCaseViewHelper || ($childNode instanceof CaseViewHelper && $childNode->getArguments()->setRenderingContext($renderingContext)['value'] == $this->arguments['expression'])) {
+                $content = $childNode->execute($renderingContext);
                 break;
             }
         }
-
         return $content;
-    }
-
-    /**
-     * Backups "switch expression" and "break" state of a possible parent switch ViewHelper to support nesting
-     *
-     * @return void
-     */
-    protected function backupSwitchState(): void
-    {
-        if ($this->renderingContext->getViewHelperVariableContainer()->exists(SwitchViewHelper::class, 'switchExpression')) {
-            $this->backupSwitchExpression = $this->renderingContext->getViewHelperVariableContainer()->get(SwitchViewHelper::class, 'switchExpression');
-        }
-        if ($this->renderingContext->getViewHelperVariableContainer()->exists(SwitchViewHelper::class, 'break')) {
-            $this->backupBreakState = $this->renderingContext->getViewHelperVariableContainer()->get(SwitchViewHelper::class, 'break');
-        }
-    }
-
-    /**
-     * Restores "switch expression" and "break" states that might have been backed up in backupSwitchState() before
-     *
-     * @return void
-     */
-    protected function restoreSwitchState(): void
-    {
-        if ($this->backupSwitchExpression !== null) {
-            $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'switchExpression', $this->backupSwitchExpression);
-        }
-        if ($this->backupBreakState !== null) {
-            $this->renderingContext->getViewHelperVariableContainer()->addOrUpdate(SwitchViewHelper::class, 'break', $this->backupBreakState);
-        }
     }
 }

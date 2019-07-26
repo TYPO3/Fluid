@@ -48,8 +48,9 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         $this->registerArgument('as', 'string', 'Type to cast, valid values are: integer, boolean, string, float and array', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         if (!empty($this->parts)) {
             $parts = $this->parts;
         } else {

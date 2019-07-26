@@ -85,7 +85,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         $elseViewHelperEncountered = false;
         foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof ThenViewHelper) {
-                $data = $childNode->execute($this->renderingContext, $childNode->getArguments()->setRenderingContext($this->arguments->getRenderingContext()));
+                $data = $childNode->execute($this->renderingContext);
                 return $data;
             }
             if ($childNode instanceof ElseViewHelper) {
@@ -118,9 +118,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         $elseNode = null;
         foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof ElseViewHelper) {
-                $conditionArgument = $childNode->getArguments()['if'];
+                $conditionArgument = $childNode->getArguments()->setRenderingContext($this->renderingContext)['if'];
                 if ($conditionArgument) {
-                    return $childNode->execute($this->renderingContext, $childNode->getArguments()->setRenderingContext($this->arguments->getRenderingContext()));
+                    return $childNode->execute($this->renderingContext);
                 }
             }
         }

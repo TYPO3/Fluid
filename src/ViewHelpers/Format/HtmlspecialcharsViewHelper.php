@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -60,8 +59,9 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
         $this->registerArgument('doubleEncode', 'boolean', 'If FALSE html entities will not be encoded', false, true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $value = $arguments['value'];
         $keepQuotes = $arguments['keepQuotes'];
         $encoding = $arguments['encoding'];

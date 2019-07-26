@@ -18,28 +18,15 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ComponentInterface
 {
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollection|null $arguments
-     * @return self
-     */
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): self;
+    public function onOpen(RenderingContextInterface $renderingContext): self;
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return self
-     */
     public function onClose(RenderingContextInterface $renderingContext): self;
 
     /**
-     * Evaluate the component by passing the execution context
-     * which contains a rendering context and arguments.
-     *
      * @param RenderingContextInterface $renderingContext
-     * @param ArgumentCollection|null $arguments
      * @return mixed
      */
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null);
+    public function execute(RenderingContextInterface $renderingContext);
 
     /**
      * Returns one of the following:

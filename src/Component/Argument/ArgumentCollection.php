@@ -98,7 +98,7 @@ class ArgumentCollection extends \ArrayObject
         }
         $value = parent::offsetGet($offset);
         if ($value instanceof ComponentInterface) {
-            $value = $value->execute($this->renderingContext, $value->getArguments()->setRenderingContext($this->renderingContext));
+            $value = $value->execute($this->renderingContext);
         }
         return $value;
     }

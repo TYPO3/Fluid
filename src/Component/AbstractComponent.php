@@ -60,9 +60,8 @@ abstract class AbstractComponent implements ComponentInterface
      */
     protected $arguments = null;
 
-    public function onOpen(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null): ComponentInterface
+    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        $this->arguments = ($arguments ?? $this->getArguments())->setRenderingContext($renderingContext);
         return $this;
     }
 
@@ -219,7 +218,7 @@ abstract class AbstractComponent implements ComponentInterface
         return $this->escapeOutput !== false;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
         return $this->evaluateChildren($renderingContext);
     }
@@ -240,10 +239,7 @@ abstract class AbstractComponent implements ComponentInterface
     {
         $evaluatedNodes = [];
         foreach ($this->getChildren() as $childNode) {
-            $evaluatedNodes[] = $childNode->execute(
-                $renderingContext,
-                $childNode->getArguments()->setRenderingContext($renderingContext)
-            );
+            $evaluatedNodes[] = $childNode->execute($renderingContext);
         }
         // Make decisions about what to actually return
         if (empty($evaluatedNodes)) {

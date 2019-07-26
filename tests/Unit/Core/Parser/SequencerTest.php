@@ -1143,7 +1143,8 @@ class SequencerTest extends UnitTestCase
     {
         /** @var ComponentInterface $instance */
         $instance = new $viewHelperClassName();
-        $instance->onOpen($context, $instance->getArguments()->assignAll($arguments));
+        $instance->getArguments()->assignAll($arguments);
+        $instance->onOpen($context);
         foreach ($children as $child) {
             $instance->addChild($child);
         }

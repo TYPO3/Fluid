@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -50,9 +49,10 @@ class InlineViewHelper extends AbstractViewHelper
         );
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $parsed = $renderingContext->getTemplateParser()->parse((string) ($arguments['code'] ?? $this->evaluateChildren($renderingContext)));
-        return $parsed->execute($renderingContext, $parsed->getArguments()->setRenderingContext($arguments->getRenderingContext()));
+        return $parsed->execute($renderingContext);
     }
 }

@@ -39,7 +39,7 @@ class TextNode extends AbstractComponent
         $this->text = $text;
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
         return $this->text;
     }

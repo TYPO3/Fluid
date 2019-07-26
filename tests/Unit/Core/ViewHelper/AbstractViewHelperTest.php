@@ -138,7 +138,8 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
     {
         $subject = new RenderMethodFreeViewHelper();
         $context = new RenderingContextFixture();
-        $this->assertSame('I was rendered', $subject->onOpen($context)->execute($context, $subject->getArguments()->setRenderingContext($context)));
+        #$subject->getArguments()->setRenderingContext($context);
+        $this->assertSame('I was rendered', $subject->onOpen($context)->execute($context));
     }
 
     /**
@@ -149,6 +150,7 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
         $subject->addChild(new TextNode('foo'));
         $context = new RenderingContextFixture();
-        $this->assertSame('foo', $subject->onOpen($context)->execute($context, $subject->getArguments()));
+        #$subject->getArguments()->setRenderingContext($context);
+        $this->assertSame('foo', $subject->onOpen($context)->execute($context));
     }
 }

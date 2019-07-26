@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -60,8 +59,9 @@ class PrintfViewHelper extends AbstractViewHelper
         $this->registerArgument('arguments', 'array', 'The arguments for vsprintf', false, []);
     }
 
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
+    public function execute(RenderingContextInterface $renderingContext)
     {
+        $arguments = $this->getArguments()->getArrayCopy();
         $value = (string) ($arguments['value'] ?? $this->evaluateChildren($renderingContext));
         $formatParameters = (array) $arguments['arguments'];
         return vsprintf($value, $formatParameters);

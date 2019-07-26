@@ -7,10 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 
 /**
  * Case view helper that is only usable within the SwitchViewHelper.
@@ -33,22 +30,5 @@ class CaseViewHelper extends AbstractViewHelper
     {
         parent::initializeArguments();
         $this->registerArgument('value', 'mixed', 'Value to match in this case', true);
-    }
-
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
-    {
-        $value = $this->arguments['value'];
-        $viewHelperVariableContainer = $renderingContext->getViewHelperVariableContainer();
-        if (!$viewHelperVariableContainer->exists(SwitchViewHelper::class, 'switchExpression')) {
-            throw new Exception('The "case" View helper can only be used within a switch View helper', 1368112037);
-        }
-        $switchExpression = $viewHelperVariableContainer->get(SwitchViewHelper::class, 'switchExpression');
-
-        // non-type-safe comparison by intention
-        if ($switchExpression == $value) {
-            $viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'break', true);
-            return $this->evaluateChildren($renderingContext);
-        }
-        return null;
     }
 }

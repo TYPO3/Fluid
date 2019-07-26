@@ -8,10 +8,18 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Root node of every syntax tree.
  */
 class RootNode extends AbstractComponent
 {
+    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
+    {
+        $this->getArguments()->setRenderingContext($renderingContext);
+        return parent::onOpen($renderingContext);
+    }
+
 }
