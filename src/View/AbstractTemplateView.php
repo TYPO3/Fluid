@@ -168,13 +168,14 @@ abstract class AbstractTemplateView extends AbstractView
         }
         try {
             $parsedTemplate = $this->getCurrentParsedTemplate();
+            $parsedTemplate->getArguments()->setRenderingContext($renderingContext);
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
         }
 
         try {
             $layoutNameNode = $parsedTemplate->getNamedChild('layoutName');
-            $layoutName = $layoutNameNode->execute($renderingContext, $layoutNameNode->getArguments()->setRenderingContext($renderingContext));
+            $layoutName = $layoutNameNode->getArguments()->setRenderingContext($renderingContext)['name'];
         } catch (ChildNotFoundException $exception) {
             $layoutName = null;
         }
@@ -187,6 +188,7 @@ abstract class AbstractTemplateView extends AbstractView
                         return $paths->getLayoutSource($layoutName);
                     }
                 );
+                $parsedLayout->getArguments()->setRenderingContext($renderingContext);
             } catch (PassthroughSourceException $error) {
                 return $error->getSource();
             }
@@ -278,6 +280,7 @@ abstract class AbstractTemplateView extends AbstractView
                     return $paths->getPartialSource($partialName);
                 }
             );
+            $parsedPartial->getArguments()->setRenderingContext($renderingContext);
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
         } catch (InvalidTemplateResourceException $error) {

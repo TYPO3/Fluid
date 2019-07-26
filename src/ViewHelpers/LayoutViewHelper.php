@@ -27,26 +27,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class LayoutViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var string|null
-     */
     protected $name = 'layoutName';
 
     protected $escapeOutput = false;
 
-    /**
-     * Initialize arguments
-     *
-     * @return void
-     * @api
-     */
     public function initializeArguments()
     {
-        $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.');
-    }
-
-    public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
-    {
-        return $arguments['name'];
+        $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.', false, 'Default');
     }
 }

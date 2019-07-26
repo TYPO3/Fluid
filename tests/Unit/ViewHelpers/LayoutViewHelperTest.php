@@ -15,7 +15,7 @@ class LayoutViewHelperTest extends ViewHelperBaseTestCase
     public function getStandardTestValues(): array
     {
         return [
-            'returns layout name on execution' => ['layout', null, ['name' => 'layout']],
+            'returns null on execution' => [null, null, ['name' => 'layout']],
         ];
     }
 }

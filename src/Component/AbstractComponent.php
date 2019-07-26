@@ -2,6 +2,11 @@
 declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Component;
 
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
@@ -93,17 +98,61 @@ abstract class AbstractComponent implements ComponentInterface
 
     public function getNamedChild(string $name): ComponentInterface
     {
+        $parts = explode('.', $name, 2);
         foreach ($this->children as $child) {
-            if ($child->getName() === $name) {
+            if ($child->getName() === $parts[0]) {
+                if (isset($parts[1])) {
+                    return $child->getNamedChild($parts[1]);
+                }
                 return $child;
             }
-            try {
-                return $child->getNamedChild($name);
-            } catch (ChildNotFoundException $exception) {
+            if ($child instanceof TransparentComponentInterface) {
+                try {
+                    return $child->getNamedChild($name);
+                } catch (ChildNotFoundException $exception) {
 
+                }
             }
         }
         throw new ChildNotFoundException(sprintf('Child with name "%s" not found', $name), 1562757835);
+    }
+
+    /**
+     * Gets a new RootNode with children copied from this current
+     * Component. Scans for children of a specific type (a Component
+     * class name like a ViewHelper class name) and an optional name
+     * which if not-null must also be matched (much like getNamedChild,
+     * except does not error when no children match and is capable of
+     * returning multiple children if they have the same name).
+     *
+     * @param string $typeClassName
+     * @param string|null $name
+     * @return ComponentInterface
+     */
+    public function getTypedChildren(string $typeClassName, ?string $name = null): ComponentInterface
+    {
+        $root = new RootNode();
+        foreach ($this->children as $child) {
+            if ($child instanceof $typeClassName) {
+                if ($name === null || ($parts = explode('.', $name, 2)) && $parts[0] === $child->getName()) {
+                    // Child will be a Component of the right class; matching name if name is provided. Otherwise ignored.
+                    if (isset($parts[1])) {
+                        // If $name is null then $parts won't be set and this condition is not entered. If $parts[1] is set
+                        // this means the $name had a dot and we must recurse.
+                        $root->addChild($child->getTypedChildren($typeClassName, $parts[1]));
+                        continue;
+                    } else {
+                        // Otherwise we indiscriminately add the resolved child to our collection, but only if $parts[1]
+                        // was not set (no more recursion), if $name was null, or if $name matched completely.
+                        $root->addChild($child);
+                    }
+                }
+            }
+            if ($child instanceof TransparentComponentInterface) {
+                $root->addChild($child->getTypedChildren($typeClassName, $name));
+            }
+        }
+        return $root;
     }
 
     /**
@@ -130,8 +179,7 @@ abstract class AbstractComponent implements ComponentInterface
         if (empty($this->children) && $extractNode) {
             return null;
         }
-        $nodesCounted = count($this->children);
-        if ($nodesCounted === 1) {
+        if (!isset($this->children[1])) {
             if ($extractNode) {
                 if ($this->children[0] instanceof TextNode) {
                     $text = $this->children[0]->getText();
@@ -192,7 +240,10 @@ abstract class AbstractComponent implements ComponentInterface
     {
         $evaluatedNodes = [];
         foreach ($this->getChildren() as $childNode) {
-            $evaluatedNodes[] = $childNode->execute($renderingContext, $childNode->getArguments()->setRenderingContext($renderingContext));
+            $evaluatedNodes[] = $childNode->execute(
+                $renderingContext,
+                $childNode->getArguments()->setRenderingContext($renderingContext)
+            );
         }
         // Make decisions about what to actually return
         if (empty($evaluatedNodes)) {

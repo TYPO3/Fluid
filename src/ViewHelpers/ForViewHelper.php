@@ -82,7 +82,7 @@ class ForViewHelper extends AbstractViewHelper
     public function execute(RenderingContextInterface $renderingContext, ?ArgumentCollection $arguments = null)
     {
         $templateVariableContainer = $renderingContext->getVariableProvider();
-        $arguments = $this->arguments->setRenderingContext($renderingContext);
+        $arguments = $this->arguments->getArrayCopy();
         if (!isset($arguments['each'])) {
             return '';
         }

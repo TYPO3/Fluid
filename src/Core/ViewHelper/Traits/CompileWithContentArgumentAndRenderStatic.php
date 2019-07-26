@@ -55,7 +55,7 @@ trait CompileWithContentArgumentAndRenderStatic
         return static::renderStatic(
             $this->arguments->getArrayCopy(),
             $this->buildRenderChildrenClosure(),
-            $this->renderingContext
+            $this->arguments->getRenderingContext()
         );
     }
 

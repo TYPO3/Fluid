@@ -71,6 +71,8 @@ interface ComponentInterface
 
     public function getNamedChild(string $name): ComponentInterface;
 
+    public function getTypedChildren(string $typeClassName, ?string $name = null): ComponentInterface;
+
     public function getChildren(): iterable;
 
     /**
