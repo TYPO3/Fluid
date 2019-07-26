@@ -42,7 +42,7 @@ class VariableViewHelper extends AbstractViewHelper
         $this->registerArgument('name', 'string', 'Name of variable to create', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $renderingContext->getVariableProvider()->add($arguments['name'], $arguments['value'] ?? $this->evaluateChildren($renderingContext));

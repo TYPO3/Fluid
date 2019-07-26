@@ -26,7 +26,7 @@ interface ComponentInterface
      * @param RenderingContextInterface $renderingContext
      * @return mixed
      */
-    public function execute(RenderingContextInterface $renderingContext);
+    public function evaluate(RenderingContextInterface $renderingContext);
 
     /**
      * Returns one of the following:

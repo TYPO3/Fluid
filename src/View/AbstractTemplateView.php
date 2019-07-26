@@ -192,11 +192,11 @@ abstract class AbstractTemplateView extends AbstractView
                 return $error->getSource();
             }
             $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedLayout->execute($this->baseRenderingContext);
+            $output = $parsedLayout->evaluate($this->baseRenderingContext);
             $this->stopRendering();
         } else {
             $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->execute($this->baseRenderingContext);
+            $output = $parsedTemplate->evaluate($this->baseRenderingContext);
             $this->stopRendering();
         }
 
@@ -254,7 +254,7 @@ abstract class AbstractTemplateView extends AbstractView
         );
 
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-        $output = $section->execute($renderingContext);
+        $output = $section->evaluate($renderingContext);
         $this->stopRendering();
 
         return $output;
@@ -301,7 +301,7 @@ abstract class AbstractTemplateView extends AbstractView
             $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
         } else {
             $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
-            $output = $parsedPartial->execute($renderingContext);
+            $output = $parsedPartial->evaluate($renderingContext);
         }
         $this->stopRendering();
         return $output;

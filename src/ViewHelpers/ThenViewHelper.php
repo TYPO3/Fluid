@@ -21,7 +21,7 @@ class ThenViewHelper extends AbstractViewHelper
 {
     protected $escapeOutput = false;
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         return $this->evaluateChildren($renderingContext);
     }

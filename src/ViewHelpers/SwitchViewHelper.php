@@ -68,14 +68,14 @@ class SwitchViewHelper extends AbstractViewHelper
         $this->registerArgument('expression', 'mixed', 'Expression to switch', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $this->getArguments()->setRenderingContext($renderingContext);
         $content = null;
 
         foreach ($this->getChildren() as $childNode) {
             if ($childNode instanceof DefaultCaseViewHelper || ($childNode instanceof CaseViewHelper && $childNode->getArguments()->setRenderingContext($renderingContext)['value'] == $this->arguments['expression'])) {
-                $content = $childNode->execute($renderingContext);
+                $content = $childNode->evaluate($renderingContext);
                 break;
             }
         }

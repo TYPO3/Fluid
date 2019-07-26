@@ -62,7 +62,7 @@ class BooleanNode extends AbstractComponent
         return $this->stack;
     }
 
-    public function execute(RenderingContextInterface $renderingContext): bool
+    public function evaluate(RenderingContextInterface $renderingContext): bool
     {
         return self::evaluateStack($renderingContext, $this->stack);
     }
@@ -118,7 +118,7 @@ class BooleanNode extends AbstractComponent
         $context = [];
         foreach ($expressionParts as $key => $expressionPart) {
             if ($expressionPart instanceof ComponentInterface) {
-                $context['node' . $key] = $expressionPart->execute($renderingContext);
+                $context['node' . $key] = $expressionPart->evaluate($renderingContext);
             } else {
                 $context['node' . $key] = $expressionPart;
             }

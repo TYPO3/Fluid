@@ -78,7 +78,7 @@ class SectionViewHelper extends AbstractViewHelper
         return $this;
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $content = null;
         if ($renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {

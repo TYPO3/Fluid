@@ -40,9 +40,9 @@ class EscapingNode extends AbstractComponent
         return $this;
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $evaluated = $this->node->execute($renderingContext);
+        $evaluated = $this->node->evaluate($renderingContext);
         if (is_string($evaluated) || (is_object($evaluated) && method_exists($evaluated, '__toString'))) {
             return htmlspecialchars((string) $evaluated, ENT_QUOTES);
         }

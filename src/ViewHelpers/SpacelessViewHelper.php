@@ -42,7 +42,7 @@ class SpacelessViewHelper extends AbstractViewHelper
      */
     protected $escapeOutput = false;
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         return trim(preg_replace('/\\>\\s+\\</', '><', $this->evaluateChildren($renderingContext)));
     }

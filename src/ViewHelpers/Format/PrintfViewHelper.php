@@ -59,7 +59,7 @@ class PrintfViewHelper extends AbstractViewHelper
         $this->registerArgument('arguments', 'array', 'The arguments for vsprintf', false, []);
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->getArrayCopy();
         $value = (string) ($arguments['value'] ?? $this->evaluateChildren($renderingContext));

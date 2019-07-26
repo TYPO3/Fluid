@@ -68,7 +68,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $parameters = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         foreach ($parameters as $argumentName => $argumentValue) {
@@ -96,7 +96,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
             }
         }
         $this->getArguments()->exchangeArray($parameters);
-        return parent::execute($renderingContext);
+        return parent::evaluate($renderingContext);
     }
 
     public function render()

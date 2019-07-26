@@ -96,7 +96,7 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
             'undeclared' => 'some',
         ];
         $viewHelper->expects($this->once())->method('callRenderMethod');
-        $viewHelper->execute(new RenderingContextFixture(), (new ArgumentCollection())->setRenderingContext(new RenderingContextFixture())->assignAll($expectedArguments));
+        $viewHelper->evaluate(new RenderingContextFixture(), (new ArgumentCollection())->setRenderingContext(new RenderingContextFixture())->assignAll($expectedArguments));
     }
 
     /**
@@ -139,7 +139,7 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
         $subject = new RenderMethodFreeViewHelper();
         $context = new RenderingContextFixture();
         #$subject->getArguments()->setRenderingContext($context);
-        $this->assertSame('I was rendered', $subject->onOpen($context)->execute($context));
+        $this->assertSame('I was rendered', $subject->onOpen($context)->evaluate($context));
     }
 
     /**
@@ -151,6 +151,6 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
         $subject->addChild(new TextNode('foo'));
         $context = new RenderingContextFixture();
         #$subject->getArguments()->setRenderingContext($context);
-        $this->assertSame('foo', $subject->onOpen($context)->execute($context));
+        $this->assertSame('foo', $subject->onOpen($context)->evaluate($context));
     }
 }

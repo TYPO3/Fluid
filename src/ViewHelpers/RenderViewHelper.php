@@ -106,7 +106,7 @@ class RenderViewHelper extends AbstractViewHelper
         $this->registerArgument('contentAs', 'string', 'If used, renders the child content and adds it as a template variable with this name for use in the partial/section');
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $section = $arguments['section'];
@@ -126,14 +126,14 @@ class RenderViewHelper extends AbstractViewHelper
         if ($renderable) {
             $newContext = clone $renderingContext;
             $newContext->setVariableProvider($newContext->getVariableProvider()->getScopeCopy($variables));
-            $content = $renderable->execute($newContext);
+            $content = $renderable->evaluate($newContext);
         } elseif ($delegate !== null) {
             if (!is_a($delegate, ComponentInterface::class, true)) {
                 throw new \InvalidArgumentException(sprintf('Cannot render %s - must implement ParsedTemplateInterface!', $delegate));
             }
             $newContext = clone $renderingContext;
             $newContext->getVariableProvider()->setSource($variables);
-            $content = (new $delegate())->execute($newContext);
+            $content = (new $delegate())->evaluate($newContext);
         } elseif ($partial !== null) {
             $content = $view->renderPartial($partial, $section, $variables, $optional);
         } elseif ($section !== null) {

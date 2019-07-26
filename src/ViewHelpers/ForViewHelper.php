@@ -79,7 +79,7 @@ class ForViewHelper extends AbstractViewHelper
         $this->registerArgument('iteration', 'string', 'The name of the variable to store iteration information (index, cycle, isFirst, isLast, isEven, isOdd)');
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $templateVariableContainer = $renderingContext->getVariableProvider();
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();

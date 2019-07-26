@@ -31,7 +31,7 @@ class ObjectAccessorNodeTest extends UnitTestCase
         $renderingContext = $this->getMock(RenderingContextInterface::class);
         $variableContainer = new StandardVariableProvider($variables);
         $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
-        $value = $node->execute($renderingContext);
+        $value = $node->evaluate($renderingContext);
         $this->assertEquals($expected, $value);
     }
 
@@ -61,7 +61,7 @@ class ObjectAccessorNodeTest extends UnitTestCase
         $variableContainer = $this->getMock(StandardVariableProvider::class);
         $variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', [])->will($this->returnValue('foo'));
         $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
-        $value = $node->execute($renderingContext);
+        $value = $node->evaluate($renderingContext);
         $this->assertEquals('foo', $value);
     }
 }

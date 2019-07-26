@@ -59,7 +59,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
         $this->registerArgument('doubleEncode', 'boolean', 'If FALSE html entities will not be encoded', false, true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $value = $arguments['value'];

@@ -218,7 +218,7 @@ abstract class AbstractComponent implements ComponentInterface
         return $this->escapeOutput !== false;
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         return $this->evaluateChildren($renderingContext);
     }
@@ -239,7 +239,7 @@ abstract class AbstractComponent implements ComponentInterface
     {
         $evaluatedNodes = [];
         foreach ($this->getChildren() as $childNode) {
-            $evaluatedNodes[] = $childNode->execute($renderingContext);
+            $evaluatedNodes[] = $childNode->evaluate($renderingContext);
         }
         // Make decisions about what to actually return
         if (empty($evaluatedNodes)) {

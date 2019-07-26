@@ -30,7 +30,7 @@ class OrViewHelper extends AbstractViewHelper
         $this->registerArgument('arguments', 'array', 'Arguments to be replaced in the resulting string, using sprintf');
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $alternative = $arguments['alternative'];

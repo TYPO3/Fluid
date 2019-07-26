@@ -62,7 +62,7 @@ class CdataViewHelper extends AbstractViewHelper
         $this->registerArgument('value', 'mixed', 'The value to output');
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         return sprintf('<![CDATA[%s]]>', $arguments['value'] ?? $this->evaluateChildren($renderingContext));
     }

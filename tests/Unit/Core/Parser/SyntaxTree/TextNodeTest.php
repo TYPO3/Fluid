@@ -25,6 +25,6 @@ class TextNodeTest extends UnitTestCase
         $string = 'I can work quite effectively in a train!';
         $node = new TextNode($string);
         $renderingContext = new RenderingContextFixture();
-        $this->assertEquals($node->execute($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
+        $this->assertEquals($node->evaluate($renderingContext), $string, 'The rendered string of a text node is not the same as the string given in the constructor.');
     }
 }

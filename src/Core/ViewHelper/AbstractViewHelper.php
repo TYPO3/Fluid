@@ -38,7 +38,7 @@ abstract class AbstractViewHelper extends AbstractComponent
      * @return mixed
      * @api
      */
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
         $this->getArguments()->setRenderingContext($renderingContext);

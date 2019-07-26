@@ -23,6 +23,6 @@ class RootNodeTest extends UnitTestCase
     {
         $subject = $this->getMock(RootNode::class, ['evaluateChildren']);
         $subject->expects($this->once())->method('evaluateChildren');
-        $subject->execute(new RenderingContextFixture());
+        $subject->evaluate(new RenderingContextFixture());
     }
 }

@@ -45,10 +45,10 @@ abstract class ViewHelperBaseTestCase extends UnitTestCase
         if ($numberOfExecutions > 1) {
             $output = null;
             while (--$numberOfExecutions >= 0) {
-                $output .= $viewHelper->execute($renderingContext);
+                $output .= $viewHelper->evaluate($renderingContext);
             }
         } else {
-            $output = $viewHelper->execute($renderingContext);
+            $output = $viewHelper->evaluate($renderingContext);
         }
         if ($expectedOutput instanceof IsAnything) {
             // Semi-void case: redundant assertion to prevent an error; if the tested logic did not break that's consider a pass

@@ -65,7 +65,7 @@ class CycleViewHelper extends AbstractViewHelper
         $this->registerArgument('as', 'strong', 'The name of the iteration variable', true);
     }
 
-    public function execute(RenderingContextInterface $renderingContext)
+    public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $values = $arguments['values'];
