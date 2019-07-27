@@ -58,7 +58,7 @@ class SequencerTest extends UnitTestCase
         $parser = new TemplateParser();
         $context->setTemplateParser($parser);
         $parser->setRenderingContext($context);
-        $parser->parse($template)->getRootNode();
+        $parser->parse($template);
     }
 
     public function getErrorExpectations(): array
@@ -1249,7 +1249,7 @@ class SequencerTest extends UnitTestCase
                     ]
                 )
         );
-        $this->assertNodeEquals($expected, $result);
+        $this->assertNodeEquals($result, $expected);
     }
 
     /**
@@ -1291,7 +1291,7 @@ class SequencerTest extends UnitTestCase
                     ]
                 )
         );
-        $this->assertNodeEquals($expected, $result);
+        $this->assertNodeEquals($result, $expected);
     }
 
     /**
@@ -1322,7 +1322,7 @@ class SequencerTest extends UnitTestCase
                 )
             )
             ;
-        $this->assertNodeEquals($expected, $result);
+        $this->assertNodeEquals($result, $expected);
     }
 
     /**
