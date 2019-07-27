@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -53,7 +54,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @api
  */
-class SectionViewHelper extends AbstractViewHelper
+class SectionViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
 {
     /**
      * @var boolean
@@ -76,15 +77,5 @@ class SectionViewHelper extends AbstractViewHelper
         parent::onOpen($renderingContext);
         $this->name = $this->getArguments()['name'];
         return $this;
-    }
-
-    public function evaluate(RenderingContextInterface $renderingContext)
-    {
-        $content = null;
-        if ($renderingContext->getViewHelperVariableContainer()->exists(SectionViewHelper::class, 'isCurrentlyRenderingSection')) {
-            $renderingContext->getViewHelperVariableContainer()->remove(SectionViewHelper::class, 'isCurrentlyRenderingSection');
-            $content = $this->evaluateChildren($renderingContext);
-        }
-        return $content;
     }
 }

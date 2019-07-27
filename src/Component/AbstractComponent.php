@@ -242,6 +242,9 @@ abstract class AbstractComponent implements ComponentInterface
     {
         $evaluatedNodes = [];
         foreach ($this->getChildren() as $childNode) {
+            if ($childNode instanceof EmbeddedComponentInterface) {
+                continue;
+            }
             $evaluatedNodes[] = $childNode->evaluate($renderingContext);
         }
         // Make decisions about what to actually return

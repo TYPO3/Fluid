@@ -247,12 +247,6 @@ abstract class AbstractTemplateView extends AbstractView
             return '';
         }
 
-        $renderingContext->getViewHelperVariableContainer()->add(
-            SectionViewHelper::class,
-            'isCurrentlyRenderingSection',
-            true
-        );
-
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
         $output = $section->evaluate($renderingContext);
         $this->stopRendering();
