@@ -49,7 +49,7 @@ class Configuration
         if (is_bool($state) || is_numeric($state) || is_null($state)) {
             $this->features[$feature] = (bool)$state;
         } elseif (is_string($state)) {
-            $this->features[$feature] = in_array(strtolower($state), ['on', 'true', 'enabled']);
+            $this->features[$feature] = in_array(strtolower($state), ['on', 'true', 'enabled'], true);
         }
         return $previous;
     }

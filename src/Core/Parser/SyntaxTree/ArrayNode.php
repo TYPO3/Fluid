@@ -34,6 +34,11 @@ class ArrayNode extends AbstractComponent implements \ArrayAccess
         $this->internalArray = $internalArray;
     }
 
+    public function flatten(bool $extractNode = false)
+    {
+        return $this;
+    }
+
     public function evaluate(RenderingContextInterface $renderingContext): array
     {
         $arrayToBuild = [];

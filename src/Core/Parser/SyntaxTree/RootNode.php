@@ -16,10 +16,22 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class RootNode extends AbstractComponent
 {
+    protected $quoted = false;
+
+    public function isQuoted(): bool
+    {
+        return $this->quoted;
+    }
+
+    public function setQuoted(bool $quoted): self
+    {
+        $this->quoted = $quoted;
+        return $this;
+    }
+
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
         $this->getArguments()->setRenderingContext($renderingContext);
         return parent::onOpen($renderingContext);
     }
-
 }

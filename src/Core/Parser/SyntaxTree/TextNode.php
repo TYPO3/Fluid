@@ -43,6 +43,14 @@ class TextNode extends AbstractComponent
         return $this->text;
     }
 
+    public function flatten(bool $extractNode = false)
+    {
+        if ($extractNode) {
+            return $this->text;
+        }
+        return $this;
+    }
+
     /**
      * Getter for text
      *

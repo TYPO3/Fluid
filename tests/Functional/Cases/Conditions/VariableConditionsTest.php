@@ -77,8 +77,8 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
             ['({foo.someArray.foo} == \'bar\') && (TRUE || 0)', true, ['foo' => ['someArray' => $someArray]]],
 
             // inline viewHelpers
-            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 1)', true],
-            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0)', false],
+            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 1))', true],
+            ['(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 0))', false],
 
             //conditions with countable objects
             ['{emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
@@ -86,7 +86,7 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
             ['{emptyCountable} || FALSE', false, ['emptyCountable' => $emptyCountable]],
             ['FALSE || {emptyCountable}', false, ['emptyCountable' => $emptyCountable]],
             // inline if-viewhelper condition with countable objects
-            ['{f:if(condition: \'{emptyCountable} || FALSE\', else: \'1\')} == 1)', true, ['emptyCountable' => $emptyCountable]]
+            ['{f:if(condition: \'{emptyCountable} || FALSE\', else: \'1\')} == 1', true, ['emptyCountable' => $emptyCountable]]
         ];
     }
 }

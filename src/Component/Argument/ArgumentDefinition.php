@@ -59,7 +59,7 @@ class ArgumentDefinition
     public function __construct(string $name, string $type, string $description, bool $required, $defaultValue = null)
     {
         $this->name = $name;
-        $this->type = $type;
+        $this->type = $type === 'bool' ? 'boolean' : $type;
         $this->description = $description;
         $this->required = $required;
         $this->defaultValue = $defaultValue;

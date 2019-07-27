@@ -19,15 +19,18 @@ use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\Sequencer;
 use TYPO3Fluid\Fluid\Core\Parser\Source;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers\CViewHelper;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
@@ -1033,6 +1036,331 @@ class SequencerTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider getBooleanNodeTestValues
+     * @param string $template
+     * @param RenderingContextInterface $context
+     * @param bool $escapingEnabled
+     * @param ComponentInterface $expectedRootNode
+     */
+    public function sequencesBooleanNodes(
+        string $template,
+        RenderingContextInterface $context,
+        bool $escapingEnabled,
+        ComponentInterface $expectedRootNode
+    ) {
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    public function getBooleanNodeTestValues(): array
+    {
+        $context = $this->createContext();
+        return [
+            'simple numeric boolean true value' => [
+                '<f:c b="1" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))])),
+            ],
+            'simple numeric boolean false value' => [
+                '<f:c b="0" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('0'))])),
+            ],
+            'single object accessor boolean value' => [
+                '<f:c b="{foo}" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new ObjectAccessorNode('foo'))])),
+            ],
+            'expression boolean value split to parts' => [
+                '<f:c b="1 == 1" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild(new TextNode('1'))])),
+            ],
+            'object accessor with comparison boolean value' => [
+                '<f:c b="{foo} === 1" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode('==='))->addChild(new TextNode('1'))])),
+            ],
+            'quoted string comparison' => [
+                '<f:c b="\'foo\' == \'bar\'" />',
+                $context,
+                false,
+                (new RootNode())->addChild(
+                    $this->createViewHelper(
+                        $context,
+                        CViewHelper::class,
+                        [
+                            'b' => (new BooleanNode())
+                                ->addChild((new RootNode())
+                                    ->addChild(new TextNode('foo'))
+                                    ->setQuoted(true)
+                                )->addChild(new TextNode('=='))
+                                ->addChild((new RootNode())
+                                    ->addChild(new TextNode('bar'))
+                                    ->setQuoted(true)
+                                )
+                        ]
+                    )
+                ),
+            ],
+            'object accessor with comparison boolean value and && combination' => [
+                '<f:c b="{foo} === 1 && true" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode('==='))->addChild(new TextNode('1'))->addChild(new TextNode('&&'))->addChild(new TextNode('true'))])),
+            ],
+            'multiple groupings' => [
+                '<f:c b="0 || 1 && 0" />',
+                $context,
+                false,
+                (new RootNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('0'))->addChild(new TextNode('||'))->addChild(new TextNode('1'))->addChild(new TextNode('&&'))->addChild(new TextNode('0'))])),
+            ],
+            'multiple groupings and comparisons' => [
+                '<f:c b="0 || (\'foo\' == \'foo\')" />',
+                $context,
+                false,
+                (new RootNode())->addChild(
+                    $this->createViewHelper(
+                        $context,
+                        CViewHelper::class,
+                        [
+                            'b' => (new BooleanNode())
+                                ->addChild(new TextNode('0'))
+                                ->addChild(new TextNode('||'))
+                                ->addChild(
+                                    (new BooleanNode())
+                                        ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true))
+                                        ->addChild(new TextNode('=='))
+                                        ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true))
+                                )
+                        ]
+                    )
+                ),
+            ],
+            'grouped expressions become nested BooleanNode' => [
+                '<f:c b="({foo} != 1) && ({foo} != 2)" />',
+                $context,
+                false,
+                (new RootNode())->addChild(
+                    $this->createViewHelper(
+                        $context,
+                        CViewHelper::class,
+                        [
+                            'b' => (new BooleanNode())
+                                ->addChild(
+                                    (new BooleanNode())
+                                        ->addChild(new ObjectAccessorNode('foo'))
+                                        ->addChild(new TextNode('!='))
+                                        ->addChild(new TextNode('1'))
+                                )->addChild(new TextNode('&&'))
+                                ->addChild(
+                                    (new BooleanNode())
+                                        ->addChild(new ObjectAccessorNode('foo'))
+                                        ->addChild(new TextNode('!='))
+                                        ->addChild(new TextNode('2'))
+                                )
+                        ]
+                    )
+                ),
+            ],
+            'multiple grouped expressions become nested BooleanNode' => [
+                '<f:c b="(1 != 2) && (1 != 3) && (1 != 4) && 1" />',
+                $context,
+                false,
+                (new RootNode())->addChild(
+                    $this->createViewHelper(
+                        $context,
+                        CViewHelper::class,
+                        [
+                            'b' => (new BooleanNode())
+                                ->addChild(
+                                    (new BooleanNode())
+                                        ->addChild(new TextNode('1'))
+                                        ->addChild(new TextNode('!='))
+                                        ->addChild(new TextNode('2'))
+                                )->addChild(new TextNode('&&'))
+                                ->addChild(
+                                    (new BooleanNode())
+                                        ->addChild(new TextNode('1'))
+                                        ->addChild(new TextNode('!='))
+                                        ->addChild(new TextNode('3'))
+                                )->addChild(new TextNode('&&'))
+                                ->addChild(
+                                    (new BooleanNode())
+                                        ->addChild(new TextNode('1'))
+                                        ->addChild(new TextNode('!='))
+                                        ->addChild(new TextNode('4'))
+                                )->addChild(new TextNode('&&')
+                                )->addChild(new TextNode('1')
+                            )
+                        ]
+                    )
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function complexGroupedConditionParsesCorrectly(): void
+    {
+        $expression = '(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE';
+        $context = $this->createContext();
+        $sequencer = new Sequencer(
+            $context,
+            new Contexts(),
+            new Source('<f:if condition="' . $expression . '" />')
+        );
+        $result = $sequencer->sequence();
+
+        $firstInnerGroup = (new BooleanNode())
+            ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true))
+            ->addChild(new TextNode('=='))
+            ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true));
+        $secondInnerGroup = (new BooleanNode())
+            ->addChild(new TextNode('TRUE'))
+            ->addChild(new TextNode('||'))
+            ->addChild(new TextNode('1'));
+        $firstGroup = (new BooleanNode())
+            ->addChild(new TextNode('1'))
+            ->addChild(new TextNode('&&'))
+            ->addChild($firstInnerGroup)
+            ->addChild(new TextNode('&&'))
+            ->addChild($secondInnerGroup);
+
+        $expected = (new RootNode())
+            ->addChild(
+                $this->createViewHelper(
+                    $context,
+                    IfViewHelper::class,
+                    [
+                        'condition' => (new BooleanNode())->addChild($firstGroup)
+                            ->addChild(new TextNode('&&'))
+                            ->addChild(new TextNode('0'))
+                            ->addChild(new TextNode('!='))
+                            ->addChild(new TextNode('1'))
+                            ->addChild(new TextNode('&&'))
+                            ->addChild(new TextNode('FALSE'))
+                    ]
+                )
+        );
+        $this->assertNodeEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function conditionWithNestedInlineViewHelperParsesCorrectly(): void
+    {
+        $expression = '(TRUE && ({f:if(condition: \'TRUE\', then: \'1\')} == 1))';
+        $context = $this->createContext();
+        $sequencer = new Sequencer(
+            $context,
+            new Contexts(),
+            new Source('<f:if condition="' . $expression . '" />')
+        );
+        $result = $sequencer->sequence();
+
+        $innerConditionArgument = (new BooleanNode())->addChild(new TextNode('TRUE'));
+        $firstInnerGroup = $this->createViewHelper(
+            $context,
+            IfViewHelper::class,
+            [
+                'condition' => $innerConditionArgument,
+                'then' => 1
+            ]
+        );
+        $firstGroup = (new BooleanNode())
+            ->addChild(new TextNode('TRUE'))
+            ->addChild(new TextNode('&&'))
+            ->addChild((new BooleanNode())->addChild($firstInnerGroup)->addChild(new TextNode('=='))->addChild(new TextNode('1'))
+        );
+
+        $expected = (new RootNode())
+            ->addChild(
+                $this->createViewHelper(
+                    $context,
+                    IfViewHelper::class,
+                    [
+                        'condition' => (new BooleanNode())->addChild($firstGroup)
+                    ]
+                )
+        );
+        $this->assertNodeEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function arrayComparisonConditionParsesCorrectly(): void
+    {
+        $expression = '{someArray} == {foo: \'bar\'}';
+        $context = $this->createContext();
+        $sequencer = new Sequencer(
+            $context,
+            new Contexts(),
+            new Source('<f:if condition="' . $expression . '" />')
+        );
+        $result = $sequencer->sequence();
+
+        $expected = (new RootNode())
+            ->addChild(
+                $this->createViewHelper(
+                    $context,
+                    IfViewHelper::class,
+                    [
+                        'condition' => (new BooleanNode())
+                            ->addChild(new ObjectAccessorNode('someArray'))
+                            ->addChild(new TextNode('=='))
+                            ->addChild(new ArrayNode(['foo' => 'bar']))
+                    ]
+                )
+            )
+            ;
+        $this->assertNodeEquals($expected, $result);
+    }
+
+    /**
+     * @test
+     */
+    public function nestedConditionInConditionParsesCorrectly(): void
+    {
+        $expression = '{f:if(condition: \'{var}\', else: \'1\')}';
+        $context = new RenderingContextFixture();
+        $context->setVariableProvider(new StandardVariableProvider(['var' => new \SplObjectStorage()]));
+
+        $sequencer = new Sequencer(
+            $context,
+            new Contexts(),
+            new Source('<f:if condition="' . $expression . '" then="yes" else="no" />')
+        );
+        $result = $sequencer->sequence();
+
+        $nestedConditionArgument = (new BooleanNode())->addChild(new ObjectAccessorNode('var'));
+        $nestedViewHelper = $this->createViewHelper($context, IfViewHelper::class, ['condition' => $nestedConditionArgument, 'else' => 1]);
+
+        $expected = (new RootNode())
+            ->addChild(
+                $this->createViewHelper(
+                    $context,
+                    IfViewHelper::class,
+                    [
+                        'then' => 'yes',
+                        'else' => 'no',
+                        'condition' => (new BooleanNode())->addChild($nestedViewHelper)
+                    ]
+                )
+            );
+        $this->assertNodeEquals($expected, $result);
+    }
+
+    /**
+     * @test
      */
     public function featureToggleParsingOffThrowsPassthroughException()
     {
@@ -1103,7 +1431,6 @@ class SequencerTest extends UnitTestCase
         $expectedRootNode = new RootNode();
         $node = $expectedRootNode;
         for ($i = 0; $i < 50; $i++) {
-            #$childNode = new RawViewHelper();
             $childNode = $this->createViewHelper($context, RawViewHelper::class);
             $node->addChild($childNode);
             $template .= '| f:format.raw() ';

@@ -60,6 +60,8 @@ abstract class AbstractComponent implements ComponentInterface
      */
     protected $arguments = null;
 
+    private $_lastAddedWasTextNode = false;
+
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
         return $this;
@@ -87,10 +89,11 @@ abstract class AbstractComponent implements ComponentInterface
             foreach ($component->getChildren() as $node) {
                 $this->addChild($node);
             }
-        } elseif ($component instanceof TextNode && ($last = end($this->children)) && $last instanceof TextNode) {
-            $last->appendText($component->getText());
+        } elseif ($component instanceof TextNode && $this->_lastAddedWasTextNode) {
+            end($this->children)->appendText($component->getText());
         } else {
             $this->children[] = $component;
+            $this->_lastAddedWasTextNode = $component instanceof TextNode;
         }
         return $this;
     }
@@ -178,7 +181,7 @@ abstract class AbstractComponent implements ComponentInterface
         if (empty($this->children) && $extractNode) {
             return null;
         }
-        if (!isset($this->children[1])) {
+        if (isset($this->children[0]) && !isset($this->children[1])) {
             if ($extractNode) {
                 if ($this->children[0] instanceof TextNode) {
                     $text = $this->children[0]->getText();

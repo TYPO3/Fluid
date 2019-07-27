@@ -114,7 +114,7 @@ class ViewHelperResolver
             $this->namespaces[$identifier] = $phpNamespace === null ? null : (array) $phpNamespace;
         } elseif (is_array($phpNamespace)) {
             $this->namespaces[$identifier] = array_unique(array_merge($this->namespaces[$identifier], $phpNamespace));
-        } elseif (isset($this->namespaces[$identifier]) && !in_array($phpNamespace, $this->namespaces[$identifier])) {
+        } elseif (isset($this->namespaces[$identifier]) && !in_array($phpNamespace, $this->namespaces[$identifier], true)) {
             $this->namespaces[$identifier][] = $phpNamespace;
         }
         $this->resolvedViewHelperClassNames = [];

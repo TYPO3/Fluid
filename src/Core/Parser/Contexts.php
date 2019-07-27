@@ -52,6 +52,9 @@ class Contexts
     /** @var Context */
     public $empty;
 
+    /** @var Context */
+    public $boolean;
+
     public function __construct()
     {
         // Root context: aware of tag start or inline start only.
@@ -63,7 +66,7 @@ class Contexts
         // Tag: entered into when a detected tag has a namespace operator in tag name
         $this->tag = new Context(Context::CONTEXT_TAG, "[>:{ /\t\n\r\0");
 
-        // P/CDATA: entered into when a detected tag starts with [CDATA[ or [PCDATA[ - exclusively matches termination brackets and end of tag.
+        // P/CDATA: entered into when a detected tag starts with ![CDATA[ or ![PCDATA[ - exclusively matches termination brackets and end of tag.
         $this->data = new Context(Context::CONTEXT_DATA, ']>');
 
         // Fluid feature toggles: an inline prefixed with at sign, e.g. {@escaping off}, which supports only whitespace and ending curly brace symbols.
@@ -90,5 +93,8 @@ class Contexts
 
         // Empty: matches no characters, only possible yield is BYTE_NULL.
         $this->empty = new Context(Context::CONTEXT_EMPTY, '');
+
+        // Boolean: matches parenthesis groups, backslash, inline expressions, quotes and whitespace (which separates expression parts but is not quoted).
+        $this->boolean = new Context(Context::CONTEXT_BOOLEAN, "{()'\"\\ \t\r\n");
     }
 }

@@ -76,6 +76,11 @@ class ObjectAccessorNode extends AbstractComponent
         return $this->accessors;
     }
 
+    public function flatten(bool $extractNode = false)
+    {
+        return $this;
+    }
+
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $children = $this->getChildren();

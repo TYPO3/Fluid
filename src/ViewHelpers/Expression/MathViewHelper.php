@@ -58,7 +58,7 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         $operator = null;
         $operators = str_split(static::$operators);
         foreach ($parts as $part) {
-            if (in_array($part, $operators)) {
+            if (in_array($part, $operators, true)) {
                 $operator = $part;
             } else {
                 $part = $renderingContext->getVariableProvider()->get($part) ?? $part;

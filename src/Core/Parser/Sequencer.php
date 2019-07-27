@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -65,6 +66,8 @@ class Sequencer
     public const BYTE_SLASH = 47; // The "/" character
     public const BYTE_BACKSLASH = 92; // The "\" character
     public const BYTE_BACKTICK = 96; // The "`" character
+    public const BYTE_EXCLAMATION = 33; // The "!" character
+    public const BYTE_AMPERSAND = 38; // The "&" character
     public const BYTE_AT = 64; // The "@" character
     public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
     public const MASK_WHITESPACE = 0 | self::MASK_LINEBREAKS | (1 << self::BYTE_WHITESPACE_SPACE) | (1 << self::BYTE_WHITESPACE_TAB);
@@ -312,7 +315,11 @@ class Sequencer
                     if ($key === null) {
                         throw $this->createErrorAtPosition('Quoted value without a key is not allowed in tags', 1558952412);
                     } else {
-                        $arguments[$key] = $this->sequenceQuotedNode(0, isset($namespace) && isset($method))->flatten(true);
+                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                            $arguments[$key] = $this->sequenceBooleanNode(0)->flatten(true);
+                        } else {
+                            $arguments[$key] = $this->sequenceQuotedNode(0, isset($namespace) && isset($method))->flatten(true);
+                        }
                         $key = null;
                     }
                     break;
@@ -398,11 +405,19 @@ class Sequencer
                     // literal style associative array entry. Do the same for $captured.
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
                         if ($key !== null) {
-                            $arguments[$key] = new ObjectAccessorNode((string) $key);
+                            $value = new ObjectAccessorNode((string) $key);
+                            if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                                $value = new BooleanNode($value);
+                            }
+                            $arguments[$key] = $value;
                         }
 
                         if ($captured !== null) {
-                            $arguments[$captured] = new ObjectAccessorNode($captured);
+                            $value = new ObjectAccessorNode((string) $captured);
+                            if (isset($definitions[$captured]) && $definitions[$captured]->getType() === 'boolean') {
+                                $value = is_numeric($captured) ? (bool) $captured : new BooleanNode($value);
+                            }
+                            $arguments[$captured] = $value;
                         }
                     }
 
@@ -445,7 +460,11 @@ class Sequencer
                             // string value before encountering an equals sign. This is treated as ECMA literal short
                             // hand equivalent of having written `attr="{attr}"` in the Fluid template.
                             if ($key !== null) {
-                                $arguments[$key] = new ObjectAccessorNode((string) $key);
+                                if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                                    $arguments[$key] = new BooleanNode($key);
+                                } else {
+                                    $arguments[$key] = new ObjectAccessorNode((string) $key);
+                                }
                             }
                             $key = $captured;
                         }
@@ -488,10 +507,6 @@ class Sequencer
         throw $this->createErrorAtPosition('Unexpected token in tag sequencing', 1557700786);
     }
 
-    /**
-     * @param bool $allowArray
-     * @return ComponentInterface
-     */
     protected function sequenceInlineNodes(bool $allowArray = true): ComponentInterface
     {
         $text = '{';
@@ -512,13 +527,14 @@ class Sequencer
         $parts = [];
         $ignoredEndingBraces = 0;
         $countedEscapes = 0;
-        $this->splitter->switch($this->contexts->inline);
+        $restore = $this->splitter->switch($this->contexts->inline);
         $this->sequence->next();
         foreach ($this->sequence as $symbol => $captured) {
             $text .= $captured;
             switch ($symbol) {
                 case self::BYTE_AT:
                     $this->sequenceToggleInstruction();
+                    $this->splitter->switch($restore);
                     return new TextNode('');
                     break;
 
@@ -537,7 +553,6 @@ class Sequencer
                     // from {foo, bar}.
                     $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
                     $this->sequenceArrayNode($node, true);
-                    $this->splitter->switch($this->contexts->inline);
                     unset($key);
                     break;
 
@@ -562,7 +577,6 @@ class Sequencer
                         if ($captured !== null) {
                             $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
                             $this->sequenceArrayNode($node);
-                            $this->splitter->switch($this->contexts->inline);
                         }
                     } else {
                         $childNodeToAdd = $this->sequenceInlineNodes($allowArray);
@@ -597,7 +611,11 @@ class Sequencer
                         break;
                     }
                     if (isset($key)) {
-                        $array[$key] = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
+                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                            $array[$key] = $this->sequenceBooleanNode($countedEscapes)->flatten(true);
+                        } else {
+                            $array[$key] = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
+                        }
                         $key = null;
                     } else {
                         $key = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
@@ -612,7 +630,12 @@ class Sequencer
                         break;
                     }
                     if (isset($captured)) {
-                        $array[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                        $key = $key ?? $captured;
+                        $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                            $value = is_numeric($value) ? (bool) $value : new BooleanNode($value);
+                        }
+                        $array[$key] = $value;
                     }
                     $key = null;
                     $isArray = $allowArray;
@@ -671,6 +694,7 @@ class Sequencer
                         // string comparison with strict types enabled). We then return an empty TextNode which is
                         // ignored by the parent node when attached so we don't create any output.
                         $this->sequenceToggleInstruction('namespace');
+                        $this->splitter->switch($restore);
                         return new TextNode('');
                     }
                     $key = $key ?? $captured;
@@ -718,12 +742,12 @@ class Sequencer
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
-                    $this->splitter->switch($this->contexts->array);
+                    #$this->splitter->switch($this->contexts->array);
                     $this->sequenceArrayNode($arguments);
                     $arguments->validate()->setRenderingContext($this->renderingContext);
                     $node = $node->onOpen($this->renderingContext);
 
-                    $this->splitter->switch($this->contexts->inline);
+                    #$this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
                             $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
@@ -750,6 +774,7 @@ class Sequencer
                         if ($captured !== null) {
                             $array[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                         }
+                        $this->splitter->switch($restore);
                         return new ArrayNode($array);
                     } elseif ($callDetected) {
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
@@ -829,6 +854,7 @@ class Sequencer
                     }
 
                     $this->callInterceptor($node, $interceptionPoint);
+                    $this->splitter->switch($restore);
                     return $node;
             }
         }
@@ -839,10 +865,66 @@ class Sequencer
         throw $this->createErrorAtPosition('Unterminated inline syntax', 1557838506);
     }
 
-    /**
-     * @param \ArrayAccess $array
-     * @param bool $numeric
-     */
+    protected function sequenceBooleanNode(int $leadingEscapes = 0): BooleanNode
+    {
+        $startingByte = $this->source->bytes[$this->splitter->index];
+        $closingByte = $startingByte === self::BYTE_PARENTHESIS_START ? self::BYTE_PARENTHESIS_END : $startingByte;
+        $countedEscapes = 0;
+        $node = new BooleanNode();
+        $restore = $this->splitter->switch($this->contexts->boolean);
+        $this->sequence->next();
+        foreach ($this->sequence as $symbol => $captured) {
+            if ($captured !== null) {
+                $node->addChild(new TextNode($captured));
+            }
+            switch ($symbol) {
+                case self::BYTE_INLINE:
+                    $node->addChild($this->sequenceInlineNodes(true));
+                    break;
+
+                case self::BYTE_PARENTHESIS_END:
+                    if ($countedEscapes === $leadingEscapes) {
+                        $this->splitter->switch($restore);
+                        return $node;
+                    }
+                    break;
+
+                case self::BYTE_QUOTE_DOUBLE:
+                case self::BYTE_QUOTE_SINGLE:
+                    if ($symbol === $closingByte && $countedEscapes === $leadingEscapes) {
+                        $this->splitter->switch($restore);
+                        return $node;
+                    }
+                    // Sequence a quoted node and set the "quoted" flag on the resulting root node (which is not
+                    // flattened even if it contains a single child). This allows the BooleanNode to enforce a string
+                    // value whenever parts of the expression are quoted, indicating user explicitly wants string type.
+                    $node->addChild($this->sequenceQuotedNode($countedEscapes)->setQuoted(true));
+                    break;
+
+                case self::BYTE_PARENTHESIS_START:
+                    $node->addChild($this->sequenceBooleanNode(0));
+                    break;
+
+                case self::BYTE_WHITESPACE_SPACE:
+                case self::BYTE_WHITESPACE_TAB:
+                case self::BYTE_WHITESPACE_RETURN:
+                case self::BYTE_WHITESPACE_EOL:
+                    break;
+
+                case self::BYTE_BACKSLASH:
+                    ++$countedEscapes;
+                    break;
+
+                default:
+                    throw $this->createErrorAtPosition('Unexpected token in Boo: ' . chr($symbol), 1);
+            }
+            if ($symbol !== self::BYTE_BACKSLASH) {
+                $countedEscapes = 0;
+            }
+        }
+        throw $this->createErrorAtPosition('Unterminated boolean expression', 1564159986);
+    }
+
     protected function sequenceArrayNode(\ArrayAccess &$array, bool $numeric = false): void
     {
         $definitions = null;
@@ -852,10 +934,13 @@ class Sequencer
 
         $keyOrValue = null;
         $key = null;
+        $value = null;
         $itemCount = -1;
         $countedEscapes = 0;
         $escapingEnabledBackup = $this->escapingEnabled;
 
+        $restore = $this->splitter->switch($this->contexts->array);
+        #$restore = $this->splitter->context;
         $this->sequence->next();
         foreach ($this->sequence as $symbol => $captured) {
             switch ($symbol) {
@@ -908,7 +993,11 @@ class Sequencer
                     // Quotes will always cause sequencing of the quoted string, but differs in behavior based on whether
                     // or not the $key is set. If $key is set, we know for sure we can assign a value. If it is not set
                     // we instead leave $keyOrValue defined so this will be processed by one of the next iterations.
-                    $keyOrValue = $this->sequenceQuotedNode($countedEscapes);
+                    if (isset($key, $definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                        $keyOrValue = $this->sequenceBooleanNode($countedEscapes);
+                    } else {
+                        $keyOrValue = $this->sequenceQuotedNode($countedEscapes);
+                    }
                     if (isset($key)) {
                         $array[$key] = $keyOrValue->flatten(true);
                         $keyOrValue = null;
@@ -920,19 +1009,27 @@ class Sequencer
                 case self::BYTE_SEPARATOR_COMMA:
                     // Comma separator: if we've collected a key or value, use it. Otherwise, use captured string.
                     // If neither key nor value nor captured string exists, ignore the comma (likely a tailing comma).
+                    $value = null;
                     if (isset($keyOrValue)) {
                         // Key or value came as quoted string and exists in $keyOrValue
                         $potentialValue = $keyOrValue->flatten(true);
                         $key = $numeric ? ++$itemCount : $potentialValue;
-                        $array[$key] = $numeric ? $potentialValue : (is_numeric($key) ? $key + 0 : new ObjectAccessorNode((string) $key));
+                        $value = $numeric ? $potentialValue : (is_numeric($key) ? $key + 0 : new ObjectAccessorNode((string) $key));
                     } elseif (isset($captured)) {
                         $key = $key ?? ($numeric ? ++$itemCount : $captured);
                         if (!$numeric && isset($definitions) && !isset($definitions[$key])) {
                             throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                         }
-                        $array[$key] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                        $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                    }
+                    if ($value !== null) {
+                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                            $value = is_numeric($array[$key]) ? (bool) $array[$key] : new BooleanNode($array[$key]);
+                        }
+                        $array[$key] = $value;
                     }
                     $keyOrValue = null;
+                    $value = null;
                     $key = null;
                     break;
 
@@ -970,7 +1067,11 @@ class Sequencer
                     if (!$numeric && isset($key, $definitions) && !isset($definitions[$key])) {
                         throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                     }
+                    if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
+                        $array[$key] = is_numeric($array[$key]) ? (bool) $array[$key] : new BooleanNode($array[$key]);
+                    }
                     $this->escapingEnabled = $escapingEnabledBackup;
+                    $this->splitter->switch($restore);
                     return;
             }
         }
@@ -1002,11 +1103,11 @@ class Sequencer
     protected function sequenceQuotedNode(int $leadingEscapes = 0, $allowArray = true): RootNode
     {
         $startingByte = $this->source->bytes[$this->splitter->index];
-        $contextToRestore = $this->splitter->switch($this->contexts->quoted);
         $node = new RootNode();
-        $this->sequence->next();
         $countedEscapes = 0;
 
+        $contextToRestore = $this->splitter->switch($this->contexts->quoted);
+        $this->sequence->next();
         foreach ($this->sequence as $symbol => $captured) {
             switch ($symbol) {
 
@@ -1015,11 +1116,9 @@ class Sequencer
                     if ($captured === null) {
                         // Array start "[" only triggers array sequencing if it is the very first byte in the quoted
                         // string - otherwise, it is added as part of the text.
-                        $this->splitter->switch($this->contexts->array);
                         $child = new ArrayNode();
                         $this->sequenceArrayNode($child, true);
                         $node->addChild($child);
-                        $this->splitter->switch($this->contexts->quoted);
                     } else {
                         $node->addChild(new TextNode($captured . '['));
                     }
@@ -1037,7 +1136,6 @@ class Sequencer
                     }
 
                     $node->addChild($this->sequenceInlineNodes());
-                    $this->splitter->switch($this->contexts->quoted);
                     break;
 
                 case self::BYTE_BACKSLASH:

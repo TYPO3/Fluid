@@ -7,17 +7,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -36,608 +32,6 @@ class BooleanNodeTest extends UnitTestCase
     public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
-    }
-
-    /**
-     * @test
-     */
-    public function convertToBooleanProperlyConvertsValuesOfTypeBoolean(): void
-    {
-        $this->assertFalse(BooleanNode::convertToBoolean(false, $this->renderingContext));
-        $this->assertTrue(BooleanNode::convertToBoolean(true, $this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function convertToBooleanProperlyConvertsValuesOfTypeString(): void
-    {
-        $this->assertFalse(BooleanNode::convertToBoolean('', $this->renderingContext));
-        $this->assertFalse(BooleanNode::convertToBoolean('false', $this->renderingContext));
-        $this->assertFalse(BooleanNode::convertToBoolean('FALSE', $this->renderingContext));
-
-        $this->assertTrue(BooleanNode::convertToBoolean('true', $this->renderingContext));
-        $this->assertTrue(BooleanNode::convertToBoolean('TRUE', $this->renderingContext));
-    }
-
-    /**
-     * @param mixed $number
-     * @param boolean $expected
-     * @test
-     * @dataProvider getNumericBooleanTestValues
-     */
-    public function convertToBooleanProperlyConvertsNumericValues($number, bool $expected): void
-    {
-        $this->assertEquals($expected, BooleanNode::convertToBoolean($number, $this->renderingContext));
-    }
-
-    /**
-     * @return array
-     */
-    public function getNumericBooleanTestValues(): array
-    {
-        return [
-            [0, false],
-            [-1, true],
-            ['-1', true],
-            [-.5, true],
-            [1, true],
-            [.5, true],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function convertToBooleanProperlyConvertsValuesOfTypeArray(): void
-    {
-        $this->assertFalse(BooleanNode::convertToBoolean([], $this->renderingContext));
-
-        $this->assertTrue(BooleanNode::convertToBoolean(['foo'], $this->renderingContext));
-        $this->assertTrue(BooleanNode::convertToBoolean(['foo' => 'bar'], $this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function convertToBooleanProperlyConvertsObjects(): void
-    {
-        $this->assertFalse(BooleanNode::convertToBoolean(null, $this->renderingContext));
-
-        $this->assertTrue(BooleanNode::convertToBoolean(new \stdClass(), $this->renderingContext));
-    }
-
-    /**
-     * @return array
-     */
-    public function getEvaluateComparatorTestValues(): array
-    {
-        $user1 = new UserWithToString('foobar');
-        $user2 = new UserWithToString('foobar');
-        return [
-            ['===', $user1, $user1, true],
-            ['===', $user1, $user2, false],
-            ['===', $user1, 'foobar', false],
-
-            ['==', $user1, $user1, true],
-            ['==', $user1, $user2, false],
-            ['==', $user1, 'foobar', false],
-            ['==', 'foobar', $user1, false],
-            ['==', 1, 0, false],
-            ['==', 1, 1, true],
-            ['==', ['foobar'], ['foobar'], true],
-            ['==', ['foobar'], ['baz'], false],
-
-            ['>', 1, 0, true],
-            ['>', 1, false, true],
-            ['>', false, 0, false],
-
-            ['<', 1, 0, false],
-
-            // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
-            ['==', 'foo', 0, true],
-            ['>=', 1.1, 'foo', true],
-            ['>', 'foo', 0, false],
-
-        ];
-    }
-
-    /**
-     * @dataProvider getCreateFromNodeAndEvaluateTestValues
-     * @param ComponentInterface $node
-     * @param boolean $expected
-     */
-    public function testCreateFromNodeAndEvaluate(ComponentInterface $node, bool $expected): void
-    {
-        $result = (new BooleanNode($node))->evaluate($this->renderingContext);
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * @return array
-     */
-    public function getCreateFromNodeAndEvaluateTestValues(): array
-    {
-        return [
-            '1 && 1' => [new TextNode('1 && 1'), true],
-            '1 && 0' => [new TextNode('1 && 0'), false],
-            '(1 && 1) && 1' => [new TextNode('(1 && 1) && 1'), true],
-            '(1 && 0) || 1' => [new TextNode('(1 && 0) || 1'), true],
-            '(\'text\' == \'text\') || 1 >= 0' => [new TextNode('(\'text\' == \'text\') || 1 >= 0'), true],
-            '1 <= 0' => [new TextNode('1 <= 0'), false],
-            '1 > 4' => [new TextNode('1 > 4'), false],
-            '1 < 4' => [new TextNode('1 < 4'), true],
-            '4 % 4' => [new TextNode('4 % 4'), false],
-            '2 % 4' => [new TextNode('2 % 4'), true],
-            '0 && 1' => [new TextNode('0 && 1'), false],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function comparingNestedComparisonsWorks(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('('));
-        $rootNode->addChild(new ArrayNode(['foo' => 'bar']));
-        $rootNode->addChild(new TextNode('=='));
-        $rootNode->addChild(new ArrayNode(['foo' => 'bar']));
-        $rootNode->addChild(new TextNode(')'));
-        $rootNode->addChild(new TextNode('&&'));
-        $rootNode->addChild(new TextNode('1'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingEqualNumbersReturnsTrue(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('5'));
-        $rootNode->addChild(new TextNode('=='));
-        $rootNode->addChild(new TextNode('5'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingUnequalNumbersReturnsFalse(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('5'));
-        $rootNode->addChild(new TextNode('=='));
-        $rootNode->addChild(new TextNode('3'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertFalse($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingEqualIdentityReturnsTrue(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('5'));
-        $rootNode->addChild(new TextNode('==='));
-        $rootNode->addChild(new TextNode('5'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingUnequalIdentityReturnsFalse(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('0'));
-        $rootNode->addChild(new TextNode('==='));
-        $rootNode->addChild(new BooleanNode(false));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertFalse($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function notEqualReturnsFalseIfNumbersAreEqual(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('5'));
-        $rootNode->addChild(new TextNode('!='));
-        $rootNode->addChild(new TextNode('5'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertFalse($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function notEqualReturnsTrueIfNumbersAreNotEqual(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('5'));
-        $rootNode->addChild(new TextNode('!='));
-        $rootNode->addChild(new TextNode('3'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function oddNumberModulo2ReturnsTrue(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('43'));
-        $rootNode->addChild(new TextNode('%'));
-        $rootNode->addChild(new TextNode('2'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function evenNumberModulo2ReturnsFalse(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('42'));
-        $rootNode->addChild(new TextNode('%'));
-        $rootNode->addChild(new TextNode('2'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertFalse($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function greaterThanReturnsTrueIfNumberIsReallyGreater(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('>'));
-        $rootNode->addChild(new TextNode('9'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function greaterThanReturnsFalseIfNumberIsEqual(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('>'));
-        $rootNode->addChild(new TextNode('10'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertFalse($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function greaterOrEqualsReturnsTrueIfNumberIsReallyGreater(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('>='));
-        $rootNode->addChild(new TextNode('9'));
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function greaterOrEqualsReturnsTrueIfNumberIsEqual(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('>='));
-        $rootNode->addChild(new TextNode('10'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function greaterOrEqualsReturnFalseIfNumberIsSmaller(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('>='));
-        $rootNode->addChild(new TextNode('11'));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function lessThanReturnsTrueIfNumberIsReallyless(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('9'));
-        $rootNode->addChild(new TextNode('<'));
-        $rootNode->addChild(new TextNode('10'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function lessThanReturnsFalseIfNumberIsEqual(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('<'));
-        $rootNode->addChild(new TextNode('10'));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function lessOrEqualsReturnsTrueIfNumberIsReallyLess(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('9'));
-        $rootNode->addChild(new TextNode('<='));
-        $rootNode->addChild(new TextNode('10'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function lessOrEqualsReturnsTrueIfNumberIsEqual(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('10'));
-        $rootNode->addChild(new TextNode('<='));
-        $rootNode->addChild(new TextNode('10'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function lessOrEqualsReturnFalseIfNumberIsBigger(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('11'));
-        $rootNode->addChild(new TextNode('<='));
-        $rootNode->addChild(new TextNode('10'));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function lessOrEqualsReturnFalseIfComparingWithANegativeNumber(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('11 <= -2.1'));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @param array $variables
-     * @return RenderingContext
-     */
-    protected function getDummyRenderingContextWithVariables(array $variables): RenderingContextInterface
-    {
-        $context = $this->renderingContext;
-        $context->setVariableProvider(new StandardVariableProvider($variables));
-        $context->getVariableProvider()->setSource($variables);
-        return $context;
-    }
-
-    /**
-     * @test
-     */
-    public function comparingVariableWithMatchedQuotedString(): void
-    {
-        $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
-        $rootNode = new RootNode();
-        $rootNode->addChild(new ObjectAccessorNode('test'));
-        $rootNode->addChild(new TextNode(' == \'somevalue\''));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingVariableWithUnmatchedQuotedString(): void
-    {
-        $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
-        $rootNode = new RootNode();
-        $rootNode->addChild(new ObjectAccessorNode('test'));
-        $rootNode->addChild(new TextNode(' != '));
-        $rootNode->addChild(new TextNode('\'othervalue\''));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingNotEqualsVariableWithMatchedQuotedString(): void
-    {
-        $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
-        $rootNode = new RootNode();
-        $rootNode->addChild(new ObjectAccessorNode('test'));
-        $rootNode->addChild(new TextNode(' != '));
-        $rootNode->addChild(new TextNode('\'somevalue\''));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingNotEqualsVariableWithUnmatchedQuotedString(): void
-    {
-        $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
-        $rootNode = new RootNode();
-        $rootNode->addChild(new ObjectAccessorNode('test'));
-        $rootNode->addChild(new TextNode(' != '));
-        $rootNode->addChild(new TextNode('\'somevalue\''));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function comparingEqualsVariableWithMatchedQuotedStringInSingleTextNode(): void
-    {
-        $renderingContext = $this->getDummyRenderingContextWithVariables(['test' => 'somevalue']);
-        $rootNode = new RootNode();
-        $rootNode->addChild(new ObjectAccessorNode('test'));
-        $rootNode->addChild(new TextNode(' != \'somevalue\''));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function notEqualReturnsFalseIfComparingMatchingStrings(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'stringA\' != "stringA"'));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function notEqualReturnsTrueIfComparingNonMatchingStrings(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'stringA\' != \'stringB\''));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function equalsReturnsFalseIfComparingNonMatchingStrings(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'stringA\' == \'stringB\''));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function equalsReturnsTrueIfComparingMatchingStrings(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'stringA\' == "stringA"'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function equalsReturnsTrueIfComparingMatchingStringsWithEscapedQuotes(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'\\\'stringA\\\'\' == \'\\\'stringA\\\'\''));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function equalsReturnsFalseIfComparingStringWithNonZero(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'stringA\' == 42'));
-        $this->assertFalse((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function equalsReturnsTrueIfComparingStringWithZero(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'stringA\' == 0'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function equalsReturnsFalseIfComparingStringZeroWithZero(): void
-    {
-        $rootNode = new RootNode();
-        $rootNode->addChild(new TextNode('\'0\' == 0'));
-        $this->assertTrue((new BooleanNode($rootNode))->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function objectsAreComparedStrictly(): void
-    {
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
-
-        $rootNode = new RootNode();
-
-        $object1Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
-        $object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
-
-        $object2Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
-        $object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
-
-        $rootNode->addChild($object1Node);
-        $rootNode->addChild(new TextNode('=='));
-        $rootNode->addChild($object2Node);
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertFalse($booleanNode->evaluate($this->renderingContext));
-    }
-
-    /**
-     * @test
-     */
-    public function objectsAreComparedStrictlyInUnequalComparison(): void
-    {
-        $object1 = new \stdClass();
-        $object2 = new \stdClass();
-
-        $rootNode = new RootNode();
-
-        $object1Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
-        $object1Node->expects($this->any())->method('evaluate')->will($this->returnValue($object1));
-
-        $object2Node = $this->getMock(ObjectAccessorNode::class, ['evaluate'], ['foo']);
-        $object2Node->expects($this->any())->method('evaluate')->will($this->returnValue($object2));
-
-        $rootNode->addChild($object1Node);
-        $rootNode->addChild(new TextNode('!='));
-        $rootNode->addChild($object2Node);
-
-        $booleanNode = new BooleanNode($rootNode);
-        $this->assertTrue($booleanNode->evaluate($this->renderingContext));
     }
 
     /**
@@ -667,7 +61,87 @@ class BooleanNodeTest extends UnitTestCase
             ['0', false],
             ['1', true],
             [[1], true],
-            [[0], false],
+            [[0], true],
+            [[false], true],
+            [[null], true],
+            [[], false],
         ];
     }
+
+    /**
+     * @test
+     * @dataProvider getChildNodeTestValues
+     * @param RenderingContextInterface $context
+     * @param iterable $children
+     * @param bool $expected
+     */
+    public function evaluatesChildNodesCorrectly(RenderingContextInterface $context, iterable $children, bool $expected): void
+    {
+        $subject = new BooleanNode();
+        foreach ($children as $child) {
+            $subject->addChild($child);
+        }
+        $this->assertSame($expected, $subject->evaluate($context));
+    }
+
+    public function getChildNodeTestValues(): array
+    {
+        $context = new RenderingContextFixture();
+        $context->setVariableProvider(new StandardVariableProvider([
+            'foo' => 'filled',
+            'bar' => 'also filled',
+            'baz' => new \DateTime('now'),
+            'false' => false,
+        ]));
+        return [
+            #/*
+            'no children means false' => [
+                $context,
+                [],
+                false,
+            ],
+            'single hardcoded "true" means true' => [
+                $context,
+                [new TextNode('true')],
+                true,
+            ],
+            'single hardcoded "false" means false' => [
+                $context,
+                [new TextNode('false')],
+                false,
+            ],
+            'string comparison with quoted part treats as string' => [
+                $context,
+                [(new RootNode())->addChild(new TextNode('false'))->setQuoted(true), new TextNode('!='), new TextNode('false')],
+                true,
+            ],
+            'single hardcoded true-ish loose string comparison means true' => [
+                $context,
+                [new TextNode('1'), new TextNode('=='), new BooleanNode(true)],
+                true,
+            ],
+            'single child object accessor with true-ish value' => [
+                $context,
+                [new ObjectAccessorNode('foo')],
+                true,
+            ],
+            'multiple child object accessor with true-ish values with "OR" groups' => [
+                $context,
+                [new ObjectAccessorNode('foo'), new TextNode('||'), new ObjectAccessorNode('bar'), new TextNode('||'), new ObjectAccessorNode('baz')],
+                true,
+            ],
+            #*/
+            'multiple child object accessor with true-ish values with "AND" groups' => [
+                $context,
+                [new ObjectAccessorNode('foo'), new TextNode('&&'), new ObjectAccessorNode('bar'), new TextNode('&&'), new ObjectAccessorNode('baz')],
+                true,
+            ],
+            'multiple child object accessor with true-ish values with "AND" groups with last false' => [
+                $context,
+                [new ObjectAccessorNode('foo'), new TextNode('&&'), new ObjectAccessorNode('bar'), new TextNode('&&'), new ObjectAccessorNode('false')],
+                false,
+            ],
+        ];
+    }
+
 }

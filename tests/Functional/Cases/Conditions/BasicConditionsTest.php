@@ -31,11 +31,8 @@ class BasicConditionsTest extends BaseConditionalFunctionalTestCase
             ['\'  FALSE  \'', true],
             ['\'foo\' > 0', false],
             ['FALSE', false],
-            ['(FALSE || (FALSE || 1)', true],
-            ['(FALSE || (FALSE || 1)', true],
-            ['(FALSE || (FALSE || 1)', true],
-
-            ['(FALSE or (FALSE or 1)', true],
+            ['(FALSE || (FALSE || 1))', true],
+            ['(FALSE or (FALSE or 1))', true],
 
             // integers
             ['13 == \'13\'', true],
@@ -46,8 +43,8 @@ class BasicConditionsTest extends BaseConditionalFunctionalTestCase
             ['13.37 === \'13.37\'', false],
 
             // groups
-            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1', true],
-            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE', false]
+            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1', true],
+            ['(1 && (\'foo\' == \'foo\') && (TRUE || 1)) && 0 != 1 && FALSE', false]
         ];
     }
 }

@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Component\Argument;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -78,17 +77,6 @@ class ArgumentCollection extends \ArrayObject
         $argumentName = $definition->getName();
         $this->definitions[$argumentName] = $definition;
         return $this;
-    }
-
-    public function offsetSet($index, $value)
-    {
-        if (!$value instanceof BooleanNode && isset($this->definitions[$index])) {
-            $type = $this->definitions[$index]->getType();
-            if ($type === 'bool' || $type === 'boolean') {
-                $value = is_bool($value) || is_numeric($value) || is_null($value) ? (bool) $value : new BooleanNode($value);
-            }
-        }
-        parent::offsetSet($index, $value);
     }
 
     public function offsetGet($offset)
