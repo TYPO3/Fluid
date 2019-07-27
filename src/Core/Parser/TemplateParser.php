@@ -77,7 +77,14 @@ class TemplateParser
      */
     public function getOrParseAndStoreTemplate(string $templateIdentifier, \Closure $templateSourceClosure): ComponentInterface
     {
-        return $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+        if (!$this->configuration->isFeatureEnabled(Configuration::FEATURE_RUNTIME_CACHE)) {
+            return $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+        }
+        static $cache = [];
+        if (!isset($cache[$templateIdentifier])) {
+            $cache[$templateIdentifier] = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
+        }
+        return $cache[$templateIdentifier];
     }
 
     /**
