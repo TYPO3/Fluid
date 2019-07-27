@@ -180,7 +180,7 @@ class IfViewHelper extends AbstractConditionViewHelper implements ExpressionComp
                 $check = substr($check, 1);
                 $negated = true;
             }
-            $check = $variables->get($check) ?? $check;
+            $check = $variables->get($check);
         }
 
         if (!is_numeric($then)) {
