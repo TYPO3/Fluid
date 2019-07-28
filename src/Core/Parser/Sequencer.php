@@ -1249,19 +1249,19 @@ class Sequencer
      * Is not very efficient - but adds bug tracing information. Should only
      * be called when exceptions are raised during sequencing.
      *
-     * @param Position $position
+     * @param int $index
      * @return string
      */
-    protected function extractSourceDumpOfLineAtPosition(Position $position): string
+    protected function extractSourceDumpOfLineAtPosition(int $index): string
     {
-        $lines = $this->countCharactersMatchingMask(self::MASK_LINEBREAKS, 1, $position->index) + 1;
-        $offset = $this->findBytePositionBeforeOffset(self::MASK_LINEBREAKS, $position->index);
+        $lines = $this->countCharactersMatchingMask(self::MASK_LINEBREAKS, 1, $index) + 1;
+        $offset = $this->findBytePositionBeforeOffset(self::MASK_LINEBREAKS, $index);
         $line = substr(
             $this->source->source,
             $offset,
-            $this->findBytePositionAfterOffset(self::MASK_LINEBREAKS, $position->index)
+            $this->findBytePositionAfterOffset(self::MASK_LINEBREAKS, $index)
         );
-        $character = $position->index - $offset - 1;
+        $character = $index - $offset - 1;
         $string = 'Line ' . $lines . ' character ' . $character . PHP_EOL;
         $string .= PHP_EOL;
         $string .= str_repeat(' ', max($character, 0)) . 'v' . PHP_EOL;
@@ -1272,9 +1272,8 @@ class Sequencer
 
     protected function createErrorAtPosition(string $message, int $code): SequencingException
     {
-        $position = new Position($this->splitter->context, $this->splitter->index);
         $error = new SequencingException($message, $code);
-        $error->setExcerpt($this->extractSourceDumpOfLineAtPosition($position));
+        $error->setExcerpt($this->extractSourceDumpOfLineAtPosition($this->splitter->index));
         $error->setByte($this->source->bytes[$this->splitter->index] ?? 0);
         return $error;
     }
