@@ -436,7 +436,6 @@ class Sequencer
                     if (!$closesNode) {
                         // If $closesNode is not-null this means onOpen called earlier when node got added to the stack.
                         // Hence, we only call this for nodes that are not a closing node (= opening or self-closing).
-                        #$arguments->validate();
                         $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
                     }
 
@@ -619,7 +618,6 @@ class Sequencer
                 // Note that backticks do not support escapes (they are a new feature that does not require escaping).
                 case self::BYTE_BACKTICK:
                     if ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
-                        #$node = new RootNode();
                         $node->addChild(new TextNode($text));
                         $node->addChild($this->sequenceQuotedNode()->flatten());
                         $text = '';
@@ -959,7 +957,6 @@ class Sequencer
         $escapingEnabledBackup = $this->escapingEnabled;
 
         $restore = $this->splitter->switch($this->contexts->array);
-        #$restore = $this->splitter->context;
         $this->sequence->next();
         foreach ($this->sequence as $symbol => $captured) {
             switch ($symbol) {
