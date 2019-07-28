@@ -45,9 +45,6 @@ class ObjectAccessorNodeTest extends UnitTestCase
             [['foo' => 'bar'], '_all', ['foo' => 'bar']],
             [['foo' => 'bar'], 'foo', 'bar'],
             [['foo' => ['bar' => 'test']], 'foo.bar', 'test'],
-            [['foo' => ['bar' => 'test'], 'dynamic' => 'bar'], 'foo.{dynamic}', 'test'],
-            [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar']], 'foo.{dynamic.sub}', 'test'],
-            [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar'], 'baz' => 'sub'], 'foo.{dynamic.{baz}}', 'test'],
         ];
     }
 

@@ -227,7 +227,7 @@ class SequencerTest extends UnitTestCase
                 '{foo.{bar}}',
                 $context,
                 false,
-                (new RootNode())->addChild(new ObjectAccessorNode('foo.{bar}')),
+                (new RootNode())->addChild((new ObjectAccessorNode())->addChild(new TextNode('foo.'))->addChild(new ObjectAccessorNode('bar'))),
             ],
             'simple inline with text before in root context' => [
                 'before {foo}',
@@ -1036,6 +1036,15 @@ class SequencerTest extends UnitTestCase
 
     /**
      * @test
+     */
+    public function tempTestBacktick() {
+        $data = $this->getSequenceExpectations()['likely JS syntax not detected as Fluid in root context'];
+        list ($template, $context, $escapingEnabled, $expectedRootNode) = $data;
+        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
+    }
+
+    /**
+     * @test
      * @dataProvider getBooleanNodeTestValues
      * @param string $template
      * @param RenderingContextInterface $context
@@ -1511,7 +1520,7 @@ class SequencerTest extends UnitTestCase
     {
         $this->assertInstanceOf(get_class($expected), $subject, 'Node types not as expected at path: ' . $path);
         if ($subject instanceof ObjectAccessorNode) {
-            $this->assertSame($expected->getObjectPath(), $subject->getObjectPath(), 'ObjectAccessors do not match at path ' . $path);
+            $this->assertEquals($expected->getChildren(), $subject->getChildren(), 'ObjectAccessors do not have the same child nodes at path ' . $path);
         } elseif ($subject instanceof TextNode) {
             $this->assertSame($expected->getText(), $subject->getText(), 'TextNodes do not match at path ' . $path);
         } elseif ($subject instanceof ArrayNode) {

@@ -522,7 +522,7 @@ class Sequencer
         $hasColon = null;
         $hasWhitespace = false;
         $isArray = false;
-        $array = [];
+        $array = new ArrayNode();
         $arguments = new ArgumentCollection();
         $parts = [];
         $ignoredEndingBraces = 0;
@@ -542,6 +542,14 @@ class Sequencer
                     // Increase the number of counted escapes (is passed to sequenceNode() in the "QUOTE" cases and reset
                     // after the quoted string is extracted).
                     ++$countedEscapes;
+                    if ($hasWhitespace) {
+                        $node = $node ?? new RootNode();
+                    } else {
+                        $node = $node ?? new ObjectAccessorNode();
+                    }
+                    if ($captured !== null) {
+                        $node->addChild(new TextNode((string) $captured));
+                    }
                     break;
 
                 case self::BYTE_ARRAY_START:
@@ -560,16 +568,19 @@ class Sequencer
                     // Encountering this case can mean different things: sub-syntax like {foo.{index}} or array, depending
                     // on presence of either a colon or comma before the inline. In protected mode it is simply added.
                     $text .= '{';
-                    if (!$hasWhitespace && $text !== '{{') {
-                        // Most likely, a nested object accessor syntax e.g. {foo.{bar}} - enter protected context since
-                        // these accessors do not allow anything other than additional nested accessors.
-                        $this->splitter->switch($this->contexts->accessor);
+                    $node = $node ?? new ObjectAccessorNode();
+                    if ($countedEscapes > 0) {
                         ++$ignoredEndingBraces;
+                        $countedEscapes = 0;
+                        if ($captured !== null) {
+                            $node->addChild(new TextNode((string)$captured));
+                        }
                     } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
                         // Ignore one ending additional curly brace. Subtracted in the BYTE_INLINE_END case below.
                         // The expression in this case looks like {{inline}.....} and we capture the curlies.
                         $potentialAccessor .= $captured;
-                        ++$ignoredEndingBraces;
+                    } elseif (!$allowArray && $hasWhitespace) {
+                        $this->splitter->switch($this->contexts->protected);
                     } elseif ($allowArray || $isArray) {
                         $isArray = true;
                         $captured = $key ?? $captured ?? $potentialAccessor;
@@ -579,8 +590,11 @@ class Sequencer
                             $this->sequenceArrayNode($node);
                         }
                     } else {
+                        if ($captured !== null) {
+                            $node->addChild(new TextNode((string) $captured));
+                        }
                         $childNodeToAdd = $this->sequenceInlineNodes($allowArray);
-                        $node = isset($node) ? $node->addChild($childNodeToAdd) : (new RootNode())->addChild($childNodeToAdd);
+                        $node->addChild($childNodeToAdd);
                     }
                     break;
 
@@ -595,6 +609,7 @@ class Sequencer
                 // Note that backticks do not support escapes (they are a new feature that does not require escaping).
                 case self::BYTE_BACKTICK:
                     if ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
+                        #$node = new RootNode();
                         $node->addChild(new TextNode($text));
                         $node->addChild($this->sequenceQuotedNode()->flatten());
                         $text = '';
@@ -687,6 +702,7 @@ class Sequencer
                         $this->splitter->switch($this->contexts->protected);
                         break;
                     }
+
                     if ($captured === 'namespace') {
                         // Special case: we catch namespace definitions with {namespace xyz=foo} syntax here, although
                         // the proper way with current code is to use {@namespace xyz=foo}. We have this case here since
@@ -711,12 +727,13 @@ class Sequencer
                     $hasPass = true;
                     $isArray = $allowArray;
                     $callDetected = false;
-                    $potentialAccessor = $potentialAccessor ?? $captured;
+
                     $text .=  $this->source->source[$this->splitter->index - 1];
-                    if (isset($potentialAccessor)) {
-                        $childNodeToAdd = new ObjectAccessorNode((string) $potentialAccessor);
-                        $node = isset($node) ? $node->addChild($childNodeToAdd) : $childNodeToAdd; //$node ?? (is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode($potentialAccessor));
+                    $node = $node ?? new ObjectAccessorNode();
+                    if ($potentialAccessor ?? $captured) {
+                        $node->addChild(new TextNode($potentialAccessor . $captured));
                     }
+
                     $potentialAccessor = $namespace = $method = $key = null;
                     break;
 
@@ -742,12 +759,11 @@ class Sequencer
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
-                    #$this->splitter->switch($this->contexts->array);
+
                     $this->sequenceArrayNode($arguments);
                     $arguments->validate()->setRenderingContext($this->renderingContext);
                     $node = $node->onOpen($this->renderingContext);
 
-                    #$this->splitter->switch($this->contexts->inline);
                     if ($childNodeToAdd) {
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
                             $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
@@ -761,11 +777,22 @@ class Sequencer
 
                 case self::BYTE_INLINE_END:
                     $text .= '}';
+
                     if (--$ignoredEndingBraces >= 0) {
+                        if ($captured !== null) {
+                            $node->addChild(new TextNode('{' . $captured . '}'));
+                        }
                         break;
                     }
+
+                    if ($text === '{}') {
+                        // Edge case handling of empty JS objects
+                        return new TextNode('{}');
+                    }
+
                     $isArray = $allowArray && ($isArray ?: ($hasColon && !$hasPass && !$callDetected));
-                    $potentialAccessor = $potentialAccessor ?? $captured;
+                    $potentialAccessor .= $captured;
+                    $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
 
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
@@ -775,24 +802,19 @@ class Sequencer
                             $array[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                         }
                         $this->splitter->switch($restore);
-                        return new ArrayNode($array);
+                        return $array;
                     } elseif ($callDetected) {
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
                         // in which case there is no further syntax to come.
                         $arguments->validate();
                         $node = $node->onOpen($this->renderingContext)->onClose($this->renderingContext);
                         $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
-                    } elseif ($this->splitter->context->context === Context::CONTEXT_ACCESSOR) {
-                        // If we are currently in "accessor" context we can now add the accessor by stripping the collected text.
-                        $node = new ObjectAccessorNode(substr($text, 1, -1));
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED || ($hasWhitespace && !$callDetected && !$hasPass)) {
                         // In order to qualify for potentially being an expression, the entire inline node must contain
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
                         // inline pass operand. This significantly limits the number of times this (expensive) routine
                         // has to be executed.
                         $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
-                        $childNodeToAdd = new TextNode($text);
                         $parts[] = $captured;
                         try {
                             foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
@@ -810,24 +832,11 @@ class Sequencer
                                 $this->renderingContext->getErrorHandler()->handleExpressionError($exception)
                             );
                         }
-                        if (isset($node)) {
-                            $this->callInterceptor($childNodeToAdd, $interceptionPoint);
-                            $node = $node->addChild($childNodeToAdd);
-                        } else {
-                            $node = $childNodeToAdd;
-                        }
+                        $node = $childNodeToAdd ?? ($node ?? new RootNode())->addChild(new TextNode($text));
                     } elseif (!$hasPass && !$callDetected) {
-                        // Third priority check is if there was no pass syntax and no ViewHelper, in which case we
-                        // create a standard ObjectAccessorNode; alternatively, if nothing was captured (expression
-                        // was empty, e.g. {} was used) we create a TextNode with the captured text to output "{}".
-                        if (isset($potentialAccessor)) {
-                            // If the accessor is set we can trust it is not a numeric value, since this will have
-                            // set $isArray to TRUE if nothing else already did so.
-                            $node = is_numeric($potentialAccessor) ? $potentialAccessor + 0 : new ObjectAccessorNode((string) $potentialAccessor);
-                            $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
-                        } else {
-                            $node = new TextNode($text);
-                            $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
+                        $node = $node ?? new ObjectAccessorNode();
+                        if ($potentialAccessor !== '') {
+                            $node->addChild(new TextNode((string) $potentialAccessor));
                         }
                     } elseif ($hasPass && $this->resolver->isAliasRegistered((string) $potentialAccessor)) {
                         // Fourth priority check is for a pass to a ViewHelper alias, e.g. "{value | raw}" in which case

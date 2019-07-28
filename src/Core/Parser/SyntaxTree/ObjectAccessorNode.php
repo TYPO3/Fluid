@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -16,20 +15,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class ObjectAccessorNode extends AbstractComponent
 {
-
-    /**
-     * Object path which will be called. Is a list like "post.name.email"
-     *
-     * @var string
-     */
-    protected $objectPath;
-
-    /**
-     * Accessor names, one per segment in the object path. Use constants from VariableExtractor
-     *
-     * @var array
-     */
-    protected $accessors = [];
+    protected $escapeChildren = false;
 
     /**
      * Constructor. Takes an object path or null as input;
@@ -40,40 +26,13 @@ class ObjectAccessorNode extends AbstractComponent
      * The first part of the object path has to be a variable in the
      * VariableProvider.
      *
-     * @param string|null $objectPath An Object Path, like object1.object2.object3. If NULL, child nodes will be evaluated to generate a property path
-     *                                UNLESS the only child of the node is a ViewHelper, in which case, that ViewHelper is evaluated
-     * @param array $accessors Optional list of accessor strategies; starting from beginning of dotted path. Incomplete allowed.
+     * @param string|null $objectPath An Object Path, like object1.object2.object3. If NULL you must provide child nodes.
      */
-    public function __construct(?string $objectPath, array $accessors = [])
+    public function __construct(?string $objectPath = null)
     {
-        $this->objectPath = $objectPath;
-        $this->accessors = $accessors;
-    }
-
-    /**
-     * @param string|null $objectPath
-     */
-    public function setObjectPath(?string $objectPath): void
-    {
-        $this->objectPath = $objectPath;
-    }
-
-    /**
-     * Internally used for building up cached templates; do not use directly!
-     *
-     * @return string|null
-     */
-    public function getObjectPath(): string
-    {
-        return $this->objectPath;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAccessors(): iterable
-    {
-        return $this->accessors;
+        if ($objectPath !== null) {
+            $this->addChild(new TextNode($objectPath));
+        }
     }
 
     public function flatten(bool $extractNode = false)
@@ -83,16 +42,11 @@ class ObjectAccessorNode extends AbstractComponent
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $children = $this->getChildren();
-        $numberOfChildNodes = count($children);
-        if ($this->objectPath !== null && $numberOfChildNodes > 0) {
-            throw new Exception('An ObjectAccessor can use either a string variable path or child nodes - but not both', 1559241805);
-        }
-        $objectPath = strtolower($this->objectPath ?? $this->evaluateChildren($renderingContext));
+        $objectPath = (string) $this->evaluateChildren($renderingContext);
         $variableProvider = $renderingContext->getVariableProvider();
         if ($objectPath === '_all') {
             return $variableProvider->getAll();
         }
-        return $variableProvider->getByPath($this->objectPath, $this->accessors);
+        return $variableProvider->getByPath($objectPath);
     }
 }

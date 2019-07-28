@@ -123,7 +123,7 @@ class StandardVariableProvider implements VariableProviderInterface
     public function getByPath(string $path, array $accessors = [])
     {
         $subject = $this->variables;
-        foreach (explode('.', $this->resolveSubVariableReferences($path)) as $index => $pathSegment) {
+        foreach (explode('.', $path) as $index => $pathSegment) {
             $accessor = isset($accessors[$index]) ? $accessors[$index] : null;
             $subject = $this->extractSingleValue($subject, $pathSegment, $accessor);
             if ($subject === null) {
@@ -189,22 +189,6 @@ class StandardVariableProvider implements VariableProviderInterface
             $subject = $this->extractSingleValue($subject, $pathSegment);
         }
         return $accessors;
-    }
-
-    /**
-     * @param string $propertyPath
-     * @return string
-     */
-    protected function resolveSubVariableReferences(string $propertyPath): string
-    {
-        if (strpos($propertyPath, '{') !== false) {
-            preg_match_all('/(\{.*\})/', $propertyPath, $matches);
-            foreach ($matches[1] as $match) {
-                $subPropertyPath = substr($match, 1, -1);
-                $propertyPath = str_replace($match, $this->getByPath($subPropertyPath), $propertyPath);
-            }
-        }
-        return $propertyPath;
     }
 
     /**
