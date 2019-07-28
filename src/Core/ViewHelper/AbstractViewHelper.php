@@ -188,6 +188,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      */
     protected function hasArgument(string $argumentName): bool
     {
-        return $this->getArguments()->offsetExists($argumentName);
+        return $this->getArguments()->getRaw($argumentName) !== null;
     }
 }
