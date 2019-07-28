@@ -1036,15 +1036,6 @@ class SequencerTest extends UnitTestCase
 
     /**
      * @test
-     */
-    public function tempTestBacktick() {
-        $data = $this->getSequenceExpectations()['likely JS syntax not detected as Fluid in root context'];
-        list ($template, $context, $escapingEnabled, $expectedRootNode) = $data;
-        $this->performSequencerAssertions($template, $context, $escapingEnabled, $expectedRootNode);
-    }
-
-    /**
-     * @test
      * @dataProvider getBooleanNodeTestValues
      * @param string $template
      * @param RenderingContextInterface $context
@@ -1561,7 +1552,6 @@ class SequencerTest extends UnitTestCase
         $parser = new TemplateParser();
         $configuration = new Configuration();
         $configuration->setFeatureState(Configuration::FEATURE_ESCAPING, $escapingEnabled);
-        $configuration->addEscapingInterceptor(new Escape());
         $parser->setRenderingContext($context);
         $context->setTemplateParser($parser);
         $node = $parser->parse($template, $configuration);

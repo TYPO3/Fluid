@@ -18,20 +18,6 @@ class Configuration
     public const FEATURE_RUNTIME_CACHE = 'runtimeCache';
 
     /**
-     * Generic interceptors registered with the configuration.
-     *
-     * @var array
-     */
-    protected $interceptors = [];
-
-    /**
-     * Escaping interceptors registered with the configuration.
-     *
-     * @var array
-     */
-    protected $escapingInterceptors = [];
-
-    /**
      * @var array
      */
     protected $features = [
@@ -59,67 +45,5 @@ class Configuration
     public function isFeatureEnabled(string $feature): bool
     {
         return $this->features[$feature];
-    }
-
-    /**
-     * Adds an interceptor to apply to values coming from object accessors.
-     *
-     * @param InterceptorInterface $interceptor
-     * @return void
-     */
-    public function addInterceptor(InterceptorInterface $interceptor): void
-    {
-        $this->addInterceptorToArray($interceptor, $this->interceptors);
-    }
-
-    /**
-     * Adds an escaping interceptor to apply to values coming from object accessors if escaping is enabled
-     *
-     * @param InterceptorInterface $interceptor
-     * @return void
-     */
-    public function addEscapingInterceptor(InterceptorInterface $interceptor): void
-    {
-        $this->addInterceptorToArray($interceptor, $this->escapingInterceptors);
-    }
-
-    /**
-     * Adds an interceptor to apply to values coming from object accessors.
-     *
-     * @param InterceptorInterface $interceptor
-     * @param \SplObjectStorage[] $interceptorArray
-     * @return void
-     */
-    protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray): void
-    {
-        foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
-            if (!isset($interceptorArray[$interceptionPoint])) {
-                $interceptorArray[$interceptionPoint] = [];
-            }
-            $interceptorClass = get_class($interceptor);
-            $interceptorArray[$interceptionPoint][$interceptorClass] = $interceptor;
-        }
-    }
-
-    /**
-     * Returns all interceptors for a given Interception Point.
-     *
-     * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
-     * @return array
-     */
-    public function getInterceptors(int $interceptionPoint): array
-    {
-        return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : [];
-    }
-
-    /**
-     * Returns all escaping interceptors for a given Interception Point.
-     *
-     * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
-     * @return array
-     */
-    public function getEscapingInterceptors(int $interceptionPoint): array
-    {
-        return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : [];
     }
 }

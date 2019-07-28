@@ -9,9 +9,10 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
+use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -58,19 +59,28 @@ class Sequencer
     public const BYTE_SEPARATOR_EQUALS = 61; // The "=" character
     public const BYTE_SEPARATOR_COLON = 58; // The ":" character
     public const BYTE_SEPARATOR_COMMA = 44; // The "," character
-    public const BYTE_SEPARATOR_PIPE = 124; // The "|" character
     public const BYTE_PARENTHESIS_START = 40; // The "(" character
     public const BYTE_PARENTHESIS_END = 41; // The ")" character
     public const BYTE_ARRAY_START = 91; // The "[" character
     public const BYTE_ARRAY_END = 93; // The "]" character
-    public const BYTE_SLASH = 47; // The "/" character
     public const BYTE_BACKSLASH = 92; // The "\" character
     public const BYTE_BACKTICK = 96; // The "`" character
-    public const BYTE_EXCLAMATION = 33; // The "!" character
-    public const BYTE_AMPERSAND = 38; // The "&" character
     public const BYTE_AT = 64; // The "@" character
     public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
-    public const MASK_WHITESPACE = 0 | self::MASK_LINEBREAKS | (1 << self::BYTE_WHITESPACE_SPACE) | (1 << self::BYTE_WHITESPACE_TAB);
+    
+    private const INTERCEPT_OPENING_VIEWHELPER = 1;
+    private const INTERCEPT_CLOSING_VIEWHELPER = 2;
+    private const INTERCEPT_OBJECTACCESSOR = 4;
+    private const INTERCEPT_EXPRESSION = 5;
+    private const INTERCEPT_SELFCLOSING_VIEWHELPER = 6;
+    
+    /**
+     * A counter of ViewHelperNodes which currently disable the interceptor.
+     * Needed to enable the interceptor again.
+     *
+     * @var int
+     */
+    protected $viewHelperNodesWhichDisableTheInterceptor = 0;
 
     /**
      * @var RenderingContextInterface
@@ -434,16 +444,16 @@ class Sequencer
                         // The node is neither a closing or self-closing node (= an opening node expecting tag content).
                         // Add it to the stack and return null to return the Sequencer to "root" context and continue
                         // sequencing the tag's body - parsed nodes then get attached to this node as children.
-                        $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
+                        $viewHelperNode = $this->callInterceptor($viewHelperNode, self::INTERCEPT_OPENING_VIEWHELPER);
                         $this->nodeStack[] = $viewHelperNode;
                         return null;
                     }
 
                     $viewHelperNode = $viewHelperNode->onClose($this->renderingContext);
 
-                    $this->callInterceptor(
+                    $viewHelperNode = $this->callInterceptor(
                         $viewHelperNode,
-                        $selfClosing ? InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER : InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
+                        $selfClosing ? self::INTERCEPT_SELFCLOSING_VIEWHELPER : self::INTERCEPT_CLOSING_VIEWHELPER
                     );
 
                     return $viewHelperNode;
@@ -755,7 +765,7 @@ class Sequencer
                     try {
                         $node = $this->resolver->createViewHelperInstance($namespace, $method);
                         $arguments = $node->getArguments();
-                        $this->callInterceptor($node, Escape::INTERCEPT_OPENING_VIEWHELPER);
+                        $node = $this->callInterceptor($node, self::INTERCEPT_OPENING_VIEWHELPER);
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
                     }
@@ -766,7 +776,7 @@ class Sequencer
 
                     if ($childNodeToAdd) {
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
-                            $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
+                            $childNodeToAdd = $this->callInterceptor($childNodeToAdd, self::INTERCEPT_OBJECTACCESSOR);
                         }
                         $node->addChild($childNodeToAdd);
                     }
@@ -792,7 +802,7 @@ class Sequencer
 
                     $isArray = $allowArray && ($isArray ?: ($hasColon && !$hasPass && !$callDetected));
                     $potentialAccessor .= $captured;
-                    $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
+                    $interceptionPoint = self::INTERCEPT_OBJECTACCESSOR;
 
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
@@ -808,19 +818,18 @@ class Sequencer
                         // in which case there is no further syntax to come.
                         $arguments->validate();
                         $node = $node->onOpen($this->renderingContext)->onClose($this->renderingContext);
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
+                        $interceptionPoint = self::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED || ($hasWhitespace && !$callDetected && !$hasPass)) {
                         // In order to qualify for potentially being an expression, the entire inline node must contain
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
                         // inline pass operand. This significantly limits the number of times this (expensive) routine
                         // has to be executed.
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_TEXT;
                         $parts[] = $captured;
                         try {
                             foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                                 if ($expressionNodeTypeClassName::matches($parts)) {
-                                    $interceptionPoint = InterceptorInterface::INTERCEPT_EXPRESSION;
                                     $childNodeToAdd = new $expressionNodeTypeClassName($parts);
+                                    $childNodeToAdd = $this->callInterceptor($childNodeToAdd, self::INTERCEPT_EXPRESSION);
                                     break;
                                 }
                             }
@@ -833,6 +842,7 @@ class Sequencer
                             );
                         }
                         $node = $childNodeToAdd ?? ($node ?? new RootNode())->addChild(new TextNode($text));
+                        return $node;
                     } elseif (!$hasPass && !$callDetected) {
                         $node = $node ?? new ObjectAccessorNode();
                         if ($potentialAccessor !== '') {
@@ -849,7 +859,7 @@ class Sequencer
                         $node->onClose(
                             $this->renderingContext
                         );
-                        $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
+                        $interceptionPoint = self::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } else {
                         # TODO: should this be an error case, or should it result in a TextNode?
                         throw $this->createErrorAtPosition(
@@ -862,7 +872,7 @@ class Sequencer
                         );
                     }
 
-                    $this->callInterceptor($node, $interceptionPoint);
+                    $node = $this->callInterceptor($node, $interceptionPoint);
                     $this->splitter->switch($restore);
                     return $node;
             }
@@ -1140,7 +1150,6 @@ class Sequencer
                     // expression as next sibling and continue the loop.
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
-                        $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChild($childNode);
                     }
 
@@ -1168,14 +1177,12 @@ class Sequencer
                 case self::BYTE_BACKTICK:
                     if ($symbol !== $startingByte || $countedEscapes !== $leadingEscapes) {
                         $childNode = new TextNode($captured . chr($symbol));
-                        $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChild($childNode);
                         $countedEscapes = 0; // If number of escapes do not match expected, reset the counter
                         break;
                     }
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
-                        $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChild($childNode);
                     }
                     $this->splitter->switch($contextToRestore);
@@ -1207,22 +1214,34 @@ class Sequencer
      * Call all interceptors registered for a given interception point.
      *
      * @param ComponentInterface $node The syntax tree node which can be modified by the interceptors.
-     * @param integer $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
-     * @return void
+     * @param integer $interceptorPosition the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\self::INTERCEPT_* constants.
+     * @return ComponentInterface
      */
-    protected function callInterceptor(ComponentInterface &$node, $interceptionPoint)
+    protected function callInterceptor(ComponentInterface $node, int $interceptorPosition): ComponentInterface
     {
-        if ($this->escapingEnabled) {
-            /** @var $interceptor InterceptorInterface */
-            foreach ($this->configuration->getEscapingInterceptors($interceptionPoint) as $interceptor) {
-                $node = $interceptor->process($node, $interceptionPoint);
+        if (!$this->escapingEnabled) {
+            return $node;
+        }
+        if ($interceptorPosition === self::INTERCEPT_OPENING_VIEWHELPER) {
+            if (!$node->isChildrenEscapingEnabled()) {
+                ++$this->viewHelperNodesWhichDisableTheInterceptor;
             }
-        }
+        } elseif ($interceptorPosition === self::INTERCEPT_CLOSING_VIEWHELPER) {
+            if (!$node->isChildrenEscapingEnabled()) {
+                --$this->viewHelperNodesWhichDisableTheInterceptor;
+            }
 
-        /** @var $interceptor InterceptorInterface */
-        foreach ($this->configuration->getInterceptors($interceptionPoint) as $interceptor) {
-            $node = $interceptor->process($node, $interceptionPoint);
+            if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
+                $node = new EscapingNode($node);
+            }
+        } elseif ($interceptorPosition === self::INTERCEPT_SELFCLOSING_VIEWHELPER) {
+            if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
+                $node = new EscapingNode($node);
+            }
+        } elseif ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && ($node instanceof ExpressionComponentInterface || $node instanceof ObjectAccessorNode)) {
+            $node = new EscapingNode($node);
         }
+        return $node;
     }
 
     /**

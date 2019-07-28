@@ -8,8 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
-use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
-use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -56,29 +54,5 @@ class ConfigurationTest extends UnitTestCase
                 Configuration::FEATURE_PARSING, true, true,
             ],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function testAddInterceptor(): void
-    {
-        $interceptor = new Escape();
-        $configuration = new Configuration();
-        $configuration->addInterceptor($interceptor);
-        $interceptors = $configuration->getInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-        $this->assertContains($interceptor, $interceptors);
-    }
-
-    /**
-     * @test
-     */
-    public function testAddEscapingInterceptor(): void
-    {
-        $interceptor = new Escape();
-        $configuration = new Configuration();
-        $configuration->addEscapingInterceptor($interceptor);
-        $interceptors = $configuration->getEscapingInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-        $this->assertContains($interceptor, $interceptors);
     }
 }

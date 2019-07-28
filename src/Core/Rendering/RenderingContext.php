@@ -260,8 +260,6 @@ class RenderingContext implements RenderingContextInterface
     {
         if (!isset($this->parserConfiguration)) {
             $this->parserConfiguration = new Configuration();
-            $escapeInterceptor = new Escape();
-            $this->parserConfiguration->addEscapingInterceptor($escapeInterceptor);
         }
         return $this->parserConfiguration;
     }
