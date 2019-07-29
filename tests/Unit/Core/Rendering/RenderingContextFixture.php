@@ -7,12 +7,13 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use PHPUnit\Framework\MockObject\Generator;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -57,6 +58,11 @@ class RenderingContextFixture implements RenderingContextInterface
     public $templatePaths;
 
     /**
+     * @var FluidRenderer
+     */
+    public $renderer;
+
+    /**
      * @var array
      */
     public $expressionNodeTypes = [
@@ -76,21 +82,19 @@ class RenderingContextFixture implements RenderingContextInterface
     public $controllerAction = 'Default';
 
     /**
-     * Constructor
+     * @return FluidRenderer
      */
-    public function __construct()
+    public function getRenderer(): FluidRenderer
     {
-        $mockBuilder = new Generator();
-        $this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
-        $this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, ['dummy']);
-        $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
-        $this->templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
-        $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
+        return $this->renderer ?? ($this->renderer = new FluidRenderer($this));
     }
 
-    public function initialize()
+    /**
+     * @param FluidRenderer $renderer
+     */
+    public function setRenderer(FluidRenderer $renderer): void
     {
-
+        $this->renderer = $renderer;
     }
 
     /**
@@ -136,7 +140,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getVariableProvider(): VariableProviderInterface
     {
-        return $this->variableProvider;
+        return $this->variableProvider ?? ($this->variableProvider = new StandardVariableProvider());
     }
 
     /**
@@ -146,7 +150,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getViewHelperVariableContainer(): ViewHelperVariableContainer
     {
-        return $this->viewHelperVariableContainer;
+        return $this->viewHelperVariableContainer ?? ($this->viewHelperVariableContainer = new ViewHelperVariableContainer());
     }
 
     /**
@@ -154,7 +158,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getViewHelperResolver(): ViewHelperResolver
     {
-        return $this->viewHelperResolver;
+        return $this->viewHelperResolver ?? ($this->viewHelperResolver = new ViewHelperResolver());
     }
 
     /**
@@ -175,7 +179,6 @@ class RenderingContextFixture implements RenderingContextInterface
     public function setTemplateParser(TemplateParser $templateParser): void
     {
         $this->templateParser = $templateParser;
-        $this->templateParser->setRenderingContext($this);
     }
 
     /**
@@ -183,7 +186,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getTemplateParser(): TemplateParser
     {
-        return $this->templateParser;
+        return $this->templateParser ?? ($this->templateParser = new TemplateParser($this));
     }
 
     /**
@@ -191,7 +194,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getTemplatePaths(): TemplatePaths
     {
-        return $this->templatePaths;
+        return $this->templatePaths ?? ($this->templatePaths = new TemplatePaths());
     }
 
     /**

@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for ParsingState
@@ -40,8 +39,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testGetter(string $property, $value): void
     {
-        $view = new TemplateView();
-        $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy'], [$view]);
+        $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy']);
         $subject->_set($property, $value);
         $getter = 'get' . ucfirst($property);
         $this->assertSame($value, $subject->$getter());
@@ -54,8 +52,7 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testSetter(string $property, $value): void
     {
-        $view = new TemplateView();
-        $subject = new RenderingContext($view);
+        $subject = new RenderingContext();
         $setter = 'set' . ucfirst($property);
         $subject->$setter($value);
         $this->assertAttributeSame($value, $property, $subject);
@@ -69,11 +66,9 @@ class RenderingContextTest extends UnitTestCase
         return [
             ['variableProvider', new StandardVariableProvider(['foo' => 'bar'])],
             ['viewHelperResolver', $this->getMock(ViewHelperResolver::class)],
-            ['controllerName', 'foobar-controllerName'],
-            ['controllerAction', 'foobar-controllerAction'],
             ['expressionNodeTypes', ['Foo', 'Bar']],
             ['templatePaths', $this->getMock(TemplatePaths::class)],
-            ['templateParser', $this->getMock(TemplateParser::class)],
+            ['templateParser', $this->getMockBuilder(TemplateParser::class)->disableOriginalConstructor()->getMock()],
         ];
     }
 

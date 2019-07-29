@@ -7,9 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
+use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for RenderViewHelper
@@ -19,16 +18,14 @@ class RenderViewHelperTest extends ViewHelperBaseTestCase
     public function getStandardTestValues(): array
     {
         $context = new RenderingContextFixture();
-        $view = $this->getMockBuilder(TemplateView::class)->setMethods(['renderPartial', 'renderSection'])->getMock();
-        $view->expects($this->any())->method('renderSection')->willReturn('sectionRendered');
-        $view->expects($this->any())->method('renderPartial')->withConsecutive(
+        $renderer = $this->getMockBuilder(FluidRenderer::class)->setMethods(['renderPartial', 'renderSection'])->setConstructorArgs([$context])->getMock();
+        $renderer->expects($this->any())->method('renderSection')->willReturn('sectionRendered');
+        $renderer->expects($this->any())->method('renderPartial')->withConsecutive(
             ['partial', null, [], false],
             ['partial', 'section', [], false],
             ['partial', 'section', ['foo' => 'bar'], false]
         )->willReturnOnConsecutiveCalls('partialRendered', 'sectionRendered', 'renderedWithArguments');
-        $viewHelperVariableContainer = new ViewHelperVariableContainer();
-        $viewHelperVariableContainer->setView($view);
-        $context->setViewHelperVariableContainer($viewHelperVariableContainer);
+        $context->setRenderer($renderer);
         return [
             'renders section' => ['sectionRendered', $context, ['section' => 'section']],
             'renders partial' => ['partialRendered', $context, ['partial' => 'partial']],

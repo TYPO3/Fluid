@@ -9,6 +9,8 @@ namespace TYPO3Fluid\Fluid\View;
 
 /**
  * The main template view. Should be used as view if you want Fluid Templating
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 class TemplateView extends AbstractTemplateView
 {

@@ -9,6 +9,8 @@ namespace TYPO3Fluid\Fluid\View;
 
 /**
  * Interface of a view
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 interface ViewInterface
 {

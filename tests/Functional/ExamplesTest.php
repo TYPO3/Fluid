@@ -115,15 +115,6 @@ class ExamplesTest extends BaseTestCase
                     'Overridden contents of SecondPartial.html',
                 ]
             ],
-            'example_mvc.php' => [
-                'example_mvc.php',
-                [
-                    'I am the template belonging to the "Default" controller, action "Default".',
-                    'I am the template belonging to the "Other" controller, action "Default".',
-                    'I am the template belonging to the "Other" controller, action "List".',
-                    'Value of "foobar": MVC template.'
-                ]
-            ],
             'example_namespaces.php' => [
                 'example_namespaces.php',
                 [

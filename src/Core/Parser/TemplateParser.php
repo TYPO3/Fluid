@@ -25,15 +25,10 @@ class TemplateParser
      */
     protected $renderingContext;
 
-    /**
-     * @param RenderingContextInterface $renderingContext
-     * @return self
-     */
-    public function setRenderingContext(RenderingContextInterface $renderingContext): TemplateParser
+    public function __construct(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
         $this->configuration = $renderingContext->getParserConfiguration();
-        return $this;
     }
 
     /**

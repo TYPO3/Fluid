@@ -55,10 +55,7 @@ class SequencerTest extends UnitTestCase
     public function failsWithExpectedSequencingException(string $template, RenderingContextInterface $context, int $expectedExceptionCode)
     {
         $this->setExpectedException(Exception::class, '', $expectedExceptionCode);
-        $parser = new TemplateParser();
-        $context->setTemplateParser($parser);
-        $parser->setRenderingContext($context);
-        $parser->parse($template);
+        $context->getTemplateParser()->parse($template);
     }
 
     public function getErrorExpectations(): array
@@ -1494,9 +1491,8 @@ class SequencerTest extends UnitTestCase
         $viewHelperResolver->addViewHelperAlias('raw', 'f', 'format.raw');
         $parserConfiguration = new Configuration();
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMock();
-        $templateParser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getConfiguration'])->getMock();
+        $templateParser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getConfiguration'])->setConstructorArgs([$context])->getMock();
         $templateParser->expects($this->any())->method('getConfiguration')->willReturn($parserConfiguration);
-        $templateParser->setRenderingContext($context);
         $context->setViewHelperResolver($viewHelperResolver);
         $context->expects($this->any())->method('getParserConfiguration')->willReturn($parserConfiguration);
         $context->expects($this->any())->method('getTemplateParser')->willReturn($templateParser);
@@ -1549,11 +1545,9 @@ class SequencerTest extends UnitTestCase
         bool $escapingEnabled,
         ComponentInterface $expectedRootNode
     ) {
-        $parser = new TemplateParser();
         $configuration = new Configuration();
         $configuration->setFeatureState(Configuration::FEATURE_ESCAPING, $escapingEnabled);
-        $parser->setRenderingContext($context);
-        $context->setTemplateParser($parser);
+        $parser = $context->getTemplateParser();
         $node = $parser->parse($template, $configuration);
         $this->assertNodeEquals($node, $expectedRootNode);
     }

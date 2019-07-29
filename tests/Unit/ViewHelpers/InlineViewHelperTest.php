@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 
@@ -19,7 +18,6 @@ class InlineViewHelperTest extends ViewHelperBaseTestCase
     public function getStandardTestValues(): array
     {
         $context = new RenderingContextFixture();
-        $context->setTemplateParser(new TemplateParser());
         $context->setVariableProvider(new StandardVariableProvider(['variable' => 'rendered']));
         return [
             'executes sub-fluid code' => ['rendered', $context, ['code' => '{variable}']],

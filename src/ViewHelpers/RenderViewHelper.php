@@ -110,12 +110,12 @@ class RenderViewHelper extends AbstractViewHelper
             $variables[$arguments['contentAs']] = $tagContent;
         }
 
-        $view = $renderingContext->getViewHelperVariableContainer()->getView();
+        $renderer = $renderingContext->getRenderer();
         $content = '';
         if ($partial !== null) {
-            $content = $view->renderPartial($partial, $section, $variables, $optional);
+            $content = $renderer->renderPartial($partial, $section, $variables, $optional);
         } elseif ($section !== null) {
-            $content = $view->renderSection($section, $variables, $optional);
+            $content = $renderer->renderSection($section, $variables, $optional);
         } elseif (!$optional) {
             throw new \InvalidArgumentException('ViewHelper f:render called without either argument section, partial, renderable or delegate and optional flag is false');
         }

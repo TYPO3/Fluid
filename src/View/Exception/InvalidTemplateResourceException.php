@@ -11,6 +11,8 @@ use TYPO3Fluid\Fluid\View\Exception;
 
 /**
  * An "Invalid Template Resource" exception
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 class InvalidTemplateResourceException extends Exception
 {

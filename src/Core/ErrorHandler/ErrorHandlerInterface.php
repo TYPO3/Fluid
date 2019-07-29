@@ -48,6 +48,7 @@ interface ErrorHandlerInterface
     /**
      * @param ViewException $error
      * @return string
+     * @deprecated Will be removed in Fluid 4.0
      */
     public function handleViewError(ViewException $error): string;
 

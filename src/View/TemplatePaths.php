@@ -36,6 +36,26 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  * Either method can also be called after instance
  * is created, but both will overwrite any paths
  * you have previously configured.
+ *
+ * DEPRECATION INFORMATION
+ * -----------------------
+ *
+ * This class and the entire "View" scope with it are deprecated in
+ * Fluid 3.0 and will be removed in version 4.0. The new approach
+ * to template file usage in Fluid is condensed into a single
+ * replacement feature: Atoms.
+ *
+ * Atoms serve the same purposes as Templates, Partials and Layouts
+ * did in earlier versions (and have a compatibility layer that
+ * will exist throughout the 3.x lifetime) but provide a unified
+ * collection that's also associated with a proper namespace and
+ * allows the Atoms to work in the same way a ViewHelper works;
+ * by supporting arguments, descriptions, examples and so on but
+ * not being based on any specific PHP class. In essence a template
+ * file becomes a pseudo ViewHelper that renders what's contained
+ * in the template file instead of calling a PHP method.
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 class TemplatePaths
 {
@@ -134,12 +154,12 @@ class TemplatePaths
     }
 
     /**
-     * @param string $templatePathAndFilename
+     * @param string|null $templatePathAndFilename
      * @return void
      */
     public function setTemplatePathAndFilename($templatePathAndFilename)
     {
-        $this->templatePathAndFilename = (string) $this->sanitizePath($templatePathAndFilename);
+        $this->templatePathAndFilename = $templatePathAndFilename === null ? null : (string) $this->sanitizePath($templatePathAndFilename);
     }
 
     /**
@@ -592,9 +612,6 @@ class TemplatePaths
             return $this->templateSource = stream_get_contents($this->templateSource);
         }
         $templateReference = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action);
-        if (!$templateReference) {
-
-        }
         if (!$templateReference || ($templateReference !== 'php://stdin' && !file_exists($templateReference))) {
             $format = $this->getFormat();
             throw new InvalidTemplateResourceException(

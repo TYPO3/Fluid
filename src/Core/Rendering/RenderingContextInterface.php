@@ -84,12 +84,14 @@ interface RenderingContextInterface
 
     /**
      * @return TemplatePaths
+     * @deprecated Will be removed in Fluid 4.0
      */
     public function getTemplatePaths(): TemplatePaths;
 
     /**
      * @param TemplatePaths $templatePaths
      * @return void
+     * @deprecated Will be removed in Fluid 4.0
      */
     public function setTemplatePaths(TemplatePaths $templatePaths): void;
 
@@ -111,25 +113,7 @@ interface RenderingContextInterface
      */
     public function getParserConfiguration(): Configuration;
 
-    /**
-     * @return string
-     */
-    public function getControllerName();
+    public function getRenderer(): FluidRenderer;
 
-    /**
-     * @param string $controllerName
-     * @return void
-     */
-    public function setControllerName($controllerName);
-
-    /**
-     * @return string
-     */
-    public function getControllerAction();
-
-    /**
-     * @param string $action
-     * @return void
-     */
-    public function setControllerAction($action);
+    public function setRenderer(FluidRenderer $renderer): void;
 }

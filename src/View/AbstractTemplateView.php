@@ -7,9 +7,7 @@ namespace TYPO3Fluid\Fluid\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
-use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -19,16 +17,11 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  * Abstract Fluid Template View.
  *
  * Contains the fundamental methods which any Fluid based template view needs.
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 abstract class AbstractTemplateView extends AbstractView
 {
-    /**
-     * Constants defining possible rendering types
-     */
-    const RENDERING_TEMPLATE = 1;
-    const RENDERING_PARTIAL = 2;
-    const RENDERING_LAYOUT = 3;
-
     /**
      * The initial rendering context for this template view.
      * Due to the rendering stack, another rendering context might be active
@@ -38,33 +31,18 @@ abstract class AbstractTemplateView extends AbstractView
      */
     protected $baseRenderingContext;
 
-    /**
-     * Stack containing the current rendering type, the current rendering context, and the current parsed template
-     * Do not manipulate directly, instead use the methods"getCurrent*()", "startRendering(...)" and "stopRendering()"
-     *
-     * @var array
-     */
-    protected $renderingStack = [];
-
     public function __construct(RenderingContextInterface $context = null)
     {
         if ($context === null) {
-            $context = new RenderingContext($this);
-            $context->setControllerName('Default');
-            $context->setControllerAction('Default');
+            $context = new RenderingContext();
+            if (is_callable([$context, 'setControllerName'])) {
+                $context->setControllerName('Default');
+            }
+            if (is_callable([$context, 'setControllerAction'])) {
+                $context->setControllerAction('Default');
+            }
         }
         $this->setRenderingContext($context);
-    }
-
-    /**
-     * Initialize the RenderingContext. This method can be overridden in your
-     * View implementation to manipulate the rendering context *before* it is
-     * passed during rendering.
-     */
-    public function initializeRenderingContext(): void
-    {
-        $this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
-        $this->baseRenderingContext->initialize();
     }
 
     public function getTemplatePaths(): TemplatePaths
@@ -85,7 +63,8 @@ abstract class AbstractTemplateView extends AbstractView
     public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->baseRenderingContext = $renderingContext;
-        $this->initializeRenderingContext();
+        $this->baseRenderingContext->getViewHelperVariableContainer()->setView($this);
+        $this->baseRenderingContext->getRenderer()->setRenderingContext($this->baseRenderingContext);
     }
 
     /**
@@ -126,49 +105,25 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function render(?string $actionName = null)
     {
-        $renderingContext = $this->getCurrentRenderingContext();
-        $templateParser = $renderingContext->getTemplateParser();
+        $renderingContext = $this->baseRenderingContext;
         $templatePaths = $renderingContext->getTemplatePaths();
         if ($actionName) {
             $actionName = ucfirst($actionName);
-            $renderingContext->setControllerAction($actionName);
-        }
-        try {
-            $parsedTemplate = $this->getCurrentParsedTemplate();
-            $parsedTemplate->getArguments()->setRenderingContext($renderingContext);
-        } catch (PassthroughSourceException $error) {
-            return $error->getSource();
-        }
-
-        try {
-            $layoutNameNode = $parsedTemplate->getNamedChild('layoutName');
-            $layoutName = $layoutNameNode->getArguments()->setRenderingContext($renderingContext)['name'];
-        } catch (ChildNotFoundException $exception) {
-            $layoutName = null;
-        }
-
-        if ($layoutName) {
-            try {
-                $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
-                    $templatePaths->getLayoutIdentifier($layoutName),
-                    function($parent, TemplatePaths $paths) use ($layoutName): string {
-                        return $paths->getLayoutSource($layoutName);
-                    }
-                );
-                $parsedLayout->getArguments()->setRenderingContext($renderingContext);
-            } catch (PassthroughSourceException $error) {
-                return $error->getSource();
+            if (is_callable([$renderingContext, 'setControllerAction'])) {
+                $renderingContext->setControllerAction($actionName);
             }
-            $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedLayout->evaluate($this->baseRenderingContext);
-            $this->stopRendering();
         } else {
-            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->evaluate($this->baseRenderingContext);
-            $this->stopRendering();
+            $actionName = is_callable([$renderingContext, 'getControllerAction']) ? $renderingContext->getControllerAction() : 'Default';
         }
+        $controllerName = is_callable([$renderingContext, 'getControllerName']) ? $renderingContext->getControllerName() : 'Default';
+        $filePathAndFilename = $templatePaths->resolveTemplateFileForControllerAndActionAndFormat($controllerName, $actionName);
 
-        return $output;
+        if ($filePathAndFilename !== null) {
+            return $renderingContext->getRenderer()->renderFile($filePathAndFilename);
+        }
+        return $renderingContext->getRenderer()->renderSource(
+            $templatePaths->getTemplateSource($controllerName, $actionName)
+        );
     }
 
     /**
@@ -184,44 +139,18 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false)
     {
-
-        if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
-            // in case we render a layout right now, we will render a section inside a TEMPLATE.
-            $renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
-            $renderingContext = $this->getCurrentRenderingContext();
-        } else {
-            $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
-            $renderingContext = clone $this->getCurrentRenderingContext();
-            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
-        }
-
-        try {
-            $parsedTemplate = $this->getCurrentParsedTemplate();
-        } catch (PassthroughSourceException $error) {
-            return $error->getSource();
-        } catch (InvalidTemplateResourceException $error) {
-            if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($error);
-            }
-            return '';
-        } catch (Exception $error) {
-            return $renderingContext->getErrorHandler()->handleViewError($error);
-        }
-
-        try {
-            $section = $parsedTemplate->getNamedChild($sectionName);
-        } catch (ChildNotFoundException $exception) {
-            if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($exception);
-            }
-            return '';
-        }
-
-        $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
-        $output = $section->evaluate($renderingContext);
-        $this->stopRendering();
-
-        return $output;
+        $context = $this->baseRenderingContext;
+        $templatePaths = $context->getTemplatePaths();
+        $templateClosure = function($parent, TemplatePaths $paths): string {
+            return $paths->getTemplateSource('Default', 'Default');
+        };
+        $identifierClosure = function() use ($context, $templatePaths) {
+            return $templatePaths->getTemplateSource($context->getControllerName(), $context->getControllerAction());
+        };
+        return $this->baseRenderingContext->getRenderer()
+            ->setBaseTemplateClosure($templateClosure)
+            ->setBaseIdentifierClosure($identifierClosure)
+            ->renderSection($sectionName, $variables, $ignoreUnknown);
     }
 
     /**
@@ -238,96 +167,6 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function renderPartial(string $partialName, ?string $sectionName, array $variables, bool $ignoreUnknown = false)
     {
-        $templatePaths = $this->baseRenderingContext->getTemplatePaths();
-        $renderingContext = clone $this->getCurrentRenderingContext();
-        try {
-            $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
-                $templatePaths->getPartialIdentifier($partialName),
-                function ($parent, TemplatePaths $paths) use ($partialName): string {
-                    return $paths->getPartialSource($partialName);
-                }
-            );
-            $parsedPartial->getArguments()->setRenderingContext($renderingContext);
-        } catch (PassthroughSourceException $error) {
-            return $error->getSource();
-        } catch (InvalidTemplateResourceException $error) {
-            if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($error);
-            }
-            return '';
-        } catch (ChildNotFoundException $error) {
-            if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($error);
-            }
-            return '';
-        } catch (Exception $error) {
-            return $renderingContext->getErrorHandler()->handleViewError($error);
-        }
-        $this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
-        if ($sectionName !== null) {
-            $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
-        } else {
-            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
-            $output = $parsedPartial->evaluate($renderingContext);
-        }
-        $this->stopRendering();
-        return $output;
-    }
-
-    /**
-     * Start a new nested rendering. Pushes the given information onto the $renderingStack.
-     *
-     * @param integer $type one of the RENDERING_* constants
-     * @param ComponentInterface $template
-     * @param RenderingContextInterface $context
-     * @return void
-     */
-    protected function startRendering(int $type, ComponentInterface $template, RenderingContextInterface $context): void
-    {
-        array_push($this->renderingStack, ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context]);
-    }
-
-    /**
-     * Stops the current rendering. Removes one element from the $renderingStack. Make sure to always call this
-     * method pair-wise with startRendering().
-     *
-     * @return void
-     */
-    protected function stopRendering(): void
-    {
-        array_pop($this->renderingStack);
-    }
-
-    protected function getCurrentRenderingType(): int
-    {
-        $currentRendering = end($this->renderingStack);
-        return $currentRendering['type'] ? $currentRendering['type'] : self::RENDERING_TEMPLATE;
-    }
-
-    protected function getCurrentParsedTemplate(): ComponentInterface
-    {
-        $currentRendering = end($this->renderingStack);
-        $renderingContext = $this->getCurrentRenderingContext();
-        $parsedTemplate = $currentRendering['parsedTemplate'] ?? null;
-        if ($parsedTemplate) {
-            return $parsedTemplate;
-        }
-        $templatePaths = $renderingContext->getTemplatePaths();
-        $templateParser = $renderingContext->getTemplateParser();
-        $controllerName = $renderingContext->getControllerName();
-        $actionName = $renderingContext->getControllerAction();
-        $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
-            $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-            function($parent, TemplatePaths $paths) use ($controllerName, $actionName): string {
-                return $paths->getTemplateSource($controllerName, $actionName);
-            }
-        );
-        return $parsedTemplate;
-    }
-
-    protected function getCurrentRenderingContext(): RenderingContextInterface
-    {
-        $currentRendering = end($this->renderingStack);
-        return $currentRendering['renderingContext'] ? $currentRendering['renderingContext'] : $this->baseRenderingContext;
+        return $this->baseRenderingContext->getRenderer()->renderPartial($partialName, $sectionName, $variables, $ignoreUnknown);
     }
 }

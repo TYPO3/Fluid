@@ -9,6 +9,8 @@ namespace TYPO3Fluid\Fluid\View;
 
 /**
  * An abstract View
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 abstract class AbstractView implements ViewInterface
 {

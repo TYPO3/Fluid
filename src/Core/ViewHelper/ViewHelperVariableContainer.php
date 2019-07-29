@@ -24,6 +24,7 @@ class ViewHelperVariableContainer
 
     /**
      * @var ViewInterface
+     * @deprecated Will be removed in Fluid 4.0
      */
     protected $view;
 
@@ -136,6 +137,7 @@ class ViewHelperVariableContainer
      *
      * @param ViewInterface $view View to set
      * @return void
+     * @deprecated Will be removed in Fluid 4.0
      */
     public function setView(ViewInterface $view): void
     {
@@ -148,6 +150,7 @@ class ViewHelperVariableContainer
      * !!! This is NOT a public API and might still change!!!
      *
      * @return ViewInterface The View
+     * @deprecated Will be removed in Fluid 4.0
      */
     public function getView(): ViewInterface
     {

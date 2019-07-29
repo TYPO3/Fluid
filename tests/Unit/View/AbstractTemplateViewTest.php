@@ -7,8 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\ComponentInterface;
-use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -135,26 +133,4 @@ class AbstractTemplateViewTest extends UnitTestCase
         $this->view->assignMultiple(['foo' => 'FooValueOverridden', 'bar' => 'BarValue']);
     }
 
-    /**
-     * @test
-     */
-    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(): void
-    {
-        $parsedTemplate = $this->getMockBuilder(ComponentInterface::class)->setMethods(['getNamedChild'])->getMockForAbstractClass();
-        $parsedTemplate->expects($this->any())->method('getNamedChild')->willThrowException(new ChildNotFoundException('...'));
-        $view = $this->getMockForAbstractClass(
-            AbstractTemplateView::class,
-            [],
-            '',
-            false,
-            false,
-            true,
-            ['getCurrentParsedTemplate', 'getCurrentRenderingType', 'getCurrentRenderingContext']
-        );
-        $view->expects($this->once())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
-        $view->expects($this->once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
-        $view->expects($this->once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-        $this->setExpectedException(ChildNotFoundException::class);
-        $view->renderSection('Missing');
-    }
 }

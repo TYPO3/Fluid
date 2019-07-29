@@ -10,14 +10,12 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
-use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
-use TYPO3Fluid\Fluid\View\ViewInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
@@ -57,24 +55,14 @@ class RenderingContext implements RenderingContextInterface
     protected $templatePaths;
 
     /**
-     * @var string|null
-     */
-    protected $controllerName;
-
-    /**
-     * @var string|null
-     */
-    protected $controllerAction;
-
-    /**
-     * @var ViewInterface
-     */
-    protected $view;
-
-    /**
      * @var TemplateParser
      */
     protected $templateParser;
+
+    /**
+     * @var FluidRenderer
+     */
+    protected $renderer;
 
     /**
      * @var Configuration
@@ -95,30 +83,19 @@ class RenderingContext implements RenderingContextInterface
     ];
 
     /**
-     * Constructor
-     *
-     * Constructing a RenderingContext should result in an object containing instances
-     * in all properties of the object. Subclassing RenderingContext allows changing the
-     * types of instances that are created.
-     *
-     * Setters are used to fill the object instances. Some setters will call the
-     * setRenderingContext() method (convention name) to provide the instance that is
-     * created with an instance of the "parent" RenderingContext.
+     * @return FluidRenderer
      */
-    public function __construct(ViewInterface $view)
+    public function getRenderer(): FluidRenderer
     {
-        $this->view = $view;
-        $this->initialize();
+        return $this->renderer ?? ($this->renderer = new FluidRenderer($this));
     }
 
-    public function initialize(): void
+    /**
+     * @param FluidRenderer $renderer
+     */
+    public function setRenderer(FluidRenderer $renderer): void
     {
-        $this->setTemplateParser($this->templateParser ?? new TemplateParser());
-        $this->setTemplatePaths($this->templatePaths ?? new TemplatePaths());
-        $this->setViewHelperResolver($this->viewHelperResolver ?? new ViewHelperResolver());
-        $this->setViewHelperVariableContainer($this->viewHelperVariableContainer ?? new ViewHelperVariableContainer());
-        $this->setVariableProvider($this->variableProvider ?? new StandardVariableProvider());
-        $this->setErrorHandler($this->errorHandler ?? new StandardErrorHandler());
+        $this->renderer = $renderer;
     }
 
     /**
@@ -126,7 +103,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getErrorHandler(): ErrorHandlerInterface
     {
-        return $this->errorHandler;
+        return $this->errorHandler ?? ($this->errorHandler = new StandardErrorHandler());
     }
 
     /**
@@ -156,7 +133,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getVariableProvider(): VariableProviderInterface
     {
-        return $this->variableProvider;
+        return $this->variableProvider ?? ($this->variableProvider = new StandardVariableProvider());
     }
 
     /**
@@ -164,7 +141,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getViewHelperResolver(): ViewHelperResolver
     {
-        return $this->viewHelperResolver;
+        return $this->viewHelperResolver ?? ($this->viewHelperResolver = new ViewHelperResolver());
     }
 
     /**
@@ -181,7 +158,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getTemplatePaths(): TemplatePaths
     {
-        return $this->templatePaths;
+        return $this->templatePaths ?? ($this->templatePaths = new TemplatePaths());
     }
 
     /**
@@ -211,7 +188,7 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getViewHelperVariableContainer(): ViewHelperVariableContainer
     {
-        return $this->viewHelperVariableContainer;
+        return $this->viewHelperVariableContainer ?? ($this->viewHelperVariableContainer = new ViewHelperVariableContainer());
     }
 
     /**
@@ -223,7 +200,6 @@ class RenderingContext implements RenderingContextInterface
     public function setTemplateParser(TemplateParser $templateParser): void
     {
         $this->templateParser = $templateParser;
-        $this->templateParser->setRenderingContext($this);
     }
 
     /**
@@ -231,11 +207,11 @@ class RenderingContext implements RenderingContextInterface
      */
     public function getTemplateParser(): TemplateParser
     {
-        return $this->templateParser;
+        return $this->templateParser ?? ($this->templateParser = new TemplateParser($this));
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getExpressionNodeTypes(): array
     {
@@ -262,39 +238,5 @@ class RenderingContext implements RenderingContextInterface
             $this->parserConfiguration = new Configuration();
         }
         return $this->parserConfiguration;
-    }
-
-    /**
-     * @return string
-     */
-    public function getControllerName()
-    {
-        return $this->controllerName ?? 'Default';
-    }
-
-    /**
-     * @param string $controllerName
-     * @return void
-     */
-    public function setControllerName($controllerName)
-    {
-        $this->controllerName = $controllerName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getControllerAction()
-    {
-        return $this->controllerAction ?? 'Default';
-    }
-
-    /**
-     * @param string $action
-     * @return void
-     */
-    public function setControllerAction($action)
-    {
-        $this->controllerAction = $action;
     }
 }

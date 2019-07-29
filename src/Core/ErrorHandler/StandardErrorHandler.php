@@ -60,6 +60,7 @@ class StandardErrorHandler implements ErrorHandlerInterface
      * @param ViewException $error
      * @return void
      * @throws ViewException
+     * @deprecated Will be removed in Fluid 4.0
      */
     public function handleViewError(ViewException $error): string
     {

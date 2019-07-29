@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -36,7 +37,7 @@ class TemplateParserTest extends UnitTestCase
      */
     public function unquoteStringReturnsUnquotedStrings($quoted, $unquoted): void
     {
-        $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
+        $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy'], [new RenderingContextFixture()]);
         $this->assertEquals($unquoted, $templateParser->_call('unquoteString', $quoted));
     }
 }
