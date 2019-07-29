@@ -18,6 +18,16 @@ use TYPO3Fluid\Fluid\Core\Exception;
  * an argument value must be checked and used instead of
  * the normal render children closure, if that named
  * argument is specified and not empty.
+ *
+ * Deprecated - should be avoided in favor of null-coalesce
+ * of arguments and evaluateChildren, e.g.:
+ *
+ *     $content = $arguments['content'] ?? $this->evaluateChildren($renderingContext);
+ *
+ * Which serves the exact same purpose and avoids the
+ * overhead of this trait.
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 trait CompileWithContentArgumentAndRenderStatic
 {
@@ -27,7 +37,6 @@ trait CompileWithContentArgumentAndRenderStatic
     protected function resolveContentArgumentName(): string
     {
         if (empty($this->contentArgumentName)) {
-            #$registeredArguments = call_user_func_array([$this, 'getArguments'], []);
             $registeredArguments = $this->getArguments()->getDefinitions();
             foreach ($registeredArguments as $registeredArgument) {
                 if (!$registeredArgument->isRequired()) {
