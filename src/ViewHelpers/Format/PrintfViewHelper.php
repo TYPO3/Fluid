@@ -44,8 +44,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * <output>
  * We love TYPO3
  * </output>
- *
- * @api
  */
 class PrintfViewHelper extends AbstractViewHelper
 {

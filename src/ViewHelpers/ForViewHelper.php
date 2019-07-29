@@ -55,14 +55,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  *   <li>Index: 3 Cycle: 4 Total: 4 Even Last</li>
  * </ul>
  * </output>
- *
- * @api
  */
 class ForViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

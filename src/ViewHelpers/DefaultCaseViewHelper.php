@@ -12,14 +12,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * A view helper which specifies the "default" case when used within the SwitchViewHelper.
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
- *
- * @api
  */
 class DefaultCaseViewHelper extends AbstractViewHelper
 {
-
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 }

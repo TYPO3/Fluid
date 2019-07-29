@@ -51,21 +51,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * [...]
  * (depending on the value of {menu})
  * </output>
- *
- * @api
  */
 class SectionViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**
-     * Initialize the arguments.
-     *
      * @return void
-     * @api
      */
     public function initializeArguments()
     {

@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /**
  * An ExpressionNode evaluation Exception
- *
- * @api
  */
 class ExpressionException extends Exception
 {

@@ -70,14 +70,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  *
  * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
  * you might want to fine-tune your "view model" (the data you assign to the view).
- *
- * @api
  */
 class GroupedForViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**
@@ -92,6 +87,10 @@ class GroupedForViewHelper extends AbstractViewHelper
         $this->registerArgument('groupKey', 'string', 'The name of the variable to store the current group', false, 'groupKey');
     }
 
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();

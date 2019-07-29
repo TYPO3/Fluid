@@ -59,8 +59,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * This is also evaluated when compiled (static node is closed)
  * <f:if condition="{var}">Also evaluated; is outside static node</f:if>
  * </code>
- *
- * @api
  */
 class StaticViewHelper extends AbstractViewHelper
 {

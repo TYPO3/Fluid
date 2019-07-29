@@ -27,13 +27,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * </output>
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
- * @api
  */
 class ElseViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

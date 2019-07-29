@@ -79,14 +79,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Note that while ParsedTemplateInterface supports returning a Layout name, this Layout will not
  * be respected when rendering using this method. Only the `render()` method will be called!
  * </output>
- *
- * @api
  */
 class RenderViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

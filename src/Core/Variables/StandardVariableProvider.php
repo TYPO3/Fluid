@@ -86,7 +86,6 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
      * @return void
-     * @api
      */
     public function add(string $identifier, $value): void
     {
@@ -102,7 +101,6 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param string $identifier
      * @return mixed The variable value identified by $identifier
-     * @api
      */
     public function get(string $identifier)
     {
@@ -138,7 +136,6 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param string $identifier The identifier to remove
      * @return void
-     * @api
      */
     public function remove(string $identifier): void
     {
@@ -160,7 +157,6 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param string $identifier
      * @return boolean TRUE if $identifier exists, FALSE otherwise
-     * @api
      */
     public function exists(string $identifier): bool
     {

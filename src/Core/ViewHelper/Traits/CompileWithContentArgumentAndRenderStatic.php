@@ -48,7 +48,6 @@ trait CompileWithContentArgumentAndRenderStatic
      * first defined optional argument as content.
      *
      * @return mixed Rendered result
-     * @api
      */
     public function render()
     {

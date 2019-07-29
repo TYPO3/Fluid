@@ -27,15 +27,13 @@ use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper for a more detailed explanation and a simple usage example.
  * Make sure to NOT OVERRIDE the constructor.
- *
- * @api
  */
 abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {
     protected $escapeOutput = false;
 
     /**
-     * Initializes the "then" and "else" arguments
+     * @return void
      */
     public function initializeArguments()
     {
@@ -49,7 +47,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * the then/else nodes are converted to closures and condition evaluation closures.
      *
      * @return mixed
-     * @api
      */
     public function render()
     {
@@ -75,7 +72,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * If then attribute is not set and no ThenViewHelper and no ElseViewHelper is found, all child nodes are rendered
      *
      * @return mixed rendered ThenViewHelper or contents of <f:if> if no ThenViewHelper was found
-     * @api
      */
     protected function renderThenChild()
     {
@@ -106,7 +102,6 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * If else attribute is not set and no ElseViewHelper is found, an empty string will be returned.
      *
      * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
-     * @api
      */
     protected function renderElseChild()
     {

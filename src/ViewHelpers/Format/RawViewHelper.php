@@ -39,19 +39,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * <output>
  * (Content of {string} without any conversion/escaping)
  * </output>
- *
- * @api
  */
 class RawViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeChildren = false;
 
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

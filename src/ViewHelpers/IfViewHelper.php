@@ -78,8 +78,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
  * The value of the "then" attribute is displayed if the condition evaluates to TRUE.
  * Otherwise, everything the value of the "else"-attribute is displayed.
  * </output>
- *
- * @api
  */
 class IfViewHelper extends AbstractConditionViewHelper implements ExpressionComponentInterface
 {
@@ -102,7 +100,6 @@ class IfViewHelper extends AbstractConditionViewHelper implements ExpressionComp
      * the then/else nodes are converted to closures and condition evaluation closures.
      *
      * @return mixed
-     * @api
      */
     public function render()
     {

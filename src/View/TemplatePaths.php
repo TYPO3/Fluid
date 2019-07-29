@@ -249,7 +249,6 @@ class TemplatePaths
      * @param string $action
      * @param string|null $format
      * @return string|null
-     * @api
      */
     public function resolveTemplateFileForControllerAndActionAndFormat(string $controller, string $action, ?string $format = null): ?string
     {
@@ -372,7 +371,6 @@ class TemplatePaths
      *
      * @param array $paths
      * @return void
-     * @api
      */
     public function fillFromConfigurationArray($paths)
     {
@@ -392,7 +390,6 @@ class TemplatePaths
      *
      * @param string $packageName
      * @return void
-     * @api
      */
     public function fillDefaultsByPackageName($packageName)
     {

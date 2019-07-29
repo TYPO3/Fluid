@@ -21,8 +21,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * <output>
  * (no output)
  * </output>
- *
- * @api
  */
 class LayoutViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
 {

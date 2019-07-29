@@ -20,7 +20,6 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 interface VariableProviderInterface
 {
-
     /**
      * Variables, if any, with which to initialize this
      * VariableProvider.
@@ -53,28 +52,10 @@ interface VariableProviderInterface
      */
     public function setSource($source): void;
 
-    /**
-     * @return mixed
-     */
     public function getSource();
 
-    /**
-     * Get every variable provisioned by the VariableProvider
-     * implementing the interface. Must return an array or
-     * ArrayAccess instance!
-     *
-     * @return array
-     */
     public function getAll(): array;
 
-    /**
-     * Add a variable to the context
-     *
-     * @param string $identifier Identifier of the variable to add
-     * @param mixed $value The variable's value
-     * @return void
-     * @api
-     */
     public function add(string $identifier, $value): void;
 
     /**
@@ -82,7 +63,6 @@ interface VariableProviderInterface
      *
      * @param string $identifier
      * @return mixed The variable value identified by $identifier
-     * @api
      */
     public function get(string $identifier);
 
@@ -99,28 +79,9 @@ interface VariableProviderInterface
      */
     public function getByPath(string $path, array $accessors = []);
 
-    /**
-     * Remove a variable from context.
-     *
-     * @param string $identifier The identifier to remove
-     * @return void
-     * @api
-     */
     public function remove(string $identifier): void;
 
-    /**
-     * Returns an array of all identifiers available in the context.
-     *
-     * @return array Array of identifier strings
-     */
     public function getAllIdentifiers(): array;
 
-    /**
-     * Checks if this property exists in the VariableContainer.
-     *
-     * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
-     * @api
-     */
     public function exists(string $identifier): bool;
 }

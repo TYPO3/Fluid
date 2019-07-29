@@ -11,8 +11,6 @@ use TYPO3Fluid\Fluid;
 
 /**
  * A generic Fluid View exception.
- *
- * @api
  */
 class Exception extends Fluid\Exception
 {

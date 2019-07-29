@@ -21,8 +21,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
  * Fluid to extract namespaces from <html> tags and if
  * so instructed, not render the <html> tag itself but
  * only the child content.
- *
- * @api
  */
 class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentInterface
 {
@@ -56,6 +54,10 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
         return $this;
     }
 
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return mixed
+     */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $content = $this->evaluateChildren($renderingContext);

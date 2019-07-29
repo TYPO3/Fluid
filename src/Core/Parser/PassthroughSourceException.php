@@ -13,8 +13,6 @@ use TYPO3Fluid\Fluid\Core\Exception;
  * Exception which when thrown causes the template rendering
  * to output the full source of the Fluid template file rather
  * than allow it to be parsed.
- *
- * @api
  */
 class PassthroughSourceException extends Exception
 {

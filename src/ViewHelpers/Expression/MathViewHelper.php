@@ -19,11 +19,6 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
 {
     protected $parts = [];
 
-    public function __construct(iterable $parts = [])
-    {
-        $this->parts = $parts;
-    }
-
     /**
      * Possible operators, sorted by likely frequency of use to make
      * the strpos() check work as fast as possible for the most common
@@ -33,6 +28,11 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
      */
     protected static $operators = '+-*/%^';
 
+    public function __construct(iterable $parts = [])
+    {
+        $this->parts = $parts;
+    }
+
     protected function initializeArguments()
     {
         $this->registerArgument('a', 'mixed', 'Numeric first value to calculate', true);
@@ -40,10 +40,6 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         $this->registerArgument('operator', 'string', 'Operator to use, e.g. +, -, %', true);
     }
 
-    /**
-     * @param array $parts
-     * @return bool
-     */
     public static function matches(array $parts): bool
     {
         return isset($parts[2]) && strpos(static::$operators, $parts[1]) !== false;

@@ -19,9 +19,6 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
 {
     protected $parts = [];
 
-    /**
-     * @var array
-     */
     protected static $validTypes = [
         'integer', 'boolean', 'string', 'float', 'array', \DateTime::class
     ];
@@ -122,10 +119,6 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         return \DateTime::createFromFormat('U', (string) $variable);
     }
 
-    /**
-     * @param mixed $variable
-     * @return array
-     */
     protected static function convertToArray($variable): array
     {
         if (is_array($variable)) {

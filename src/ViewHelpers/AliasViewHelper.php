@@ -38,14 +38,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
  * you might want to fine-tune your "view model" (the data you assign to the view).
- *
- * @api
  */
 class AliasViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

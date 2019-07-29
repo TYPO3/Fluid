@@ -13,53 +13,29 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Tag based view helper.
  * Should be used as the base class for all view helpers which output simple tags, as it provides some
  * convenience methods to register default attributes, ...
- *
- * @api
  */
 abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 {
-    /**
-     * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
-     *
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
-    /**
-     * Names of all registered tag attributes
-     *
-     * @var array
-     */
     static private $tagAttributes = [];
 
     /**
      * Tag builder instance
      *
      * @var TagBuilder
-     * @api
      */
     protected $tag = null;
 
-    /**
-     * Name of the tag to be created by this view helper
-     *
-     * @var string
-     * @api
-     */
     protected $tagName = 'div';
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->tag = new TagBuilder($this->tagName);
     }
 
     /**
-     * Constructor
-     *
-     * @api
+     * @return void
      */
     public function initializeArguments()
     {
@@ -112,7 +88,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
      * @param mixed $defaultValue Optional, default value of attribute if one applies
      * @return void
-     * @api
      */
     protected function registerTagAttribute(string $name, string $type, string $description, bool $required = false, $defaultValue = null)
     {
@@ -125,7 +100,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * Should be used inside registerArguments();
      *
      * @return void
-     * @api
      */
     protected function registerUniversalTagAttributes()
     {

@@ -42,7 +42,6 @@ abstract class AbstractComponent implements ComponentInterface
      * Note: If this is NULL the value of $this->escapingInterceptorEnabled is considered for backwards compatibility
      *
      * @var boolean|null
-     * @api
      */
     protected $escapeChildren = null;
 
@@ -51,7 +50,6 @@ abstract class AbstractComponent implements ComponentInterface
      * @see isOutputEscapingEnabled()
      *
      * @var boolean|null
-     * @api
      */
     protected $escapeOutput = null;
 

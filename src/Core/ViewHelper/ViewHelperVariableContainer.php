@@ -11,8 +11,6 @@ use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * A key/value store that can be used by ViewHelpers to communicate between each other.
- *
- * @api
  */
 class ViewHelperVariableContainer
 {
@@ -37,7 +35,6 @@ class ViewHelperVariableContainer
      * @param string $key Key of the data
      * @param mixed $value The value to store
      * @return void
-     * @api
      */
     public function add(string $viewHelperName, string $key, $value): void
     {
@@ -51,7 +48,6 @@ class ViewHelperVariableContainer
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param array|\Traversable $variables An associative array of all variables to add
      * @return void
-     * @api
      */
     public function addAll(string $viewHelperName, iterable $variables): void
     {
@@ -93,7 +89,6 @@ class ViewHelperVariableContainer
      * @param string $key Key of the data
      * @param mixed $default Default value to use if no value is found.
      * @return mixed The object stored
-     * @api
      */
     public function get(string $viewHelperName, string $key, $default = null)
     {
@@ -118,7 +113,6 @@ class ViewHelperVariableContainer
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data
      * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
-     * @api
      */
     public function exists(string $viewHelperName, string $key): bool
     {
@@ -131,7 +125,6 @@ class ViewHelperVariableContainer
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data to remove
      * @return void
-     * @api
      */
     public function remove(string $viewHelperName, string $key): void
     {

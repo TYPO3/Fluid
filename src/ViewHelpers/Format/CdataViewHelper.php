@@ -38,19 +38,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * <output>
  * <![CDATA[(Content of {string} without any conversion/escaping)]]>
  * </output>
- *
- * @api
  */
 class CdataViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeChildren = false;
 
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

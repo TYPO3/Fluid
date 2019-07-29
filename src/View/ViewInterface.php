@@ -7,12 +7,8 @@ namespace TYPO3Fluid\Fluid\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
-
 /**
  * Interface of a view
- *
- * @api
  */
 interface ViewInterface
 {
@@ -23,7 +19,6 @@ interface ViewInterface
      * @param string $key Key of variable
      * @param mixed $value Value of object
      * @return ViewInterface an instance of $this, to enable chaining
-     * @api
      */
     public function assign($key, $value): self;
 
@@ -32,7 +27,6 @@ interface ViewInterface
      *
      * @param array $values array in the format array(key1 => value1, key2 => value2)
      * @return ViewInterface an instance of $this, to enable chaining
-     * @api
      */
     public function assignMultiple(array $values): self;
 
@@ -40,7 +34,6 @@ interface ViewInterface
      * Renders the view
      *
      * @return mixed The rendered view
-     * @api
      */
     public function render();
 
@@ -51,7 +44,6 @@ interface ViewInterface
      * @param array $variables The variables to use
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return mixed rendered template for the section
-     * @throws InvalidSectionException
      */
     public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false);
 

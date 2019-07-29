@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid;
 
 /**
  * The most general Fluid exception.
- *
- * @api
  */
 class Exception extends \RuntimeException
 {

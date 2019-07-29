@@ -34,30 +34,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * E.g. the above example could be achieved with <f:render partial="title.{person.gender}" /> and the partials
  * "title.male.html", "title.female.html", ...
  * Depending on the scenario this can be easier to extend and possibly contains less duplication.
- *
- * @api
  */
 class SwitchViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
-    /**
-     * @var boolean
-     */
     protected $escapeChildren = false;
-
-    /**
-     * @var mixed
-     */
-    protected $backupSwitchExpression = null;
-
-    /**
-     * @var boolean
-     */
-    protected $backupBreakState = false;
 
     /**
      * @return void

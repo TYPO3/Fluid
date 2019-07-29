@@ -45,14 +45,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
  * </output>
  *
  * Note: The above examples could also be achieved using the "iteration" argument of the ForViewHelper
- *
- * @api
  */
 class CycleViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid\View;
 
 /**
  * An abstract View
- *
- * @api
  */
 abstract class AbstractView implements ViewInterface
 {
@@ -26,7 +24,6 @@ abstract class AbstractView implements ViewInterface
      * Renders the view
      *
      * @return mixed The rendered view
-     * @api
      */
     public function render()
     {
@@ -39,8 +36,7 @@ abstract class AbstractView implements ViewInterface
      *
      * @param string $key Key of variable
      * @param mixed $value Value of object
-     * @return $this
-     * @api
+     * @return self
      */
     public function assign($key, $value): ViewInterface
     {
@@ -53,7 +49,6 @@ abstract class AbstractView implements ViewInterface
      *
      * @param array $values array in the format array(key1 => value1, key2 => value2)
      * @return AbstractView an instance of $this, to enable chaining
-     * @api
      */
     public function assignMultiple(array $values): ViewInterface
     {

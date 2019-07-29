@@ -9,146 +9,60 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /**
  * Tag builder. Can be easily accessed in AbstractTagBasedViewHelper
- *
- * @api
  */
 class TagBuilder
 {
-    /**
-     * Name of the Tag to be rendered
-     *
-     * @var string
-     */
     protected $tagName = '';
 
-    /**
-     * Content of the tag to be rendered
-     *
-     * @var string
-     */
     protected $content = '';
 
-    /**
-     * Attributes of the tag to be rendered
-     *
-     * @var array
-     */
     protected $attributes = [];
 
-    /**
-     * Specifies whether this tag needs a closing tag.
-     * E.g. <textarea> cant be self-closing even if its empty
-     *
-     * @var boolean
-     */
     protected $forceClosingTag = false;
 
-    /**
-     * @var bool
-     */
     protected $ignoreEmptyAttributes = false;
 
-    /**
-     * Constructor
-     *
-     * @param string $tagName name of the tag to be rendered
-     * @param string $tagContent content of the tag to be rendered
-     * @api
-     */
     public function __construct(string $tagName = '', string $tagContent = '')
     {
         $this->setTagName($tagName);
         $this->setContent($tagContent);
     }
 
-    /**
-     * Sets the tag name
-     *
-     * @param string $tagName name of the tag to be rendered
-     * @return void
-     * @api
-     */
     public function setTagName(string $tagName): void
     {
         $this->tagName = $tagName;
     }
 
-    /**
-     * Gets the tag name
-     *
-     * @return string tag name of the tag to be rendered
-     * @api
-     */
     public function getTagName(): string
     {
         return $this->tagName;
     }
 
-    /**
-     * Sets the content of the tag
-     *
-     * @param string|null $tagContent content of the tag to be rendered
-     * @return void
-     * @api
-     */
     public function setContent(?string $tagContent): void
     {
         $this->content = $tagContent;
     }
 
-    /**
-     * Gets the content of the tag
-     *
-     * @return string content of the tag to be rendered
-     * @api
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * Returns TRUE if tag contains content, otherwise FALSE
-     *
-     * @return boolean TRUE if tag contains text, otherwise FALSE
-     * @api
-     */
     public function hasContent(): bool
     {
         return $this->content !== '' && $this->content !== null;
     }
 
-    /**
-     * Set this to TRUE to force a closing tag
-     * E.g. <textarea> cant be self-closing even if its empty
-     *
-     * @param boolean $forceClosingTag
-     * @api
-     */
     public function forceClosingTag(bool $forceClosingTag): void
     {
         $this->forceClosingTag = $forceClosingTag;
     }
 
-    /**
-     * Returns TRUE if the tag has an attribute with the given name
-     *
-     * @param string $attributeName name of the attribute
-     * @return boolean TRUE if the tag has an attribute with the given name, otherwise FALSE
-     * @api
-     */
     public function hasAttribute(string $attributeName): bool
     {
         return array_key_exists($attributeName, $this->attributes);
     }
 
-    /**
-     * Get an attribute from the $attributes-collection
-     *
-     * @param string $attributeName name of the attribute
-     * @return mixed The attribute value or NULL if the attribute is not registered
-     * @api
-     */
     public function getAttribute(string $attributeName)
     {
         if (!$this->hasAttribute($attributeName)) {
@@ -157,21 +71,11 @@ class TagBuilder
         return $this->attributes[$attributeName];
     }
 
-    /**
-     * Get all attribute from the $attributes-collection
-     *
-     * @return array Attributes indexed by attribute name
-     * @api
-     */
     public function getAttributes(): iterable
     {
         return $this->attributes;
     }
 
-    /**
-     * @param boolean $ignoreEmptyAttributes
-     * @return void
-     */
     public function ignoreEmptyAttributes(bool $ignoreEmptyAttributes): void
     {
         $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
@@ -180,15 +84,6 @@ class TagBuilder
         }
     }
 
-    /**
-     * Adds an attribute to the $attributes-collection
-     *
-     * @param string $attributeName name of the attribute to be added to the tag
-     * @param mixed $attributeValue attribute value
-     * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute value
-     * @return void
-     * @api
-     */
     public function addAttribute(string $attributeName, $attributeValue, bool $escapeSpecialCharacters = true): void
     {
         if ($attributeName === 'data' && (is_array($attributeValue) || $attributeValue instanceof \Traversable)) {
@@ -207,14 +102,6 @@ class TagBuilder
         }
     }
 
-    /**
-     * Adds attributes to the $attributes-collection
-     *
-     * @param iterable $attributes collection of attributes to add. key = attribute name, value = attribute value
-     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values
-     * @return void
-     * @api
-     */
     public function addAttributes(iterable $attributes, bool $escapeSpecialCharacters = true): void
     {
         foreach ($attributes as $attributeName => $attributeValue) {
@@ -222,24 +109,11 @@ class TagBuilder
         }
     }
 
-    /**
-     * Removes an attribute from the $attributes-collection
-     *
-     * @param string $attributeName name of the attribute to be removed from the tag
-     * @return void
-     * @api
-     */
     public function removeAttribute(string $attributeName): void
     {
         unset($this->attributes[$attributeName]);
     }
 
-    /**
-     * Resets the TagBuilder by setting all members to their default value
-     *
-     * @return void
-     * @api
-     */
     public function reset(): void
     {
         $this->tagName = '';
@@ -248,12 +122,6 @@ class TagBuilder
         $this->forceClosingTag = false;
     }
 
-    /**
-     * Renders and returns the tag
-     *
-     * @return string
-     * @api
-     */
     public function render(): string
     {
         if (empty($this->tagName)) {

@@ -30,21 +30,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * <output>
  * Text with & " ' < > * replaced by HTML entities (htmlspecialchars applied).
  * </output>
- *
- * @api
  */
 class HtmlspecialcharsViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeChildren = false;
 
-    /**
-     * Disable the output escaping interceptor so that the value is not htmlspecialchar'd twice
-     *
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

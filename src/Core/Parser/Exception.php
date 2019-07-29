@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /**
  * A Parsing Exception
- *
- * @api
  */
 class Exception extends \TYPO3Fluid\Fluid\Core\Exception
 {

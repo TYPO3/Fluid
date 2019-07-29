@@ -29,19 +29,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * </output>
  *
  * Note: This view helper is only meant to be used during development
- *
- * @api
  */
 class DebugViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeChildren = false;
 
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**
@@ -55,6 +47,10 @@ class DebugViewHelper extends AbstractViewHelper
         $this->registerArgument('html', 'boolean', 'Render HTML. If FALSE, output is indented plaintext', false, false);
     }
 
+    /**
+     * @param RenderingContextInterface $renderingContext
+     * @return string
+     */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();

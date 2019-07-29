@@ -16,8 +16,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * The abstract base class for all view helpers.
- *
- * @api
  */
 abstract class AbstractViewHelper extends AbstractComponent
 {
@@ -36,7 +34,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      *
      * @param RenderingContextInterface $renderingContext
      * @return mixed
-     * @api
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
@@ -71,7 +68,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      * @param mixed $defaultValue Default value of argument
      * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
-     * @api
      */
     protected function registerArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
@@ -91,7 +87,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      * @param mixed $defaultValue Default value of argument
      * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
-     * @api
      */
     protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {
@@ -134,7 +129,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      * opening and the closing tag.
      *
      * @return mixed The finally rendered child nodes.
-     * @api
      */
     protected function renderChildren()
     {
@@ -167,7 +161,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      * $this->registerArgument(...) inside this method, to register all your arguments.
      *
      * @return void
-     * @api
      */
     protected function initializeArguments()
     {
@@ -178,14 +171,6 @@ abstract class AbstractViewHelper extends AbstractComponent
         return false;
     }
 
-    /**
-     * Tests if the given $argumentName is set, and not NULL.
-     * The isset() test used fills both those requirements.
-     *
-     * @param string $argumentName
-     * @return boolean TRUE if $argumentName is found, FALSE otherwise
-     * @api
-     */
     protected function hasArgument(string $argumentName): bool
     {
         return $this->getArguments()->getRaw($argumentName) !== null;

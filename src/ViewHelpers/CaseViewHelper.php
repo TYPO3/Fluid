@@ -12,15 +12,9 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 /**
  * Case view helper that is only usable within the SwitchViewHelper.
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
- *
- * @api
  */
 class CaseViewHelper extends AbstractViewHelper
 {
-
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**

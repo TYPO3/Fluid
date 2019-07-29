@@ -16,13 +16,11 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
  */
 trait CompileWithRenderStatic
 {
-
     /**
      * Default render method - simply calls renderStatic() with a
      * prepared set of arguments.
      *
      * @return mixed Rendered result
-     * @api
      */
     public function render()
     {

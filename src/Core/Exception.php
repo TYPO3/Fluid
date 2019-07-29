@@ -9,8 +9,6 @@ namespace TYPO3Fluid\Fluid\Core;
 
 /**
  * A generic Fluid Core exception.
- *
- * @api
  */
 class Exception extends \TYPO3Fluid\Fluid\Exception
 {

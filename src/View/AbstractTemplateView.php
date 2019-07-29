@@ -23,7 +23,6 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
  */
 abstract class AbstractTemplateView extends AbstractView
 {
-
     /**
      * Constants defining possible rendering types
      */
@@ -48,11 +47,6 @@ abstract class AbstractTemplateView extends AbstractView
      */
     protected $renderingStack = [];
 
-    /**
-     * Constructor
-     *
-     * @param null|RenderingContextInterface $context
-     */
     public function __construct(RenderingContextInterface $context = null)
     {
         if ($context === null) {
@@ -74,42 +68,21 @@ abstract class AbstractTemplateView extends AbstractView
         $this->baseRenderingContext->initialize();
     }
 
-    /**
-     * Gets the TemplatePaths instance from RenderingContext
-     *
-     * @return TemplatePaths
-     */
     public function getTemplatePaths(): TemplatePaths
     {
         return $this->baseRenderingContext->getTemplatePaths();
     }
 
-    /**
-     * Gets the ViewHelperResolver instance from RenderingContext
-     *
-     * @return ViewHelperResolver
-     */
     public function getViewHelperResolver(): ViewHelperResolver
     {
         return $this->baseRenderingContext->getViewHelperResolver();
     }
 
-    /**
-     * Gets the RenderingContext used by the View
-     *
-     * @return RenderingContextInterface
-     */
     public function getRenderingContext(): RenderingContextInterface
     {
         return $this->baseRenderingContext;
     }
 
-    /**
-     * Injects a fresh rendering context
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @return void
-     */
     public function setRenderingContext(RenderingContextInterface $renderingContext): void
     {
         $this->baseRenderingContext = $renderingContext;
@@ -122,7 +95,6 @@ abstract class AbstractTemplateView extends AbstractView
      * @param string $key The key of a view variable to set
      * @param mixed $value The value of the view variable
      * @return $this
-     * @api
      */
     public function assign($key, $value): ViewInterface
     {
@@ -135,8 +107,7 @@ abstract class AbstractTemplateView extends AbstractView
      * However, only the key "value" is accepted.
      *
      * @param array $values Keys and values - only a value with key "value" is considered
-     * @return $this
-     * @api
+     * @return self
      */
     public function assignMultiple(array $values): ViewInterface
     {
@@ -153,7 +124,6 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @param string|null $actionName If set, this action's template will be rendered instead of the one defined in the context.
      * @return mixed Rendered Template
-     * @api
      */
     public function render(?string $actionName = null)
     {
@@ -209,7 +179,9 @@ abstract class AbstractTemplateView extends AbstractView
      * @param array $variables The variables to use
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return mixed rendered template for the section
-     * @throws InvalidSectionException
+     * @throws ChildNotFoundException
+     * @throws InvalidTemplateResourceException
+     * @throws Exception
      */
     public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false)
     {
@@ -261,6 +233,9 @@ abstract class AbstractTemplateView extends AbstractView
      * @param array $variables
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return mixed
+     * @throws ChildNotFoundException
+     * @throws InvalidTemplateResourceException
+     * @throws Exception
      */
     public function renderPartial(string $partialName, ?string $sectionName, array $variables, bool $ignoreUnknown = false)
     {
@@ -324,22 +299,12 @@ abstract class AbstractTemplateView extends AbstractView
         array_pop($this->renderingStack);
     }
 
-    /**
-     * Get the current rendering type.
-     *
-     * @return integer one of RENDERING_* constants
-     */
     protected function getCurrentRenderingType(): int
     {
         $currentRendering = end($this->renderingStack);
         return $currentRendering['type'] ? $currentRendering['type'] : self::RENDERING_TEMPLATE;
     }
 
-    /**
-     * Get the parsed template which is currently being rendered or compiled.
-     *
-     * @return ComponentInterface
-     */
     protected function getCurrentParsedTemplate(): ComponentInterface
     {
         $currentRendering = end($this->renderingStack);
@@ -361,11 +326,6 @@ abstract class AbstractTemplateView extends AbstractView
         return $parsedTemplate;
     }
 
-    /**
-     * Get the rendering context which is currently used.
-     *
-     * @return RenderingContextInterface
-     */
     protected function getCurrentRenderingContext(): RenderingContextInterface
     {
         $currentRendering = end($this->renderingStack);

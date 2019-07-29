@@ -29,19 +29,11 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
  * <output>
  * 10 (depending on the number of items in {objects})
  * </output>
- *
- * @api
  */
 class CountViewHelper extends AbstractViewHelper
 {
-    /**
-     * @var boolean
-     */
     protected $escapeChildren = false;
 
-    /**
-     * @var boolean
-     */
     protected $escapeOutput = false;
 
     /**
