@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -43,7 +44,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * However it can lead to reduced readability. You can use layouts and partials to split a large template into smaller
  * parts. Using self-descriptive names for the partials can make comments redundant.
  */
-class CommentViewHelper extends AbstractViewHelper
+class CommentViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
 {
     public function evaluate(RenderingContextInterface $renderingContext)
     {

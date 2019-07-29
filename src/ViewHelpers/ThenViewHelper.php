@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -15,7 +16,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  */
-class ThenViewHelper extends AbstractViewHelper
+class ThenViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
 {
     protected $escapeOutput = false;
 

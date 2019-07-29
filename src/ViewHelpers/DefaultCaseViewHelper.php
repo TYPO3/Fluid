@@ -7,13 +7,14 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * A view helper which specifies the "default" case when used within the SwitchViewHelper.
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  */
-class DefaultCaseViewHelper extends AbstractViewHelper
+class DefaultCaseViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
 {
     protected $escapeOutput = false;
 }
