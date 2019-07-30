@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Template parser building up an object syntax tree
@@ -31,12 +32,14 @@ class TemplateParser
         $this->configuration = $renderingContext->getParserConfiguration();
     }
 
-    /**
-     * @return Configuration
-     */
-    public function getConfiguration()
+    public function parseFile(string $templatePathAndFilename, ?Configuration $configuration = null): ComponentInterface
     {
-        return $this->configuration;
+        return $this->getOrParseAndStoreTemplate(
+            $this->createIdentifierForFile($templatePathAndFilename, ''),
+            function ($parent, TemplatePaths $paths) use ($templatePathAndFilename): string {
+                return file_get_contents($templatePathAndFilename);
+            }
+        );
     }
 
     /**
@@ -98,25 +101,16 @@ class TemplateParser
     }
 
     /**
-     * Removes escaping from a given argument string and trims the outermost
-     * quotes.
+     * Returns a unique identifier for the given file in the format
+     * <PackageKey>_<SubPackageKey>_<ControllerName>_<prefix>_<SHA1>
+     * The SH1 hash is a checksum that is based on the file path and last modification date
      *
-     * This method is meant as a helper for regular expression results.
-     *
-     * @param string $quotedValue Value to unquote
-     * @return string Unquoted value
+     * @param string $pathAndFilename
+     * @param string $prefix
+     * @return string
      */
-    public function unquoteString(string $quotedValue): string
+    protected function createIdentifierForFile(string $pathAndFilename, string $prefix): string
     {
-        $value = $quotedValue;
-        if ($value === '') {
-            return $value;
-        }
-        if ($quotedValue{0} === '"') {
-            $value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
-        } elseif ($quotedValue{0} === '\'') {
-            $value = str_replace("\\'", "'", preg_replace('/(^\'|\'$)/', '', $quotedValue));
-        }
-        return str_replace('\\\\', '\\', $value);
+        return sprintf('%s_%s', $prefix, sha1($pathAndFilename));
     }
 }

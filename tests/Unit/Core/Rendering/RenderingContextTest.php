@@ -65,7 +65,7 @@ class RenderingContextTest extends UnitTestCase
     {
         return [
             ['variableProvider', new StandardVariableProvider(['foo' => 'bar'])],
-            ['viewHelperResolver', $this->getMock(ViewHelperResolver::class)],
+            ['viewHelperResolver', $this->getMockBuilder(ViewHelperResolver::class)->disableOriginalConstructor()->getMock()],
             ['expressionNodeTypes', ['Foo', 'Bar']],
             ['templatePaths', $this->getMock(TemplatePaths::class)],
             ['templateParser', $this->getMockBuilder(TemplateParser::class)->disableOriginalConstructor()->getMock()],

@@ -1485,12 +1485,12 @@ class SequencerTest extends UnitTestCase
         $variableProvider->add('integer', 42);
         $variableProvider->add('numericArray', ['foo', 'bar']);
         $variableProvider->add('associativeArray', ['foo' => 'bar']);
-        $viewHelperResolver = new ViewHelperResolver();
+        $context = $this->getMockBuilder(RenderingContextInterface::class)->getMock();
+        $viewHelperResolver = new ViewHelperResolver($context);
         $errorHandler = new $errorHandlerClass();
         $viewHelperResolver->addNamespace('f', 'TYPO3Fluid\\Fluid\\Tests\\Unit\\Core\\Parser\\Fixtures\\ViewHelpers');
         $viewHelperResolver->addViewHelperAlias('raw', 'f', 'format.raw');
         $parserConfiguration = new Configuration();
-        $context = $this->getMockBuilder(RenderingContextInterface::class)->getMock();
         $templateParser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getConfiguration'])->setConstructorArgs([$context])->getMock();
         $templateParser->expects($this->any())->method('getConfiguration')->willReturn($parserConfiguration);
         $context->setViewHelperResolver($viewHelperResolver);

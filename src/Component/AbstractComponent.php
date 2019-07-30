@@ -8,11 +8,14 @@ namespace TYPO3Fluid\Fluid\Component;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\ViewHelpers\ArgumentViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
 
 /**
  * Base Component Class
@@ -82,7 +85,22 @@ abstract class AbstractComponent implements ComponentInterface
 
     public function addChild(ComponentInterface $component): ComponentInterface
     {
-        if ($component instanceof RootNode) {
+        if ($component instanceof ParameterViewHelper) {
+            // The child is a parameter declaration. Use the Component's argument values to create and
+            // add a new ArgumentDefinition to this component.
+            $arguments = $this->getArguments();
+            $context = $arguments->getRenderingContext();
+            $parameters = $component->getArguments()->setRenderingContext($context);
+            $arguments->addDefinition(
+                new ArgumentDefinition(
+                    $parameters['name'],
+                    $parameters['type'],
+                    $parameters['description'] ?? 'Argument ' . $parameters['name'],
+                    $parameters['required'],
+                    $parameters['default'] ?? null
+                )
+            );
+        } elseif ($component instanceof RootNode) {
             // Assimilate child nodes instead of allowing a root node inside a root node.
             foreach ($component->getChildren() as $node) {
                 $this->addChild($node);

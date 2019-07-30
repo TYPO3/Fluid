@@ -158,7 +158,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getViewHelperResolver(): ViewHelperResolver
     {
-        return $this->viewHelperResolver ?? ($this->viewHelperResolver = new ViewHelperResolver());
+        return $this->viewHelperResolver ?? ($this->viewHelperResolver = new ViewHelperResolver($this));
     }
 
     /**

@@ -8,7 +8,10 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  */
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * Class ViewHelperResolver
@@ -24,13 +27,25 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 class ViewHelperResolver
 {
     /**
+     * @var RenderingContextInterface
+     */
+    protected $renderingContext;
+
+    /**
      * @var array
      */
     protected $resolvedViewHelperClassNames = [];
 
     /**
+     * Atom paths indexed by namespace, in
+     * [shortname => [path1, path2, ...]] format.
+     * @var array
+     */
+    protected $atoms = [];
+
+    /**
      * Namespaces requested by the template being rendered,
-     * in [shortname => phpnamespace] format.
+     * in [shortname => [phpnamespace1, phpnamespace2, ...]] format.
      *
      * @var array
      */
@@ -45,6 +60,52 @@ class ViewHelperResolver
         'html' => ['f', 'html'],
         'raw' => ['f', 'format.raw'],
     ];
+
+    public function __construct(RenderingContextInterface $renderingContext)
+    {
+        $this->renderingContext = $renderingContext;
+    }
+
+    public function addAtomPath(string $namespace, string $path): void
+    {
+        if (!in_array($path, $this->atoms[$namespace] ?? [], true)) {
+            $this->atoms[$namespace][] = $path;
+        }
+    }
+
+    public function addAtomPaths(iterable $paths): void
+    {
+        foreach ($paths as $namespace => $collection) {
+            foreach ($collection as $path) {
+                $this->addAtomPath($namespace, $path);
+            }
+        }
+    }
+
+    public function resolveAtom(string $namespace, string $name): ComponentInterface
+    {
+        $expectedFileParts = explode('.', $name);
+        foreach (array_reverse($this->atoms[$namespace]) as $path) {
+            $parts = $expectedFileParts;
+            $subPath = $path;
+            while ($expectedFilePart = array_shift($parts)) {
+                $subPath .= '/' . $expectedFilePart;
+                if (!is_dir($subPath)) {
+                    break;
+                }
+            }
+            $atom = $this->renderingContext->getTemplateParser()->parseFile($subPath . '.html');
+            if (!empty($parts)) {
+                $atom = $atom->getNamedChild(implode('.', $parts));
+            }
+            return $atom;
+        }
+        $paths = empty($this->atoms[$namespace]) ? 'none' : implode(', ', $this->atoms[$namespace]);
+        throw new ChildNotFoundException(
+            'Atom "' . $namespace . ':' . $name . '" could not be resolved. We looked in: ' . $paths,
+            1564404340
+        );
+    }
 
     /**
      * @return array
@@ -231,7 +292,7 @@ class ViewHelperResolver
             return true;
         }
 
-        if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
+        if (array_key_exists($namespaceIdentifier, $this->namespaces) || array_key_exists($namespaceIdentifier, $this->atoms)) {
             return true;
         }
         return $this->isNamespaceIgnored($namespaceIdentifier);
@@ -326,7 +387,14 @@ class ViewHelperResolver
      */
     public function createViewHelperInstance(?string $namespace, string $viewHelperShortName): ComponentInterface
     {
-        $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
+        try {
+            $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
+        } catch (Exception $exception) {
+            if (empty($this->atoms[$namespace])) {
+                throw $exception;
+            }
+            return $this->resolveAtom($namespace, $viewHelperShortName);
+        }
         return $this->createViewHelperInstanceFromClassName($className);
     }
 

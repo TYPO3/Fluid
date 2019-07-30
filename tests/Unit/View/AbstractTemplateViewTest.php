@@ -75,7 +75,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function testGetViewHelperResolverReturnsExpectedViewHelperResolver(): void
     {
-        $viewHelperResolver = $this->getMock(ViewHelperResolver::class);
+        $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->disableOriginalConstructor()->getMock();
         $this->renderingContext->setViewHelperResolver($viewHelperResolver);
         $result = $this->view->getViewHelperResolver();
         $this->assertSame($viewHelperResolver, $result);
