@@ -300,7 +300,7 @@ class Sequencer
 
                 case self::BYTE_INLINE:
                     $contextBefore = $this->splitter->context;
-                    $collected = $this->sequenceInlineNodes(isset($namespace) && isset($method));
+                    $collected = $this->sequenceInlineNodes(isset($namespace, $method));
                     $node->addChild(new TextNode($text));
                     $node->addChild($collected);
                     $text = '';
@@ -326,9 +326,9 @@ class Sequencer
                         throw $this->createErrorAtPosition('Quoted value without a key is not allowed in tags', 1558952412);
                     } else {
                         if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                            $arguments[$key] = $this->sequenceBooleanNode(0)->flatten(true);
+                            $arguments[$key] = $this->sequenceBooleanNode()->flatten(true);
                         } else {
-                            $arguments[$key] = $this->sequenceQuotedNode(0, isset($namespace) && isset($method))->flatten(true);
+                            $arguments[$key] = $this->sequenceQuotedNode()->flatten(true);
                         }
                         $key = null;
                     }
@@ -374,7 +374,7 @@ class Sequencer
 
                     $this->escapingEnabled = $escapingEnabledBackup;
 
-                    if ((!isset($namespace) && ($this->splitter->context->context === Context::CONTEXT_DEAD || !$this->resolver->isAliasRegistered((string) $method))) || $this->resolver->isNamespaceIgnored((string) $namespace)) {
+                    if (($namespace === null && ($this->splitter->context->context === Context::CONTEXT_DEAD || !$this->resolver->isAliasRegistered((string) $method))) || $this->resolver->isNamespaceIgnored((string) $namespace)) {
                         return $node->addChild(new TextNode($text))->flatten();
                     }
 
@@ -465,7 +465,7 @@ class Sequencer
                             }
                             $key = $captured;
                         }
-                    } elseif (isset($namespace) || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
+                    } elseif ($namespace !== null || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
                         $method = $captured;
 
                         try {
@@ -557,7 +557,7 @@ class Sequencer
                     // from {foo, bar}.
                     $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
                     $this->sequenceArrayNode($node, true);
-                    unset($key);
+                    $key = null;
                     break;
 
                 case self::BYTE_INLINE:
@@ -620,7 +620,7 @@ class Sequencer
                         $text .= chr($symbol);
                         break;
                     }
-                    if (isset($key)) {
+                    if ($key !== null) {
                         if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
                             $array[$key] = $this->sequenceBooleanNode($countedEscapes)->flatten(true);
                         } else {
@@ -639,7 +639,7 @@ class Sequencer
                         $text .= ',';
                         break;
                     }
-                    if (isset($captured)) {
+                    if ($captured !== null) {
                         $key = $key ?? $captured;
                         $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                         if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
@@ -906,7 +906,7 @@ class Sequencer
                     break;
 
                 case self::BYTE_PARENTHESIS_START:
-                    $node->addChild($this->sequenceBooleanNode(0));
+                    $node->addChild($this->sequenceBooleanNode());
                     break;
 
                 case self::BYTE_WHITESPACE_SPACE:
@@ -952,8 +952,8 @@ class Sequencer
                     // Colon or equals has same meaning (which allows tag syntax as argument syntax). Encountering this
                     // byte always means the preceding byte was a key. However, if nothing was captured before this,
                     // it means colon or equals was used without a key which is a syntax error.
-                    $key = $key ?? $captured ?? (isset($keyOrValue) ? $keyOrValue->flatten(true) : null);
-                    if (!isset($key)) {
+                    $key = $key ?? $captured ?? ($keyOrValue !== null ? $keyOrValue->flatten(true) : null);
+                    if ($key === null) {
                         throw $this->createErrorAtPosition('Unexpected colon or equals sign, no preceding key', 1559250839);
                     }
                     if ($definitions !== null && !$numeric && !isset($definitions[$key])) {
@@ -969,7 +969,7 @@ class Sequencer
                     if ($captured !== null) {
                         throw $this->createErrorAtPosition('Unexpected content before array/inline start in associative array, ASCII: ' . ord($captured), 1559131849);
                     }
-                    if (!isset($key) && !$numeric) {
+                    if ($key === null && !$numeric) {
                         throw $this->createErrorAtPosition('Unexpected array/inline start in associative array without preceding key', 1559131848);
                     }
 
@@ -1001,7 +1001,7 @@ class Sequencer
                     } else {
                         $keyOrValue = $this->sequenceQuotedNode($countedEscapes);
                     }
-                    if (isset($key)) {
+                    if ($key !== null) {
                         $array[$key] = $keyOrValue->flatten(true);
                         $keyOrValue = null;
                         $key = null;
@@ -1013,14 +1013,14 @@ class Sequencer
                     // Comma separator: if we've collected a key or value, use it. Otherwise, use captured string.
                     // If neither key nor value nor captured string exists, ignore the comma (likely a tailing comma).
                     $value = null;
-                    if (isset($keyOrValue)) {
+                    if ($keyOrValue !== null) {
                         // Key or value came as quoted string and exists in $keyOrValue
                         $potentialValue = $keyOrValue->flatten(true);
                         $key = $numeric ? ++$itemCount : $potentialValue;
                         $value = $numeric ? $potentialValue : (is_numeric($key) ? $key + 0 : new ObjectAccessorNode((string) $key));
-                    } elseif (isset($captured)) {
+                    } elseif ($captured !== null) {
                         $key = $key ?? ($numeric ? ++$itemCount : $captured);
-                        if (!$numeric && isset($definitions) && !isset($definitions[$key])) {
+                        if (!$numeric && $definitions !== null && !isset($definitions[$key])) {
                             throw $this->createUnsupportedArgumentError((string)$key, $definitions);
                         }
                         $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
@@ -1056,12 +1056,12 @@ class Sequencer
                 case self::BYTE_PARENTHESIS_END:
                     // Array end indication. Check if anything was collected previously or was captured currently,
                     // assign that to the array and return an ArrayNode with the full array inside.
-                    $captured = $captured ?? (isset($keyOrValue) ? $keyOrValue->flatten(true) : null);
+                    $captured = $captured ?? ($keyOrValue !== null ? $keyOrValue->flatten(true) : null);
                     $key = $key ?? ($numeric ? ++$itemCount : $captured);
                     if (isset($captured, $key)) {
                         if (is_numeric($captured)) {
                             $array[$key] = $captured + 0;
-                        } elseif (isset($keyOrValue)) {
+                        } elseif ($keyOrValue !== null) {
                             $array[$key] = $keyOrValue->flatten();
                         } else {
                             $array[$key] = new ObjectAccessorNode((string) ($captured ?? $key));
@@ -1100,10 +1100,9 @@ class Sequencer
      * contains other (dynamic) values like an inline syntax.
      *
      * @param int $leadingEscapes A backwards compatibility measure: when passed, this number of escapes must precede a closing quote for it to trigger node closing.
-     * @param bool $allowArray
      * @return RootNode
      */
-    protected function sequenceQuotedNode(int $leadingEscapes = 0, $allowArray = true): RootNode
+    protected function sequenceQuotedNode(int $leadingEscapes = 0): RootNode
     {
         $startingByte = $this->source->bytes[$this->splitter->index];
         $node = new RootNode();
@@ -1203,27 +1202,36 @@ class Sequencer
      */
     protected function callInterceptor(ComponentInterface $node, int $interceptorPosition): ComponentInterface
     {
-        if (!$this->escapingEnabled) {
+        if (!$this->escapingEnabled || $this->viewHelperNodesWhichDisableTheInterceptor > 0) {
             return $node;
         }
-        if ($interceptorPosition === self::INTERCEPT_OPENING_VIEWHELPER) {
-            if (!$node->isChildrenEscapingEnabled()) {
-                ++$this->viewHelperNodesWhichDisableTheInterceptor;
-            }
-        } elseif ($interceptorPosition === self::INTERCEPT_CLOSING_VIEWHELPER) {
-            if (!$node->isChildrenEscapingEnabled()) {
-                --$this->viewHelperNodesWhichDisableTheInterceptor;
-            }
 
-            if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
+        switch ($interceptorPosition) {
+            case self::INTERCEPT_OPENING_VIEWHELPER:
+                if (!$node->isChildrenEscapingEnabled()) {
+                    ++$this->viewHelperNodesWhichDisableTheInterceptor;
+                }
+                break;
+
+            case self::INTERCEPT_CLOSING_VIEWHELPER:
+                if (!$node->isChildrenEscapingEnabled()) {
+                    --$this->viewHelperNodesWhichDisableTheInterceptor;
+                }
+                if ($node->isOutputEscapingEnabled()) {
+                    $node = new EscapingNode($node);
+                }
+                break;
+
+            case self::INTERCEPT_SELFCLOSING_VIEWHELPER:
+                if ($node->isOutputEscapingEnabled()) {
+                    $node = new EscapingNode($node);
+                }
+                break;
+
+            case self::INTERCEPT_OBJECTACCESSOR:
+            case self::INTERCEPT_EXPRESSION:
                 $node = new EscapingNode($node);
-            }
-        } elseif ($interceptorPosition === self::INTERCEPT_SELFCLOSING_VIEWHELPER) {
-            if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
-                $node = new EscapingNode($node);
-            }
-        } elseif ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && ($node instanceof ExpressionComponentInterface || $node instanceof ObjectAccessorNode)) {
-            $node = new EscapingNode($node);
+                break;
         }
         return $node;
     }

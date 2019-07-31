@@ -109,7 +109,7 @@ class Splitter
                 $captured = null;
             } else {
                 // Append captured bytes from source, must happen after the conditions above so we avoid appending tokens.
-                $captured .= $source{$this->index - 1};
+                $captured .= $source[$this->index - 1];
             }
         }
         if ($captured !== null) {
