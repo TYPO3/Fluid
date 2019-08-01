@@ -52,13 +52,6 @@ class ViewHelperVariableContainer
      */
     public function addAll(string $viewHelperName, iterable $variables): void
     {
-        if (!is_array($variables) && !$variables instanceof \Traversable) {
-            throw new \InvalidArgumentException(
-                'Invalid argument type for $variables in ViewHelperVariableContainer->addAll(). Expects array/Traversable ' .
-                'but received ' . (is_object($variables) ? get_class($variables) : gettype($variables)),
-                1501425195
-            );
-        }
         $this->objects[$viewHelperName] = array_replace_recursive(
             isset($this->objects[$viewHelperName]) ? $this->objects[$viewHelperName] : [],
             $variables instanceof \Traversable ? iterator_to_array($variables) : $variables

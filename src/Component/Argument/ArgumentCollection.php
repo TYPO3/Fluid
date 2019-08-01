@@ -55,12 +55,6 @@ class ArgumentCollection extends \ArrayObject
         return $this;
     }
 
-    public function assign(string $name, $value): ArgumentCollection
-    {
-        $this[$name] = $value;
-        return $this;
-    }
-
     public function getAllRaw(): iterable
     {
         return parent::getArrayCopy();

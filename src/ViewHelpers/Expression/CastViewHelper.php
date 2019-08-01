@@ -26,16 +26,6 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
     public function __construct(iterable $parts = [])
     {
         $this->parts = $parts;
-        if (!in_array($parts[2], self::$validTypes, true)) {
-            throw new ExpressionException(
-                sprintf(
-                    'Invalid target conversion type "%s" specified in casting expression "{%s}".',
-                    $parts[2],
-                    implode(' ', $parts)
-                ),
-                1559248372
-            );
-        }
     }
 
     protected function initializeArguments()

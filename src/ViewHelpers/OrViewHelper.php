@@ -33,10 +33,6 @@ class OrViewHelper extends AbstractViewHelper
         $alternative = $arguments['alternative'];
         $variables = (array) $arguments['arguments'];
 
-        if (empty($arguments)) {
-            $arguments = null;
-        }
-
         $content = $arguments['content'] ?? $this->evaluateChildren($renderingContext);
 
         if (null === $content) {

@@ -1511,7 +1511,7 @@ class SequencerTest extends UnitTestCase
         } elseif ($subject instanceof TextNode) {
             $this->assertSame($expected->getText(), $subject->getText(), 'TextNodes do not match at path ' . $path);
         } elseif ($subject instanceof ArrayNode) {
-            $this->assertEquals($expected->getInternalArray(), $subject->getInternalArray(), 'Arrays do not match at path ' . $path);
+            $this->assertEquals($expected, $subject, 'Arrays do not match at path ' . $path);
         } elseif ($subject instanceof RootNode) {
             //$this->assertEquals($expected->getChildren(), $subject->getChildren(), 'RootNode does not have expected children at path ' . $path);
             // NO-OP; the assertion on children consistency is done below.

@@ -12,10 +12,6 @@ use TYPO3Fluid\Fluid\Core\Parser\ExpressionException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 use TYPO3Fluid\Fluid\View\Exception as ViewException;
 
-/*
- * This file belongs to the package "TYPO3 Fluid".
- * See LICENSE.txt that was shipped with this package.
- */
 /**
  * Class StandardErrorHandler
  *

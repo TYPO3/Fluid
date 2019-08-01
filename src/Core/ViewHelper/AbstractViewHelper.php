@@ -78,7 +78,6 @@ abstract class AbstractViewHelper extends AbstractComponent
     /**
      * Overrides a registered argument. Call this method from your ViewHelper subclass
      * inside the initializeArguments() method if you want to override a previously registered argument.
-     * @see registerArgument()
      *
      * @param string $name Name of the argument
      * @param string $type Type of the argument
@@ -87,6 +86,8 @@ abstract class AbstractViewHelper extends AbstractComponent
      * @param mixed $defaultValue Default value of argument
      * @return AbstractViewHelper $this, to allow chaining.
      * @throws Exception
+     * @see registerArgument()
+     * @deprecated Will be removed in Fluid 4.0
      */
     protected function overrideArgument(string $name, string $type, string $description, bool $required = false, $defaultValue = null): self
     {

@@ -48,16 +48,6 @@ class ArrayNode extends AbstractComponent implements \ArrayAccess
         return $arrayToBuild;
     }
 
-    /**
-     * INTERNAL; DO NOT CALL DIRECTLY!
-     *
-     * @return array
-     */
-    public function getInternalArray(): array
-    {
-        return $this->internalArray;
-    }
-
     public function offsetExists($offset): bool
     {
         return isset($this->internalArray[$offset]);
