@@ -57,6 +57,8 @@ abstract class ViewHelperBaseTestCase extends UnitTestCase
         if ($expectedOutput instanceof IsAnything) {
             // Semi-void case: redundant assertion to prevent an error; if the tested logic did not break that's consider a pass
             $this->assertTrue(true);
+        } elseif (is_object($expectedOutput)) {
+            $this->assertEquals($expectedOutput, $output);
         } else {
             $this->assertSame($expectedOutput, $output);
         }

@@ -26,6 +26,11 @@ class UserWithoutToString
         $this->name = $name;
     }
 
+    public function toArray(): array
+    {
+        return ['name' => $this->name];
+    }
+
     /**
      * @return string
      */

@@ -47,7 +47,11 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
 
     protected function evaluateParts(RenderingContextInterface $renderingContext, iterable $parts)
     {
-        return static::convert($renderingContext->getVariableProvider()->get($parts[0]) ?? $parts[0], $parts[2]);
+        $subject = $parts[0];
+        if (is_string($subject)) {
+            $subject = $renderingContext->getVariableProvider()->get($subject) ?? $subject;
+        }
+        return static::convert($subject, $parts[2]);
     }
 
     /**
@@ -103,7 +107,7 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
      */
     protected static function convertToDateTime($variable)
     {
-        if (is_string($variable) && preg_match_all('/[a-z]+/i', $variable)) {
+        if (!is_numeric($variable)) {
             return new \DateTime($variable);
         }
         return \DateTime::createFromFormat('U', (string) $variable);
