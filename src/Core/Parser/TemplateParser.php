@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Template parser building up an object syntax tree
@@ -36,7 +35,7 @@ class TemplateParser
     {
         return $this->getOrParseAndStoreTemplate(
             $this->createIdentifierForFile($templatePathAndFilename, ''),
-            function ($parent, TemplatePaths $paths) use ($templatePathAndFilename): string {
+            function () use ($templatePathAndFilename): string {
                 return file_get_contents($templatePathAndFilename);
             }
         );
@@ -93,7 +92,7 @@ class TemplateParser
     protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ComponentInterface
     {
         $parsedTemplate = $this->parse(
-            $templateSourceClosure($this, $this->renderingContext->getTemplatePaths()),
+            $templateSourceClosure($this->renderingContext),
             $this->renderingContext->getParserConfiguration()
         );
         //$parsedTemplate->setIdentifier($templateIdentifier);

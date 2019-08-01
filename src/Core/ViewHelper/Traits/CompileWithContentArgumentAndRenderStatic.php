@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Exception;
 
 /**
@@ -91,4 +92,6 @@ trait CompileWithContentArgumentAndRenderStatic
         }
         return $renderChildrenClosure;
     }
+
+    abstract public function getArguments(): ArgumentCollection;
 }

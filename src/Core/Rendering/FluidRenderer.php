@@ -7,7 +7,6 @@ use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\View\Exception;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
-use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 class FluidRenderer
 {
@@ -93,7 +92,7 @@ class FluidRenderer
         try {
             $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
                 sha1($source),
-                function($parent, TemplatePaths $paths) use ($source): string { return $source; }
+                function() use ($source): string { return $source; }
             );
             $parsedTemplate->getArguments()->setRenderingContext($renderingContext);
         } catch (PassthroughSourceException $error) {
@@ -111,8 +110,8 @@ class FluidRenderer
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
-                    function($parent, TemplatePaths $paths) use ($layoutName): string {
-                        return $paths->getLayoutSource($layoutName);
+                    function(RenderingContextInterface $renderingContext) use ($layoutName): string {
+                        return $renderingContext->getTemplatePaths()->getLayoutSource($layoutName);
                     }
                 );
                 $parsedLayout->getArguments()->setRenderingContext($renderingContext);
@@ -177,6 +176,7 @@ class FluidRenderer
 
         try {
             $parsedTemplate = $this->getCurrentParsedTemplate();
+            $section = $parsedTemplate->getNamedChild($sectionName);
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
         } catch (InvalidTemplateResourceException $error) {
@@ -184,17 +184,13 @@ class FluidRenderer
                 return $renderingContext->getErrorHandler()->handleViewError($error);
             }
             return '';
-        } catch (Exception $error) {
-            return $renderingContext->getErrorHandler()->handleViewError($error);
-        }
-
-        try {
-            $section = $parsedTemplate->getNamedChild($sectionName);
-        } catch (ChildNotFoundException $exception) {
+        } catch (ChildNotFoundException $error) {
             if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($exception);
+                return $renderingContext->getErrorHandler()->handleViewError($error);
             }
             return '';
+        } catch (Exception $error) {
+            return $renderingContext->getErrorHandler()->handleViewError($error);
         }
 
         $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
@@ -227,8 +223,8 @@ class FluidRenderer
         try {
             $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $templatePaths->getPartialIdentifier($partialName),
-                function ($parent, TemplatePaths $paths) use ($partialName): string {
-                    return $paths->getPartialSource($partialName);
+                function (RenderingContextInterface $renderingContext) use ($partialName): string {
+                    return $renderingContext->getTemplatePaths()->getPartialSource($partialName);
                 }
             );
             $parsedPartial->getArguments()->setRenderingContext($renderingContext);
@@ -305,8 +301,8 @@ class FluidRenderer
         // Support for the closures will be removed in Fluid 4.0 since they are a temporary measure.
         $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
             $this->baseIdentifierClosure ? call_user_func($this->baseIdentifierClosure) : $templatePaths->getTemplateIdentifier('Default', 'Default'),
-            $this->baseTemplateClosure ?? function($parent, TemplatePaths $paths): string {
-                return $paths->getTemplateSource('Default', 'Default');
+            $this->baseTemplateClosure ?? function(RenderingContextInterface $renderingContext): string {
+                return $renderingContext->getTemplatePaths()->getTemplateSource('Default', 'Default');
             }
         );
         return $parsedTemplate;
