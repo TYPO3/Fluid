@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -16,6 +17,21 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class RootNodeTest extends UnitTestCase
 {
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function evaluateAssignsArgumentsAsVariables(): void
+    {
+        $subject = new RootNode();
+        $context = new RenderingContextFixture();
+        $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
+        $provider->expects($this->once())->method('add')->with('argumentName', 'argumentValue');
+        $context->setVariableProvider($provider);
+        $subject->getArguments()['argumentName'] = 'argumentValue';
+        $subject->evaluate($context);
+    }
+
     /**
      * @test
      */

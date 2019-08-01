@@ -10,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Component\Argument;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -19,6 +20,17 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class ArgumentCollectionTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function getAllRawReturnsNotEvaluatedComponents(): void
+    {
+        $child = new TextNode('foo');
+        $subject = new ArgumentCollection();
+        $subject['test'] = $child;
+        $this->assertSame(['test' => $child], $subject->getAllRaw());
+    }
+
     /**
      * @test
      * @dataProvider getArgumentArrayAccessTestValues

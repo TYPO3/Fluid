@@ -17,6 +17,23 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class ObjectAccessorNodeTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function flattenReturnsSelf(): void
+    {
+        $subject = new ObjectAccessorNode();
+        $this->assertSame($subject, $subject->flatten());
+    }
+
+    /**
+     * @test
+     */
+    public function flattenReturnsSelfWithExtractTrue(): void
+    {
+        $subject = new ObjectAccessorNode();
+        $this->assertSame($subject, $subject->flatten(true));
+    }
 
     /**
      * @test

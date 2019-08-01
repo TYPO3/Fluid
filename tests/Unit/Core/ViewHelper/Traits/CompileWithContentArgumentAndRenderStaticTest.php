@@ -24,13 +24,7 @@ class CompileWithContentArgumentAndRenderStaticTest extends UnitTestCase
     public function testGetContentArgumentNameThrowsExceptionIfNoArgumentsAvailable(): void
     {
         $instance = $this->getMockBuilder(CompileWithContentArgumentAndRenderStatic::class)->setMethods(['getArguments'])->getMockForTrait();
-        $instance->expects($this->once())->method('getArguments')->willReturn(
-            new ArgumentCollection(
-                [
-                    'arg' => new ArgumentDefinition('arg', 'string', 'Arg', true)
-                ]
-            )
-        );
+        $instance->expects($this->once())->method('getArguments')->willReturn(new ArgumentCollection());
         $this->setExpectedException(Exception::class);
         $method = new \ReflectionMethod($instance, 'resolveContentArgumentName');
         $method->setAccessible(true);

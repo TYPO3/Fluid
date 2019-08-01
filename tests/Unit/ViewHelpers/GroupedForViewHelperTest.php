@@ -10,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 
 /**
@@ -41,6 +42,12 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestCase
                 $context,
                 ['each' => [['prop' => 1, 'name' => 'z'], ['prop' => 2, 'name' => 'y'], ['prop' => 1, 'name' => 'x']], 'as' => 'grouped', 'groupBy' => 'prop', 'groupKey' => 'key'],
                 [(clone $forViewHelper)->addChild(new ObjectAccessorNode('key'))],
+            ],
+            'renders grouped object elements from array with key' => [
+                'alfredalfredbertha',
+                $context,
+                ['each' => [new UserWithoutToString('alfred'), new UserWithoutToString('alfred'), new UserWithoutToString('bertha')], 'as' => 'grouped', 'groupBy' => 'name', 'groupKey' => 'key'],
+                [clone $forViewHelper],
             ],
             'renders grouped elements from iterator with key' => [
                 'z1x1y2',

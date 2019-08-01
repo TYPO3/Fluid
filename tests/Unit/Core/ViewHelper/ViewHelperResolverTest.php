@@ -7,17 +7,130 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Class ViewHelperResolverTest
  */
 class ViewHelperResolverTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function viewHelperAliasCanBeAddedAndResolved(): void
+    {
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addViewHelperAlias('aliased', 'f', 'format.raw');
+        $this->assertInstanceOf(RawViewHelper::class, $resolver->createViewHelperInstance(null, 'aliased'));
+    }
+
+    /**
+     * @test
+     */
+    public function viewHelperAliasCanBeChecked(): void
+    {
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addViewHelperAlias('aliased', 'f', 'format.raw');
+        $this->assertSame(true, $resolver->isAliasRegistered('aliased'));
+        $this->assertSame(false, $resolver->isAliasRegistered('notRegistered'));
+    }
+
+    /**
+     * @test
+     */
+    public function atomsPathCanBeAdded(): void
+    {
+        $paths = ['foo' => ['/path/first/']];
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addAtomPaths($paths);
+        $this->assertSame($paths, $resolver->getAtoms());
+    }
+
+    /**
+     * @test
+     */
+    public function notFoundAtomsThrowChildNotFoundException(): void
+    {
+        $paths = ['foo' => [__DIR__ . '/../../../Fixtures/Atoms/']];
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addAtomPaths($paths);
+        $this->setExpectedException(ChildNotFoundException::class);
+        $resolver->resolveAtom('foo', 'invalid');
+    }
+
+    /**
+     * @test
+     */
+    public function atomsCanBeResolvedWithAtomResolver(): void
+    {
+        $paths = ['foo' => [__DIR__ . '/../../../Fixtures/Atoms/']];
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addAtomPaths($paths);
+        $this->assertInstanceOf(RootNode::class, $resolver->resolveAtom('foo', 'testAtom'));
+    }
+
+    /**
+     * @test
+     */
+    public function atomsCanBeResolvedWithViewHelperResolver(): void
+    {
+        $paths = ['foo' => [__DIR__ . '/../../../Fixtures/Atoms/']];
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addAtomPaths($paths);
+        $this->assertInstanceOf(RootNode::class, $resolver->createViewHelperInstance('foo', 'testAtom'));
+    }
+
+    /**
+     * @test
+     */
+    public function atomsNotFoundResolvedWithViewHelperResolverThrowsException(): void
+    {
+        $paths = ['foo' => [__DIR__ . '/../../../Fixtures/Atoms/']];
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addAtomPaths($paths);
+        $this->setExpectedException(Exception::class);
+        $resolver->createViewHelperInstance('notAtomNamespace', 'invalid');
+    }
+
+    /**
+     * @test
+     */
+    public function componentsInsideAtomsCanBeResolvedWithAtomResolver(): void
+    {
+        $paths = ['foo' => [__DIR__ . '/../../../Fixtures/Atoms/']];
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addAtomPaths($paths);
+        $this->assertInstanceOf(SectionViewHelper::class, $resolver->resolveAtom('foo', 'testAtom.sub'));
+    }
+
+    /**
+     * @test
+     */
+    public function removeNamespaceRemovesNamespace(): void
+    {
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addNamespace('t', 'test');
+        $resolver->removeNamespace('t', 'test');
+        $this->assertSame(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers']], $resolver->getNamespaces());
+    }
+
+    /**
+     * @test
+     */
+    public function getNamespacesReturnsNamespacesArray(): void
+    {
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $resolver->addNamespace('t', 'test');
+        $this->assertSame(['f' => ['TYPO3Fluid\\Fluid\\ViewHelpers'], 't' => ['test']], $resolver->getNamespaces());
+    }
 
     /**
      * @test

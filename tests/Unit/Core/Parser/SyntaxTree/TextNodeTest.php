@@ -16,6 +16,23 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class TextNodeTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function flattenReturnsSelf(): void
+    {
+        $subject = new TextNode('');
+        $this->assertSame($subject, $subject->flatten());
+    }
+
+    /**
+     * @test
+     */
+    public function flattenReturnsTextWithExtractTrue(): void
+    {
+        $subject = new TextNode('foo');
+        $this->assertSame('foo', $subject->flatten(true));
+    }
 
     /**
      * @test

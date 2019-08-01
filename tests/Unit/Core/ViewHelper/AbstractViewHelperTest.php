@@ -119,6 +119,26 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
     /**
      * @test
      */
+    public function argumentsCanBeOverriddenAndRegisteredTwiceWithoutError(): void
+    {
+        $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
+
+        $name = 'name_something';
+        $description = 'Example desc';
+        $type = 'string';
+        $isRequired = true;
+        $expected = new ArgumentDefinition($name, $type, $description, $isRequired);
+
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('overrideArgument', $name, $type, $description, $isRequired);
+        $viewHelper->_call('overrideArgument', $name, $type, $description, $isRequired);
+        $this->assertEquals([$name => $expected], $viewHelper->getArguments()->getDefinitions(), 'Argument definitions not returned correctly.');
+    }
+
+    /**
+     * @test
+     */
     public function testRenderChildrenCallsRenderChildrenClosureIfSet()
     {
         $viewHelper = $this->getMockForAbstractClass(AbstractViewHelper::class);

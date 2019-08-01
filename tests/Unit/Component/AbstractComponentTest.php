@@ -8,19 +8,44 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Component;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\AlternativeComponentFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\ComponentFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\TransparentComponentFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
 
 /**
  * Test for base methods on AbstractComponent
  */
 class AbstractComponentTest extends UnitTestCase
 {
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function addChildCalledWithParameterViewHelperRegistersArgument(): void
+    {
+        $context = new RenderingContextFixture();
+        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        $definitionArguments = ['name' => 'foo', 'type' => 'string', 'description' => 'Test'];
+
+        $child = (new ParameterViewHelper())->onOpen($context);
+        $child->getArguments()->setRenderingContext($context)->assignAll($definitionArguments);
+
+        $subject->getArguments()->setRenderingContext($context);
+        $subject->addChild($child);
+
+        $expectedDefinitions = ['foo' => new ArgumentDefinition('foo', 'string', 'Test', false)];
+        $this->assertEquals($expectedDefinitions, $subject->getArguments()->getDefinitions());
+    }
+
     /**
      * @test
      * @dataProvider getNamedChildErrorTestValues
@@ -76,9 +101,12 @@ class AbstractComponentTest extends UnitTestCase
     public function getNamedChildTestValues(): array
     {
         $namedChild = new ComponentFixture('named');
+        $namedRoot = new ComponentFixture('root');
         $unnamedChild = new ComponentFixture();
         $transparentParent = new TransparentComponentFixture();
+        $emptyTransparentParent = new TransparentComponentFixture();
         $transparentParent->addChild($namedChild);
+        $namedRoot->addChild($namedChild);
         return [
             'named child as immediate root' => [
                 [$unnamedChild, $namedChild],
@@ -87,6 +115,16 @@ class AbstractComponentTest extends UnitTestCase
             ],
             'named child in transparent parent' => [
                 [$transparentParent],
+                'named',
+                $namedChild,
+            ],
+            'named child in named child' => [
+                [$namedRoot],
+                'root.named',
+                $namedChild,
+            ],
+            'swallows ChildNotFound in transparent parent' => [
+                [$emptyTransparentParent, $namedChild],
                 'named',
                 $namedChild,
             ],
@@ -202,5 +240,119 @@ class AbstractComponentTest extends UnitTestCase
                 (new RootNode())->addChild($namedNestedNonTransparentWithoutChildren),
             ],
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getFlattenTestValues
+     * @param ComponentInterface $subject
+     * @param bool $extract
+     * @param mixed $expected
+     */
+    public function flattenReturnsExpectedValue(ComponentInterface $subject, bool $extract, $expected): void
+    {
+        $this->assertSame($expected, $subject->flatten($extract));
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getFlattenTestValues(): array
+    {
+        $textNode = new TextNode('foo');
+        $selfReturn = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        return [
+            'returns null for empty children with extract true' => [
+                $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass(),
+                true,
+                null,
+            ],
+            'returns self for empty children with extract false' => [
+                $selfReturn,
+                false,
+                $selfReturn,
+            ],
+            'returns single child text value if single child TextNode and extract true' => [
+                $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass()->setChildren([new TextNode('foo')]),
+                true,
+                'foo',
+            ],
+            'returns single child if single child TextNode and extract false' => [
+                $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass()->setChildren([$textNode]),
+                false,
+                $textNode
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getEvaluateChildrenTestValues
+     * @param iterable $children
+     * @param mixed $expected
+     * @throws \ReflectionException
+     */
+    public function evaluateChildrenReturnsExpectedValue(iterable $children, $expected): void
+    {
+        /** @var ComponentInterface $subject */
+        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        $subject->setChildren($children);
+        $this->assertSame($expected, $subject->evaluate(new RenderingContextFixture()));
+    }
+
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
+    public function getEvaluateChildrenTestValues(): array
+    {
+        $arrayReturningComponent = $this->getMockBuilder(ComponentInterface::class)->getMockForAbstractClass();
+        $arrayReturningComponent->expects($this->once())->method('evaluate')->willReturn(['foo' => 'bar']);
+        $embeddedComponent = $this->getMockBuilder(EmbeddedComponentInterface::class)->getMockForAbstractClass();
+        return [
+            'returns null for empty children' => [
+                [],
+                null,
+            ],
+            'multiple text nodes become concatenated string' => [
+                [new TextNode('foo'), new TextNode('bar'), new TextNode('baz')],
+                'foobarbaz',
+            ],
+            'skips embedded components' => [
+                [new TextNode('foo'), $embeddedComponent, new TextNode('baz')],
+                'foobaz',
+            ],
+            'executes single child without cast to string' => [
+                [$arrayReturningComponent],
+                ['foo' => 'bar'],
+            ],
+        ];
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function detachChildrenReturnsAndRemovesChildren(): void
+    {
+        /** @var ComponentInterface $subject */
+        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        $children = [new TextNode('foo'), new TextNode('bar')];
+        $subject->setChildren($children);
+        $detached = $subject->detachChildren();
+        $this->assertSame($children, $detached->getChildren());
+        $this->assertEmpty($subject->getChildren());
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function allowsArbitraryArgumentsByDefault(): void
+    {
+        /** @var ComponentInterface $subject */
+        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        $this->assertSame(true, $subject->allowUndeclaredArgument('random-argument'));
     }
 }

@@ -10,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestCase;
 
 /**
@@ -19,12 +20,14 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestCase
 {
     public function getStandardTestValues(): array
     {
+        $object = new UserWithoutToString('object');
         $html = '<b>html</b>';
         $context = new RenderingContextFixture();
         $context->setVariableProvider(new StandardVariableProvider(['foo' => $html]));
         return [
             'encodes html via argument value' => ['&lt;b&gt;html&lt;/b&gt;', $context, ['value' => $html]],
             'encodes html via child node' => ['&lt;b&gt;html&lt;/b&gt;', $context, null, [new ObjectAccessorNode('foo')]],
+            'does not encode incompatible objects' => [$object, $context, ['value' => $object]],
         ];
     }
 }
