@@ -60,7 +60,25 @@ interface ComponentInterface
 
     public function getTypedChildren(string $typeClassName, ?string $name = null): ComponentInterface;
 
+    /**
+     * @return iterable|ComponentInterface[]
+     */
     public function getChildren(): iterable;
+
+    /**
+     * @param iterable|ComponentInterface[] $children
+     * @return ComponentInterface
+     */
+    public function setChildren(iterable $children): self;
+
+    /**
+     * Creates a new RootNode (or other, depending on implementation) which
+     * contains the children of this component, then removes all children of the
+     * this component and returns the new component.
+     *
+     * @return ComponentInterface
+     */
+    public function detachChildren(): ComponentInterface;
 
     /**
      * Returns whether the escaping interceptors should be disabled or enabled for the render-result of children of this ViewHelper

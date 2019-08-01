@@ -210,6 +210,25 @@ abstract class AbstractComponent implements ComponentInterface
     }
 
     /**
+     * @param iterable|ComponentInterface[] $children
+     * @return ComponentInterface
+     */
+    public function setChildren(iterable $children): ComponentInterface
+    {
+        $this->children = $children;
+        $this->_lastAddedWasTextNode = end($children) instanceof TextNode;
+        return $this;
+    }
+
+    public function detachChildren(): ComponentInterface
+    {
+        $node = (new RootNode())->setChildren($this->children);
+        $this->children = [];
+        $this->_lastAddedWasTextNode = false;
+        return $node;
+    }
+
+    /**
      * Returns whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
      *
      * Note: This method is no public API, use $this->escapeChildren instead!
@@ -270,7 +289,11 @@ abstract class AbstractComponent implements ComponentInterface
         if (count($evaluatedNodes) === 1) {
             return $evaluatedNodes[0];
         }
-        return implode('', array_map([$this, 'castToString'], $evaluatedNodes));
+        $string = '';
+        foreach ($evaluatedNodes as $evaluatedNode) {
+            $string .= $this->castToString($evaluatedNode);
+        }
+        return $string;
     }
 
     /**
