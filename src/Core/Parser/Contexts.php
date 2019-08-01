@@ -55,6 +55,9 @@ class Contexts
     /** @var Context */
     public $boolean;
 
+    /** @var Context */
+    public $inactive;
+
     public function __construct()
     {
         // Root context: aware of tag start or inline start only.
@@ -96,5 +99,8 @@ class Contexts
 
         // Boolean: matches parenthesis groups, backslash, inline expressions, quotes and whitespace (which separates expression parts but is not quoted).
         $this->boolean = new Context(Context::CONTEXT_BOOLEAN, "{()'\"\\ \t\r\n");
+
+        // Inactive: a context that will only match tag open and close, ignoring everything else
+        $this->inactive = new Context(Context::CONTEXT_INACTIVE, '<>');
     }
 }

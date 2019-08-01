@@ -32,6 +32,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\ViewHelpers\CViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\DescriptionViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
@@ -1392,6 +1393,24 @@ class SequencerTest extends UnitTestCase
     /**
      * @test
      */
+    public function inactiveTagSequencingTreatsAllContentAsPureText(): void
+    {
+        $context = $this->createContext();
+        $sequencer = new Sequencer(
+            $this->createContext(),
+            new Contexts(),
+            new Source('<f:description> text and <f:render /> <f:description>test</f:description> </f:description> outside')
+        );
+        $expectedNode = (new RootNode());
+        $expectedNode->addChild($this->createViewHelper($context, DescriptionViewHelper::class, [], [new TextNode(' text and <f:render /> <f:description>test</f:description> ')]));
+        $expectedNode->addChild(new TextNode(' outside'));
+        $node = $sequencer->sequence();
+        $this->assertNodeEquals($node, $expectedNode);
+    }
+
+    /**
+     * @test
+     */
     public function stressTestOneThousandArrayItems()
     {
         $context = $this->createContext();
@@ -1523,14 +1542,7 @@ class SequencerTest extends UnitTestCase
 
         $children = $subject->getChildren();
         $expectedChildren = $expected->getChildren();
-        if (count($children) !== count($expectedChildren)) {
-            $this->fail('Nodes have an unequal number of child nodes. Got ' . count($children) . ', expected ' . count($expectedChildren) . '. Path: ' . $path);
-        }
-        foreach ($expectedChildren as $index => $expectedChild) {
-            $child = $children[$index];
-            $class = get_class($subject);
-            $this->assertNodeEquals($child, $expectedChild, substr($class, strrpos($class, '\\') + 1) . '.child@' . $index);
-        }
+        $this->assertEquals($expectedChildren, $children);
     }
 
     /**

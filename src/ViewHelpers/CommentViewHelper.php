@@ -8,6 +8,8 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
+use TYPO3Fluid\Fluid\Component\SequencingComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\Sequencer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -32,11 +34,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * After
  * </output>
  *
- * <code title="Prevent parsing">
- * <f:comment><![CDATA[
- *  <f:some.invalid.syntax />
- * ]]></f:comment>
- * </code>
  * <output>
  * </output>
  *
@@ -44,10 +41,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * However it can lead to reduced readability. You can use layouts and partials to split a large template into smaller
  * parts. Using self-descriptive names for the partials can make comments redundant.
  */
-class CommentViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
+class CommentViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface, SequencingComponentInterface
 {
-    public function evaluate(RenderingContextInterface $renderingContext)
+    public function sequence(Sequencer $sequencer, ?string $namespace, string $method): void
     {
-        return null;
+        $sequencer->sequenceUntilClosingTagAndIgnoreNested($this, $namespace, $method);
     }
 }

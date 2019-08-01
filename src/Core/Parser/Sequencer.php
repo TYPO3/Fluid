@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
+use TYPO3Fluid\Fluid\Component\SequencingComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
@@ -84,30 +85,30 @@ class Sequencer
     /**
      * @var RenderingContextInterface
      */
-    protected $renderingContext;
+    public $renderingContext;
 
     /**
      * @var Contexts
      */
-    protected $contexts;
+    public $contexts;
 
     /**
      * @var Source
      */
-    protected $source;
+    public $source;
 
     /**
      * @var Splitter
      */
-    protected $splitter;
+    public $splitter;
 
     /** @var \NoRewindIterator */
-    protected $sequence;
+    public $sequence;
 
     /**
      * @var Configuration
      */
-    protected $configuration;
+    public $configuration;
 
     /**
      * @var ViewHelperResolver
@@ -201,6 +202,35 @@ class Sequencer
         $node = array_pop($this->nodeStack)->onClose($this->renderingContext);
         $node->getArguments()->setRenderingContext($this->renderingContext);
         return $node;
+    }
+
+    public function sequenceUntilClosingTagAndIgnoreNested(ComponentInterface $parent, ?string $namespace, string $method): void
+    {
+        $matchingTag = $namespace ? $namespace . ':' . $method : $method;
+        $matchingTagLength = strlen($matchingTag);
+        $ignoredNested = 0;
+        $this->splitter->switch($this->contexts->inactive);
+        $this->sequence->next();
+        $text = '';
+        foreach ($this->sequence as $symbol => $captured) {
+            if ($symbol === self::BYTE_TAG_END && $captured !== null && strncmp($captured, $matchingTag, $matchingTagLength) === 0) {
+                // An opening tag matching the parent tag - treat as text and add to ignored count.
+                ++$ignoredNested;
+            } elseif ($symbol === self::BYTE_TAG_END && $captured === '/' . $matchingTag) {
+                // A closing version of the parent tag. Check counter; if zero, finish. If not, decrease ignored count.
+                if ($ignoredNested === 0) {
+                    $parent->addChild(new TextNode((string) substr($text, 0, -1)));
+                    return;
+                }
+                --$ignoredNested;
+            }
+            $text .= (string) $captured . chr($symbol);
+        }
+
+        throw $this->createErrorAtPosition(
+            'Unterminated inactive tag: ' . $matchingTag,
+            1564665730
+        );
     }
 
     protected function sequenceCharacterData(string $text): ComponentInterface
@@ -431,6 +461,13 @@ class Sequencer
                         // sequencing the tag's body - parsed nodes then get attached to this node as children.
                         $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
                         $viewHelperNode = $this->callInterceptor($viewHelperNode, self::INTERCEPT_OPENING_VIEWHELPER);
+                        if ($viewHelperNode instanceof SequencingComponentInterface) {
+                            // The Component will take over sequencing. It will return if encountering the right closing
+                            // tag - so when it returns, we reached the end of the Component and must pop the stack.
+                            $viewHelperNode->sequence($this, $namespace, (string) $method);
+                            #array_pop($this->nodeStack);
+                            return $viewHelperNode;
+                        }
                         $this->nodeStack[] = $viewHelperNode;
                         return null;
                     }
