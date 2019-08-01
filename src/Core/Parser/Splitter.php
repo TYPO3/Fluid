@@ -74,7 +74,7 @@ class Splitter
      */
     public function parse(): \NoRewindIterator
     {
-        return new \NoRewindIterator($this->createGenerator());
+        return new \NoRewindIterator($this->iterate());
     }
 
     /**
@@ -83,9 +83,9 @@ class Splitter
      * character (byte). The secondary bit mask is costless as it is OR'ed into
      * the primary bit mask.
      *
-     * @return \NoRewindIterator|string[]|null[]
+     * @return \Generator|string[]|null[]
      */
-    protected function createGenerator(): \Generator
+    protected function iterate(): \Generator
     {
         $bytes = &$this->source->bytes;
         $source = &$this->source->source;
