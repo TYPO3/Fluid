@@ -72,6 +72,26 @@ class ViewHelperResolver
         }
     }
 
+    /**
+     * Add all Atom paths as array-in-array, with the first level key
+     * being the namespace and the value being an array of paths.
+     *
+     * Example:
+     *
+     * $resolver->addAtomPaths(
+     *   [
+     *     'my' => [
+     *       'path/first/',
+     *       'path/second/',
+     *     ],
+     *     'other' => [
+     *       'path/third/',
+     *     ],
+     *   ]
+     * );
+     *
+     * @param iterable|string[][] $paths
+     */
     public function addAtomPaths(iterable $paths): void
     {
         foreach ($paths as $namespace => $collection) {
@@ -93,17 +113,28 @@ class ViewHelperResolver
                     break;
                 }
             }
-            $atom = $this->renderingContext->getTemplateParser()->parseFile($subPath . '.html');
-            if (!empty($parts)) {
-                $atom = $atom->getNamedChild(implode('.', $parts));
+            $filePathAndFilename = $subPath . '.html';
+            if (file_exists($filePathAndFilename)) {
+                $atom = $this->renderingContext->getTemplateParser()->parseFile($filePathAndFilename);
+                if (!empty($parts)) {
+                    $atom = $atom->getNamedChild(implode('.', $parts));
+                }
+                return $atom;
             }
-            return $atom;
         }
         $paths = empty($this->atoms[$namespace]) ? 'none' : implode(', ', $this->atoms[$namespace]);
         throw new ChildNotFoundException(
             'Atom "' . $namespace . ':' . $name . '" could not be resolved. We looked in: ' . $paths,
             1564404340
         );
+    }
+
+    /**
+     * @return array|string[][]
+     */
+    public function getAtoms(): array
+    {
+        return $this->atoms;
     }
 
     /**
@@ -198,7 +229,7 @@ class ViewHelperResolver
 
     public function removeNamespace(string $identifier, $phpNamespace): void
     {
-        if (($key = array_search($phpNamespace, $this->namespaces[$identifier]))) {
+        if (($key = array_search($phpNamespace, $this->namespaces[$identifier], true)) !== false) {
             unset($this->namespaces[$identifier][$key]);
             if (empty($this->namespaces[$identifier])) {
                 unset($this->namespaces[$identifier]);
