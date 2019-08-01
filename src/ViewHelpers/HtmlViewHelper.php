@@ -34,10 +34,15 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
 
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        $this->shouldRenderTag = ($arguments['data-namespace-typo3-fluid'] ?? null) === 'true';
-        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
+        $arguments = $this->arguments->getArrayCopy();
         $resolver = $renderingContext->getViewHelperResolver();
-        foreach ($arguments as $name => $value) {
+        foreach ($this->arguments as $name => $value) {
+            if ($name === 'data-namespace-typo3-fluid') {
+                $this->shouldRenderTag = $value !== 'true';
+                $this->arguments['data-namespace-typo3-fluid'] = null;
+                continue;
+            }
+
             $parts = explode(':', $name);
             if ($parts[0] === 'xmlns' && isset($parts[1]) && strncmp('http://typo3.org/ns/', $value, 20) === 0) {
                 $namespace = $resolver->resolvePhpNamespaceFromFluidNamespace($value);
@@ -66,6 +71,7 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
         }
 
         $tagBuilder = new TagBuilder('html');
+        $tagBuilder->ignoreEmptyAttributes(true);
         $tagBuilder->addAttributes($this->arguments->setRenderingContext($renderingContext)->getArrayCopy());
         $tagBuilder->setContent($content);
         return $tagBuilder->render();
