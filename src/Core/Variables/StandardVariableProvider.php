@@ -255,7 +255,7 @@ class StandardVariableProvider implements VariableProviderInterface
     protected function resolveSubVariableReferences($propertyPath)
     {
         if (strpos($propertyPath, '{') !== false) {
-            preg_match_all('/(\{.*\})/', $propertyPath, $matches);
+            preg_match_all('/(\{.*?\})/', $propertyPath, $matches);
             foreach ($matches[1] as $match) {
                 $subPropertyPath = substr($match, 1, -1);
                 $propertyPath = str_replace($match, $this->getByPath($subPropertyPath), $propertyPath);
