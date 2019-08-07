@@ -334,21 +334,6 @@ class AbstractComponentTest extends UnitTestCase
      * @test
      * @throws \ReflectionException
      */
-    public function detachChildrenReturnsAndRemovesChildren(): void
-    {
-        /** @var ComponentInterface $subject */
-        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
-        $children = [new TextNode('foo'), new TextNode('bar')];
-        $subject->setChildren($children);
-        $detached = $subject->detachChildren();
-        $this->assertSame($children, $detached->getChildren());
-        $this->assertEmpty($subject->getChildren());
-    }
-
-    /**
-     * @test
-     * @throws \ReflectionException
-     */
     public function allowsArbitraryArgumentsByDefault(): void
     {
         /** @var ComponentInterface $subject */

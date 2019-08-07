@@ -220,14 +220,6 @@ abstract class AbstractComponent implements ComponentInterface
         return $this;
     }
 
-    public function detachChildren(): ComponentInterface
-    {
-        $node = (new RootNode())->setChildren($this->children);
-        $this->children = [];
-        $this->_lastAddedWasTextNode = false;
-        return $node;
-    }
-
     /**
      * Returns whether the escaping interceptors should be disabled or enabled for the result of renderChildren() calls within this ViewHelper
      *
