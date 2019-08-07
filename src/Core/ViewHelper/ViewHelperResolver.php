@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
@@ -444,10 +445,7 @@ class ViewHelperResolver
                 if ($atomFile) {
                     $atom = $this->renderingContext->getTemplateParser()->parseFile($atomFile)->setName($namespace . ':' . $viewHelperShortName);
                     $instance = $this->createViewHelperInstanceFromClassName(AtomViewHelper::class);
-                    $instance->setArguments($atom->getArguments());
-                    $instance->getArguments()->setDefinitions(
-                        $atom->getArguments()->getDefinitions()
-                    )['file'] = $atomFile;
+                    $instance->getArguments()->setDefinitions($atom->getArguments()->getDefinitions())['file'] = $atomFile;
                     return $instance;
                 }
             } catch (ChildNotFoundException $exception) {

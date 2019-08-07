@@ -46,11 +46,13 @@ class EntryNode extends AbstractComponent implements EmbeddedComponentInterface,
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $arguments = $this->getArguments()->setRenderingContext($renderingContext)->validate();
-        $variables = $renderingContext->getVariableProvider();
-        foreach ($arguments->getArrayCopy() as $name => $value) {
-            $variables->add($name, $value);
-        }
+        $renderingContext = clone $renderingContext;
+        $renderingContext->setVariableProvider(
+            $renderingContext->getVariableProvider()->getScopeCopy(
+                $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy()
+                + $renderingContext->getVariableProvider()->getAll()
+            )
+        );
         return parent::evaluate($renderingContext);
     }
 

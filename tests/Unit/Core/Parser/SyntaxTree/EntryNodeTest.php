@@ -26,7 +26,7 @@ class EntryNodeTest extends UnitTestCase
         $subject = new EntryNode();
         $context = new RenderingContextFixture();
         $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
-        $provider->expects($this->once())->method('add')->with('argumentName', 'argumentValue');
+        $provider->expects($this->once())->method('getScopeCopy')->with(['argumentName' => 'argumentValue']);
         $context->setVariableProvider($provider);
         $subject->getArguments()['argumentName'] = 'argumentValue';
         $subject->evaluate($context);

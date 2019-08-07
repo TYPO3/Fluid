@@ -38,6 +38,7 @@ class AtomViewHelper extends AbstractViewHelper
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $optional = (boolean) ($arguments['optional'] ?? false);
         $default = $arguments['default'] ?? null;
+
         try {
             if (isset($arguments['file'])) {
                 $component = $renderingContext->getTemplateParser()->parseFile($arguments['file']);
@@ -52,11 +53,11 @@ class AtomViewHelper extends AbstractViewHelper
             }
             throw $exception;
         }
+
         if (!empty($arguments['section'])) {
             $component = $component->getNamedChild($arguments['section']);
         }
-        $variables = (array) $arguments;
-        $component->getArguments()->setRenderingContext($renderingContext)->assignAll($arguments);
+        $component->getArguments()->assignAll($arguments);
         return $component->evaluate($renderingContext);
     }
 
