@@ -78,6 +78,12 @@ abstract class AbstractComponent implements ComponentInterface
         return $this->name;
     }
 
+    public function setArguments(ArgumentCollection $arguments): ComponentInterface
+    {
+        $this->arguments = $arguments;
+        return $this;
+    }
+
     public function getArguments(): ArgumentCollection
     {
         return $this->arguments ?? ($this->arguments = new ArgumentCollection());

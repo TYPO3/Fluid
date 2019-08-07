@@ -73,6 +73,16 @@ class ArgumentCollection extends \ArrayObject
         return $this;
     }
 
+    /**
+     * @param iterable|ArgumentDefinition[] $definitions
+     * @return ArgumentCollection
+     */
+    public function setDefinitions(iterable $definitions): ArgumentCollection
+    {
+        $this->definitions = $definitions;
+        return $this;
+    }
+
     public function offsetGet($offset)
     {
         if (isset($this->definitions[$offset]) && !parent::offsetExists($offset)) {

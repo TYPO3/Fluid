@@ -50,6 +50,8 @@ interface ComponentInterface
      */
     public function getArguments(): ArgumentCollection;
 
+    public function setArguments(ArgumentCollection $arguments): self;
+
     public function allowUndeclaredArgument(string $argumentName): bool;
 
     public function getName(): ?string;
