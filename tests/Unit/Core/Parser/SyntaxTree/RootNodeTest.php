@@ -19,21 +19,6 @@ class RootNodeTest extends UnitTestCase
 {
     /**
      * @test
-     * @throws \ReflectionException
-     */
-    public function evaluateAssignsArgumentsAsVariables(): void
-    {
-        $subject = new RootNode();
-        $context = new RenderingContextFixture();
-        $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
-        $provider->expects($this->once())->method('add')->with('argumentName', 'argumentValue');
-        $context->setVariableProvider($provider);
-        $subject->getArguments()['argumentName'] = 'argumentValue';
-        $subject->evaluate($context);
-    }
-
-    /**
-     * @test
      */
     public function testEvaluateCallsEvaluateChildNodes(): void
     {

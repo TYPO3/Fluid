@@ -12,12 +12,14 @@ use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\SequencingComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Sequencer for Fluid syntax
@@ -144,34 +146,38 @@ class Sequencer
 
     public function sequence(): ComponentInterface
     {
-        // Please note: repeated calls to $this->getNodeFromStack() are indeed intentional. That method may
-        // return different nodes at different times depending on what has occurred in other methods! Only the places
-        // where $node is actually extracted is it (by design) safe to do so. DO NOT REFACTOR!
-        // It is *also* intentional that this switch has no default case. The root context is very specific and will
-        // only apply when the splitter is actually in root, which means there is no chance of it yielding an unexpected
-        // character (because that implies a method called by this method already threw a SequencingException).
-        $this->nodeStack[] = (new RootNode())->onOpen($this->renderingContext);
+        // Root context - the only symbols that cause any context switching are curly brace open and tag start, but
+        // only if they are not preceded by a backslash character; in which case the symbol is ignored and merely
+        // collected as part of the output string. NULL bytes are ignored in this context (the Splitter will yield
+        // a single NULL byte when end of source is reached).
+        $this->nodeStack[] = (new EntryNode())->onOpen($this->renderingContext);
         $this->sequence = $this->splitter->parse();
+        $countedEscapes = 0;
         foreach ($this->sequence as $symbol => $captured) {
+            $node = end($this->nodeStack);
+            $text = $captured . ($countedEscapes > 0 ? chr($symbol) : '');
+            if ($text !== '') {
+                $node->addChild(new TextNode($text));
+            }
+
+            if ($countedEscapes > 0) {
+                $countedEscapes = 0;
+                continue;
+            }
+
             switch ($symbol) {
+                case self::BYTE_BACKSLASH:
+                    ++$countedEscapes;
+                    break;
+
                 case self::BYTE_INLINE:
-                    $node = end($this->nodeStack);
-                    if ($this->splitter->index > 1 && $this->source->bytes[$this->splitter->index - 1] === self::BYTE_BACKSLASH) {
-                        $node->addChild(new TextNode(substr($captured, 0, -1) . '{'));
-                        break;
-                    }
-                    if ($captured !== null) {
-                        $node->addChild(new TextNode($captured));
-                    }
+                    $countedEscapes = 0;
                     $node->addChild($this->sequenceInlineNodes(false));
                     $this->splitter->switch($this->contexts->root);
                     break;
 
                 case self::BYTE_TAG:
-                    if ($captured !== null) {
-                        end($this->nodeStack)->addChild(new TextNode($captured));
-                    }
-
+                    $countedEscapes = 0;
                     $childNode = $this->sequenceTagNode();
                     $this->splitter->switch($this->contexts->root);
 
@@ -181,13 +187,15 @@ class Sequencer
                     break;
 
                 case self::BYTE_NULL:
-                    if ($captured !== null) {
-                        end($this->nodeStack)->addChild(new TextNode($captured));
-                    }
                     break;
             }
         }
 
+        // If there is more than a single node remaining in the stack this indicates an error. More precisely it
+        // indicates that some function called in the above switch added a node to the stack but failed to remove it
+        // before returning, which usually indicates that the template contains one or more incorrectly closed tags.
+        // In order to report this as error we collect the classes of every remaining node in the stack. Unfortunately
+        // we cannot report the position of where the closing tag was expected - this is simply not known to Fluid.
         if (count($this->nodeStack) !== 1) {
             $names = [];
             while (($unterminatedNode = array_pop($this->nodeStack))) {
@@ -199,6 +207,8 @@ class Sequencer
             );
         }
 
+        // Finishing sequencing means returning the single node that remains in the node stack, firing the onClose
+        // method on it and assigning the rendering context to the ArgumentCollection carried by the root node.
         $node = array_pop($this->nodeStack)->onClose($this->renderingContext);
         $node->getArguments()->setRenderingContext($this->renderingContext);
         return $node;
@@ -206,6 +216,12 @@ class Sequencer
 
     public function sequenceUntilClosingTagAndIgnoreNested(ComponentInterface $parent, ?string $namespace, string $method): void
     {
+        // Special method of sequencing which completely ignores any and all Fluid code inside a tag if said tag is
+        // associated with a Component that implements SequencingComponentInterface and calls this method as a default
+        // implementation of an "ignore everything until closed" type of behavior. Exists in Sequencer since this is
+        // the most common expected use case which would otherwise 1) be likely to become duplicated, or 2) require the
+        // use of a trait or base class for this single method alone. Since the Component which implements the signal
+        // interface already receives the Sequencer instance it is readily available without composition concerns.
         $matchingTag = $namespace ? $namespace . ':' . $method : $method;
         $matchingTagLength = strlen($matchingTag);
         $ignoredNested = 0;
@@ -410,24 +426,23 @@ class Sequencer
                     try {
                         if (!$closing || $selfClosing) {
                             $viewHelperNode = $viewHelperNode ?? $this->resolver->createViewHelperInstance($namespace, (string) $method);
-                            $arguments = $viewHelperNode->getArguments();
+                            $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
                         } else {
+                            // $closing will be true and $selfClosing false; add to stack, continue with children.
+                            $viewHelperNode = array_pop($this->nodeStack);
                             $expectedClass = $this->resolver->resolveViewHelperClassName($namespace, (string) $method);
-                            $closesNode = array_pop($this->nodeStack);
-                            if (!$closesNode instanceof RootNode && !$closesNode instanceof $expectedClass) {
+                            if (!$viewHelperNode instanceof $expectedClass) {
                                 throw $this->createErrorAtPosition(
                                     sprintf(
                                         'Mismatched closing tag. Expecting: %s:%s (%s). Found: (%s).',
                                         $namespace,
                                         $method,
                                         $expectedClass,
-                                        get_class($closesNode)
+                                        get_class($viewHelperNode)
                                     ),
                                     1557700789
                                 );
                             }
-                            $viewHelperNode = $closesNode;
-                            $arguments = $viewHelperNode->getArguments();
                         }
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         $error = $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
@@ -459,13 +474,11 @@ class Sequencer
                         // The node is neither a closing or self-closing node (= an opening node expecting tag content).
                         // Add it to the stack and return null to return the Sequencer to "root" context and continue
                         // sequencing the tag's body - parsed nodes then get attached to this node as children.
-                        $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
                         $viewHelperNode = $this->callInterceptor($viewHelperNode, self::INTERCEPT_OPENING_VIEWHELPER);
                         if ($viewHelperNode instanceof SequencingComponentInterface) {
                             // The Component will take over sequencing. It will return if encountering the right closing
                             // tag - so when it returns, we reached the end of the Component and must pop the stack.
                             $viewHelperNode->sequence($this, $namespace, (string) $method);
-                            #array_pop($this->nodeStack);
                             return $viewHelperNode;
                         }
                         $this->nodeStack[] = $viewHelperNode;
@@ -486,7 +499,6 @@ class Sequencer
                 case self::BYTE_WHITESPACE_EOL:
                 case self::BYTE_WHITESPACE_SPACE:
                     $text .= chr($symbol);
-
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
                         if ($captured !== null) {
                             // Encountering this case means we've collected a previous key and now collected a non-empty

@@ -60,8 +60,8 @@ class Contexts
 
     public function __construct()
     {
-        // Root context: aware of tag start or inline start only.
-        $this->root = new Context(Context::CONTEXT_ROOT, '{<');
+        // Root context: aware of tag start or inline start only, and escapes (to ignore next symbol).
+        $this->root = new Context(Context::CONTEXT_ROOT, '{<\\');
 
         // Inline context: aware of array syntax, sub-inline syntax, inline VH syntax, and arguments enclosed by parenthesis by looking for parenthesis start
         $this->inline = new Context(Context::CONTEXT_INLINE, "@(->[]|{}:,=|\\\t\n\r\0'\"` ");

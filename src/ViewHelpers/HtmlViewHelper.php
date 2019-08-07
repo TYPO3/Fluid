@@ -34,7 +34,7 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
 
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        $arguments = $this->arguments->getArrayCopy();
+        $arguments = $this->getArguments()->getArrayCopy();
         $resolver = $renderingContext->getViewHelperResolver();
         foreach ($this->arguments as $name => $value) {
             if ($name === 'data-namespace-typo3-fluid') {

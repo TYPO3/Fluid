@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -64,10 +65,8 @@ class SectionViewHelper extends AbstractViewHelper implements EmbeddedComponentI
         $this->registerArgument('name', 'string', 'Name of the section', true);
     }
 
-    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        parent::onOpen($renderingContext);
-        $this->name = $this->getArguments()['name'];
-        return $this;
+        return (new EntryNode())->setName($this->getArguments()['name'])->setChildren($this->getChildren());
     }
 }

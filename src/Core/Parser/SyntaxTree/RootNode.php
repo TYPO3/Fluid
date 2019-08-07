@@ -18,6 +18,8 @@ class RootNode extends AbstractComponent
 {
     protected $quoted = false;
 
+    protected $escapeOutput = false;
+
     public function isQuoted(): bool
     {
         return $this->quoted;
@@ -27,20 +29,5 @@ class RootNode extends AbstractComponent
     {
         $this->quoted = $quoted;
         return $this;
-    }
-
-    public function evaluate(RenderingContextInterface $renderingContext)
-    {
-        $variables = $renderingContext->getVariableProvider();
-        foreach ($this->getArguments()->validate()->getArrayCopy() as $name => $value) {
-            $variables->add($name, $value);
-        }
-        return parent::evaluate($renderingContext);
-    }
-
-    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
-    {
-        $this->getArguments()->setRenderingContext($renderingContext)->validate();
-        return parent::onOpen($renderingContext);
     }
 }

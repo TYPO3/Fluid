@@ -29,6 +29,8 @@ abstract class AbstractViewHelper extends AbstractComponent
      */
     protected $renderChildrenClosure = null;
 
+    protected $escapeOutput = true;
+
     /**
      * Execute via Component API implementation.
      *
