@@ -28,7 +28,7 @@ class AtomViewHelper extends AbstractViewHelper
     {
         parent::initializeArguments();
         $this->registerArgument('atom', 'mixed', 'Atom name or instance', true);
-        $this->registerArgument('file', 'mixed', 'Atom file name, overrides "atom" if both are provided', true);
+        $this->registerArgument('file', 'mixed', 'Atom file name, overrides "atom" if both are provided');
         $this->registerArgument('section', 'string', 'Optional name or dotted-name path to section to render from inside Atom');
         $this->registerArgument('optional', 'boolean', 'If Atom is not found and optional is true, does not throw exception error', false, false);
     }
