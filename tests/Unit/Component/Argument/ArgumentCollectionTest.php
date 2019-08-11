@@ -9,7 +9,9 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Component\Argument;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -20,6 +22,43 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class ArgumentCollectionTest extends UnitTestCase
 {
+
+    /**
+     * @test
+     * @dataProvider getBooleanSetterTestValues
+     * @param mixed $value
+     * @param mixed $expected
+     */
+    public function settingBooleanPropertiesConvertsInputValue($value, $expected): void
+    {
+        $context = new RenderingContextFixture();
+        $context->setVariableProvider(new StandardVariableProvider(['fooTrue' => 1, 'fooFalse' => 0]));
+        $subject = new ArgumentCollection();
+        $subject->setRenderingContext($context);
+        $subject->addDefinition(new ArgumentDefinition('bool', 'boolean', 'Boolean argument', true));
+        $subject['bool'] = $value;
+        $this->assertSame($expected, $subject['bool']);
+    }
+
+    public function getBooleanSetterTestValues(): array
+    {
+        return [
+            'true integer as int' => [1, true],
+            'false integer as int' => [0, false],
+            'true integer as string' => ['1', true],
+            'false integer as string' => ['0', false],
+            'true as string' => ['true', true],
+            'false as string' => ['false', false],
+            'true as uppercase string' => ['TRUE', true],
+            'false as uppercase string' => ['FALSE', false],
+            'true as boolean' => ['TRUE', true],
+            'false as boolean' => ['FALSE', false],
+            'true-ish expression' => ['astring', true],
+            'false-ish expression' => ['', false],
+            'null expression' => [null, false],
+        ];
+    }
+
     /**
      * @test
      */

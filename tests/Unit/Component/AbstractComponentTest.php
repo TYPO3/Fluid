@@ -8,16 +8,21 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Component;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\AlternativeComponentFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\ComponentFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\TransparentComponentFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
 
@@ -26,6 +31,32 @@ use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
  */
 class AbstractComponentTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function setArgumentsSetsArguments(): void
+    {
+        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        $arguments = new ArgumentCollection();
+        $subject->setArguments($arguments);
+        $this->assertSame($arguments, $subject->getArguments());
+    }
+
+    /**
+     * @test
+     */
+    public function castingNonStringCompatibleChildComponentsThrowsError(): void
+    {
+        $context = new RenderingContextFixture();
+        $context->setVariableProvider(new StandardVariableProvider(['foo' => new UserWithoutToString('user')]));
+        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
+        // Note: two identical child components is intentional; more than one must exist for casting to occur.
+        $subject->addChild(new ObjectAccessorNode('foo'));
+        $subject->addChild(new ObjectAccessorNode('foo'));
+        $this->setExpectedException(Exception::class);
+        $subject->evaluate($context);
+    }
+
     /**
      * @test
      * @throws \ReflectionException

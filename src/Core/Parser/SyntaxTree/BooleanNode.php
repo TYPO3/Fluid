@@ -18,8 +18,6 @@ class BooleanNode extends AbstractComponent
 {
     protected $escapeOutput = false;
 
-    protected $comparators = ['==', '===', '!==', '!=', '<=', '>=', '<', '>', '<>', '%'];
-
     protected $combiners = ['&&', '||', 'AND', 'OR', 'and', 'or', '&', '|', 'xor', 'XOR'];
 
     /**
@@ -33,7 +31,7 @@ class BooleanNode extends AbstractComponent
     public function __construct($input = null)
     {
         // First, evaluate everything that is not an ObjectAccessorNode, ArrayNode
-        // or ViewHelperNode so we get all text, numbers, comparators and
+        // or ViewHelper so we get all text, numbers, comparators and
         // groupers from the text parts of the expression. All other nodes
         // we leave intact for later processing
         if ($input !== null) {
@@ -53,6 +51,9 @@ class BooleanNode extends AbstractComponent
 
     public function flatten(bool $extractNode = false)
     {
+        if ($extractNode && $this->children[0] instanceof TextNode && count($this->children) === 1) {
+            return $this->convertToBoolean($this->children[0]->getText());
+        }
         return $this;
     }
 
@@ -138,10 +139,6 @@ class BooleanNode extends AbstractComponent
     protected function evaluateAndOr($x, $y, string $combiner): bool
     {
         switch ($combiner) {
-            case '&&':
-            case 'and':
-            case 'AND':
-                return $x && $y;
 
             case '||';
             case 'or':
@@ -155,8 +152,13 @@ class BooleanNode extends AbstractComponent
             case 'xor':
             case 'XOR':
                 return (bool) ((int) $x | (int) $y);
+
+            case '&&':
+            case 'and':
+            case 'AND':
+            default:
+                return $x && $y;
         }
-        return false;
     }
 
     protected function evaluateParts(array $parts, RenderingContextInterface $renderingContext): bool
@@ -174,10 +176,8 @@ class BooleanNode extends AbstractComponent
             return $this->convertToBoolean(
                 $parts[0] instanceof ComponentInterface ? $parts[0]->evaluate($renderingContext) : $parts[0]
             );
-        } elseif (empty($parts)) {
-            return false;
         }
-        throw new \RuntimeException('Incorrect number of expression parts for boolean: ' . $numberOfParts);
+        return !empty($parts);
     }
 
     /**

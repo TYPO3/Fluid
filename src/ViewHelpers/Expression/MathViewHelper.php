@@ -8,7 +8,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers\Expression;
  */
 
 use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -50,26 +49,15 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $parts = empty($this->parts) ? [$arguments['a'], $arguments['operator'], $arguments['b']] : $this->parts;
         $variable = array_shift($parts);
-        $result = $renderingContext->getVariableProvider()->get($variable) ?? $variable;
+        $result = $this->resolveToNumericValue($variable, $renderingContext);
         $operator = null;
         $operators = str_split(static::$operators);
         foreach ($parts as $part) {
             if (in_array($part, $operators, true)) {
                 $operator = $part;
             } else {
-                $part = $renderingContext->getVariableProvider()->get($part) ?? $part;
-
-                if (!is_string($operator)) {
-                    throw new Exception(
-                        sprintf(
-                            'Invalid operator type (%s) given, it must be a valid string, e.g. "+" or "-"!',
-                            gettype($operator)
-                        ),
-                        1561121432
-                    );
-                }
-
-                $result = self::evaluateOperation($result, $operator, $part);
+                $part = $this->resolveToNumericValue($part, $renderingContext);
+                $result = $this->evaluateOperation($result, $operator, $part);
             }
         }
         return $result + 0;
@@ -81,27 +69,36 @@ class MathViewHelper extends AbstractViewHelper implements ExpressionComponentIn
      * @param integer|float $right
      * @return integer|float
      */
-    protected static function evaluateOperation($left, string $operator, $right)
+    protected function evaluateOperation($left, string $operator, $right)
     {
-        if (!is_numeric($left)) {
-            $left = 0;
+        switch ($operator) {
+            case '%':
+                return $left % $right;
+            case '-':
+                return $left - $right;
+            case '*':
+                return $left * $right;
+            case '^':
+                return pow($left, $right);
+            case '/':
+                return (integer) $right !== 0 ? $left / $right : 0;
+            case '+':
+            default:
+                return $left + $right;
         }
-        if (!is_numeric($right)) {
-            $right = 0;
+    }
+
+    protected function resolveToNumericValue($value, RenderingContextInterface $renderingContext)
+    {
+        if (is_object($value)) {
+            if (!method_exists($value, '__toString')) {
+                return 0;
+            }
+            $value = (string) $value;
         }
-        if ($operator === '%') {
-            return $left % $right;
-        } elseif ($operator === '-') {
-            return $left - $right;
-        } elseif ($operator === '+') {
-            return $left + $right;
-        } elseif ($operator === '*') {
-            return $left * $right;
-        } elseif ($operator === '/') {
-            return (integer) $right !== 0 ? $left / $right : 0;
-        } elseif ($operator === '^') {
-            return pow($left, $right);
+        if (!is_numeric($value)) {
+            $value = $renderingContext->getVariableProvider()->get((string) $value);
         }
-        return 0;
+        return $value + 0;
     }
 }

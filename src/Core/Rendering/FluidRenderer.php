@@ -11,13 +11,6 @@ use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 class FluidRenderer
 {
     /**
-     * Constants defining possible rendering types
-     */
-    const RENDERING_TEMPLATE = 1;
-    const RENDERING_PARTIAL = 2;
-    const RENDERING_LAYOUT = 3;
-
-    /**
      * The initial rendering context for this template view.
      * Due to the rendering stack, another rendering context might be active
      * at certain points while rendering the template.
@@ -85,10 +78,9 @@ class FluidRenderer
 
     public function renderSource(string $source)
     {
-        $renderingContext = $this->getCurrentRenderingContext();
+        $renderingContext = $this->baseRenderingContext;
         $renderingContext->getTemplatePaths()->setTemplateSource($source);
         $templateParser = $renderingContext->getTemplateParser();
-        $templatePaths = $renderingContext->getTemplatePaths();
         try {
             $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
                 sha1($source),
@@ -99,33 +91,9 @@ class FluidRenderer
             return $error->getSource();
         }
 
-        try {
-            $layoutNameNode = $parsedTemplate->getNamedChild('layoutName');
-            $layoutName = $layoutNameNode->getArguments()->setRenderingContext($renderingContext)['name'];
-        } catch (ChildNotFoundException $exception) {
-            $layoutName = null;
-        }
-
-        if ($layoutName) {
-            try {
-                $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
-                    $templatePaths->getLayoutIdentifier($layoutName),
-                    function(RenderingContextInterface $renderingContext) use ($layoutName): string {
-                        return $renderingContext->getTemplatePaths()->getLayoutSource($layoutName);
-                    }
-                );
-                $parsedLayout->getArguments()->setRenderingContext($renderingContext);
-            } catch (PassthroughSourceException $error) {
-                return $error->getSource();
-            }
-            $this->startRendering(self::RENDERING_LAYOUT, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedLayout->evaluate($this->baseRenderingContext);
-            $this->stopRendering();
-        } else {
-            $this->startRendering(self::RENDERING_TEMPLATE, $parsedTemplate, $this->baseRenderingContext);
-            $output = $parsedTemplate->evaluate($this->baseRenderingContext);
-            $this->stopRendering();
-        }
+        $this->renderingStack[] = $parsedTemplate;
+        $output = $parsedTemplate->evaluate($this->baseRenderingContext);
+        array_pop($this->renderingStack);
         return $output;
     }
 
@@ -160,31 +128,21 @@ class FluidRenderer
      * @throws ChildNotFoundException
      * @throws InvalidTemplateResourceException
      * @throws Exception
-     * @deprecated Will be removed in Fluid 4.0
      */
     public function renderSection(string $sectionName, array $variables = [], bool $ignoreUnknown = false)
     {
-        if ($this->getCurrentRenderingType() === self::RENDERING_LAYOUT) {
-            // in case we render a layout right now, we will render a section inside a TEMPLATE.
-            $renderingTypeOnNextLevel = self::RENDERING_TEMPLATE;
-            $renderingContext = $this->getCurrentRenderingContext();
-        } else {
-            $renderingTypeOnNextLevel = $this->getCurrentRenderingType();
-            $renderingContext = clone $this->getCurrentRenderingContext();
-            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
-        }
+        $renderingContext = $this->baseRenderingContext;
 
         try {
             $parsedTemplate = $this->getCurrentParsedTemplate();
             $section = $parsedTemplate->getNamedChild($sectionName);
-        } catch (PassthroughSourceException $error) {
-            return $error->getSource();
-        } catch (InvalidTemplateResourceException $error) {
+            $section->getArguments()->assignAll($variables);
+        } catch (ChildNotFoundException $error) {
             if (!$ignoreUnknown) {
                 return $renderingContext->getErrorHandler()->handleViewError($error);
             }
             return '';
-        } catch (ChildNotFoundException $error) {
+        } catch (InvalidTemplateResourceException $error) {
             if (!$ignoreUnknown) {
                 return $renderingContext->getErrorHandler()->handleViewError($error);
             }
@@ -193,9 +151,7 @@ class FluidRenderer
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
 
-        $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
         $output = $section->evaluate($renderingContext);
-        $this->stopRendering();
 
         return $output;
     }
@@ -216,10 +172,10 @@ class FluidRenderer
      * @throws Exception
      * @deprecated Will be removed in Fluid 4.0
      */
-    public function renderPartial(string $partialName, ?string $sectionName, array $variables, bool $ignoreUnknown = false)
+    public function renderPartial(string $partialName, ?string $sectionName, array $variables = [], bool $ignoreUnknown = false)
     {
         $templatePaths = $this->baseRenderingContext->getTemplatePaths();
-        $renderingContext = clone $this->getCurrentRenderingContext();
+        $renderingContext = $this->baseRenderingContext;
         try {
             $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $templatePaths->getPartialIdentifier($partialName),
@@ -228,6 +184,14 @@ class FluidRenderer
                 }
             );
             $parsedPartial->getArguments()->setRenderingContext($renderingContext);
+            $this->renderingStack[] = $parsedPartial;
+            if ($sectionName !== null) {
+                $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
+            } else {
+                $parsedPartial->getArguments()->assignAll($variables);
+                $output = $parsedPartial->evaluate($renderingContext);
+            }
+            array_pop($this->renderingStack);
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
         } catch (InvalidTemplateResourceException $error) {
@@ -235,60 +199,17 @@ class FluidRenderer
                 return $renderingContext->getErrorHandler()->handleViewError($error);
             }
             return '';
-        } catch (ChildNotFoundException $error) {
-            if (!$ignoreUnknown) {
-                return $renderingContext->getErrorHandler()->handleViewError($error);
-            }
-            return '';
         } catch (Exception $error) {
             return $renderingContext->getErrorHandler()->handleViewError($error);
         }
-        $this->startRendering(self::RENDERING_PARTIAL, $parsedPartial, $renderingContext);
-        if ($sectionName !== null) {
-            $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
-        } else {
-            $renderingContext->setVariableProvider($renderingContext->getVariableProvider()->getScopeCopy($variables));
-            $output = $parsedPartial->evaluate($renderingContext);
-        }
-        $this->stopRendering();
+
         return $output;
-    }
-
-    /**
-     * Start a new nested rendering. Pushes the given information onto the $renderingStack.
-     *
-     * @param integer $type one of the RENDERING_* constants
-     * @param ComponentInterface $template
-     * @param RenderingContextInterface $context
-     * @return void
-     */
-    protected function startRendering(int $type, ComponentInterface $template, RenderingContextInterface $context): void
-    {
-        array_push($this->renderingStack, ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context]);
-    }
-
-    /**
-     * Stops the current rendering. Removes one element from the $renderingStack. Make sure to always call this
-     * method pair-wise with startRendering().
-     *
-     * @return void
-     */
-    protected function stopRendering(): void
-    {
-        array_pop($this->renderingStack);
-    }
-
-    protected function getCurrentRenderingType(): int
-    {
-        $currentRendering = end($this->renderingStack);
-        return $currentRendering['type'] ? $currentRendering['type'] : self::RENDERING_TEMPLATE;
     }
 
     protected function getCurrentParsedTemplate(): ComponentInterface
     {
-        $currentRendering = end($this->renderingStack);
-        $renderingContext = $this->getCurrentRenderingContext();
-        $parsedTemplate = $currentRendering['parsedTemplate'] ?? null;
+        $renderingContext = $this->baseRenderingContext;
+        $parsedTemplate = end($this->renderingStack);
         if ($parsedTemplate) {
             return $parsedTemplate;
         }
@@ -306,11 +227,5 @@ class FluidRenderer
             }
         );
         return $parsedTemplate;
-    }
-
-    protected function getCurrentRenderingContext(): RenderingContextInterface
-    {
-        $currentRendering = end($this->renderingStack);
-        return $currentRendering['renderingContext'] ? $currentRendering['renderingContext'] : $this->baseRenderingContext;
     }
 }

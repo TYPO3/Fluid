@@ -7,7 +7,9 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
@@ -32,7 +34,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *
  * @deprecated Will be removed in Fluid 4.0
  */
-class LayoutViewHelper extends AbstractViewHelper implements EmbeddedComponentInterface
+class LayoutViewHelper extends AbstractViewHelper
 {
     protected $name = 'layoutName';
 
@@ -41,5 +43,23 @@ class LayoutViewHelper extends AbstractViewHelper implements EmbeddedComponentIn
     public function initializeArguments()
     {
         $this->registerArgument('name', 'string', 'Name of layout to use. If none given, "Default" is used.', false, 'Default');
+    }
+
+    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
+    {
+        $container = $renderingContext->getViewHelperVariableContainer();
+        $allowed = $container->get(self::class, 'allowed') ?? true;
+        if ($allowed) {
+            // f:layout is not yet active and is allowed to extract the layout and add add all nodes it contains.
+            // Prevents recursion when f:layout is used in both template and layout files.
+            $container->addOrUpdate(self::class, 'allowed', false);
+            $layoutPathAndFilename = $renderingContext->getTemplatePaths()->getLayoutPathAndFilename(
+                $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy()['name']
+            );
+            $parsedLayout = $renderingContext->getTemplateParser()->parseFile($layoutPathAndFilename);
+            $container->addOrUpdate(self::class, 'true', false);
+            $this->children = $parsedLayout->getChildren();
+        }
+        return parent::onOpen($renderingContext);
     }
 }

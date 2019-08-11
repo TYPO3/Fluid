@@ -37,20 +37,17 @@ trait CompileWithContentArgumentAndRenderStatic
      */
     protected function resolveContentArgumentName(): string
     {
-        if (empty($this->contentArgumentName)) {
-            $registeredArguments = $this->getArguments()->getDefinitions();
-            foreach ($registeredArguments as $registeredArgument) {
-                if (!$registeredArgument->isRequired()) {
-                    $this->contentArgumentName = $registeredArgument->getName();
-                    return $this->contentArgumentName;
-                }
+        $registeredArguments = $this->getArguments()->getDefinitions();
+        foreach ($registeredArguments as $registeredArgument) {
+            if (!$registeredArgument->isRequired()) {
+                $this->contentArgumentName = $registeredArgument->getName();
+                return $this->contentArgumentName;
             }
-            throw new Exception(
-                sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
-                    'at least one registered and optional argument', __CLASS__)
-            );
         }
-        return $this->contentArgumentName;
+        throw new Exception(
+            sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
+                'at least one registered and optional argument', __CLASS__)
+        );
     }
 
     /**
@@ -61,10 +58,11 @@ trait CompileWithContentArgumentAndRenderStatic
      */
     public function render()
     {
+        $arguments = $this->getArguments();
         return static::renderStatic(
-            $this->arguments->getArrayCopy(),
+            $arguments->getArrayCopy(),
             $this->buildRenderChildrenClosure(),
-            $this->arguments->getRenderingContext()
+            $arguments->getRenderingContext()
         );
     }
 
@@ -80,16 +78,10 @@ trait CompileWithContentArgumentAndRenderStatic
     {
         $argumentName = $this->resolveContentArgumentName();
         $arguments = $this->arguments ?? [];
-        if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function () use ($arguments, $argumentName) {
-                return $arguments[$argumentName];
-            };
-        } else {
-            $self = clone $this;
-            $renderChildrenClosure = function () use ($self) {
-                return $self->renderChildren();
-            };
-        }
+        $self = $this;
+        $renderChildrenClosure = function () use ($arguments, $argumentName, $self) {
+            return !empty($argumentName) ? ($arguments[$argumentName] ?? $self->renderChildren()) : $self->renderChildren();
+        };
         return $renderChildrenClosure;
     }
 

@@ -27,6 +27,17 @@ class ViewHelperResolverTest extends UnitTestCase
     /**
      * @test
      */
+    public function returnsAtomViewHelperClassForNamespaceAndMethodMatchingAnAtom(): void
+    {
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['resolveAtomFile'])->disableOriginalConstructor()->getMock();
+        $resolver->expects($this->once())->method('resolveAtomFile')->willReturn('foo.html');
+        $resolver->addAtomPaths(['foo' => ['/path/to/foo']]);
+        $this->assertSame(AtomViewHelper::class, $resolver->resolveViewHelperClassName('foo', 'bar'));
+    }
+
+    /**
+     * @test
+     */
     public function viewHelperAliasCanBeAddedAndResolved(): void
     {
         $resolver = new ViewHelperResolver(new RenderingContextFixture());

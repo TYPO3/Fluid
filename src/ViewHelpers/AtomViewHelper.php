@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -43,9 +42,9 @@ class AtomViewHelper extends AbstractViewHelper
             if (isset($arguments['file'])) {
                 $component = $renderingContext->getTemplateParser()->parseFile($arguments['file']);
             } elseif (isset($arguments['atom'])) {
-                $component = $arguments['atom'] instanceof ComponentInterface ? $arguments['atom'] : $renderingContext->getViewHelperResolver()->resolveAtom(...explode(':', $arguments['atom']));
+                $component = $renderingContext->getViewHelperResolver()->resolveAtom(...explode(':', $arguments['atom']));
             } else {
-                $component = $this;
+                return $this->evaluateChildren($renderingContext);
             }
         } catch (ChildNotFoundException $exception) {
             if ($optional) {

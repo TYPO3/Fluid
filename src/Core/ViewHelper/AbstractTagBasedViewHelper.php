@@ -47,7 +47,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     {
         $parameters = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         foreach ($parameters as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
+            if (strncmp($argumentName, 'data-', 5) === 0) {
                 $this->tag->addAttribute($argumentName, $argumentValue);
                 unset($parameters[$argumentName]);
             }

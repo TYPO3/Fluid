@@ -82,6 +82,11 @@ class RenderingContextFixture implements RenderingContextInterface
     public $controllerAction = 'Default';
 
     /**
+     * @var Configuration
+     */
+    public $configuration;
+
+    /**
      * @return FluidRenderer
      */
     public function getRenderer(): FluidRenderer
@@ -230,7 +235,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getParserConfiguration(): Configuration
     {
-        return new Configuration();
+        return $this->configuration ?? ($this->configuration = new Configuration());
     }
 
     /**

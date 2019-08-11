@@ -14,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -32,6 +33,26 @@ class BooleanNodeTest extends UnitTestCase
     public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
+    }
+
+    /**
+     * @test
+     */
+    public function flattenWithExtractEvaluatesSingleChildNodeToBoolean(): void
+    {
+        $subject = new BooleanNode();
+        $subject->addChild(new TextNode('true'));
+        $this->assertSame(true, $subject->flatten(true));
+    }
+
+    /**
+     * @test
+     */
+    public function flattenWithExtractReturnsSelfWithMoreThanOneChildNode(): void
+    {
+        $subject = new BooleanNode();
+        $subject->addChild(new TextNode('true'))->addChild(new TextNode('true'));
+        $this->assertSame($subject, $subject->flatten(true));
     }
 
     /**
@@ -92,9 +113,12 @@ class BooleanNodeTest extends UnitTestCase
             'bar' => 'also filled',
             'baz' => new \DateTime('now'),
             'false' => false,
+            'object1' => new UserWithToString('user'),
+            'object2' => new UserWithToString('user'),
+            'emptyArrayObject' => new \ArrayObject([]),
+            'arrayObject' => new \ArrayObject(['foo', 'bar']),
         ]));
         return [
-            #/*
             'no children means false' => [
                 $context,
                 [],
@@ -108,6 +132,116 @@ class BooleanNodeTest extends UnitTestCase
             'single hardcoded "false" means false' => [
                 $context,
                 [new TextNode('false')],
+                false,
+            ],
+            'incorrect number of parts always true' => [
+                $context,
+                [new TextNode('false'), new TextNode('false')],
+                true,
+            ],
+            'negated object accessor' => [
+                $context,
+                [new TextNode('!'), new ObjectAccessorNode('foo')],
+                false,
+            ],
+            'negated object accessor and negated object accessor' => [
+                $context,
+                [(new BooleanNode())->addChild(new TextNode('!'))->addChild(new ObjectAccessorNode('foo'))->addChild(new TextNode('AND'))->addChild(new TextNode('!'))->addChild(new ObjectAccessorNode('foo'))],
+                false,
+            ],
+            'lowercase or' => [
+                $context,
+                [new TextNode('false'), new TextNode('or'), new TextNode('true')],
+                true,
+            ],
+            'uppercase OR' => [
+                $context,
+                [new TextNode('false'), new TextNode('OR'), new TextNode('true')],
+                true,
+            ],
+            'lowercase and' => [
+                $context,
+                [new TextNode('true'), new TextNode('and'), new TextNode('false')],
+                false,
+            ],
+            'uppercase AND' => [
+                $context,
+                [new TextNode('true'), new TextNode('AND'), new TextNode('false')],
+                false,
+            ],
+            'string &&' => [
+                $context,
+                [new TextNode('false'), new TextNode('&&'), new TextNode('true')],
+                false,
+            ],
+            'string XOR' => [
+                $context,
+                [new TextNode('3'), new TextNode('XOR'), new TextNode('2')],
+                true,
+            ],
+            'string xor' => [
+                $context,
+                [new TextNode('3'), new TextNode('xor'), new TextNode('2')],
+                true,
+            ],
+            'pipe XOR' => [
+                $context,
+                [new TextNode('3'), new TextNode('|'), new TextNode('2')],
+                true,
+            ],
+            'ampersand and' => [
+                $context,
+                [new TextNode('3'), new TextNode('&'), new TextNode('2')],
+                true,
+            ],
+            'greater than' => [
+                $context,
+                [new TextNode('3'), new TextNode('>'), new TextNode('2')],
+                true,
+            ],
+            'greater than or equal' => [
+                $context,
+                [new TextNode('3'), new TextNode('>='), new TextNode('2')],
+                true,
+            ],
+            'less than' => [
+                $context,
+                [new TextNode('3'), new TextNode('<'), new TextNode('2')],
+                false,
+            ],
+            'less than or equal' => [
+                $context,
+                [new TextNode('3'), new TextNode('<='), new TextNode('2')],
+                false,
+            ],
+            'strictly not equal' => [
+                $context,
+                [new TextNode('3'), new TextNode('!=='), new TextNode('3.0')],
+                true,
+            ],
+            'not equal' => [
+                $context,
+                [new TextNode('3'), new TextNode('!='), new TextNode('3.0')],
+                false,
+            ],
+            'strictly equal' => [
+                $context,
+                [new TextNode('3'), new TextNode('==='), new TextNode('3')],
+                true,
+            ],
+            'equal' => [
+                $context,
+                [new TextNode('3'), new TextNode('=='), new TextNode('3.0')],
+                true,
+            ],
+            'modulo' => [
+                $context,
+                [new TextNode('3'), new TextNode('%'), new TextNode('3')],
+                false,
+            ],
+            'modulo with non-numeric' => [
+                $context,
+                [new TextNode('3'), new TextNode('%'), new TextNode('not-numeric')],
                 false,
             ],
             'string comparison with quoted part treats as string' => [
@@ -125,12 +259,31 @@ class BooleanNodeTest extends UnitTestCase
                 [new ObjectAccessorNode('foo')],
                 true,
             ],
+            'countable false if empty' => [
+                $context,
+                [new ObjectAccessorNode('emptyArrayObject')],
+                false,
+            ],
+            'countable true if not empty' => [
+                $context,
+                [new ObjectAccessorNode('arrayObject')],
+                true,
+            ],
+            'comparing objects equal forces strict' => [
+                $context,
+                [new ObjectAccessorNode('object1'), new TextNode('=='), new ObjectAccessorNode('object2')],
+                false,
+            ],
+            'comparing objects not equal forces strict' => [
+                $context,
+                [new ObjectAccessorNode('object1'), new TextNode('!='), new ObjectAccessorNode('object2')],
+                true,
+            ],
             'multiple child object accessor with true-ish values with "OR" groups' => [
                 $context,
                 [new ObjectAccessorNode('foo'), new TextNode('||'), new ObjectAccessorNode('bar'), new TextNode('||'), new ObjectAccessorNode('baz')],
                 true,
             ],
-            #*/
             'multiple child object accessor with true-ish values with "AND" groups' => [
                 $context,
                 [new ObjectAccessorNode('foo'), new TextNode('&&'), new ObjectAccessorNode('bar'), new TextNode('&&'), new ObjectAccessorNode('baz')],
@@ -143,5 +296,4 @@ class BooleanNodeTest extends UnitTestCase
             ],
         ];
     }
-
 }

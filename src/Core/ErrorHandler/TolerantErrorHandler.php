@@ -30,7 +30,7 @@ class TolerantErrorHandler implements ErrorHandlerInterface
      */
     public function handleParserError(Exception $error): string
     {
-        return 'Parser error: ' . $error->getMessage() . ' Offending code: ';
+        return 'Parser error: ' . $error->getMessage();
     }
 
     /**
@@ -48,7 +48,7 @@ class TolerantErrorHandler implements ErrorHandlerInterface
      */
     public function handleViewHelperError(ViewHelperException $error): string
     {
-        return 'ViewHelper error: ' . $error->getMessage() . ' - Offending code: ';
+        return 'ViewHelper error: ' . $error->getMessage();
     }
 
     /**

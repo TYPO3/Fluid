@@ -64,6 +64,7 @@ class TemplateParser
             $source,
             $configuration ?? $this->configuration
         );
+
         return $sequencer->sequence();
     }
 

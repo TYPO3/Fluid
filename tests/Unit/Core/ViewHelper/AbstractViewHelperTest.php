@@ -139,16 +139,14 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
     /**
      * @test
      */
-    public function testRenderChildrenCallsRenderChildrenClosureIfSet()
+    public function defaultRenderChildrenClosureCallsRenderChildren()
     {
-        $viewHelper = $this->getMockForAbstractClass(AbstractViewHelper::class);
-        $viewHelper->setRenderChildrenClosure(function (): string {
-            return 'foobar';
-        });
-        $method = new \ReflectionMethod($viewHelper, 'renderChildren');
+        $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['renderChildren'])->getMockForAbstractClass();
+        $viewHelper->expects($this->once())->method('renderChildren');
+        $method = new \ReflectionMethod($viewHelper, 'buildRenderChildrenClosure');
         $method->setAccessible(true);
-        $result = $method->invoke($viewHelper);
-        $this->assertEquals('foobar', $result);
+
+        ($method->invoke($viewHelper))();
     }
 
     /**
@@ -158,7 +156,6 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
     {
         $subject = new RenderMethodFreeViewHelper();
         $context = new RenderingContextFixture();
-        #$subject->getArguments()->setRenderingContext($context);
         $this->assertSame('I was rendered', $subject->onOpen($context)->evaluate($context));
     }
 
@@ -170,7 +167,6 @@ class AbstractViewHelperTest extends ViewHelperBaseTestCase
         $subject = new RenderMethodFreeDefaultRenderStaticViewHelper();
         $subject->addChild(new TextNode('foo'));
         $context = new RenderingContextFixture();
-        #$subject->getArguments()->setRenderingContext($context);
         $this->assertSame('foo', $subject->onOpen($context)->evaluate($context));
     }
 }

@@ -7,6 +7,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -15,6 +17,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
+use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 /**
  * Testcase for the TemplateView
@@ -56,6 +59,31 @@ class AbstractTemplateViewTest extends UnitTestCase
         $this->renderingContext->variableProvider = $this->templateVariableContainer;
         $this->view = $this->getMockForAbstractClass(AbstractTemplateView::class);
         $this->view->setRenderingContext($this->renderingContext);
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function renderSectionUsesCustomClosures(): void
+    {
+        $templatePaths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getTemplateSource', 'getTemplateIdentifier'])->getMock();
+        $templatePaths->expects($this->atLeastOnce())->method('getTemplateSource')->willReturn('<f:section name="Foo">foo</f:section>');
+        $this->renderingContext->setTemplatePaths($templatePaths);
+        $output = $this->view->renderSection('Foo');
+        $this->assertSame('foo', $output);
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function renderPartialDelegatesToFluidRenderer(): void
+    {
+        $renderer = $this->getMockBuilder(FluidRenderer::class)->setMethods(['renderPartial'])->disableOriginalConstructor()->getMock();
+        $renderer->expects($this->once())->method('renderPartial');
+        $this->renderingContext->setRenderer($renderer);
+        $this->view->renderPartial('foo', null, []);
     }
 
     /**

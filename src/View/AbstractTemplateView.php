@@ -35,12 +35,6 @@ abstract class AbstractTemplateView extends AbstractView
     {
         if ($context === null) {
             $context = new RenderingContext();
-            if (is_callable([$context, 'setControllerName'])) {
-                $context->setControllerName('Default');
-            }
-            if (is_callable([$context, 'setControllerAction'])) {
-                $context->setControllerAction('Default');
-            }
         }
         $this->setRenderingContext($context);
     }

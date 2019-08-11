@@ -69,8 +69,8 @@ class Contexts
         // Tag: entered into when a detected tag has a namespace operator in tag name
         $this->tag = new Context(Context::CONTEXT_TAG, "[>:{ /\t\n\r\0");
 
-        // P/CDATA: entered into when a detected tag starts with ![CDATA[ or ![PCDATA[ - exclusively matches termination brackets and end of tag.
-        $this->data = new Context(Context::CONTEXT_DATA, ']>');
+        // P/CDATA: entered into when a detected tag starts with ![CDATA[ or ![PCDATA[ - exclusively matches end of tag.
+        $this->data = new Context(Context::CONTEXT_DATA, '>');
 
         // Fluid feature toggles: an inline prefixed with at sign, e.g. {@escaping off}, which supports only whitespace and ending curly brace symbols.
         $this->toggle = new Context(Context::CONTEXT_TOGGLE, ' }');

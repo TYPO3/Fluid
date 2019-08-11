@@ -7,14 +7,11 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\AtomViewHelper;
-use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
-use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Class ViewHelperResolver
@@ -402,13 +399,9 @@ class ViewHelperResolver
 
             if ($actualViewHelperClassName === false) {
 
-                // Consult Atoms registrations. If namespace and method match an Atom, return RenderViewHelper.
-                try {
-                    $atom = $this->resolveAtom($namespaceIdentifier, $methodIdentifier);
-                    #$atomFile = $this->resolveAtomFile($namespaceIdentifier, $methodIdentifier);
+                // If namespace and method match an Atom, return AtomViewHelper's class name. Otherwise, error out.
+                if ($this->resolveAtomFile($namespaceIdentifier, $methodIdentifier)) {
                     return AtomViewHelper::class;
-                } catch (ChildNotFoundException $exception) {
-                    // Silenced; not resolving an atom simply throws the ViewHelper exception below.
                 }
 
                 throw new Exception(sprintf(
@@ -440,16 +433,12 @@ class ViewHelperResolver
     public function createViewHelperInstance(?string $namespace, string $viewHelperShortName): ComponentInterface
     {
         if (!empty($namespace) && isset($this->atoms[$namespace])) {
-            try {
-                $atomFile = $this->resolveAtomFile($namespace, $viewHelperShortName);
-                if ($atomFile) {
-                    $atom = $this->renderingContext->getTemplateParser()->parseFile($atomFile)->setName($namespace . ':' . $viewHelperShortName);
-                    $instance = $this->createViewHelperInstanceFromClassName(AtomViewHelper::class);
-                    $instance->getArguments()->setDefinitions($atom->getArguments()->getDefinitions())['file'] = $atomFile;
-                    return $instance;
-                }
-            } catch (ChildNotFoundException $exception) {
-                // Suppressed; failing to resolve an atom resolves a ViewHelper class instead.
+            $atomFile = $this->resolveAtomFile($namespace, $viewHelperShortName);
+            if ($atomFile) {
+                $atom = $this->renderingContext->getTemplateParser()->parseFile($atomFile)->setName($namespace . ':' . $viewHelperShortName);
+                $instance = $this->createViewHelperInstanceFromClassName(AtomViewHelper::class);
+                $instance->getArguments()->setDefinitions($atom->getArguments()->getDefinitions())['file'] = $atomFile;
+                return $instance;
             }
         }
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);

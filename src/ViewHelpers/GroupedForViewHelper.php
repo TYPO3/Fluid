@@ -131,7 +131,7 @@ class GroupedForViewHelper extends AbstractViewHelper
      * @return array The grouped array in the form array('keys' => array('key1' => [key1value], 'key2' => [key2value], ...), 'values' => array('key1' => array([key1value] => [element1]), ...), ...)
      * @throws Exception
      */
-    protected static function groupElements(array $elements, string $groupBy): array
+    protected static function groupElements(iterable $elements, string $groupBy): array
     {
         $provider = new StandardVariableProvider(['elements' => $elements]);
         $groups = ['keys' => [], 'values' => []];

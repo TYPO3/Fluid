@@ -19,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Sequencer for Fluid syntax
@@ -77,7 +76,7 @@ class Sequencer
     private const INTERCEPT_SELFCLOSING_VIEWHELPER = 6;
     
     /**
-     * A counter of ViewHelperNodes which currently disable the interceptor.
+     * A counter of nodes which currently disable the interceptor.
      * Needed to enable the interceptor again.
      *
      * @var int
@@ -251,19 +250,13 @@ class Sequencer
 
     protected function sequenceCharacterData(string $text): ComponentInterface
     {
-        $capturedClosingBrackets = 0;
         $this->splitter->switch($this->contexts->data);
         $this->sequence->next();
         foreach ($this->sequence as $symbol => $captured) {
             $text .= $captured;
-            if ($symbol === self::BYTE_ARRAY_END) {
-                $text .= ']';
-                ++$capturedClosingBrackets;
-            } elseif ($symbol === self::BYTE_TAG_END && $capturedClosingBrackets === 2) {
+            if ($symbol === self::BYTE_TAG_END && substr($this->source->source, $this->splitter->index - 3, 2) === ']]') {
                 $text .= '>';
                 break;
-            } else {
-                $capturedClosingBrackets = 0;
             }
         }
         return new TextNode($text);
@@ -359,8 +352,7 @@ class Sequencer
                         throw $this->createErrorAtPosition('Unexpected equals sign without preceding attribute/key name', 1561039838);
                     } elseif ($definitions !== null && !isset($definitions[$key]) && !$viewHelperNode->allowUndeclaredArgument($key)) {
                         $error = $this->createUnsupportedArgumentError($key, $definitions);
-                        $content = $this->renderingContext->getErrorHandler()->handleParserError($error);
-                        return new TextNode($content);
+                        return new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error));
                     }
                     break;
 
@@ -369,14 +361,13 @@ class Sequencer
                     $text .= chr($symbol);
                     if ($key === null) {
                         throw $this->createErrorAtPosition('Quoted value without a key is not allowed in tags', 1558952412);
-                    } else {
-                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                            $arguments[$key] = $this->sequenceBooleanNode()->flatten(true);
-                        } else {
-                            $arguments[$key] = $this->sequenceQuotedNode()->flatten(true);
-                        }
-                        $key = null;
                     }
+                    if ($arguments->isArgumentBoolean($key)) {
+                        $arguments[$key] = $this->sequenceBooleanNode()->flatten(true);
+                    } else {
+                        $arguments[$key] = $this->sequenceQuotedNode()->flatten(true);
+                    }
+                    $key = null;
                     break;
 
                 case self::BYTE_TAG_CLOSE:
@@ -446,8 +437,7 @@ class Sequencer
                         }
                     } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                         $error = $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
-                        $content = $this->renderingContext->getErrorHandler()->handleParserError($error);
-                        return new TextNode($content);
+                        return new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error));
                     }
 
                     // Possibly pending argument still needs to be processed since $key is not null. Create an ECMA
@@ -455,17 +445,11 @@ class Sequencer
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
                         if ($key !== null) {
                             $value = new ObjectAccessorNode((string) $key);
-                            if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                                $value = new BooleanNode($value);
-                            }
                             $arguments[$key] = $value;
                         }
 
                         if ($captured !== null) {
                             $value = new ObjectAccessorNode((string) $captured);
-                            if (isset($definitions[$captured]) && $definitions[$captured]->getType() === 'boolean') {
-                                $value = is_numeric($captured) ? (bool) $captured : new BooleanNode($value);
-                            }
                             $arguments[$captured] = $value;
                         }
                     }
@@ -504,13 +488,6 @@ class Sequencer
                             // Encountering this case means we've collected a previous key and now collected a non-empty
                             // string value before encountering an equals sign. This is treated as ECMA literal short
                             // hand equivalent of having written `attr="{attr}"` in the Fluid template.
-                            if ($key !== null) {
-                                if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                                    $arguments[$key] = new BooleanNode($key);
-                                } else {
-                                    $arguments[$key] = new ObjectAccessorNode((string) $key);
-                                }
-                            }
                             $key = $captured;
                         }
                     } elseif ($namespace !== null || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
@@ -522,8 +499,7 @@ class Sequencer
                             $definitions = $arguments->getDefinitions();
                         } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
                             $error = $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
-                            $content = $this->renderingContext->getErrorHandler()->handleParserError($error);
-                            return new TextNode($content);
+                            return new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error));
                         }
 
                         // Forcibly disable escaping OFF as default decision for whether or not to escape an argument.
@@ -566,7 +542,6 @@ class Sequencer
         $hasColon = null;
         $hasWhitespace = false;
         $isArray = false;
-        $array = new ArrayNode();
         $arguments = new ArgumentCollection();
         $parts = [];
         $ignoredEndingBraces = 0;
@@ -603,7 +578,7 @@ class Sequencer
                     // Sequence the node. Pass the "use numeric keys?" boolean based on the current byte. Only array
                     // start creates numeric keys. Inline start with keyless values creates ECMA style {foo:foo, bar:bar}
                     // from {foo, bar}.
-                    $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
+                    $arguments[$key ?? $captured ?? 0] = $node = new ArrayNode();
                     $this->sequenceArrayNode($node, true);
                     $key = null;
                     break;
@@ -623,14 +598,12 @@ class Sequencer
                         // Ignore one ending additional curly brace. Subtracted in the BYTE_INLINE_END case below.
                         // The expression in this case looks like {{inline}.....} and we capture the curlies.
                         $potentialAccessor .= $captured;
-                    } elseif (!$allowArray && $hasWhitespace) {
-                        $this->splitter->switch($this->contexts->protected);
                     } elseif ($allowArray || $isArray) {
                         $isArray = true;
                         $captured = $key ?? $captured ?? $potentialAccessor;
                         // This is a sub-syntax following a colon - meaning it is an array.
                         if ($captured !== null) {
-                            $array[$key ?? $captured ?? 0] = $node = new ArrayNode();
+                            $arguments[$key ?? $captured ?? 0] = $node = new ArrayNode();
                             $this->sequenceArrayNode($node);
                         }
                     } else {
@@ -669,11 +642,7 @@ class Sequencer
                         break;
                     }
                     if ($key !== null) {
-                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                            $array[$key] = $this->sequenceBooleanNode($countedEscapes)->flatten(true);
-                        } else {
-                            $array[$key] = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
-                        }
+                        $arguments[$key] = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
                         $key = null;
                     } else {
                         $key = $this->sequenceQuotedNode($countedEscapes)->flatten(true);
@@ -688,12 +657,7 @@ class Sequencer
                         break;
                     }
                     if ($captured !== null) {
-                        $key = $key ?? $captured;
-                        $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
-                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                            $value = is_numeric($value) ? (bool) $value : new BooleanNode($value);
-                        }
-                        $array[$key] = $value;
+                        $arguments[$key ?? $captured] = new ObjectAccessorNode($captured);
                     }
                     $key = null;
                     $isArray = $allowArray;
@@ -842,10 +806,10 @@ class Sequencer
                     // appropriate type of ExpressionNode.
                     if ($isArray) {
                         if ($captured !== null) {
-                            $array[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                            $arguments[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                         }
                         $this->splitter->switch($restore);
-                        return $array;
+                        return $arguments->toArrayNode();
                     } elseif ($callDetected) {
                         // The first-priority check is for a ViewHelper used right before the inline expression ends,
                         // in which case there is no further syntax to come.
@@ -883,7 +847,7 @@ class Sequencer
                         }
                     } elseif ($hasPass && $this->resolver->isAliasRegistered((string) $potentialAccessor)) {
                         // Fourth priority check is for a pass to a ViewHelper alias, e.g. "{value | raw}" in which case
-                        // we look for the alias used and create a ViewHelperNode with no arguments.
+                        // we look for the alias used and create a ViewHelper with no arguments.
                         $childNodeToAdd = $node;
                         $node = $this->resolver->createViewHelperInstance(null, (string) $potentialAccessor);
                         $arguments = $node->getArguments()->validate()->setRenderingContext($this->renderingContext);
@@ -934,13 +898,6 @@ class Sequencer
                     $node->addChild($this->sequenceInlineNodes(true));
                     break;
 
-                case self::BYTE_PARENTHESIS_END:
-                    if ($countedEscapes === $leadingEscapes) {
-                        $this->splitter->switch($restore);
-                        return $node;
-                    }
-                    break;
-
                 case self::BYTE_QUOTE_DOUBLE:
                 case self::BYTE_QUOTE_SINGLE:
                     if ($symbol === $closingByte && $countedEscapes === $leadingEscapes) {
@@ -957,6 +914,10 @@ class Sequencer
                     $node->addChild($this->sequenceBooleanNode());
                     break;
 
+                case self::BYTE_PARENTHESIS_END:
+                    $this->splitter->switch($restore);
+                    return $node;
+
                 case self::BYTE_WHITESPACE_SPACE:
                 case self::BYTE_WHITESPACE_TAB:
                 case self::BYTE_WHITESPACE_RETURN:
@@ -966,9 +927,6 @@ class Sequencer
                 case self::BYTE_BACKSLASH:
                     ++$countedEscapes;
                     break;
-
-                default:
-                    throw $this->createErrorAtPosition('Unexpected token in Boo: ' . chr($symbol), 1);
             }
             if ($symbol !== self::BYTE_BACKSLASH) {
                 $countedEscapes = 0;
@@ -1074,9 +1032,6 @@ class Sequencer
                         $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                     }
                     if ($value !== null) {
-                        if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                            $value = is_numeric($array[$key]) ? (bool) $array[$key] : new BooleanNode($array[$key]);
-                        }
                         $array[$key] = $value;
                     }
                     $keyOrValue = null;
@@ -1117,9 +1072,6 @@ class Sequencer
                     }
                     if (!$numeric && isset($key, $definitions) && !isset($definitions[$key])) {
                         throw $this->createUnsupportedArgumentError((string)$key, $definitions);
-                    }
-                    if (isset($definitions[$key]) && $definitions[$key]->getType() === 'boolean') {
-                        $array[$key] = is_numeric($array[$key]) ? (bool) $array[$key] : new BooleanNode($array[$key]);
                     }
                     $this->escapingEnabled = $escapingEnabledBackup;
                     $this->splitter->switch($restore);
@@ -1250,7 +1202,12 @@ class Sequencer
      */
     protected function callInterceptor(ComponentInterface $node, int $interceptorPosition): ComponentInterface
     {
-        if (!$this->escapingEnabled || $this->viewHelperNodesWhichDisableTheInterceptor > 0) {
+        if (!$this->escapingEnabled) {
+            // Escaping is either explicitly disabled (for example, we may be parsing arguments) or there are
+            // at least 2 preceding ViewHelpers which have disabled child escaping. The reason for checking >1
+            // instead of >0 is because escaping must happen if the value is decremented to zero, which is not
+            // possible unless the value is >1 to begin with. This early return avoids entering the switch and
+            // conditions below when they are simply not necessary to consult.
             return $node;
         }
 
@@ -1265,20 +1222,22 @@ class Sequencer
                 if (!$node->isChildrenEscapingEnabled()) {
                     --$this->viewHelperNodesWhichDisableTheInterceptor;
                 }
-                if ($node->isOutputEscapingEnabled()) {
+                if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
                     $node = new EscapingNode($node);
                 }
                 break;
 
             case self::INTERCEPT_SELFCLOSING_VIEWHELPER:
-                if ($node->isOutputEscapingEnabled()) {
+                if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
                     $node = new EscapingNode($node);
                 }
                 break;
 
             case self::INTERCEPT_OBJECTACCESSOR:
             case self::INTERCEPT_EXPRESSION:
-                $node = new EscapingNode($node);
+                if ($this->viewHelperNodesWhichDisableTheInterceptor === 0) {
+                    $node = new EscapingNode($node);
+                }
                 break;
         }
         return $node;

@@ -107,6 +107,19 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
+    public function prefixedDataAttributesAreRenderedCorrectly(): void
+    {
+        $this->tagBuilder->expects($this->at(0))->method('addAttribute')->with('data-foo', 'foo');
+        $this->tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-bar', 'bar');
+
+        $arguments = ['data-foo' => 'foo', 'data-bar' => 'bar'];
+        $this->viewHelper->getArguments()->assignAll($arguments);
+        $this->viewHelper->onOpen(new RenderingContextFixture())->evaluate(new RenderingContextFixture());
+    }
+
+    /**
+     * @test
+     */
     public function standardTagAttributesAreRegistered(): void
     {
         $this->tagBuilder->expects($this->at(0))->method('addAttribute')->with('class', 'classAttribute');

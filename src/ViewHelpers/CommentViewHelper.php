@@ -10,7 +10,6 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Component\SequencingComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Sequencer;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**

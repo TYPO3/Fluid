@@ -7,6 +7,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Configuration;
+use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -17,8 +21,15 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class TemplateParserTest extends UnitTestCase
 {
-    public function testSkipped(): void
+    /**
+     * @test
+     */
+    public function getOrParseAndStoreTemplateCallsParseTemplateSourceWithDisabledRuntimeCache(): void
     {
-        $this->markTestSkipped('Temporarily skipped');
+        $context = new RenderingContextFixture();
+        $context->getParserConfiguration()->setFeatureState(Configuration::FEATURE_RUNTIME_CACHE, false);
+        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['parseTemplateSource'])->setConstructorArgs([$context])->getMock();
+        $parser->expects($this->once())->method('parseTemplateSource');
+        $parser->getOrParseAndStoreTemplate('foo', function(RenderingContextInterface $context) {});
     }
 }

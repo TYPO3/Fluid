@@ -20,8 +20,7 @@ class ObjectAccessorNode extends AbstractComponent
     /**
      * Constructor. Takes an object path or null as input;
      * if null is provided, the object path is determined by
-     * evaluating the child nodes - or the single child node
-     * is rendered directly if it is a ViewHelperNode.
+     * evaluating the child nodes.
      *
      * The first part of the object path has to be a variable in the
      * VariableProvider.

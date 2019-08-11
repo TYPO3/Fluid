@@ -52,7 +52,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  *         Will only be evaluated once and this output will be
  *         cached as a static string with no logic attached.
  *         The compiled template will not contain neither the
- *         condition ViewHelperNodes or the variable accessor
+ *         condition ViewHelper or the variable accessor
  *         that are used inside this node.
  *     </f:if>
  * </f:cache.static>

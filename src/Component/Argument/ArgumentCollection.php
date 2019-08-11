@@ -9,6 +9,8 @@ namespace TYPO3Fluid\Fluid\Component\Argument;
 
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -81,6 +83,31 @@ class ArgumentCollection extends \ArrayObject
     {
         $this->definitions = $definitions;
         return $this;
+    }
+
+    public function isArgumentBoolean(string $argumentName): bool
+    {
+        return isset($this->definitions[$argumentName]) && $this->definitions[$argumentName]->getType() === 'boolean';
+    }
+
+    public function toArrayNode(): ArrayNode
+    {
+        return new ArrayNode((array) $this->getAllRaw());
+    }
+
+    public function offsetSet($index, $value)
+    {
+        if (isset($this->definitions[$index]) && !$value instanceof BooleanNode && $this->definitions[$index]->getType() === 'boolean' && $value !== false && $value !== true) {
+            // Note: a switch() was not used here because it makes PHP attempt type coercion and we need strict comparisons.
+            if ($value === 1 || $value === 'true' || $value === 'TRUE') {
+                $value = true;
+            } elseif ($value === null || $value === 0 || $value === 'false' || $value === 'FALSE') {
+                $value = false;
+            } else {
+                $value = new BooleanNode($value);
+            }
+        }
+        parent::offsetSet($index, $value);
     }
 
     public function offsetGet($offset)

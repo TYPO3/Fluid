@@ -37,6 +37,18 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
 
     /**
      * @test
+     * @throws \ReflectionException
+     */
+    public function defaultConditionIsTrue(): void
+    {
+        $context = new RenderingContextFixture();
+        $viewHelper = $this->getMockBuilder(AbstractConditionViewHelper::class)->getMockForAbstractClass();
+        $viewHelper->getArguments()->assignAll(['then' => 'yes']);
+        $this->assertSame('yes', $viewHelper->evaluate($context));
+    }
+
+    /**
+     * @test
      */
     public function renderThenChildReturnsAllChildrenIfNoThenViewHelperChildExists(): void
     {

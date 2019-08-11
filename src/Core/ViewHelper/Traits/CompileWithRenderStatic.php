@@ -28,10 +28,11 @@ trait CompileWithRenderStatic
      */
     public function render()
     {
+        $arguments = $this->getArguments();
         return static::renderStatic(
-            $this->arguments->getArrayCopy(),
+            $arguments->getArrayCopy(),
             $this->buildRenderChildrenClosure(),
-            $this->renderingContext
+            $arguments->getRenderingContext()
         );
     }
 

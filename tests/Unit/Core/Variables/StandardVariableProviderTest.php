@@ -209,6 +209,7 @@ class StandardVariableProviderTest extends UnitTestCase
             [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.user.name', [$asArray, $asArray, $asGetter]],
             [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.foo', [$asArray, $asArray]],
             [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
+            [['inArrayWithNotFoundTailingPath' => $inArray], 'inArray.user.notfound.void', [$asArray]],
         ];
     }
 
@@ -218,7 +219,7 @@ class StandardVariableProviderTest extends UnitTestCase
      * @param string|null $accessor
      * @param mixed $expected
      * @test
-     * @dataProvider getExtractRedectAccessorTestValues
+     * @dataProvider getExtractRedetectAccessorTestValues
      */
     public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, string $path, ?string $accessor, $expected): void
     {
@@ -230,7 +231,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getExtractRedectAccessorTestValues(): array
+    public function getExtractRedetectAccessorTestValues(): array
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],
@@ -238,6 +239,7 @@ class StandardVariableProviderTest extends UnitTestCase
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_PUBLICPROPERTY, 'test'],
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_GETTER, 'test'],
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_ASSERTER, 'test'],
+            [['test' => ['array' => new ArrayAccessDummy(['sub' => 'sub'])]], 'test.array.sub', StandardVariableProvider::ACCESSOR_ARRAY, 'sub'],
         ];
     }
 }

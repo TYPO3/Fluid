@@ -114,6 +114,16 @@ class TagBuilderTest extends UnitTestCase
     /**
      * @test
      */
+    public function expandsDataAttribute(): void
+    {
+        $tagBuilder = new TagBuilder('tag');
+        $tagBuilder->addAttribute('data', ['foo' => 'foo', 'bar' => 'bar']);
+        $this->assertEquals('<tag data-foo="foo" data-bar="bar" />', $tagBuilder->render());
+    }
+
+    /**
+     * @test
+     */
     public function attributesAreProperlyRendered(): void
     {
         $tagBuilder = new TagBuilder('tag');

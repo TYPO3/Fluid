@@ -27,6 +27,117 @@ class TemplatePathsTest extends BaseTestCase
     }
 
     /**
+     * @test
+     */
+    public function getLayoutSourceGetsLayoutSource(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setLayoutRootPaths([__DIR__ . '/../../../examples/Resources/Private/Layouts/']);
+        $this->assertNotNull($subject->getLayoutSource('Default'));
+    }
+
+    /**
+     * @test
+     */
+    public function getLayoutIdentifierGetsLayoutIdentifier(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setLayoutRootPaths([__DIR__ . '/../../../examples/Resources/Private/Layouts/']);
+        $this->assertNotNull($subject->getLayoutIdentifier('Default'));
+    }
+
+    /**
+     * @test
+     */
+    public function getTemplateIdentifierGetsTemplateIdentifier(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setTemplateRootPaths([__DIR__ . '/../../../examples/Resources/Private/Templates/']);
+        $this->assertNotNull($subject->getTemplateIdentifier('Default', 'Default'));
+    }
+
+    /**
+     * @test
+     */
+    public function getTemplateSourceGetsTemplateSource(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setTemplateRootPaths([__DIR__ . '/../../../examples/Resources/Private/Templates/']);
+        $this->assertNotNull($subject->getTemplateSource('Default', 'Default'));
+    }
+
+    /**
+     * @test
+     */
+    public function getPartialSourceGetsPartialSource(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setPartialRootPaths([__DIR__ . '/../../../examples/Resources/Private/Partials/']);
+        $this->assertNotNull($subject->getPartialSource('FirstPartial'));
+    }
+
+    /**
+     * @test
+     */
+    public function getPartialSourceGetsPartialSourceWithPartialHavingDifferentFormat(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setFormat('txt');
+        $subject->setPartialRootPaths([__DIR__ . '/../../../examples/Resources/Private/Partials/']);
+        $this->assertNotNull($subject->getPartialSource('FirstPartial.html'));
+    }
+
+    /**
+     * @test
+     */
+    public function getTemplateSourceGetsTemplateSourceWithInvalidPathInSet(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setTemplateRootPaths(['/not/found', __DIR__ . '/../../../examples/Resources/Private/Templates/']);
+        $this->assertNotNull($subject->getTemplateSource('Default', 'Default'));
+    }
+
+    /**
+     * @test
+     */
+    public function resolveAvailableLayoutFilesListsFiles(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setLayoutRootPaths([__DIR__ . '/../../../examples/Resources/Private/Layouts/']);
+        $this->assertNotEmpty($subject->resolveAvailableLayoutFiles());
+    }
+
+    /**
+     * @test
+     */
+    public function resolveAvailablePartialFilesListsFiles(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setPartialRootPaths([__DIR__ . '/../../../examples/Resources/Private/Partials/']);
+        $this->assertNotEmpty($subject->resolveAvailablePartialFiles());
+    }
+
+    /**
+     * @test
+     */
+    public function resolveAvailableTemplateFilesListsFiles(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setTemplateRootPaths([__DIR__ . '/../../../examples/Resources/Private/Templates/']);
+        $this->assertNotEmpty($subject->resolveAvailableTemplateFiles('Default'));
+    }
+
+    /**
+     * @test
+     */
+    public function resolveAvailableTemplateFilesListsFilesWithInvalidPathInSet(): void
+    {
+        $subject = new TemplatePaths();
+        $subject->setTemplateRootPaths(['/not/found/', __DIR__ . '/../../../examples/Resources/Private/Templates/']);
+        $this->assertNotEmpty($subject->resolveAvailableTemplateFiles('Default'));
+    }
+
+    /**
      * @param string|array $input
      * @param string|array $expected
      * @test

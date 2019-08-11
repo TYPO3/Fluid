@@ -761,12 +761,6 @@ class TemplatePaths
     {
         if ($type !== null) {
             $this->resolvedIdentifiers[$type] = $this->resolvedFiles[$type] = [];
-        } else {
-            $this->resolvedIdentifiers = $this->resolvedFiles = [
-                self::NAME_TEMPLATES => [],
-                self::NAME_LAYOUTS => [],
-                self::NAME_PARTIALS => []
-            ];
         }
     }
 }

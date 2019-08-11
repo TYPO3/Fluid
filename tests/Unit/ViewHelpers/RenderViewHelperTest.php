@@ -9,12 +9,24 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
+use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
 /**
  * Testcase for RenderViewHelper
  */
 class RenderViewHelperTest extends ViewHelperBaseTestCase
 {
+    /**
+     * @test
+     */
+    public function throwsErrorWhenMissingAllTargetArguments(): void
+    {
+        $context = new RenderingContextFixture();
+        $viewHelper = new RenderViewHelper();
+        $this->setExpectedException(\InvalidArgumentException::class);
+        $viewHelper->evaluate($context);
+    }
+
     public function getStandardTestValues(): array
     {
         $context = new RenderingContextFixture();
@@ -24,13 +36,14 @@ class RenderViewHelperTest extends ViewHelperBaseTestCase
             ['partial', null, [], false],
             ['partial', 'section', [], false],
             ['partial', 'section', ['foo' => 'bar'], false]
-        )->willReturnOnConsecutiveCalls('partialRendered', 'sectionRendered', 'renderedWithArguments');
+        )->willReturnOnConsecutiveCalls('partialRendered', 'sectionRendered', 'renderedWithArguments', 'renderedWithContentAs');
         $context->setRenderer($renderer);
         return [
             'renders section' => ['sectionRendered', $context, ['section' => 'section']],
             'renders partial' => ['partialRendered', $context, ['partial' => 'partial']],
             'renders section in partial' => ['sectionRendered', $context, ['section' => 'section', 'partial' => 'partial']],
             'renders section in partial with arguments' => ['renderedWithArguments', $context, ['section' => 'section', 'partial' => 'partial', 'arguments' => ['foo' => 'bar']]],
+            'renders with contentAs argument' => ['renderedWithContentAs', $context, ['partial' => 'partial', 'contentAs' => 'foo'], []],
         ];
     }
 }

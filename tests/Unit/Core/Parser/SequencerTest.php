@@ -36,6 +36,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\DescriptionViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\CastViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Expression\MathViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\HtmlViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
@@ -65,6 +66,16 @@ class SequencerTest extends UnitTestCase
         $context = $this->createContext();
 
         return [
+            'Unterminated active tag' => [
+                '<div',
+                $context,
+                1557700786
+            ],
+            'Unterminated inactive tag' => [
+                '<f:example>foo',
+                $context,
+                1564665730
+            ],
             'Unterminated inline syntax' => [
                 '{foo',
                 $context,
@@ -94,6 +105,11 @@ class SequencerTest extends UnitTestCase
                 '<f:c a="[foo:',
                 $context,
                 1557748574
+            ],
+            'Unterminated boolean node' => [
+                '<f:c b="',
+                $context,
+                1564159986
             ],
             'Unsupported argument before equals sign in active tag' => [
                 '<f:c foo="no" />',
@@ -221,6 +237,12 @@ class SequencerTest extends UnitTestCase
                 $context,
                 false,
                 (new EntryNode())->addChild(new ObjectAccessorNode('foo')),
+            ],
+            'inline namespace without at-sign prefix' => [
+                '{namespace foo=Bar}',
+                $context,
+                false,
+                (new EntryNode())->addChild(new TextNode('')),
             ],
             'accessor with dynamic part last in inline in root context' => [
                 '{foo.{bar}}',
@@ -1004,6 +1026,12 @@ class SequencerTest extends UnitTestCase
                 false,
                 (new EntryNode())->addChild(new TextNode('<![CDATA[{notparsed}]]>'))
             ],
+            'cdata node with unmatched closing square brackets inside becomes text node without parsing content' => [
+                '<![CDATA[{not [] parsed}]]>',
+                $context,
+                false,
+                (new EntryNode())->addChild(new TextNode('<![CDATA[{not [] parsed}]]>'))
+            ],
             'pcdata node becomes text node without parsing content' => [
                 '<![PCDATA[{notparsed}]]>',
                 $context,
@@ -1012,18 +1040,6 @@ class SequencerTest extends UnitTestCase
             ],
 
             /* STRUCTURAL */
-            'layout node with empty layout name' => [
-                '<f:layout />',
-                $context,
-                false,
-                (new EntryNode())->addChild($this->createViewHelper($context, LayoutViewHelper::class)),
-            ],
-            'layout node with layout name' => [
-                '<f:layout name="Default" />',
-                $context,
-                false,
-                (new EntryNode())->addChild($this->createViewHelper($context, LayoutViewHelper::class, ['name' => 'Default'])),
-            ],
             'section with name' => [
                 '<f:section name="Default">DefaultSection</f:section>',
                 $context,
@@ -1058,13 +1074,13 @@ class SequencerTest extends UnitTestCase
                 '<f:c b="1" />',
                 $context,
                 false,
-                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))])),
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => true])),
             ],
             'simple numeric boolean false value' => [
                 '<f:c b="0" />',
                 $context,
                 false,
-                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('0'))])),
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => false])),
             ],
             'single object accessor boolean value' => [
                 '<f:c b="{foo}" />',
@@ -1077,6 +1093,36 @@ class SequencerTest extends UnitTestCase
                 $context,
                 false,
                 (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild(new TextNode('1'))])),
+            ],
+            'expression boolean value split to parts with tab whitespace' => [
+                "<f:c b=\"1\t==\t1\" />",
+                $context,
+                false,
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild(new TextNode('1'))])),
+            ],
+            'expression boolean value split to parts with carriage return whitespace' => [
+                "<f:c b=\"1\r==\r1\" />",
+                $context,
+                false,
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild(new TextNode('1'))])),
+            ],
+            'expression boolean value split to parts with line feed whitespace' => [
+                "<f:c b=\"1\n==\n1\" />",
+                $context,
+                false,
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild(new TextNode('1'))])),
+            ],
+            'expression boolean value split to parts with line feed and carriage return whitespace' => [
+                "<f:c b=\"1\r\n==\r\n1\" />",
+                $context,
+                false,
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild(new TextNode('1'))])),
+            ],
+            'string comparison with escaped quote outside string' => [
+                '<f:c b="1 == \\\'test\\\'" />',
+                $context,
+                false,
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild((new RootNode())->addChild(new TextNode('test'))->setQuoted(true))])),
             ],
             'object accessor with comparison boolean value' => [
                 '<f:c b="{foo} === 1" />',
@@ -1265,12 +1311,11 @@ class SequencerTest extends UnitTestCase
         );
         $result = $sequencer->sequence();
 
-        $innerConditionArgument = (new BooleanNode())->addChild(new TextNode('TRUE'));
         $firstInnerGroup = $this->createViewHelper(
             $context,
             IfViewHelper::class,
             [
-                'condition' => $innerConditionArgument,
+                'condition' => true,
                 'then' => 1
             ]
         );
@@ -1475,12 +1520,55 @@ class SequencerTest extends UnitTestCase
     {
         $context = $this->createContext();
         return [
-            'escapes object accessors in root context' => [
+            'escapes object accessors' => [
                 '{foo}',
                 $context,
                 (new EntryNode())->addChild((new EscapingNode(new ObjectAccessorNode('foo')))),
             ],
+            'escapes expressions' => [
+                '{foo as string}',
+                $context,
+                (new EntryNode())->addChild((new EscapingNode(new CastViewHelper(['foo', 'as', 'string'])))),
+            ],
+            'escapes self-closing ViewHelper' => [
+                '<f:format.printf value="%s" arguments="["foo"]" />',
+                $context,
+                (new EntryNode())->addChild(
+                    new EscapingNode(
+                        $this->createViewHelper(
+                            $context,
+                            PrintfViewHelper::class,
+                            ['value' => '%s', 'arguments' => new ArrayNode(['foo'])]
+                        )
+                    )
+                ),
+            ],
+            'escapes open-and-closing ViewHelper' => [
+                '<f:format.printf arguments="["foo"]">%s</f:format.printf>',
+                $context,
+                (new EntryNode())->addChild(
+                    new EscapingNode(
+                        $this->createViewHelper(
+                            $context,
+                            PrintfViewHelper::class,
+                            ['arguments' => new ArrayNode(['foo'])],
+                            [new TextNode('%s')]
+                        )
+                    )
+                ),
+            ],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function togglingParsingOffSequencesRemainderAsText(): void
+    {
+        $template = '{@parsing off}' . PHP_EOL . '<f:format.raw>{value}</f:format.raw>';
+        $context = $this->createContext();
+        $this->setExpectedException(PassthroughSourceException::class);
+        $this->createsExpectedNodeStructure($template, $context, true, new EntryNode());
     }
 
     protected function createViewHelper(RenderingContextInterface $context, string $viewHelperClassName, array $arguments = [], iterable $children = []): ComponentInterface

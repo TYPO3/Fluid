@@ -24,11 +24,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      */
     protected $renderingContext;
 
-    /**
-     * @var Closure
-     */
-    protected $renderChildrenClosure = null;
-
     protected $escapeOutput = true;
 
     /**
@@ -98,21 +93,11 @@ abstract class AbstractViewHelper extends AbstractComponent
     }
 
     /**
-     * Called when being inside a cached template.
-     *
-     * @param Closure $renderChildrenClosure
-     * @return void
-     */
-    public function setRenderChildrenClosure(Closure $renderChildrenClosure)
-    {
-        $this->renderChildrenClosure = $renderChildrenClosure;
-    }
-
-    /**
      * Call the render() method and handle errors.
      *
      * @return mixed the rendered ViewHelper
      * @throws Exception
+     * @deprecated Will be removed and no longer called in Fluid 4.0
      */
     protected function callRenderMethod()
     {
@@ -135,10 +120,6 @@ abstract class AbstractViewHelper extends AbstractComponent
      */
     protected function renderChildren()
     {
-        if ($this->renderChildrenClosure !== null) {
-            $closure = $this->renderChildrenClosure;
-            return $closure();
-        }
         return $this->evaluateChildren($this->renderingContext);
     }
 
@@ -148,6 +129,7 @@ abstract class AbstractViewHelper extends AbstractComponent
      *
      * No public API yet.
      *
+     * @deprecated Will be removed and not called in Fluid 4.0
      * @return Closure
      */
     protected function buildRenderChildrenClosure()
