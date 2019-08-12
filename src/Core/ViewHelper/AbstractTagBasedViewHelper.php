@@ -95,6 +95,12 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         self::$tagAttributes[get_class($this)][$name] = $name;
     }
 
+    public function allowUndeclaredArgument(string $argumentName): bool
+    {
+        // We only allow arbitrary arguments w/o a definition, if they are prefixed with "data-".
+        return strncmp('data-', $argumentName, 5) === 0 || parent::allowUndeclaredArgument($argumentName);
+    }
+
     /**
      * Registers all standard HTML universal attributes.
      * Should be used inside registerArguments();

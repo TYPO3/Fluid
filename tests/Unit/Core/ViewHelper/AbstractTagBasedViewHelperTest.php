@@ -151,4 +151,22 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $this->viewHelper->getArguments()->assignAll($arguments);
         $this->viewHelper->onOpen($context)->evaluate($context);
     }
+
+    /**
+     * @test
+     */
+    public function disallowsUndeclaredArgumentNotPrefixedWithData(): void
+    {
+        $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->getMockForAbstractClass();
+        $this->assertFalse($subject->allowUndeclaredArgument('foo-invalid'));
+    }
+
+    /**
+     * @test
+     */
+    public function allowsUndeclaredArgumentPrefixedWithData(): void
+    {
+        $subject = $this->getMockBuilder(AbstractTagBasedViewHelper::class)->getMockForAbstractClass();
+        $this->assertTrue($subject->allowUndeclaredArgument('data-allowed'));
+    }
 }
