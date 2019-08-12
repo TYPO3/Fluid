@@ -149,9 +149,11 @@ class BooleanNode extends AbstractComponent
                 return (bool) ((int) $x & (int) $y);
 
             case '|':
+                return (bool) ((int) $x | (int) $y);
+
             case 'xor':
             case 'XOR':
-                return (bool) ((int) $x | (int) $y);
+                return (bool) ((int) $x XOR (int) $y);
 
             case '&&':
             case 'and':

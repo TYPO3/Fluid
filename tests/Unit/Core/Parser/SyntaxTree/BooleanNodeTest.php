@@ -174,22 +174,27 @@ class BooleanNodeTest extends UnitTestCase
                 [new TextNode('false'), new TextNode('&&'), new TextNode('true')],
                 false,
             ],
-            'string XOR' => [
+            'string XOR true/true is false' => [
                 $context,
                 [new TextNode('3'), new TextNode('XOR'), new TextNode('2')],
-                true,
+                false,
             ],
-            'string xor' => [
+            'string XOR false/false is false' => [
                 $context,
-                [new TextNode('3'), new TextNode('xor'), new TextNode('2')],
+                [new TextNode('0'), new TextNode('XOR'), new TextNode('0')],
+                false,
+            ],
+            'string xor false/true is true' => [
+                $context,
+                [new TextNode('0'), new TextNode('xor'), new TextNode('2')],
                 true,
             ],
-            'pipe XOR' => [
+            'bitwise or' => [
                 $context,
                 [new TextNode('3'), new TextNode('|'), new TextNode('2')],
                 true,
             ],
-            'ampersand and' => [
+            'bitwise and' => [
                 $context,
                 [new TextNode('3'), new TextNode('&'), new TextNode('2')],
                 true,
