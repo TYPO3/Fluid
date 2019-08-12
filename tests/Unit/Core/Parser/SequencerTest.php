@@ -40,7 +40,6 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\HtmlViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
-use TYPO3Fluid\Fluid\ViewHelpers\LayoutViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 
