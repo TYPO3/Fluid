@@ -53,6 +53,7 @@ class InlineViewHelper extends AbstractViewHelper
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $parsed = $renderingContext->getTemplateParser()->parse((string) ($arguments['code'] ?? $this->evaluateChildren($renderingContext)));
+        $parsed->getArguments()->assignAll($renderingContext->getVariableProvider()->getAll());
         return $parsed->evaluate($renderingContext);
     }
 }

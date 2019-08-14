@@ -20,6 +20,16 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class ArgumentCollectionTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function setDefinitionsSetsDefinitions(): void
+    {
+        $definition = new ArgumentDefinition('name', 'string', 'Name', true);
+        $subject = new ArgumentCollection();
+        $subject->setDefinitions(['name' => $definition]);
+        $this->assertSame(['name' => $definition], $subject->getDefinitions());
+    }
 
     /**
      * @test

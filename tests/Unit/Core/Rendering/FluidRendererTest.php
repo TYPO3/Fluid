@@ -71,6 +71,7 @@ class FluidRendererTest extends UnitTestCase
     {
         $subject = $this->getMockBuilder(FluidRenderer::class)->setMethods(['getCurrentParsedTemplate'])->disableOriginalConstructor()->getMock();
         $subject->expects($this->once())->method('getCurrentParsedTemplate')->willThrowException(new InvalidTemplateResourceException('foo'));
+        $subject->setRenderingContext(new RenderingContextFixture());
         $subject->renderSection('Foo', [], true);
     }
 
@@ -179,6 +180,19 @@ class FluidRendererTest extends UnitTestCase
         $paths->expects($this->once())->method('getPartialIdentifier')->willReturn('foo');
         $output = $subject->renderPartial('Foo', null, [], true);
         $this->assertSame('', $output);
+    }
+
+    /**
+     * @test
+     * @throws \ReflectionException
+     */
+    public function renderComponentRendersComponent(): void
+    {
+        $context = new RenderingContextFixture();
+        $subject = new FluidRenderer($context);
+        $component = $this->getMockBuilder(ComponentInterface::class)->setMethods(['evaluate'])->getMockForAbstractClass();
+        $component->expects($this->once())->method('evaluate')->with($context);
+        $subject->renderComponent($component);
     }
 
     /**

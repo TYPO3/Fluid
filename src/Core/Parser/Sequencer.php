@@ -141,6 +141,12 @@ class Sequencer
         $this->configuration = $configuration ?? $renderingContext->getParserConfiguration();
         $this->escapingEnabled = $this->configuration->isFeatureEnabled(Configuration::FEATURE_ESCAPING);
         $this->splitter = new Splitter($this->source, $this->contexts);
+        $this->nodeStack[] = (new EntryNode())->onOpen($this->renderingContext);
+    }
+
+    public function getComponent(): ComponentInterface
+    {
+        return reset($this->nodeStack) ?: $this->sequence();
     }
 
     public function sequence(): ComponentInterface
@@ -149,7 +155,6 @@ class Sequencer
         // only if they are not preceded by a backslash character; in which case the symbol is ignored and merely
         // collected as part of the output string. NULL bytes are ignored in this context (the Splitter will yield
         // a single NULL byte when end of source is reached).
-        $this->nodeStack[] = (new EntryNode())->onOpen($this->renderingContext);
         $this->sequence = $this->splitter->parse();
         $countedEscapes = 0;
         foreach ($this->sequence as $symbol => $captured) {

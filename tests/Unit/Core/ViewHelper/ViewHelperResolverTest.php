@@ -9,12 +9,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\ViewHelpers\AtomViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 
 /**
@@ -30,7 +30,7 @@ class ViewHelperResolverTest extends UnitTestCase
         $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['resolveAtomFile'])->disableOriginalConstructor()->getMock();
         $resolver->expects($this->once())->method('resolveAtomFile')->willReturn('foo.html');
         $resolver->addAtomPaths(['foo' => ['/path/to/foo']]);
-        $this->assertSame(AtomViewHelper::class, $resolver->resolveViewHelperClassName('foo', 'bar'));
+        $this->assertSame(AtomNode::class, $resolver->resolveViewHelperClassName('foo', 'bar'));
     }
 
     /**
@@ -96,7 +96,7 @@ class ViewHelperResolverTest extends UnitTestCase
         $paths = ['foo' => [__DIR__ . '/../../../Fixtures/Atoms/']];
         $resolver = new ViewHelperResolver(new RenderingContextFixture());
         $resolver->addAtomPaths($paths);
-        $this->assertInstanceOf(AtomViewHelper::class, $resolver->createViewHelperInstance('foo', 'testAtom'));
+        $this->assertInstanceOf(AtomNode::class, $resolver->createViewHelperInstance('foo', 'testAtom'));
     }
 
     /**

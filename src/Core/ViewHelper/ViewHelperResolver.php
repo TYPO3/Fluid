@@ -10,8 +10,8 @@ namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\ViewHelpers\AtomViewHelper;
 
 /**
  * Class ViewHelperResolver
@@ -399,9 +399,9 @@ class ViewHelperResolver
 
             if ($actualViewHelperClassName === false) {
 
-                // If namespace and method match an Atom, return AtomViewHelper's class name. Otherwise, error out.
+                // If namespace and method match an Atom, return AtomNode's class name. Otherwise, error out.
                 if ($this->resolveAtomFile($namespaceIdentifier, $methodIdentifier)) {
-                    return AtomViewHelper::class;
+                    return AtomNode::class;
                 }
 
                 throw new Exception(sprintf(
@@ -435,10 +435,10 @@ class ViewHelperResolver
         if (!empty($namespace) && isset($this->atoms[$namespace])) {
             $atomFile = $this->resolveAtomFile($namespace, $viewHelperShortName);
             if ($atomFile) {
-                $atom = $this->renderingContext->getTemplateParser()->parseFile($atomFile)->setName($namespace . ':' . $viewHelperShortName);
-                $instance = $this->createViewHelperInstanceFromClassName(AtomViewHelper::class);
-                $instance->getArguments()->setDefinitions($atom->getArguments()->getDefinitions())['file'] = $atomFile;
-                return $instance;
+                return (new AtomNode())
+                    ->setArguments(clone $this->renderingContext->getTemplateParser()->parseFile($atomFile)->getArguments())
+                    ->setFile($atomFile)
+                    ->setName($namespace . ':' . $viewHelperShortName);
             }
         }
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);

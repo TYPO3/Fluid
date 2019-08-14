@@ -35,8 +35,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class LayoutViewHelper extends AbstractViewHelper
 {
-    protected $name = 'layoutName';
-
     protected $escapeOutput = false;
 
     public function initializeArguments()

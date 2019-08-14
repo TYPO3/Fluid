@@ -86,13 +86,24 @@ class FluidRenderer
                 sha1($source),
                 function() use ($source): string { return $source; }
             );
-            $parsedTemplate->getArguments()->setRenderingContext($renderingContext);
+            $parsedTemplate->getArguments()
+                ->assignAll($renderingContext->getVariableProvider()->getAll())
+                ->setRenderingContext($renderingContext)
+                ->validate();
         } catch (PassthroughSourceException $error) {
             return $error->getSource();
         }
 
         $this->renderingStack[] = $parsedTemplate;
         $output = $parsedTemplate->evaluate($this->baseRenderingContext);
+        array_pop($this->renderingStack);
+        return $output;
+    }
+
+    public function renderComponent(ComponentInterface $component)
+    {
+        $this->renderingStack[] = $component;
+        $output = $component->evaluate($this->baseRenderingContext);
         array_pop($this->renderingStack);
         return $output;
     }
@@ -106,10 +117,7 @@ class FluidRenderer
      */
     public function renderFile(string $filePathAndName)
     {
-        $this->baseRenderingContext->getTemplatePaths()->setTemplatePathAndFilename($filePathAndName);
-        $output = $this->renderSource(file_get_contents($filePathAndName));
-        $this->baseRenderingContext->getTemplatePaths()->setTemplatePathAndFilename(null);
-        return $output;
+        return $this->renderSource(file_get_contents($filePathAndName));
     }
 
     /**
@@ -133,10 +141,17 @@ class FluidRenderer
     {
         $renderingContext = $this->baseRenderingContext;
 
+        if (empty($variables)) {
+            // Rendering a section without variables always assigns all variables. If the section doesn't need variables
+            // it will behave no differently - and when calling the section from a layout-like Atom, presence of all
+            // variables is assumed without passing any to the f:render statement.
+            $variables = $renderingContext->getVariableProvider()->getAll();
+        }
+
         try {
             $parsedTemplate = $this->getCurrentParsedTemplate();
             $section = $parsedTemplate->getNamedChild($sectionName);
-            $section->getArguments()->assignAll($variables);
+            $section->getArguments()->assignAll($variables)->setRenderingContext($renderingContext)->validate();
         } catch (ChildNotFoundException $error) {
             if (!$ignoreUnknown) {
                 return $renderingContext->getErrorHandler()->handleViewError($error);
@@ -188,7 +203,7 @@ class FluidRenderer
             if ($sectionName !== null) {
                 $output = $this->renderSection($sectionName, $variables, $ignoreUnknown);
             } else {
-                $parsedPartial->getArguments()->assignAll($variables);
+                $parsedPartial->getArguments()->assignAll($variables)->validate();
                 $output = $parsedPartial->evaluate($renderingContext);
             }
             array_pop($this->renderingStack);

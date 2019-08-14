@@ -32,4 +32,17 @@ class TemplateParserTest extends UnitTestCase
         $parser->expects($this->once())->method('parseTemplateSource');
         $parser->getOrParseAndStoreTemplate('foo', function(RenderingContextInterface $context) {});
     }
+
+    /**
+     * @test
+     */
+    public function parsingSameFileTwiceReturnsSameInstance(): void
+    {
+        $context = new RenderingContextFixture();
+        $subject = new TemplateParser($context);
+        $string = __DIR__ . '/../../../Fixtures/Atoms/testAtom.html';
+        $instance1 = $subject->parseFile($string);
+        $instance2 = $subject->parseFile($string);
+        $this->assertSame($instance1, $instance2);
+    }
 }

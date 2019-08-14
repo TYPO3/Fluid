@@ -50,7 +50,6 @@ class EntryNode extends AbstractComponent implements EmbeddedComponentInterface,
         $renderingContext->setVariableProvider(
             $renderingContext->getVariableProvider()->getScopeCopy(
                 $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy()
-                + $renderingContext->getVariableProvider()->getAll()
             )
         );
         return parent::evaluate($renderingContext);

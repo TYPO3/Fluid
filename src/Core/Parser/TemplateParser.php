@@ -25,6 +25,11 @@ class TemplateParser
      */
     protected $renderingContext;
 
+    /**
+     * @var array 
+     */
+    protected $stack = [];
+
     public function __construct(RenderingContextInterface $renderingContext)
     {
         $this->renderingContext = $renderingContext;
@@ -33,6 +38,10 @@ class TemplateParser
 
     public function parseFile(string $templatePathAndFilename, ?Configuration $configuration = null): ComponentInterface
     {
+        $hash = sha1_file($templatePathAndFilename);
+        if (isset($this->stack[$hash])) {
+            return $this->stack[$hash];
+        }
         return $this->getOrParseAndStoreTemplate(
             $this->createIdentifierForFile($templatePathAndFilename, ''),
             function () use ($templatePathAndFilename): string {
@@ -56,6 +65,7 @@ class TemplateParser
      */
     public function parse(string $templateString, ?Configuration $configuration = null): ComponentInterface
     {
+        $hash = sha1($templateString);
         $source = new Source($templateString);
         $contexts = new Contexts();
         $sequencer = new Sequencer(
@@ -64,8 +74,15 @@ class TemplateParser
             $source,
             $configuration ?? $this->configuration
         );
-
-        return $sequencer->sequence();
+        // Recursion support: triggering parsing of the same source file from within the file returns a reference
+        // to the still unfinished EntryNode created by the Sequencer. The returned instance still does not have all
+        // child nodes until the Sequencer has finished. The second time the template is parsed the temporary EntryNode
+        // is returned to prevent infinite recursion.
+        // The first instance now contains a circular reference to itself, as a branch nested in children somewhere.
+        // Any subsequent usages of the same source creates additional references to the original/root/parent.
+        $this->stack[$hash] = $sequencer->getComponent();
+        $component = $sequencer->sequence();
+        return $component;
     }
 
     /**
