@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ReferenceNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -315,7 +316,7 @@ class ViewHelperResolver
             return false;
         }
 
-        return $this->namespaces[$namespaceIdentifier] !== null;
+        return $this->namespaces[$namespaceIdentifier] !== null && $namespaceIdentifier !== 'this';
     }
 
     /**
@@ -377,6 +378,9 @@ class ViewHelperResolver
      */
     public function resolveViewHelperClassName(?string $namespaceIdentifier, string $methodIdentifier): ?string
     {
+        if ($namespaceIdentifier === 'this') {
+            return ReferenceNode::class;
+        }
         if (empty($namespaceIdentifier) && isset($this->aliases[$methodIdentifier])) {
             list ($namespaceIdentifier, $methodIdentifier) = $this->aliases[$methodIdentifier];
         }
@@ -432,6 +436,9 @@ class ViewHelperResolver
      */
     public function createViewHelperInstance(?string $namespace, string $viewHelperShortName): ComponentInterface
     {
+        if ($namespace === 'this') {
+            return new ReferenceNode($viewHelperShortName);
+        }
         if (!empty($namespace) && isset($this->atoms[$namespace])) {
             $atomFile = $this->resolveAtomFile($namespace, $viewHelperShortName);
             if ($atomFile) {

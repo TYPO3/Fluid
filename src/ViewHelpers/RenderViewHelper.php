@@ -11,6 +11,13 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
+ * DEPRECATION INFORMATION
+ *
+ * This ViewHelper is deprecated - sections are now rendered using <this:sectionName />
+ * or {this:sectionName()} supporting arbitrary arguments that become variables inside
+ * the section when rendering. Partials as a concept is also deprecated which means
+ * this entire ViewHelper is now deprecated.
+ *
  * A ViewHelper to render a section, a partial, a specified section in a partial
  * or a delegate ParsedTemplateInterface implementation.
  *
@@ -79,6 +86,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Note that while ParsedTemplateInterface supports returning a Layout name, this Layout will not
  * be respected when rendering using this method. Only the `render()` method will be called!
  * </output>
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 class RenderViewHelper extends AbstractViewHelper
 {

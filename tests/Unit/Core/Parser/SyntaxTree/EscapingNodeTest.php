@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -17,6 +18,15 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
  */
 class EscapingNodeTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function getNameDelegatesToNestedNode(): void
+    {
+        $childNode = (new EntryNode())->setName('test');
+        $node = new EscapingNode($childNode);
+        $this->assertSame('test', $node->getName());
+    }
 
     /**
      * @test

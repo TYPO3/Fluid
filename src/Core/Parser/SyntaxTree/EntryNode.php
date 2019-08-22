@@ -10,7 +10,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
-use TYPO3Fluid\Fluid\Component\TransparentComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -34,7 +33,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * of another EntryNode to any nesting depth by
  * using dotted path as argument for getNamedChild).
  */
-class EntryNode extends AbstractComponent implements EmbeddedComponentInterface, TransparentComponentInterface
+class EntryNode extends AbstractComponent implements EmbeddedComponentInterface
 {
     protected $escapeOutput = false;
 

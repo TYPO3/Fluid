@@ -44,6 +44,11 @@ class FluidRenderer
         $this->baseRenderingContext = $renderingContext;
     }
 
+    public function getComponentBeingRendered(): ?ComponentInterface
+    {
+        return end($this->renderingStack) ?: null;
+    }
+
     /**
      * @param callable|null $baseTemplateClosure
      * @return FluidRenderer

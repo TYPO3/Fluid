@@ -23,6 +23,17 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
  */
 class FluidRendererTest extends UnitTestCase
 {
+
+    /**
+     * @test
+     */
+    public function getComponentBeingRenderedReturnsNullByDefault(): void
+    {
+        $context = new RenderingContextFixture();
+        $subject = new FluidRenderer($context);
+        $this->assertNull($subject->getComponentBeingRendered());
+    }
+
     /**
      * @test
      */

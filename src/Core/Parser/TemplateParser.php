@@ -36,13 +36,15 @@ class TemplateParser
         $this->configuration = $renderingContext->getParserConfiguration();
     }
 
+    public function getComponentBeingParsed(): ?ComponentInterface
+    {
+        return end($this->stack) ?: null;
+    }
+
     public function parseFile(string $templatePathAndFilename, ?Configuration $configuration = null): ComponentInterface
     {
         $hash = sha1_file($templatePathAndFilename);
-        if (isset($this->stack[$hash])) {
-            return $this->stack[$hash];
-        }
-        return $this->getOrParseAndStoreTemplate(
+        return $this->stack[$hash] ?? $this->getOrParseAndStoreTemplate(
             $this->createIdentifierForFile($templatePathAndFilename, ''),
             function () use ($templatePathAndFilename): string {
                 return file_get_contents($templatePathAndFilename);
@@ -82,6 +84,7 @@ class TemplateParser
         // Any subsequent usages of the same source creates additional references to the original/root/parent.
         $this->stack[$hash] = $sequencer->getComponent();
         $component = $sequencer->sequence();
+        array_pop($this->stack);
         return $component;
     }
 

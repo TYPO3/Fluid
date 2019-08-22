@@ -45,4 +45,14 @@ class TemplateParserTest extends UnitTestCase
         $instance2 = $subject->parseFile($string);
         $this->assertSame($instance1, $instance2);
     }
+
+    /**
+     * @test
+     */
+    public function getComponentBeingParsedReturnsNullByDefault(): void
+    {
+        $context = new RenderingContextFixture();
+        $subject = new TemplateParser($context);
+        $this->assertNull($subject->getComponentBeingParsed());
+    }
 }

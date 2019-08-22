@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ReferenceNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -22,6 +23,26 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
  */
 class ViewHelperResolverTest extends UnitTestCase
 {
+    /**
+     * @test
+     */
+    public function createViewHelperInstanceWithThisAsNamespaceCreatesReferenceNode(): void
+    {
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $component = $resolver->createViewHelperInstance('this', 'foo.bar');
+        $this->assertInstanceOf(ReferenceNode::class, $component);
+    }
+
+    /**
+     * @test
+     */
+    public function resolveViewHelperClassNameReturnsReferenceNodeClassNameWithThisAsNamespace(): void
+    {
+        $resolver = new ViewHelperResolver(new RenderingContextFixture());
+        $class = $resolver->resolveViewHelperClassName('this', 'foo.bar');
+        $this->assertSame(ReferenceNode::class, $class);
+    }
+
     /**
      * @test
      */
