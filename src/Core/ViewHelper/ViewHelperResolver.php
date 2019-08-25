@@ -409,7 +409,7 @@ class ViewHelperResolver
                 }
 
                 throw new Exception(sprintf(
-                    'The ViewHelper "<%s:%s>" could not be resolved.' . chr(10) .
+                    'A Component named "<%s:%s>" could not be resolved.' . chr(10) .
                     'We looked in the following namespaces: %s.',
                     $namespaceIdentifier,
                     $methodIdentifier,

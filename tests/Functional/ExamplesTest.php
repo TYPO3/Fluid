@@ -217,7 +217,7 @@ class ExamplesTest extends BaseTestCase
                     'View error: The Fluid template files',
                     'View error: Child with name "DoesNotExist" not found',
                     'error: Undeclared argument',
-                    'error: The ViewHelper "<f:invalid>" could not be resolved',
+                    'error: A Component named "<f:invalid>" could not be resolved',
                 ]
             ]
         ];
