@@ -123,7 +123,7 @@ abstract class AbstractComponent implements ComponentInterface
     public function getNamedChild(string $name): ComponentInterface
     {
         $parts = explode('.', $name, 2);
-        foreach ($this->children as $child) {
+        foreach (array_reverse($this->children) as $child) {
             if ($child->getName() === $parts[0]) {
                 if (isset($parts[1])) {
                     return $child->getNamedChild($parts[1]);
