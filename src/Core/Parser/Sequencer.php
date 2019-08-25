@@ -176,13 +176,36 @@ class Sequencer
 
                 case self::BYTE_INLINE:
                     $countedEscapes = 0;
-                    $node->addChild($this->sequenceInlineNodes(false));
+                    try {
+                        $childNode = $this->sequenceInlineNodes(false);
+                    } catch (Exception $exception) {
+                        $childNode = new TextNode(
+                            $this->renderingContext->getErrorHandler()->handleParserError(
+                                $this->createErrorAtPosition(
+                                    $exception->getMessage(),
+                                    $exception->getCode()
+                                )
+                            )
+                        );
+                    }
+                    $node->addChild($childNode);
                     $this->splitter->switch($this->contexts->root);
                     break;
 
                 case self::BYTE_TAG:
                     $countedEscapes = 0;
-                    $childNode = $this->sequenceTagNode();
+                    try {
+                        $childNode = $this->sequenceTagNode();
+                    } catch (Exception $exception) {
+                        $childNode = new TextNode(
+                            $this->renderingContext->getErrorHandler()->handleParserError(
+                                $this->createErrorAtPosition(
+                                    $exception->getMessage(),
+                                    $exception->getCode()
+                                )
+                            )
+                        );
+                    }
                     $this->splitter->switch($this->contexts->root);
 
                     if ($childNode) {
@@ -419,30 +442,25 @@ class Sequencer
                         return $node->addChild(new TextNode($text))->flatten();
                     }
 
-                    try {
-                        if (!$closing || $selfClosing) {
-                            $viewHelperNode = $viewHelperNode ?? $this->resolver->createViewHelperInstance($namespace, (string) $method);
-                            $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
-                        } else {
-                            // $closing will be true and $selfClosing false; add to stack, continue with children.
-                            $viewHelperNode = array_pop($this->nodeStack);
-                            $expectedClass = $this->resolver->resolveViewHelperClassName($namespace, (string) $method);
-                            if (!$viewHelperNode instanceof $expectedClass) {
-                                throw $this->createErrorAtPosition(
-                                    sprintf(
-                                        'Mismatched closing tag. Expecting: %s:%s (%s). Found: (%s).',
-                                        $namespace,
-                                        $method,
-                                        $expectedClass,
-                                        get_class($viewHelperNode)
-                                    ),
-                                    1557700789
-                                );
-                            }
+                    if (!$closing || $selfClosing) {
+                        $viewHelperNode = $viewHelperNode ?? $this->resolver->createViewHelperInstance($namespace, (string) $method);
+                        $viewHelperNode->onOpen($this->renderingContext)->getArguments()->validate();
+                    } else {
+                        // $closing will be true and $selfClosing false; add to stack, continue with children.
+                        $viewHelperNode = array_pop($this->nodeStack);
+                        $expectedClass = $this->resolver->resolveViewHelperClassName($namespace, (string) $method);
+                        if (!$viewHelperNode instanceof $expectedClass) {
+                            throw $this->createErrorAtPosition(
+                                sprintf(
+                                    'Mismatched closing tag. Expecting: %s:%s (%s). Found: (%s).',
+                                    $namespace,
+                                    $method,
+                                    $expectedClass,
+                                    get_class($viewHelperNode)
+                                ),
+                                1557700789
+                            );
                         }
-                    } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
-                        $error = $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
-                        return new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error));
                     }
 
                     // Possibly pending argument still needs to be processed since $key is not null. Create an ECMA
@@ -497,15 +515,9 @@ class Sequencer
                         }
                     } elseif ($namespace !== null || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
                         $method = $captured;
-
-                        try {
-                            $viewHelperNode = $this->resolver->createViewHelperInstance($namespace, $method);
-                            $arguments = $viewHelperNode->getArguments();
-                            $definitions = $arguments->getDefinitions();
-                        } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
-                            $error = $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
-                            return new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error));
-                        }
+                        $viewHelperNode = $this->resolver->createViewHelperInstance($namespace, $method);
+                        $arguments = $viewHelperNode->getArguments();
+                        $definitions = $arguments->getDefinitions();
 
                         // Forcibly disable escaping OFF as default decision for whether or not to escape an argument.
                         $this->escapingEnabled = false;
@@ -764,13 +776,9 @@ class Sequencer
                     $callDetected = true;
                     $method = $captured;
                     $childNodeToAdd = $node;
-                    try {
-                        $node = $this->resolver->createViewHelperInstance($namespace, $method);
-                        $arguments = $node->getArguments();
-                        $node = $this->callInterceptor($node, self::INTERCEPT_OPENING_VIEWHELPER);
-                    } catch (\TYPO3Fluid\Fluid\Core\Exception $exception) {
-                        throw $this->createErrorAtPosition($exception->getMessage(), $exception->getCode());
-                    }
+                    $node = $this->resolver->createViewHelperInstance($namespace, $method);
+                    $arguments = $node->getArguments();
+                    $node = $this->callInterceptor($node, self::INTERCEPT_OPENING_VIEWHELPER);
 
                     $this->sequenceArrayNode($arguments);
                     $arguments->setRenderingContext($this->renderingContext)->validate();
