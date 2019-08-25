@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use org\bovigo\vfs\vfsStream;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\ExpressionComponentInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
@@ -14,6 +15,7 @@ use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\Contexts;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
+use TYPO3Fluid\Fluid\Core\Parser\FileSource;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\Core\Parser\Sequencer;
@@ -54,10 +56,26 @@ class SequencerTest extends UnitTestCase
      * @param string $template
      * @param RootNode $expectedRootNode
      */
+    public function failsWithExpectedSequencingExceptionUsingFileSource(string $template, RenderingContextInterface $context, int $expectedExceptionCode)
+    {
+        $dir = vfsStream::setup('root');
+        $file = vfsStream::newFile(sha1($template));
+        $dir->addChild($file);
+        $file->setContent($template);
+        $this->setExpectedException(Exception::class, '', $expectedExceptionCode);
+        $context->getTemplateParser()->parse(new FileSource($file->url()));
+    }
+
+    /**
+     * @test
+     * @dataProvider getErrorExpectations
+     * @param string $template
+     * @param RootNode $expectedRootNode
+     */
     public function failsWithExpectedSequencingException(string $template, RenderingContextInterface $context, int $expectedExceptionCode)
     {
         $this->setExpectedException(Exception::class, '', $expectedExceptionCode);
-        $context->getTemplateParser()->parse($template);
+        $context->getTemplateParser()->parse(new Source($template));
     }
 
     public function getErrorExpectations(): array
@@ -1648,7 +1666,7 @@ class SequencerTest extends UnitTestCase
         $configuration = new Configuration();
         $configuration->setFeatureState(Configuration::FEATURE_ESCAPING, $escapingEnabled);
         $parser = $context->getTemplateParser();
-        $node = $parser->parse($template, $configuration);
+        $node = $parser->parse(new Source($template), $configuration);
         $this->assertNodeEquals($node, $expectedRootNode);
     }
 }

@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -44,6 +45,20 @@ class TemplateParserTest extends UnitTestCase
         $instance1 = $subject->parseFile($string);
         $instance2 = $subject->parseFile($string);
         $this->assertSame($instance1, $instance2);
+    }
+
+    /**
+     * @test
+     */
+    public function fileCanBeParsedWithRuntimeCacheDisabled(): void
+    {
+        $context = new RenderingContextFixture();
+        $subject = new TemplateParser($context);
+        $configuration = new Configuration();
+        $configuration->setFeatureState(Configuration::FEATURE_RUNTIME_CACHE, false);
+        $string = __DIR__ . '/../../../Fixtures/Atoms/testAtom.html';
+        $instance = $subject->parseFile($string, $configuration);
+        $this->assertInstanceOf(EntryNode::class, $instance);
     }
 
     /**

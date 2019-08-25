@@ -16,6 +16,8 @@ class SequencingException extends Exception
 
     protected $byte = 0;
 
+    protected $file = '';
+
     public function getExcerpt(): string
     {
         return $this->excerpt;
@@ -34,5 +36,15 @@ class SequencingException extends Exception
     public function setByte(int $byte): void
     {
         $this->byte = $byte;
+    }
+
+    public function setLine($line): void
+    {
+        $this->line = $line;
+    }
+
+    public function setFile(string $file): void
+    {
+        $this->file = $file;
     }
 }

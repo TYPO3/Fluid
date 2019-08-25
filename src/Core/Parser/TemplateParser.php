@@ -26,9 +26,14 @@ class TemplateParser
     protected $renderingContext;
 
     /**
-     * @var array 
+     * @var ComponentInterface[]
      */
     protected $stack = [];
+
+    /**
+     * @var Source[]
+     */
+    protected $sources = [];
 
     public function __construct(RenderingContextInterface $renderingContext)
     {
@@ -44,12 +49,15 @@ class TemplateParser
     public function parseFile(string $templatePathAndFilename, ?Configuration $configuration = null): ComponentInterface
     {
         $hash = sha1_file($templatePathAndFilename);
-        return $this->stack[$hash] ?? $this->getOrParseAndStoreTemplate(
-            $this->createIdentifierForFile($templatePathAndFilename, ''),
-            function () use ($templatePathAndFilename): string {
-                return file_get_contents($templatePathAndFilename);
-            }
-        );
+        $source = $this->sources[$hash] ?? ($this->sources[$hash] = new FileSource($templatePathAndFilename));
+        if (!($configuration ?? $this->configuration)->isFeatureEnabled(Configuration::FEATURE_RUNTIME_CACHE)) {
+            return ($this->stack[$hash] ?? $this->parse($source));
+        }
+        static $cache = [];
+        if (isset($cache[$hash])) {
+            return $cache[$hash];
+        }
+        return $cache[$hash] = ($this->stack[$hash] ?? $this->parse($source));
     }
 
     /**
@@ -60,15 +68,14 @@ class TemplateParser
      * Normally, you should use a subclass of AbstractTemplateView instead of calling the
      * TemplateParser directly.
      *
-     * @param string $templateString The template to parse as a string
+     * @param Source $source Template source instance
      * @param Configuration|null Template parsing configuration to use
      * @return ComponentInterface Parsed template
      * @throws Exception
      */
-    public function parse(string $templateString, ?Configuration $configuration = null): ComponentInterface
+    public function parse(Source $source, ?Configuration $configuration = null): ComponentInterface
     {
-        $hash = sha1($templateString);
-        $source = new Source($templateString);
+        $hash = sha1($source->source);
         $contexts = new Contexts();
         $sequencer = new Sequencer(
             $this->renderingContext,
@@ -113,24 +120,10 @@ class TemplateParser
     protected function parseTemplateSource(string $templateIdentifier, \Closure $templateSourceClosure): ComponentInterface
     {
         $parsedTemplate = $this->parse(
-            $templateSourceClosure($this->renderingContext),
+            new Source($templateSourceClosure($this->renderingContext)),
             $this->renderingContext->getParserConfiguration()
         );
         //$parsedTemplate->setIdentifier($templateIdentifier);
         return $parsedTemplate;
-    }
-
-    /**
-     * Returns a unique identifier for the given file in the format
-     * <PackageKey>_<SubPackageKey>_<ControllerName>_<prefix>_<SHA1>
-     * The SH1 hash is a checksum that is based on the file path and last modification date
-     *
-     * @param string $pathAndFilename
-     * @param string $prefix
-     * @return string
-     */
-    protected function createIdentifierForFile(string $pathAndFilename, string $prefix): string
-    {
-        return sprintf('%s_%s', $prefix, sha1($pathAndFilename));
     }
 }

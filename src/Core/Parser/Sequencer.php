@@ -1282,6 +1282,12 @@ class Sequencer
         $error = new SequencingException($message, $code);
         $error->setExcerpt($this->extractSourceDumpOfLineAtPosition($this->splitter->index));
         $error->setByte($this->source->bytes[$this->splitter->index] ?? 0);
+        $error->setLine($this->countCharactersMatchingMask(1 << self::BYTE_WHITESPACE_EOL, 0, $this->splitter->index) + 1);
+        if ($this->source instanceof FileSource) {
+            $error->setFile($this->source->filePathAndFilename);
+        } else {
+            $error->setFile('Source hash: ' . sha1($this->source->source));
+        }
         return $error;
     }
 
@@ -1301,8 +1307,10 @@ class Sequencer
     {
         $bytes = &$this->source->bytes;
         $counted = 0;
-        for ($index = $offset; $index < $this->source->length; $index++) {
-            if (($primaryMask & (1 << $bytes[$index])) && $bytes[$index] < 64) {
+        ++$offset; // We must start one byte after offset since source byte array index starts with 1. See unpack().
+        for ($index = $offset; $index < $this->source->length && $index <= $length && isset($bytes[$index]); $index++) {
+            $byte = $bytes[$index];
+            if (($primaryMask & (1 << $byte)) && $byte < 64) {
                 $counted++;
             }
         }

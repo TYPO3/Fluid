@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\Source;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -52,7 +53,7 @@ class InlineViewHelper extends AbstractViewHelper
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
-        $parsed = $renderingContext->getTemplateParser()->parse((string) ($arguments['code'] ?? $this->evaluateChildren($renderingContext)));
+        $parsed = $renderingContext->getTemplateParser()->parse(new Source((string) ($arguments['code'] ?? $this->evaluateChildren($renderingContext))));
         $parsed->getArguments()->assignAll($renderingContext->getVariableProvider()->getAll());
         return $parsed->evaluate($renderingContext);
     }
