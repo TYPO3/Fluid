@@ -28,7 +28,7 @@ class AtomNode extends AbstractComponent
         return $this;
     }
 
-    public function setFile($file): ComponentInterface
+    public function setFile(string $file): ComponentInterface
     {
         $this->file = $file;
         return $this;
@@ -36,10 +36,13 @@ class AtomNode extends AbstractComponent
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $atom = $renderingContext->getTemplateParser()->parseFile($this->file);
+        $atom = clone $renderingContext->getTemplateParser()->parseFile($this->file);
         $arguments = clone $atom->getArguments();
-        $arguments->assignAll($this->getArguments()->getAllRaw() + $renderingContext->getVariableProvider()->getAll());
-        return $atom->setArguments($arguments)->evaluate($renderingContext);
+        $arguments->assignAll($this->getArguments()->getAllRaw() + $renderingContext->getVariableProvider()->getAll())->setRenderingContext($renderingContext);
+        foreach ($this->getChildren() as $child) {
+            $atom->addChild($child);
+        }
+        return $renderingContext->getRenderer()->renderComponent($atom->setArguments($arguments));
     }
 
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface

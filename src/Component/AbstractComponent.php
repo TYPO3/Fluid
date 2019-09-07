@@ -91,22 +91,7 @@ abstract class AbstractComponent implements ComponentInterface
 
     public function addChild(ComponentInterface $component): ComponentInterface
     {
-        if ($component instanceof ParameterViewHelper) {
-            // The child is a parameter declaration. Use the Component's argument values to create and
-            // add a new ArgumentDefinition to this component.
-            $arguments = $this->getArguments();
-            $context = $arguments->getRenderingContext();
-            $parameters = $component->getArguments()->setRenderingContext($context);
-            $arguments->addDefinition(
-                new ArgumentDefinition(
-                    $parameters['name'],
-                    $parameters['type'],
-                    $parameters['description'] ?? 'Argument ' . $parameters['name'],
-                    $parameters['required'],
-                    $parameters['default'] ?? null
-                )
-            );
-        } elseif ($component instanceof RootNode) {
+        if ($component instanceof RootNode) {
             // Assimilate child nodes instead of allowing a root node inside a root node.
             foreach ($component->getChildren() as $node) {
                 $this->addChild($node);

@@ -35,7 +35,7 @@ class ReferenceNode extends AbstractComponent
         $component->getArguments()->assignAll(
             $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy()
             + $renderingContext->getVariableProvider()->getAll()
-        );
+        )->validate();
         return $component->evaluate($renderingContext);
     }
 

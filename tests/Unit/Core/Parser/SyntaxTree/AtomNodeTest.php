@@ -10,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -24,12 +25,15 @@ class AtomNodeTest extends UnitTestCase
      * @test
      * @throws \ReflectionException
      */
-    public function evaluateParsesAtomAndAssignsArgumentsAsVariables(): void
+    public function evaluateParsesAtomAndAssignsArgumentsAsVariablesAndAddsChildren(): void
     {
         $subject = new AtomNode();
         $subject->setFile(__DIR__ . '/../../../../Fixtures/Atoms/testAtom.html');
+        $child = new ObjectAccessorNode('foo');
+        $subject->addChild($child);
         $context = new RenderingContextFixture();
-        $atom = new EntryNode();
+        $atom = $this->getMockBuilder(EntryNode::class)->setMethods(['addChild'])->getMock();
+        $atom->expects($this->once())->method('addChild')->with($child);
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['parseFile'])->disableOriginalConstructor()->getMock();
         $parser->expects($this->once())->method('parseFile')->willReturn($atom);
         $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();

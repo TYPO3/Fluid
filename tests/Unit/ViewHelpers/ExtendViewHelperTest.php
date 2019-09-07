@@ -19,13 +19,14 @@ class ExtendViewHelperTest extends ViewHelperBaseTestCase
 {
     public function getStandardTestValues(): array
     {
+        $atom = new EntryNode();
+        $atom->addChild(new TextNode('foobar'));
         $context = new RenderingContextFixture();
         $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['resolveAtom'])->setConstructorArgs([$context])->getMock();
-        $resolver->expects($this->atLeastOnce())->method('resolveAtom')->with('foo', 'bar')->willReturn(new EntryNode());
+        $resolver->expects($this->atLeastOnce())->method('resolveAtom')->with('foo', 'bar')->willReturn($atom);
         $context->setViewHelperResolver($resolver);
         return [
             'returns null on execution without child nodes' => [null, $context, ['atom' => 'foo:bar']],
-            'returns child nodes on execution' => ['test', $context, ['atom' => 'foo:bar'], [new TextNode('test')]],
         ];
     }
 }

@@ -59,26 +59,6 @@ class AbstractComponentTest extends UnitTestCase
 
     /**
      * @test
-     * @throws \ReflectionException
-     */
-    public function addChildCalledWithParameterViewHelperRegistersArgument(): void
-    {
-        $context = new RenderingContextFixture();
-        $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();
-        $definitionArguments = ['name' => 'foo', 'type' => 'string', 'description' => 'Test'];
-
-        $child = (new ParameterViewHelper())->onOpen($context);
-        $child->getArguments()->setRenderingContext($context)->assignAll($definitionArguments);
-
-        $subject->getArguments()->setRenderingContext($context);
-        $subject->addChild($child);
-
-        $expectedDefinitions = ['foo' => new ArgumentDefinition('foo', 'string', 'Test', false)];
-        $this->assertEquals($expectedDefinitions, $subject->getArguments()->getDefinitions());
-    }
-
-    /**
-     * @test
      * @dataProvider getNamedChildErrorTestValues
      * @param iterable $children
      * @param string $name

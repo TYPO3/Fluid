@@ -67,6 +67,7 @@ class SectionViewHelper extends AbstractViewHelper implements EmbeddedComponentI
 
     public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        return (new EntryNode())->setName($this->getArguments()['name'])->setChildren($this->getChildren());
+        $arguments = $this->getArguments();
+        return (new EntryNode())->setName($arguments['name'])->setChildren($this->getChildren())->onClose($renderingContext);
     }
 }

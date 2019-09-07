@@ -8,9 +8,12 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  */
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\ViewHelpers\ExtendViewHelper;
+use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
 
 /**
  * Entry node. Used to represent either the root
@@ -54,9 +57,32 @@ class EntryNode extends AbstractComponent implements EmbeddedComponentInterface
         return parent::evaluate($renderingContext);
     }
 
-    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        $this->getArguments()->setRenderingContext($renderingContext)->validate();
-        return parent::onOpen($renderingContext);
+        $this->getArguments()->setRenderingContext($renderingContext);
+        foreach ($this->getChildren() as $child) {
+            if ($child instanceof ExtendViewHelper) {
+                $atom = $child->getAtom();
+                foreach ($atom->getArguments()->getDefinitions() as $definition) {
+                    $this->getArguments()->addDefinition($definition);
+                }
+            } elseif ($child instanceof ParameterViewHelper) {
+                // The child is a parameter declaration. Use the Component's argument values to create and
+                // add a new ArgumentDefinition to this component.
+                $arguments = $this->getArguments();
+                $context = $arguments->getRenderingContext();
+                $parameters = $child->getArguments()->setRenderingContext($context);
+                $arguments->addDefinition(
+                    new ArgumentDefinition(
+                        $parameters['name'],
+                        $parameters['type'],
+                        $parameters['description'] ?? 'Argument ' . $parameters['name'],
+                        $parameters['required'],
+                        $parameters['default'] ?? null
+                    )
+                );
+            }
+        }
+        return $this;
     }
 }

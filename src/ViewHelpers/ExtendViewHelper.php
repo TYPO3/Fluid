@@ -36,16 +36,34 @@ class ExtendViewHelper extends AbstractViewHelper implements TransparentComponen
 {
     protected $escapeOutput = false;
 
+    /**
+     * @var ComponentInterface|null
+     */
+    protected $atom;
+
     public function initializeArguments()
     {
         $this->registerArgument('atom', 'string', 'Name of Atom to extend', true);
+    }
+
+    public function evaluate(RenderingContextInterface $renderingContext)
+    {
+        return null;
     }
 
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface
     {
         list ($namespace, $atomName) = explode(':', $this->getArguments()->setRenderingContext($renderingContext)['atom']);
         $atom = $renderingContext->getViewHelperResolver()->resolveAtom($namespace, $atomName);
-        $this->children += $atom->getChildren();
+        foreach ($atom->getChildren() as $child) {
+            $this->addChild($child);
+        }
+        $this->atom = $atom;
         return parent::onOpen($renderingContext);
+    }
+
+    public function getAtom(): ?ComponentInterface
+    {
+        return $this->atom;
     }
 }
