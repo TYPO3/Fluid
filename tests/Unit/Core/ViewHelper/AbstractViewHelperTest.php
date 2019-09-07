@@ -9,19 +9,17 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
-use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
-use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefaultRenderStaticViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestCase;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for AbstractViewHelper
  */
-class AbstractViewHelperTest extends ViewHelperBaseTestCase
+class AbstractViewHelperTest extends UnitTestCase
 {
     public function getStandardTestValues(): array
     {

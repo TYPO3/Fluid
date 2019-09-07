@@ -10,14 +10,14 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestCase;
+use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 
 /**
  * Testcase for Condition ViewHelper
  */
-class AbstractConditionViewHelperTest extends ViewHelperBaseTestCase
+class AbstractConditionViewHelperTest extends UnitTestCase
 {
     public function getStandardTestValues(): array
     {
