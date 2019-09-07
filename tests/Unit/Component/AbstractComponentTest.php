@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Component;
 
 use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
@@ -24,7 +23,6 @@ use TYPO3Fluid\Fluid\Tests\Unit\Component\Fixtures\TransparentComponentFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
 
 /**
  * Test for base methods on AbstractComponent

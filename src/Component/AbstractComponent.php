@@ -8,14 +8,12 @@ namespace TYPO3Fluid\Fluid\Component;
  */
 
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
-use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\ArgumentViewHelper;
-use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
 
 /**
  * Base Component Class

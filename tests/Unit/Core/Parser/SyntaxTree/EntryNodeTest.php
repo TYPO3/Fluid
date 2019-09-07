@@ -7,7 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
