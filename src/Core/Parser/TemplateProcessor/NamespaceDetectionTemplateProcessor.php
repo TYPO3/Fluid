@@ -31,7 +31,7 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     protected $renderingContext;
 
     /**
-     * @var array()
+     * @var array
      */
     protected $localNamespaces = [];
 
