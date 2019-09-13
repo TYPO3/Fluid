@@ -133,7 +133,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
         $functionName = $templateCompiler->variableName('ternaryExpression');
         $initializationPhpCode .= sprintf(
             '%s = function($context, $renderingContext) {
-				if (%s::convertToBoolean(' . $compiledExpression . ', $renderingContext) === TRUE) {
+				if (%s::convertToBoolean(%s, $renderingContext) === TRUE) {
 					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
 				} else {
 					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
@@ -141,6 +141,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
 			};' . chr(10),
             $functionName,
             BooleanNode::class,
+            var_export($compiledExpression, true),
             static::class,
             var_export($then, true),
             static::class,
