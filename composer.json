@@ -24,7 +24,7 @@
         }
     },
     "replace": {
-        "typo3fluid/fluid": ">=3.0.0"
+        "typo3fluid/fluid": "*"
     },
     "bin": [
         "bin/fluid"
