@@ -82,6 +82,14 @@ class RenderingContext implements RenderingContextInterface
         IfViewHelper::class,
     ];
 
+    public function __construct()
+    {
+        $this->viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $this->viewHelperResolver = new ViewHelperResolver($this);
+        $this->variableProvider = new StandardVariableProvider([]);
+        $this->templatePaths = new TemplatePaths();
+    }
+
     /**
      * @return FluidRenderer
      */
