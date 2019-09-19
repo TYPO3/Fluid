@@ -141,8 +141,9 @@ abstract class AbstractTemplateView extends AbstractView
         $identifierClosure = function() use ($context, $templatePaths) {
             return $templatePaths->getTemplateSource($context->getControllerName(), $context->getControllerAction());
         };
-        return $this->baseRenderingContext->getRenderer()
-            ->setBaseTemplateClosure($templateClosure)
+        $renderer = clone $this->baseRenderingContext->getRenderer();
+        $renderer->setRenderingContext($this->baseRenderingContext);
+        return $renderer->setBaseTemplateClosure($templateClosure)
             ->setBaseIdentifierClosure($identifierClosure)
             ->renderSection($sectionName, $variables, $ignoreUnknown);
     }
