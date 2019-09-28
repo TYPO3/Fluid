@@ -674,7 +674,7 @@ class Sequencer
                         break;
                     }
                     if ($captured !== null) {
-                        $arguments[$key ?? $captured] = new ObjectAccessorNode($captured);
+                        $arguments[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                     }
                     $key = null;
                     $isArray = $allowArray;
