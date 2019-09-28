@@ -9,6 +9,7 @@ namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\ExpressionException;
+use TYPO3Fluid\Fluid\Core\Parser\SequencingException;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception as ViewHelperException;
 use TYPO3Fluid\Fluid\View\Exception as ViewException;
 
@@ -29,7 +30,13 @@ class StandardErrorHandler implements ErrorHandlerInterface
      */
     public function handleParserError(Exception $error): string
     {
-        throw $error;
+        $class = get_class($error);
+        $message = $error->getMessage();
+        if ($error instanceof SequencingException) {
+            $message .= ' - ' . $error->getExcerpt();
+        }
+        $replacement = new $class($message);
+        throw $replacement;
     }
 
     /**

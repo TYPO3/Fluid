@@ -1274,13 +1274,13 @@ class Sequencer
         $line = substr(
             $this->source->source,
             $offset,
-            $this->findBytePositionAfterOffset(self::MASK_LINEBREAKS, $index)
+            $this->findBytePositionAfterOffset(self::MASK_LINEBREAKS, $offset + 1) - $offset
         );
         $character = $index - $offset - 1;
         $string = 'Line ' . $lines . ' character ' . $character . PHP_EOL;
         $string .= PHP_EOL;
         $string .= str_repeat(' ', max($character, 0)) . 'v' . PHP_EOL;
-        $string .= trim($line) . PHP_EOL;
+        $string .= rtrim($line) . PHP_EOL;
         $string .= str_repeat(' ', max($character, 0)) . '^' . PHP_EOL;
         return $string;
     }
