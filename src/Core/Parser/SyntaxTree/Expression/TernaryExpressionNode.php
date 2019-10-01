@@ -134,12 +134,12 @@ class TernaryExpressionNode extends AbstractExpressionNode
         $initializationPhpCode .= sprintf(
             '%s = function($context, $renderingContext) {
                 $candidate = %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				if (%s::convertToBoolean($candidate, $renderingContext)) {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				} else {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				}
-			};' . chr(10),
+                if (%s::convertToBoolean($candidate, $renderingContext)) {
+                    return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
+                } else {
+                    return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
+                }
+            };' . chr(10),
             $functionName,
             static::class,
             var_export($compiledExpression, true),
