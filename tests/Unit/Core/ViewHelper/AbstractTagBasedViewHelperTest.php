@@ -84,7 +84,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
      */
     public function additionalTagAttributesAreRenderedCorrectly(): void
     {
-        $this->tagBuilder->expects($this->once())->method('addAttributes')->with(['foo' => 'bar']);
+        $this->tagBuilder->expects($this->atLeastOnce())->method('addAttributes')->withConsecutive([['foo' => 'bar']], [['data' => []]]);
 
         $arguments = ['additionalAttributes' => ['foo' => 'bar']];
         $this->viewHelper->getArguments()->assignAll($arguments);
@@ -96,10 +96,9 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
      */
     public function dataAttributesAreRenderedCorrectly(): void
     {
-        $this->tagBuilder->expects($this->at(0))->method('addAttribute')->with('data-foo', 'bar');
-        $this->tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-baz', 'foos');
-
         $arguments = ['data' => ['foo' => 'bar', 'baz' => 'foos']];
+        $this->tagBuilder->expects($this->atLeastOnce())->method('addAttributes')->withConsecutive([[]], [$arguments], []);
+
         $this->viewHelper->getArguments()->assignAll($arguments);
         $this->viewHelper->onOpen(new RenderingContextFixture())->evaluate(new RenderingContextFixture());
     }
@@ -109,8 +108,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
      */
     public function prefixedDataAttributesAreRenderedCorrectly(): void
     {
-        $this->tagBuilder->expects($this->at(0))->method('addAttribute')->with('data-foo', 'foo');
-        $this->tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-bar', 'bar');
+        $this->tagBuilder->expects($this->atLeastOnce())->method('addAttributes')->withConsecutive([[]], [['data' => []]], [['data-foo' => 'foo', 'data-bar' => 'bar']]);
 
         $arguments = ['data-foo' => 'foo', 'data-bar' => 'bar'];
         $this->viewHelper->getArguments()->assignAll($arguments);

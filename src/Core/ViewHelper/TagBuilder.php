@@ -79,33 +79,17 @@ class TagBuilder
     public function ignoreEmptyAttributes(bool $ignoreEmptyAttributes): void
     {
         $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
-        if ($ignoreEmptyAttributes) {
-            $this->attributes = array_filter($this->attributes, function ($item): bool { return trim((string) $item) !== ''; });
-        }
     }
 
-    public function addAttribute(string $attributeName, $attributeValue, bool $escapeSpecialCharacters = true): void
+    public function addAttribute(string $attributeName, $attributeValue): void
     {
-        if ($attributeName === 'data' && (is_array($attributeValue) || $attributeValue instanceof \Traversable)) {
-            foreach ($attributeValue as $name => $value) {
-                $this->addAttribute('data-' . $name, $value, $escapeSpecialCharacters);
-            }
-        } else {
-            $attributeValue = (string) $attributeValue;
-            if (trim($attributeValue) === '' && $this->ignoreEmptyAttributes) {
-                return;
-            }
-            if ($escapeSpecialCharacters) {
-                $attributeValue = htmlspecialchars($attributeValue);
-            }
-            $this->attributes[$attributeName] = $attributeValue;
-        }
+        $this->attributes[$attributeName] = $attributeValue;
     }
 
-    public function addAttributes(iterable $attributes, bool $escapeSpecialCharacters = true): void
+    public function addAttributes(iterable $attributes): void
     {
         foreach ($attributes as $attributeName => $attributeValue) {
-            $this->addAttribute($attributeName, (string) $attributeValue, $escapeSpecialCharacters);
+            $this->addAttribute($attributeName, $attributeValue);
         }
     }
 
@@ -128,13 +112,30 @@ class TagBuilder
             return '';
         }
         $output = '<' . $this->tagName;
-        foreach ($this->attributes as $attributeName => $attributeValue) {
-            $output .= ' ' . $attributeName . '="' . $attributeValue . '"';
-        }
+        $output .= $this->renderAttributes($this->attributes);
         if ($this->hasContent() || $this->forceClosingTag) {
             $output .= '>' . $this->content . '</' . $this->tagName . '>';
         } else {
             $output .= ' />';
+        }
+        return $output;
+    }
+
+    protected function renderAttributes(iterable $attributes, ?string $prefix = null): string
+    {
+        $output = '';
+        foreach ($attributes as $attributeName => $attributeValue) {
+            if (is_array($attributeValue) || $attributeValue instanceof \Traversable) {
+                if ($this->ignoreEmptyAttributes && empty($attributeValue)) {
+                    continue;
+                }
+                $output .= $this->renderAttributes($attributeValue, $prefix . $attributeName . '-');
+            } elseif ($this->ignoreEmptyAttributes && trim((string) $attributeValue) === '') {
+                continue;
+            } else {
+                $attributeValue = htmlspecialchars((string) $attributeValue);
+                $output .= ' ' . $prefix . $attributeName . '="' . $attributeValue . '"';
+            }
         }
         return $output;
     }

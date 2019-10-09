@@ -13,6 +13,48 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Tag based view helper.
  * Should be used as the base class for all view helpers which output simple tags, as it provides some
  * convenience methods to register default attributes, ...
+ *
+ * DEPRECATION INFORMATION
+ *
+ * This utility base class is deprecated in favor of the following strategy, which can be used in any
+ * type of ViewHelper:
+ *
+ * - Avoid declaring attributes, declare only arguments
+ * - Set escapeOutput = false in the ViewHelper's class properties.
+ * - If you want to pass through any arbitrary tag attribute, override method
+ *   allowUndeclaredArgument(string $name) in your ViewHelper and return true.
+ * - If you want to only pass through some, use for example in_array() in the
+ *   method to return true only for some argument names.
+ * - If you need the attribute to be required, declare it as argument and then
+ *   manually assign it as attribute.
+ * - To render a tag, create an instance of Fluid's TagBuilder and call:
+ *   $tagBuilder->addAttributes($this->arguments->getUndeclaredArgumentAndValues())
+ *   from your ViewHelper's render method and return $tagBuilder->render().
+ *
+ * This causes Fluid to select all the arguments that have no argument definition
+ * to be assigned as tag attributes.
+ *
+ * A complete usage example:
+ *
+ *     // Example: ViewHelper declared "class" as required argument and needs to
+ *     // output a DIV tag.
+ *     $tagBuilder = new TagBuilder('div')
+ *     $tagBuilder->addAttributes($this->arguments->getUndeclaredArgumentsAndValues());
+ *     $tagBuilder->addAttribute('class', $this->arguments['class']);
+ *     $tagBuilder->setContent($this->renderChildren());
+ *     $tag = $tagBuilder->render();
+ *     return $tag;
+ *
+ * The benefit being that:
+ *
+ * - You no longer have to restrict yourself to a specific parent class in order
+ *   to gain tag rendering ability.
+ * - Tag attributes no longer have to be declared as arguments.
+ * - There is no set of "universal tag attributes"; Fluid is no longer opinionated
+ *   about the specific nature of the markup Fluid generates *except* that it can
+ *   generate (X)HTML tags.
+ *
+ * @deprecated Will be removed in Fluid 4.0
  */
 abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 {
@@ -39,29 +81,16 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.');
-        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.');
+        $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false, []);
+        $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false, []);
     }
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $parameters = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
-        foreach ($parameters as $argumentName => $argumentValue) {
-            if (strncmp($argumentName, 'data-', 5) === 0) {
-                $this->tag->addAttribute($argumentName, $argumentValue);
-                unset($parameters[$argumentName]);
-            }
-        }
+        $arguments = $this->getArguments();
+        $arguments->setRenderingContext($renderingContext);
 
-        if (isset($parameters['additionalAttributes']) && is_array($parameters['additionalAttributes'])) {
-            $this->tag->addAttributes($parameters['additionalAttributes']);
-        }
-
-        if (isset($parameters['data']) && is_array($parameters['data'])) {
-            foreach ($parameters['data'] as $dataAttributeKey => $dataAttributeValue) {
-                $this->tag->addAttribute('data-' . $dataAttributeKey, (string) $dataAttributeValue);
-            }
-        }
+        $parameters = $arguments->getArrayCopy();
 
         if (isset(self::$tagAttributes[get_class($this)])) {
             foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
@@ -70,7 +99,11 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
                 }
             }
         }
-        $this->getArguments()->exchangeArray($parameters);
+
+        $this->tag->addAttributes($parameters['additionalAttributes']);
+        $this->tag->addAttributes(['data' => $parameters['data']]);
+        $this->tag->addAttributes($arguments->getUndeclaredArgumentsAndValues());
+
         return parent::evaluate($renderingContext);
     }
 

@@ -35,7 +35,7 @@ class StandardErrorHandler implements ErrorHandlerInterface
         if ($error instanceof SequencingException) {
             $message .= ' - ' . $error->getExcerpt();
         }
-        $replacement = new $class($message);
+        $replacement = new $class($message, $error->getCode());
         throw $replacement;
     }
 

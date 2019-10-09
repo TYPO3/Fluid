@@ -146,16 +146,6 @@ class TagBuilderTest extends UnitTestCase
     /**
      * @test
      */
-    public function attributeValuesAreNotEscapedIfDisabled(): void
-    {
-        $tagBuilder = new TagBuilder('tag');
-        $tagBuilder->addAttribute('foo', '<not to be escaped>', false);
-        $this->assertEquals('<tag foo="<not to be escaped>" />', $tagBuilder->render());
-    }
-
-    /**
-     * @test
-     */
     public function attributesCanBeRemoved(): void
     {
         $tagBuilder = new TagBuilder('tag');

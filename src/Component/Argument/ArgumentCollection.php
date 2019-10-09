@@ -68,6 +68,14 @@ class ArgumentCollection extends \ArrayObject
         return $value;
     }
 
+    public function getUndeclaredArgumentsAndValues(): iterable
+    {
+        return array_diff_key(
+            $this->getArrayCopy(),
+            $this->definitions
+        );
+    }
+
     public function addDefinition(ArgumentDefinition $definition): ArgumentCollection
     {
         $argumentName = $definition->getName();
