@@ -269,7 +269,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         throw new Exception(
             sprintf(
                 'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
-                'Exceuting this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
+                'Executing this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
                 '"renderStatic()" on your ViewHelper class',
                 get_class($this)
             )
