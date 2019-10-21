@@ -306,7 +306,7 @@ class StandardVariableProvider implements VariableProviderInterface
             // The subject is not an object, none of the next accessors will apply so we return false immediately.
             return false;
         }
-        $className = $this->studyObject($subject);
+        $className = $this->populateGettersByClassName($subject);
         if ($accessor === self::ACCESSOR_GETTER) {
             return static::$gettersByClassName[$className]['get' . ucfirst($propertyName)] ?? false;
         } elseif ($accessor === self::ACCESSOR_ASSERTER) {
@@ -355,7 +355,7 @@ class StandardVariableProvider implements VariableProviderInterface
             return self::ACCESSOR_ARRAY;
         }
         if (is_object($subject)) {
-            $className = $this->studyObject($subject);
+            $className = $this->populateGettersByClassName($subject);
             $upperCasePropertyName = ucfirst($propertyName);
             $getter = 'get' . $upperCasePropertyName;
             if (static::$gettersByClassName[$className][$getter] ?? false) {
@@ -384,7 +384,7 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function isExtractableThroughAsserter($subject, $propertyName)
     {
-        $className = $this->studyObject($subject);
+        $className = $this->populateGettersByClassName($subject);
         $upperCasePropertyName = ucfirst($propertyName);
         return (bool) (static::$gettersByClassName[$className]['is' . $upperCasePropertyName] ?? static::$gettersByClassName[$className]['has' . $upperCasePropertyName] ?? false);
     }
@@ -398,7 +398,7 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function extractThroughAsserter($subject, $propertyName)
     {
-        $className = $this->studyObject($subject);
+        $className = $this->populateGettersByClassName($subject);
         $upperCasePropertyName = ucfirst($propertyName);
         if (static::$gettersByClassName[$className]['is' . $upperCasePropertyName] ?? false) {
             return call_user_func_array([$subject, 'is' . $upperCasePropertyName], []);
@@ -429,7 +429,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param object $instance
      * @return string
      */
-    protected function studyObject($instance)
+    protected function populateGettersByClassName($instance)
     {
         $className = get_class($instance);
         if (!isset(static::$gettersByClassName[$className])) {
