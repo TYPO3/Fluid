@@ -132,15 +132,4 @@ class VariableExtractorTest extends UnitTestCase
         $result = VariableExtractor::extract($subject, 'test');
         $this->assertEquals('test result', $result);
     }
-
-    /**
-     * @test
-     */
-    public function testExtractReturnsNullOnProtectedGetters()
-    {
-        $subject = new ClassWithProtectedGetter();
-        $result = VariableExtractor::extract($subject, 'test');
-        $this->assertEquals(null, $result);
-    }
-
 }
