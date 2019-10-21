@@ -308,7 +308,7 @@ class StandardVariableProvider implements VariableProviderInterface
         }
         $className = $this->populateGettersByClassName($subject);
         if ($accessor === self::ACCESSOR_GETTER) {
-            return static::$gettersByClassName[$className]['get' . ucfirst($propertyName)] ?? false;
+            return static::$gettersByClassName[$className]['get' . ucfirst($propertyName)] ?: false;
         } elseif ($accessor === self::ACCESSOR_ASSERTER) {
             return ($this->isExtractableThroughAsserter($subject, $propertyName));
         } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
@@ -358,7 +358,7 @@ class StandardVariableProvider implements VariableProviderInterface
             $className = $this->populateGettersByClassName($subject);
             $upperCasePropertyName = ucfirst($propertyName);
             $getter = 'get' . $upperCasePropertyName;
-            if (static::$gettersByClassName[$className][$getter] ?? false) {
+            if (isset(static::$gettersByClassName[$className][$getter])) {
                 return self::ACCESSOR_GETTER;
             }
             if ($this->isExtractableThroughAsserter($subject, $propertyName)) {
@@ -386,7 +386,7 @@ class StandardVariableProvider implements VariableProviderInterface
     {
         $className = $this->populateGettersByClassName($subject);
         $upperCasePropertyName = ucfirst($propertyName);
-        return (bool) (static::$gettersByClassName[$className]['is' . $upperCasePropertyName] ?? static::$gettersByClassName[$className]['has' . $upperCasePropertyName] ?? false);
+        return (bool) (isset(static::$gettersByClassName[$className]['is' . $upperCasePropertyName]) || isset(static::$gettersByClassName[$className]['has' . $upperCasePropertyName]));
     }
 
     /**
@@ -400,7 +400,7 @@ class StandardVariableProvider implements VariableProviderInterface
     {
         $className = $this->populateGettersByClassName($subject);
         $upperCasePropertyName = ucfirst($propertyName);
-        if (static::$gettersByClassName[$className]['is' . $upperCasePropertyName] ?? false) {
+        if (isset(static::$gettersByClassName[$className]['is' . $upperCasePropertyName])) {
             return call_user_func_array([$subject, 'is' . $upperCasePropertyName], []);
         }
 
