@@ -3,7 +3,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures as Fixtures;
+use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
@@ -30,7 +30,7 @@ class DataAccessorTest extends UnitTestCase
                 [
                     'privateValue' => null,
                 ],
-                'Cannot access private property class@anonymous::$privateValue',
+                'Cannot access private property TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithProperties::$privateValue',
             ],
             3 => [
                 $this->createObjectWithProperties(),
@@ -197,78 +197,46 @@ class DataAccessorTest extends UnitTestCase
 
     private function createObjectWithProperties()
     {
-        // @todo In case PHP 5.5 requirement is correct, create fixture classes
-        return new class {
-            use Fixtures\PropertiesTrait;
-        };
+        return new Objects\WithProperties();
     }
 
     private function createObjectWithCamelCaseGetter()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\CamelCaseGetterTrait;
-        };
+        return new Objects\WithCamelCaseGetter();
     }
 
     private function createObjectWithUpperCaseGetter()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\UpperCaseGetterTrait;
-        };
+        return new Objects\WithUpperCaseGetter();
     }
 
     private function createObjectWithMagicCall()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\MagicCallTrait;
-        };
+        return new Objects\WithMagicCall();
     }
 
     private function createObjectWithMagicGet()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\MagicGetTrait;
-        };
+        return new Objects\WithMagicGet();
     }
 
     private function createObjectWithCamelCaseGetterAndMagicCall()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\CamelCaseGetterTrait;
-            use Fixtures\MagicCallTrait;
-        };
+        return new Objects\WithCamelCaseGetterAndMagicCall();
     }
 
     private function createObjectWithCamelCaseGetterAndMagicGet()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\CamelCaseGetterTrait;
-            use Fixtures\MagicGetTrait;
-        };
+        return new Objects\WithCamelCaseGetterAndMagicGet();
     }
 
     private function createObjectWithMagicCallAndMagicGet()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\MagicCallTrait;
-            use Fixtures\MagicGetTrait;
-        };
+        return new Objects\WithMagicCallAndMagicGet();
     }
 
     private function createObjectWithEverything()
     {
-        return new class {
-            use Fixtures\PropertiesTrait;
-            use Fixtures\CamelCaseGetterTrait;
-            use Fixtures\MagicCallTrait;
-            use Fixtures\MagicGetTrait;
-        };
+        return new Objects\WithEverything();
     }
 }
