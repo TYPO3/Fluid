@@ -15,9 +15,13 @@ trait MagicCallTrait
         if (strpos($name, 'get') === 0) {
             $propertyName = lcfirst(substr($name, 3));
         }
-        if (isset($propertyName) && property_exists($this, $propertyName)) {
-            return $this->{$propertyName} . sprintf('@__call(%s)', $name);
+        if (!isset($propertyName)) {
+            return null;
         }
-        return null;
+        if (property_exists($this, $propertyName)) {
+            return $this->{$propertyName} . sprintf('@__call(%s)', $name);
+        } else {
+            return sprintf('*@__call(%s)', $name);
+        }
     }
 }

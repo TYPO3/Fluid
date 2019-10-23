@@ -13,7 +13,8 @@ trait MagicGetTrait
     {
         if (property_exists($this, $propertyName)) {
             return $this->{$propertyName} . sprintf('@__get(%s)', $propertyName);
+        } else {
+            return sprintf('*@__get(%s)', $propertyName);
         }
-        return null;
     }
 }
