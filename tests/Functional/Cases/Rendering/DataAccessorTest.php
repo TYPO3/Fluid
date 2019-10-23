@@ -58,18 +58,15 @@ class DataAccessorTest extends UnitTestCase
             ],
             // accessing using magic method __call()
             6 => [
-                // @note not yet in 2.6.1
                 $this->createObjectWithMagicCall(),
                 [
-                    'privateValue' => null,
+                    'privateValue' => 'privateValue@__call(getPrivateValue)',
                 ],
-                'Cannot access private property TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithMagicCall::$privateValue'
             ],
             7 => [
-                // @note not yet in 2.6.1
                 $this->createObjectWithMagicCall(),
                 [
-                    'nonExisting' => '',
+                    'nonExisting' => '*@__call(getNonExisting)',
                 ],
             ],
             8 => [
