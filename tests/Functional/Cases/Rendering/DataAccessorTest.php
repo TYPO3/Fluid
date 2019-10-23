@@ -69,20 +69,28 @@ class DataAccessorTest extends UnitTestCase
                 // @note not yet in 2.6.1
                 $this->createObjectWithMagicCall(),
                 [
+                    'nonExisting' => '',
+                ],
+            ],
+            8 => [
+                // @note not yet in 2.6.1
+                $this->createObjectWithMagicCall(),
+                [
                     'publicValue' => 'publicValue',
                 ],
             ],
             // accessing using magic method __get()
-            8 => [
+            9 => [
                 $this->createObjectWithMagicGet(),
                 [
+                    'nonExisting' => '',
                     'privateValue' => 'privateValue@__get(privateValue)',
                     'protectedValue' => 'protectedValue@__get(protectedValue)',
                     'publicValue' => 'publicValue',
                 ],
             ],
             // accessing using everything
-            9 => [
+            10 => [
                 $this->createObjectWithCamelCaseGetterAndMagicCall(),
                 [
                     'privateValue' => 'privateValue@getPrivateValue()',
@@ -90,7 +98,7 @@ class DataAccessorTest extends UnitTestCase
                     'publicValue' => 'publicValue@getPublicValue()',
                 ],
             ],
-            10 => [
+            11 => [
                 $this->createObjectWithCamelCaseGetterAndMagicGet(),
                 [
                     'privateValue' => 'privateValue@getPrivateValue()',
@@ -98,7 +106,7 @@ class DataAccessorTest extends UnitTestCase
                     'publicValue' => 'publicValue@getPublicValue()',
                 ],
             ],
-            11 => [
+            12 => [
                 $this->createObjectWithMagicCallAndMagicGet(),
                 [
                     'privateValue' => 'privateValue@__get(privateValue)',
@@ -106,7 +114,7 @@ class DataAccessorTest extends UnitTestCase
                     'publicValue' => 'publicValue',
                 ],
             ],
-            12 => [
+            13 => [
                 $this->createObjectWithEverything(),
                 [
                     'privateValue' => 'privateValue@getPrivateValue()',
