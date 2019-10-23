@@ -58,18 +58,15 @@ class DataAccessorTest extends UnitTestCase
             ],
             // accessing using magic method __call()
             6 => [
-                // @note not yet in 2.6.1
                 $this->createObjectWithMagicCall(),
                 [
-                    'privateValue' => null,
+                    'privateValue' => 'privateValue@__call(getPrivateValue)',
                 ],
-                'Cannot access private property class@anonymous::$privateValue'
             ],
             7 => [
-                // @note not yet in 2.6.1
                 $this->createObjectWithMagicCall(),
                 [
-                    'publicValue' => 'publicValue',
+                    'publicValue' => 'publicValue@__call(getPublicValue)',
                 ],
             ],
             // accessing using magic method __get()
@@ -101,9 +98,9 @@ class DataAccessorTest extends UnitTestCase
             11 => [
                 $this->createObjectWithMagicCallAndMagicGet(),
                 [
-                    'privateValue' => 'privateValue@__get(privateValue)',
-                    'protectedValue' => 'protectedValue@__get(protectedValue)',
-                    'publicValue' => 'publicValue',
+                    'privateValue' => 'privateValue@__call(getPrivateValue)',
+                    'protectedValue' => 'protectedValue@__call(getProtectedValue)',
+                    'publicValue' => 'publicValue@__call(getPublicValue)',
                 ],
             ],
             12 => [
