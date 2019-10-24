@@ -209,7 +209,7 @@ class VariableExtractor
         if (is_object($subject)) {
             $upperCasePropertyName = ucfirst($propertyName);
             $getter = 'get' . $upperCasePropertyName;
-            if (method_exists($subject, $getter)) {
+            if (is_callable([$subject, $getter])) {
                 return self::ACCESSOR_GETTER;
             }
             if ($this->isExtractableThroughAsserter($subject, $propertyName)) {
@@ -217,9 +217,6 @@ class VariableExtractor
             }
             if (property_exists($subject, $propertyName)) {
                 return self::ACCESSOR_PUBLICPROPERTY;
-            }
-            if (method_exists($subject, '__call')) {
-                return self::ACCESSOR_GETTER;
             }
         }
 

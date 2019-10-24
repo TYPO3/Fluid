@@ -24,14 +24,6 @@ class StandardVariableProvider implements VariableProviderInterface
     protected $variables = [];
 
     /**
-     * Internal array of ['className' => ['getFoo', 'getBar'], ...]
-     * storing all names of getter methods for a given class.
-     *
-     * @var array
-     */
-    protected static $gettersByClassName = [];
-
-    /**
      * Variables, if any, with which to initialize this
      * VariableProvider.
      *
@@ -299,20 +291,15 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function canExtractWithAccessor($subject, $propertyName, $accessor)
     {
+        $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_ARRAY) {
             return (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)));
-        }
-        if (!is_object($subject)) {
-            // The subject is not an object, none of the next accessors will apply so we return false immediately.
-            return false;
-        }
-        $className = $this->populateGettersByClassName($subject);
-        if ($accessor === self::ACCESSOR_GETTER) {
-            return static::$gettersByClassName[$className]['get' . ucfirst($propertyName)] ?? false;
+        } elseif ($accessor === self::ACCESSOR_GETTER) {
+            return ($class !== false && method_exists($subject, 'get' . ucfirst($propertyName)));
         } elseif ($accessor === self::ACCESSOR_ASSERTER) {
-            return ($this->isExtractableThroughAsserter($subject, $propertyName));
+            return ($class !== false && $this->isExtractableThroughAsserter($subject, $propertyName));
         } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
-            return (property_exists($subject, $propertyName));
+            return ($class !== false && property_exists($subject, $propertyName));
         }
         return false;
     }
@@ -355,7 +342,6 @@ class StandardVariableProvider implements VariableProviderInterface
             return self::ACCESSOR_ARRAY;
         }
         if (is_object($subject)) {
-            $className = $this->populateGettersByClassName($subject);
             $upperCasePropertyName = ucfirst($propertyName);
             $getter = 'get' . $upperCasePropertyName;
             if (method_exists($subject, $getter)) {
@@ -366,9 +352,6 @@ class StandardVariableProvider implements VariableProviderInterface
             }
             if (property_exists($subject, $propertyName)) {
                 return self::ACCESSOR_PUBLICPROPERTY;
-            }
-            if (method_exists($subject, '__call')) {
-                return self::ACCESSOR_GETTER;
             }
         }
 
@@ -384,9 +367,8 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function isExtractableThroughAsserter($subject, $propertyName)
     {
-        $className = $this->populateGettersByClassName($subject);
-        $upperCasePropertyName = ucfirst($propertyName);
-        return (bool) (static::$gettersByClassName[$className]['is' . $upperCasePropertyName] ?? static::$gettersByClassName[$className]['has' . $upperCasePropertyName] ?? false);
+        return method_exists($subject, 'is' . ucfirst($propertyName))
+            || method_exists($subject, 'has' . ucfirst($propertyName));
     }
 
     /**
@@ -398,44 +380,10 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function extractThroughAsserter($subject, $propertyName)
     {
-        $className = $this->populateGettersByClassName($subject);
-        $upperCasePropertyName = ucfirst($propertyName);
-        if (static::$gettersByClassName[$className]['is' . $upperCasePropertyName] ?? false) {
-            return call_user_func_array([$subject, 'is' . $upperCasePropertyName], []);
+        if (method_exists($subject, 'is' . ucfirst($propertyName))) {
+            return call_user_func_array([$subject, 'is' . ucfirst($propertyName)], []);
         }
 
-        return call_user_func_array([$subject, 'has' . $upperCasePropertyName], []);
-    }
-
-    /**
-     * Studies an object and fills the static internal cache of getter method awareness.
-     * The method must be called when detecting an accessor for an object and has a very
-     * particular reason for existing:
-     *
-     * - method_exists() will return TRUE even for protected methods
-     * - is_callable() will not, but is far too greedy and returns TRUE for *any* method
-     *   name if __call is defined on the class.
-     * - disregarding Reflection which is horribly slow, get_class_methods is the only
-     *   method which returns a list of public methods.
-     * - but repeatedly calling get_class_methods() *AND* in_array() is not a sensible
-     *   solution.
-     * - therefore, an internal cached array is built by class name which allows a null-
-     *   coalesce expression to determine if a getter method exists *AND* is public *AND*
-     *   is not going to be handled by __call.
-     *
-     * For ease of use (to avoid repeating get_class calls) the method returns the class
-     * name of the instance as returned by get_class($instance).
-     *
-     * @param object $instance
-     * @return string
-     */
-    protected function populateGettersByClassName($instance)
-    {
-        $className = get_class($instance);
-        if (!isset(static::$gettersByClassName[$className])) {
-            $methods = get_class_methods($instance);
-            static::$gettersByClassName[$className] = array_combine($methods, $methods);
-        }
-        return $className;
+        return call_user_func_array([$subject, 'has' . ucfirst($propertyName)], []);
     }
 }
