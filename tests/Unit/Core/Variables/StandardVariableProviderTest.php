@@ -7,8 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
  */
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithProtectedGetter;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -277,27 +275,5 @@ class StandardVariableProviderTest extends UnitTestCase
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_GETTER, 'test'],
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_ASSERTER, 'test'],
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function testExtractCallsMagicMethodGetters()
-    {
-        $provider = new StandardVariableProvider();
-        $provider->setSource(['object' => new ClassWithMagicGetter()]);
-        $result = $provider->get('object.test');
-        $this->assertEquals('test result', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testExtractReturnsNullOnProtectedGetters()
-    {
-        $provider = new StandardVariableProvider();
-        $provider->setSource(['object' => new ClassWithProtectedGetter()]);
-        $result = $provider->get('object.test');
-        $this->assertEquals(null, $result);
     }
 }
