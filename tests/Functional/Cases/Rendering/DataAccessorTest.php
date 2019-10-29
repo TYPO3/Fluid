@@ -159,31 +159,6 @@ class DataAccessorTest extends UnitTestCase
         return new Objects\WithUpperCaseGetter();
     }
 
-    private function createObjectWithMagicCall()
-    {
-        return new Objects\WithMagicCall();
-    }
-
-    private function createObjectWithMagicGet()
-    {
-        return new Objects\WithMagicGet();
-    }
-
-    private function createObjectWithCamelCaseGetterAndMagicCall()
-    {
-        return new Objects\WithCamelCaseGetterAndMagicCall();
-    }
-
-    private function createObjectWithCamelCaseGetterAndMagicGet()
-    {
-        return new Objects\WithCamelCaseGetterAndMagicGet();
-    }
-
-    private function createObjectWithMagicCallAndMagicGet()
-    {
-        return new Objects\WithMagicCallAndMagicGet();
-    }
-
     private function createObjectWithEverything()
     {
         return new Objects\WithEverything();
