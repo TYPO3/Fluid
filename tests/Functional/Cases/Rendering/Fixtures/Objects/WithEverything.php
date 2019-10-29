@@ -7,6 +7,4 @@ class WithEverything
 {
     use Traits\PropertiesTrait;
     use Traits\CamelCaseGetterTrait;
-    use Traits\MagicCallTrait;
-    use Traits\MagicGetTrait;
 }

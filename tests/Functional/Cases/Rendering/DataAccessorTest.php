@@ -15,31 +15,28 @@ class DataAccessorTest extends UnitTestCase
     public function dataIsRenderedDataProvider()
     {
         return [
-            // array values
-            0 => [
+            'plain array' => [
                 ['value' => 'value'],
                 ['value' => 'value'],
             ],
-            1 => [
+            'array object' => [
                 new \ArrayObject(['value' => 'value']),
                 ['value' => 'value'],
             ],
-            // accessing using properties directly
-            2 => [
+            'private properties fail' => [
                 $this->createObjectWithProperties(),
                 [
                     'privateValue' => null,
                 ],
                 'Cannot access private property TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithProperties::$privateValue',
             ],
-            3 => [
+            'public property' => [
                 $this->createObjectWithProperties(),
                 [
                     'publicValue' => 'publicValue',
                 ],
             ],
-            // accessing using camelCased getters
-            4 => [
+            'camelCase getter method' => [
                 $this->createObjectWithCamelCaseGetter(),
                 [
                     'privateValue' => 'privateValue@getPrivateValue()',
@@ -47,8 +44,7 @@ class DataAccessorTest extends UnitTestCase
                     'publicValue' => 'publicValue@getPublicValue()',
                 ],
             ],
-            // accessing using UPPERCASED getters
-            5 => [
+            'UPPERCASE getter method' => [
                 $this->createObjectWithUpperCaseGetter(),
                 [
                     'privateValue' => 'privateValue@GETPRIVATEVALUE()',
@@ -56,62 +52,7 @@ class DataAccessorTest extends UnitTestCase
                     'publicValue' => 'publicValue@GETPUBLICVALUE()',
                 ],
             ],
-            // accessing using magic method __call()
-            6 => [
-                $this->createObjectWithMagicCall(),
-                [
-                    'privateValue' => 'privateValue@__call(getPrivateValue)',
-                ],
-            ],
-            7 => [
-                $this->createObjectWithMagicCall(),
-                [
-                    'nonExisting' => '*@__call(getNonExisting)',
-                ],
-            ],
-            8 => [
-                // @note not yet in 2.6.1
-                $this->createObjectWithMagicCall(),
-                [
-                    'publicValue' => 'publicValue',
-                ],
-            ],
-            // accessing using magic method __get()
-            9 => [
-                $this->createObjectWithMagicGet(),
-                [
-                    'nonExisting' => '',
-                    'privateValue' => 'privateValue@__get(privateValue)',
-                    'protectedValue' => 'protectedValue@__get(protectedValue)',
-                    'publicValue' => 'publicValue',
-                ],
-            ],
-            // accessing using everything
-            10 => [
-                $this->createObjectWithCamelCaseGetterAndMagicCall(),
-                [
-                    'privateValue' => 'privateValue@getPrivateValue()',
-                    'protectedValue' => 'protectedValue@getProtectedValue()',
-                    'publicValue' => 'publicValue@getPublicValue()',
-                ],
-            ],
-            11 => [
-                $this->createObjectWithCamelCaseGetterAndMagicGet(),
-                [
-                    'privateValue' => 'privateValue@getPrivateValue()',
-                    'protectedValue' => 'protectedValue@getProtectedValue()',
-                    'publicValue' => 'publicValue@getPublicValue()',
-                ],
-            ],
-            12 => [
-                $this->createObjectWithMagicCallAndMagicGet(),
-                [
-                    'privateValue' => 'privateValue@__get(privateValue)',
-                    'protectedValue' => 'protectedValue@__get(protectedValue)',
-                    'publicValue' => 'publicValue',
-                ],
-            ],
-            13 => [
+            'multiple accessor types' => [
                 $this->createObjectWithEverything(),
                 [
                     'privateValue' => 'privateValue@getPrivateValue()',
