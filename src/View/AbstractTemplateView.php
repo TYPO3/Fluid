@@ -377,7 +377,7 @@ abstract class AbstractTemplateView extends AbstractView
     {
         $currentRendering = end($this->renderingStack);
         $renderingContext = $this->getCurrentRenderingContext();
-        $parsedTemplate = $currentRendering['parsedTemplate'] ? $currentRendering['parsedTemplate'] : $renderingContext->getTemplateCompiler()->getCurrentlyProcessingState();
+        $parsedTemplate = isset($currentRendering['parsedTemplate']) ? $currentRendering['parsedTemplate'] : $renderingContext->getTemplateCompiler()->getCurrentlyProcessingState();
         if ($parsedTemplate) {
             return $parsedTemplate;
         }
@@ -405,6 +405,6 @@ abstract class AbstractTemplateView extends AbstractView
     protected function getCurrentRenderingContext()
     {
         $currentRendering = end($this->renderingStack);
-        return $currentRendering['renderingContext'] ? $currentRendering['renderingContext'] : $this->baseRenderingContext;
+        return isset($currentRendering['renderingContext']) ? $currentRendering['renderingContext'] : $this->baseRenderingContext;
     }
 }
