@@ -54,7 +54,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
         list ($check, $then, $else) = $parts;
 
         if ($then === '') {
-            $then = $check{0} === '!' ? $else : $check;
+            $then = $check[0] === '!' ? $else : $check;
         }
 
         $context = static::gatherContext($renderingContext, $expression);
