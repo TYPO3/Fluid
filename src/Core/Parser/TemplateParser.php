@@ -573,9 +573,9 @@ class TemplateParser
         if ($value === '') {
             return $value;
         }
-        if ($quotedValue{0} === '"') {
+        if ($quotedValue[0] === '"') {
             $value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
-        } elseif ($quotedValue{0} === '\'') {
+        } elseif ($quotedValue[0] === '\'') {
             $value = str_replace("\\'", "'", preg_replace('/(^\'|\'$)/', '', $quotedValue));
         }
         return str_replace('\\\\', '\\', $value);
