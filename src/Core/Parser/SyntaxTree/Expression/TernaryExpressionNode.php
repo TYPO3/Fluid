@@ -52,6 +52,10 @@ class TernaryExpressionNode extends AbstractExpressionNode
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
         list ($check, $then, $else) = $parts;
 
+        if ($then === '') {
+            $then = $check[0] === '!' ? $else : $check;
+        }
+
         $context = static::gatherContext($renderingContext, $expression);
 
         $parser = new BooleanParser();
