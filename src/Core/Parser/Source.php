@@ -23,4 +23,9 @@ class Source
         $this->bytes = unpack('C*', $source);
         $this->length = count($this->bytes);
     }
+
+    public function __toString()
+    {
+        return $this->source;
+    }
 }
