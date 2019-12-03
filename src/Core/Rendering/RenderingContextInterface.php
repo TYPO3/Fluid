@@ -113,7 +113,7 @@ interface RenderingContextInterface
      */
     public function getParserConfiguration(): Configuration;
 
-    public function getRenderer(): FluidRenderer;
+    public function getRenderer(): FluidRendererInterface;
 
-    public function setRenderer(FluidRenderer $renderer): void;
+    public function setRenderer(FluidRendererInterface $renderer): void;
 }

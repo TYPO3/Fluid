@@ -8,7 +8,7 @@ use TYPO3Fluid\Fluid\Core\Parser\PassthroughSourceException;
 use TYPO3Fluid\Fluid\View\Exception;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 
-class FluidRenderer
+class FluidRenderer implements FluidRendererInterface
 {
     /**
      * The initial rendering context for this template view.

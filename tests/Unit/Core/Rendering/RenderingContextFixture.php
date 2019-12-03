@@ -12,6 +12,7 @@ use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
+use TYPO3Fluid\Fluid\Core\Rendering\FluidRendererInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -89,7 +90,7 @@ class RenderingContextFixture implements RenderingContextInterface
     /**
      * @return FluidRenderer
      */
-    public function getRenderer(): FluidRenderer
+    public function getRenderer(): FluidRendererInterface
     {
         return $this->renderer ?? ($this->renderer = new FluidRenderer($this));
     }
@@ -97,7 +98,7 @@ class RenderingContextFixture implements RenderingContextInterface
     /**
      * @param FluidRenderer $renderer
      */
-    public function setRenderer(FluidRenderer $renderer): void
+    public function setRenderer(FluidRendererInterface $renderer): void
     {
         $this->renderer = $renderer;
     }

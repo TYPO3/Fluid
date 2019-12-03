@@ -91,17 +91,17 @@ class RenderingContext implements RenderingContextInterface
     }
 
     /**
-     * @return FluidRenderer
+     * @return FluidRendererInterface
      */
-    public function getRenderer(): FluidRenderer
+    public function getRenderer(): FluidRendererInterface
     {
         return $this->renderer ?? ($this->renderer = new FluidRenderer($this));
     }
 
     /**
-     * @param FluidRenderer $renderer
+     * @param FluidRendererInterface $renderer
      */
-    public function setRenderer(FluidRenderer $renderer): void
+    public function setRenderer(FluidRendererInterface $renderer): void
     {
         $this->renderer = $renderer;
     }
