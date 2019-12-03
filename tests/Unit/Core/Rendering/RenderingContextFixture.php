@@ -238,37 +238,4 @@ class RenderingContextFixture implements RenderingContextInterface
     {
         return $this->configuration ?? ($this->configuration = new Configuration());
     }
-
-    /**
-     * @return string
-     */
-    public function getControllerName()
-    {
-        return $this->controllerName;
-    }
-
-    /**
-     * @param string $controllerName
-     * @return void
-     */
-    public function setControllerName($controllerName)
-    {
-    }
-
-    /**
-     * @return string
-     */
-    public function getControllerAction()
-    {
-        return $this->controllerAction;
-    }
-
-    /**
-     * @param string $action
-     * @return void
-     */
-    public function setControllerAction($action)
-    {
-        $this->controllerAction = $action;
-    }
 }
