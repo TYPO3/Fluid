@@ -41,6 +41,6 @@ class VariableViewHelper extends AbstractViewHelper
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
-        $renderingContext->getVariableProvider()->add($arguments['name'], $arguments['value'] ?? $this->evaluateChildren($renderingContext));
+        $renderingContext->getVariableProvider()->add($arguments['name'], $arguments['value'] ?? $this->evaluateChildNodes($renderingContext));
     }
 }

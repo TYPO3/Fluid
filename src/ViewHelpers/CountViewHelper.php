@@ -48,7 +48,7 @@ class CountViewHelper extends AbstractViewHelper
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
-        $countable = $arguments['subject'] ?? $this->evaluateChildren($renderingContext);
+        $countable = $arguments['subject'] ?? $this->evaluateChildNodes($renderingContext);
         if ($countable === null) {
             return 0;
         } elseif (!$countable instanceof \Countable && !is_array($countable)) {

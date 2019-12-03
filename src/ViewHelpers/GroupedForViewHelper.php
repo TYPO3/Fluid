@@ -115,7 +115,7 @@ class GroupedForViewHelper extends AbstractViewHelper
         foreach ($groups['values'] as $currentGroupIndex => $group) {
             $templateVariableContainer->add($groupKey, $groups['keys'][$currentGroupIndex]);
             $templateVariableContainer->add($as, $group);
-            $output .= $this->evaluateChildren($renderingContext);
+            $output .= $this->evaluateChildNodes($renderingContext);
             $templateVariableContainer->remove($groupKey);
             $templateVariableContainer->remove($as);
         }

@@ -91,8 +91,8 @@ class EntryNodeTest extends UnitTestCase
      */
     public function testEvaluateCallsEvaluateChildNodes(): void
     {
-        $subject = $this->getMock(EntryNode::class, ['evaluateChildren']);
-        $subject->expects($this->once())->method('evaluateChildren');
+        $subject = $this->getMock(EntryNode::class, ['evaluateChildNodes']);
+        $subject->expects($this->once())->method('evaluateChildNodes');
         $subject->evaluate(new RenderingContextFixture());
     }
 }

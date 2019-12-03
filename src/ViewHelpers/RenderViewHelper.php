@@ -114,7 +114,7 @@ class RenderViewHelper extends AbstractViewHelper
         $partial = $arguments['partial'];
         $variables = (array) $arguments['arguments'];
         $optional = (boolean) $arguments['optional'];
-        $tagContent = $this->evaluateChildren($renderingContext);
+        $tagContent = $this->evaluateChildNodes($renderingContext);
         if ($arguments['contentAs']) {
             $variables[$arguments['contentAs']] = $tagContent;
         }

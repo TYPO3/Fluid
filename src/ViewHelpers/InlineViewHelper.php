@@ -53,7 +53,7 @@ class InlineViewHelper extends AbstractViewHelper
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
-        $parsed = $renderingContext->getTemplateParser()->parse(new Source((string) ($arguments['code'] ?? $this->evaluateChildren($renderingContext))));
+        $parsed = $renderingContext->getTemplateParser()->parse(new Source((string) ($arguments['code'] ?? $this->evaluateChildNodes($renderingContext))));
         $parsed->getArguments()->assignAll($renderingContext->getVariableProvider()->getAll());
         return $parsed->evaluate($renderingContext);
     }

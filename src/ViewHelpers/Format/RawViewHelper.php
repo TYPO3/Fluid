@@ -56,6 +56,6 @@ class RawViewHelper extends AbstractViewHelper
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return $this->getArguments()->setRenderingContext($renderingContext)['value'] ?? $this->evaluateChildren($renderingContext);
+        return $this->getArguments()->setRenderingContext($renderingContext)['value'] ?? $this->evaluateChildNodes($renderingContext);
     }
 }

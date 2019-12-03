@@ -239,7 +239,7 @@ abstract class AbstractComponent implements ComponentInterface
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return $this->evaluateChildren($renderingContext);
+        return $this->evaluateChildNodes($renderingContext);
     }
 
     public function allowUndeclaredArgument(string $argumentName): bool
@@ -254,7 +254,7 @@ abstract class AbstractComponent implements ComponentInterface
      * @return mixed Normally, an object is returned - in case it is concatenated with a string, a string is returned.
      * @throws Exception
      */
-    protected function evaluateChildren(RenderingContextInterface $renderingContext)
+    protected function evaluateChildNodes(RenderingContextInterface $renderingContext)
     {
         $evaluatedNodes = [];
         foreach ($this->getChildren() as $childNode) {

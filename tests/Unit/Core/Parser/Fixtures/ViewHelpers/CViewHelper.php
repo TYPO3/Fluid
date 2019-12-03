@@ -40,7 +40,7 @@ class CViewHelper extends AbstractViewHelper
             'bool' => $arguments['b'],
             'array' => $arguments['a'],
             'datetime' => ($arguments['dt'] instanceof \DateTime ? $arguments['dt']->format('U') : null),
-            'child' => $this->evaluateChildren($renderingContext),
+            'child' => $this->evaluateChildNodes($renderingContext),
         ];
         if ($arguments['return']) {
             return $data;

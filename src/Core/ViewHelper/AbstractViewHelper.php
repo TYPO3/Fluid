@@ -120,7 +120,7 @@ abstract class AbstractViewHelper extends AbstractComponent
      */
     protected function renderChildren()
     {
-        return $this->evaluateChildren($this->renderingContext);
+        return $this->evaluateChildNodes($this->renderingContext);
     }
 
     /**

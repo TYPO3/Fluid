@@ -93,7 +93,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
             return null;
         }
 
-        return $this->evaluateChildren($this->renderingContext);
+        return $this->evaluateChildNodes($this->renderingContext);
     }
 
     /**

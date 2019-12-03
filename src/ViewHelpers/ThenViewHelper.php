@@ -22,6 +22,6 @@ class ThenViewHelper extends AbstractViewHelper implements EmbeddedComponentInte
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return $this->evaluateChildren($renderingContext);
+        return $this->evaluateChildNodes($renderingContext);
     }
 }

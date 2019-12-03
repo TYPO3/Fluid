@@ -302,7 +302,7 @@ class AbstractComponentTest extends UnitTestCase
      * @param mixed $expected
      * @throws \ReflectionException
      */
-    public function evaluateChildrenReturnsExpectedValue(iterable $children, $expected): void
+    public function evaluateChildNodesReturnsExpectedValue(iterable $children, $expected): void
     {
         /** @var ComponentInterface $subject */
         $subject = $this->getMockBuilder(AbstractComponent::class)->getMockForAbstractClass();

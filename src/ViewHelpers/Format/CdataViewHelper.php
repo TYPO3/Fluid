@@ -55,6 +55,6 @@ class CdataViewHelper extends AbstractViewHelper
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return sprintf('<![CDATA[%s]]>', $arguments['value'] ?? $this->evaluateChildren($renderingContext));
+        return sprintf('<![CDATA[%s]]>', $arguments['value'] ?? $this->evaluateChildNodes($renderingContext));
     }
 }

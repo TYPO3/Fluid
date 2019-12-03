@@ -59,7 +59,7 @@ class AliasViewHelper extends AbstractViewHelper
         foreach ($map as $aliasName => $value) {
             $templateVariableContainer->add($aliasName, $value);
         }
-        $output = $this->evaluateChildren($renderingContext);
+        $output = $this->evaluateChildNodes($renderingContext);
         foreach ($map as $aliasName => $value) {
             $templateVariableContainer->remove($aliasName);
         }

@@ -57,7 +57,7 @@ class HtmlspecialcharsViewHelper extends AbstractViewHelper
         $encoding = $arguments['encoding'];
         $doubleEncode = $arguments['doubleEncode'];
         if ($value === null) {
-            $value = $this->evaluateChildren($renderingContext);
+            $value = $this->evaluateChildNodes($renderingContext);
         }
 
         if (!is_string($value) && !(is_object($value) && method_exists($value, '__toString'))) {

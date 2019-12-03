@@ -32,7 +32,7 @@ class PassthroughViewHelper extends AbstractViewHelper implements SequencingComp
         if ($this->getArguments()['escape'] ?? true) {
             return (new HtmlspecialcharsViewHelper())->setChildren($this->getChildren())->evaluate($renderingContext);
         }
-        return $this->evaluateChildren($renderingContext);
+        return $this->evaluateChildNodes($renderingContext);
     }
 
     public function sequence(Sequencer $sequencer, ?string $namespace, string $method): void

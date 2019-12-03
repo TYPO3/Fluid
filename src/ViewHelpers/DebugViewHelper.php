@@ -55,7 +55,7 @@ class DebugViewHelper extends AbstractViewHelper
     {
         $arguments = $this->getArguments()->setRenderingContext($renderingContext)->getArrayCopy();
         $typeOnly = $arguments['typeOnly'];
-        $expressionToExamine = $this->evaluateChildren($renderingContext);
+        $expressionToExamine = $this->evaluateChildNodes($renderingContext);
         if ($typeOnly === true) {
             return (is_object($expressionToExamine) ? get_class($expressionToExamine) : gettype($expressionToExamine));
         }

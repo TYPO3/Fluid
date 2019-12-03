@@ -117,7 +117,7 @@ class ForViewHelper extends AbstractViewHelper
                 $iterationData['index']++;
                 $iterationData['cycle']++;
             }
-            $output .= $this->evaluateChildren($renderingContext);
+            $output .= $this->evaluateChildNodes($renderingContext);
             $templateVariableContainer->remove($arguments['as']);
             if (isset($arguments['key'])) {
                 $templateVariableContainer->remove($arguments['key']);

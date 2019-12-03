@@ -68,11 +68,11 @@ class StaticViewHelper extends AbstractViewHelper
 
     public function onClose(RenderingContextInterface $renderingContext): ComponentInterface
     {
-        return new TextNode($this->evaluateChildren($renderingContext));
+        return new TextNode($this->evaluateChildNodes($renderingContext));
     }
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return $this->evaluateChildren($renderingContext);
+        return $this->evaluateChildNodes($renderingContext);
     }
 }

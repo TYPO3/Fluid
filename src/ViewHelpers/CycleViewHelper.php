@@ -66,7 +66,7 @@ class CycleViewHelper extends AbstractViewHelper
         $values = $arguments['values'];
         $as = $arguments['as'];
         if ($values === null) {
-            return $this->evaluateChildren($renderingContext);
+            return $this->evaluateChildNodes($renderingContext);
         }
         $values = static::initializeValues($values);
         $index = static::initializeIndex($as, $renderingContext->getViewHelperVariableContainer());
@@ -74,7 +74,7 @@ class CycleViewHelper extends AbstractViewHelper
         $currentValue = isset($values[$index]) ? $values[$index] : null;
 
         $renderingContext->getVariableProvider()->add($as, $currentValue);
-        $output = $this->evaluateChildren($renderingContext);
+        $output = $this->evaluateChildNodes($renderingContext);
         $renderingContext->getVariableProvider()->remove($as);
 
         $index++;

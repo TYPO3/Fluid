@@ -41,7 +41,7 @@ class ObjectAccessorNode extends AbstractComponent
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $objectPath = (string) $this->evaluateChildren($renderingContext);
+        $objectPath = (string) $this->evaluateChildNodes($renderingContext);
         $variableProvider = $renderingContext->getVariableProvider();
         if ($objectPath === '_all') {
             return $variableProvider->getAll();

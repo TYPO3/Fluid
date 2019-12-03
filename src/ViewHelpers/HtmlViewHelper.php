@@ -65,7 +65,7 @@ class HtmlViewHelper extends AbstractViewHelper implements TransparentComponentI
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        $content = $this->evaluateChildren($renderingContext);
+        $content = $this->evaluateChildNodes($renderingContext);
         if (!$this->shouldRenderTag) {
             return $content;
         }

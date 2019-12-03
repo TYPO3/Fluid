@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Component;
  *
  * Signaling interface for Components. Any Component that
  * implements this interface will not be evaluated when
- * evaluateChildren() is called - but is still fully
+ * evaluateChildNodes() is called - but is still fully
  * possible to extract with getNamedChild / getTypedChildren
  * (and then render directly if necessary).
  */

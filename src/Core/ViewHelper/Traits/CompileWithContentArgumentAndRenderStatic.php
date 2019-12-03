@@ -21,9 +21,9 @@ use TYPO3Fluid\Fluid\Core\Exception;
  * argument is specified and not empty.
  *
  * Deprecated - should be avoided in favor of null-coalesce
- * of arguments and evaluateChildren, e.g.:
+ * of arguments and evaluateChildNodes, e.g.:
  *
- *     $content = $arguments['content'] ?? $this->evaluateChildren($renderingContext);
+ *     $content = $arguments['content'] ?? $this->evaluateChildNodes($renderingContext);
  *
  * Which serves the exact same purpose and avoids the
  * overhead of this trait.
