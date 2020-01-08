@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -13,6 +14,7 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
@@ -850,5 +852,147 @@ class TemplateParserTest extends UnitTestCase
                 '\TYPO3Fluid\Fluid\Core\Parser\Exception'
             ],
         ];
+    }
+
+    /**
+     * Data provider for testRecursiveArrayHandler()
+     *
+     * @return \Generator
+     */
+    public function dataProviderRecursiveArrayHandler()
+    {
+        yield 'Single number' => [
+            'string' => 'number: 123',
+            'expected' => [
+                'number' => 123,
+            ]
+        ];
+
+        yield 'Single quoted string' => [
+            'string' => 'string: \'some.string\'',
+            'expected' => [
+                'string' => new TextNode('some.string'),
+            ]
+        ];
+
+        yield 'Single identifier' => [
+            'string' => 'identifier: some.identifier',
+            'expected' => [
+                'identifier' => new ObjectAccessorNode('some.identifier', [])
+            ]
+        ];
+
+        yield 'Single subarray' => [
+            'string' => 'array: {number: 123, string: \'some.string\', identifier: some.identifier}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier', [])
+                ])
+            ]
+        ];
+
+        yield 'Single subarray with numerical ids' => [
+            'string' => 'array: {0: 123, 1: \'some.string\', 2: some.identifier}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    123,
+                    new TextNode('some.string'),
+                    new ObjectAccessorNode('some.identifier', [])
+                ])
+            ]
+        ];
+
+        yield 'Single quoted subarray' => [
+            'string' => 'number: 123, array: \'{number: 234, string: \'some.string\', identifier: some.identifier}\'',
+            'expected' => [
+                'number' => 234,
+                'string' => new TextNode('some.string'),
+                'identifier' => new ObjectAccessorNode('some.identifier', [])
+            ]
+        ];
+
+        yield 'Single quoted subarray with numerical keys' => [
+            'string' => 'number: 123, array: \'{0: 234, 1: \'some.string\', 2: some.identifier}\'',
+            'expected' => [
+                'number' => 123,
+                234,
+                new TextNode('some.string'),
+                new ObjectAccessorNode('some.identifier', [])
+            ]
+        ];
+
+        yield 'Nested subarray' => [
+            'string' => 'array: {number: 123, string: \'some.string\', identifier: some.identifier, array: {number: 123, string: \'some.string\', identifier: some.identifier}}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier', []),
+                    'array' => new ArrayNode([
+                        'number' => 123,
+                        'string' => new TextNode('some.string'),
+                        'identifier' => new ObjectAccessorNode('some.identifier', [])
+                    ])
+                ])
+            ]
+        ];
+
+        yield 'Mixed types' => [
+            'string' => 'number: 123, string: \'some.string\', identifier: some.identifier, array: {number: 123, string: \'some.string\', identifier: some.identifier}',
+            'expected' => [
+                'number' => 123,
+                'string' => new TextNode('some.string'),
+                'identifier' => new ObjectAccessorNode('some.identifier', []),
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier', [])
+                ])
+            ]
+        ];
+
+        $rootNode = new RootNode();
+        $rootNode->addChildNode(new ObjectAccessorNode('some.{index}'));
+        yield 'variable identifier' => [
+            'string' => 'variableIdentifier: \'{some.{index}}\'',
+            'expected' => [
+                'variableIdentifier' => $rootNode
+            ]
+        ];
+
+        $rootNode = new RootNode();
+        $rootNode->addChildNode(new ObjectAccessorNode('some.{index}'));
+        yield 'variable identifier in array' => [
+            'string' => 'array: {variableIdentifier: \'{some.{index}}\'}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    'variableIdentifier' => $rootNode
+                ])
+            ]
+        ];
+    }
+
+    /**
+     * @param $string
+     * @param $expected
+     * @dataProvider dataProviderRecursiveArrayHandler
+     * @throws \ReflectionException
+     */
+    public function testRecursiveArrayHandler($string, $expected)
+    {
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
+        $resolver->expects($this->any())->method('isNamespaceIgnored')->willReturn(true);
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+        $context->setVariableProvider(new StandardVariableProvider());
+        $templateParser = new TemplateParser();
+        $templateParser->setRenderingContext($context);
+        $method = new \ReflectionMethod($templateParser, 'recursiveArrayHandler');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($templateParser, [$string]);
+
+        $this->assertEquals($expected, $result);
     }
 }
