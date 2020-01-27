@@ -462,7 +462,7 @@ class ViewHelperResolver
      * @param string $viewHelperClassName
      * @return ComponentInterface
      */
-    public function createViewHelperInstanceFromClassName(string $viewHelperClassName): ComponentInterface
+    public function createViewHelperInstanceFromClassName(string $viewHelperClassName)
     {
         return new $viewHelperClassName();
     }
