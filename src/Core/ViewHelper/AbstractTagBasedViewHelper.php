@@ -100,7 +100,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
             }
         }
 
-        $this->tag->addAttributes($parameters['additionalAttributes']);
+        $this->tag->addAttributes($parameters['additionalAttributes'] ?? []);
         $this->tag->addAttributes(['data' => $parameters['data']]);
         $this->tag->addAttributes($arguments->getUndeclaredArgumentsAndValues());
 
