@@ -25,7 +25,7 @@ class EscapingNodeTest extends UnitTestCase
     {
         $childNode = (new EntryNode())->setName('test');
         $node = new EscapingNode($childNode);
-        $this->assertSame('test', $node->getName());
+        $this->assertSame('test', $node->getComponentName());
     }
 
     /**

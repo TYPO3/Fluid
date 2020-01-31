@@ -54,7 +54,7 @@ interface ComponentInterface
 
     public function allowUndeclaredArgument(string $argumentName): bool;
 
-    public function getName(): ?string;
+    public function getComponentName(): ?string;
 
     public function addChild(ComponentInterface $component): self;
 

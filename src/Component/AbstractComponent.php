@@ -71,7 +71,7 @@ abstract class AbstractComponent implements ComponentInterface
         return $this;
     }
 
-    public function getName(): ?string
+    public function getComponentName(): ?string
     {
         return $this->name;
     }
@@ -107,7 +107,7 @@ abstract class AbstractComponent implements ComponentInterface
     {
         $parts = explode('.', $name, 2);
         foreach (array_reverse($this->children) as $child) {
-            if ($child->getName() === $parts[0]) {
+            if ($child->getComponentName() === $parts[0]) {
                 if (isset($parts[1])) {
                     return $child->getNamedChild($parts[1]);
                 }
@@ -141,7 +141,7 @@ abstract class AbstractComponent implements ComponentInterface
         $root = new RootNode();
         foreach ($this->children as $child) {
             if ($child instanceof $typeClassName) {
-                if ($name === null || ($parts = explode('.', $name, 2)) && $parts[0] === $child->getName()) {
+                if ($name === null || ($parts = explode('.', $name, 2)) && $parts[0] === $child->getComponentName()) {
                     // Child will be a Component of the right class; matching name if name is provided. Otherwise ignored.
                     if (isset($parts[1])) {
                         // If $name is null then $parts won't be set and this condition is not entered. If $parts[1] is set

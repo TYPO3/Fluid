@@ -28,9 +28,9 @@ class EscapingNode extends AbstractComponent
         $this->node = $node;
     }
 
-    public function getName(): ?string
+    public function getComponentName(): ?string
     {
-        return $this->node->getName();
+        return $this->node->getComponentName();
     }
 
     public function addChild(ComponentInterface $component): ComponentInterface
