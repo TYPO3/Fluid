@@ -190,7 +190,7 @@ class TagBuilderTest extends UnitTestCase
         $tagBuilder = new TagBuilder('tag');
         $tagBuilder->ignoreEmptyAttributes(true);
         $tagBuilder->addAttribute('attribute1', '');
-        $tagBuilder->addAttribute('attribute2', '');
+        $tagBuilder->addAttribute('attribute2', []);
         $tagBuilder->addAttribute('attribute3', 'attribute3value');
         $this->assertEquals('<tag attribute3="attribute3value" />', $tagBuilder->render());
     }
