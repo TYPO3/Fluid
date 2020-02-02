@@ -25,7 +25,7 @@ install:
   - composer install
 
 script:
-  - vendor/bin/phpstan analyse src tests
+  - vendor/bin/phpstan analyse src tests --level 1
   - vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
 after_script:
