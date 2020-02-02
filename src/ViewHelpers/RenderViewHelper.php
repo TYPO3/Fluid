@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\ViewHelpers;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
@@ -119,6 +120,7 @@ class RenderViewHelper extends AbstractViewHelper
             $variables[$arguments['contentAs']] = $tagContent;
         }
 
+        /** @var FluidRenderer $renderer */
         $renderer = $renderingContext->getRenderer();
         $content = '';
         if ($partial !== null) {

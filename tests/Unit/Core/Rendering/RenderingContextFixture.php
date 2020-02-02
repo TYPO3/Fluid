@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -29,17 +30,17 @@ use TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper;
 class RenderingContextFixture implements RenderingContextInterface
 {
     /**
-     * @var ErrorHandlerInterface
+     * @var ErrorHandlerInterface|MockObject
      */
     public $errorHandler;
 
     /**
-     * @var VariableProviderInterface
+     * @var VariableProviderInterface|MockObject
      */
     public $variableProvider;
 
     /**
-     * @var ViewHelperVariableContainer
+     * @var ViewHelperVariableContainer|MockObject
      */
     public $viewHelperVariableContainer;
 
@@ -59,7 +60,7 @@ class RenderingContextFixture implements RenderingContextInterface
     public $templatePaths;
 
     /**
-     * @var FluidRenderer
+     * @var FluidRendererInterface
      */
     public $renderer;
 
@@ -88,7 +89,7 @@ class RenderingContextFixture implements RenderingContextInterface
     public $configuration;
 
     /**
-     * @return FluidRenderer
+     * @return FluidRendererInterface
      */
     public function getRenderer(): FluidRendererInterface
     {

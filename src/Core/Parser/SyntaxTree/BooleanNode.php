@@ -92,7 +92,11 @@ class BooleanNode extends AbstractComponent
                 } elseif ($lowered === 'false') {
                     $part = false;
                 } elseif (is_numeric($lowered)) {
-                    $part = $part + 0;
+                    if (strpos($lowered, '.') === false) {
+                        $part = (int) $lowered;
+                    } else {
+                        $part = (float) $lowered;
+                    }
                 } elseif (in_array($part, $this->combiners, true)) {
                     // And/or encountered. Evaluate parts so far and assign left value.
 

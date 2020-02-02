@@ -34,15 +34,17 @@ class RenderingContextTest extends UnitTestCase
     }
 
     /**
-     * @param string $property
+     * @param string $propertyName
      * @param mixed $value
      * @dataProvider getPropertyNameTestValues
      */
-    public function testGetter(string $property, $value): void
+    public function testGetter(string $propertyName, $value): void
     {
-        $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy']);
-        $subject->_set($property, $value);
-        $getter = 'get' . ucfirst($property);
+        $subject = new RenderingContext();
+        $property = new \ReflectionProperty($subject, $propertyName);
+        $property->setAccessible(true);
+        $property->setValue($subject, $value);
+        $getter = 'get' . ucfirst($propertyName);
         $this->assertSame($value, $subject->$getter());
     }
 

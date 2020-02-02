@@ -49,7 +49,7 @@ class CastViewHelperTest extends ViewHelperBaseTestCase
      * @test
      * @dataProvider getEvaluateWithPartsTestValues
      * @param array $parts
-     * @param $expected
+     * @param mixed $expected
      */
     public function evaluateWithParts(array $parts, $expected): void
     {

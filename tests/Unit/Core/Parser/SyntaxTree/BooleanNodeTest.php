@@ -251,7 +251,7 @@ class BooleanNodeTest extends UnitTestCase
             ],
             'string comparison with quoted part treats as string' => [
                 $context,
-                [(new RootNode())->addChild(new TextNode('false'))->setQuoted(true), new TextNode('!='), new TextNode('false')],
+                [(new RootNode())->setQuoted(true)->addChild(new TextNode('false')), new TextNode('!='), new TextNode('false')],
                 true,
             ],
             'single hardcoded true-ish loose string comparison means true' => [

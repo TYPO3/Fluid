@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
@@ -48,6 +49,7 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function returnsAtomViewHelperClassForNamespaceAndMethodMatchingAnAtom(): void
     {
+        /** @var ViewHelperResolver|MockObject $resolver */
         $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['resolveAtomFile'])->disableOriginalConstructor()->getMock();
         $resolver->expects($this->once())->method('resolveAtomFile')->willReturn('foo.html');
         $resolver->addAtomPaths(['foo' => ['/path/to/foo']]);
@@ -330,6 +332,7 @@ class ViewHelperResolverTest extends UnitTestCase
      */
     public function testCreateViewHelperInstance(): void
     {
+        /** @var ViewHelperResolver|MockObject $resolver */
         $resolver = $this->getMockBuilder(ViewHelperResolver::class)
             ->setMethods(
                 ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName']

@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  */
 
 use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
@@ -21,12 +22,12 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 class AbstractTagBasedViewHelperTest extends UnitTestCase
 {
     /**
-     * @var MockObject|ViewHelperInterface
+     * @var MockObject|ComponentInterface
      */
     protected $viewHelper;
 
     /**
-     * @var MockObject|ViewHelperInterface
+     * @var MockObject|TagBuilder
      */
     protected $tagBuilder;
 
@@ -60,7 +61,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     public function testRenderCallsRenderOnTagBuilder(): void
     {
         $this->tagBuilder->expects($this->once())->method('render')->willReturn('foobar');
-        $this->assertEquals('foobar', $this->viewHelper->render());
+        $this->assertEquals('foobar', $this->viewHelper->evaluate(new RenderingContextFixture()));
     }
 
     /**

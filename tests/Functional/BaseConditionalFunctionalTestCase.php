@@ -21,7 +21,7 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      * If your test case requires a custom View instance
      * return the instance from this method.
      *
-     * @return ViewInterface
+     * @return TemplateView
      */
     protected function getView(): TemplateView
     {

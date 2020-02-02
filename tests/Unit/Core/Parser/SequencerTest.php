@@ -54,7 +54,8 @@ class SequencerTest extends UnitTestCase
      * @test
      * @dataProvider getErrorExpectations
      * @param string $template
-     * @param RootNode $expectedRootNode
+     * @param RenderingContextInterface $context
+     * @param int $expectedExceptionCode
      */
     public function failsWithExpectedSequencingExceptionUsingFileSource(string $template, RenderingContextInterface $context, int $expectedExceptionCode)
     {
@@ -70,7 +71,8 @@ class SequencerTest extends UnitTestCase
      * @test
      * @dataProvider getErrorExpectations
      * @param string $template
-     * @param RootNode $expectedRootNode
+     * @param RenderingContextInterface $context
+     * @param int $expectedExceptionCode
      */
     public function failsWithExpectedSequencingException(string $template, RenderingContextInterface $context, int $expectedExceptionCode)
     {
@@ -1139,7 +1141,7 @@ class SequencerTest extends UnitTestCase
                 '<f:c b="1 == \\\'test\\\'" />',
                 $context,
                 false,
-                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild((new RootNode())->addChild(new TextNode('test'))->setQuoted(true))])),
+                (new EntryNode())->addChild($this->createViewHelper($context, CViewHelper::class, ['b' => (new BooleanNode())->addChild(new TextNode('1'))->addChild(new TextNode('=='))->addChild((new RootNode())->setQuoted(true)->addChild(new TextNode('test')))])),
             ],
             'object accessor with comparison boolean value' => [
                 '<f:c b="{foo} === 1" />',
@@ -1158,12 +1160,12 @@ class SequencerTest extends UnitTestCase
                         [
                             'b' => (new BooleanNode())
                                 ->addChild((new RootNode())
-                                    ->addChild(new TextNode('foo'))
                                     ->setQuoted(true)
+                                    ->addChild(new TextNode('foo'))
                                 )->addChild(new TextNode('=='))
                                 ->addChild((new RootNode())
-                                    ->addChild(new TextNode('bar'))
                                     ->setQuoted(true)
+                                    ->addChild(new TextNode('bar'))
                                 )
                         ]
                     )
@@ -1195,9 +1197,9 @@ class SequencerTest extends UnitTestCase
                                 ->addChild(new TextNode('||'))
                                 ->addChild(
                                     (new BooleanNode())
-                                        ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true))
+                                        ->addChild((new RootNode())->setQuoted(true)->addChild(new TextNode('foo')))
                                         ->addChild(new TextNode('=='))
-                                        ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true))
+                                        ->addChild((new RootNode())->setQuoted(true)->addChild(new TextNode('foo')))
                                 )
                         ]
                     )
@@ -1281,9 +1283,9 @@ class SequencerTest extends UnitTestCase
         $result = $sequencer->sequence();
 
         $firstInnerGroup = (new BooleanNode())
-            ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true))
+            ->addChild((new RootNode())->setQuoted(true)->addChild(new TextNode('foo')))
             ->addChild(new TextNode('=='))
-            ->addChild((new RootNode())->addChild(new TextNode('foo'))->setQuoted(true));
+            ->addChild((new RootNode())->setQuoted(true)->addChild(new TextNode('foo')));
         $secondInnerGroup = (new BooleanNode())
             ->addChild(new TextNode('TRUE'))
             ->addChild(new TextNode('||'))
@@ -1497,7 +1499,8 @@ class SequencerTest extends UnitTestCase
         }
         $thousandRandomArrayItemsInline .= '})}';
         $viewHelper = new CViewHelper();
-        $expectedRootNode = (new EntryNode())->addChild($viewHelper->onOpen($context, $viewHelper->getArguments()->assignAll(['a' => new ArrayNode($thousandRandomArray)])));
+        $viewHelper->getArguments()->assignAll(['a' => new ArrayNode($thousandRandomArray)]);
+        $expectedRootNode = (new EntryNode())->addChild($viewHelper->onOpen($context));
         $this->createsExpectedNodeStructure($thousandRandomArrayItemsInline, $context, false, $expectedRootNode);
     }
 
@@ -1632,10 +1635,13 @@ class SequencerTest extends UnitTestCase
 
     protected function assertNodeEquals(ComponentInterface $subject, ComponentInterface $expected, string $path = '')
     {
+
         $this->assertInstanceOf(get_class($expected), $subject, 'Node types not as expected at path: ' . $path);
         if ($subject instanceof ObjectAccessorNode) {
             $this->assertEquals($expected->getChildren(), $subject->getChildren(), 'ObjectAccessors do not have the same child nodes at path ' . $path);
         } elseif ($subject instanceof TextNode) {
+            /** @var TextNode $subject */
+            /** @var TextNode $expected */
             $this->assertSame($expected->getText(), $subject->getText(), 'TextNodes do not match at path ' . $path);
         } elseif ($subject instanceof ArrayNode) {
             $this->assertEquals($expected, $subject, 'Arrays do not match at path ' . $path);

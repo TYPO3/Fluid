@@ -101,7 +101,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * If else attribute is not set, iterates through child nodes and renders ElseViewHelper.
      * If else attribute is not set and no ElseViewHelper is found, an empty string will be returned.
      *
-     * @return string rendered ElseViewHelper or an empty string if no ThenViewHelper was found
+     * @return string|null rendered ElseViewHelper or null if no ElseViewHelper was found
      */
     protected function renderElseChild()
     {

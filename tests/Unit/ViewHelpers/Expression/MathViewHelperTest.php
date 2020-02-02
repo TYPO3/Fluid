@@ -48,9 +48,9 @@ class MathViewHelperTest extends ViewHelperBaseTestCase
      * @test
      * @dataProvider getEvaluateWithPartsTestValues
      * @param array $parts
-     * @param $expected
+     * @param int $expected
      */
-    public function evaluateWithParts(array $parts, $expected): void
+    public function evaluateWithParts(array $parts, int $expected): void
     {
         $context = new RenderingContextFixture();
         $context->getVariableProvider()->add('var', 15);

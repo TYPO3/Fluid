@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
@@ -32,10 +33,13 @@ class AtomNodeTest extends UnitTestCase
         $child = new ObjectAccessorNode('foo');
         $subject->addChild($child);
         $context = new RenderingContextFixture();
+        /** @var EntryNode|MockObject $atom */
         $atom = $this->getMockBuilder(EntryNode::class)->setMethods(['addChild'])->getMock();
         $atom->expects($this->once())->method('addChild')->with($child);
+        /** @var TemplateParser|MockObject $parser */
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['parseFile'])->disableOriginalConstructor()->getMock();
         $parser->expects($this->once())->method('parseFile')->willReturn($atom);
+        /** @var VariableProviderInterface|MockObject $provider */
         $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
         $provider->expects($this->once())->method('getScopeCopy')->with(['argumentName' => 'argumentValue']);
         $context->setVariableProvider($provider);
@@ -50,8 +54,10 @@ class AtomNodeTest extends UnitTestCase
     public function onOpenSetsRenderingContextInArgumentCollection(): void
     {
         $context = new RenderingContextFixture();
+        /** @var ArgumentCollection|MockObject $arguments */
         $arguments = $this->getMockBuilder(ArgumentCollection::class)->setMethods(['setRenderingContext'])->getMock();
         $arguments->expects($this->once())->method('setRenderingContext')->with($context);
+        /** @var AtomNode|MockObject $subject */
         $subject = $this->getMockBuilder(AtomNode::class)->setMethods(['getArguments'])->getMock();
         $subject->expects($this->once())->method('getArguments')->willReturn($arguments);
         $subject->onOpen($context);

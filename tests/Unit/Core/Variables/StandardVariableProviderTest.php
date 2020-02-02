@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ArrayAccessDummy;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
@@ -19,7 +20,7 @@ class StandardVariableProviderTest extends UnitTestCase
 {
 
     /**
-     * @var StandardVariableProvider
+     * @var StandardVariableProvider|MockObject
      */
     protected $variableProvider;
 

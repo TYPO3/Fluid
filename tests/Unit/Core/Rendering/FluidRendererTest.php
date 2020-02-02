@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
@@ -61,9 +62,11 @@ class FluidRendererTest extends UnitTestCase
      */
     public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(): void
     {
+        /** @var ComponentInterface|MockObject $parsedTemplate */
         $parsedTemplate = $this->getMockBuilder(ComponentInterface::class)->setMethods(['getNamedChild'])->getMockForAbstractClass();
         $parsedTemplate->expects($this->any())->method('getNamedChild')->willThrowException(new ChildNotFoundException('...'));
         $context = new RenderingContextFixture();
+        /** @var FluidRenderer|MockObject $subject */
         $subject = $this->getMockBuilder(FluidRenderer::class)
             ->setMethods(['getCurrentParsedTemplate'])
             ->setConstructorArgs([$context])
@@ -80,6 +83,7 @@ class FluidRendererTest extends UnitTestCase
      */
     public function renderSectionCatchesInvalidTemplateResourceExceptionWithOptionalTrue(): void
     {
+        /** @var FluidRenderer|MockObject $subject */
         $subject = $this->getMockBuilder(FluidRenderer::class)->setMethods(['getCurrentParsedTemplate'])->disableOriginalConstructor()->getMock();
         $subject->expects($this->once())->method('getCurrentParsedTemplate')->willThrowException(new InvalidTemplateResourceException('foo'));
         $subject->setRenderingContext(new RenderingContextFixture());
@@ -93,6 +97,7 @@ class FluidRendererTest extends UnitTestCase
     public function renderSectionRethrowsInvalidTemplateResourceExceptionWithOptionalFalse(): void
     {
         $context = new RenderingContextFixture();
+        /** @var FluidRenderer|MockObject $subject */
         $subject = $this->getMockBuilder(FluidRenderer::class)->setMethods(['getCurrentParsedTemplate'])->setConstructorArgs([$context])->getMock();
         $subject->expects($this->once())->method('getCurrentParsedTemplate')->willThrowException(new InvalidTemplateResourceException('foo'));
         $this->setExpectedException(InvalidTemplateResourceException::class);
@@ -106,9 +111,11 @@ class FluidRendererTest extends UnitTestCase
     public function renderSectionDelegatesViewExceptionToErrorHandler(): void
     {
         $context = new RenderingContextFixture();
+        /** @var ErrorHandlerInterface|MockObject $errorHandler */
         $errorHandler = $this->getMockBuilder(ErrorHandlerInterface::class)->getMockForAbstractClass();
         $errorHandler->expects($this->once())->method('handleViewError');
         $context->setErrorHandler($errorHandler);
+        /** @var FluidRenderer|MockObject $subject */
         $subject = $this->getMockBuilder(FluidRenderer::class)->setMethods(['getCurrentParsedTemplate'])->setConstructorArgs([$context])->getMock();
         $subject->expects($this->once())->method('getCurrentParsedTemplate')->willThrowException(new Exception('foo'));
         $subject->renderSection('Foo', [], false);
@@ -121,9 +128,12 @@ class FluidRendererTest extends UnitTestCase
     public function renderPartialDelegatesToRenderSectionWhenBothPartialAndSectionProvided(): void
     {
         $context = new RenderingContextFixture();
+        /** @var FluidRenderer|MockObject $subject */
         $subject = $this->getMockBuilder(FluidRenderer::class)->setMethods(['renderSection'])->setConstructorArgs([$context])->getMock();
         $subject->expects($this->once())->method('renderSection')->with('section', [], false)->willReturn('something');
+        /** @var TemplatePaths|MockObject $paths */
         $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getPartialIdentifier'])->getMock();
+        /** @var TemplateParser|MockObject $parser */
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->disableOriginalConstructor()->getMock();
         $context->setTemplateParser($parser);
         $context->setTemplatePaths($paths);
@@ -142,7 +152,9 @@ class FluidRendererTest extends UnitTestCase
         $exception->setSource('source');
         $context = new RenderingContextFixture();
         $subject = new FluidRenderer($context);
+        /** @var TemplatePaths|MockObject $paths */
         $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getPartialIdentifier'])->getMock();
+        /** @var TemplateParser|MockObject $parser */
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->disableOriginalConstructor()->getMock();
         $context->setTemplateParser($parser);
         $context->setTemplatePaths($paths);
@@ -161,7 +173,9 @@ class FluidRendererTest extends UnitTestCase
         $exception = new InvalidTemplateResourceException('foo');
         $context = new RenderingContextFixture();
         $subject = new FluidRenderer($context);
+        /** @var TemplatePaths|MockObject $paths */
         $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getPartialIdentifier'])->getMock();
+        /** @var TemplateParser|MockObject $parser */
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->disableOriginalConstructor()->getMock();
         $context->setTemplateParser($parser);
         $context->setTemplatePaths($paths);
@@ -180,7 +194,9 @@ class FluidRendererTest extends UnitTestCase
         $exception = new Exception('foo');
         $context = new RenderingContextFixture();
         $subject = new FluidRenderer($context);
+        /** @var TemplatePaths|MockObject $paths */
         $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getPartialIdentifier'])->getMock();
+        /** @var TemplateParser|MockObject $parser */
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['getOrParseAndStoreTemplate'])->disableOriginalConstructor()->getMock();
         $errorHandler = $this->getMockBuilder(ErrorHandlerInterface::class)->getMockForAbstractClass();
         $context->setTemplateParser($parser);
@@ -201,6 +217,7 @@ class FluidRendererTest extends UnitTestCase
     {
         $context = new RenderingContextFixture();
         $subject = new FluidRenderer($context);
+        /** @var ComponentInterface|MockObject $component */
         $component = $this->getMockBuilder(ComponentInterface::class)->setMethods(['evaluate'])->getMockForAbstractClass();
         $component->expects($this->once())->method('evaluate')->with($context);
         $subject->renderComponent($component);
@@ -211,6 +228,7 @@ class FluidRendererTest extends UnitTestCase
      */
     public function getCurrentParsedTemplateUsesDefaultClosuresAsFallback(): void
     {
+        /** @var TemplatePaths|MockObject $paths */
         $paths = $this->getMockBuilder(TemplatePaths::class)->setMethods(['getTemplateIdentifier', 'getTemplateSource'])->getMock();
         $paths->expects($this->once())->method('getTemplateIdentifier')->willReturn('foo');
         $paths->expects($this->once())->method('getTemplateSource')->willReturn('<f:section name="foo">foo</f:section>');

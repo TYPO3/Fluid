@@ -38,7 +38,7 @@ class AtomNode extends AbstractComponent
     {
         $atom = clone $renderingContext->getTemplateParser()->parseFile($this->file);
         $arguments = clone $atom->getArguments();
-        $arguments->assignAll($this->getArguments()->getAllRaw() + $renderingContext->getVariableProvider()->getAll())->setRenderingContext($renderingContext);
+        $arguments->assignAll((array) $this->getArguments()->getAllRaw() + $renderingContext->getVariableProvider()->getAll())->setRenderingContext($renderingContext);
         foreach ($this->getChildren() as $child) {
             $atom->addChild($child);
         }

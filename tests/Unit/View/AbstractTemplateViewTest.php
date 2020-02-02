@@ -7,8 +7,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -30,17 +32,17 @@ class AbstractTemplateViewTest extends UnitTestCase
     protected $view;
 
     /**
-     * @var RenderingContext
+     * @var RenderingContextInterface
      */
     protected $renderingContext;
 
     /**
-     * @var ViewHelperVariableContainer
+     * @var ViewHelperVariableContainer|MockObject
      */
     protected $viewHelperVariableContainer;
 
     /**
-     * @var VariableProviderInterface
+     * @var VariableProviderInterface|MockObject
      */
     protected $templateVariableContainer;
 

@@ -26,7 +26,7 @@ class StandardErrorHandler implements ErrorHandlerInterface
     /**
      * @param Exception $error
      * @throws Exception
-     * @return void
+     * @return string
      */
     public function handleParserError(Exception $error): string
     {
@@ -42,7 +42,7 @@ class StandardErrorHandler implements ErrorHandlerInterface
     /**
      * @param ExpressionException $error
      * @throws ExpressionException
-     * @return void
+     * @return string
      */
     public function handleExpressionError(ExpressionException $error): string
     {
@@ -51,7 +51,7 @@ class StandardErrorHandler implements ErrorHandlerInterface
 
     /**
      * @param ViewHelperException $error
-     * @return void
+     * @return string
      * @throws ViewHelperException
      */
     public function handleViewHelperError(ViewHelperException $error): string
@@ -61,7 +61,7 @@ class StandardErrorHandler implements ErrorHandlerInterface
 
     /**
      * @param ViewException $error
-     * @return void
+     * @return string
      * @throws ViewException
      * @deprecated Will be removed in Fluid 4.0
      */

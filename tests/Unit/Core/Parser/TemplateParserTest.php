@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
@@ -29,6 +30,7 @@ class TemplateParserTest extends UnitTestCase
     {
         $context = new RenderingContextFixture();
         $context->getParserConfiguration()->setFeatureState(Configuration::FEATURE_RUNTIME_CACHE, false);
+        /** @var TemplateParser|MockObject $parser */
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['parseTemplateSource'])->setConstructorArgs([$context])->getMock();
         $parser->expects($this->once())->method('parseTemplateSource');
         $parser->getOrParseAndStoreTemplate('foo', function(RenderingContextInterface $context) {});

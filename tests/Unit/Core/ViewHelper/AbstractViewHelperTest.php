@@ -7,8 +7,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -71,12 +73,14 @@ class AbstractViewHelperTest extends UnitTestCase
         $argumentDefinitions = [
             'foo' => new ArgumentDefinition('foo', 'string', 'Foo', true),
         ];
+        /** @var ComponentInterface|MockObject $viewHelper */
         $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['dummy'])->getMockForAbstractClass();
         $expectedArguments = [
             'foo' => 'foovalue',
             'undeclared' => 'some',
         ];
-        $result = $viewHelper->onOpen(new RenderingContextFixture(), (new ArgumentCollection($argumentDefinitions))->assignAll($expectedArguments));
+        $viewHelper->getArguments()->setDefinitions($argumentDefinitions)->assignAll($expectedArguments);
+        $result = $viewHelper->onOpen(new RenderingContextFixture());
         $this->assertSame($viewHelper, $result);
     }
 
@@ -85,6 +89,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function testExecuteCallsExpectedFunctions()
     {
+        /** @var ComponentInterface|MockObject $viewHelper */
         $viewHelper = $this->getAccessibleMock(
             AbstractViewHelper::class,
             ['callRenderMethod']
@@ -93,8 +98,9 @@ class AbstractViewHelperTest extends UnitTestCase
             'foo' => 'foovalue',
             'undeclared' => 'some',
         ];
+        $viewHelper->getArguments()->assignAll($expectedArguments);
         $viewHelper->expects($this->once())->method('callRenderMethod');
-        $viewHelper->evaluate(new RenderingContextFixture(), (new ArgumentCollection())->setRenderingContext(new RenderingContextFixture())->assignAll($expectedArguments));
+        $viewHelper->evaluate(new RenderingContextFixture());
     }
 
     /**
@@ -102,6 +108,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function argumentsCanBeRegistered(): void
     {
+        /** @var ComponentInterface|MockObject $viewHelper */
         $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
 
         $name = 'name_something';
@@ -110,7 +117,10 @@ class AbstractViewHelperTest extends UnitTestCase
         $isRequired = true;
         $expected = new ArgumentDefinition($name, $type, $description, $isRequired);
 
-        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
+        $registerMethod = new \ReflectionMethod($viewHelper, 'registerArgument');
+        $registerMethod->setAccessible(true);
+
+        $registerMethod->invokeArgs($viewHelper, [$name, $type, $description, $isRequired]);
         $this->assertEquals([$name => $expected], $viewHelper->getArguments()->getDefinitions(), 'Argument definitions not returned correctly.');
     }
 
@@ -119,6 +129,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function argumentsCanBeOverriddenAndRegisteredTwiceWithoutError(): void
     {
+        /** @var ComponentInterface|MockObject $viewHelper */
         $viewHelper = $this->getAccessibleMockForAbstractClass(AbstractViewHelper::class);
 
         $name = 'name_something';
@@ -127,10 +138,15 @@ class AbstractViewHelperTest extends UnitTestCase
         $isRequired = true;
         $expected = new ArgumentDefinition($name, $type, $description, $isRequired);
 
-        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-        $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-        $viewHelper->_call('overrideArgument', $name, $type, $description, $isRequired);
-        $viewHelper->_call('overrideArgument', $name, $type, $description, $isRequired);
+        $registerMethod = new \ReflectionMethod($viewHelper, 'registerArgument');
+        $registerMethod->setAccessible(true);
+        $overrideMethod = new \ReflectionMethod($viewHelper, 'overrideArgument');
+        $overrideMethod->setAccessible(true);
+
+        $registerMethod->invokeArgs($viewHelper, [$name, $type, $description, $isRequired]);
+        $registerMethod->invokeArgs($viewHelper, [$name, $type, $description, $isRequired]);
+        $overrideMethod->invokeArgs($viewHelper, [$name, $type, $description, $isRequired]);
+        $overrideMethod->invokeArgs($viewHelper, [$name, $type, $description, $isRequired]);
         $this->assertEquals([$name => $expected], $viewHelper->getArguments()->getDefinitions(), 'Argument definitions not returned correctly.');
     }
 
@@ -139,6 +155,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function defaultRenderChildrenClosureCallsRenderChildren()
     {
+        /** @var ComponentInterface|MockObject $viewHelper */
         $viewHelper = $this->getMockBuilder(AbstractViewHelper::class)->setMethods(['renderChildren'])->getMockForAbstractClass();
         $viewHelper->expects($this->once())->method('renderChildren');
         $method = new \ReflectionMethod($viewHelper, 'buildRenderChildrenClosure');

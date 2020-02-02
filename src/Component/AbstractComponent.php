@@ -95,7 +95,11 @@ abstract class AbstractComponent implements ComponentInterface
                 $this->addChild($node);
             }
         } elseif ($component instanceof TextNode && $this->_lastAddedWasTextNode) {
-            end($this->children)->appendText($component->getText());
+            /** @var TextNode|false $lastNode */
+            $lastNode = end($this->children);
+            if ($lastNode) {
+                $lastNode->appendText($component->getText());
+            }
         } else {
             $this->children[] = $component;
             $this->_lastAddedWasTextNode = $component instanceof TextNode;
@@ -179,7 +183,7 @@ abstract class AbstractComponent implements ComponentInterface
      * - Null if there are no child nodes at all.
      *
      * @param bool $extractNode If TRUE, will extract the value of a single node if the node type contains a scalar value
-     * @return ComponentInterface|string|int|float|null
+     * @return ComponentInterface|mixed
      */
     public function flatten(bool $extractNode = false)
     {
@@ -189,6 +193,7 @@ abstract class AbstractComponent implements ComponentInterface
         if (isset($this->children[0]) && !isset($this->children[1])) {
             if ($extractNode) {
                 if ($this->children[0] instanceof TextNode) {
+                    /** @var string|float|int $text */
                     $text = $this->children[0]->getText();
                     return is_numeric($text) ? $text + 0 : $text;
                 }

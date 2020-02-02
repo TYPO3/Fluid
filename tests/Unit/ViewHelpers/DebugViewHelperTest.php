@@ -24,6 +24,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestCase
      */
     public function getStandardTestValues(): array
     {
+        /** @var \ArrayObject<string, mixed> $arrayObject */
         $arrayObject = new \ArrayObject(['foo' => 'bar']);
         $arrayIterator = new \ArrayIterator(['foo' => 'bar']);
         $recursive = clone $arrayObject;

@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -232,7 +233,7 @@ class TagBuilderTest extends UnitTestCase
      */
     public function resetResetsTagBuilder(): void
     {
-        $tagBuilder = $this->getAccessibleMock(TagBuilder::class, ['dummy']);
+        $tagBuilder = new TagBuilder('div');
         $tagBuilder->setTagName('tagName');
         $tagBuilder->setContent('some content');
         $tagBuilder->forceClosingTag(true);
@@ -240,10 +241,7 @@ class TagBuilderTest extends UnitTestCase
         $tagBuilder->addAttribute('attribute2', 'attribute2value');
         $tagBuilder->reset();
 
-        $this->assertEquals('', $tagBuilder->_get('tagName'));
-        $this->assertEquals('', $tagBuilder->_get('content'));
-        $this->assertEquals([], $tagBuilder->_get('attributes'));
-        $this->assertFalse($tagBuilder->_get('forceClosingTag'));
+        $this->assertSame('', $tagBuilder->render());
     }
 
     /**

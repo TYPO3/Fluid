@@ -60,7 +60,7 @@ class RenderingContext implements RenderingContextInterface
     protected $templateParser;
 
     /**
-     * @var FluidRenderer
+     * @var FluidRendererInterface
      */
     protected $renderer;
 

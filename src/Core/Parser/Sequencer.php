@@ -443,7 +443,7 @@ class Sequencer
                         // $closing will be true and $selfClosing false; add to stack, continue with children.
                         $viewHelperNode = array_pop($this->nodeStack);
                         $expectedClass = $this->resolver->resolveViewHelperClassName($namespace, (string) $method);
-                        if (!$viewHelperNode instanceof $expectedClass) {
+                        if ($expectedClass !== null && !$viewHelperNode instanceof $expectedClass) {
                             throw $this->createErrorAtPosition(
                                 sprintf(
                                     'Mismatched closing tag. Expecting: %s:%s (%s). Found: (%s).',
@@ -511,7 +511,7 @@ class Sequencer
                         $method = $captured;
                         $viewHelperNode = $this->resolver->createViewHelperInstance($namespace, $method);
                         $arguments = $viewHelperNode->getArguments();
-                        $definitions = $arguments->getDefinitions();
+                        $definitions = (array) $arguments->getDefinitions();
 
                         // Forcibly disable escaping OFF as default decision for whether or not to escape an argument.
                         $this->escapingEnabled = false;
@@ -566,7 +566,6 @@ class Sequencer
                     $this->sequenceToggleInstruction();
                     $this->splitter->switch($restore);
                     return new TextNode('');
-                    break;
 
                 case self::BYTE_BACKSLASH:
                     // Increase the number of counted escapes (is passed to sequenceNode() in the "QUOTE" cases and reset
@@ -826,7 +825,7 @@ class Sequencer
                         $arguments->validate();
                         $node = $node->onOpen($this->renderingContext)->onClose($this->renderingContext);
                         $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
-                    } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED || ($hasWhitespace && !$callDetected && !$hasPass)) {
+                    } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED || ($hasWhitespace && $callDetected === false && $hasPass === false)) {
                         // In order to qualify for potentially being an expression, the entire inline node must contain
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
                         // inline pass operand. This significantly limits the number of times this (expensive) routine
@@ -853,7 +852,7 @@ class Sequencer
                         }
                         $node = $childNodeToAdd ?? ($node ?? new RootNode())->addChild($this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT));
                         return $node;
-                    } elseif (!$hasPass && !$callDetected) {
+                    } elseif ($hasPass === false && $callDetected === false) {
                         $node = $node ?? new ObjectAccessorNode();
                         if ($potentialAccessor !== '') {
                             $node->addChild($this->callInterceptor(new TextNode((string) $potentialAccessor), InterceptorInterface::INTERCEPT_TEXT));
@@ -952,7 +951,7 @@ class Sequencer
     {
         $definitions = null;
         if ($array instanceof ArgumentCollection) {
-            $definitions = $array->getDefinitions();
+            $definitions = (array) $array->getDefinitions();
         }
 
         $keyOrValue = null;

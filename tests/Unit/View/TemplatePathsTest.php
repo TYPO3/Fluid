@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3Fluid\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
@@ -205,6 +206,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function setsLayoutPathAndFilename(): void
     {
+        /** @var TemplatePaths|MockObject $instance */
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setLayoutPathAndFilename('foobar');
@@ -217,6 +219,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function setsTemplatePathAndFilename(): void
     {
+        /** @var TemplatePaths|MockObject $instance */
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setTemplatePathAndFilename('foobar');
@@ -232,6 +235,7 @@ class TemplatePathsTest extends BaseTestCase
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
+        /** @var TemplatePaths|MockObject $instance */
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
         $instance->$setter($value);
@@ -304,6 +308,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testToArray(): void
     {
+        /** @var TemplatePaths|MockObject $instance */
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
         $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setTemplateRootPaths(['1']);

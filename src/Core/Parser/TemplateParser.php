@@ -69,7 +69,7 @@ class TemplateParser
      * TemplateParser directly.
      *
      * @param Source $source Template source instance
-     * @param Configuration|null Template parsing configuration to use
+     * @param Configuration|null $configuration Template parsing configuration to use
      * @return ComponentInterface Parsed template
      * @throws Exception
      */

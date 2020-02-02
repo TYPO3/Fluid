@@ -7,8 +7,10 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
+use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -22,6 +24,7 @@ class CompileWithRenderStaticTest extends UnitTestCase
      */
     public function testRenderCallsRenderStatic(): void
     {
+        /** @var TestViewHelper|MockObject $instance */
         $instance = $this->getMockBuilder(CompileWithRenderStatic::class)->setMethods(['getArguments', 'buildRenderChildrenClosure', 'renderStatic'])->getMockForTrait();
         $instance->expects($this->once())->method('getArguments')->willReturn((new ArgumentCollection())->setRenderingContext(new RenderingContextFixture()));
         $instance->expects($this->once())->method('buildRenderChildrenClosure')->willReturn(function() {});

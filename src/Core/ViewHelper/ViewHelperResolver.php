@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ReferenceNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -113,7 +114,9 @@ class ViewHelperResolver
                 1564404340
             );
         }
-        return $this->renderingContext->getTemplateParser()->parseFile($file)->setName($namespace . ':' . $name);
+        /** @var EntryNode $atom */
+        $atom = $this->renderingContext->getTemplateParser()->parseFile($file);
+        return $atom->setName($namespace . ':' . $name);
     }
 
     public function resolveAtomFile(string $namespace, string $name): ?string
@@ -206,7 +209,7 @@ class ViewHelperResolver
      * when you use this method you should always include the "f" namespace.
      *
      * @param string $identifier
-     * @param string|array $phpNamespace
+     * @param string|array|null $phpNamespace
      * @return void
      */
     public function addNamespace(string $identifier, $phpNamespace): void
@@ -442,10 +445,10 @@ class ViewHelperResolver
         if (!empty($namespace) && isset($this->atoms[$namespace])) {
             $atomFile = $this->resolveAtomFile($namespace, $viewHelperShortName);
             if ($atomFile) {
-                return (new AtomNode())
-                    ->setArguments(clone $this->renderingContext->getTemplateParser()->parseFile($atomFile)->getArguments())
-                    ->setFile($atomFile)
-                    ->setName($namespace . ':' . $viewHelperShortName);
+                $node = new AtomNode();
+                $node->setFile($atomFile);
+                $node->setName($namespace . ':' . $viewHelperShortName);
+                $node->setArguments(clone $this->renderingContext->getTemplateParser()->parseFile($atomFile)->getArguments());
             }
         }
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);

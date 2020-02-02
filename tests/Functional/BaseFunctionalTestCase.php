@@ -21,7 +21,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * If your test case requires a custom View instance
      * return the instance from this method.
      *
-     * @return ViewInterface
+     * @return TemplateView
      */
     protected function getView(): TemplateView
     {
@@ -79,7 +79,6 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * @param array $expected
      * @param array $notExpected
      * @param string|NULL $expectedException
-     * @param boolean $withCache
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */

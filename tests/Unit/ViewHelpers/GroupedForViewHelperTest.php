@@ -49,7 +49,8 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestCase
         $context = new RenderingContextFixture();
         $context->setVariableProvider(new StandardVariableProvider());
         $forViewHelper = new ForViewHelper();
-        $forViewHelper->onOpen($context, $forViewHelper->getArguments()->assignAll(['each' => new ObjectAccessorNode('grouped'), 'as' => 'value']))->addChild(new ObjectAccessorNode('value.name'));
+        $forViewHelper->onOpen($context)->addChild(new ObjectAccessorNode('value.name'));
+        $forViewHelper->getArguments()->assignAll(['each' => new ObjectAccessorNode('grouped'), 'as' => 'value']);
         $user1 = new UserWithoutToString('user1');
         $user2 = new UserWithoutToString('user2');
         return [

@@ -19,9 +19,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 interface ComponentInterface extends NodeInterface
 {
-    public function onOpen(RenderingContextInterface $renderingContext): self;
+    public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface;
 
-    public function onClose(RenderingContextInterface $renderingContext): self;
+    public function onClose(RenderingContextInterface $renderingContext): ComponentInterface;
 
     /**
      * @param RenderingContextInterface $renderingContext
@@ -51,13 +51,13 @@ interface ComponentInterface extends NodeInterface
      */
     public function getArguments(): ArgumentCollection;
 
-    public function setArguments(ArgumentCollection $arguments): self;
+    public function setArguments(ArgumentCollection $arguments): ComponentInterface;
 
     public function allowUndeclaredArgument(string $argumentName): bool;
 
     public function getComponentName(): ?string;
 
-    public function addChild(ComponentInterface $component): self;
+    public function addChild(ComponentInterface $component): ComponentInterface;
 
     public function getNamedChild(string $name): ComponentInterface;
 
@@ -72,7 +72,7 @@ interface ComponentInterface extends NodeInterface
      * @param iterable|ComponentInterface[] $children
      * @return ComponentInterface
      */
-    public function setChildren(iterable $children): self;
+    public function setChildren(iterable $children): ComponentInterface;
 
     /**
      * Returns whether the escaping interceptors should be disabled or enabled for the render-result of children of this ViewHelper

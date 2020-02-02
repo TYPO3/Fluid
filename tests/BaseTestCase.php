@@ -131,7 +131,7 @@ abstract class BaseTestCase extends TestCase
      * @param boolean $callOriginalConstructor
      * @param boolean $callOriginalClone
      * @param boolean $callAutoload
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      * @api
      */
     protected function getAccessibleMockForAbstractClass(string $originalClassName, array $arguments = [], string $mockClassName = '', bool $callOriginalConstructor = true, bool $callOriginalClone = true, bool $callAutoload = true): MockObject

@@ -66,7 +66,7 @@ class ForViewHelper extends AbstractViewHelper
     public function initializeArguments()
     {
         parent::initializeArguments();
-        $this->registerArgument('each', 'array', 'The array or \SplObjectStorage to iterated over', true);
+        $this->registerArgument('each', 'array', 'The iterable to iterated over', true);
         $this->registerArgument('as', 'string', 'The name of the iteration variable', true);
         $this->registerArgument('key', 'string', 'Variable to assign array key to');
         $this->registerArgument('reverse', 'boolean', 'If TRUE, iterates in reverse', false, false);
@@ -87,7 +87,7 @@ class ForViewHelper extends AbstractViewHelper
         if ($arguments['reverse'] === true) {
             // array_reverse only supports arrays
             if (is_object($arguments['each'])) {
-                /** @var $each \Traversable */
+                /** @var \Traversable $each */
                 $each = $arguments['each'];
                 $arguments['each'] = iterator_to_array($each);
             }

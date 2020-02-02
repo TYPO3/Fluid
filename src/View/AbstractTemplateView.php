@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\View;
  */
 
 use TYPO3Fluid\Fluid\Component\Error\ChildNotFoundException;
+use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -143,6 +144,7 @@ abstract class AbstractTemplateView extends AbstractView
             $controllerName = is_callable([$context, 'getControllerName']) ? $context->getControllerName() : 'Default';
             return $templatePaths->getTemplateSource($controllerName, $actionName);
         };
+        /** @var FluidRenderer $renderer */
         $renderer = clone $this->baseRenderingContext->getRenderer();
         $renderer->setRenderingContext($this->baseRenderingContext);
         return $renderer->setBaseTemplateClosure($templateClosure)
@@ -164,6 +166,8 @@ abstract class AbstractTemplateView extends AbstractView
      */
     public function renderPartial(string $partialName, ?string $sectionName, array $variables, bool $ignoreUnknown = false)
     {
-        return $this->baseRenderingContext->getRenderer()->renderPartial($partialName, $sectionName, $variables, $ignoreUnknown);
+        /** @var FluidRenderer $renderer */
+        $renderer = $this->baseRenderingContext->getRenderer();
+        return $renderer->renderPartial($partialName, $sectionName, $variables, $ignoreUnknown);
     }
 }

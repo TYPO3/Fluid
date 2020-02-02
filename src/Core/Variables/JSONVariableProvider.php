@@ -42,7 +42,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     protected $source = null;
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getSource(): string
     {

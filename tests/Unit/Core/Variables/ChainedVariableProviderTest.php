@@ -20,7 +20,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param VariableProviderInterface[] $chain
      * @param string $path
      * @param mixed $expected
      * @dataProvider getGetTestValues
@@ -34,7 +34,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param VariableProviderInterface[] $chain
      * @param string $path
      * @param mixed $expected
      * @dataProvider getGetTestValues
@@ -66,7 +66,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param VariableProviderInterface[] $chain
      * @param mixed $expected
      * @dataProvider getGetAllTestValues
      */
@@ -95,7 +95,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param VariableProviderInterface[] $chain
      * @param mixed $expected
      * @dataProvider getGetAllIdentifiersTestValues
      */

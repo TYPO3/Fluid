@@ -24,10 +24,7 @@ class IfViewHelperTest extends ViewHelperBaseTestCase
         $elseViewHelper = (new ElseViewHelper())->addChild(new TextNode('no'));
 
         $elseViewHelper2 = new ElseViewHelper();
-        $elseViewHelper2->onOpen(
-            $context,
-            $elseViewHelper2->getArguments()->assignAll(['if' => true])
-        )->addChild(new TextNode('matchedcondition'));
+        $elseViewHelper2->onOpen($context)->addChild(new TextNode('matchedcondition'));
 
         $elseViewHelper3 = (new ElseViewHelper())->addChild(new TextNode('nocondition'));
 

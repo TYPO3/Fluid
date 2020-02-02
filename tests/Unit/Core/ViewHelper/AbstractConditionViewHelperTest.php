@@ -113,7 +113,9 @@ class AbstractConditionViewHelperTest extends UnitTestCase
     public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndNoElseViewHelperChildExists(): void
     {
         $this->viewHelper->expects($this->any())->method('getChildren')->will($this->returnValue([]));
-        $actualResult = $this->viewHelper->_call('renderElseChild');
+        $method = new \ReflectionMethod($this->viewHelper, 'renderElseChild');
+        $method->setAccessible(true);
+        $actualResult = $method->invoke($this->viewHelper);
         $this->assertEquals(null, $actualResult);
     }
 
@@ -142,6 +144,7 @@ class AbstractConditionViewHelperTest extends UnitTestCase
     public function renderElseChildReturnsEmptyStringIfConditionIsFalseAndElseViewHelperChildIfArgumentConditionIsFalseToo(): void
     {
         $context = new RenderingContextFixture();
+        /** @var ElseViewHelper|MockObject $mockElseViewHelperNode */
         $mockElseViewHelperNode = $this->getMock(ElseViewHelper::class, ['evaluate'], [], false, false);
         $mockElseViewHelperNode->getArguments()->assignAll(['if' => false]);
         $mockElseViewHelperNode->onOpen($context);
