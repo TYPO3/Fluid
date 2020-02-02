@@ -27,6 +27,29 @@ class Configuration
     ];
 
     /**
+     * @var InterceptorInterface[][]
+     */
+    protected $interceptors = [];
+
+    public function addInterceptor(InterceptorInterface $interceptor): void
+    {
+        foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
+            if (!in_array($interceptor, $this->interceptors[$interceptionPoint] ?? [], true)) {
+                $this->interceptors[$interceptionPoint][] = $interceptor;
+            }
+        }
+    }
+
+    /**
+     * @param int $interceptionPoint
+     * @return InterceptorInterface[]
+     */
+    public function getInterceptors(int $interceptionPoint)
+    {
+        return $this->interceptors[$interceptionPoint] ?? [];
+    }
+
+    /**
      * @param string $feature
      * @param string|int|bool|null $state
      * @return bool

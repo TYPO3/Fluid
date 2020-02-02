@@ -68,13 +68,7 @@ class Sequencer
     public const BYTE_BACKTICK = 96; // The "`" character
     public const BYTE_AT = 64; // The "@" character
     public const MASK_LINEBREAKS = 0 | (1 << self::BYTE_WHITESPACE_EOL) | (1 << self::BYTE_WHITESPACE_RETURN);
-    
-    private const INTERCEPT_OPENING_VIEWHELPER = 1;
-    private const INTERCEPT_CLOSING_VIEWHELPER = 2;
-    private const INTERCEPT_OBJECTACCESSOR = 4;
-    private const INTERCEPT_EXPRESSION = 5;
-    private const INTERCEPT_SELFCLOSING_VIEWHELPER = 6;
-    
+
     /**
      * A counter of nodes which currently disable the interceptor.
      * Needed to enable the interceptor again.
@@ -161,7 +155,7 @@ class Sequencer
             $node = end($this->nodeStack);
             $text = $captured . ($countedEscapes > 0 ? chr($symbol) : '');
             if ($text !== '') {
-                $node->addChild(new TextNode($text));
+                $node->addChild($this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT));
             }
 
             if ($countedEscapes > 0) {
@@ -262,7 +256,7 @@ class Sequencer
             } elseif ($symbol === self::BYTE_TAG_END && $captured === '/' . $matchingTag) {
                 // A closing version of the parent tag. Check counter; if zero, finish. If not, decrease ignored count.
                 if ($ignoredNested === 0) {
-                    $parent->addChild(new TextNode((string) substr($text, 0, -1)));
+                    $parent->addChild($this->callInterceptor(new TextNode((string) substr($text, 0, -1)), InterceptorInterface::INTERCEPT_TEXT));
                     return;
                 }
                 --$ignoredNested;
@@ -287,7 +281,7 @@ class Sequencer
                 break;
             }
         }
-        return new TextNode($text);
+        return $this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT);
     }
 
     /**
@@ -367,7 +361,7 @@ class Sequencer
                 case self::BYTE_INLINE:
                     $contextBefore = $this->splitter->context;
                     $collected = $this->sequenceInlineNodes(isset($namespace, $method));
-                    $node->addChild(new TextNode($text));
+                    $node->addChild($this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT));
                     $node->addChild($collected);
                     $text = '';
                     $this->splitter->switch($contextBefore);
@@ -380,7 +374,7 @@ class Sequencer
                         throw $this->createErrorAtPosition('Unexpected equals sign without preceding attribute/key name', 1561039838);
                     } elseif ($definitions !== null && !isset($definitions[$key]) && !$viewHelperNode->allowUndeclaredArgument($key)) {
                         $error = $this->createUnsupportedArgumentError($key, $definitions);
-                        return new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error));
+                        return $this->callInterceptor(new TextNode($this->renderingContext->getErrorHandler()->handleParserError($error)), InterceptorInterface::INTERCEPT_TEXT);
                     }
                     break;
 
@@ -411,12 +405,12 @@ class Sequencer
                         // pending argument and the latter contains a captured value-less attribute right before the
                         // tag closing character.
                         if ($key !== null) {
-                            $arguments[$key] = new ObjectAccessorNode((string) $key);
+                            $arguments[$key] = $this->callInterceptor(new ObjectAccessorNode((string) $key), InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                             $key = null;
                         }
-                        // (see comment above) Hence, the two conditions must not be compunded to else-if.
+                        // (see comment above) Hence, the two conditions must not be compounded to else-if.
                         if ($captured !== null) {
-                            $arguments[$captured] = new ObjectAccessorNode($captured);
+                            $arguments[$captured] = $this->callInterceptor(new ObjectAccessorNode($captured), InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                         }
                     }
                     break;
@@ -439,7 +433,7 @@ class Sequencer
                     $this->escapingEnabled = $escapingEnabledBackup;
 
                     if (($namespace === null && ($this->splitter->context->context === Context::CONTEXT_DEAD || !$this->resolver->isAliasRegistered((string) $method))) || $this->resolver->isNamespaceIgnored((string) $namespace)) {
-                        return $node->addChild(new TextNode($text))->flatten();
+                        return $node->addChild($this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT))->flatten();
                     }
 
                     if (!$closing || $selfClosing) {
@@ -467,12 +461,12 @@ class Sequencer
                     // literal style associative array entry. Do the same for $captured.
                     if ($this->splitter->context->context === Context::CONTEXT_ATTRIBUTES) {
                         if ($key !== null) {
-                            $value = new ObjectAccessorNode((string) $key);
+                            $value = $this->callInterceptor(new ObjectAccessorNode((string) $key), InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                             $arguments[$key] = $value;
                         }
 
                         if ($captured !== null) {
-                            $value = new ObjectAccessorNode((string) $captured);
+                            $value = $this->callInterceptor(new ObjectAccessorNode((string) $captured), InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                             $arguments[$captured] = $value;
                         }
                     }
@@ -481,7 +475,7 @@ class Sequencer
                         // The node is neither a closing or self-closing node (= an opening node expecting tag content).
                         // Add it to the stack and return null to return the Sequencer to "root" context and continue
                         // sequencing the tag's body - parsed nodes then get attached to this node as children.
-                        $viewHelperNode = $this->callInterceptor($viewHelperNode, self::INTERCEPT_OPENING_VIEWHELPER);
+                        $viewHelperNode = $this->callInterceptor($viewHelperNode, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
                         if ($viewHelperNode instanceof SequencingComponentInterface) {
                             // The Component will take over sequencing. It will return if encountering the right closing
                             // tag - so when it returns, we reached the end of the Component and must pop the stack.
@@ -496,7 +490,7 @@ class Sequencer
 
                     $viewHelperNode = $this->callInterceptor(
                         $viewHelperNode,
-                        $selfClosing ? self::INTERCEPT_SELFCLOSING_VIEWHELPER : self::INTERCEPT_CLOSING_VIEWHELPER
+                        $selfClosing ? InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER : InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
                     );
 
                     return $viewHelperNode;
@@ -584,7 +578,7 @@ class Sequencer
                         $node = $node ?? new ObjectAccessorNode();
                     }
                     if ($captured !== null) {
-                        $node->addChild(new TextNode((string) $captured));
+                        $node->addChild($this->callInterceptor(new TextNode((string) $captured), InterceptorInterface::INTERCEPT_TEXT));
                     }
                     break;
 
@@ -609,7 +603,7 @@ class Sequencer
                         ++$ignoredEndingBraces;
                         $countedEscapes = 0;
                         if ($captured !== null) {
-                            $node->addChild(new TextNode((string)$captured));
+                            $node->addChild($this->callInterceptor(new TextNode((string)$captured), InterceptorInterface::INTERCEPT_TEXT));
                         }
                     } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
                         // Ignore one ending additional curly brace. Subtracted in the BYTE_INLINE_END case below.
@@ -643,7 +637,7 @@ class Sequencer
                 // Note that backticks do not support escapes (they are a new feature that does not require escaping).
                 case self::BYTE_BACKTICK:
                     if ($this->splitter->context->context === Context::CONTEXT_PROTECTED) {
-                        $node->addChild(new TextNode($text));
+                        $node->addChild($this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT));
                         $node->addChild($this->sequenceQuotedNode()->flatten());
                         $text = '';
                         break;
@@ -674,7 +668,7 @@ class Sequencer
                         break;
                     }
                     if ($captured !== null) {
-                        $arguments[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                        $arguments[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : $this->callInterceptor(new ObjectAccessorNode($captured), InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                     }
                     $key = null;
                     $isArray = $allowArray;
@@ -755,7 +749,7 @@ class Sequencer
                     $text .=  $this->source->source[$this->splitter->index - 1];
                     $node = $node ?? new ObjectAccessorNode();
                     if ($potentialAccessor ?? $captured) {
-                        $node->addChild(new TextNode($potentialAccessor . $captured));
+                        $node->addChild($this->callInterceptor(new TextNode($potentialAccessor . $captured), InterceptorInterface::INTERCEPT_TEXT));
                     }
 
                     $potentialAccessor = $namespace = $method = $key = null;
@@ -778,7 +772,7 @@ class Sequencer
                     $childNodeToAdd = $node;
                     $node = $this->resolver->createViewHelperInstance($namespace, $method);
                     $arguments = $node->getArguments();
-                    $node = $this->callInterceptor($node, self::INTERCEPT_OPENING_VIEWHELPER);
+                    $node = $this->callInterceptor($node, InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER);
 
                     $this->sequenceArrayNode($arguments);
                     $arguments->setRenderingContext($this->renderingContext)->validate();
@@ -786,7 +780,7 @@ class Sequencer
 
                     if ($childNodeToAdd) {
                         if ($childNodeToAdd instanceof ObjectAccessorNode) {
-                            $childNodeToAdd = $this->callInterceptor($childNodeToAdd, self::INTERCEPT_OBJECTACCESSOR);
+                            $childNodeToAdd = $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
                         }
                         $node->addChild($childNodeToAdd);
                     }
@@ -800,7 +794,7 @@ class Sequencer
 
                     if (--$ignoredEndingBraces >= 0) {
                         if ($captured !== null) {
-                            $node->addChild(new TextNode('{' . $captured . '}'));
+                            $node->addChild($this->callInterceptor(new TextNode('{' . $captured . '}'), InterceptorInterface::INTERCEPT_TEXT));
                         }
                         break;
                     }
@@ -812,14 +806,17 @@ class Sequencer
 
                     $isArray = $allowArray && ($isArray ?: ($hasColon && !$hasPass && !$callDetected));
                     $potentialAccessor .= $captured;
-                    $interceptionPoint = self::INTERCEPT_OBJECTACCESSOR;
+                    $interceptionPoint = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
 
                     // Decision: if we did not detect a ViewHelper we match the *entire* expression, from the cached
                     // starting index, to see if it matches a known type of expression. If it does, we must return the
                     // appropriate type of ExpressionNode.
                     if ($isArray) {
                         if ($captured !== null) {
-                            $arguments[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
+                            $arguments[$key ?? $captured] = is_numeric($captured) ? $captured + 0 : $this->callInterceptor(
+                                new ObjectAccessorNode($captured),
+                                InterceptorInterface::INTERCEPT_OBJECTACCESSOR
+                            );
                         }
                         $this->splitter->switch($restore);
                         return $arguments->toArrayNode();
@@ -828,7 +825,7 @@ class Sequencer
                         // in which case there is no further syntax to come.
                         $arguments->validate();
                         $node = $node->onOpen($this->renderingContext)->onClose($this->renderingContext);
-                        $interceptionPoint = self::INTERCEPT_SELFCLOSING_VIEWHELPER;
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } elseif ($this->splitter->context->context === Context::CONTEXT_PROTECTED || ($hasWhitespace && !$callDetected && !$hasPass)) {
                         // In order to qualify for potentially being an expression, the entire inline node must contain
                         // whitespace, must not contain parenthesis, must not contain a colon and must not contain an
@@ -839,7 +836,7 @@ class Sequencer
                             foreach ($this->renderingContext->getExpressionNodeTypes() as $expressionNodeTypeClassName) {
                                 if ($expressionNodeTypeClassName::matches($parts)) {
                                     $childNodeToAdd = new $expressionNodeTypeClassName($parts);
-                                    $childNodeToAdd = $this->callInterceptor($childNodeToAdd, self::INTERCEPT_EXPRESSION);
+                                    $childNodeToAdd = $this->callInterceptor($childNodeToAdd, InterceptorInterface::INTERCEPT_EXPRESSION);
                                     break;
                                 }
                             }
@@ -847,16 +844,19 @@ class Sequencer
                             // ErrorHandler will either return a string or throw the exception anew, depending on the
                             // exact implementation of ErrorHandlerInterface. When it returns a string we use that as
                             // text content of a new TextNode so the message is output as part of the rendered result.
-                            $childNodeToAdd = new TextNode(
-                                $this->renderingContext->getErrorHandler()->handleExpressionError($exception)
+                            $childNodeToAdd = $this->callInterceptor(
+                                new TextNode(
+                                    $this->renderingContext->getErrorHandler()->handleExpressionError($exception)
+                                ),
+                                InterceptorInterface::INTERCEPT_TEXT
                             );
                         }
-                        $node = $childNodeToAdd ?? ($node ?? new RootNode())->addChild(new TextNode($text));
+                        $node = $childNodeToAdd ?? ($node ?? new RootNode())->addChild($this->callInterceptor(new TextNode($text), InterceptorInterface::INTERCEPT_TEXT));
                         return $node;
                     } elseif (!$hasPass && !$callDetected) {
                         $node = $node ?? new ObjectAccessorNode();
                         if ($potentialAccessor !== '') {
-                            $node->addChild(new TextNode((string) $potentialAccessor));
+                            $node->addChild($this->callInterceptor(new TextNode((string) $potentialAccessor), InterceptorInterface::INTERCEPT_TEXT));
                         }
                     } elseif ($hasPass && $this->resolver->isAliasRegistered((string) $potentialAccessor)) {
                         // Fourth priority check is for a pass to a ViewHelper alias, e.g. "{value | raw}" in which case
@@ -869,7 +869,7 @@ class Sequencer
                         $node->onClose(
                             $this->renderingContext
                         );
-                        $interceptionPoint = self::INTERCEPT_SELFCLOSING_VIEWHELPER;
+                        $interceptionPoint = InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER;
                     } else {
                         # TODO: should this be an error case, or should it result in a TextNode?
                         throw $this->createErrorAtPosition(
@@ -904,7 +904,7 @@ class Sequencer
         $this->sequence->next();
         foreach ($this->sequence as $symbol => $captured) {
             if ($captured !== null) {
-                $node->addChild(new TextNode($captured));
+                $node->addChild($this->callInterceptor(new TextNode($captured), InterceptorInterface::INTERCEPT_TEXT));
             }
             switch ($symbol) {
                 case self::BYTE_INLINE:
@@ -961,6 +961,7 @@ class Sequencer
         $itemCount = -1;
         $countedEscapes = 0;
         $escapingEnabledBackup = $this->escapingEnabled;
+        $this->escapingEnabled = false;
 
         $restore = $this->splitter->switch($this->contexts->array);
         $this->sequence->next();
@@ -1044,7 +1045,9 @@ class Sequencer
                         }
                         $value = is_numeric($captured) ? $captured + 0 : new ObjectAccessorNode($captured);
                     }
-                    if ($value !== null) {
+                    if ($value instanceof ObjectAccessorNode) {
+                        $array[$key] = $this->callInterceptor($value, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
+                    } elseif ($value !== null) {
                         $array[$key] = $value;
                     }
                     $keyOrValue = null;
@@ -1076,11 +1079,16 @@ class Sequencer
                     $key = $key ?? ($numeric ? ++$itemCount : $captured);
                     if (isset($captured, $key)) {
                         if (is_numeric($captured)) {
-                            $array[$key] = $captured + 0;
+                            $nodeOrValue = $captured + 0;
                         } elseif ($keyOrValue !== null) {
-                            $array[$key] = $keyOrValue->flatten();
+                            $nodeOrValue = $keyOrValue->flatten();
                         } else {
-                            $array[$key] = new ObjectAccessorNode((string) ($captured ?? $key));
+                            $nodeOrValue = new ObjectAccessorNode((string) ($captured ?? $key));
+                        }
+                        if ($nodeOrValue instanceof ObjectAccessorNode) {
+                            $array[$key] = $this->callInterceptor($nodeOrValue, InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
+                        } else {
+                            $array[$key] = $nodeOrValue;
                         }
                     }
                     if (!$numeric && isset($key, $definitions) && !isset($definitions[$key])) {
@@ -1135,7 +1143,7 @@ class Sequencer
                         $this->sequenceArrayNode($child, true);
                         $node->addChild($child);
                     } else {
-                        $node->addChild(new TextNode($captured . '['));
+                        $node->addChild($this->callInterceptor(new TextNode($captured . '['), InterceptorInterface::INTERCEPT_TEXT));
                     }
                     break;
 
@@ -1146,6 +1154,7 @@ class Sequencer
                     // expression as next sibling and continue the loop.
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
+                        $childNode = $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChild($childNode);
                     }
 
@@ -1157,10 +1166,10 @@ class Sequencer
                     ++$countedEscapes;
                     if ($next === $startingByte || $next === self::BYTE_BACKSLASH) {
                         if ($captured !== null) {
-                            $node->addChild(new TextNode($captured));
+                            $node->addChild($this->callInterceptor(new TextNode($captured), InterceptorInterface::INTERCEPT_TEXT));
                         }
                     } else {
-                        $node->addChild(new TextNode($captured . str_repeat('\\', $countedEscapes)));
+                        $node->addChild($this->callInterceptor(new TextNode($captured . str_repeat('\\', $countedEscapes)), InterceptorInterface::INTERCEPT_TEXT));
                         $countedEscapes = 0;
                     }
                     break;
@@ -1173,12 +1182,14 @@ class Sequencer
                 case self::BYTE_BACKTICK:
                     if ($symbol !== $startingByte || $countedEscapes !== $leadingEscapes) {
                         $childNode = new TextNode($captured . chr($symbol));
+                        $childNode = $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChild($childNode);
                         $countedEscapes = 0; // If number of escapes do not match expected, reset the counter
                         break;
                     }
                     if ($captured !== null) {
                         $childNode = new TextNode($captured);
+                        $childNode = $this->callInterceptor($childNode, InterceptorInterface::INTERCEPT_TEXT);
                         $node->addChild($childNode);
                     }
                     $this->splitter->switch($contextToRestore);
@@ -1215,23 +1226,23 @@ class Sequencer
      */
     protected function callInterceptor(ComponentInterface $node, int $interceptorPosition): ComponentInterface
     {
+        foreach ($this->configuration->getInterceptors($interceptorPosition) ?? [] as $interceptor) {
+            $node = $interceptor->process($node, $interceptorPosition, $this->getComponent());
+        }
+
         if (!$this->escapingEnabled) {
-            // Escaping is either explicitly disabled (for example, we may be parsing arguments) or there are
-            // at least 2 preceding ViewHelpers which have disabled child escaping. The reason for checking >1
-            // instead of >0 is because escaping must happen if the value is decremented to zero, which is not
-            // possible unless the value is >1 to begin with. This early return avoids entering the switch and
-            // conditions below when they are simply not necessary to consult.
+            // Escaping is explicitly disabled, avoid calling the escaping logic below.
             return $node;
         }
 
         switch ($interceptorPosition) {
-            case self::INTERCEPT_OPENING_VIEWHELPER:
+            case InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER:
                 if (!$node->isChildrenEscapingEnabled()) {
                     ++$this->viewHelperNodesWhichDisableTheInterceptor;
                 }
                 break;
 
-            case self::INTERCEPT_CLOSING_VIEWHELPER:
+            case InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER:
                 if (!$node->isChildrenEscapingEnabled()) {
                     --$this->viewHelperNodesWhichDisableTheInterceptor;
                 }
@@ -1240,14 +1251,14 @@ class Sequencer
                 }
                 break;
 
-            case self::INTERCEPT_SELFCLOSING_VIEWHELPER:
+            case InterceptorInterface::INTERCEPT_SELFCLOSING_VIEWHELPER:
                 if ($this->viewHelperNodesWhichDisableTheInterceptor === 0 && $node->isOutputEscapingEnabled()) {
                     $node = new EscapingNode($node);
                 }
                 break;
 
-            case self::INTERCEPT_OBJECTACCESSOR:
-            case self::INTERCEPT_EXPRESSION:
+            case InterceptorInterface::INTERCEPT_OBJECTACCESSOR:
+            case InterceptorInterface::INTERCEPT_EXPRESSION:
                 if ($this->viewHelperNodesWhichDisableTheInterceptor === 0) {
                     $node = new EscapingNode($node);
                 }

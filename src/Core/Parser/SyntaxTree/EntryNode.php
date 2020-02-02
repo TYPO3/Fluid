@@ -11,6 +11,7 @@ use TYPO3Fluid\Fluid\Component\AbstractComponent;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Component\EmbeddedComponentInterface;
+use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\ViewHelpers\ExtendViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
@@ -36,7 +37,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\ParameterViewHelper;
  * of another EntryNode to any nesting depth by
  * using dotted path as argument for getNamedChild).
  */
-class EntryNode extends AbstractComponent implements EmbeddedComponentInterface
+class EntryNode extends ParsingState implements EmbeddedComponentInterface
 {
     protected $escapeOutput = false;
 

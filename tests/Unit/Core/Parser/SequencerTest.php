@@ -1426,6 +1426,7 @@ class SequencerTest extends UnitTestCase
     public function featureToggleParsingOffThrowsPassthroughException()
     {
         $configuration = $this->getMockBuilder(Configuration::class)->getMock();
+        $configuration->method('getInterceptors')->willReturn([]);
         $sequencer = new Sequencer(
             $this->createContext(),
             new Contexts(),
@@ -1441,7 +1442,8 @@ class SequencerTest extends UnitTestCase
      */
     public function featureToggleEscapingOffSetsFeatureStateAvoidsOutput()
     {
-        $configuration = $this->getMockBuilder(Configuration::class)->setMethods(['setFeatureState'])->getMock();
+        $configuration = $this->getMockBuilder(Configuration::class)->setMethods(['setFeatureState', 'getInterceptors'])->getMock();
+        $configuration->method('getInterceptors')->willReturn([]);
         $sequencer = new Sequencer(
             $this->createContext(),
             new Contexts(),

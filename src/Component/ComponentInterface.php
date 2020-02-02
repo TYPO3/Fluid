@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Component;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -16,7 +17,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  * Implemented by any class that is capable of being rendered
  * in Fluid with or without arguments.
  */
-interface ComponentInterface
+interface ComponentInterface extends NodeInterface
 {
     public function onOpen(RenderingContextInterface $renderingContext): self;
 
