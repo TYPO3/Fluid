@@ -513,7 +513,7 @@ class Sequencer
                             // hand equivalent of having written `attr="{attr}"` in the Fluid template.
                             $key = $captured;
                         }
-                    } elseif ($namespace !== null || (!isset($namespace, $method) && $this->resolver->isAliasRegistered((string)$captured))) {
+                    } elseif ($namespace !== null || (!isset($method) && $this->resolver->isAliasRegistered((string)$captured))) {
                         $method = $captured;
                         $viewHelperNode = $this->resolver->createViewHelperInstance($namespace, $method);
                         $arguments = $viewHelperNode->getArguments();

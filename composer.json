@@ -9,7 +9,8 @@
 		"phpunit/phpunit": "^8.1",
 		"mikey179/vfsstream": "^1.6",
 		"squizlabs/php_codesniffer": "^2.7",
-		"php-coveralls/php-coveralls": "^2.1"
+		"php-coveralls/php-coveralls": "^2.1",
+		"phpstan/phpstan": "^0.12.8"
 	},
 	"autoload": {
 		"psr-4": {
