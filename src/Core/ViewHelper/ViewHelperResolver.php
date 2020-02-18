@@ -449,6 +449,7 @@ class ViewHelperResolver
                 $node->setFile($atomFile);
                 $node->setName($namespace . ':' . $viewHelperShortName);
                 $node->setArguments(clone $this->renderingContext->getTemplateParser()->parseFile($atomFile)->getArguments());
+                return $node;
             }
         }
         $className = $this->resolveViewHelperClassName($namespace, $viewHelperShortName);
