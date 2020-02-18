@@ -48,7 +48,7 @@ class ExtendViewHelper extends AbstractViewHelper implements TransparentComponen
 
     public function evaluate(RenderingContextInterface $renderingContext)
     {
-        return null;
+        return $this->evaluateChildNodes($renderingContext);
     }
 
     public function onOpen(RenderingContextInterface $renderingContext): ComponentInterface

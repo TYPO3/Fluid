@@ -26,7 +26,7 @@ class ExtendViewHelperTest extends ViewHelperBaseTestCase
         $resolver->expects($this->atLeastOnce())->method('resolveAtom')->with('foo', 'bar')->willReturn($atom);
         $context->setViewHelperResolver($resolver);
         return [
-            'returns null on execution without child nodes' => [null, $context, ['atom' => 'foo:bar']],
+            'returns atom child node execution result on execution' => ['foobar', $context, ['atom' => 'foo:bar']],
         ];
     }
 }
