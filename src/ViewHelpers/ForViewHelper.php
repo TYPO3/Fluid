@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
  * Loop ViewHelper which can be used to iterate over arrays.
- * Implements what a basic :php:`foreach()` does.
+ * Implements what a basic PHP ``foreach()`` does.
  *
  * Examples
  * ========

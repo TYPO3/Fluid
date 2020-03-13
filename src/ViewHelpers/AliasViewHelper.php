@@ -14,8 +14,12 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  * Declares new variables which are aliases of other variables.
  * Takes a "map"-Parameter which is an associative array which defines the shorthand mapping.
  *
- * The variables are only declared inside the :html:`<f:alias>...</f:alias>` tag. After the
+ * The variables are only declared inside the ``<f:alias>...</f:alias>`` tag. After the
  * closing tag, all declared variables are removed again.
+ *
+ * Using this ViewHelper can be a sign of weak architecture. If you end up
+ * using it extensively you might want to fine-tune your "view model" (the
+ * data you assign to the view).
  *
  * Examples
  * ========
@@ -46,10 +50,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *
  * Depending on ``{foo.bar.baz}``.
  *
- * .. note::
- *    Using this ViewHelper can be a sign of weak architecture. If you end up
- *    using it extensively you might want to fine-tune your "view model" (the
- *    data you assign to the view).
  *
  * @api
  */

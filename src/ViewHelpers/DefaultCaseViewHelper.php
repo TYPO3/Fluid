@@ -12,7 +12,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * A ViewHelper which specifies the "default" case when used within the :ref:`SwitchViewHelper <typo3fluid-fluid-switch>`.
+ * A ViewHelper which specifies the "default" case when used within the ``f:switch`` ViewHelper.
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  *

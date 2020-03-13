@@ -18,6 +18,10 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *
  * The groupBy argument also supports property paths.
  *
+ * Using this ViewHelper can be a sign of weak architecture. If you end up
+ * using it extensively you might want to fine-tune your "view model" (the
+ * data you assign to the view).
+ *
  * Examples
  * ========
  *
@@ -78,11 +82,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *             </ul>
  *         </li>
  *     </ul>
- *
- * .. note::
- *    Using this ViewHelper can be a sign of weak architecture. If you end up
- *    using it extensively you might want to fine-tune your "view model" (the
- *    data you assign to the view).
  *
  * @api
  */

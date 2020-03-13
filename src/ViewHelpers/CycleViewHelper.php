@@ -15,12 +15,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  * This ViewHelper cycles through the specified values.
  * This can be often used to specify CSS classes for example.
  *
- * .. note::
- *    To achieve the "zebra class" effect in a loop you can also use the
- *    "iteration" argument of the **for** ViewHelper.
+ * To achieve the "zebra class" effect in a loop you can also use the
+ * "iteration" argument of the **for** ViewHelper.
  *
  * Examples
  * ========
+ *
+ * These examples could also be achieved using the "iteration" argument
+ * of the ForViewHelper.
  *
  * Simple
  * ------
@@ -58,10 +60,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  *         <li class="odd">3</li>
  *         <li class="even">4</li>
  *     </ul>
- *
- * .. note::
- *    The above examples could also be achieved using the "iteration" argument
- *    of the ForViewHelper.
  *
  * @api
  */

@@ -12,7 +12,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Case ViewHelper that is only usable within the :ref:`SwitchViewHelper <typo3fluid-fluid-switch>`.
+ * Case ViewHelper that is only usable within the ``f:switch`` ViewHelper.
  *
  * @see \TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper
  *
