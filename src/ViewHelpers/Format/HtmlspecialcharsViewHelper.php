@@ -11,7 +11,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Applies :php:`htmlspecialchars()` escaping to a value.
+ * Applies PHP ``htmlspecialchars()`` escaping to a value.
  *
  * See http://www.php.net/manual/function.htmlspecialchars.php
  *

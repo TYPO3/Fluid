@@ -12,10 +12,15 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 /**
  * This ViewHelper prevents rendering of any content inside the tag.
  *
- * .. note::
- *    Contents of the comment will still be **parsed** thus throwing an
- *    Exception if it contains syntax errors. You can put child nodes in
- *    CDATA tags to avoid this.
+ * Contents of the comment will still be **parsed** thus throwing an
+ * Exception if it contains syntax errors. You can put child nodes in
+ * CDATA tags to avoid this.
+ *
+ * Using this ViewHelper won't have a notable effect on performance,
+ * especially once the template is parsed.  However it can lead to reduced
+ * readability. You can use layouts and partials to split a large template
+ * into smaller parts. Using self-descriptive names for the partials can
+ * make comments redundant.
  *
  * Examples
  * ========
@@ -49,13 +54,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  * Output:
  *
  * Will be nothing.
- *
- * .. note::
- *    Using this ViewHelper won't have a notable effect on performance,
- *    especially once the template is parsed.  However it can lead to reduced
- *    readability. You can use layouts and partials to split a large template
- *    into smaller parts. Using self-descriptive names for the partials can
- *    make comments redundant.
  *
  * @api
  */

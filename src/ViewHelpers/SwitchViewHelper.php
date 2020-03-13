@@ -13,10 +13,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
  * Switch ViewHelper which can be used to render content depending on a value or expression.
- * Implements what a basic :php:`switch()` does.
+ * Implements what a basic PHP ``switch()`` does.
  *
  * An optional default case can be specified which is rendered if none of the
- * :ref:`f:case <ypo3fluid-fluid-case>` conditions matches.
+ * ``case`` conditions matches.
+ *
+ * Using this ViewHelper can be a sign of weak architecture. If you end up using it extensively
+ * you might want to consider restructuring your controllers/actions and/or use partials and sections.
+ * E.g. the above example could be achieved with :html:`<f:render partial="title.{person.gender}" />`
+ * and the partials "title.male.html", "title.female.html", ...
+ * Depending on the scenario this can be easier to extend and possibly contains less duplication.
  *
  * Examples
  * ========
@@ -35,13 +41,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * Output::
  *
  *     "Mr.", "Mrs." or "Mr. / Mrs." (depending on the value of {person.gender})
- *
- * .. note::
- *    Using this ViewHelper can be a sign of weak architecture. If you end up using it extensively
- *    you might want to consider restructuring your controllers/actions and/or use partials and sections.
- *    E.g. the above example could be achieved with :html:`<f:render partial="title.{person.gender}" />`
- *    and the partials "title.male.html", "title.female.html", ...
- *    Depending on the scenario this can be easier to extend and possibly contains less duplication.
  *
  * @api
  */
