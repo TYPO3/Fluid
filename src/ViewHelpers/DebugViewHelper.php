@@ -12,6 +12,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
+ * This ViewHelper is only meant to be used during development.
+ *
  * Examples
  * ========
  *
@@ -36,9 +38,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  * Output::
  *
  *     the type or class name of {object}
- *
- * .. note::
- *    This ViewHelper is only meant to be used during development.
  *
  * @api
  */

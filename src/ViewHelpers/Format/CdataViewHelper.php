@@ -13,9 +13,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
 /**
  * Outputs an argument/value without any escaping and wraps it with CDATA tags.
  *
- * .. danger::
- *    PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
- *    as the output is NOT SANITIZED!
+ * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+ * as the output is NOT SANITIZED!
  *
  * Examples
  * ========

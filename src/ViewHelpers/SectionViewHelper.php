@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
- * A ViewHelper to declare sections in templates for later use with e.g. the :ref:`RenderViewHelper <typo3fluid-fluid-render>`.
+ * A ViewHelper to declare sections in templates for later use with e.g. the ``f:render`` ViewHelper.
  *
  * Examples
  * ========

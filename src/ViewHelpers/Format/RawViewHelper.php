@@ -16,9 +16,8 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  * Outputs an argument/value without any escaping. Is normally used to output
  * an ObjectAccessor which should not be escaped, but output as-is.
  *
- * .. danger::
- *    PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
- *    as the output is NOT SANITIZED!
+ * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
+ * as the output is NOT SANITIZED!
  *
  * Examples
  * ========

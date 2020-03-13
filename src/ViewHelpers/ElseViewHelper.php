@@ -11,8 +11,8 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Else-Branch of a condition. Only has an effect inside of "If".
- * See the :ref:`if <typo3fluid-fluid-if>` for documentation.
+ * Else-Branch of a condition. Only has an effect inside of ``f:if``.
+ * See the ``f:if`` ViewHelper for documentation.
  *
  * Examples
  * ========
