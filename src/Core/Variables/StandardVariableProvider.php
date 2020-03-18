@@ -344,7 +344,7 @@ class StandardVariableProvider implements VariableProviderInterface
         if (is_object($subject)) {
             $upperCasePropertyName = ucfirst($propertyName);
             $getter = 'get' . $upperCasePropertyName;
-            if (is_callable([$subject, $getter])) {
+            if (method_exists($subject, $getter)) {
                 return self::ACCESSOR_GETTER;
             }
             if ($this->isExtractableThroughAsserter($subject, $propertyName)) {
