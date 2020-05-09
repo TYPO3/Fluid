@@ -2,6 +2,11 @@ dist: trusty
 
 language: php
 
+os:
+  - linux
+  - windows
+  - osx
+
 branches:
   only:
     - master
