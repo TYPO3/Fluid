@@ -13,6 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AtomNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -40,7 +41,7 @@ class AtomNodeTest extends UnitTestCase
         $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['parseFile'])->disableOriginalConstructor()->getMock();
         $parser->expects($this->once())->method('parseFile')->willReturn($atom);
         /** @var VariableProviderInterface|MockObject $provider */
-        $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
+        $provider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['getScopeCopy'])->getMock();
         $provider->expects($this->once())->method('getScopeCopy')->with(['argumentName' => 'argumentValue']);
         $context->setVariableProvider($provider);
         $context->setTemplateParser($parser);

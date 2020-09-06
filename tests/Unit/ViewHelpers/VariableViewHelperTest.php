@@ -8,6 +8,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 
@@ -19,7 +20,7 @@ class VariableViewHelperTest extends ViewHelperBaseTestCase
     public function getStandardTestValues(): array
     {
         $context = new RenderingContextFixture();
-        $variableProvider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
+        $variableProvider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['add'])->getMock();
         $variableProvider->expects($this->atLeastOnce())->method('add')->with('foo');
         $context->setVariableProvider($variableProvider);
         return [
