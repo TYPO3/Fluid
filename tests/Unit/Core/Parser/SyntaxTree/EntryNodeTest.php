@@ -10,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Component\Argument\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EntryNode;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -31,7 +32,7 @@ class EntryNodeTest extends UnitTestCase
         $subject = new EntryNode();
         $context = new RenderingContextFixture();
         /** @var VariableProviderInterface|MockObject $provider */
-        $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
+        $provider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['getScopeCopy'])->getMock();
         $provider->expects($this->once())->method('getScopeCopy')->with(['argumentName' => 'argumentValue']);
         $context->setVariableProvider($provider);
         $subject->getArguments()['argumentName'] = 'argumentValue';

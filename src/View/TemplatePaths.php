@@ -463,7 +463,7 @@ class TemplatePaths
      */
     protected function ensureAbsolutePath(string $path)
     {
-        return ((!empty($path) && $path{0} !== '/' && $path{1} !== ':') ? $this->sanitizePath(realpath($path)) : $path);
+        return ((!empty($path) && $path[0] !== '/' && $path[1] !== ':') ? $this->sanitizePath(realpath($path)) : $path);
     }
 
     /**

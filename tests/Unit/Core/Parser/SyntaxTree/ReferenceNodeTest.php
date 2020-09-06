@@ -13,6 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ReferenceNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -33,7 +34,7 @@ class ReferenceNodeTest extends UnitTestCase
         $root = (new RootNode())->addChild((new EntryNode())->setName('test')->addChild(new ObjectAccessorNode('test')));
         $renderer = $this->getMockBuilder(FluidRenderer::class)->setMethods(['getComponentBeingRendered'])->setConstructorArgs([$context])->getMock();
         $renderer->expects($this->once())->method('getComponentBeingRendered')->willReturn($root);
-        $provider = $this->getMockBuilder(VariableProviderInterface::class)->getMockForAbstractClass();
+        $provider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['getScopeCopy'])->getMock();
         $provider->expects($this->once())->method('getScopeCopy')->with(['test' => 'test']);
         $context->setVariableProvider($provider);
         $context->setRenderer($renderer);

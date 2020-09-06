@@ -124,7 +124,7 @@ class FluidCommandLine {
                 /** @var \TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface $variableProvider */
                 $variableProvider = new $variableProviderClassName();
                 $variableProvider->setSource($source);
-            } elseif (($variablesReference{0} === '{' && substr($variablesReference, -1) === '}')
+            } elseif (($variablesReference[0] === '{' && substr($variablesReference, -1) === '}')
                 || file_exists($variablesReference)
                 || strpos($variablesReference, ':/') !== FALSE
             ) {
