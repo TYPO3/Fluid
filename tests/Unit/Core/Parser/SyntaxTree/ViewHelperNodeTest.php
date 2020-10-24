@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
@@ -77,50 +76,5 @@ class ViewHelperNodeTest extends UnitTestCase
         $node = new ViewHelperNode($this->renderingContext, 'f', 'vh', ['foo' => 'bar'], new ParsingState());
         $result = $node->evaluate($this->renderingContext);
         $this->assertEquals('test', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testThrowsExceptionOnMissingRequiredArgument()
-    {
-        $this->setExpectedException(ParserException::class);
-        new ViewHelperNode($this->renderingContext, 'f', 'vh', ['notfoo' => false], new ParsingState());
-    }
-
-    /**
-     * @test
-     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-     */
-    public function abortIfRequiredArgumentsAreMissingThrowsException()
-    {
-        $expected = [
-            new ArgumentDefinition('firstArgument', 'string', '', false),
-            new ArgumentDefinition('secondArgument', 'string', '', true)
-        ];
-
-        $templateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
-
-        $templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, []);
-    }
-
-    /**
-     * @test
-     */
-    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists()
-    {
-        $expectedArguments = [
-            new ArgumentDefinition('name1', 'string', 'desc', false),
-            new ArgumentDefinition('name2', 'string', 'desc', true)
-        ];
-        $actualArguments = [
-            'name2' => 'bla'
-        ];
-
-        $mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
-
-        $mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
-        // dummy assertion to avoid "did not perform any assertions" error
-        $this->assertTrue(true);
     }
 }

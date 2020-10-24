@@ -35,10 +35,10 @@ class CommandTest extends BaseTestCase
         $command = sprintf($argumentString, $bin);
         $output = shell_exec($command);
         foreach ($mustContain as $mustContainString) {
-            $this->assertContains($mustContainString, $output);
+            $this->assertTrue(strpos($output, $mustContainString) !== false, $command);
         }
         foreach ($mustNotContain as $mustNotContainString) {
-            $this->assertNotContains($mustNotContainString, $output);
+            $this->assertTrue(strpos($output, $mustNotContainString) === false, $command);
         }
     }
 

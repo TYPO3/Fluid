@@ -13,7 +13,9 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
@@ -22,10 +24,12 @@ use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\PostParseFacetViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
 /**
  * Testcase for TemplateParser.
@@ -236,6 +240,10 @@ class TemplateParserTest extends UnitTestCase
             ['parseArguments', 'initializeViewHelperAndAddItToStack']
         );
         $context = new RenderingContextFixture();
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['isNamespaceValid', 'resolveViewHelperClassName'])->getMock();
+        $resolver->expects($this->once())->method('isNamespaceValid')->with('namespaceIdentifier')->willReturn(true);
+        $resolver->expects($this->once())->method('resolveViewHelperClassName')->with('namespaceIdentifier')->willReturn(CommentViewHelper::class);
+        $context->setViewHelperResolver($resolver);
         $templateParser->setRenderingContext($context);
         $templateParser->expects($this->once())->method('parseArguments')
             ->with(['arguments'])->will($this->returnValue(['parsedArguments']));
@@ -254,10 +262,19 @@ class TemplateParserTest extends UnitTestCase
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($this->getMock(NodeInterface::class)));
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($this->getMock(NodeInterface::class)));
 
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['isNamespaceValid', 'isNamespaceIgnored', 'resolveViewHelperClassName'])->getMock();
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->with('')->willReturn(false);
+        $resolver->expects($this->once())->method('isNamespaceValid')->with('')->willReturn(true);
+        $resolver->expects($this->once())->method('resolveViewHelperClassName')->willReturn(new CommentViewHelper());
+
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+
         $templateParser = $this->getAccessibleMock(
             TemplateParser::class,
             ['parseArguments', 'initializeViewHelperAndAddItToStack']
         );
+        $templateParser->setRenderingContext($context);
         $node = $this->getMock(ViewHelperNode::class, ['dummy'], [], '', false);
         $templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue($node));
 
@@ -372,14 +389,15 @@ class TemplateParserTest extends UnitTestCase
             TemplateParser::class,
             ['recursiveArrayHandler', 'initializeViewHelperAndAddItToStack']
         );
+        $templateParser->setRenderingContext(new RenderingContextFixture());
         $templateParser->expects($this->at(0))->method('recursiveArrayHandler')
-            ->with('format: "H:i"')->will($this->returnValue(['format' => 'H:i']));
+            ->with('arguments: {0: \'foo\'}')->will($this->returnValue(['arguments' => ['foo']]));
         $templateParser->expects($this->at(1))->method('initializeViewHelperAndAddItToStack')
-            ->with($mockState, 'f', 'format.date', ['format' => 'H:i'])->will($this->returnValue(true));
+            ->with($mockState, 'f', 'format.printf', ['arguments' => ['foo']])->will($this->returnValue(true));
         $templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')
             ->with($mockState, 'f', 'debug', [])->will($this->returnValue(true));
 
-        $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.date(format: "H:i")', '');
+        $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.printf(arguments: {0: \'foo\'})', '');
     }
 
     /**
@@ -490,10 +508,15 @@ class TemplateParserTest extends UnitTestCase
      */
     public function parseArgumentsWorksAsExpected($argumentsString, array $expected)
     {
+        $context = new RenderingContextFixture();
+        $viewHelper = $this->getMockBuilder(CommentViewHelper::class)->setMethods(['validateAdditionalArguments'])->getMock();
+        $viewHelper->expects($this->once())->method('validateAdditionalArguments');
+
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
+        $templateParser->setRenderingContext($context);
         $templateParser->expects($this->any())->method('buildArgumentObjectTree')->will($this->returnArgument(0));
 
-        $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString));
+        $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString, $viewHelper));
     }
 
     /**
@@ -792,5 +815,73 @@ class TemplateParserTest extends UnitTestCase
                 '\TYPO3Fluid\Fluid\Core\Parser\Exception'
             ],
         ];
+    }
+
+    /**
+     * @test
+     */
+    public function abortIfRequiredArgumentsAreMissingThrowsException()
+    {
+        $this->setExpectedException(Exception::class);
+
+        $expected = [
+            'firstArgument' => new ArgumentDefinition('firstArgument', 'string', '', false),
+            'secondArgument' => new ArgumentDefinition('secondArgument', 'string', '', true)
+        ];
+
+        $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
+
+        $templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, []);
+    }
+
+    /**
+     * @test
+     */
+    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists()
+    {
+        $expectedArguments = [
+            new ArgumentDefinition('name1', 'string', 'desc', false),
+            new ArgumentDefinition('name2', 'string', 'desc', true)
+        ];
+        $actualArguments = [
+            'name2' => 'bla'
+        ];
+
+        $mockTemplateParser = $this->getAccessibleMock(TemplateParser::class);
+
+        $mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
+        // dummy assertion to avoid "did not perform any assertions" error
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
+    public function booleanArgumentsMustBeConvertedIntoBooleanNodes()
+    {
+        $argumentDefinitions = [
+            'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),
+            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false)
+        ];
+
+        $viewHelper = $this->getMockBuilder(CommentViewHelper::class)->getMock();
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['getArgumentDefinitionsForViewHelper'])->getMock();
+        $resolver->expects($this->once())->method('getArgumentDefinitionsForViewHelper')->with($viewHelper)->willReturn($argumentDefinitions);
+
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+
+        $mockTemplateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
+        $mockTemplateParser->setRenderingContext($context);
+
+        $parsedArguments = $mockTemplateParser->_call('parseArguments', 'var1="1" var2="0"}', $viewHelper);
+
+        $this->assertEquals(
+            [
+                'var1' => new BooleanNode(new NumericNode(1)),
+                'var2' => new BooleanNode(new NumericNode(0))
+            ],
+            $parsedArguments
+        );
     }
 }
