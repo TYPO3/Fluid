@@ -6,7 +6,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -62,8 +61,6 @@ class ViewHelperNode extends AbstractNode
         // Note: RenderingContext required here though replaced later. See https://github.com/TYPO3Fluid/Fluid/pull/93
         $this->uninitializedViewHelper->setRenderingContext($renderingContext);
         $this->argumentDefinitions = $resolver->getArgumentDefinitionsForViewHelper($this->uninitializedViewHelper);
-        $this->rewriteBooleanNodesInArgumentsObjectTree($this->argumentDefinitions, $this->arguments);
-        $this->validateArguments($this->argumentDefinitions, $this->arguments);
     }
 
     /**
@@ -151,57 +148,5 @@ class ViewHelperNode extends AbstractNode
     public function evaluate(RenderingContextInterface $renderingContext)
     {
         return $renderingContext->getViewHelperInvoker()->invoke($this->uninitializedViewHelper, $this->arguments, $renderingContext);
-    }
-
-    /**
-     * Wraps the argument tree, if a node is boolean, into a Boolean syntax tree node
-     *
-     * @param ArgumentDefinition[] $argumentDefinitions the argument definitions, key is the argument name, value is the ArgumentDefinition object
-     * @param NodeInterface[] $argumentsObjectTree the arguments syntax tree, key is the argument name, value is an AbstractNode
-     * @return void
-     */
-    protected function rewriteBooleanNodesInArgumentsObjectTree($argumentDefinitions, &$argumentsObjectTree)
-    {
-        /** @var $argumentDefinition ArgumentDefinition */
-        foreach ($argumentDefinitions as $argumentName => $argumentDefinition) {
-            if (($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool')
-                 && isset($argumentsObjectTree[$argumentName])) {
-                $argumentsObjectTree[$argumentName] = new BooleanNode($argumentsObjectTree[$argumentName]);
-            }
-        }
-    }
-
-    /**
-     * @param ArgumentDefinition[] $argumentDefinitions
-     * @param NodeInterface[] $argumentsObjectTree
-     * @throws Exception
-     */
-    protected function validateArguments(array $argumentDefinitions, array $argumentsObjectTree)
-    {
-        $additionalArguments = [];
-        foreach ($argumentsObjectTree as $argumentName => $value) {
-            if (!array_key_exists($argumentName, $argumentDefinitions)) {
-                $additionalArguments[$argumentName] = $value;
-            }
-        }
-        $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $argumentsObjectTree);
-        $this->uninitializedViewHelper->validateAdditionalArguments($additionalArguments);
-    }
-
-    /**
-     * Throw an exception if required arguments are missing
-     *
-     * @param ArgumentDefinition[] $expectedArguments Array of all expected arguments
-     * @param NodeInterface[] $actualArguments Actual arguments
-     * @throws Exception
-     */
-    protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments)
-    {
-        $actualArgumentNames = array_keys($actualArguments);
-        foreach ($expectedArguments as $expectedArgument) {
-            if ($expectedArgument->isRequired() && !in_array($expectedArgument->getName(), $actualArgumentNames)) {
-                throw new Exception('Required argument "' . $expectedArgument->getName() . '" was not supplied.', 1237823699);
-            }
-        }
     }
 }
