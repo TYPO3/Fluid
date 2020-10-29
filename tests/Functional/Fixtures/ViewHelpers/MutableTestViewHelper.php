@@ -12,51 +12,72 @@ class MutableTestViewHelper extends AbstractViewHelper
         return $this->argumentDefinitions;
     }
 
-    public function setEscapeChildren($escapeChildren): void
+    public function setEscapeChildren($escapeChildren)
     {
         // Public method to force escape-children behavior which is normally only possible to set in class properties
         $this->escapeChildren = $escapeChildren;
     }
 
-    public function setEscapeOutput($escapeOutput): void
+    public function setEscapeOutput($escapeOutput)
     {
         // Public method to force escape-content behavior which is normally only possible to set in class properties
         $this->escapeOutput = $escapeOutput;
     }
 
-    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
+    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escaped = null)
     {
-        return parent::registerArgument($name, $type, $description, $required, $defaultValue);
+        return parent::registerArgument($name, $type, $description, $required, $defaultValue, $escaped);
     }
 
-    public function withContentArgument($escaped = null): self
-    {
-        // TODO: set escaping behavior if $escaped !== null
-        $clone = clone $this;
-        $clone->registerArgument('content', 'string', 'Content argument');
-        return $clone;
-    }
-
-    public function withOutputArgument($escaped = null): self
+    /**
+     * @param bool|null $escaped
+     * @return MutableTestViewHelper
+     */
+    public function withContentArgument($escaped = null)
     {
         // TODO: set escaping behavior if $escaped !== null
         $clone = clone $this;
-        $clone->registerArgument('output', 'string', 'Content argument', true);
+        $clone->registerArgument('content', 'string', 'Content argument', false, null, $escaped);
         return $clone;
     }
 
-    public function withEscapeChildren($escapeChildren): self
+    /**
+     * @param bool|null $escaped
+     * @return MutableTestViewHelper
+     */
+    public function withOutputArgument($escaped = null)
+    {
+        // TODO: set escaping behavior if $escaped !== null
+        $clone = clone $this;
+        $clone->registerArgument('output', 'string', 'Content argument', true, null, $escaped);
+        return $clone;
+    }
+
+    /**
+     * @param bool|null $escapeChildren
+     * @return MutableTestViewHelper
+     */
+    public function withEscapeChildren($escapeChildren)
     {
         $clone = clone $this;
         $clone->setEscapeChildren($escapeChildren);
         return $clone;
     }
 
-    public function withEscapeOutput($escapeOutput): self
+    /**
+     * @param bool|null $escapeOutput
+     * @return MutableTestViewHelper
+     */
+    public function withEscapeOutput($escapeOutput)
     {
         $clone = clone $this;
         $clone->setEscapeOutput($escapeOutput);
         return $clone;
+    }
+
+    public function resolveContentArgumentName()
+    {
+        return 'content';
     }
 
     public function render()

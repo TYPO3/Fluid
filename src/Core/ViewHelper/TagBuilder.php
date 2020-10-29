@@ -179,6 +179,7 @@ class TagBuilder
     {
         if ($escapeSpecialCharacters) {
             $attributeValue = htmlspecialchars($attributeValue);
+            $attributeName = htmlspecialchars($attributeName);
         }
         $this->attributes[$attributeName] = $attributeValue;
     }
