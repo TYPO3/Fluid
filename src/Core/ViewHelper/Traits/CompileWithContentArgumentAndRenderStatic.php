@@ -117,7 +117,7 @@ trait CompileWithContentArgumentAndRenderStatic
     /**
      * @return string
      */
-    protected function resolveContentArgumentName()
+    public function resolveContentArgumentName()
     {
         if (empty($this->contentArgumentName)) {
             $registeredArguments = call_user_func_array([$this, 'prepareArguments'], []);

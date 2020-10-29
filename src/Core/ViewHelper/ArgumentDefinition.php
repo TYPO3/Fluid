@@ -48,6 +48,21 @@ class ArgumentDefinition
     protected $defaultValue = null;
 
     /**
+     * Escaping instruction, in line with $this->escapeOutput / $this->escapeChildren on ViewHelpers.
+     *
+     * A value of NULL means "use default behavior" (which is to escape nodes contained in the value).
+     *
+     * A value of TRUE means "escape unless escaping is disabled" (e.g. if argument is used in a ViewHelper nested
+     * within f:format.raw which disables escaping, the argument will not be escaped).
+     *
+     * A value of FALSE means "never escape argument" (as in behavior of f:format.raw, which supports both passing
+     * argument as actual argument or as tag content, but wants neither to be escaped).
+     *
+     * @var bool|null
+     */
+    protected $escape = null;
+
+    /**
      * Constructor for this argument definition.
      *
      * @param string $name Name of argument
@@ -55,14 +70,16 @@ class ArgumentDefinition
      * @param string $description Description of argument
      * @param boolean $required TRUE if argument is required
      * @param mixed $defaultValue Default value
+     * @param bool|null $escape Whether or not argument is escaped, or uses default escaping behavior (see class var comment)
      */
-    public function __construct($name, $type, $description, $required, $defaultValue = null)
+    public function __construct($name, $type, $description, $required, $defaultValue = null, $escape = null)
     {
         $this->name = $name;
         $this->type = $type;
         $this->description = $description;
         $this->required = $required;
         $this->defaultValue = $defaultValue;
+        $this->escape = $escape;
     }
 
     /**
@@ -113,5 +130,13 @@ class ArgumentDefinition
     public function getDefaultValue()
     {
         return $this->defaultValue;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getEscape()
+    {
+        return $this->escape;
     }
 }
