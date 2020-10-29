@@ -391,7 +391,7 @@ class TemplateParserTest extends UnitTestCase
         );
         $templateParser->setRenderingContext(new RenderingContextFixture());
         $templateParser->expects($this->at(0))->method('recursiveArrayHandler')
-            ->with('arguments: {0: \'foo\'}')->will($this->returnValue(['arguments' => ['foo']]));
+            ->with($mockState, 'arguments: {0: \'foo\'}')->will($this->returnValue(['arguments' => ['foo']]));
         $templateParser->expects($this->at(1))->method('initializeViewHelperAndAddItToStack')
             ->with($mockState, 'f', 'format.printf', ['arguments' => ['foo']])->will($this->returnValue(true));
         $templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')

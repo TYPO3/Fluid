@@ -159,16 +159,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
+     * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {
         if (array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception('Argument "' . $name . '" has already been defined, thus it should not be defined again.', 1253036401);
         }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
         return $this;
     }
 
@@ -182,16 +183,17 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
+     * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {
         if (!array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception('Argument "' . $name . '" has not been defined, thus it can\'t be overridden.', 1279212461);
         }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
         return $this;
     }
 
