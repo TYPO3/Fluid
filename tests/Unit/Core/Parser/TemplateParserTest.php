@@ -407,7 +407,7 @@ class TemplateParserTest extends UnitTestCase
         );
         $templateParser->setRenderingContext(new RenderingContextFixture());
         $templateParser->expects($this->at(0))->method('recursiveArrayHandler')
-            ->with('arguments: {0: \'foo\'}')->will($this->returnValue(['arguments' => ['foo']]));
+            ->with($mockState, 'arguments: {0: \'foo\'}')->will($this->returnValue(['arguments' => ['foo']]));
         $templateParser->expects($this->at(1))->method('initializeViewHelperAndAddItToStack')
             ->with($mockState, 'f', 'format.printf', ['arguments' => ['foo']])->will($this->returnValue(true));
         $templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')
@@ -961,6 +961,7 @@ class TemplateParserTest extends UnitTestCase
      */
     public function testRecursiveArrayHandler($string, $expected)
     {
+        $state = new ParsingState();
         $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
         $resolver->expects($this->any())->method('isNamespaceIgnored')->willReturn(true);
         $context = new RenderingContextFixture();
@@ -970,7 +971,7 @@ class TemplateParserTest extends UnitTestCase
         $templateParser->setRenderingContext($context);
         $method = new \ReflectionMethod($templateParser, 'recursiveArrayHandler');
         $method->setAccessible(true);
-        $result = $method->invokeArgs($templateParser, [$string]);
+        $result = $method->invokeArgs($templateParser, [$state, $string]);
 
         $this->assertEquals($expected, $result);
     }
