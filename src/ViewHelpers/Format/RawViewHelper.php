@@ -64,7 +64,7 @@ class RawViewHelper extends AbstractViewHelper
      */
     public function initializeArguments()
     {
-        $this->registerArgument('value', 'mixed', 'The value to output');
+        $this->registerArgument('value', 'mixed', 'The value to output', false, null, false);
     }
 
     /**
