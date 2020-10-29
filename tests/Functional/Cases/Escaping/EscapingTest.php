@@ -130,6 +130,13 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         $viewHelper = (new MutableTestViewHelper())->withContentArgument()->withEscapeOutput(false);
         $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+
+        // TODO: security case - argument must be escaped!
+        #$this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(content: value)}'), 'Inline pass of variable');
+
+        // TODO: inconsistent case - argument is quoted and is escaped, which does not happen if the argument is NOT quoted
+        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: "{value}")}'), 'Inline pass of variable');
+
         $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
@@ -139,6 +146,9 @@ class EscapingTest extends BaseFunctionalTestCase
         $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
         $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
         $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+
+        // TODO: inconsistent case - argument is quoted and is escaped, which does not happen if the argument is NOT quoted
+        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: "{value}")}'), 'Inline output argument');
 
         // TODO: possibly undesired behavior, escapes argument though output should be unescaped / children should be escaped but value is not passed as child
         $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
@@ -169,7 +179,12 @@ class EscapingTest extends BaseFunctionalTestCase
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument()->withEscapeOutput(false)->withEscapeChildren(true);
         $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
         $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+
+        // TODO: security case - argument must be escaped!
+        #$this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+
+        // TODO: inconsistent case - argument is quoted and is escaped, which does not happen if the argument is NOT quoted
+        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: "{value}")}'), 'Inline output argument');
 
         // TODO: possibly undesired behavior, escapes argument though output should be unescaped and value is not passed as child
         $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
