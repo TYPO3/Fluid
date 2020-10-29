@@ -12,6 +12,10 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 class Configuration
 {
+    /**
+     * @var bool
+     */
+    protected $viewHelperArgumentEscapingEnabled = true;
 
     /**
      * Generic interceptors registered with the configuration.
@@ -26,6 +30,22 @@ class Configuration
      * @var \SplObjectStorage[]
      */
     protected $escapingInterceptors = [];
+
+    /**
+     * @return bool
+     */
+    public function isViewHelperArgumentEscapingEnabled()
+    {
+        return $this->viewHelperArgumentEscapingEnabled;
+    }
+
+    /**
+     * @param bool $viewHelperArgumentEscapingEnabled
+     */
+    public function setViewHelperArgumentEscapingEnabled($viewHelperArgumentEscapingEnabled)
+    {
+        $this->viewHelperArgumentEscapingEnabled = (bool) $viewHelperArgumentEscapingEnabled;
+    }
 
     /**
      * Adds an interceptor to apply to values coming from object accessors.
