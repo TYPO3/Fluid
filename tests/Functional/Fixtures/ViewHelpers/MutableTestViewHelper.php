@@ -24,16 +24,16 @@ class MutableTestViewHelper extends AbstractViewHelper
         $this->escapeOutput = $escapeOutput;
     }
 
-    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
+    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escaped = null)
     {
-        return parent::registerArgument($name, $type, $description, $required, $defaultValue);
+        return parent::registerArgument($name, $type, $description, $required, $defaultValue, $escaped);
     }
 
     public function withContentArgument($escaped = null): self
     {
         // TODO: set escaping behavior if $escaped !== null
         $clone = clone $this;
-        $clone->registerArgument('content', 'string', 'Content argument');
+        $clone->registerArgument('content', 'string', 'Content argument', false, null, $escaped);
         return $clone;
     }
 
@@ -41,7 +41,7 @@ class MutableTestViewHelper extends AbstractViewHelper
     {
         // TODO: set escaping behavior if $escaped !== null
         $clone = clone $this;
-        $clone->registerArgument('output', 'string', 'Content argument', true);
+        $clone->registerArgument('output', 'string', 'Content argument', true, null, $escaped);
         return $clone;
     }
 
@@ -57,6 +57,11 @@ class MutableTestViewHelper extends AbstractViewHelper
         $clone = clone $this;
         $clone->setEscapeOutput($escapeOutput);
         return $clone;
+    }
+
+    public function resolveContentArgumentName()
+    {
+        return 'content';
     }
 
     public function render()
