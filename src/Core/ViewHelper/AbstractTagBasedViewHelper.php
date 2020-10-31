@@ -47,6 +47,14 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     protected $tagName = 'div';
 
     /**
+     * Arguments which are valid but do not have an ArgumentDefinition, e.g.
+     * data- prefixed arguments.
+     *
+     * @var array
+     */
+    protected $additionalArguments = [];
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -101,6 +109,12 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
             }
         }
 
+        foreach ($this->additionalArguments as $argumentName => $argumentValue) {
+            if (strpos($argumentName, 'data-') === 0) {
+                $this->tag->addAttribute($argumentName, $argumentValue);
+            }
+        }
+
         if (isset(self::$tagAttributes[get_class($this)])) {
             foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
                 if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
@@ -147,27 +161,10 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
     }
 
-    /**
-     * Handles additional arguments, sorting out any data-
-     * prefixed tag attributes and assigning them. Then passes
-     * the unassigned arguments to the parent class' method,
-     * which in the default implementation will throw an error
-     * about "undeclared argument used".
-     *
-     * @param array $arguments
-     * @return void
-     */
     public function handleAdditionalArguments(array $arguments)
     {
-        $unassigned = [];
-        foreach ($arguments as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
-                $this->tag->addAttribute($argumentName, $argumentValue);
-            } else {
-                $unassigned[$argumentName] = $argumentValue;
-            }
-        }
-        parent::handleAdditionalArguments($unassigned);
+        $this->additionalArguments = $arguments;
+        parent::handleAdditionalArguments($arguments);
     }
 
     /**
