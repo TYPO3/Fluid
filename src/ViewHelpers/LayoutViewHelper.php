@@ -16,14 +16,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 /**
  * With this tag, you can select a layout to be used for the current template.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code>
- * <f:layout name="main" />
- * </code>
- * <output>
- * (no output)
- * </output>
+ * ::
+ *
+ *     <f:layout name="main" />
+ *
+ * Output::
+ *
+ *     (no output)
  *
  * @api
  */

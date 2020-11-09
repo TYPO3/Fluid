@@ -24,14 +24,14 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * template once it is compiled. It will essentially replace
  * all logic inside the tag with a plain string output.
  *
- * Works by turning the `compile` method into a method that
+ * Works by turning the ``compile`` method into a method that
  * renders the child nodes and returns the resulting content
  * directly as a string variable.
  *
  * You can use this with great effect to further optimise the
  * performance of your templates: in use cases where chunks of
  * template code depend on static variables (like thoese in
- * {settings} for example) and those variables never change,
+ * ``{settings}`` for example) and those variables never change,
  * and the template uses no other dynamic variables, forcing
  * the template to compile that chunk to a static string can
  * save a lot of operations when rendering the compiled template.
@@ -42,22 +42,28 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * USE WITH CARE! WILL PRESERVE EVERYTHING RENDERED, INCLUDING
  * POTENTIALLY SENSITIVE DATA CONTAINED IN OUTPUT!
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Usage and effect">
- * <f:if condition="{var}">Is always evaluated also when compiled</f:if>
- * <f:cache.static>
- *     <f:if condition="{othervar}">
- *         Will only be evaluated once and this output will be
- *         cached as a static string with no logic attached.
- *         The compiled template will not contain neither the
- *         condition ViewHelperNodes or the variable accessor
- *         that are used inside this node.
- *     </f:if>
- * </f:cache.static>
- * This is also evaluated when compiled (static node is closed)
- * <f:if condition="{var}">Also evaluated; is outside static node</f:if>
- * </code>
+ * Usage and effect
+ * ----------------
+ *
+ * ::
+ *
+ *     <f:if condition="{var}">Is always evaluated also when compiled</f:if>
+ *     <f:cache.static>
+ *         <f:if condition="{othervar}">
+ *             Will only be evaluated once and this output will be
+ *             cached as a static string with no logic attached.
+ *             The compiled template will not contain neither the
+ *             condition ViewHelperNodes or the variable accessor
+ *             that are used inside this node.
+ *         </f:if>
+ *     </f:cache.static>
+ *
+ * This is also evaluated when compiled (static node is closed)::
+ *
+ *     <f:if condition="{var}">Also evaluated; is outside static node</f:if>
  *
  * @api
  */

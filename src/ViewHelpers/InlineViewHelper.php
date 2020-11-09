@@ -10,16 +10,16 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  *
  * Renders Fluid code stored in a variable, which you normally would
  * have to render before assigning it to the view. Instead you can
- * do the following (note, extremely simplified use case):
+ * do the following (note, extremely simplified use case)::
  *
  *      $view->assign('variable', 'value of my variable');
  *      $view->assign('code', 'My variable: {variable}');
  *
- * And in the template:
+ * And in the template::
  *
  *      {code -> f:inline()}
  *
- * Which outputs:
+ * Which outputs::
  *
  *      My variable: value of my variable
  *
