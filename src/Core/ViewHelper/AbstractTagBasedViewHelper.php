@@ -110,7 +110,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
 
         foreach ($this->additionalArguments as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
+            if (strpos($argumentName, 'data-') === 0 || strpos($argumentName, 'aria-') === 0) {
                 $this->tag->addAttribute($argumentName, $argumentValue);
             }
         }

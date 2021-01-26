@@ -156,6 +156,27 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
+    public function handleAdditionalArgumentsSetsTagAttributesForAriaArguments()
+    {
+        $viewHelper = $this->getAccessibleMock(
+            AbstractTagBasedViewHelper::class,
+            ['dummy'],
+            [],
+            '',
+            false
+        );
+        $viewHelper->setRenderingContext(new RenderingContextFixture());
+        $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
+        $tagBuilder->expects($this->at(0))->method('addAttribute')->with('aria-labelledby', 'foo');
+        $tagBuilder->expects($this->at(1))->method('addAttribute')->with('aria-live', 'polite');
+        $viewHelper->setTagBuilder($tagBuilder);
+        $viewHelper->handleAdditionalArguments(['aria-labelledby' => 'foo', 'aria-live' => 'polite']);
+        $viewHelper->initializeArgumentsAndRender();
+    }
+
+    /**
+     * @test
+     */
     public function testHandleAdditionalArgumentsSetsTagAttributesForDataArguments()
     {
         $viewHelper = $this->getAccessibleMock(
