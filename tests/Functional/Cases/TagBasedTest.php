@@ -45,4 +45,37 @@ class TagBasedTest extends UnitTestCase
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
         $this->assertSame('<div data-foo="bar" />', $result);
     }
+
+    /**
+     * @dataProvider tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider
+     */
+    public function testTagBasedViewHelperWithDataArrayAndPrefixedArgument(array $arguments)
+    {
+        $invoker = new ViewHelperInvoker();
+        $viewHelper = new TagBasedTestViewHelper();
+        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
+        $this->assertSame('<div data-foo="attribute" />', $result);
+    }
+
+    public function tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider(): array
+    {
+        return [
+            'data before attribute' => [
+                [
+                    'data' => [
+                        'foo' => 'data',
+                    ],
+                    'data-foo' => 'attribute',
+                ],
+            ],
+            'attribute before data' => [
+                [
+                    'data-foo' => 'attribute',
+                    'data' => [
+                        'foo' => 'data',
+                    ],
+                ],
+            ],
+        ];
+    }
 }
