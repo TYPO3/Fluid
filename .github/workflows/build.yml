@@ -57,5 +57,8 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
       - name: Coveralls
-        # if retry is required, use https://github.com/nick-invision/retry/
-        run: php vendor/bin/php-coveralls
+        uses: nick-invision/retry@v2
+        with:
+          timeout_seconds: 30
+          max_attempts: 5
+          command: php vendor/bin/php-coveralls
