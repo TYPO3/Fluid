@@ -27,9 +27,8 @@ jobs:
             experimental: true
             dependencies: 'highest'
 
-          # Build for minimum dependencies. Note: Installation with PHP 5.5 fails due to PHPUnit PHP requirements
-          - php-versions: '7.0'
-            composer-arguments: '--ignore-platform-reqs'
+          # Build for minimum dependencies. Note: Running tests with PHP 5.5 fails due to PHPUnit PHP requirements
+          - php-versions: '7.2'
             experimental: false
             dependencies: 'lowest'
 
