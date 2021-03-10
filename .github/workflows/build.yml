@@ -57,8 +57,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
       - name: Coveralls
-        uses: nick-invision/retry@v2
+        uses: coverallsapp/github-action@master
         with:
-          timeout_seconds: 30
-          max_attempts: 5
-          command: php vendor/bin/php-coveralls
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: build/logs/clover.xml
