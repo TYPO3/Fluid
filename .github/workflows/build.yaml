@@ -1,0 +1,61 @@
+name: build
+
+on:
+  push:
+    branches: [ master, '[0-9]+.[0-9]+', '[0-9]+.[0-9]+.[0-9]+' ]
+  pull_request:
+    branches: [ master, '[0-9]+.[0-9]', '[0-9]+.[0-9]+.[0-9]+' ]
+
+jobs:
+  build:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    name: "PHP ${{ matrix.php-versions }} Test (deps: ${{ matrix.dependencies }})"
+
+    continue-on-error: ${{ matrix.experimental }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['7.2', '7.3', '7.4']
+        dependencies: ['highest']
+        composer-arguments: [''] # to run --ignore-platform-reqs in experimental builds
+        experimental: [false]
+        include:
+          # Experimental build for PHP 8
+          #- php-versions: '8.0'
+          #  composer-arguments: '--ignore-platform-reqs'
+          #  static-analysis: 'no'
+          #  experimental: true
+          #  dependencies: 'highest'
+
+          # Build for minimum dependencies.
+          - php-versions: '5.5'
+            experimental: false
+            dependencies: 'lowest'
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: mbstring, json
+          coverage: xdebug #optional
+          ini-values: date.timezone="Africa/Tunis", opcache.fast_shutdown=0
+
+      - name: Composer install
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: ${{ matrix.composer-arguments }}
+
+      - name: Run tests
+        run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
+
+      - name: Coveralls
+        # if retry is required, use https://github.com/nick-invision/retry/
+        run: php vendor/bin/php-coveralls
