@@ -6,10 +6,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Exception as ParserException;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
@@ -32,19 +29,19 @@ class ViewHelperNodeTest extends UnitTestCase
     protected $renderingContext;
 
     /**
-     * @var TemplateVariableContainer|\PHPUnit_Framework_MockObject_MockObject
+     * @var TemplateVariableContainer|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $templateVariableContainer;
 
     /**
-     * @var ViewHelperResolver|\PHPUnit_Framework_MockObject_MockObject
+     * @var ViewHelperResolver|\PHPUnit\Framework\MockObject\MockObject
      */
     protected $mockViewHelperResolver;
 
     /**
      * Setup fixture
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
         $this->mockViewHelperResolver = $this->getMock(ViewHelperResolver::class, ['resolveViewHelperClassName', 'createViewHelperInstanceFromClassName', 'getArgumentDefinitionsForViewHelper']);
@@ -62,7 +59,7 @@ class ViewHelperNodeTest extends UnitTestCase
     public function constructorSetsViewHelperAndArguments()
     {
         $arguments = ['foo' => 'bar'];
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $viewHelperNode */
+        /** @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject $viewHelperNode */
         $viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
 
         $this->assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
@@ -79,74 +76,5 @@ class ViewHelperNodeTest extends UnitTestCase
         $node = new ViewHelperNode($this->renderingContext, 'f', 'vh', ['foo' => 'bar'], new ParsingState());
         $result = $node->evaluate($this->renderingContext);
         $this->assertEquals('test', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testThrowsExceptionOnMissingRequiredArgument()
-    {
-        $this->setExpectedException(ParserException::class);
-        new ViewHelperNode($this->renderingContext, 'f', 'vh', ['notfoo' => false], new ParsingState());
-    }
-
-    /**
-     * @test
-     * @expectedException \TYPO3Fluid\Fluid\Core\Parser\Exception
-     */
-    public function abortIfRequiredArgumentsAreMissingThrowsException()
-    {
-        $expected = [
-            new ArgumentDefinition('firstArgument', 'string', '', false),
-            new ArgumentDefinition('secondArgument', 'string', '', true)
-        ];
-
-        $templateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
-
-        $templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, []);
-    }
-
-    /**
-     * @test
-     */
-    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists()
-    {
-        $expectedArguments = [
-            new ArgumentDefinition('name1', 'string', 'desc', false),
-            new ArgumentDefinition('name2', 'string', 'desc', true)
-        ];
-        $actualArguments = [
-            'name2' => 'bla'
-        ];
-
-        $mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
-
-        $mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
-        // dummy assertion to avoid "did not perform any assertions" error
-        $this->assertTrue(true);
-    }
-
-    /**
-     * @test
-     */
-    public function booleanArgumentsMustBeConvertedIntoBooleanNodes()
-    {
-        $argumentDefinitions = [
-            'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),
-            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false)
-        ];
-        $argumentsObjectTree = [
-            'var1' => new TextNode('true'),
-            'var2' => new TextNode('true')
-        ];
-
-        $mockTemplateParser = $this->getAccessibleMock(ViewHelperNode::class, ['dummy'], [], '', false);
-
-        $mockTemplateParser->_callRef('rewriteBooleanNodesInArgumentsObjectTree', $argumentDefinitions, $argumentsObjectTree);
-
-        $this->assertEquals($argumentsObjectTree, [
-            'var1' => new BooleanNode(new TextNode('true')),
-            'var2' => new BooleanNode(new TextNode('true'))
-        ]);
     }
 }

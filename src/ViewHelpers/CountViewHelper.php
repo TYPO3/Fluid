@@ -14,21 +14,30 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
 /**
  * This ViewHelper counts elements of the specified array or countable object.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Count array elements">
- * <f:count subject="{0:1, 1:2, 2:3, 3:4}" />
- * </code>
- * <output>
- * 4
- * </output>
+ * Count array elements
+ * --------------------
  *
- * <code title="inline notation">
- * {objects -> f:count()}
- * </code>
- * <output>
- * 10 (depending on the number of items in {objects})
- * </output>
+ * ::
+ *
+ *     <f:count subject="{0:1, 1:2, 2:3, 3:4}" />
+ *
+ * Output::
+ *
+ *     4
+ *
+ * inline notation
+ * ---------------
+ *
+ * ::
+ *
+ *     {objects -> f:count()}
+ *
+ * Output::
+ *
+ *     10 (depending on the number of items in ``{objects}``)
  *
  * @api
  */

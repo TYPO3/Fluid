@@ -50,6 +50,7 @@ class VariableExtractorTest extends UnitTestCase
             [['user' => $namedUser], 'user.invalid', null],
             [['foodynamicbar' => 'test', 'dyn' => 'dynamic'], 'foo{dyn}bar', 'test'],
             [['foo' => ['dynamic' => ['bar' => 'test']], 'dyn' => 'dynamic'], 'foo.{dyn}.bar', 'test'],
+            [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar'], 'baz' => 'sub'], 'foo.{dynamic.{baz}}', 'test'],
             [['user' => $namedUser], 'user.hasAccessor', true],
             [['user' => $namedUser], 'user.isAccessor', true],
             [['user' => $unnamedUser], 'user.hasAccessor', false],
@@ -132,15 +133,4 @@ class VariableExtractorTest extends UnitTestCase
         $result = VariableExtractor::extract($subject, 'test');
         $this->assertEquals('test result', $result);
     }
-
-    /**
-     * @test
-     */
-    public function testExtractReturnsNullOnProtectedGetters()
-    {
-        $subject = new ClassWithProtectedGetter();
-        $result = VariableExtractor::extract($subject, 'test');
-        $this->assertEquals(null, $result);
-    }
-
 }

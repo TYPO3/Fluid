@@ -191,6 +191,9 @@ class TagBuilder
      */
     public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = true)
     {
+        if ($escapeSpecialCharacters) {
+            $attributeName = htmlspecialchars($attributeName);
+        }
         if ($attributeName === 'data' && (is_array($attributeValue) || $attributeValue instanceof \Traversable)) {
             foreach ($attributeValue as $name => $value) {
                 $this->addAttribute('data-' . $name, $value, $escapeSpecialCharacters);

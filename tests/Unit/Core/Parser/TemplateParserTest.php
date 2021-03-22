@@ -13,19 +13,25 @@ use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
+use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Fixtures\PostParseFacetViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\ViewHelpers\CommentViewHelper;
 
 /**
  * Testcase for TemplateParser.
@@ -39,9 +45,28 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceNotValid()
+    public function testInitializeViewHelperAndAddItToStackReturnsFalseIfNamespaceIgnored()
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid']);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(true);
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+        $templateParser = new TemplateParser();
+        $templateParser->setRenderingContext($context);
+        $method = new \ReflectionMethod($templateParser, 'initializeViewHelperAndAddItToStack');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render', []]);
+        $this->assertNull($result);
+    }
+
+    /**
+     * @test
+     */
+    public function testInitializeViewHelperAndAddItToStackThrowsExceptionIfNamespaceInvalid()
+    {
+        $this->setExpectedException(UnknownNamespaceException::class);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored', 'isNamespaceValid']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(false);
         $resolver->expects($this->once())->method('isNamespaceValid')->willReturn(false);
         $context = new RenderingContextFixture();
         $context->setViewHelperResolver($resolver);
@@ -56,9 +81,28 @@ class TemplateParserTest extends UnitTestCase
     /**
      * @test
      */
-    public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceNotValid()
+    public function testClosingViewHelperTagHandlerReturnsFalseIfNamespaceIgnored()
     {
-        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid']);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(true);
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+        $templateParser = new TemplateParser();
+        $templateParser->setRenderingContext($context);
+        $method = new \ReflectionMethod($templateParser, 'closingViewHelperTagHandler');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($templateParser, [new ParsingState(), 'f', 'render']);
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function testClosingViewHelperTagHandlerThrowsExceptionIfNamespaceInvalid()
+    {
+        $this->setExpectedException(UnknownNamespaceException::class);
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceValid', 'isNamespaceIgnored']);
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->willReturn(false);
         $resolver->expects($this->once())->method('isNamespaceValid')->willReturn(false);
         $context = new RenderingContextFixture();
         $context->setViewHelperResolver($resolver);
@@ -149,10 +193,10 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function parseThrowsExceptionWhenStringArgumentMissing()
     {
+        $this->expectException(\Exception::class);
         $templateParser = new TemplateParser();
         $templateParser->parse(123);
     }
@@ -251,6 +295,10 @@ class TemplateParserTest extends UnitTestCase
             ['parseArguments', 'initializeViewHelperAndAddItToStack']
         );
         $context = new RenderingContextFixture();
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['isNamespaceValid', 'resolveViewHelperClassName'])->getMock();
+        $resolver->expects($this->once())->method('isNamespaceValid')->with('namespaceIdentifier')->willReturn(true);
+        $resolver->expects($this->once())->method('resolveViewHelperClassName')->with('namespaceIdentifier')->willReturn(CommentViewHelper::class);
+        $context->setViewHelperResolver($resolver);
         $templateParser->setRenderingContext($context);
         $templateParser->expects($this->once())->method('parseArguments')
             ->with(['arguments'])->will($this->returnValue(['parsedArguments']));
@@ -269,10 +317,19 @@ class TemplateParserTest extends UnitTestCase
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($this->getMock(NodeInterface::class)));
         $mockState->expects($this->once())->method('getNodeFromStack')->will($this->returnValue($this->getMock(NodeInterface::class)));
 
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['isNamespaceValid', 'isNamespaceIgnored', 'resolveViewHelperClassName'])->getMock();
+        $resolver->expects($this->once())->method('isNamespaceIgnored')->with('')->willReturn(false);
+        $resolver->expects($this->once())->method('isNamespaceValid')->with('')->willReturn(true);
+        $resolver->expects($this->once())->method('resolveViewHelperClassName')->willReturn(new CommentViewHelper());
+
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+
         $templateParser = $this->getAccessibleMock(
             TemplateParser::class,
             ['parseArguments', 'initializeViewHelperAndAddItToStack']
         );
+        $templateParser->setRenderingContext($context);
         $node = $this->getMock(ViewHelperNode::class, ['dummy'], [], '', false);
         $templateParser->expects($this->once())->method('initializeViewHelperAndAddItToStack')->will($this->returnValue($node));
 
@@ -281,10 +338,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @__test
-     * @expectedException Exception
      */
     public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassDoesNotExisit()
     {
+        $this->expectException(\Exception::class);
+
         $mockState = $this->getMock(ParsingState::class);
 
         $templateParser = $this->getAccessibleMock(
@@ -301,10 +359,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @__test
-     * @expectedException Exception
      */
     public function initializeViewHelperAndAddItToStackThrowsExceptionIfViewHelperClassNameIsWronglyCased()
     {
+        $this->expectException(\Exception::class);
+
         $mockState = $this->getMock(ParsingState::class);
 
         $templateParser = $this->getAccessibleMock(
@@ -344,10 +403,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function closingViewHelperTagHandlerThrowsExceptionBecauseOfClosingTagWhichWasNeverOpened()
     {
+        $this->expectException(\Exception::class);
+
         $mockNodeOnStack = $this->getMock(NodeInterface::class, [], [], '', false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -360,10 +420,11 @@ class TemplateParserTest extends UnitTestCase
 
     /**
      * @test
-     * @expectedException Exception
      */
     public function closingViewHelperTagHandlerThrowsExceptionBecauseOfWrongTagNesting()
     {
+        $this->expectException(\Exception::class);
+
         $mockNodeOnStack = $this->getMock(ViewHelperNode::class, [], [], '', false);
         $mockState = $this->getMock(ParsingState::class);
         $mockState->expects($this->once())->method('popNodeFromStack')->will($this->returnValue($mockNodeOnStack));
@@ -387,14 +448,15 @@ class TemplateParserTest extends UnitTestCase
             TemplateParser::class,
             ['recursiveArrayHandler', 'initializeViewHelperAndAddItToStack']
         );
+        $templateParser->setRenderingContext(new RenderingContextFixture());
         $templateParser->expects($this->at(0))->method('recursiveArrayHandler')
-            ->with('format: "H:i"')->will($this->returnValue(['format' => 'H:i']));
+            ->with($mockState, 'arguments: {0: \'foo\'}')->will($this->returnValue(['arguments' => ['foo']]));
         $templateParser->expects($this->at(1))->method('initializeViewHelperAndAddItToStack')
-            ->with($mockState, 'f', 'format.date', ['format' => 'H:i'])->will($this->returnValue(true));
+            ->with($mockState, 'f', 'format.printf', ['arguments' => ['foo']])->will($this->returnValue(true));
         $templateParser->expects($this->at(2))->method('initializeViewHelperAndAddItToStack')
             ->with($mockState, 'f', 'debug', [])->will($this->returnValue(true));
 
-        $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.date(format: "H:i")', '');
+        $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.printf(arguments: {0: \'foo\'})', '');
     }
 
     /**
@@ -505,10 +567,15 @@ class TemplateParserTest extends UnitTestCase
      */
     public function parseArgumentsWorksAsExpected($argumentsString, array $expected)
     {
+        $context = new RenderingContextFixture();
+        $viewHelper = $this->getMockBuilder(CommentViewHelper::class)->setMethods(['validateAdditionalArguments'])->getMock();
+        $viewHelper->expects($this->once())->method('validateAdditionalArguments');
+
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['buildArgumentObjectTree']);
+        $templateParser->setRenderingContext($context);
         $templateParser->expects($this->any())->method('buildArgumentObjectTree')->will($this->returnArgument(0));
 
-        $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString));
+        $this->assertSame($expected, $templateParser->_call('parseArguments', $argumentsString, $viewHelper));
     }
 
     /**
@@ -807,5 +874,217 @@ class TemplateParserTest extends UnitTestCase
                 '\TYPO3Fluid\Fluid\Core\Parser\Exception'
             ],
         ];
+    }
+
+    /**
+     * Data provider for testRecursiveArrayHandler()
+     *
+     * @return \Generator
+     */
+    public function dataProviderRecursiveArrayHandler()
+    {
+        yield 'Single number' => [
+            'string' => 'number: 123',
+            'expected' => [
+                'number' => 123,
+            ]
+        ];
+
+        yield 'Single quoted string' => [
+            'string' => 'string: \'some.string\'',
+            'expected' => [
+                'string' => new TextNode('some.string'),
+            ]
+        ];
+
+        yield 'Single identifier' => [
+            'string' => 'identifier: some.identifier',
+            'expected' => [
+                'identifier' => new ObjectAccessorNode('some.identifier', [])
+            ]
+        ];
+
+        yield 'Single subarray' => [
+            'string' => 'array: {number: 123, string: \'some.string\', identifier: some.identifier}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier', [])
+                ])
+            ]
+        ];
+
+        yield 'Single subarray with numerical ids' => [
+            'string' => 'array: {0: 123, 1: \'some.string\', 2: some.identifier}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    123,
+                    new TextNode('some.string'),
+                    new ObjectAccessorNode('some.identifier', [])
+                ])
+            ]
+        ];
+
+        yield 'Single quoted subarray' => [
+            'string' => 'number: 123, array: \'{number: 234, string: \'some.string\', identifier: some.identifier}\'',
+            'expected' => [
+                'number' => 234,
+                'string' => new TextNode('some.string'),
+                'identifier' => new ObjectAccessorNode('some.identifier', [])
+            ]
+        ];
+
+        yield 'Single quoted subarray with numerical keys' => [
+            'string' => 'number: 123, array: \'{0: 234, 1: \'some.string\', 2: some.identifier}\'',
+            'expected' => [
+                'number' => 123,
+                234,
+                new TextNode('some.string'),
+                new ObjectAccessorNode('some.identifier', [])
+            ]
+        ];
+
+        yield 'Nested subarray' => [
+            'string' => 'array: {number: 123, string: \'some.string\', identifier: some.identifier, array: {number: 123, string: \'some.string\', identifier: some.identifier}}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier', []),
+                    'array' => new ArrayNode([
+                        'number' => 123,
+                        'string' => new TextNode('some.string'),
+                        'identifier' => new ObjectAccessorNode('some.identifier', [])
+                    ])
+                ])
+            ]
+        ];
+
+        yield 'Mixed types' => [
+            'string' => 'number: 123, string: \'some.string\', identifier: some.identifier, array: {number: 123, string: \'some.string\', identifier: some.identifier}',
+            'expected' => [
+                'number' => 123,
+                'string' => new TextNode('some.string'),
+                'identifier' => new ObjectAccessorNode('some.identifier', []),
+                'array' => new ArrayNode([
+                    'number' => 123,
+                    'string' => new TextNode('some.string'),
+                    'identifier' => new ObjectAccessorNode('some.identifier', [])
+                ])
+            ]
+        ];
+
+        $rootNode = new RootNode();
+        $rootNode->addChildNode(new ObjectAccessorNode('some.{index}'));
+        yield 'variable identifier' => [
+            'string' => 'variableIdentifier: \'{some.{index}}\'',
+            'expected' => [
+                'variableIdentifier' => $rootNode
+            ]
+        ];
+
+        $rootNode = new RootNode();
+        $rootNode->addChildNode(new ObjectAccessorNode('some.{index}'));
+        yield 'variable identifier in array' => [
+            'string' => 'array: {variableIdentifier: \'{some.{index}}\'}',
+            'expected' => [
+                'array' => new ArrayNode([
+                    'variableIdentifier' => $rootNode
+                ])
+            ]
+        ];
+    }
+
+    /**
+     * @param $string
+     * @param $expected
+     * @dataProvider dataProviderRecursiveArrayHandler
+     * @throws \ReflectionException
+     */
+    public function testRecursiveArrayHandler($string, $expected)
+    {
+        $state = new ParsingState();
+        $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);
+        $resolver->expects($this->any())->method('isNamespaceIgnored')->willReturn(true);
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+        $context->setVariableProvider(new StandardVariableProvider());
+        $templateParser = new TemplateParser();
+        $templateParser->setRenderingContext($context);
+        $method = new \ReflectionMethod($templateParser, 'recursiveArrayHandler');
+        $method->setAccessible(true);
+        $result = $method->invokeArgs($templateParser, [$state, $string]);
+
+        $this->assertEquals($expected, $result);
+    }
+
+
+    /**
+     * @test
+     */
+    public function abortIfRequiredArgumentsAreMissingThrowsException()
+    {
+        $this->expectException(Exception::class);
+
+        $expected = [
+            'firstArgument' => new ArgumentDefinition('firstArgument', 'string', '', false),
+            'secondArgument' => new ArgumentDefinition('secondArgument', 'string', '', true)
+        ];
+
+        $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
+
+        $templateParser->_call('abortIfRequiredArgumentsAreMissing', $expected, []);
+    }
+
+    /**
+     * @test
+     */
+    public function abortIfRequiredArgumentsAreMissingDoesNotThrowExceptionIfRequiredArgumentExists()
+    {
+        $expectedArguments = [
+            new ArgumentDefinition('name1', 'string', 'desc', false),
+            new ArgumentDefinition('name2', 'string', 'desc', true)
+        ];
+        $actualArguments = [
+            'name2' => 'bla'
+        ];
+
+        $mockTemplateParser = $this->getAccessibleMock(TemplateParser::class);
+
+        $mockTemplateParser->_call('abortIfRequiredArgumentsAreMissing', $expectedArguments, $actualArguments);
+        // dummy assertion to avoid "did not perform any assertions" error
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @test
+     */
+    public function booleanArgumentsMustBeConvertedIntoBooleanNodes()
+    {
+        $argumentDefinitions = [
+            'var1' => new ArgumentDefinition('var1', 'bool', 'desc', false),
+            'var2' => new ArgumentDefinition('var2', 'boolean', 'desc', false)
+        ];
+
+        $viewHelper = $this->getMockBuilder(CommentViewHelper::class)->getMock();
+        $resolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['getArgumentDefinitionsForViewHelper'])->getMock();
+        $resolver->expects($this->once())->method('getArgumentDefinitionsForViewHelper')->with($viewHelper)->willReturn($argumentDefinitions);
+
+        $context = new RenderingContextFixture();
+        $context->setViewHelperResolver($resolver);
+
+        $mockTemplateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
+        $mockTemplateParser->setRenderingContext($context);
+
+        $parsedArguments = $mockTemplateParser->_call('parseArguments', 'var1="1" var2="0"}', $viewHelper);
+
+        $this->assertEquals(
+            [
+                'var1' => new BooleanNode(new NumericNode(1)),
+                'var2' => new BooleanNode(new NumericNode(0))
+            ],
+            $parsedArguments
+        );
     }
 }

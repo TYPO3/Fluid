@@ -108,6 +108,6 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
     protected function isJSON($string)
     {
         $string = trim($string);
-        return ($string{0} === '{' && substr($string, -1) === '}');
+        return ($string[0] === '{' && substr($string, -1) === '}');
     }
 }

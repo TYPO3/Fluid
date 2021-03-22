@@ -26,11 +26,11 @@ class TernaryExpressionNode extends AbstractExpressionNode
 		(
 			{                                                               # Start of shorthand syntax
 				(?:                                                         # Math expression is composed of...
-					[\\!a-zA-Z0-9.\(\)\!\|\&\\\'\'\"\=\<\>\%\s\{\}\:\,]+    # Check variable side
+					[\\!_a-zA-Z0-9.\(\)\!\|\&\\\'\'\"\=\<\>\%\s\{\}\:\,]+    # Check variable side
 					[\s]?\?[\s]?
-					[a-zA-Z0-9.\s\'\"\\.]*                                  # Then variable side, optional
+					[_a-zA-Z0-9.\s\'\"\\.]*                                  # Then variable side, optional
 					[\s]?:[\s]?
-					[a-zA-Z0-9.\s\'\"\\.]+                                  # Else variable side
+					[_a-zA-Z0-9.\s\'\"\\.]+                                  # Else variable side
 				)
 			}                                                               # End of shorthand syntax
 		)/x';
@@ -38,7 +38,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
     /**
      * Filter out variable names form expression
      */
-    protected static $variableDetection = '/[^\'a-zA-Z0-9\.\\\\]{0,1}([a-zA-Z0-9\.\\\\]*)[^\']{0,1}/';
+    protected static $variableDetection = '/[^\'_a-zA-Z0-9\.\\\\]{0,1}([_a-zA-Z0-9\.\\\\]*)[^\']{0,1}/';
 
     /**
      * @param RenderingContextInterface $renderingContext
@@ -54,7 +54,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
         list ($check, $then, $else) = $parts;
 
         if ($then === '') {
-            $then = $check{0} === '!' ? $else : $check;
+            $then = $check[0] === '!' ? $else : $check;
         }
 
         $context = static::gatherContext($renderingContext, $expression);

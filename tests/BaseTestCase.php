@@ -6,6 +6,9 @@ namespace TYPO3Fluid\Fluid\Tests;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+
 /**
  * The mother of all test cases.
  *
@@ -14,7 +17,7 @@ namespace TYPO3Fluid\Fluid\Tests;
  *
  * @api
  */
-abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
+abstract class BaseTestCase extends TestCase
 {
 
     /**
@@ -34,12 +37,87 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
      * @param boolean $callOriginalConstructor
      * @param boolean $callOriginalClone
      * @param boolean $callAutoload
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject
      * @api
      */
     protected function getAccessibleMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
     {
-        return $this->getMock($this->buildAccessibleProxy($originalClassName), $methods, $arguments, $mockClassName, $callOriginalConstructor, $callOriginalClone, $callAutoload);
+        $builder = $this->getMockBuilder($this->buildAccessibleProxy($originalClassName))->setMethods($methods)->setConstructorArgs($arguments)->setMockClassName($mockClassName);
+        if (!$callAutoload) {
+            $builder->disableAutoload();
+        }
+        if (!$callOriginalClone) {
+            $builder->disableOriginalClone();
+        }
+        if (!$callOriginalConstructor) {
+            $builder->disableOriginalConstructor();
+        }
+
+        return $builder->getMock();
+    }
+
+    public static function assertAttributeEquals($expected, string $actualAttributeName, $actualClassOrObject, string $message = '', float $delta = 0.0, int $maxDepth = 10, bool $canonicalize = false, bool $ignoreCase = false): void
+    {
+        static::assertEquals($expected, static::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
+    }
+
+    public static function assertAttributeSame($expected, string $actualAttributeName, $actualClassOrObject, string $message = '', float $delta = 0.0, int $maxDepth = 10, bool $canonicalize = false, bool $ignoreCase = false): void
+    {
+        static::assertSame($expected, static::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
+    }
+
+    public static function assertAttributeContains($needle, string $haystackAttributeName, $haystackClassOrObject, string $message = '', bool $ignoreCase = false, bool $checkForObjectIdentity = true, bool $checkForNonObjectIdentity = false): void
+    {
+        static::assertContains($needle, static::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
+    }
+
+    public static function assertAttributeNotEmpty(string $haystackAttributeName, $haystackClassOrObject, string $message = ''): void
+    {
+        static::assertNotEmpty(static::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
+    }
+
+    public static function assertAttributeInstanceOf(string $expected, string $attributeName, $classOrObject, string $message = ''): void
+    {
+        static::assertInstanceOf($expected, static::extractNonPublicAttribute($classOrObject, $attributeName));
+    }
+
+    protected static function extractNonPublicAttribute($actualClassOrObject, string $actualAttributeName)
+    {
+        $reflection = new \ReflectionClass($actualClassOrObject);
+        $attribute = $reflection->getProperty($actualAttributeName);
+        $attribute->setAccessible(true);
+        return $attribute->getValue($actualClassOrObject);
+    }
+
+    /**
+     * Returns a mock object which allows for calling protected methods and access
+     * of protected properties.
+     *
+     * @param string $originalClassName Full qualified name of the original class
+     * @param array $methods
+     * @param array $arguments
+     * @param boolean $callOriginalConstructor
+     * @param boolean $callOriginalClone
+     * @param boolean $callAutoload
+     * @return MockObject
+     * @api
+     */
+    protected function getMock($originalClassName, $methods = [], array $arguments = [], $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
+    {
+        $builder = $this->getMockBuilder($originalClassName)->setMethods($methods)->setConstructorArgs($arguments);
+        if (!$callAutoload) {
+            $builder->disableAutoload();
+        }
+
+        if (!$callOriginalClone) {
+            $builder->disableOriginalClone();
+        }
+
+        if (!$callOriginalConstructor) {
+            $builder->disableOriginalConstructor();
+        }
+
+        return $builder->getMock();
     }
 
     /**
@@ -104,6 +182,19 @@ abstract class BaseTestCase extends \PHPUnit_Framework_TestCase
 			}
 		');
         return $accessibleClassName;
+    }
+
+    protected function setExpectedException(string $class = \Exception::class, string $message = '', int $code = 0)
+    {
+        if ($class) {
+            $this->expectException($class);
+        }
+        if ($message) {
+            $this->expectExceptionMessage($message);
+        }
+        if ($code) {
+            $this->expectExceptionCode($code);
+        }
     }
 
     /**

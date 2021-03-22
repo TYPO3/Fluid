@@ -1,5 +1,5 @@
 <?php
-namespace FluidTYPO3Fluid\Flux\Tests\Unit\Functional;
+namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
@@ -18,7 +18,7 @@ class ExamplesTest extends BaseTestCase
     /**
      * @return void
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         vfsStream::setup('fakecache/');
     }
@@ -132,8 +132,8 @@ class ExamplesTest extends BaseTestCase
                 [
                     'Expression: $numberten % 4 = 2',
                     'Expression: 4 * $numberten = 40',
-                    'Expression: 4 / $numberten = 0.4',
-                    'Expression: $numberone / $numberten = 0.1',
+                    'Expression: 4 / $numberten = ' . (0.4), // NOTE: concat'ing a float + string LC-casts the float to localized comma/t-sep. Hence, let PHP also cast the expected value.
+                    'Expression: $numberone / $numberten = ' . (0.1), // NOTE: concat'ing a float + string LC-casts the float to localized comma/t-sep. Hence, let PHP also cast the expected value.
                     'Expression: 10 ^ $numberten = 10000000000'
                 ]
             ],
@@ -218,6 +218,8 @@ class ExamplesTest extends BaseTestCase
                     'Output of variable whose name is stored in a variable: string foo',
                     'Direct access of numeric prefixed variable: Numeric prefixed variable',
                     'Aliased access of numeric prefixed variable: Numeric prefixed variable',
+                    'Escaped ternary expression: &lt;b&gt;Unescaped string&lt;/b&gt;',
+                    'Escaped cast expression: &lt;b&gt;Unescaped string&lt;/b&gt;',
                     'Received $array.foobar with value <b>Unescaped string</b> (same using "value" argument: <b>Unescaped string</b>)',
                     'Received $array.printf with formatted string Formatted string, value: formatted',
                     'Received $array.baz with value 42',
@@ -260,7 +262,7 @@ class ExamplesTest extends BaseTestCase
                     'ViewHelper error: Undeclared arguments passed to ViewHelper TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper: notregistered. Valid arguments are: then, else, condition - Offending code: <f:if notregistered="1" />',
                     'Parser error: The ViewHelper "<f:invalid>" could not be resolved.',
                     'Based on your spelling, the system would load the class "TYPO3Fluid\Fluid\ViewHelpers\InvalidViewHelper", however this class does not exist. Offending code: <f:invalid />',
-                    'Invalid expression: Invalid target conversion type "invalidtype" specified in casting expression "{foobar as invalidtype}".',
+                    'Invalid expression: Invalid target conversion type &quot;invalidtype&quot; specified in casting expression &quot;{foobar as invalidtype}&quot;.',
                 ]
             ]
         ];

@@ -210,8 +210,8 @@ class ViewHelperResolver
      */
     public function isNamespaceIgnored($namespaceIdentifier)
     {
-        if (array_key_exists($namespaceIdentifier, $this->namespaces) && $this->namespaces[$namespaceIdentifier] === null) {
-            return true;
+        if (array_key_exists($namespaceIdentifier, $this->namespaces)) {
+            return $this->namespaces[$namespaceIdentifier] === null;
         }
         foreach (array_keys($this->namespaces) as $existingNamespaceIdentifier) {
             if (strpos($existingNamespaceIdentifier, '*') === false) {

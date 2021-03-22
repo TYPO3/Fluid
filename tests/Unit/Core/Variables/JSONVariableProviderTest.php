@@ -25,7 +25,7 @@ class JSONVariableProviderTest extends UnitTestCase
     /**
      * Constructor
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->jsonFile = new vfsStreamFile('test.json');
         $this->jsonFile->setContent('{"foo": "bar"}');
@@ -49,9 +49,6 @@ class JSONVariableProviderTest extends UnitTestCase
         }
     }
 
-    /**
-     * @test
-     */
     public function getOperabilityTestValues()
     {
         return [

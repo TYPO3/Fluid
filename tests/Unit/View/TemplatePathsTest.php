@@ -144,7 +144,7 @@ class TemplatePathsTest extends BaseTestCase
     public function testFillByPackageName()
     {
         $className = $this->getSubjectClassName();
-        $instance = new $className('FluidTYPO3.Flux');
+        $instance = new $className('TYPO3Fluid.Fluid');
         $this->assertNotEmpty($instance->getTemplateRootPaths());
     }
 

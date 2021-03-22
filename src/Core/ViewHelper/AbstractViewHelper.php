@@ -158,11 +158,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
+     * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {
         if (array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
@@ -170,7 +171,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 1253036401
             );
         }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
         return $this;
     }
 
@@ -184,11 +185,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
      * @param mixed $defaultValue Default value of argument
+     * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
      * @api
      */
-    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null)
+    protected function overrideArgument($name, $type, $description, $required = false, $defaultValue = null, $escape = null)
     {
         if (!array_key_exists($name, $this->argumentDefinitions)) {
             throw new Exception(
@@ -196,7 +198,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
                 1279212461
             );
         }
-        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue);
+        $this->argumentDefinitions[$name] = new ArgumentDefinition($name, $type, $description, $required, $defaultValue, $escape);
         return $this;
     }
 
@@ -269,7 +271,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
         throw new Exception(
             sprintf(
                 'ViewHelper class "%s" does not declare a "render()" method and inherits the default "renderStatic". ' .
-                'Exceuting this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
+                'Executing this ViewHelper would cause infinite recursion - please either implement "render()" or ' .
                 '"renderStatic()" on your ViewHelper class',
                 get_class($this)
             )
