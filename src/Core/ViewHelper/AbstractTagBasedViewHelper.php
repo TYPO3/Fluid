@@ -73,6 +73,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false);
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false);
+        $this->registerArgument('aria', 'array', 'Additional aria-* attributes. They will each be added with a "aria-" prefix.', false);
     }
 
     /**
@@ -98,6 +99,12 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         if ($this->hasArgument('data') && is_array($this->arguments['data'])) {
             foreach ($this->arguments['data'] as $dataAttributeKey => $dataAttributeValue) {
                 $this->tag->addAttribute('data-' . $dataAttributeKey, $dataAttributeValue);
+            }
+        }
+
+        if ($this->hasArgument('aria') && is_array($this->arguments['aria'])) {
+            foreach ($this->arguments['aria'] as $dataAttributeKey => $dataAttributeValue) {
+                $this->tag->addAttribute('aria-' . $dataAttributeKey, $dataAttributeValue);
             }
         }
 
