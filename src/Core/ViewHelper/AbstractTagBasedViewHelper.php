@@ -168,10 +168,27 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
     }
 
+    /**
+     * Handles additional arguments, sorting out any data- and
+     * aria- prefixed tag attributes and assigning them. Then
+     * passes the unassigned arguments to the parent class'
+     * method, which in the default implementation will throw
+     * an error about "undeclared argument used".
+     *
+     * @param array $arguments
+     * @return void
+     */
     public function handleAdditionalArguments(array $arguments)
     {
-        $this->additionalArguments = $arguments;
-        parent::handleAdditionalArguments($arguments);
+        $unassigned = [];
+        foreach ($arguments as $argumentName => $argumentValue) {
+            if (strpos($argumentName, 'data-') === 0 || strpos($argumentName, 'aria-') === 0) {
+                $this->tag->addAttribute($argumentName, $argumentValue);
+            } else {
+                $unassigned[$argumentName] = $argumentValue;
+            }
+        }
+        parent::handleAdditionalArguments($unassigned);
     }
 
     /**
