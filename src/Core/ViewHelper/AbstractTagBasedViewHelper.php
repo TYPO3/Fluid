@@ -103,8 +103,8 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
 
         if ($this->hasArgument('aria') && is_array($this->arguments['aria'])) {
-            foreach ($this->arguments['aria'] as $dataAttributeKey => $dataAttributeValue) {
-                $this->tag->addAttribute('aria-' . $dataAttributeKey, $dataAttributeValue);
+            foreach ($this->arguments['aria'] as $ariaAttributeKey => $ariaAttributeValue) {
+                $this->tag->addAttribute('aria-' . $ariaAttributeKey, $ariaAttributeValue);
             }
         }
 
@@ -155,11 +155,11 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     }
 
     /**
-     * Handles additional arguments, sorting out any data-
-     * prefixed tag attributes and assigning them. Then passes
-     * the unassigned arguments to the parent class' method,
-     * which in the default implementation will throw an error
-     * about "undeclared argument used".
+     * Handles additional arguments, sorting out any data- and
+     * aria- prefixed tag attributes and assigning them. Then
+     * passes the unassigned arguments to the parent class'
+     * method, which in the default implementation will throw
+     * an error about "undeclared argument used".
      *
      * @param array $arguments
      * @return void
@@ -168,7 +168,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     {
         $unassigned = [];
         foreach ($arguments as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
+            if (strpos($argumentName, 'data-') === 0 || strpos($argumentName, 'aria-') === 0) {
                 $this->tag->addAttribute($argumentName, $argumentValue);
             } else {
                 $unassigned[$argumentName] = $argumentValue;
