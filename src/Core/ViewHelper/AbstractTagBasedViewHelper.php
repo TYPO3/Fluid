@@ -111,8 +111,8 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         }
 
         if ($this->hasArgument('aria') && is_array($this->arguments['aria'])) {
-            foreach ($this->arguments['aria'] as $dataAttributeKey => $dataAttributeValue) {
-                $this->tag->addAttribute('aria-' . $dataAttributeKey, $dataAttributeValue);
+            foreach ($this->arguments['aria'] as $ariaAttributeKey => $ariaAttributeValue) {
+                $this->tag->addAttribute('aria-' . $ariaAttributeKey, $ariaAttributeValue);
             }
         }
 
