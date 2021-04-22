@@ -207,6 +207,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $tagBuilder->expects($this->at(1))->method('addAttribute')->with('aria-bar', 'bar');
         $viewHelper->setTagBuilder($tagBuilder);
         $viewHelper->handleAdditionalArguments(['aria-foo' => 'foo', 'aria-bar' => 'bar']);
+        $viewHelper->initializeArgumentsAndRender();
     }
 
     /**
