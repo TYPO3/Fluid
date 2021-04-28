@@ -194,7 +194,7 @@ class TagBuilder
         if ($escapeSpecialCharacters) {
             $attributeName = htmlspecialchars($attributeName);
         }
-        if (($attributeName === 'data' || $attributeName === 'aria')
+        if (in_array($attributeName, ['data', 'aria'], true)
             && (is_array($attributeValue) || $attributeValue instanceof \Traversable)
         ) {
             foreach ($attributeValue as $name => $value) {
