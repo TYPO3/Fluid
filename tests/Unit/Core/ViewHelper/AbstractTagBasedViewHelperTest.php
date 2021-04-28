@@ -139,6 +139,21 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
+    public function ariaAttributesAreRenderedCorrectly()
+    {
+        $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
+        $mockTagBuilder->expects($this->at(0))->method('addAttribute')->with('aria-foo', 'bar');
+        $mockTagBuilder->expects($this->at(1))->method('addAttribute')->with('aria-baz', 'foos');
+        $this->viewHelper->setTagBuilder($mockTagBuilder);
+
+        $arguments = ['aria' => ['foo' => 'bar', 'baz' => 'foos']];
+        $this->viewHelper->setArguments($arguments);
+        $this->viewHelper->initialize();
+    }
+
+    /**
+     * @test
+     */
     public function testValidateAdditionalArgumentsThrowsExceptionIfContainingNonDataArguments()
     {
         $viewHelper = $this->getAccessibleMock(
@@ -171,6 +186,27 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $tagBuilder->expects($this->at(1))->method('addAttribute')->with('data-bar', 'bar');
         $viewHelper->setTagBuilder($tagBuilder);
         $viewHelper->handleAdditionalArguments(['data-foo' => 'foo', 'data-bar' => 'bar']);
+        $viewHelper->initializeArgumentsAndRender();
+    }
+
+    /**
+     * @test
+     */
+    public function testHandleAdditionalArgumentsSetsTagAttributesForAriaArguments()
+    {
+        $viewHelper = $this->getAccessibleMock(
+            AbstractTagBasedViewHelper::class,
+            ['dummy'],
+            [],
+            '',
+            false
+        );
+        $viewHelper->setRenderingContext(new RenderingContextFixture());
+        $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
+        $tagBuilder->expects($this->at(0))->method('addAttribute')->with('aria-foo', 'foo');
+        $tagBuilder->expects($this->at(1))->method('addAttribute')->with('aria-bar', 'bar');
+        $viewHelper->setTagBuilder($tagBuilder);
+        $viewHelper->handleAdditionalArguments(['aria-foo' => 'foo', 'aria-bar' => 'bar']);
         $viewHelper->initializeArgumentsAndRender();
     }
 
