@@ -35,6 +35,19 @@ class TagBasedTest extends UnitTestCase
         $this->assertSame('<div data-foo="bar" />', $result);
     }
 
+    public function testTagBasedViewHelperWithAriaArray()
+    {
+        $invoker = new ViewHelperInvoker();
+        $viewHelper = new TagBasedTestViewHelper();
+        $arguments = [
+            'aria' => [
+                'controls' => 'foo',
+            ],
+        ];
+        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
+        $this->assertSame('<div aria-controls="foo" />', $result);
+    }
+
     public function testTagBasedViewHelperWithDataPrefixedArgument()
     {
         $invoker = new ViewHelperInvoker();
@@ -44,6 +57,17 @@ class TagBasedTest extends UnitTestCase
         ];
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
         $this->assertSame('<div data-foo="bar" />', $result);
+    }
+
+    public function testTagBasedViewHelperWithAriaPrefixedArgument()
+    {
+        $invoker = new ViewHelperInvoker();
+        $viewHelper = new TagBasedTestViewHelper();
+        $arguments = [
+            'aria-controls' => 'foo',
+        ];
+        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
+        $this->assertSame('<div aria-controls="foo" />', $result);
     }
 
     /**
@@ -73,6 +97,39 @@ class TagBasedTest extends UnitTestCase
                     'data-foo' => 'attribute',
                     'data' => [
                         'foo' => 'data',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider
+     */
+    public function testTagBasedViewHelperWithAriaArrayAndPrefixedArgument(array $arguments)
+    {
+        $invoker = new ViewHelperInvoker();
+        $viewHelper = new TagBasedTestViewHelper();
+        $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
+        $this->assertSame('<div aria-controls="attribute" />', $result);
+    }
+
+    public function tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider(): array
+    {
+        return [
+            'aria before attribute' => [
+                [
+                    'aria' => [
+                        'controls' => 'aria',
+                    ],
+                    'aria-controls' => 'attribute',
+                ],
+            ],
+            'attribute before aria' => [
+                [
+                    'aria-controls' => 'attribute',
+                    'aria' => [
+                        'controls' => 'aria',
                     ],
                 ],
             ],
