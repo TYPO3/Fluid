@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  * See LICENSE.txt that was shipped with this package.
  */
 
+use TYPO3Fluid\Fluid\Component\Argument\ArgumentCollection;
 use TYPO3Fluid\Fluid\Component\ComponentInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
@@ -55,9 +56,9 @@ class TemplateParser
         }
         static $cache = [];
         if (isset($cache[$hash])) {
-            return $cache[$hash];
+            return clone $cache[$hash];
         }
-        return $cache[$hash] = ($this->stack[$hash] ?? $this->parse($source));
+        return clone $cache[$hash] = ($this->stack[$hash] ?? $this->parse($source));
     }
 
     /**
@@ -109,7 +110,7 @@ class TemplateParser
         if (!isset($cache[$templateIdentifier])) {
             $cache[$templateIdentifier] = $this->parseTemplateSource($templateIdentifier, $templateSourceClosure);
         }
-        return $cache[$templateIdentifier];
+        return clone $cache[$templateIdentifier];
     }
 
     /**

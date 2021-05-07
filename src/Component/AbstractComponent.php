@@ -293,4 +293,17 @@ abstract class AbstractComponent implements ComponentInterface
         }
         return (string) $value;
     }
+
+    public function __clone()
+    {
+        if ($this->arguments !== null) {
+            $this->arguments = clone $this->arguments;
+        }
+
+        if (0 < count($this->children)) {
+            $this->children = array_map(function ($child) {
+                return clone $child;
+            }, $this->children);
+        }
+    }
 }
