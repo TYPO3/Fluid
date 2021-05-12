@@ -108,7 +108,7 @@ where you don't have the option of neither assuming that Fluid will convert your
 ```
 
 In these cases you cannot cast or convert the `myVariable` or `myOtherVariable` variables - and the code inside `//render` may
-fail if you receive unexpected types. To be able to cast a variable in this case, simply wrap it with qoutes:
+fail if you receive unexpected types. To be able to cast a variable in this case, simply wrap it with quotes:
 
 ```xml
 <f:for each="{0: '{myVariable as integer}', 1: '{myOtherVariable as integer}'}" as="newVariable">
