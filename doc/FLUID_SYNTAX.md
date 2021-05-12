@@ -117,4 +117,4 @@ fail if you receive unexpected types. To be able to cast a variable in this case
 ```
 
 ...and Fluid will be able to detect the **expression** you used, extract and cast the variable and finally remove the quotations
-and use the variable directly (although, semantically, the quotes mean you create a new TextNode that a variable converted into a predefined type.
+and use the variable directly. Semantically, the quotes mean you create a new `TextNode` that contains a variable converted to the specified type.
