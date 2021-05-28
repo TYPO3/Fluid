@@ -13,7 +13,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
-use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\DefaultCaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper;
@@ -172,7 +171,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function getCompileTestValues()
     {
-        $renderingContext = new RenderingContext($this->getMock(TemplateView::class), ['dummy'], [], '', false);
+        $renderingContext = new RenderingContext();
         $parsingState = new ParsingState();
         $emptySwitchNode = new ViewHelperNode(
             $renderingContext,
