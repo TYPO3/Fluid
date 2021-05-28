@@ -57,7 +57,7 @@ abstract class AbstractTemplateView extends AbstractView
     public function __construct(RenderingContextInterface $context = null)
     {
         if (!$context) {
-            $context = new RenderingContext($this);
+            $context = new RenderingContext();
             $context->setControllerName('Default');
             $context->setControllerAction('Default');
         }

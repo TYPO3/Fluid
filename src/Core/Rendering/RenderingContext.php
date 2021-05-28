@@ -26,7 +26,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
-use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
  * The rendering context that contains useful information during rendering time of a Fluid template
@@ -78,11 +77,6 @@ class RenderingContext implements RenderingContextInterface
     protected $controllerAction;
 
     /**
-     * @var ViewInterface
-     */
-    protected $view;
-
-    /**
      * @var TemplateParser
      */
     protected $templateParser;
@@ -126,9 +120,8 @@ class RenderingContext implements RenderingContextInterface
      * setRenderingContext() method (convention name) to provide the instance that is
      * created with an instance of the "parent" RenderingContext.
      */
-    public function __construct(ViewInterface $view)
+    public function __construct()
     {
-        $this->view = $view;
         $this->setTemplateParser(new TemplateParser());
         $this->setTemplateCompiler(new TemplateCompiler());
         $this->setTemplatePaths(new TemplatePaths());
