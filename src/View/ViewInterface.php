@@ -49,7 +49,7 @@ interface ViewInterface
      * @param array $variables The variables to use
      * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string rendered template for the section
-     * @throws InvalidSectionException
+     * @throws Exception\InvalidSectionException
      */
     public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false);
 
