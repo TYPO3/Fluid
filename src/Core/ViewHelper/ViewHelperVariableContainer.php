@@ -154,7 +154,7 @@ class ViewHelperVariableContainer
      *
      * !!! This is NOT a public API and might still change!!!
      *
-     * @return ViewInterface The View
+     * @return ViewInterface|null The View, or null if view was not set
      */
     public function getView()
     {
