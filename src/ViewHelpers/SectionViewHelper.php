@@ -62,6 +62,27 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
  *     [...]
  *     (depending on the value of {menu})
  *
+ *
+ * Special sections HeaderAssets/FooterAssets
+ * ------------------------------------------
+ *
+ * If you want to include a header or footer asset within a plugin, you can use the special sections "HeaderAssets" and "FooterAssets".
+ * These sections are rendered by the ActionController (\TYPO3\CMS\Extbase\Mvc\Controller\ActionController) and provide the ability to include various resources and metadata.
+ * When rendering, `{request}` is available as a template variable in both sections, as is `{arguments}`. This allows you to make decisions based on various request/controller arguments. Note that `{settings}` is also available.
+ *
+ * All content you write into these sections will be output in the respective location as is, meaning you must write the entire `<script>` or whichever tag you are writing, including all attributes. You can of course use various Fluid ViewHelpers to resolve extension asset paths.
+ *
+ * The feature only applies to ActionController (thus excluding CommandController) and will only attempt to render the section if the view is an instance of `TYPO3Fluid\\Fluid\\View\\TemplateView` (thus including any View in TYPO3 which extends either TemplateView or AbstractTemplateView from TYPO3’s Fluid adapter).
+ *
+ * ::
+ *     <f:section name="HeaderAssets">
+ *        <link rel="stylesheet" href="typo3conf/ext/my_extension/Resources/Public/Css/myCssFile.css" />
+ *     </f:section>
+ *     <f:section name="FooterAssets">
+ *        <p>© My example copyright note in the footer</p>
+ *        <script src="typo3conf/myExtension/my_extension/Resources/Public/Js/myJsFile.js"></script>
+ *     </f:section>
+ *
  * @api
  */
 class SectionViewHelper extends AbstractViewHelper
