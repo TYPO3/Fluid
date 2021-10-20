@@ -37,7 +37,7 @@ jobs:
         run: composer update
 
       - name: Run test suite
-        run: vendor/bin/phpunit --colors --coverage-clover=build/logs/clover.xml
+        run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
       - name: Upload coverage results to Coveralls
         env:
