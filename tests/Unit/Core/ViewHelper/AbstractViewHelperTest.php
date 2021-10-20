@@ -20,7 +20,6 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefault
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for AbstractViewHelper
@@ -249,8 +248,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
         $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
 
-        $view = new TemplateView();
-        $renderingContext = new RenderingContext($view);
+        $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider($templateVariableContainer);
         $renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
 
@@ -377,8 +375,7 @@ class AbstractViewHelperTest extends UnitTestCase
      */
     public function testCompileReturnsAndAssignsExpectedPhpCode()
     {
-        $view = new TemplateView();
-        $context = new RenderingContext($view);
+        $context = new RenderingContext();
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
         $node = new ViewHelperNode($context, 'f', 'comment', [], new ParsingState());
         $init = '';

@@ -1,0 +1,45 @@
+name: build
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '57 5 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.2', '7.3', '7.4']
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          tools: composer:v2
+          extensions: mbstring, json
+          coverage: xdebug
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Lint PHP
+        run: |
+          find src/ tests/ -name '*.php' -print0 | xargs -0 -n1 -P4 php -dxdebug.mode=off -l >/dev/null
+
+      - name: Install dependencies
+        run: composer update
+
+      - name: Run test suite
+        run: vendor/bin/phpunit --colors --coverage-clover=build/logs/clover.xml
+
+      - name: Upload coverage results to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: vendor/bin/php-coveralls
