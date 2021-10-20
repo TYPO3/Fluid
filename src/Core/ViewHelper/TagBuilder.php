@@ -194,9 +194,11 @@ class TagBuilder
         if ($escapeSpecialCharacters) {
             $attributeName = htmlspecialchars($attributeName);
         }
-        if ($attributeName === 'data' && (is_array($attributeValue) || $attributeValue instanceof \Traversable)) {
+        if (in_array($attributeName, ['data', 'aria'], true)
+            && (is_array($attributeValue) || $attributeValue instanceof \Traversable)
+        ) {
             foreach ($attributeValue as $name => $value) {
-                $this->addAttribute('data-' . $name, $value, $escapeSpecialCharacters);
+                $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
             if (trim((string) $attributeValue) === '' && $this->ignoreEmptyAttributes) {

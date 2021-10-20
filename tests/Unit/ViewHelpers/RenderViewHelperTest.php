@@ -7,6 +7,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderableInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ParsedTemplateImplementationFixture;
@@ -59,6 +60,23 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
         $instance->expects($this->at(6))->method('registerArgument')->with('default', 'mixed', $this->anything());
         $instance->expects($this->at(7))->method('registerArgument')->with('contentAs', 'string', $this->anything());
         $instance->initializeArguments();
+    }
+
+    public function testThrowsExceptionIfExecutedWithoutViewSetOnViewHelperVariableContainerRegardlessOfInvalidArguments()
+    {
+        $renderingContext = new RenderingContextFixture();
+        $this->setExpectedException(Exception::class);
+        $arguments = [
+            'partial' => null,
+            'section' => null,
+            'delegate' => null,
+            'renderable' => null,
+            'arguments' => [],
+            'optional' => true,
+            'default' => null,
+            'contentAs' => null
+        ];
+        RenderViewHelper::renderStatic($arguments, function() {}, $renderingContext);
     }
 
     /**

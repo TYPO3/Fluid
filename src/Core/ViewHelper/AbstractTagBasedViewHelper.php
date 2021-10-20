@@ -47,6 +47,14 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     protected $tagName = 'div';
 
     /**
+     * Arguments which are valid but do not have an ArgumentDefinition, e.g.
+     * data- prefixed arguments.
+     *
+     * @var array
+     */
+    protected $additionalArguments = [];
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -73,6 +81,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false);
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false);
+        $this->registerArgument('aria', 'array', 'Additional aria-* attributes. They will each be added with a "aria-" prefix.', false);
     }
 
     /**
@@ -98,6 +107,18 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         if ($this->hasArgument('data') && is_array($this->arguments['data'])) {
             foreach ($this->arguments['data'] as $dataAttributeKey => $dataAttributeValue) {
                 $this->tag->addAttribute('data-' . $dataAttributeKey, $dataAttributeValue);
+            }
+        }
+
+        if ($this->hasArgument('aria') && is_array($this->arguments['aria'])) {
+            foreach ($this->arguments['aria'] as $ariaAttributeKey => $ariaAttributeValue) {
+                $this->tag->addAttribute('aria-' . $ariaAttributeKey, $ariaAttributeValue);
+            }
+        }
+
+        foreach ($this->additionalArguments as $argumentName => $argumentValue) {
+            if (strpos($argumentName, 'data-') === 0 || strpos($argumentName, 'aria-') === 0) {
+                $this->tag->addAttribute($argumentName, $argumentValue);
             }
         }
 
@@ -147,27 +168,10 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
     }
 
-    /**
-     * Handles additional arguments, sorting out any data-
-     * prefixed tag attributes and assigning them. Then passes
-     * the unassigned arguments to the parent class' method,
-     * which in the default implementation will throw an error
-     * about "undeclared argument used".
-     *
-     * @param array $arguments
-     * @return void
-     */
     public function handleAdditionalArguments(array $arguments)
     {
-        $unassigned = [];
-        foreach ($arguments as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
-                $this->tag->addAttribute($argumentName, $argumentValue);
-            } else {
-                $unassigned[$argumentName] = $argumentValue;
-            }
-        }
-        parent::handleAdditionalArguments($unassigned);
+        $this->additionalArguments = $arguments;
+        parent::handleAdditionalArguments($arguments);
     }
 
     /**
