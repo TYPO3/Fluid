@@ -19,11 +19,14 @@ class BasicConditionsTest extends BaseConditionalFunctionalTestCase
             ['1 != 2', true],
             ['1 == 2', false],
             ['1 === 1', true],
-            ['\'foo\' == 0', true],
-            ['1.1 >= \'foo\'', true],
+            // expected value based on php versions behaviour
+            ['\'foo\' == 0', (PHP_VERSION_ID < 80000 ? true : false)],
+            // expected value based on php versions behaviour
+            ['1.1 >= \'foo\'', (PHP_VERSION_ID < 80000 ? true : false)],
             ['\'String containing word \"false\" in text\'', true],
             ['\'  FALSE  \'', true],
-            ['\'foo\' > 0', false],
+            // expected value based on php versions behaviour
+            ['\'foo\' > 0', (PHP_VERSION_ID < 80000 ? false : true)],
             ['FALSE', false],
             ['(FALSE || (FALSE || 1)', true],
             ['(FALSE || (FALSE || 1)', true],

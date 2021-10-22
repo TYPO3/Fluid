@@ -585,9 +585,12 @@ class BooleanNodeTest extends UnitTestCase
      */
     public function equalsReturnsTrueIfComparingStringWithZero()
     {
+        // expected value based on php versions behaviour
+        $expected = (PHP_VERSION_ID < 80000 ? true : false);
+
         $rootNode = new RootNode();
         $rootNode->addChildNode(new TextNode('\'stringA\' == 0'));
-        $this->assertTrue(BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
+        $this->assertSame($expected, BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
     }
 
     /**

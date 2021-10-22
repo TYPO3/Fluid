@@ -128,9 +128,10 @@ class BooleanParserTest extends UnitTestCase
             ['0 OR 1', true],
 
             // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
-            ['\'foo\' == 0', true],
-            ['1.1 >= foo', true],
-            ['\'foo\' > 0', false],
+            // expected value based on php versions behaviour
+            ['\'foo\' == 0', (PHP_VERSION_ID < 80000 ? true : false)],
+            ['1.1 >= foo', (PHP_VERSION_ID < 80000 ? true : false)],
+            ['\'foo\' > 0', (PHP_VERSION_ID < 80000 ? false : true)],
 
             ['{foo}', true, ['foo' => true]],
             ['{foo} == FALSE', true, ['foo' => false]],
