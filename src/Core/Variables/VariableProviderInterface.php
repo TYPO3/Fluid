@@ -130,6 +130,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param mixed $value The variable's value
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($identifier, $value);
 
     /**
@@ -138,6 +139,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param string $identifier The identifier to remove
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($identifier);
 
     /**
@@ -146,6 +148,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param string $identifier
      * @return boolean TRUE if $identifier exists, FALSE otherwise
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($identifier);
 
     /**
@@ -154,5 +157,6 @@ interface VariableProviderInterface extends \ArrayAccess
      * @param string $identifier
      * @return mixed The variable identified by $identifier
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($identifier);
 }
