@@ -608,7 +608,7 @@ class TemplatePaths
                 1257246929
             );
         }
-        return file_get_contents($templateReference, FILE_TEXT);
+        return file_get_contents($templateReference);
     }
 
     /**
