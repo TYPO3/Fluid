@@ -242,7 +242,7 @@ class TemplateParserTest extends UnitTestCase
      */
     public function splitTemplateAtDynamicTagsReturnsCorrectlySplitTemplate($templateName)
     {
-        $template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html', FILE_TEXT);
+        $template = file_get_contents(__DIR__ . '/Fixtures/' . $templateName . '.html');
         $expectedResult = require __DIR__ . '/Fixtures/' . $templateName . '-split.php';
         $templateParser = $this->getAccessibleMock(TemplateParser::class, ['dummy']);
         $this->assertSame($expectedResult, $templateParser->_call('splitTemplateAtDynamicTags', $template), 'Filed for ' . $templateName);

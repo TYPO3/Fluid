@@ -546,7 +546,7 @@ class TemplatePaths
     public function getLayoutSource($layoutName = 'Default')
     {
         $layoutPathAndFilename = $this->getLayoutPathAndFilename($layoutName);
-        return file_get_contents($layoutPathAndFilename, FILE_TEXT);
+        return file_get_contents($layoutPathAndFilename);
     }
 
     /**
@@ -680,7 +680,7 @@ class TemplatePaths
     public function getPartialSource($partialName)
     {
         $partialPathAndFilename = $this->getPartialPathAndFilename($partialName);
-        return file_get_contents($partialPathAndFilename, FILE_TEXT);
+        return file_get_contents($partialPathAndFilename);
     }
 
     /**
