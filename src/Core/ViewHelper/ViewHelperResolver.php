@@ -325,7 +325,7 @@ class ViewHelperResolver
         $namespaces = (array) $this->namespaces[$namespaceIdentifier];
 
         do {
-            $name = rtrim(array_pop($namespaces), '\\') . '\\' . $className;
+            $name = rtrim((string)array_pop($namespaces), '\\') . '\\' . $className;
         } while (!class_exists($name) && count($namespaces));
 
         return $name;
