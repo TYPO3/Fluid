@@ -10,6 +10,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 
 /**
  * Ternary Condition Node - allows the shorthand version
@@ -49,109 +50,36 @@ class NullcoalescingExpressionNode extends AbstractExpressionNode
         $parts = preg_split('/([\?\?])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
 
-        list ($value, $fallback) = $parts;
-
-        $context = static::gatherContext($renderingContext, $expression);
-
-        // After gathering context, we have to evaluate the variable and either it is null, then we return $fallback or
-        // it is not and we return $value
-
-        $parser = new BooleanParser();
-        $checkResult = $parser->evaluate($value, $context);
-
-        if ($checkResult) {
-            return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
-        } else {
-            return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
+        foreach($parts as $part) {
+            $value = static::getTemplateVariableOrValueItself($part, $renderingContext);
+            if(!is_null($value)) {
+                return $value;
+            }
         }
+
+        return null;
     }
+
 
     /**
      * @param mixed $candidate
      * @param RenderingContextInterface $renderingContext
      * @return mixed
      */
-    public static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext)
+    protected static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext)
     {
-        $suspect = parent::getTemplateVariableOrValueItself($candidate, $renderingContext);
-        if ($suspect === $candidate) {
-            return $renderingContext->getTemplateParser()->unquoteString($suspect);
+        $variables = $renderingContext->getVariableProvider()->getAll();
+        $extractor = new VariableExtractor();
+        $suspect = $extractor->getByPath($variables, $candidate);
+
+        if (is_numeric($candidate)) {
+            $suspect = $candidate;
+        } elseif (mb_strpos($candidate, '\'') === 0) {
+            $suspect = trim($candidate, '\'');
+        } elseif (mb_strpos($candidate, '"') === 0) {
+            $suspect = trim($candidate, '"');
         }
+
         return $suspect;
-    }
-
-    /**
-     * Gather all context variables used in the expression
-     *
-     * @param RenderingContextInterface $renderingContext
-     * @param string $expression
-     * @return array
-     */
-    public static function gatherContext($renderingContext, $expression)
-    {
-        $context = [];
-        if (preg_match_all(static::$variableDetection, $expression, $matches) > 0) {
-            foreach ($matches[1] as $variable) {
-                if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable) === true) {
-                    continue;
-                }
-                $context[$variable] = static::getTemplateVariableOrValueItself($variable, $renderingContext);
-            }
-        }
-        return $context;
-    }
-
-    /**
-     * Compiles the ExpressionNode, returning an array with
-     * exactly two keys which contain strings:
-     *
-     * - "initialization" which contains variable initializations
-     * - "execution" which contains the execution (that uses the variables)
-     *
-     * The expression and matches can be read from the local
-     * instance - and the RenderingContext and other APIs
-     * can be accessed via the TemplateCompiler.
-     *
-     * @param TemplateCompiler $templateCompiler
-     * @return string
-     */
-    public function compile(TemplateCompiler $templateCompiler)
-    {
-        $parts = preg_split('/([\?:])/s', $this->getExpression());
-        $parts = array_map([__CLASS__, 'trimPart'], $parts);
-        list ($check, $then, $else) = $parts;
-
-        $matchesVariable = $templateCompiler->variableName('array');
-        $initializationPhpCode = '// Rendering TernaryExpression node' . chr(10);
-        $initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), true)) . chr(10);
-
-        $parser = new BooleanParser();
-        $compiledExpression = $parser->compile($check);
-        $functionName = $templateCompiler->variableName('ternaryExpression');
-        $initializationPhpCode .= sprintf(
-            '%s = function($context, $renderingContext) {
-				if (%s::convertToBoolean(' . $compiledExpression . ', $renderingContext) === TRUE) {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				} else {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				}
-			};' . chr(10),
-            $functionName,
-            BooleanNode::class,
-            static::class,
-            var_export($then, true),
-            static::class,
-            var_export($else, true)
-        );
-
-        return [
-            'initialization' => $initializationPhpCode,
-            'execution' => sprintf(
-                '%s(%s::gatherContext($renderingContext, %s[1]), $renderingContext)',
-                $functionName,
-                static::class,
-                $matchesVariable
-            )
-        ];
     }
 }
