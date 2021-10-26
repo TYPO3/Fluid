@@ -184,7 +184,7 @@ class TagBuilder
      * Adds an attribute to the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be added to the tag
-     * @param string $attributeValue attribute value
+     * @param string|\Traversable|array|null $attributeValue attribute value
      * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute value
      * @return void
      * @api
@@ -205,7 +205,7 @@ class TagBuilder
                 return;
             }
             if ($escapeSpecialCharacters) {
-                $attributeValue = htmlspecialchars($attributeValue);
+                $attributeValue = htmlspecialchars((string)$attributeValue);
             }
             $this->attributes[$attributeName] = $attributeValue;
         }
