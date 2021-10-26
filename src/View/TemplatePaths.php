@@ -593,7 +593,7 @@ class TemplatePaths
             return $this->templateSource = stream_get_contents($this->templateSource);
         }
         $templateReference = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action);
-        if (!file_exists($templateReference) && $templateReference !== 'php://stdin') {
+        if (!file_exists((string)$templateReference) && $templateReference !== 'php://stdin') {
             $format = $this->getFormat();
             throw new InvalidTemplateResourceException(
                 sprintf(
@@ -616,12 +616,13 @@ class TemplatePaths
      * <PackageKey>_<SubPackageKey>_<ControllerName>_<prefix>_<SHA1>
      * The SH1 hash is a checksum that is based on the file path and last modification date
      *
-     * @param string $pathAndFilename
+     * @param string|null $pathAndFilename
      * @param string $prefix
      * @return string
      */
     protected function createIdentifierForFile($pathAndFilename, $prefix)
     {
+        $pathAndFilename = (string)$pathAndFilename;
         $templateModifiedTimestamp = $pathAndFilename !== 'php://stdin' && file_exists($pathAndFilename) ? filemtime($pathAndFilename) : 0;
         return sprintf('%s_%s', $prefix, sha1($pathAndFilename . '|' . $templateModifiedTimestamp));
     }
