@@ -11,6 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\StandardErrorHandler;
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
+use TYPO3Fluid\Fluid\ViewHelpers\Expression\NullcoalescingViewHelper;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateParser;
 use TYPO3Fluid\Fluid\Core\Rendering\FluidRenderer;
 use TYPO3Fluid\Fluid\Core\Rendering\FluidRendererInterface;
@@ -71,6 +72,7 @@ class RenderingContextFixture implements RenderingContextInterface
         MathViewHelper::class,
         CastViewHelper::class,
         IfViewHelper::class,
+        NullcoalescingViewHelper::class,
     ];
 
     /**

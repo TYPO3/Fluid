@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Math Expression ViewHelper, seconds as expression type
+ * Cast Expression ViewHelper, seconds as expression type
  */
 class CastViewHelper extends AbstractViewHelper implements ExpressionComponentInterface
 {
@@ -31,7 +31,7 @@ class CastViewHelper extends AbstractViewHelper implements ExpressionComponentIn
     protected function initializeArguments()
     {
         $this->registerArgument('subject', 'mixed', 'Numeric first value to calculate', true);
-        $this->registerArgument('as', 'string', 'Type to cast, valid values are: integer, boolean, string, float and array', true);
+        $this->registerArgument('as', 'string', 'Type to cast, valid values are: integer, boolean, string, float, array and DateTime', true);
     }
 
     public function evaluate(RenderingContextInterface $renderingContext)
