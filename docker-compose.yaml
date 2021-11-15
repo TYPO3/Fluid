@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+    php74:
+        build:
+            context: docker/php74
+            dockerfile: Dockerfile
+        volumes:
+            - .:/opt/fluid
+        user: 1000:1000
