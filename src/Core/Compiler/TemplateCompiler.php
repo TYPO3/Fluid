@@ -300,7 +300,7 @@ EOD;
      */
     protected function sanitizeIdentifier($identifier)
     {
-        return preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
+        return (string)preg_replace('([^a-zA-Z0-9_\x7f-\xff])', '_', $identifier);
     }
 
     /**

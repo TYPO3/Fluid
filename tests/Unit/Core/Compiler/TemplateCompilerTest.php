@@ -64,6 +64,7 @@ class TemplateCompilerTest extends UnitTestCase
         $renderingContext->cacheDisabled = true;
         $renderingContext->expects($this->never())->method('getCache');
         $instance->setRenderingContext($renderingContext);
+        $instance->expects($this->once())->method('sanitizeIdentifier')->willReturn('');
         $result = $instance->has('test');
         $this->assertFalse($result);
     }
