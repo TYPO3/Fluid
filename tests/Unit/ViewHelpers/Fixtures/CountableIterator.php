@@ -13,26 +13,32 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
  */
 class CountableIterator implements \Iterator, \Countable
 {
+    #[\ReturnTypeWillChange]
     public function current()
     {
     }
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
     }
 
+    #[\ReturnTypeWillChange]
     public function key()
     {
     }
 
+    #[\ReturnTypeWillChange]
     public function valid()
     {
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
     }
 
+    #[\ReturnTypeWillChange]
     public function count()
     {
     }
