@@ -258,9 +258,11 @@ class TemplatePaths
         $controller = str_replace('\\', '/', $controller);
         $action = ucfirst($action);
         $identifier = $controller . '/' . $action . '.' . $format;
+        $identifier = ltrim($identifier, '/');
         if (!array_key_exists($identifier, $this->resolvedFiles['templates'])) {
             $templateRootPaths = $this->getTemplateRootPaths();
             foreach ([$controller . '/' . $action, $action] as $possibleRelativePath) {
+                $possibleRelativePath = ltrim($possibleRelativePath, '/');
                 try {
                     return $this->resolvedFiles['templates'][$identifier] = $this->resolveFileInPaths($templateRootPaths, $possibleRelativePath, $format);
                 } catch (InvalidTemplateResourceException $error) {
