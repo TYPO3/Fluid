@@ -283,13 +283,29 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @@test
      */
+    public function testActionTemplateWithControllerAndAction(): void
+    {
+        $className = $this->getSubjectClassName();
+        $subject = new $className();
+        $baseTemplatePath = __DIR__ . '/Fixtures';
+        $subject->setTemplateRootPaths([$baseTemplatePath]);
+        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('ARandomController', 'TestTemplate');
+        self::assertEquals($baseTemplatePath . '/ARandomController/TestTemplate.html', $foundFixture);
+        $identifier = $subject->getTemplateIdentifier('ARandomController', 'TestTemplate');
+        self::assertStringStartsWith('ARandomController_action_TestTemplate_', $identifier);
+    }
+
+    /**
+     * @@test
+     */
     public function testActionTemplateWithEmptyController(): void
     {
         $className = $this->getSubjectClassName();
         $subject = new $className();
-        $subject->setTemplateRootPaths([__DIR__ . '/Fixtures']);
+        $baseTemplatePath = __DIR__ . '/Fixtures';
+        $subject->setTemplateRootPaths([$baseTemplatePath]);
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');
-        self::assertStringContainsString('UnparsedTemplateFixture.html', $foundFixture);
+        self::assertEquals($baseTemplatePath . '/UnparsedTemplateFixture.html', $foundFixture);
         $identifier = $subject->getTemplateIdentifier('', 'UnparsedTemplateFixture');
         self::assertStringStartsWith('action_UnparsedTemplateFixture_', $identifier);
     }
