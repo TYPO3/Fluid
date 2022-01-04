@@ -6,8 +6,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3Fluid\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
@@ -280,5 +278,19 @@ class TemplatePathsTest extends BaseTestCase
         $instance = new $className();
         $instance->setTemplateSource('foobar');
         $this->assertEquals('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+    }
+
+    /**
+     * @@test
+     */
+    public function testActionTemplateWithEmptyController(): void
+    {
+        $className = $this->getSubjectClassName();
+        $subject = new $className();
+        $subject->setTemplateRootPaths([__DIR__ . '/Fixtures']);
+        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');
+        self::assertStringContainsString('UnparsedTemplateFixture.html', $foundFixture);
+        $identifier = $subject->getTemplateIdentifier('', 'UnparsedTemplateFixture');
+        self::assertStringStartsWith('action_UnparsedTemplateFixture_', $identifier);
     }
 }

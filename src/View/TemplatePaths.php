@@ -565,7 +565,7 @@ class TemplatePaths
             return 'source_' . sha1($this->templateSource) . '_' . $controller . '_' . $action . '_' . $this->getFormat();
         }
         $templatePathAndFilename = $this->resolveTemplateFileForControllerAndActionAndFormat($controller, $action);
-        $prefix = $controller . '_action_' . $action;
+        $prefix = ltrim($controller . '_action_' . $action, '_');
         return $this->createIdentifierForFile($templatePathAndFilename, $prefix);
     }
 
