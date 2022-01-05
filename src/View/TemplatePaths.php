@@ -257,8 +257,7 @@ class TemplatePaths
         $format = $format ?: $this->getFormat();
         $controller = str_replace('\\', '/', $controller);
         $action = ucfirst($action);
-        $identifier = $controller . '/' . $action . '.' . $format;
-        $identifier = ltrim($identifier, '/');
+        $identifier = ltrim($controller . '/' . $action . '.' . $format, '/');
         if (!array_key_exists($identifier, $this->resolvedFiles['templates'])) {
             $templateRootPaths = $this->getTemplateRootPaths();
             foreach ([$controller . '/' . $action, $action] as $possibleRelativePath) {
