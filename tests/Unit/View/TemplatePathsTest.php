@@ -281,7 +281,7 @@ class TemplatePathsTest extends BaseTestCase
     }
 
     /**
-     * @@test
+     * @test
      */
     public function testActionTemplateWithControllerAndAction(): void
     {
@@ -296,7 +296,7 @@ class TemplatePathsTest extends BaseTestCase
     }
 
     /**
-     * @@test
+     * @test
      */
     public function testActionTemplateWithEmptyController(): void
     {
