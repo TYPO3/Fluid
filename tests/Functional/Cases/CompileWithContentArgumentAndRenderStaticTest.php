@@ -68,9 +68,9 @@ class CompileWithContentArgumentAndRenderStaticTest extends BaseFunctionalTestCa
                 null,
                 true
             ],
-            // now the hard cases - setting the contentArgumentName property which the trait uses to disable the magic
-            'children content but no argument value [use second optional argument]' => [
-                '<test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent >mustBeRenderingChildrenClosure</test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent>',
+            // now the hard cases - setting the contentArgumentName property through the constructor
+            'children content but no argument value [use second optional argument][explicit set in __construct]' => [
+                '<test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentInConstructor>mustBeRenderingChildrenClosure</test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentInConstructor>',
                 [],
                 [
                     '"arguments[firstOptionalArgument]": null',
@@ -81,8 +81,33 @@ class CompileWithContentArgumentAndRenderStaticTest extends BaseFunctionalTestCa
                 null,
                 true
             ],
-            'children content and argument value [use second optional argument]' => [
-                '<test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent firstOptionalArgument="firstOptionalArgument" secondOptionalArgument="secondOptionalArgument">mustBeRenderingChildrenClosure</test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent>',
+            'children content and argument value [use second optional argument][explicit set in __construct]' => [
+                '<test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentInConstructor firstOptionalArgument="firstOptionalArgument" secondOptionalArgument="secondOptionalArgument">mustBeRenderingChildrenClosure</test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentInConstructor>',
+                [],
+                [
+                    '"arguments[firstOptionalArgument]": "firstOptionalArgument"',
+                    '"arguments[secondOptionalArgument]": "secondOptionalArgument"',
+                    '"renderChildrenClosure": "secondOptionalArgument"',
+                ],
+                [],
+                null,
+                true
+            ],
+            // now the hard cases - setting the contentArgumentName property through overriding resolveContentArgumentName
+            'children content but no argument value [use second optional argument][explicit set in overriden resolveContentArgumentName]' => [
+                '<test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethod>mustBeRenderingChildrenClosure</test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethod>',
+                [],
+                [
+                    '"arguments[firstOptionalArgument]": null',
+                    '"arguments[secondOptionalArgument]": null',
+                    '"renderChildrenClosure": "mustBeRenderingChildrenClosure"',
+                ],
+                [],
+                null,
+                true
+            ],
+            'children content and argument value [use second optional argument][explicit set in overriden resolveContentArgumentName]' => [
+                '<test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethod firstOptionalArgument="firstOptionalArgument" secondOptionalArgument="secondOptionalArgument">mustBeRenderingChildrenClosure</test:compileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethod>',
                 [],
                 [
                     '"arguments[firstOptionalArgument]": "firstOptionalArgument"',

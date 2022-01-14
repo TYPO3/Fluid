@@ -20,25 +20,22 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
 /**
- * Class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentViewHelper
+ * Class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethodViewHelper *
  */
-class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentViewHelper extends AbstractViewHelper
+class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethodViewHelper extends AbstractViewHelper
 {
     // ViewHelper tests this trait functionalities.
     use CompileWithContentArgumentAndRenderStatic;
-
-    /**
-     * Explicit set name of content argument which disable the magic determination of the first optional argument
-     * provided by the 'CompileWithContentArgumentAndRenderStatic' trait.
-     *
-     * @var string
-     */
-    protected $contentArgumentName = 'secondOptionalArgument';
 
     // set to false because of json response, not test relevant
     protected $escapeOutput = false;
     // set to false because of json response, not test relevant
     protected $escapeChildren = false;
+
+    public function __construct()
+    {
+
+    }
 
     public function initializeArguments(): void
     {
@@ -57,5 +54,14 @@ class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent
             ],
             JSON_PRETTY_PRINT
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function resolveContentArgumentName()
+    {
+        // Use argument name to be used as content 'renderChildrenClosure()' if provided, otherwise render children.
+        return 'secondOptionalArgument';
     }
 }
