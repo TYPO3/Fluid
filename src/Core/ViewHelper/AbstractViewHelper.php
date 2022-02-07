@@ -140,7 +140,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Returns whether the escaping interceptors should be disabled or enabled for the render-result of this ViewHelper
      *
-     * Note: This method is no public API, use $this->escapeChildren instead!
+     * Note: This method is no public API, use $this->escapeOutput instead!
      *
      * @return boolean
      */
