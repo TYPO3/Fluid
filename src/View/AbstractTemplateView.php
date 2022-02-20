@@ -22,7 +22,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
  *
  * Contains the fundamental methods which any Fluid based template view needs.
  */
-abstract class AbstractTemplateView extends AbstractView
+abstract class AbstractTemplateView extends AbstractView implements TemplateAwareViewInterface
 {
 
     /**
