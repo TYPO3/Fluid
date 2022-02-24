@@ -25,11 +25,31 @@ trait CompileWithContentArgumentAndRenderStatic
      * registered in `initializeArguments` of the ViewHelper
      * will be used.
      *
-     * Note: it is significantly better practice to define
+     * Note: it is significantly better practice defining
      * this property in your ViewHelper class and so fix it
      * to one particular argument instead of resolving,
      * especially when your ViewHelper is called multiple
      * times within an uncompiled template!
+     *
+     * This property cannot be directly set in consuming
+     * ViewHelper, instead set the property in ViewHelper
+     * constructor '__construct()', for example with
+     * $this->contentArgumentName = 'explicitlyToUseArgumentName';
+     *
+     * Another possible way would be to override the method
+     * 'resolveContentArgumentName()' and return the name.
+     *
+     * public function resolveContentArgumentName()
+     * {
+     *     return 'explicitlyToUseArgumentName';
+     * }
+     *
+     * Note: Setting this through 'initializeArguments()' will
+     *       not work as expected, and other methods should be
+     *       avoided to override this.
+     *
+     * Following test ViewHelpers are tested and demonstrates
+     * that the setting posibillities works.
      *
      * @var string
      */
@@ -66,7 +86,7 @@ trait CompileWithContentArgumentAndRenderStatic
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
-        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
+        list($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
             $this,
             $argumentsName,
             $closureName,
@@ -128,7 +148,7 @@ trait CompileWithContentArgumentAndRenderStatic
             }
             throw new Exception(
                 sprintf('Attempting to compile %s failed. Chosen compile method requires that ViewHelper has ' .
-                'at least one registered and optional argument', __CLASS__)
+                    'at least one registered and optional argument', __CLASS__)
             );
         }
         return $this->contentArgumentName;
