@@ -157,7 +157,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * @param string $type Type of the argument
      * @param string $description Description of the argument
      * @param boolean $required If TRUE, argument is required. Defaults to FALSE.
-     * @param mixed $defaultValue Default value of argument
+     * @param mixed $defaultValue Default value of argument. Will be used if the argument is not set.
      * @param bool|null $escape Can be toggled to TRUE to force escaping of variables and inline syntax passed as argument value.
      * @return \TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper $this, to allow chaining.
      * @throws Exception
