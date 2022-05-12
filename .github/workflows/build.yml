@@ -40,19 +40,7 @@ jobs:
         run: vendor/bin/phpunit --coverage-clover=build/logs/clover.xml
 
       - name: Upload coverage results to Coveralls
-        if: ${{ matrix.php != '8.0' && matrix.php != '8.1' }}
+        if: ${{ matrix.php == '7.4'}}
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_PARALLEL: true
-          COVERALLS_FLAG_NAME: php-${{ matrix.php }}
         run: vendor/bin/php-coveralls
-
-  finish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
