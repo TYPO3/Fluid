@@ -2,7 +2,6 @@ TYPO3.Fluid Rendering Engine
 ============================
 
 [![Build Status](https://github.com/TYPO3/Fluid/actions/workflows/build.yml/badge.svg)](https://github.com/TYPO3/Fluid/actions/workflows/build.yml)
-[![Coverage Status](https://coveralls.io/repos/github/TYPO3/Fluid/badge.svg?branch=master)](https://coveralls.io/github/TYPO3/Fluid?branch=master)
 
 TYPO3 community template engine - composer-enabled, Flow/CMS dependency-free PSR-4 edition.
 
