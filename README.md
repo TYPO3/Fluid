@@ -38,3 +38,7 @@ Developer Documentation
 * [Creating ViewHelpers - special PHP classes to create custom dynamic tags](doc/FLUID_CREATING_VIEWHELPERS.md)
 * [Creating ExpressionNodes - special PHP classes that extend the Fluid syntax](doc/FLUID_EXPRESSIONS.md)
 * [Special difference information for developers coming from TYPO3 Flow/CMS](doc/README_TYPO3.md)
+
+License
+-------
+LGPL 3.0 License. See LICENSE file.
