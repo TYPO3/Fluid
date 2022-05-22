@@ -1,44 +1,31 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamFile;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
+
 use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
-/**
- * Testcase for JSONVariableProvider
- */
-class JSONVariableProviderTest extends UnitTestCase
+class JSONVariableProviderTest extends AbstractFunctionalTestCase
 {
-
-    /**
-     * @var vfsStreamFile
-     */
-    protected $jsonFile;
-
-    /**
-     * Constructor
-     */
-    public function setUp(): void
+    public function provideVariablesDataProvider(): array
     {
-        $this->jsonFile = new vfsStreamFile('test.json');
-        $this->jsonFile->setContent('{"foo": "bar"}');
-        vfsStream::setup()->addChild($this->jsonFile);
+        return [
+            ['{}', []],
+            ['{"foo": "bar"}', ['foo' => 'bar']],
+            [__DIR__ . '/Fixtures/test.json', ['foo' => 'bar']],
+        ];
     }
 
     /**
-     * @dataProvider getOperabilityTestValues
-     * @param string $input
-     * @param array $expected
+     * @test
+     * @dataProvider provideVariablesDataProvider
      */
-    public function testOperability($input, array $expected)
+    public function provideVariables(string $input, array $expected): void
     {
         $provider = new JSONVariableProvider();
         $provider->setSource($input);
@@ -48,14 +35,5 @@ class JSONVariableProviderTest extends UnitTestCase
         foreach ($expected as $key => $value) {
             self::assertEquals($value, $provider->get($key));
         }
-    }
-
-    public function getOperabilityTestValues()
-    {
-        return [
-            ['{}', []],
-            ['{"foo": "bar"}', ['foo' => 'bar']],
-            ['vfs://root/test.json', ['foo' => 'bar']],
-        ];
     }
 }
