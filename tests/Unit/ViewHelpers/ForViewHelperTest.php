@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -7,7 +8,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
  */
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\CountableIterator;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
@@ -17,11 +17,9 @@ use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
  */
 class ForViewHelperTest extends ViewHelperBaseTestcase
 {
-
     public function setUp(): void
     {
         parent::setUp();
-
 
         $this->arguments['reverse'] = null;
         $this->arguments['key'] = null;
@@ -49,7 +47,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ['innerVariable' => 2],
             ['innerVariable' => 3]
         ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -79,7 +77,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                 'someKey' => 'key2'
             ]
         ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -94,7 +92,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
 
-        $this->assertEquals('', $viewHelper->initializeArgumentsAndRender());
+        self::assertEquals('', $viewHelper->initializeArgumentsAndRender());
     }
 
     /**
@@ -109,7 +107,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
 
-        $this->assertEquals('', $viewHelper->initializeArgumentsAndRender());
+        self::assertEquals('', $viewHelper->initializeArgumentsAndRender());
     }
 
     /**
@@ -135,7 +133,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ['innerVariable' => 1],
             ['innerVariable' => 0]
         ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -161,7 +159,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ['innerVariable' => 1],
             ['innerVariable' => 0]
         ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -183,7 +181,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $viewHelper->setViewHelperNode($viewHelperNode);
         $viewHelper->initializeArgumentsAndRender();
 
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -263,7 +261,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                 'someKey' => 2
             ]
         ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -283,7 +281,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->initializeArgumentsAndRender();
     }
-
 
     /**
      * @test
@@ -305,7 +302,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ['innerVariable' => 'value1'],
             ['innerVariable' => 'value2']
         ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -335,7 +332,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                 'someKey' => 'key2'
             ]
         ];
-        $this->assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -377,7 +374,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                 'someKey' => 2
             ]
         ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -435,7 +432,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                 ]
             ]
         ];
-        $this->assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
+        self::assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -456,7 +453,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderCountsSubjectIfIterationArgumentProvided()
     {
         $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
-        $subject->expects($this->once())->method('count')->willReturn(1);
+        $subject->expects(self::once())->method('count')->willReturn(1);
         $viewHelper = new ForViewHelper();
         $this->arguments['each'] = $subject;
         $this->arguments['iteration'] = 'test';
@@ -469,7 +466,7 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
     public function renderDoesNotCountSubjectIfIterationArgumentNotProvided()
     {
         $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
-        $subject->expects($this->never())->method('count');
+        $subject->expects(self::never())->method('count');
         $viewHelper = new ForViewHelper();
         $this->arguments['each'] = $subject;
         $this->arguments['iteration'] = null;

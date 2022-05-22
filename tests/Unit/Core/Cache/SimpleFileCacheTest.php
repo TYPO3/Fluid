@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 
 /*
@@ -23,9 +24,6 @@ class SimpleFileCacheTest extends UnitTestCase
      */
     protected $directory;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->directory = vfsStream::setup('cache');
@@ -37,7 +35,7 @@ class SimpleFileCacheTest extends UnitTestCase
     public function testGetCacheWarmerReturnsStandardCacheWarmer()
     {
         $cache = new SimpleFileCache(vfsStream::url('cache/'));
-        $this->assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
+        self::assertInstanceOf(StandardCacheWarmer::class, $cache->getCacheWarmer());
     }
 
     /**
@@ -47,7 +45,7 @@ class SimpleFileCacheTest extends UnitTestCase
     {
         $cache = new SimpleFileCache(vfsStream::url('cache/'));
         $result = $cache->get('test');
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -57,7 +55,7 @@ class SimpleFileCacheTest extends UnitTestCase
     {
         $cache = new SimpleFileCache(vfsStream::url('cache/'));
         $result = $cache->get('DateTime');
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -67,7 +65,7 @@ class SimpleFileCacheTest extends UnitTestCase
     {
         $cache = new SimpleFileCache(vfsStream::url('cache/'));
         $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
-        $this->assertFileExists(vfsStream::url('cache/test.php'));
+        self::assertFileExists(vfsStream::url('cache/test.php'));
     }
 
     /**
@@ -78,7 +76,7 @@ class SimpleFileCacheTest extends UnitTestCase
         $cache = new SimpleFileCache(vfsStream::url('cache/'));
         $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
         $result = $cache->get('test');
-        $this->assertTrue(class_exists('MyCachedClass', false));
+        self::assertTrue(class_exists('MyCachedClass', false));
     }
 
     /**
@@ -91,9 +89,9 @@ class SimpleFileCacheTest extends UnitTestCase
             ['getCachedFilenames', 'flushByFilename', 'flushByname'],
             [vfsStream::url('cache/')]
         );
-        $cache->expects($this->never())->method('flushByName');
-        $cache->expects($this->once())->method('getCachedFilenames')->willReturn(['foo']);
-        $cache->expects($this->once())->method('flushByFilename')->with('foo');
+        $cache->expects(self::never())->method('flushByName');
+        $cache->expects(self::once())->method('getCachedFilenames')->willReturn(['foo']);
+        $cache->expects(self::once())->method('flushByFilename')->with('foo');
         $cache->flush();
     }
 
@@ -107,9 +105,9 @@ class SimpleFileCacheTest extends UnitTestCase
             ['getCachedFilenames', 'flushByFilename', 'flushByname'],
             [vfsStream::url('cache/')]
         );
-        $cache->expects($this->once())->method('flushByName')->with('foo');
-        $cache->expects($this->never())->method('getCachedFilenames');
-        $cache->expects($this->never())->method('flushByFilename');
+        $cache->expects(self::once())->method('flushByName')->with('foo');
+        $cache->expects(self::never())->method('getCachedFilenames');
+        $cache->expects(self::never())->method('flushByFilename');
         $cache->flush('foo');
     }
 
@@ -122,8 +120,8 @@ class SimpleFileCacheTest extends UnitTestCase
         $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
         $cache->set('test2', '<?php' . PHP_EOL . 'class MyOtherCachedClass {}' . PHP_EOL);
         $cache->flush('test');
-        $this->assertFileExists(vfsStream::url('cache/test2.php'));
-        $this->assertFileNotExists(vfsStream::url('cache/test.php'));
+        self::assertFileExists(vfsStream::url('cache/test2.php'));
+        self::assertFileNotExists(vfsStream::url('cache/test.php'));
     }
 
     /**

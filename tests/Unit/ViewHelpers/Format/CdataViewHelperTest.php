@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
@@ -18,7 +19,7 @@ class CdataViewHelperTest extends ViewHelperBaseTestcase
 
     /**
      * @param array $arguments
-     * @param string|NULL $tagContent
+     * @param string|null $tagContent
      * @param string $expected
      * @dataProvider getRenderTestValues
      */
@@ -30,7 +31,7 @@ class CdataViewHelperTest extends ViewHelperBaseTestcase
         $instance->setRenderChildrenClosure(function () use ($tagContent) {
             return $tagContent;
         });
-        $this->assertEquals($expected, $instance->initializeArgumentsAndRender());
+        self::assertEquals($expected, $instance->initializeArgumentsAndRender());
     }
 
     /**

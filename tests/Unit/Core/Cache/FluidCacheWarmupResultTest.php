@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 
 /*
@@ -30,7 +31,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
         $result2 = $this->getAccessibleMock(FluidCacheWarmupResult::class, ['dummy']);
         $result2->_set('results', array_pop($results));
         $result1->merge($result2);
-        $this->assertEquals($expected, $result1->getResults());
+        self::assertEquals($expected, $result1->getResults());
     }
 
     /**
@@ -51,7 +52,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     {
         $subject = $this->getAccessibleMock(FluidCacheWarmupResult::class, ['dummy']);
         $subject->_set('results', ['foo' => 'bar']);
-        $this->assertEquals(['foo' => 'bar'], $subject->getResults());
+        self::assertEquals(['foo' => 'bar'], $subject->getResults());
     }
 
     /**
@@ -64,7 +65,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     {
         $result = new FluidCacheWarmupResult();
         $result->add($subject, 'foobar');
-        $this->assertEquals(['foobar' => $expected], $result->getResults());
+        self::assertEquals(['foobar' => $expected], $result->getResults());
     }
 
     /**
@@ -77,21 +78,21 @@ class FluidCacheWarmupResultTest extends UnitTestCase
         )->setMethods(
             ['isCompiled', 'isCompilable', 'hasLayout', 'getIdentifier']
         )->getMockForAbstractClass();
-        $subject1->expects($this->once())->method('isCompiled')->willReturn(false);
-        $subject1->expects($this->once())->method('isCompilable')->willReturn(true);
-        $subject1->expects($this->once())->method('hasLayout')->willReturn(false);
-        $subject1->expects($this->once())->method('getIdentifier')->willReturn('subject1-identifier');
+        $subject1->expects(self::once())->method('isCompiled')->willReturn(false);
+        $subject1->expects(self::once())->method('isCompilable')->willReturn(true);
+        $subject1->expects(self::once())->method('hasLayout')->willReturn(false);
+        $subject1->expects(self::once())->method('getIdentifier')->willReturn('subject1-identifier');
         $subject2 = $this->getMockBuilder(
             FailedCompilingState::class
         )->setMethods(
             ['isCompiled', 'isCompilable', 'hasLayout', 'getIdentifier', 'getFailureReason', 'getMitigations']
         )->getMockForAbstractClass();
-        $subject2->expects($this->once())->method('isCompiled')->willReturn(true);
-        $subject2->expects($this->never())->method('isCompilable');
-        $subject2->expects($this->once())->method('hasLayout')->willReturn(true);
-        $subject2->expects($this->once())->method('getIdentifier')->willReturn('subject2-identifier');
-        $subject2->expects($this->once())->method('getFailureReason')->willReturn('failure-reason');
-        $subject2->expects($this->once())->method('getMitigations')->willReturn(['m1', 'm2']);
+        $subject2->expects(self::once())->method('isCompiled')->willReturn(true);
+        $subject2->expects(self::never())->method('isCompilable');
+        $subject2->expects(self::once())->method('hasLayout')->willReturn(true);
+        $subject2->expects(self::once())->method('getIdentifier')->willReturn('subject2-identifier');
+        $subject2->expects(self::once())->method('getFailureReason')->willReturn('failure-reason');
+        $subject2->expects(self::once())->method('getMitigations')->willReturn(['m1', 'm2']);
         return [
             [
                 $subject1,

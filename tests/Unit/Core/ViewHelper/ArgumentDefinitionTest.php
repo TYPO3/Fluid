@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -27,9 +28,9 @@ class ArgumentDefinitionTest extends UnitTestCase
         $isMethodParameter = true;
         $argumentDefinition = new ArgumentDefinition($name, $type, $description, $isRequired, null);
 
-        $this->assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
-        $this->assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
-        $this->assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
-        $this->assertEquals($argumentDefinition->isRequired(), $isRequired, 'Required flag could not be retrieved correctly.');
+        self::assertEquals($argumentDefinition->getName(), $name, 'Name could not be retrieved correctly.');
+        self::assertEquals($argumentDefinition->getDescription(), $description, 'Description could not be retrieved correctly.');
+        self::assertEquals($argumentDefinition->getType(), $type, 'Type could not be retrieved correctly');
+        self::assertEquals($argumentDefinition->isRequired(), $isRequired, 'Required flag could not be retrieved correctly.');
     }
 }

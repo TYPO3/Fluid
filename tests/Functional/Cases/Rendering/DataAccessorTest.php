@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
@@ -92,11 +93,11 @@ class DataAccessorTest extends UnitTestCase
             try {
                 $view->render();
             } catch (\Throwable $t) {
-                static::assertSame($expectedErrorMessage, $t->getMessage());
+                self::assertSame($expectedErrorMessage, $t->getMessage());
             }
         } else {
             $result = json_decode($view->render(), true);
-            static::assertSame($expectation, $result);
+            self::assertSame($expectation, $result);
         }
     }
 

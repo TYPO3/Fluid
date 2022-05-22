@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -19,8 +20,8 @@ class IfViewHelperTest extends ViewHelperBaseTestcase
     public function viewHelperRendersThenChildIfConditionIsTrue()
     {
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMockForAbstractClass();
-        $actualResult = IfViewHelper::renderStatic(['condition' => true, 'then' => 'THEN', 'else' => 'ELSE'], function() {}, $context);
-        $this->assertEquals('THEN', $actualResult);
+        $actualResult = IfViewHelper::renderStatic(['condition' => true, 'then' => 'THEN', 'else' => 'ELSE'], function () {}, $context);
+        self::assertEquals('THEN', $actualResult);
     }
 
     /**
@@ -29,7 +30,7 @@ class IfViewHelperTest extends ViewHelperBaseTestcase
     public function viewHelperRendersElseChildIfConditionIsFalse()
     {
         $context = $this->getMockBuilder(RenderingContextInterface::class)->getMockForAbstractClass();
-        $actualResult = IfViewHelper::renderStatic(['condition' => false, 'then' => 'THEN', 'else' => 'ELSE'], function() {}, $context);
-        $this->assertEquals('ELSE', $actualResult);
+        $actualResult = IfViewHelper::renderStatic(['condition' => false, 'then' => 'THEN', 'else' => 'ELSE'], function () {}, $context);
+        self::assertEquals('ELSE', $actualResult);
     }
 }

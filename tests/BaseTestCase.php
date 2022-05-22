@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests;
 
 /*
@@ -22,7 +23,7 @@ abstract class BaseTestCase extends TestCase
 
     /**
      * Enable or disable the backup and restoration of static attributes.
-     * @var boolean
+     * @var bool
      */
     protected $backupStaticAttributes = false;
 
@@ -34,9 +35,9 @@ abstract class BaseTestCase extends TestCase
      * @param array $methods
      * @param array $arguments
      * @param string $mockClassName
-     * @param boolean $callOriginalConstructor
-     * @param boolean $callOriginalClone
-     * @param boolean $callAutoload
+     * @param bool $callOriginalConstructor
+     * @param bool $callOriginalClone
+     * @param bool $callAutoload
      * @return MockObject
      * @api
      */
@@ -58,27 +59,27 @@ abstract class BaseTestCase extends TestCase
 
     public static function assertAttributeEquals($expected, string $actualAttributeName, $actualClassOrObject, string $message = '', float $delta = 0.0, int $maxDepth = 10, bool $canonicalize = false, bool $ignoreCase = false): void
     {
-        static::assertEquals($expected, static::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
+        self::assertEquals($expected, static::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
     }
 
     public static function assertAttributeSame($expected, string $actualAttributeName, $actualClassOrObject, string $message = '', float $delta = 0.0, int $maxDepth = 10, bool $canonicalize = false, bool $ignoreCase = false): void
     {
-        static::assertSame($expected, static::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
+        self::assertSame($expected, static::extractNonPublicAttribute($actualClassOrObject, $actualAttributeName));
     }
 
     public static function assertAttributeContains($needle, string $haystackAttributeName, $haystackClassOrObject, string $message = '', bool $ignoreCase = false, bool $checkForObjectIdentity = true, bool $checkForNonObjectIdentity = false): void
     {
-        static::assertContains($needle, static::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
+        self::assertContains($needle, static::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
     }
 
     public static function assertAttributeNotEmpty(string $haystackAttributeName, $haystackClassOrObject, string $message = ''): void
     {
-        static::assertNotEmpty(static::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
+        self::assertNotEmpty(static::extractNonPublicAttribute($haystackClassOrObject, $haystackAttributeName));
     }
 
     public static function assertAttributeInstanceOf(string $expected, string $attributeName, $classOrObject, string $message = ''): void
     {
-        static::assertInstanceOf($expected, static::extractNonPublicAttribute($classOrObject, $attributeName));
+        self::assertInstanceOf($expected, static::extractNonPublicAttribute($classOrObject, $attributeName));
     }
 
     protected static function extractNonPublicAttribute($actualClassOrObject, string $actualAttributeName)
@@ -96,9 +97,9 @@ abstract class BaseTestCase extends TestCase
      * @param string $originalClassName Full qualified name of the original class
      * @param array $methods
      * @param array $arguments
-     * @param boolean $callOriginalConstructor
-     * @param boolean $callOriginalClone
-     * @param boolean $callAutoload
+     * @param bool $callOriginalConstructor
+     * @param bool $callOriginalClone
+     * @param bool $callAutoload
      * @return MockObject
      * @api
      */
@@ -127,9 +128,9 @@ abstract class BaseTestCase extends TestCase
      * @param string $originalClassName Full qualified name of the original class
      * @param array $arguments
      * @param string $mockClassName
-     * @param boolean $callOriginalConstructor
-     * @param boolean $callOriginalClone
-     * @param boolean $callAutoload
+     * @param bool $callOriginalConstructor
+     * @param bool $callOriginalClone
+     * @param bool $callAutoload
      * @return \PHPUnit_Framework_MockObject_MockObject
      * @api
      */
@@ -206,7 +207,6 @@ abstract class BaseTestCase extends TestCase
      * @param object $target The instance which needs the dependency
      * @param string $name Name of the property to be injected
      * @param object $dependency The dependency to inject – usually an object but can also be any other type
-     * @return void
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */

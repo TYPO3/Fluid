@@ -135,7 +135,7 @@ class CompileWithContentArgumentAndRenderStaticTest extends BaseFunctionalTestCa
      * @param array $variables
      * @param array $expected
      * @param array $notExpected
-     * @param string|NULL $expectedException
+     * @param string|null $expectedException
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
@@ -145,7 +145,7 @@ class CompileWithContentArgumentAndRenderStaticTest extends BaseFunctionalTestCa
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
         } else {
-            $this->markTestSkipped('Cache-specific test skipped');
+            self::markTestSkipped('Cache-specific test skipped');
         }
     }
 
@@ -163,7 +163,7 @@ class CompileWithContentArgumentAndRenderStaticTest extends BaseFunctionalTestCa
      * @param array $variables
      * @param array $expected
      * @param array $notExpected
-     * @param string|NULL $expectedException
+     * @param string|null $expectedException
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */

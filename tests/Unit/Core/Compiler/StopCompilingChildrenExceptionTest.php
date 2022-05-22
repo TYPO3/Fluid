@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -26,7 +27,7 @@ class StopCompilingChildrenExceptionTest extends UnitTestCase
         $subject = $this->getAccessibleMock(StopCompilingChildrenException::class, ['dummy']);
         $subject->_set($property, $value);
         $method = 'get' . ucfirst($property);
-        $this->assertEquals($value, $subject->$method());
+        self::assertEquals($value, $subject->$method());
     }
 
     /**
@@ -41,7 +42,7 @@ class StopCompilingChildrenExceptionTest extends UnitTestCase
         $subject->_set($property, $value);
         $method = 'set' . ucfirst($property);
         $subject->$method($value);
-        $this->assertAttributeEquals($value, $property, $subject);
+        self::assertAttributeEquals($value, $property, $subject);
     }
 
     /**

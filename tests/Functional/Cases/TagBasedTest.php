@@ -1,7 +1,7 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\TagBasedTestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -19,7 +19,7 @@ class TagBasedTest extends UnitTestCase
             ],
         ];
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div foo="bar" />', $result);
+        self::assertSame('<div foo="bar" />', $result);
     }
 
     public function testTagBasedViewHelperWithDataArray()
@@ -32,7 +32,7 @@ class TagBasedTest extends UnitTestCase
             ],
         ];
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div data-foo="bar" />', $result);
+        self::assertSame('<div data-foo="bar" />', $result);
     }
 
     public function testTagBasedViewHelperWithAriaArray()
@@ -45,7 +45,7 @@ class TagBasedTest extends UnitTestCase
             ],
         ];
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div aria-controls="foo" />', $result);
+        self::assertSame('<div aria-controls="foo" />', $result);
     }
 
     public function testTagBasedViewHelperWithDataPrefixedArgument()
@@ -56,7 +56,7 @@ class TagBasedTest extends UnitTestCase
             'data-foo' => 'bar',
         ];
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div data-foo="bar" />', $result);
+        self::assertSame('<div data-foo="bar" />', $result);
     }
 
     public function testTagBasedViewHelperWithAriaPrefixedArgument()
@@ -67,7 +67,7 @@ class TagBasedTest extends UnitTestCase
             'aria-controls' => 'foo',
         ];
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div aria-controls="foo" />', $result);
+        self::assertSame('<div aria-controls="foo" />', $result);
     }
 
     /**
@@ -78,7 +78,7 @@ class TagBasedTest extends UnitTestCase
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div data-foo="attribute" />', $result);
+        self::assertSame('<div data-foo="attribute" />', $result);
     }
 
     public function tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider(): array
@@ -111,7 +111,7 @@ class TagBasedTest extends UnitTestCase
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
         $result = $invoker->invoke($viewHelper, $arguments, new RenderingContextFixture());
-        $this->assertSame('<div aria-controls="attribute" />', $result);
+        self::assertSame('<div aria-controls="attribute" />', $result);
     }
 
     public function tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider(): array

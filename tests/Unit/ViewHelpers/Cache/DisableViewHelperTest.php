@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
 
 /*
@@ -24,8 +25,8 @@ class DisableViewHelperTest extends ViewHelperBaseTestcase
     public function testRenderCallsRenderChildren()
     {
         $subject = $this->getMockBuilder(DisableViewHelper::class)->setMethods(['renderChildren'])->getMock();
-        $subject->expects($this->once())->method('renderChildren')->willReturn('test');
-        $this->assertEquals('test', $subject->render());
+        $subject->expects(self::once())->method('renderChildren')->willReturn('test');
+        self::assertEquals('test', $subject->render());
     }
 
     /**
@@ -40,7 +41,7 @@ class DisableViewHelperTest extends ViewHelperBaseTestcase
             ->disableOriginalConstructor()
             ->getMock();
         $compiler = $this->getMockBuilder(TemplateCompiler::class)->setMethods(['disable'])->getMock();
-        $compiler->expects($this->once())->method('disable');
+        $compiler->expects(self::once())->method('disable');
         $code = '';
         $subject->compile('test', 'test', $code, $node, $compiler);
     }

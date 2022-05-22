@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -22,7 +23,7 @@ class ViewHelperInvokerTest extends UnitTestCase
      * @param string $viewHelperClassName
      * @param array $arguments
      * @param mixed $expectedOutput
-     * @param string|NULL $expectedException
+     * @param string|null $expectedException
      * @test
      * @dataProvider getInvocationTestValues
      */
@@ -35,7 +36,7 @@ class ViewHelperInvokerTest extends UnitTestCase
             $this->setExpectedException($expectedException);
         }
         $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
-        $this->assertEquals($expectedOutput, $result);
+        self::assertEquals($expectedOutput, $result);
     }
 
     /**

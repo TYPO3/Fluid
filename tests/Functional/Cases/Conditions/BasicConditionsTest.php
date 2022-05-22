@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;

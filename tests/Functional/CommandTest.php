@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
@@ -15,9 +16,6 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 class CommandTest extends BaseTestCase
 {
 
-    /**
-     * @return void
-     */
     public static function setUpBeforeClass(): void
     {
         vfsStream::setup('fakecache/');
@@ -35,10 +33,10 @@ class CommandTest extends BaseTestCase
         $command = sprintf($argumentString, $bin);
         $output = shell_exec($command);
         foreach ($mustContain as $mustContainString) {
-            $this->assertStringContainsString($mustContainString, $output);
+            self::assertStringContainsString($mustContainString, $output);
         }
         foreach ($mustNotContain as $mustNotContainString) {
-            $this->assertStringNotContainsString($mustNotContainString, $output);
+            self::assertStringNotContainsString($mustNotContainString, $output);
         }
     }
 

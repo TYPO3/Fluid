@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
 
 /*
@@ -9,7 +10,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Traits;
 use TYPO3Fluid\Fluid\Core\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper3;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -23,7 +23,7 @@ class CompileWithContentArgumentAndRenderStaticTest extends UnitTestCase
     public function testGetContentArgumentNameThrowsExceptionIfNoArgumentsAvailable()
     {
         $instance = $this->getMockBuilder(CompileWithContentArgumentAndRenderStatic::class)->setMethods(['prepareArguments'])->getMockForTrait();
-        $instance->expects($this->once())->method('prepareArguments')->willReturn([
+        $instance->expects(self::once())->method('prepareArguments')->willReturn([
             'arg' => new ArgumentDefinition('arg', 'string', 'Arg', true)
         ]);
         $this->setExpectedException(Exception::class);

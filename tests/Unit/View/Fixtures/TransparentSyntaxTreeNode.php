@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\View\Fixture;
 
 /*
@@ -11,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
  * [Enter description here]
- *
  */
 class TransparentSyntaxTreeNode extends AbstractNode
 {

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
 use TYPO3Fluid\Fluid\Core\Parser\Configuration;
@@ -37,7 +38,7 @@ class EscapingTest extends BaseFunctionalTestCase
         $configuration->addEscapingInterceptor(new Escape());
 
         $context = $this->getMockBuilder(RenderingContextFixture::class)->setMethods(['buildParserConfiguration'])->getMock();
-        $context->expects($this->once())->method('buildParserConfiguration')->willReturn($configuration);
+        $context->expects(self::once())->method('buildParserConfiguration')->willReturn($configuration);
         $context->getTemplateParser()->setRenderingContext($context);
         $context->getTemplateCompiler()->setRenderingContext($context);
         $context->setVariableProvider(new StandardVariableProvider());
@@ -58,9 +59,9 @@ class EscapingTest extends BaseFunctionalTestCase
     public function testWithEscapingBehaviorsNullWithoutContentOrOutputArguments()
     {
         $viewHelper = new MutableTestViewHelper();
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value}'), 'Vanilla object accessor');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value}'), 'Vanilla object accessor');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapingBehaviorsNullWithOutputArgument()
@@ -68,17 +69,17 @@ class EscapingTest extends BaseFunctionalTestCase
         // When both escapeOutput and escapeChildren are null, output escaping is enabled and children escaping is disabled (because output is escaped there is no need to escsape children explicitly).
         // The case therefore escapes both static HTML and variables/inline in arguments.
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument();
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag with variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag with variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     public function testWithEscapingBehaviorsNullWithContentArgument()
     {
         $viewHelper = (new MutableTestViewHelper())->withContentArgument();
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     /*
@@ -90,26 +91,26 @@ class EscapingTest extends BaseFunctionalTestCase
     public function testWithEscapChildrenFalseWithoutContentOrOutputArguments()
     {
         $viewHelper = (new MutableTestViewHelper())->withEscapeChildren(false);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapChildrenFalseWithContentArgument()
     {
         $viewHelper = (new MutableTestViewHelper())->withContentArgument()->withEscapeChildren(false);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeChildrenFalseWithOutputArgument()
     {
         // Output argument is not escaped (it is not a content argument) because output escaping is OFF. Developer who wrote ViewHelper would be responsible for escaping.
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument()->withEscapeChildren(false);
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
-        $this->assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+        self::assertSame(self::ESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     /*
@@ -122,32 +123,32 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Child content and content argument are treated the same based on escape-children state. Children escaping is ON because escape output is OFF and escape children has no decision.
         $viewHelper = (new MutableTestViewHelper())->withEscapeOutput(false);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<f:if condition="1">{value}</f:if>'), 'Tag child variable (f:if)');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> f:if(condition: 1)}'), 'Inline pass of variable (f:if)');
-        $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<f:if condition="1">{value}</f:if>'), 'Tag child variable (f:if)');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> f:if(condition: 1)}'), 'Inline pass of variable (f:if)');
+        self::assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithContentArgument()
     {
         // Child content and content argument are treated the same based on escape-children state. Children escaping is ON because escape output is OFF and escape children has no decision.
         $viewHelper = (new MutableTestViewHelper())->withContentArgument(false)->withEscapeOutput(false);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: value)}'), 'Inline variable in argument');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: "{value}")}'), 'Inline pass of variable, quoted');
-        $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: value)}'), 'Inline variable in argument');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: "{value}")}'), 'Inline pass of variable, quoted');
+        self::assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithOutputArgument()
     {
         // Output argument is not escaped (it is not a content argument) because output escaping is OFF. Developer who wrote ViewHelper would be responsible for escaping.
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument(false)->withEscapeOutput(false);
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: "{value}")}'), 'Inline output argument');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: "{value}")}'), 'Inline output argument');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     /*
@@ -160,27 +161,27 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Output is escaped because children are escaped. Children are escaped because escape-output is OFF and no explicit decision is made for escape-children, causing escape-children to be ON.
         $viewHelper = (new MutableTestViewHelper())->withEscapeOutput(false)->withEscapeChildren(true);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
-        $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
+        self::assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithEscapeChildrenTrueWithContentArgument()
     {
         // Child content is escaped because escape-output is OFF but an explicit decision for escape-children has been made to turn it ON.
         $viewHelper = (new MutableTestViewHelper())->withContentArgument(false)->withEscapeOutput(false)->withEscapeChildren(true);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithEscapeChildrenTrueWithOutputArgument()
     {
         // Output argument is not escaped (it is not a content argument) because escape-output is OFF and escape-children is not considered (it is an argument, not a child). Developer who wrote ViewHelper would be responsible for escaping.
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument(false)->withEscapeOutput(false)->withEscapeChildren(true);
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: "{value}")}'), 'Inline output argument');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: "{value}")}'), 'Inline output argument');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     /*
@@ -193,28 +194,28 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Nothing is escaped because all escaping is off.
         $viewHelper = (new MutableTestViewHelper())->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag child variable');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithEscapeChildrenFalseWithContentArgument()
     {
         // Child variable is not escaped because all escaping is off, including specific argument escaping.
         $viewHelper = (new MutableTestViewHelper())->withContentArgument(false)->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithEscapeChildrenFalseWithOutputArgument()
     {
         // Argument is not escaped because all escaping is off, including specific argument escaping.
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument(false)->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{f:if(condition: 1, then: value)}'), 'Inline output argument (f:if)');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{f:if(condition: 1, then: value)}'), 'Inline output argument (f:if)');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     /*
@@ -227,18 +228,18 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // All escaping is off, output will not be escaped
         $viewHelper = (new MutableTestViewHelper())->withContentArgument(null)->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithEscapeChildrenFalseWithEscapeArgumentNullWithOutputArgument()
     {
         // All escaping is off, output will not be escaped
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument(null)->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     /*
@@ -251,18 +252,18 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Child variable is not escaped because both output and child escaping is off.
         $viewHelper = (new MutableTestViewHelper())->withContentArgument(true)->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::UNESCAPED_WRAPPED, $this->renderCode($viewHelper, '<test:test><div>{value}</div></test:test>'), 'Tag child variable with static HTML');
     }
 
     public function testWithEscapeOutputFalseWithEscapeChildrenFalseWithEscapeArgumentTrueWithOutputArgument()
     {
         // Output argument is escaped despite both escape-output and escape-children being OFF, because argument was explicitly requested to be escaped.
         $viewHelper = (new MutableTestViewHelper())->withOutputArgument(true)->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
-        $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
-        $this->assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test output="{value}" />'), 'Tag child variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(output: value)}'), 'Inline output argument');
+        self::assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '<test:test output="<div>{value}</div>" />'), 'Tag with variable and static HTML');
+        self::assertSame(self::ESCAPED_WRAPPED_STATIC_PROTECTED, $this->renderCode($viewHelper, '{test:test(output: "<div>{value}</div>")}'), 'Inline with static HTML');
     }
 
     /*
@@ -275,10 +276,10 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Content argument is escaped because because escape-output is OFF but escape-children is ON and content argument is treated as child.
         $viewHelper = (new MutableTestViewHelper())->withEscapeChildren(true)->withEscapeOutput(false)->withContentArgument(null);
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: value)}'), 'Inline with content argument');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test content="{value}" />'), 'Tag with content argument');
-        $this->assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag with child variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{value -> test:test()}'), 'Inline pass of variable');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '{test:test(content: value)}'), 'Inline with content argument');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test content="{value}" />'), 'Tag with content argument');
+        self::assertSame(self::ESCAPED, $this->renderCode($viewHelper, '<test:test>{value}</test:test>'), 'Tag with child variable');
     }
 
     /*
@@ -289,24 +290,24 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Output is not escaped because VH is surrounded by f:format.raw, overriding escape-output, escape-children and escaping flag in ArgumentDefinition.
         $viewHelper = (new MutableTestViewHelper())->withEscapeOutput(true)->withEscapeChildren(true)->withContentArgument(true);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<f:format.raw>{value -> test:test()}</f:format.raw>'), 'Inline pass of variable surrounded by format.raw');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test() -> f:format.raw()}'), 'Inline pass of variable chained with format.raw');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<f:format.raw>{value -> test:test()}</f:format.raw>'), 'Inline pass of variable surrounded by format.raw');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test() -> f:format.raw()}'), 'Inline pass of variable chained with format.raw');
     }
 
     public function testArgumentNotEscapedEvenIfArgumentRequestedEscapedBecauseChainingWithFormatRawOverridesArgumentEscaping()
     {
         // Content argument is not escaped, despite flag in ArgumentDefinition, because argument is chained with f:format.raw which overrides argument escaping.
         $viewHelper = (new MutableTestViewHelper())->withEscapeOutput(false)->withEscapeChildren(false)->withContentArgument(true);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test content="{value -> f:format.raw()}" />'), 'Tag with argument chained with format.raw');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(content: "{value -> f:format.raw()}")}'), 'Inline with argument chained with format.raw');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<test:test content="{value -> f:format.raw()}" />'), 'Tag with argument chained with format.raw');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{test:test(content: "{value -> f:format.raw()}")}'), 'Inline with argument chained with format.raw');
     }
 
     public function testArgumentNotEscapedIfDisabledByFormatRawButNormallyWouldBeEscapedByArgumentEscaping()
     {
         // Child is not escaped because VH is surrounded by f:format.raw, overriding escaping flag in ArgumentDefinition.
         $viewHelper = (new MutableTestViewHelper())->withEscapeOutput(false)->withEscapeChildren(false);
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<f:format.raw>{value -> test:test()}</f:format.raw>'), 'Inline pass of variable surrounded by format.raw');
-        $this->assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test() -> f:format.raw()}'), 'Inline pass of variable chained with format.raw');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '<f:format.raw>{value -> test:test()}</f:format.raw>'), 'Inline pass of variable surrounded by format.raw');
+        self::assertSame(self::UNESCAPED, $this->renderCode($viewHelper, '{value -> test:test() -> f:format.raw()}'), 'Inline pass of variable chained with format.raw');
     }
 
     /*
@@ -317,11 +318,11 @@ class EscapingTest extends BaseFunctionalTestCase
     {
         // Tag ViewHelper attributes are always escaped; the only way to disable this escaping is for the VH to manually add the attribute and explicitly disable conversion of special HTML chars.
         $viewHelper = new TagBasedTestViewHelper();
-        $this->assertSame('<div class="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test class="{value}" />'), 'Tag attribute is escaped');
-        $this->assertSame('<div data-foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test data="{foo: value}" />'), 'Tag data attribute values are escaped');
-        $this->assertSame('<div foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test additionalAttributes="{foo: value}" />'), 'Tag additional attributes values are escaped');
-        $this->assertSame('<div data-&gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test data=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag data attribute keys are escaped');
-        $this->assertSame('<div &gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test additionalAttributes=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag additional attributes keys are escaped');
+        self::assertSame('<div class="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test class="{value}" />'), 'Tag attribute is escaped');
+        self::assertSame('<div data-foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test data="{foo: value}" />'), 'Tag data attribute values are escaped');
+        self::assertSame('<div foo="' . self::ESCAPED . '" />', $this->renderCode($viewHelper, '<test:test additionalAttributes="{foo: value}" />'), 'Tag additional attributes values are escaped');
+        self::assertSame('<div data-&gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test data=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag data attribute keys are escaped');
+        self::assertSame('<div &gt;' . self::ESCAPED . '&lt;="1" />', $this->renderCode($viewHelper, '<test:test additionalAttributes=\'{"><script>alert(1)</script><": 1}\' />'), 'Tag additional attributes keys are escaped');
 
         // Disabled: bug detected, handleAdditionalArguments on AbstractTagBasedViewHelper does assign the tag attribute, but following this call,
         // the initialize() method is called which resets the TagBuilder and in turn removes the data- prefixed attributes which are then not re-assigned.

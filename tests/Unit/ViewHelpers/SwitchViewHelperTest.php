@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -37,7 +38,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     {
         parent::setUp();
         $this->viewHelperNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
-        $this->viewHelperNode->expects($this->any())->method('getChildNodes')->willReturn([]);
+        $this->viewHelperNode->expects(self::any())->method('getChildNodes')->willReturn([]);
         $this->viewHelper = $this->getMockBuilder(SwitchViewHelper::class)->setMethods(['renderChildren'])->getMock();
         $this->viewHelper->setViewHelperNode($this->viewHelperNode);
         $this->injectDependenciesIntoViewHelper($this->viewHelper);
@@ -48,7 +49,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
      */
     public function viewHelperInitializesArguments()
     {
-        $this->assertNotEmpty($this->viewHelper->prepareArguments());
+        self::assertNotEmpty($this->viewHelper->prepareArguments());
     }
 
     /**
@@ -59,7 +60,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $switchExpression = new \stdClass();
         $this->viewHelper->setArguments(['expression' => $switchExpression]);
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -69,7 +70,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
     {
         $this->viewHelper->setArguments(['expression' => 'switchExpression']);
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -92,7 +93,7 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $method = new \ReflectionMethod(SwitchViewHelper::class, 'retrieveContentFromChildNodes');
         $method->setAccessible(true);
         $result = $method->invokeArgs($instance, [$childNodes]);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -142,12 +143,12 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $breakingMatchingCaseNode->method('getViewHelperClassName')->willReturn(CaseViewHelper::class);
         $defaultCaseNode = $this->getMock(ViewHelperNode::class, ['getViewHelperClassName', 'evaluate'], [], '', false);
         $defaultCaseNode->method('getViewHelperClassName')->willReturn(DefaultCaseViewHelper::class);
-        $defaultCaseNode->expects($this->never())->method('evaluate');
+        $defaultCaseNode->expects(self::never())->method('evaluate');
 
         $method = new \ReflectionMethod(SwitchViewHelper::class, 'retrieveContentFromChildNodes');
         $method->setAccessible(true);
         $result = $method->invokeArgs($instance, [[$breakingMatchingCaseNode, $defaultCaseNode]]);
-        $this->assertEquals('foo-childcontent', $result);
+        self::assertEquals('foo-childcontent', $result);
     }
 
     /**
@@ -162,8 +163,8 @@ class SwitchViewHelperTest extends ViewHelperBaseTestcase
         $viewHelper = new SwitchViewHelper();
         $compiler = new TemplateCompiler();
         $code = $viewHelper->compile('$arguments', 'closure', $initializationCode, $node, $compiler);
-        $this->assertEquals($expectedCode, $code);
-        $this->assertEquals($expectedInitialization, $initializationCode);
+        self::assertEquals($expectedCode, $code);
+        self::assertEquals($expectedInitialization, $initializationCode);
     }
 
     /**

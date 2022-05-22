@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -23,7 +24,7 @@ class VariableViewHelperTest extends ViewHelperBaseTestcase
     {
         $subject = new VariableViewHelper();
         $subject->initializeArguments();
-        $this->assertAttributeNotEmpty('argumentDefinitions', $subject);
+        self::assertAttributeNotEmpty('argumentDefinitions', $subject);
     }
 
     /**
@@ -32,10 +33,9 @@ class VariableViewHelperTest extends ViewHelperBaseTestcase
     public function assignsVariableInVariableProvider()
     {
         $variableProvider = $this->getMockBuilder(StandardVariableProvider::class)->setMethods(['add'])->getMock();
-        $variableProvider->expects($this->once())->method('add')->with('name', 'value');
+        $variableProvider->expects(self::once())->method('add')->with('name', 'value');
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setVariableProvider($variableProvider);
-        VariableViewHelper::renderStatic(['name' => 'name', 'value' => null], function() { return 'value'; }, $renderingContext);
+        VariableViewHelper::renderStatic(['name' => 'name', 'value' => null], function () { return 'value'; }, $renderingContext);
     }
-
 }

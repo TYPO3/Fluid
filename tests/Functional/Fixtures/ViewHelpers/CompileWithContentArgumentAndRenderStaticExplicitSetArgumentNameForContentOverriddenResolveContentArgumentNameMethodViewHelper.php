@@ -34,7 +34,6 @@ class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent
 
     public function __construct()
     {
-
     }
 
     public function initializeArguments(): void

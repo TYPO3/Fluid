@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -23,7 +24,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for AbstractViewHelper
- *
  */
 class AbstractViewHelperTest extends UnitTestCase
 {
@@ -73,7 +73,7 @@ class AbstractViewHelperTest extends UnitTestCase
     public function testGetFirstElementOfNonEmpty($input, $expected)
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy']);
-        $this->assertEquals($expected, $viewHelper->_call('getFirstElementOfNonEmpty', $input));
+        self::assertEquals($expected, $viewHelper->_call('getFirstElementOfNonEmpty', $input));
     }
 
     /**
@@ -102,7 +102,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $expected = new ArgumentDefinition($name, $type, $description, $isRequired);
 
         $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
-        $this->assertEquals([$name => $expected], $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
+        self::assertEquals([$name => $expected], $viewHelper->prepareArguments(), 'Argument definitions not returned correctly.');
     }
 
     /**
@@ -140,7 +140,7 @@ class AbstractViewHelperTest extends UnitTestCase
 
         $viewHelper->_call('registerArgument', $name, $type, $description, $isRequired);
         $viewHelper->_call('overrideArgument', $name, $overriddenType, $overriddenDescription, $isRequired);
-        $this->assertEquals($viewHelper->prepareArguments(), [$name => $expected], 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
+        self::assertEquals($viewHelper->prepareArguments(), [$name => $expected], 'Argument definitions not returned correctly. The original ArgumentDefinition could not be overridden.');
     }
 
     /**
@@ -162,7 +162,7 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['initializeArguments'], [], '', false);
 
-        $viewHelper->expects($this->once())->method('initializeArguments');
+        $viewHelper->expects(self::once())->method('initializeArguments');
 
         $viewHelper->prepareArguments();
     }
@@ -174,7 +174,7 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([]));
+        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn([]);
 
         $viewHelper->validateArguments();
     }
@@ -186,8 +186,8 @@ class AbstractViewHelperTest extends UnitTestCase
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['prepareArguments'], [], '', false);
 
-        $viewHelper->setArguments(['test' => new \ArrayObject]);
-        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue(['test' => new ArgumentDefinition('test', 'array', false, 'documentation')]));
+        $viewHelper->setArguments(['test' => new \ArrayObject()]);
+        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn(['test' => new ArgumentDefinition('test', 'array', false, 'documentation')]);
         $viewHelper->validateArguments();
     }
 
@@ -200,9 +200,9 @@ class AbstractViewHelperTest extends UnitTestCase
 
         $viewHelper->setArguments(['test' => 'Value of argument']);
 
-        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([
+        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn([
             'test' => new ArgumentDefinition('test', 'string', false, 'documentation')
-        ]));
+        ]);
 
         $viewHelper->validateArguments();
     }
@@ -218,9 +218,9 @@ class AbstractViewHelperTest extends UnitTestCase
 
         $viewHelper->setArguments(['test' => 'test']);
 
-        $viewHelper->expects($this->once())->method('prepareArguments')->will($this->returnValue([
+        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn([
             'test' => new ArgumentDefinition('test', 'stdClass', false, 'documentation')
-        ]));
+        ]);
 
         $viewHelper->validateArguments();
     }
@@ -231,13 +231,13 @@ class AbstractViewHelperTest extends UnitTestCase
     public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods()
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['validateArguments', 'initialize', 'callRenderMethod']);
-        $viewHelper->expects($this->at(0))->method('validateArguments');
-        $viewHelper->expects($this->at(1))->method('initialize');
-        $viewHelper->expects($this->at(2))->method('callRenderMethod')->will($this->returnValue('Output'));
+        $viewHelper->expects(self::at(0))->method('validateArguments');
+        $viewHelper->expects(self::at(1))->method('initialize');
+        $viewHelper->expects(self::at(2))->method('callRenderMethod')->willReturn('Output');
 
         $expectedOutput = 'Output';
         $actualOutput = $viewHelper->initializeArgumentsAndRender(['argument1' => 'value1']);
-        $this->assertEquals($expectedOutput, $actualOutput);
+        self::assertEquals($expectedOutput, $actualOutput);
     }
 
     /**
@@ -256,8 +256,8 @@ class AbstractViewHelperTest extends UnitTestCase
 
         $viewHelper->setRenderingContext($renderingContext);
 
-        $this->assertSame($viewHelper->_get('templateVariableContainer'), $templateVariableContainer);
-        $this->assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
+        self::assertSame($viewHelper->_get('templateVariableContainer'), $templateVariableContainer);
+        self::assertSame($viewHelper->_get('viewHelperVariableContainer'), $viewHelperVariableContainer);
     }
 
     /**
@@ -270,7 +270,7 @@ class AbstractViewHelperTest extends UnitTestCase
             return 'foobar';
         });
         $result = $viewHelper->renderChildren();
-        $this->assertEquals('foobar', $result);
+        self::assertEquals('foobar', $result);
     }
 
     /**
@@ -288,12 +288,12 @@ class AbstractViewHelperTest extends UnitTestCase
             '',
             false
         );
-        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn(
+        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn(
             [$argument->getName() => $argument, 'second' => $argument]
         );
         $viewHelper->setArguments([$argument->getName() => $value, 'second' => $value]);
-        $viewHelper->expects($this->at(1))->method('hasArgument')->with($argument->getName())->willReturn(true);
-        $viewHelper->expects($this->at(2))->method('hasArgument')->with('second')->willReturn(true);
+        $viewHelper->expects(self::at(1))->method('hasArgument')->with($argument->getName())->willReturn(true);
+        $viewHelper->expects(self::at(2))->method('hasArgument')->with('second')->willReturn(true);
         $viewHelper->validateArguments();
     }
 
@@ -330,8 +330,8 @@ class AbstractViewHelperTest extends UnitTestCase
             '',
             false
         );
-        $viewHelper->expects($this->once())->method('prepareArguments')->willReturn([$argument->getName() => $argument]);
-        $viewHelper->expects($this->once())->method('hasArgument')->with($argument->getName())->willReturn(true);
+        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn([$argument->getName() => $argument]);
+        $viewHelper->expects(self::once())->method('hasArgument')->with($argument->getName())->willReturn(true);
         $viewHelper->setArguments([$argument->getName() => $value]);
         $this->setExpectedException('InvalidArgumentException');
         $viewHelper->validateArguments();
@@ -349,7 +349,7 @@ class AbstractViewHelperTest extends UnitTestCase
             [new ArgumentDefinition('test', 'DateTime', '', true), 'test'],
             [new ArgumentDefinition('test', 'integer', '', true), new \ArrayIterator(['bar'])],
             [new ArgumentDefinition('test', 'object', '', true), 'test'],
-            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'),'test']]
+            [new ArgumentDefinition('test', 'string[]', '', true), [new \DateTime('now'), 'test']]
         ];
     }
 
@@ -381,8 +381,8 @@ class AbstractViewHelperTest extends UnitTestCase
         $init = '';
         $compiler = new TemplateCompiler();
         $result = $viewHelper->compile('foobar', 'baz', $init, $node, $compiler);
-        $this->assertEmpty($init);
-        $this->assertEquals(get_class($viewHelper) . '::renderStatic(foobar, baz, $renderingContext)', $result);
+        self::assertEmpty($init);
+        self::assertEquals(get_class($viewHelper) . '::renderStatic(foobar, baz, $renderingContext)', $result);
     }
 
     /**
@@ -391,7 +391,7 @@ class AbstractViewHelperTest extends UnitTestCase
     public function testDefaultResetStateMethodDoesNothing()
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['dummy'], [], '', false);
-        $this->assertNull($viewHelper->resetState());
+        self::assertNull($viewHelper->resetState());
     }
 
     /**
@@ -404,7 +404,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $method->setAccessible(true);
         $subject->setRenderingContext(new RenderingContextFixture());
         $result = $method->invoke($subject);
-        $this->assertSame('I was rendered', $result);
+        self::assertSame('I was rendered', $result);
     }
 
     /**

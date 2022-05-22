@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
@@ -21,15 +22,11 @@ class StandardVariableProviderTest extends UnitTestCase
      */
     protected $variableProvider;
 
-    /**
-     */
     public function setUp(): void
     {
         $this->variableProvider = $this->getMock(StandardVariableProvider::class, ['dummy']);
     }
 
-    /**
-     */
     public function tearDown(): void
     {
         unset($this->variableProvider);
@@ -44,11 +41,11 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $provider = new StandardVariableProvider();
         $provider->setSource($input);
-        $this->assertEquals($input, $provider->getSource());
-        $this->assertEquals($expected, $provider->getAll());
-        $this->assertEquals(array_keys($expected), $provider->getAllIdentifiers());
+        self::assertEquals($input, $provider->getSource());
+        self::assertEquals($expected, $provider->getAll());
+        self::assertEquals(array_keys($expected), $provider->getAllIdentifiers());
         foreach ($expected as $key => $value) {
-            $this->assertEquals($value, $provider->get($key));
+            self::assertEquals($value, $provider->get($key));
         }
     }
 
@@ -71,7 +68,7 @@ class StandardVariableProviderTest extends UnitTestCase
         $provider = new StandardVariableProvider();
         $provider->setSource(['foo' => ['bar' => 'baz']]);
         $result = $provider->getByPath('foo.bar');
-        $this->assertEquals('baz', $result);
+        self::assertEquals('baz', $result);
     }
 
     /**
@@ -81,7 +78,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $this->variableProvider->add('variable', 'test');
         unset($this->variableProvider['variable']);
-        $this->assertFalse($this->variableProvider->exists('variable'));
+        self::assertFalse($this->variableProvider->exists('variable'));
     }
 
     /**
@@ -91,7 +88,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $object = 'StringObject';
         $this->variableProvider->add('variable', $object);
-        $this->assertSame($this->variableProvider->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
+        self::assertSame($this->variableProvider->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
     }
 
     /**
@@ -101,8 +98,8 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $object = 'StringObject';
         $this->variableProvider['variable'] = $object;
-        $this->assertSame($this->variableProvider->get('variable'), $object);
-        $this->assertSame($this->variableProvider['variable'], $object);
+        self::assertSame($this->variableProvider->get('variable'), $object);
+        self::assertSame($this->variableProvider['variable'], $object);
     }
 
     /**
@@ -112,8 +109,8 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $object = 'StringObject';
         $this->variableProvider->add('variable', $object);
-        $this->assertTrue($this->variableProvider->exists('variable'));
-        $this->assertTrue(isset($this->variableProvider['variable']));
+        self::assertTrue($this->variableProvider->exists('variable'));
+        self::assertTrue(isset($this->variableProvider['variable']));
     }
 
     /**
@@ -123,7 +120,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $object = 'StringObject';
         $this->variableProvider->add('variable', $object);
-        $this->assertEquals($this->variableProvider->getAllIdentifiers(), ['variable'], 'Added key is not visible in getAllIdentifiers');
+        self::assertEquals($this->variableProvider->getAllIdentifiers(), ['variable'], 'Added key is not visible in getAllIdentifiers');
     }
 
     /**
@@ -132,7 +129,7 @@ class StandardVariableProviderTest extends UnitTestCase
     public function gettingNonexistentValueReturnsNull()
     {
         $result = $this->variableProvider->get('nonexistent');
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -143,7 +140,7 @@ class StandardVariableProviderTest extends UnitTestCase
         $this->variableProvider->add('variable', 'string1');
         $this->variableProvider->remove('variable');
         $result = $this->variableProvider->get('variable');
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 
     /**
@@ -152,7 +149,7 @@ class StandardVariableProviderTest extends UnitTestCase
     public function getAllShouldReturnAllVariables()
     {
         $this->variableProvider->add('name', 'Simon');
-        $this->assertSame(['name' => 'Simon'], $this->variableProvider->getAll());
+        self::assertSame(['name' => 'Simon'], $this->variableProvider->getAll());
     }
 
     /**
@@ -162,7 +159,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $subject = new StandardVariableProvider();
         $properties = $subject->__sleep();
-        $this->assertContains('variables', $properties);
+        self::assertContains('variables', $properties);
     }
 
     /**
@@ -172,7 +169,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
         $copy = $subject->getScopeCopy(['bar' => 'foo']);
-        $this->assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
+        self::assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
     }
 
     /**
@@ -186,7 +183,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getByPath($path);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -225,7 +222,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getAccessorsForPath($path);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -236,7 +233,7 @@ class StandardVariableProviderTest extends UnitTestCase
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
         $inArrayAccess = new StandardVariableProvider($inArray);
-        $inPublic = (object) $inArray;
+        $inPublic = (object)$inArray;
         $asArray = StandardVariableProvider::ACCESSOR_ARRAY;
         $asGetter = StandardVariableProvider::ACCESSOR_GETTER;
         $asPublic = StandardVariableProvider::ACCESSOR_PUBLICPROPERTY;
@@ -261,7 +258,7 @@ class StandardVariableProviderTest extends UnitTestCase
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getByPath($path, [$accessor]);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

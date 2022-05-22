@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
@@ -41,11 +42,11 @@ class JSONVariableProviderTest extends UnitTestCase
     {
         $provider = new JSONVariableProvider();
         $provider->setSource($input);
-        $this->assertEquals($input, $provider->getSource());
-        $this->assertEquals($expected, $provider->getAll());
-        $this->assertEquals(array_keys($expected), $provider->getAllIdentifiers());
+        self::assertEquals($input, $provider->getSource());
+        self::assertEquals($expected, $provider->getAll());
+        self::assertEquals(array_keys($expected), $provider->getAllIdentifiers());
         foreach ($expected as $key => $value) {
-            $this->assertEquals($value, $provider->get($key));
+            self::assertEquals($value, $provider->get($key));
         }
     }
 

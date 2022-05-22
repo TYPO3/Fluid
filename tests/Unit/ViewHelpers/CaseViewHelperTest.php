@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -32,7 +33,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     public function viewHelperInitializesArguments()
     {
         $this->viewHelper->initializeArguments();
-        $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
+        self::assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
     }
 
     /**
@@ -54,8 +55,8 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $renderedChildNodes = 'ChildNodes';
         $this->viewHelper->setArguments(['value' => 'someValue']);
-        $this->viewHelper->expects($this->once())->method('renderChildren')->willReturn($renderedChildNodes);
-        $this->assertSame($renderedChildNodes, $this->viewHelper->render());
+        $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn($renderedChildNodes);
+        self::assertSame($renderedChildNodes, $this->viewHelper->render());
     }
 
     /**
@@ -65,6 +66,6 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     {
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $this->viewHelper->setArguments(['value' => 'someOtherValue']);
-        $this->assertSame('', $this->viewHelper->initializeArgumentsAndRender());
+        self::assertSame('', $this->viewHelper->initializeArgumentsAndRender());
     }
 }

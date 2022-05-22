@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -21,7 +22,7 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArgumentsRegistersExpectedArguments()
     {
         $instance = $this->getMock(DebugViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('typeOnly', 'boolean', $this->anything(), false, false);
+        $instance->expects(self::at(0))->method('registerArgument')->with('typeOnly', 'boolean', self::anything(), false, false);
         $instance->setRenderingContext(new RenderingContextFixture());
         $instance->initializeArguments();
     }
@@ -35,12 +36,12 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
     public function testRender($value, array $arguments, $expected = null)
     {
         $instance = $this->getMock(DebugViewHelper::class, ['renderChildren']);
-        $instance->expects($this->once())->method('renderChildren')->willReturn($value);
+        $instance->expects(self::once())->method('renderChildren')->willReturn($value);
         $instance->setArguments($arguments);
         $instance->setRenderingContext(new RenderingContextFixture());
         $result = $instance->render();
         if ($expected) {
-            $this->assertEquals($expected, $result);
+            self::assertEquals($expected, $result);
         }
     }
 

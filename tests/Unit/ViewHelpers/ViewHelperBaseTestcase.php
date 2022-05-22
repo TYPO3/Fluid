@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -57,9 +58,6 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
      */
     protected $renderingContext;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->viewHelperVariableContainer = new ViewHelperVariableContainer();
@@ -72,7 +70,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
     /**
      * @param string $viewHelperName
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function viewHelperVariableContainerExistsCallback($viewHelperName, $key)
     {
@@ -82,7 +80,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
     /**
      * @param string $viewHelperName
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function viewHelperVariableContainerGetCallback($viewHelperName, $key)
     {
@@ -91,7 +89,6 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
 
     /**
      * @param AbstractViewHelper $viewHelper
-     * @return void
      */
     protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper)
     {

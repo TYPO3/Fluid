@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -13,7 +14,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
  * Testcase for NumericNode
- *
  */
 class NumericNodeTest extends UnitTestCase
 {
@@ -35,7 +35,7 @@ class NumericNodeTest extends UnitTestCase
     {
         $string = '1';
         $node = new NumericNode($string);
-        $this->assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+        self::assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
     /**
@@ -45,7 +45,7 @@ class NumericNodeTest extends UnitTestCase
     {
         $string = '1.1';
         $node = new NumericNode($string);
-        $this->assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+        self::assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
     /**

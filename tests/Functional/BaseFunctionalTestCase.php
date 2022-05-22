@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
@@ -88,8 +89,8 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * @param array $variables
      * @param array $expected
      * @param array $notExpected
-     * @param string|NULL $expectedException
-     * @param boolean $withCache
+     * @param string|null $expectedException
+     * @param bool $withCache
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
@@ -103,22 +104,22 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
         $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $view->assignMultiple($variables);
         $output = trim($view->render());
-        $this->assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
+        self::assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
         if (empty($expected) && empty($notExpected)) {
-            $this->fail('Test performs no assertions!');
+            self::fail('Test performs no assertions!');
         }
         foreach ($expected as $expectedValue) {
             if (is_string($expectedValue) === true) {
-                $this->assertStringContainsString($expectedValue, $output);
+                self::assertStringContainsString($expectedValue, $output);
             } else {
-                $this->assertEquals($expectedValue, $output);
+                self::assertEquals($expectedValue, $output);
             }
         }
         foreach ($notExpected as $notExpectedValue) {
             if (is_string($notExpectedValue) === true) {
-                $this->assertStringNotContainsString($notExpectedValue, $output);
+                self::assertStringNotContainsString($notExpectedValue, $output);
             } else {
-                $this->assertNotEquals($notExpectedValue, $output);
+                self::assertNotEquals($notExpectedValue, $output);
             }
         }
     }
@@ -137,7 +138,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
      * @param array $variables
      * @param array $expected
      * @param array $notExpected
-     * @param string|NULL $expectedException
+     * @param string|null $expectedException
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
@@ -147,7 +148,7 @@ abstract class BaseFunctionalTestCase extends UnitTestCase
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
         } else {
-            $this->markTestSkipped('Cache-specific test skipped');
+            self::markTestSkipped('Cache-specific test skipped');
         }
     }
 }

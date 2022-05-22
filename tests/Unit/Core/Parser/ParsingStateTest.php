@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -42,7 +43,7 @@ class ParsingStateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
         $instance->setIdentifier('test');
-        $this->assertAttributeEquals('test', 'identifier', $instance);
+        self::assertAttributeEquals('test', 'identifier', $instance);
     }
 
     /**
@@ -52,7 +53,7 @@ class ParsingStateTest extends UnitTestCase
     {
         $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
         $instance->_set('identifier', 'test');
-        $this->assertEquals('test', $instance->getIdentifier());
+        self::assertEquals('test', $instance->getIdentifier());
     }
 
     /**
@@ -62,7 +63,7 @@ class ParsingStateTest extends UnitTestCase
     {
         $rootNode = new RootNode();
         $this->parsingState->setRootNode($rootNode);
-        $this->assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
+        self::assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
     }
 
     /**
@@ -72,8 +73,8 @@ class ParsingStateTest extends UnitTestCase
     {
         $rootNode = new RootNode();
         $this->parsingState->pushNodeToStack($rootNode);
-        $this->assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
-        $this->assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
+        self::assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
+        self::assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
     }
 
     /**
@@ -83,10 +84,10 @@ class ParsingStateTest extends UnitTestCase
     {
         $renderingContext = new RenderingContextFixture();
         $rootNode = $this->getMock(RootNode::class);
-        $rootNode->expects($this->once())->method('evaluate')->with($renderingContext)->will($this->returnValue('T3DD09 Rock!'));
+        $rootNode->expects(self::once())->method('evaluate')->with($renderingContext)->willReturn('T3DD09 Rock!');
         $this->parsingState->setRootNode($rootNode);
         $renderedValue = $this->parsingState->render($renderingContext);
-        $this->assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
+        self::assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
     }
 
     /**
@@ -96,7 +97,7 @@ class ParsingStateTest extends UnitTestCase
     {
         $this->parsingState->setVariableProvider(new StandardVariableProvider(['layoutName' => 'test']));
         $result = $this->parsingState->getLayoutName(new RenderingContextFixture());
-        $this->assertEquals('test', $result);
+        self::assertEquals('test', $result);
     }
 
     /**
@@ -105,6 +106,6 @@ class ParsingStateTest extends UnitTestCase
     public function testSetCompilableSetsProperty()
     {
         $this->parsingState->setCompilable(false);
-        $this->assertAttributeEquals(false, 'compilable', $this->parsingState);
+        self::assertAttributeEquals(false, 'compilable', $this->parsingState);
     }
 }

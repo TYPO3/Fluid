@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
@@ -42,5 +43,4 @@ class CountableIterator implements \Iterator, \Countable
     public function count()
     {
     }
-
 }
