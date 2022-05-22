@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -8,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -19,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  */
 class TemplateCompiler
 {
-
     const SHOULD_GENERATE_VIEWHELPER_INVOCATION = '##should_gen_viewhelper##';
     const MODE_NORMAL = 'normal';
     const MODE_WARMUP = 'warmup';
@@ -79,7 +78,7 @@ class TemplateCompiler
     }
 
     /**
-     * @return ParsedTemplateInterface|NULL
+     * @return ParsedTemplateInterface|null
      */
     public function getCurrentlyProcessingState()
     {
@@ -88,7 +87,6 @@ class TemplateCompiler
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
@@ -105,7 +103,6 @@ class TemplateCompiler
 
     /**
      * @param NodeConverter $nodeConverter
-     * @return void
      */
     public function setNodeConverter(NodeConverter $nodeConverter)
     {
@@ -120,16 +117,13 @@ class TemplateCompiler
         return $this->nodeConverter;
     }
 
-    /**
-     * @return void
-     */
     public function disable()
     {
         throw new StopCompilingException('Compiling stopped');
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDisabled()
     {
@@ -138,7 +132,7 @@ class TemplateCompiler
 
     /**
      * @param string $identifier
-     * @return boolean
+     * @return bool
      */
     public function has($identifier)
     {
@@ -151,7 +145,7 @@ class TemplateCompiler
             return false;
         }
         if (!empty($identifier)) {
-            return (boolean) $this->renderingContext->getCache()->get($identifier);
+            return (boolean)$this->renderingContext->getCache()->get($identifier);
         }
         return false;
     }
@@ -175,14 +169,11 @@ class TemplateCompiler
             }
         }
 
-
         return $this->syntaxTreeInstanceCache[$identifier];
     }
 
     /**
      * Resets the currently processing state
-     *
-     * @return void
      */
     public function reset()
     {
@@ -264,11 +255,10 @@ EOD;
     protected function generateCodeForLayoutName($storedLayoutNameArgument)
     {
         if ($storedLayoutNameArgument instanceof RootNode) {
-            list ($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
+            list($initialization, $execution) = array_values($this->nodeConverter->convertListOfSubNodes($storedLayoutNameArgument));
             return $initialization . PHP_EOL . 'return ' . $execution;
-        } else {
-            return 'return (string) \'' . $storedLayoutNameArgument . '\'';
         }
+        return 'return (string) \'' . $storedLayoutNameArgument . '\'';
     }
 
     /**

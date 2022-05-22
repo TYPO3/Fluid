@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /*
@@ -16,7 +17,6 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 class VariableExtractor
 {
-
     const ACCESSOR_ARRAY = 'array';
     const ACCESSOR_GETTER = 'getter';
     const ACCESSOR_ASSERTER = 'asserter';
@@ -152,19 +152,22 @@ class VariableExtractor
      * @param mixed $subject
      * @param string $propertyName
      * @param string $accessor
-     * @return boolean
+     * @return bool
      */
     protected function canExtractWithAccessor($subject, $propertyName, $accessor)
     {
         $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_ARRAY) {
-            return (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)));
-        } elseif ($accessor === self::ACCESSOR_GETTER) {
-            return ($class !== false && method_exists($subject, 'get' . ucfirst($propertyName)));
-        } elseif ($accessor === self::ACCESSOR_ASSERTER) {
-            return ($class !== false && $this->isExtractableThroughAsserter($subject, $propertyName));
-        } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
-            return ($class !== false && property_exists($subject, $propertyName));
+            return is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName));
+        }
+        if ($accessor === self::ACCESSOR_GETTER) {
+            return $class !== false && method_exists($subject, 'get' . ucfirst($propertyName));
+        }
+        if ($accessor === self::ACCESSOR_ASSERTER) {
+            return $class !== false && $this->isExtractableThroughAsserter($subject, $propertyName);
+        }
+        if ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
+            return $class !== false && property_exists($subject, $propertyName);
         }
         return false;
     }
@@ -181,12 +184,15 @@ class VariableExtractor
             || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
         ) {
             return $subject[$propertyName];
-        } elseif (is_object($subject)) {
+        }
+        if (is_object($subject)) {
             if ($accessor === self::ACCESSOR_GETTER) {
                 return call_user_func_array([$subject, 'get' . ucfirst($propertyName)], []);
-            } elseif ($accessor === self::ACCESSOR_ASSERTER) {
+            }
+            if ($accessor === self::ACCESSOR_ASSERTER) {
                 return $this->extractThroughAsserter($subject, $propertyName);
-            } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
+            }
+            if ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
                 return $subject->$propertyName;
             }
         }
@@ -199,7 +205,7 @@ class VariableExtractor
      *
      * @param mixed $subject
      * @param string $propertyName
-     * @return string|NULL
+     * @return string|null
      */
     protected function detectAccessor($subject, $propertyName)
     {

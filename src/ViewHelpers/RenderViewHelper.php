@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -110,13 +111,10 @@ class RenderViewHelper extends AbstractViewHelper
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -137,8 +135,8 @@ class RenderViewHelper extends AbstractViewHelper
     {
         $section = $arguments['section'];
         $partial = $arguments['partial'];
-        $variables = (array) $arguments['arguments'];
-        $optional = (boolean) $arguments['optional'];
+        $variables = (array)$arguments['arguments'];
+        $optional = (boolean)$arguments['optional'];
         $delegate = $arguments['delegate'];
         /** @var RenderableInterface $renderable */
         $renderable = $arguments['renderable'];

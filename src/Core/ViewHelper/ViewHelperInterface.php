@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -26,19 +27,16 @@ interface ViewHelperInterface
 
     /**
      * @param array $arguments
-     * @return void
      */
     public function setArguments(array $arguments);
 
     /**
      * @param NodeInterface[] $nodes
-     * @return void
      */
     public function setChildNodes(array $nodes);
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext);
 
@@ -53,8 +51,6 @@ interface ViewHelperInterface
      * Initializes the view helper before invoking the render method.
      *
      * Override this method to solve tasks before the view helper content is rendered.
-     *
-     * @return void
      */
     public function initialize();
 
@@ -69,7 +65,6 @@ interface ViewHelperInterface
     /**
      * Validate arguments, and throw exception if arguments do not validate.
      *
-     * @return void
      * @throws \InvalidArgumentException
      */
     public function validateArguments();
@@ -77,8 +72,6 @@ interface ViewHelperInterface
     /**
      * Initialize all arguments. You need to override this method and call
      * $this->registerArgument(...) inside this method, to register all your arguments.
-     *
-     * @return void
      */
     public function initializeArguments();
 
@@ -88,7 +81,6 @@ interface ViewHelperInterface
      * node in the template. Do not implement this unless you need it!
      *
      * @param array $arguments
-     * @return void
      */
     public function handleAdditionalArguments(array $arguments);
 
@@ -98,7 +90,6 @@ interface ViewHelperInterface
      * node in the template. Do not implement this unless you need it!
      *
      * @param array $arguments
-     * @return void
      */
     public function validateAdditionalArguments(array $arguments);
 
@@ -159,7 +150,6 @@ interface ViewHelperInterface
      * Called when being inside a cached template.
      *
      * @param \Closure $renderChildrenClosure
-     * @return void
      */
     public function setRenderChildrenClosure(\Closure $renderChildrenClosure);
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
 
 /*
@@ -6,9 +7,7 @@ namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessorInterface;
-use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -17,11 +16,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
  *   - replace cdata sections with empty lines (including nested cdata)
  *   - register/ignore namespaces through xmlns and shorthand syntax
  *   - report any unregistered/unignored namespaces through exception
- *
  */
 class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
 {
-
     const NAMESPACE_DECLARATION = '/(?<!\\\\){namespace\s*(?P<identifier>[a-zA-Z\*]+[a-zA-Z0-9\.\*]*)\s*(=\s*(?P<phpNamespace>(?:[A-Za-z0-9\.]+|Tx)(?:\\\\\w+)+)\s*)?}/m';
 
     /**
@@ -36,7 +33,6 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
@@ -150,7 +146,6 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
             foreach ($namespaces[0] as $removal) {
                 $templateSource = str_replace($removal, '', $templateSource);
             }
-
         }
 
         return $templateSource;

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
@@ -40,7 +41,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
  */
 class ViewHelperCompiler
 {
-
     const RENDER_STATIC = 'renderStatic';
     const DEFAULT_INIT = '';
 

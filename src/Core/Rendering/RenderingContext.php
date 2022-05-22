@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -148,7 +149,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param ErrorHandlerInterface $errorHandler
-     * @return void
      */
     public function setErrorHandler(ErrorHandlerInterface $errorHandler)
     {
@@ -186,7 +186,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param ViewHelperResolver $viewHelperResolver
-     * @return void
      */
     public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver)
     {
@@ -203,7 +202,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param ViewHelperInvoker $viewHelperInvoker
-     * @return void
      */
     public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker)
     {
@@ -220,7 +218,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param TemplatePaths $templatePaths
-     * @return void
      */
     public function setTemplatePaths(TemplatePaths $templatePaths)
     {
@@ -231,7 +228,6 @@ class RenderingContext implements RenderingContextInterface
      * Set the ViewHelperVariableContainer
      *
      * @param ViewHelperVariableContainer $viewHelperVariableContainer
-     * @return void
      */
     public function setViewHelperVariableContainer(ViewHelperVariableContainer $viewHelperVariableContainer)
     {
@@ -252,7 +248,6 @@ class RenderingContext implements RenderingContextInterface
      * Inject the Template Parser
      *
      * @param TemplateParser $templateParser The template parser
-     * @return void
      */
     public function setTemplateParser(TemplateParser $templateParser)
     {
@@ -270,7 +265,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param TemplateCompiler $templateCompiler
-     * @return void
      */
     public function setTemplateCompiler(TemplateCompiler $templateCompiler)
     {
@@ -290,7 +284,6 @@ class RenderingContext implements RenderingContextInterface
      * Delegation: Set the cache used by this View's compiler
      *
      * @param FluidCacheInterface $cache
-     * @return void
      */
     public function setCache(FluidCacheInterface $cache)
     {
@@ -306,7 +299,7 @@ class RenderingContext implements RenderingContextInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCacheEnabled()
     {
@@ -318,7 +311,6 @@ class RenderingContext implements RenderingContextInterface
      * through a public API.
      *
      * @param TemplateProcessorInterface[] $templateProcessors
-     * @return void
      */
     public function setTemplateProcessors(array $templateProcessors)
     {
@@ -346,7 +338,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param array $expressionNodeTypes
-     * @return void
      */
     public function setExpressionNodeTypes(array $expressionNodeTypes)
     {
@@ -376,7 +367,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param string $controllerName
-     * @return void
      */
     public function setControllerName($controllerName)
     {
@@ -393,7 +383,6 @@ class RenderingContext implements RenderingContextInterface
 
     /**
      * @param string $action
-     * @return void
      */
     public function setControllerAction($action)
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -14,7 +15,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
  */
 interface InterceptorInterface
 {
-
     const INTERCEPT_OPENING_VIEWHELPER = 1;
     const INTERCEPT_CLOSING_VIEWHELPER = 2;
     const INTERCEPT_TEXT = 3;
@@ -26,7 +26,7 @@ interface InterceptorInterface
      * that will be used in place of the given node.
      *
      * @param NodeInterface $node
-     * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
+     * @param int $interceptorPosition One of the INTERCEPT_* constants for the current interception point
      * @param ParsingState $parsingState the parsing state
      * @return NodeInterface
      */

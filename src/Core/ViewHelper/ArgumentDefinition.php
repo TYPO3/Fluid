@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -36,7 +37,7 @@ class ArgumentDefinition
     /**
      * Is argument required?
      *
-     * @var boolean
+     * @var bool
      */
     protected $required = false;
 
@@ -45,7 +46,7 @@ class ArgumentDefinition
      *
      * @var mixed
      */
-    protected $defaultValue = null;
+    protected $defaultValue;
 
     /**
      * Escaping instruction, in line with $this->escapeOutput / $this->escapeChildren on ViewHelpers.
@@ -60,7 +61,7 @@ class ArgumentDefinition
      *
      * @var bool|null
      */
-    protected $escape = null;
+    protected $escape;
 
     /**
      * Constructor for this argument definition.
@@ -68,7 +69,7 @@ class ArgumentDefinition
      * @param string $name Name of argument
      * @param string $type Type of argument
      * @param string $description Description of argument
-     * @param boolean $required TRUE if argument is required
+     * @param bool $required TRUE if argument is required
      * @param mixed $defaultValue Default value
      * @param bool|null $escape Whether or not argument is escaped, or uses default escaping behavior (see class var comment)
      */
@@ -115,7 +116,7 @@ class ArgumentDefinition
     /**
      * Get the optionality of the argument
      *
-     * @return boolean TRUE if argument is optional
+     * @return bool TRUE if argument is optional
      */
     public function isRequired()
     {

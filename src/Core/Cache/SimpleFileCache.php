@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Cache;
 
 /*
@@ -56,7 +57,7 @@ class SimpleFileCache implements FluidCacheInterface
      * exist in the cache directory.
      *
      * @param string $name
-     * @return boolean
+     * @return bool
      */
     public function get($name)
     {
@@ -77,7 +78,6 @@ class SimpleFileCache implements FluidCacheInterface
      *
      * @param string $name
      * @param mixed $value
-     * @return void
      * @throws \RuntimeException
      */
     public function set($name, $value)
@@ -92,8 +92,7 @@ class SimpleFileCache implements FluidCacheInterface
      * Flushes the cache either by entry or flushes
      * the entire cache if no entry is provided.
      *
-     * @param string|NULL $name
-     * @return void
+     * @param string|null $name
      */
     public function flush($name = null)
     {
@@ -118,7 +117,6 @@ class SimpleFileCache implements FluidCacheInterface
 
     /**
      * @param string $name
-     * @return void
      */
     protected function flushByName($name)
     {
@@ -127,7 +125,6 @@ class SimpleFileCache implements FluidCacheInterface
 
     /**
      * @param string $filename
-     * @return void
      */
     protected function flushByFilename($filename)
     {

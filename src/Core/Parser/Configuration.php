@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -44,14 +45,13 @@ class Configuration
      */
     public function setViewHelperArgumentEscapingEnabled($viewHelperArgumentEscapingEnabled): void
     {
-        $this->viewHelperArgumentEscapingEnabled = (bool) $viewHelperArgumentEscapingEnabled;
+        $this->viewHelperArgumentEscapingEnabled = (bool)$viewHelperArgumentEscapingEnabled;
     }
 
     /**
      * Adds an interceptor to apply to values coming from object accessors.
      *
      * @param InterceptorInterface $interceptor
-     * @return void
      */
     public function addInterceptor(InterceptorInterface $interceptor)
     {
@@ -62,7 +62,6 @@ class Configuration
      * Adds an escaping interceptor to apply to values coming from object accessors if escaping is enabled
      *
      * @param InterceptorInterface $interceptor
-     * @return void
      */
     public function addEscapingInterceptor(InterceptorInterface $interceptor)
     {
@@ -74,7 +73,6 @@ class Configuration
      *
      * @param InterceptorInterface $interceptor
      * @param \SplObjectStorage[] $interceptorArray
-     * @return void
      */
     protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray)
     {
@@ -92,7 +90,7 @@ class Configuration
     /**
      * Returns all interceptors for a given Interception Point.
      *
-     * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
+     * @param int $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
     public function getInterceptors($interceptionPoint)
@@ -103,7 +101,7 @@ class Configuration
     /**
      * Returns all escaping interceptors for a given Interception Point.
      *
-     * @param integer $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
+     * @param int $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
     public function getEscapingInterceptors($interceptionPoint)
