@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -35,7 +36,7 @@ class MathExpressionNode extends AbstractExpressionNode
      * @param RenderingContextInterface $renderingContext
      * @param string $expression
      * @param array $matches
-     * @return integer|float
+     * @return int|float
      */
     public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
     {
@@ -62,24 +63,29 @@ class MathExpressionNode extends AbstractExpressionNode
     }
 
     /**
-     * @param integer|float $left
+     * @param int|float $left
      * @param string $operator
-     * @param integer|float $right
-     * @return integer|float
+     * @param int|float $right
+     * @return int|float
      */
     protected static function evaluateOperation($left, $operator, $right)
     {
         if ($operator === '%') {
             return $left % $right;
-        } elseif ($operator === '-') {
+        }
+        if ($operator === '-') {
             return $left - $right;
-        } elseif ($operator === '+') {
+        }
+        if ($operator === '+') {
             return $left + $right;
-        } elseif ($operator === '*') {
+        }
+        if ($operator === '*') {
             return $left * $right;
-        } elseif ($operator === '/') {
-            return (integer) $right !== 0 ? $left / $right : 0;
-        } elseif ($operator === '^') {
+        }
+        if ($operator === '/') {
+            return (integer)$right !== 0 ? $left / $right : 0;
+        }
+        if ($operator === '^') {
             return pow($left, $right);
         }
         return 0;

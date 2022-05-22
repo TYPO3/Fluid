@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -37,7 +38,7 @@ class ViewHelperInvoker
      * @param string|ViewHelperInterface $viewHelperClassNameOrInstance
      * @param array $arguments
      * @param RenderingContextInterface $renderingContext
-     * @param null|\Closure $renderChildrenClosure
+     * @param \Closure|null $renderChildrenClosure
      * @return string
      */
     public function invoke($viewHelperClassNameOrInstance, array $arguments, RenderingContextInterface $renderingContext, \Closure $renderChildrenClosure = null)

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -19,7 +20,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     /**
      * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
      *
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
@@ -28,7 +29,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * @var array
      */
-    static private $tagAttributes = [];
+    private static $tagAttributes = [];
 
     /**
      * Tag builder instance
@@ -36,7 +37,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @var TagBuilder
      * @api
      */
-    protected $tag = null;
+    protected $tag;
 
     /**
      * Name of the tag to be created by this view helper
@@ -64,7 +65,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 
     /**
      * @param TagBuilder $tag
-     * @return void
      */
     public function setTagBuilder(TagBuilder $tag)
     {
@@ -91,7 +91,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * Will be invoked just before the render method.
      *
-     * @return void
      * @api
      */
     public function initialize()
@@ -137,9 +136,8 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param string $name Name of tag attribute
      * @param string $type Type of the tag attribute
      * @param string $description Description of tag attribute
-     * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
+     * @param bool $required set to TRUE if tag attribute is required. Defaults to FALSE.
      * @param mixed $defaultValue Optional, default value of attribute if one applies
-     * @return void
      * @api
      */
     protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
@@ -152,7 +150,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * Registers all standard HTML universal attributes.
      * Should be used inside registerArguments();
      *
-     * @return void
      * @api
      */
     protected function registerUniversalTagAttributes()

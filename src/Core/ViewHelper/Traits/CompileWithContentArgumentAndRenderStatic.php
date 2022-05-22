@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;

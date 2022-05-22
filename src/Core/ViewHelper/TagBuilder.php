@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -39,7 +40,7 @@ class TagBuilder
      * Specifies whether this tag needs a closing tag.
      * E.g. <textarea> cant be self-closing even if its empty
      *
-     * @var boolean
+     * @var bool
      */
     protected $forceClosingTag = false;
 
@@ -65,7 +66,6 @@ class TagBuilder
      * Sets the tag name
      *
      * @param string $tagName name of the tag to be rendered
-     * @return void
      * @api
      */
     public function setTagName($tagName)
@@ -88,7 +88,6 @@ class TagBuilder
      * Sets the content of the tag
      *
      * @param string $tagContent content of the tag to be rendered
-     * @return void
      * @api
      */
     public function setContent($tagContent)
@@ -110,7 +109,7 @@ class TagBuilder
     /**
      * Returns TRUE if tag contains content, otherwise FALSE
      *
-     * @return boolean TRUE if tag contains text, otherwise FALSE
+     * @return bool TRUE if tag contains text, otherwise FALSE
      * @api
      */
     public function hasContent()
@@ -122,7 +121,7 @@ class TagBuilder
      * Set this to TRUE to force a closing tag
      * E.g. <textarea> cant be self-closing even if its empty
      *
-     * @param boolean $forceClosingTag
+     * @param bool $forceClosingTag
      * @api
      */
     public function forceClosingTag($forceClosingTag)
@@ -134,7 +133,7 @@ class TagBuilder
      * Returns TRUE if the tag has an attribute with the given name
      *
      * @param string $attributeName name of the attribute
-     * @return boolean TRUE if the tag has an attribute with the given name, otherwise FALSE
+     * @return bool TRUE if the tag has an attribute with the given name, otherwise FALSE
      * @api
      */
     public function hasAttribute($attributeName)
@@ -169,14 +168,13 @@ class TagBuilder
     }
 
     /**
-     * @param boolean $ignoreEmptyAttributes
-     * @return void
+     * @param bool $ignoreEmptyAttributes
      */
     public function ignoreEmptyAttributes($ignoreEmptyAttributes)
     {
         $this->ignoreEmptyAttributes = $ignoreEmptyAttributes;
         if ($ignoreEmptyAttributes) {
-            $this->attributes = array_filter($this->attributes, function ($item) { return trim((string) $item) !== ''; });
+            $this->attributes = array_filter($this->attributes, function ($item) { return trim((string)$item) !== ''; });
         }
     }
 
@@ -185,8 +183,7 @@ class TagBuilder
      *
      * @param string $attributeName name of the attribute to be added to the tag
      * @param string|\Traversable|array|null $attributeValue attribute value
-     * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute value
-     * @return void
+     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute value
      * @api
      */
     public function addAttribute($attributeName, $attributeValue, $escapeSpecialCharacters = true)
@@ -201,7 +198,7 @@ class TagBuilder
                 $this->addAttribute($attributeName . '-' . $name, $value, $escapeSpecialCharacters);
             }
         } else {
-            if (trim((string) $attributeValue) === '' && $this->ignoreEmptyAttributes) {
+            if (trim((string)$attributeValue) === '' && $this->ignoreEmptyAttributes) {
                 return;
             }
             if ($escapeSpecialCharacters) {
@@ -215,8 +212,7 @@ class TagBuilder
      * Adds attributes to the $attributes-collection
      *
      * @param array $attributes collection of attributes to add. key = attribute name, value = attribute value
-     * @param boolean $escapeSpecialCharacters apply htmlspecialchars to attribute values#
-     * @return void
+     * @param bool $escapeSpecialCharacters apply htmlspecialchars to attribute values#
      * @api
      */
     public function addAttributes(array $attributes, $escapeSpecialCharacters = true)
@@ -230,7 +226,6 @@ class TagBuilder
      * Removes an attribute from the $attributes-collection
      *
      * @param string $attributeName name of the attribute to be removed from the tag
-     * @return void
      * @api
      */
     public function removeAttribute($attributeName)
@@ -241,7 +236,6 @@ class TagBuilder
     /**
      * Resets the TagBuilder by setting all members to their default value
      *
-     * @return void
      * @api
      */
     public function reset()

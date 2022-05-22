@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -38,7 +39,6 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
 
     /**
      * @param string $failureReason
-     * @return void
      */
     public function setFailureReason($failureReason)
     {
@@ -63,7 +63,6 @@ class FailedCompilingState extends ParsingState implements ParsedTemplateInterfa
 
     /**
      * @param string $mitigation
-     * @return void
      */
     public function addMitigation($mitigation)
     {

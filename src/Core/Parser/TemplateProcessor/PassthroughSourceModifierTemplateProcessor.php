@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
 
 /*
@@ -40,7 +41,6 @@ class PassthroughSourceModifierTemplateProcessor implements TemplateProcessorInt
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {

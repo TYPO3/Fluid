@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -33,7 +34,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
@@ -114,8 +115,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * be a warning if someone considers changing this method signature!
      *
      * @deprecated Deprecated in favor of ClassName::verdict($arguments, renderingContext), will no longer be called in 3.0
-     * @param array|NULL $arguments
-     * @return boolean
+     * @param array|null $arguments
+     * @return bool
      * @api
      */
     protected static function evaluateCondition($arguments = null)
@@ -134,10 +135,9 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
         foreach ($closures as $elseNodeIndex => $elseNodeClosure) {
             if (!isset($conditionClosures[$elseNodeIndex])) {
                 return $elseNodeClosure();
-            } else {
-                if ($conditionClosures[$elseNodeIndex]()) {
-                    return $elseNodeClosure();
-                }
+            }
+            if ($conditionClosures[$elseNodeIndex]()) {
+                return $elseNodeClosure();
             }
         }
         return '';
@@ -172,9 +172,8 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
 
         if ($elseViewHelperEncountered) {
             return '';
-        } else {
-            return $this->renderChildren();
         }
+        return $this->renderChildren();
     }
 
     /**
@@ -187,12 +186,11 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      */
     protected function renderElseChild()
     {
-
         if ($this->hasArgument('else')) {
             return $this->arguments['else'];
         }
 
-        /** @var ViewHelperNode|NULL $elseNode */
+        /** @var ViewHelperNode|null $elseNode */
         $elseNode = null;
         foreach ($this->viewHelperNode->getChildNodes() as $childNode) {
             if ($childNode instanceof ViewHelperNode

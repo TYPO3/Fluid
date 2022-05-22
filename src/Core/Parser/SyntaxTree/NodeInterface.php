@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -33,7 +34,6 @@ interface NodeInterface
      * Appends a sub node to this node. Is used inside the parser to append children
      *
      * @param NodeInterface $childNode The sub node to add
-     * @return void
      */
     public function addChildNode(NodeInterface $childNode);
 
