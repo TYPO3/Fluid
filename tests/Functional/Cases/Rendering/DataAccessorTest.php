@@ -4,11 +4,11 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
+use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class DataAccessorTest extends UnitTestCase
+class DataAccessorTest extends BaseTestCase
 {
     /**
      * @return array

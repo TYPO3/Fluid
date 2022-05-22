@@ -3,14 +3,11 @@
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
+use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 
-/**
- * Class BaseFunctionalTestCase
- */
-abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
+abstract class BaseConditionalFunctionalTestCase extends BaseTestCase
 {
 
     /**

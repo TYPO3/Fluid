@@ -141,12 +141,8 @@ class CompileWithContentArgumentAndRenderStaticTest extends BaseFunctionalTestCa
      */
     public function testTemplateCodeFixtureWithCache($sourceOrStream, array $variables, array $expected, array $notExpected, $expectedException = null)
     {
-        if ($this->getCache()) {
-            $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
-            $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
-        } else {
-            self::markTestSkipped('Cache-specific test skipped');
-        }
+        $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
+        $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, $expectedException, true);
     }
 
     /**
