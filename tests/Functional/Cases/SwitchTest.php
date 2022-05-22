@@ -1,51 +1,56 @@
 <?php
 
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
-use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
-/**
- * Class SwitchTest
- */
-class SwitchTest extends BaseFunctionalTestCase
+class SwitchTest extends AbstractFunctionalTestCase
 {
-
-    /**
-     * If your test case requires a cache, override this
-     * method and return an instance.
-     *
-     * @return FluidCacheInterface
-     */
-    protected function getCache()
-    {
-        return new SimpleFileCache(sys_get_temp_dir());
-    }
-
-    /**
-     * @return array
-     */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function ignoreTextAndWhitespacesDataProvider(): array
     {
         return [
             'Ignores whitespace inside parent switch outside case children' => [
                 '<f:switch expression="1">   <f:case value="2">NO</f:case>   <f:case value="1">YES</f:case>   </f:switch>',
-                [],
-                [],
-                ['   ']
+                '   ',
             ],
             'Ignores text inside parent switch outside case children' => [
                 '<f:switch expression="1">TEXT<f:case value="2">NO</f:case><f:case value="1">YES</f:case></f:switch>',
-                [],
-                [],
-                ['TEXT']
+                'TEXT',
             ],
-            'Ignores text and whitespace inside parent switch outside case children' => [
+            'Ignores text and whitespace inside parent switch outside case children 1' => [
                 '<f:switch expression="1">   TEXT   <f:case value="2">NO</f:case><f:case value="1">YES</f:case></f:switch>',
-                [],
-                [],
-                ['TEXT', '   ']
+                'TEXT',
+            ],
+            'Ignores text and whitespace inside parent switch outside case children 2' => [
+                '<f:switch expression="1">   TEXT   <f:case value="2">NO</f:case><f:case value="1">YES</f:case></f:switch>',
+                '   ',
             ],
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider ignoreTextAndWhitespacesDataProvider
+     */
+    public function ignoreTextAndWhitespaces(string $source, string $notExpected): void
+    {
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $output = $view->render();
+        self::assertStringNotContainsString($notExpected, $output);
+
+        // Second run to test cached template parsing
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $output = $view->render();
+        self::assertStringNotContainsString($notExpected, $output);
     }
 }

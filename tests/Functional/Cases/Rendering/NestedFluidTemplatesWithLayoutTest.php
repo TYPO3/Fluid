@@ -1,96 +1,52 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
-
-use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
-use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
-
-/**
- * Class NestedFluidTemplatesWithLayout
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
  */
-class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
+
+namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
+
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
+
+class NestedFluidTemplatesWithLayoutTest extends AbstractFunctionalTestCase
 {
     /**
-     * Variables array constructed to expect exactly three
-     * recursive renderings followed by a single rendering.
-     *
-     * @var array
-     */
-    protected $variables = [
-        'anotherFluidTemplateContent' => '',
-    ];
-
-    /**
-     * If your test case requires a cache, override this
-     * method and return an instance.
-     *
-     * @return FluidCacheInterface
-     */
-    protected function getCache()
-    {
-        return new SimpleFileCache(sys_get_temp_dir());
-    }
-
-    /**
-     * @return array
-     */
-    public function getTemplateCodeFixturesAndExpectations()
-    {
-        return [
-            'Nested template rendering with different layout paths' => [
-                '<f:layout name="Layout"/><f:section name="main"><f:format.raw>{anotherFluidTemplateContent}</f:format.raw></f:section>',
-                $this->variables,
-                ['DefaultLayoutLayoutOverride'],
-                [],
-            ],
-        ];
-    }
-
-    /**
-     * Perform a standard test on the source or stream provided,
-     * rendering it with $variables assigned and checking the
-     * output for presense of $expected values and confirming
-     * that none of the $notExpected values are present.
-     *
-     * @param string|resource $source
-     * @param array $variables
-     * @param array $expected
-     * @param array $notExpected
-     * @param string|null $expectedException
-     * @param bool $withCache
      * @test
-     * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixture($source, array $variables, array $expected, array $notExpected, $expectedException = null, $withCache = false)
+    public function nestedTemplateRenderingWithDifferentLayoutPaths(): void
     {
-        $view = $this->getView();
+        $source = '<f:layout name="Layout"/><f:section name="main"><f:format.raw>{anotherFluidTemplateContent}</f:format.raw></f:section>';
+        $variables = ['anotherFluidTemplateContent' => ''];
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
-        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
-
-        $innerView = $this->getView();
+        $innerView = new TemplateView();
+        $innerView->getRenderingContext()->setCache(self::$cache);
         $innerView->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $innerView->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/LayoutsOverride/Layouts/']);
-        $innerView->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
         $innerView->assignMultiple($variables);
-        $innerOutput = trim($innerView->render());
-
+        $innerOutput = $innerView->render();
         $view->assignMultiple(['anotherFluidTemplateContent' => $innerOutput]);
-        $output = trim($view->render());
+        $output = $view->render();
+        self::assertStringContainsString('DefaultLayoutLayoutOverride', $output);
 
-        foreach ($expected as $expectedValue) {
-            if (is_string($expectedValue) === true) {
-                self::assertStringContainsString($expectedValue, $output);
-            } else {
-                self::assertEquals($expectedValue, $output);
-            }
-        }
-        foreach ($notExpected as $notExpectedValue) {
-            if (is_string($notExpectedValue) === true) {
-                self::assertStringNotContainsString($notExpectedValue, $output);
-            } else {
-                self::assertNotEquals($notExpectedValue, $output);
-            }
-        }
+        // A second run with now compliled templates.
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/Layouts/']);
+        $innerView = new TemplateView();
+        $innerView->getRenderingContext()->setCache(self::$cache);
+        $innerView->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $innerView->getRenderingContext()->getTemplatePaths()->setLayoutRootPaths([__DIR__ . '/../../Fixtures/LayoutsOverride/Layouts/']);
+        $innerView->assignMultiple($variables);
+        $innerOutput = $innerView->render();
+        $view->assignMultiple(['anotherFluidTemplateContent' => $innerOutput]);
+        $output = $view->render();
+        self::assertStringContainsString('DefaultLayoutLayoutOverride', $output);
     }
 }
