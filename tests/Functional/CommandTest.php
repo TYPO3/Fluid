@@ -10,9 +10,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
 use org\bovigo\vfs\vfsStream;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
-/**
- * Class CommandTest
- */
 class CommandTest extends BaseTestCase
 {
     public static function setUpBeforeClass(): void
