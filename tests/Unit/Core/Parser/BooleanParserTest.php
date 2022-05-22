@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -33,17 +34,17 @@ class BooleanParserTest extends UnitTestCase
      * @test
      * @dataProvider getSomeEvaluationTestValues
      * @param string $comparison
-     * @param boolean $expected
+     * @param bool $expected
      */
     public function testSomeEvaluations($comparison, $expected, $variables = [])
     {
         $parser = new BooleanParser();
-        $this->assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
+        self::assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
 
         $compiledEvaluation = $parser->compile($comparison);
         $functionName = 'expression_' . md5($comparison . rand(0, 100000));
         eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
-        $this->assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
+        self::assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
@@ -83,9 +84,9 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      * that none of the $notExpected values are present.
      *
      * @param string|resource $source
-     * @param boolean $expected
+     * @param bool $expected
      * @param array $variables
-     * @param boolean $withCache
+     * @param bool $withCache
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
@@ -96,12 +97,12 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
         $view->assignMultiple($variables);
         $output = $view->render();
-        $this->assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
+        self::assertNotEquals($view->getRenderingContext()->getTemplatePaths()->getTemplateSource(), $output, 'Input and output were the same');
 
         if ($expected === true) {
-            $this->assertEquals('yes', $output);
+            self::assertEquals('yes', $output);
         } else {
-            $this->assertEquals('no', $output);
+            self::assertEquals('no', $output);
         }
     }
 
@@ -116,7 +117,7 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
      * return a valid cache.
      *
      * @param string|resource $sourceOrStream
-     * @param boolean $expected
+     * @param bool $expected
      * @param array $variables
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
@@ -126,7 +127,7 @@ abstract class BaseConditionalFunctionalTestCase extends UnitTestCase
         if ($this->getCache()) {
             $this->testTemplateCodeFixture($sourceOrStream, $variables, $expected, $notExpected, true);
         } else {
-            $this->markTestSkipped('Cache-specific test skipped');
+            self::markTestSkipped('Cache-specific test skipped');
         }
     }
 }

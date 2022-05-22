@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Errors;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;

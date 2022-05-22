@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -32,7 +33,7 @@ class CastingExpressionNodeTest extends UnitTestCase
         $context = new RenderingContext();
         $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
         $result = $subject->evaluate($context);
-        $this->assertSame('10', $result);
+        self::assertSame('10', $result);
     }
 
     /**
@@ -57,7 +58,7 @@ class CastingExpressionNodeTest extends UnitTestCase
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

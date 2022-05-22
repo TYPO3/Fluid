@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -35,7 +36,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
         $values = ['bar', 'Fluid'];
         $this->viewHelper->setArguments(['values' => $values, 'as' => 'innerVariable']);
         $output = $this->viewHelper->render();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -55,9 +56,9 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsChildNodesIfValuesIsNull()
     {
-        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Child nodes'));
+        $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn('Child nodes');
         $this->viewHelper->setArguments(['values' => null, 'as' => 'foo']);
-        $this->assertEquals('Child nodes', $this->viewHelper->render(null, 'foo'));
+        self::assertEquals('Child nodes', $this->viewHelper->render(null, 'foo'));
     }
 
     /**
@@ -65,9 +66,9 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderReturnsChildNodesIfValuesIsAnEmptyArray()
     {
-        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('Child nodes'));
+        $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn('Child nodes');
         $this->viewHelper->setArguments(['values' => [], 'as' => 'foo']);
-        $this->assertEquals('Child nodes', $this->viewHelper->render());
+        self::assertEquals('Child nodes', $this->viewHelper->render());
     }
 
     /**
@@ -80,7 +81,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
         $o1 = $this->viewHelper->render();
         $o2 = $this->viewHelper->render();
         $o3 = $this->viewHelper->render();
-        $this->assertEquals($o1, $o2);
-        $this->assertEquals($o2, $o3);
+        self::assertEquals($o1, $o2);
+        self::assertEquals($o2, $o3);
     }
 }

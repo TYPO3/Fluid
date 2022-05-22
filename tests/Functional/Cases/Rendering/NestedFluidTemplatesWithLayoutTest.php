@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
@@ -55,8 +56,8 @@ class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
      * @param array $variables
      * @param array $expected
      * @param array $notExpected
-     * @param string|NULL $expectedException
-     * @param boolean $withCache
+     * @param string|null $expectedException
+     * @param bool $withCache
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
@@ -79,16 +80,16 @@ class NestedFluidTemplatesWithLayoutTest extends BaseFunctionalTestCase
 
         foreach ($expected as $expectedValue) {
             if (is_string($expectedValue) === true) {
-                $this->assertStringContainsString($expectedValue, $output);
+                self::assertStringContainsString($expectedValue, $output);
             } else {
-                $this->assertEquals($expectedValue, $output);
+                self::assertEquals($expectedValue, $output);
             }
         }
         foreach ($notExpected as $notExpectedValue) {
             if (is_string($notExpectedValue) === true) {
-                $this->assertStringNotContainsString($notExpectedValue, $output);
+                self::assertStringNotContainsString($notExpectedValue, $output);
             } else {
-                $this->assertNotEquals($notExpectedValue, $output);
+                self::assertNotEquals($notExpectedValue, $output);
             }
         }
     }

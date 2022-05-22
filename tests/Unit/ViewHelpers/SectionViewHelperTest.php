@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -9,13 +10,11 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
 
 /**
  * Testcase for SectionViewHelper
- *
  */
 class SectionViewHelperTest extends UnitTestCase
 {
@@ -36,8 +35,8 @@ class SectionViewHelperTest extends UnitTestCase
 
         $section->postParseEvent($viewHelperNodeMock, $viewHelperArguments, $variableContainer);
 
-        $this->assertTrue($variableContainer->exists('1457379500_sections'), 'Sections array was not created, albeit it should.');
+        self::assertTrue($variableContainer->exists('1457379500_sections'), 'Sections array was not created, albeit it should.');
         $sections = $variableContainer->get('1457379500_sections');
-        $this->assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
+        self::assertEquals($sections['sectionName'], $viewHelperNodeMock, 'ViewHelperNode for section was not stored.');
     }
 }

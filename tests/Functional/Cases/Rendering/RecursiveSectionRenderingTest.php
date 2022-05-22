@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Escaping;
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;

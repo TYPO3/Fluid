@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
 use TYPO3Fluid\Fluid\Tests\Functional\BaseConditionalFunctionalTestCase;
@@ -42,7 +43,7 @@ class VariableConditionsTest extends BaseConditionalFunctionalTestCase
 
             // conditions with objects
             ['{user1} == {user1}', true, ['user1' => $user1]],
-            ['{user1} === {user1}',true, ['user1' => $user1]],
+            ['{user1} === {user1}', true, ['user1' => $user1]],
             ['{user1} == {user2}', false, ['user1' => $user1, 'user2' => $user2]],
             ['{user1} === {user2}', false, ['user1' => $user1, 'user2' => $user2]],
 

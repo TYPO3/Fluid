@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
@@ -15,9 +16,6 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 class ExamplesTest extends BaseTestCase
 {
 
-    /**
-     * @return void
-     */
     public static function setUpBeforeClass(): void
     {
         vfsStream::setup('fakecache/');
