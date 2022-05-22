@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Cache;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Functional\Core\Cache;
 
 use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
 use TYPO3Fluid\Fluid\Core\Cache\StandardCacheWarmer;
