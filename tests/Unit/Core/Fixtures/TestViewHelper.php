@@ -14,7 +14,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class TestViewHelper extends AbstractViewHelper
 {
-
     public function initializeArguments()
     {
         $this->registerArgument('param1', 'integer', 'P1 Stuff', true);

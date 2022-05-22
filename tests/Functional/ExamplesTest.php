@@ -15,7 +15,6 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
  */
 class ExamplesTest extends BaseTestCase
 {
-
     public static function setUpBeforeClass(): void
     {
         vfsStream::setup('fakecache/');
