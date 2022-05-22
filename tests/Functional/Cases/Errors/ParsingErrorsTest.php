@@ -1,43 +1,60 @@
 <?php
 
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Errors;
 
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
-use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
+use TYPO3Fluid\Fluid\Core\Parser\UnknownNamespaceException;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
-/**
- * Class ParsingErrorsTest
- */
-class ParsingErrorsTest extends BaseFunctionalTestCase
+class ParsingErrorsTest extends AbstractFunctionalTestCase
 {
-
-    /**
-     * @return array
-     */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
-            'Unclosed ViewHelperNode' => [
+            'Unclosed ViewHelperNode non-cached' => [
                 '<f:section name="Test"></div>',
-                [],
-                [],
-                [],
-                Exception::class
+                Exception::class,
             ],
-            'Missing required argument' => [
+            'Unclosed ViewHelperNode cached' => [
+                '<f:section name="Test"></div>',
+                Exception::class,
+            ],
+            'Missing required argument non-cached' => [
                 '<f:section></f:section>',
-                [],
-                [],
-                [],
-                Exception::class
+                Exception::class,
             ],
-            'Uses invalid namespace' => [
+             'Missing required argument cached' => [
+                '<f:section></f:section>',
+                 Exception::class,
+            ],
+            'Uses invalid namespace non-cached' => [
                 '<invalid:section></invalid:section>',
-                [],
-                [],
-                [],
-                Exception::class
+                UnknownNamespaceException::class,
+            ],
+            'Uses invalid namespace cached' => [
+                '<invalid:section></invalid:section>',
+                UnknownNamespaceException::class
             ],
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getTemplateCodeFixturesAndExpectations
+     */
+    public function testTemplateCodeFixture($source, string $expectedException)
+    {
+        $this->setExpectedException($expectedException);
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $view->getRenderingContext()->getViewHelperResolver()->addNamespace('test', 'TYPO3Fluid\\Fluid\\Tests\\Functional\\Fixtures\\ViewHelpers');
+        $view->render();
     }
 }
