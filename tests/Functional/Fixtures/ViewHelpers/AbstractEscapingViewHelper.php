@@ -9,7 +9,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 abstract class AbstractEscapingViewHelper extends AbstractViewHelper
 {
-
     public function initializeArguments()
     {
         $this->registerArgument('content', 'string', 'Content provided as argument');

@@ -35,5 +35,9 @@ jobs:
       - name: Install dependencies
         run: composer update
 
+      - name: CGL check
+        if: ${{ matrix.php == '7.2' }}
+        run: vendor/bin/php-cs-fixer fix --dry-run
+
       - name: Run test suite
         run: vendor/bin/phpunit

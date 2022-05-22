@@ -10,7 +10,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  */
 trait ParserRuntimeOnly
 {
-
     public function render()
     {
         return null;
