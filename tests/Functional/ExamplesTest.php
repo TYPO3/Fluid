@@ -7,68 +7,9 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use org\bovigo\vfs\vfsStream;
-use TYPO3Fluid\Fluid\Tests\BaseTestCase;
-
-class ExamplesTest extends BaseTestCase
+class ExamplesTest extends AbstractFunctionalTestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        vfsStream::setup('fakecache/');
-    }
-
-    /**
-     * @dataProvider getExampleScriptTestValues
-     * @param string $script
-     * @param array $expectedOutputs
-     * @param string $expectedException
-     */
-    public function testExampleScriptFileWithoutCache($script, array $expectedOutputs, $expectedException = null)
-    {
-        if ($expectedException !== null) {
-            $this->setExpectedException($expectedException);
-        }
-        $this->runExampleScriptTest($script, $expectedOutputs, false);
-    }
-
-    /**
-     * @dataProvider getExampleScriptTestValues
-     * @param string $script
-     * @param array $expectedOutputs
-     * @param string $expectedException
-     */
-    public function testExampleScriptFileWithCache($script, array $expectedOutputs, $expectedException = null)
-    {
-        if ($expectedException !== null) {
-            $this->setExpectedException($expectedException);
-        }
-        $cache = vfsStream::url('fakecache/');
-        $this->runExampleScriptTest($script, $expectedOutputs, $cache);
-        $this->runExampleScriptTest($script, $expectedOutputs, $cache);
-    }
-
-    /**
-     * @param string $script
-     * @param array $expectedOutputs
-     * @param string $FLUID_CACHE_DIRECTORY
-     */
-    protected function runExampleScriptTest($script, array $expectedOutputs, $FLUID_CACHE_DIRECTORY)
-    {
-        $scriptFile = __DIR__ . '/../../examples/' . $script;
-        $self = $this;
-        $this->setOutputCallback(function ($output) use ($self, $expectedOutputs) {
-            foreach ($expectedOutputs as $expectedOutput) {
-                $self->assertContains($expectedOutput, $output);
-            }
-        });
-        include $scriptFile;
-        unset($FLUID_CACHE_DIRECTORY);
-    }
-
-    /**
-     * @return array
-     */
-    public function getExampleScriptTestValues()
+    public function exampleScriptValuesDataProvider(): array
     {
         return [
             'example_conditions.php' => [
@@ -260,5 +201,28 @@ class ExamplesTest extends BaseTestCase
                 ]
             ]
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider exampleScriptValuesDataProvider
+     */
+    public function exampleScriptValues(string $script, array $expectedOutputs): void
+    {
+        $this->runExampleScriptTest($script, $expectedOutputs, self::$cachePath);
+        $this->runExampleScriptTest($script, $expectedOutputs, self::$cachePath);
+    }
+
+    protected function runExampleScriptTest(string $script, array $expectedOutputs, string $FLUID_CACHE_DIRECTORY): void
+    {
+        $scriptFile = __DIR__ . '/../../examples/' . $script;
+        $self = $this;
+        $this->setOutputCallback(function ($output) use ($self, $expectedOutputs) {
+            foreach ($expectedOutputs as $expectedOutput) {
+                $self->assertContains($expectedOutput, $output);
+            }
+        });
+        include $scriptFile;
+        unset($FLUID_CACHE_DIRECTORY);
     }
 }
