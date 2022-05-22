@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Example;
 
 /*
@@ -20,7 +21,7 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
 {
 
     /**
-     * @var integer
+     * @var int
      */
     protected $incrementer = 0;
 
@@ -38,19 +39,19 @@ class CustomVariableProvider extends StandardVariableProvider implements Variabl
     {
         if ($path === 'random') {
             return 'random' . sha1(rand(0, 999999999));
-        } elseif ($path === 'incrementer') {
-            return ++ $this->incrementer;
-        } else {
-            return parent::getByPath($path);
         }
+        if ($path === 'incrementer') {
+            return ++ $this->incrementer;
+        }
+        return parent::getByPath($path);
     }
 
     /**
      * @param string $identifier
-     * @return boolean
+     * @return bool
      */
     public function exists($identifier)
     {
-        return ($identifier === 'incrementer' || $identifier === 'random' || parent::exists($identifier));
+        return $identifier === 'incrementer' || $identifier === 'random' || parent::exists($identifier);
     }
 }

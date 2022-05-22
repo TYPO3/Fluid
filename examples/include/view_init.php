@@ -1,4 +1,5 @@
 <?php
+
 // Define a cache directory if one is not set
 $FLUID_CACHE_DIRECTORY = !isset($FLUID_CACHE_DIRECTORY) ? __DIR__ . '/../cache/' : $FLUID_CACHE_DIRECTORY;
 
@@ -41,13 +42,11 @@ if ($FLUID_CACHE_DIRECTORY) {
     $view->setCache(new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($FLUID_CACHE_DIRECTORY));
 }
 
-
 /**
  * Tiny helper that outputs a plain string in a nice way,
  * directly to console.
  *
  * @param string $content
- * @return void
  */
 if (!function_exists('example_output')) {
     function example_output($content)
