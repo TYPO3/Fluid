@@ -216,10 +216,9 @@ class ExamplesTest extends AbstractFunctionalTestCase
     protected function runExampleScriptTest(string $script, array $expectedOutputs, string $FLUID_CACHE_DIRECTORY): void
     {
         $scriptFile = __DIR__ . '/../../examples/' . $script;
-        $self = $this;
-        $this->setOutputCallback(function ($output) use ($self, $expectedOutputs) {
+        $this->setOutputCallback(function ($output) use ($expectedOutputs) {
             foreach ($expectedOutputs as $expectedOutput) {
-                $self->assertContains($expectedOutput, $output);
+                self::assertStringContainsString($expectedOutput, $output);
             }
         });
         include $scriptFile;
