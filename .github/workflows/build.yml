@@ -39,5 +39,9 @@ jobs:
         if: ${{ matrix.php == '7.2' }}
         run: vendor/bin/php-cs-fixer fix --dry-run
 
+      - name: Phpstan
+        if: ${{ matrix.php == '7.2' }}
+        run: vendor/bin/phpstan analyze --no-progress
+
       - name: Run test suite
         run: vendor/bin/phpunit

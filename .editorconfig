@@ -12,3 +12,6 @@ trim_trailing_whitespace = true
 
 [*.{yaml,yml}]
 indent_size = 2
+
+[phpstan.neon.dist]
+indent_size = 2

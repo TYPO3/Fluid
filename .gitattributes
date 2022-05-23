@@ -3,6 +3,8 @@
 /.gitignore export-ignore
 /.github/ export-ignore
 /.php-cs-fixer.dist.php export-ignore
+/phpstan-baseline.neon export-ignore
+/phpstan.neon.dist export-ignore
 /phpunit.xml.dist export-ignore
 /tests/Functional/ export-ignore
 /tests/Unit/*/ export-ignore
