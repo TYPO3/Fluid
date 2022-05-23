@@ -6,4 +6,3 @@ tests/Functional/ export-ignore
 tests/Unit/*/ export-ignore
 tests/Unit/ViewHelpers/ -export-ignore
 tests/Unit/ViewHelpers/* export-ignore
-tests/Unit/ViewHelpers/ViewHelperBaseTestcase.php -export-ignore
