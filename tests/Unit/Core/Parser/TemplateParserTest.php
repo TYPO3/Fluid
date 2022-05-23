@@ -178,9 +178,11 @@ class TemplateParserTest extends UnitTestCase
         $context = new RenderingContextFixture();
         $compiler = $this->getMock(TemplateCompiler::class, ['store', 'get', 'has', 'isUncompilable']);
         $compiler->expects(self::never())->method('get');
-        $compiler->expects(self::at(0))->method('has')->willReturn(false);
-        $compiler->expects(self::at(1))->method('store')->willThrowException(new StopCompilingException());
-        $compiler->expects(self::at(2))->method('store');
+        $compiler->expects(self::atLeastOnce())->method('has')->willReturn(false);
+        $compiler->expects(self::atLeastOnce())->method('store')->willReturnOnConsecutiveCalls(
+            self::throwException(new StopCompilingException()),
+            true
+        );
         $context->setTemplateCompiler($compiler);
         $context->setVariableProvider(new StandardVariableProvider());
         $templateParser->setRenderingContext($context);
@@ -445,12 +447,12 @@ class TemplateParserTest extends UnitTestCase
             ['recursiveArrayHandler', 'initializeViewHelperAndAddItToStack']
         );
         $templateParser->setRenderingContext(new RenderingContextFixture());
-        $templateParser->expects(self::at(0))->method('recursiveArrayHandler')
+        $templateParser->expects(self::atLeastOnce())->method('recursiveArrayHandler')
             ->with($mockState, 'arguments: {0: \'foo\'}')->willReturn(['arguments' => ['foo']]);
-        $templateParser->expects(self::at(1))->method('initializeViewHelperAndAddItToStack')
-            ->with($mockState, 'f', 'format.printf', ['arguments' => ['foo']])->willReturn(true);
-        $templateParser->expects(self::at(2))->method('initializeViewHelperAndAddItToStack')
-            ->with($mockState, 'f', 'debug', [])->willReturn(true);
+        $templateParser->expects(self::atLeastOnce())->method('initializeViewHelperAndAddItToStack')->withConsecutive(
+            [$mockState, 'f', 'format.printf', ['arguments' => ['foo']]],
+            [$mockState, 'f', 'debug', []]
+        )->willReturn(true);
 
         $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.printf(arguments: {0: \'foo\'})', '');
     }
@@ -596,9 +598,9 @@ class TemplateParserTest extends UnitTestCase
             TemplateParser::class,
             ['splitTemplateAtDynamicTags', 'buildObjectTree']
         );
-        $templateParser->expects(self::at(0))->method('splitTemplateAtDynamicTags')
+        $templateParser->expects(self::atLeastOnce())->method('splitTemplateAtDynamicTags')
             ->with('a <very> {complex} string')->willReturn(['split string']);
-        $templateParser->expects(self::at(1))->method('buildObjectTree')
+        $templateParser->expects(self::atLeastOnce())->method('buildObjectTree')
             ->with(['split string'])->willReturn($objectTree);
 
         self::assertEquals('theRootNode', $templateParser->_call('buildArgumentObjectTree', 'a <very> {complex} string'));
@@ -618,10 +620,12 @@ class TemplateParserTest extends UnitTestCase
         );
         $context = new RenderingContextFixture();
         $templateParser->setRenderingContext($context);
-        $templateParser->expects(self::at(0))->method('textHandler')->with($mockState, ' ');
-        $templateParser->expects(self::at(1))->method('objectAccessorHandler')->with($mockState, 'someThing.absolutely', '', '', '');
-        $templateParser->expects(self::at(2))->method('textHandler')->with($mockState, ' "fishy" is \'going\' ');
-        $templateParser->expects(self::at(3))->method('arrayHandler')->with($mockState, self::anything());
+        $templateParser->expects(self::atLeastOnce())->method('textHandler')->withConsecutive(
+            [$mockState, ' '],
+            [$mockState, ' "fishy" is \'going\' ']
+        );
+        $templateParser->expects(self::atLeastOnce())->method('objectAccessorHandler')->with($mockState, 'someThing.absolutely', '', '', '');
+        $templateParser->expects(self::atLeastOnce())->method('arrayHandler')->with($mockState, self::anything());
 
         $text = ' {someThing.absolutely} "fishy" is \'going\' {on: "here"}';
         $method = new \ReflectionMethod(TemplateParser::class, 'textAndShorthandSyntaxHandler');

@@ -22,7 +22,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArgumentsRegistersExpectedArguments()
     {
         $instance = $this->getMock(AliasViewHelper::class, ['registerArgument']);
-        $instance->expects(self::at(0))->method('registerArgument')->with('map', 'array', self::anything(), true);
+        $instance->expects(self::exactly(1))->method('registerArgument')->with('map', 'array', self::anything(), true);
         $instance->initializeArguments();
     }
 

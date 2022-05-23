@@ -231,9 +231,9 @@ class AbstractViewHelperTest extends UnitTestCase
     public function initializeArgumentsAndRenderCallsTheCorrectSequenceOfMethods()
     {
         $viewHelper = $this->getAccessibleMock(AbstractViewHelper::class, ['validateArguments', 'initialize', 'callRenderMethod']);
-        $viewHelper->expects(self::at(0))->method('validateArguments');
-        $viewHelper->expects(self::at(1))->method('initialize');
-        $viewHelper->expects(self::at(2))->method('callRenderMethod')->willReturn('Output');
+        $viewHelper->expects(self::once())->method('validateArguments');
+        $viewHelper->expects(self::once())->method('initialize');
+        $viewHelper->expects(self::once())->method('callRenderMethod')->willReturn('Output');
 
         $expectedOutput = 'Output';
         $actualOutput = $viewHelper->initializeArgumentsAndRender(['argument1' => 'value1']);
@@ -292,8 +292,10 @@ class AbstractViewHelperTest extends UnitTestCase
             [$argument->getName() => $argument, 'second' => $argument]
         );
         $viewHelper->setArguments([$argument->getName() => $value, 'second' => $value]);
-        $viewHelper->expects(self::at(1))->method('hasArgument')->with($argument->getName())->willReturn(true);
-        $viewHelper->expects(self::at(2))->method('hasArgument')->with('second')->willReturn(true);
+        $viewHelper->expects(self::exactly(2))->method('hasArgument')->withConsecutive(
+            [$argument->getName()],
+            ['second']
+        )->willReturn(true);
         $viewHelper->validateArguments();
     }
 

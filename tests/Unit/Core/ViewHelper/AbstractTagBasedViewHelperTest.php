@@ -86,8 +86,10 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
             '',
             false
         );
-        $viewHelper->expects(self::at(0))->method('registerArgument')->with('additionalAttributes');
-        $viewHelper->expects(self::at(1))->method('registerArgument')->with('data');
+        $viewHelper->expects(self::atLeastOnce())->method('registerArgument')->withConsecutive(
+            ['additionalAttributes'],
+            ['data']
+        );
         $viewHelper->initializeArguments();
     }
 
@@ -127,8 +129,10 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     public function dataAttributesAreRenderedCorrectly()
     {
         $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
-        $mockTagBuilder->expects(self::at(0))->method('addAttribute')->with('data-foo', 'bar');
-        $mockTagBuilder->expects(self::at(1))->method('addAttribute')->with('data-baz', 'foos');
+        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->withConsecutive(
+            ['data-foo', 'bar'],
+            ['data-baz', 'foos']
+        );
         $this->viewHelper->setTagBuilder($mockTagBuilder);
 
         $arguments = ['data' => ['foo' => 'bar', 'baz' => 'foos']];
@@ -142,8 +146,10 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     public function ariaAttributesAreRenderedCorrectly()
     {
         $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
-        $mockTagBuilder->expects(self::at(0))->method('addAttribute')->with('aria-foo', 'bar');
-        $mockTagBuilder->expects(self::at(1))->method('addAttribute')->with('aria-baz', 'foos');
+        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->withConsecutive(
+            ['aria-foo', 'bar'],
+            ['aria-baz', 'foos']
+        );
         $this->viewHelper->setTagBuilder($mockTagBuilder);
 
         $arguments = ['aria' => ['foo' => 'bar', 'baz' => 'foos']];
@@ -182,8 +188,10 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         );
         $viewHelper->setRenderingContext(new RenderingContextFixture());
         $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
-        $tagBuilder->expects(self::at(0))->method('addAttribute')->with('data-foo', 'foo');
-        $tagBuilder->expects(self::at(1))->method('addAttribute')->with('data-bar', 'bar');
+        $tagBuilder->expects(self::atLeastOnce())->method('addAttribute')->withConsecutive(
+            ['data-foo', 'foo'],
+            ['data-bar', 'bar']
+        );
         $viewHelper->setTagBuilder($tagBuilder);
         $viewHelper->handleAdditionalArguments(['data-foo' => 'foo', 'data-bar' => 'bar']);
         $viewHelper->initializeArgumentsAndRender();
@@ -203,8 +211,10 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         );
         $viewHelper->setRenderingContext(new RenderingContextFixture());
         $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
-        $tagBuilder->expects(self::at(0))->method('addAttribute')->with('aria-foo', 'foo');
-        $tagBuilder->expects(self::at(1))->method('addAttribute')->with('aria-bar', 'bar');
+        $tagBuilder->expects(self::exactly(2))->method('addAttribute')->withConsecutive(
+            ['aria-foo', 'foo'],
+            ['aria-bar', 'bar']
+        );
         $viewHelper->setTagBuilder($tagBuilder);
         $viewHelper->handleAdditionalArguments(['aria-foo' => 'foo', 'aria-bar' => 'bar']);
         $viewHelper->initializeArgumentsAndRender();
@@ -216,14 +226,16 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     public function standardTagAttributesAreRegistered()
     {
         $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], '', false);
-        $mockTagBuilder->expects(self::at(0))->method('addAttribute')->with('class', 'classAttribute');
-        $mockTagBuilder->expects(self::at(1))->method('addAttribute')->with('dir', 'dirAttribute');
-        $mockTagBuilder->expects(self::at(2))->method('addAttribute')->with('id', 'idAttribute');
-        $mockTagBuilder->expects(self::at(3))->method('addAttribute')->with('lang', 'langAttribute');
-        $mockTagBuilder->expects(self::at(4))->method('addAttribute')->with('style', 'styleAttribute');
-        $mockTagBuilder->expects(self::at(5))->method('addAttribute')->with('title', 'titleAttribute');
-        $mockTagBuilder->expects(self::at(6))->method('addAttribute')->with('accesskey', 'accesskeyAttribute');
-        $mockTagBuilder->expects(self::at(7))->method('addAttribute')->with('tabindex', 'tabindexAttribute');
+        $mockTagBuilder->expects(self::exactly(8))->method('addAttribute')->withConsecutive(
+            ['class', 'classAttribute'],
+            ['dir', 'dirAttribute'],
+            ['id', 'idAttribute'],
+            ['lang', 'langAttribute'],
+            ['style', 'styleAttribute'],
+            ['title', 'titleAttribute'],
+            ['accesskey', 'accesskeyAttribute'],
+            ['tabindex', 'tabindexAttribute']
+        );
         $this->viewHelper->setTagBuilder($mockTagBuilder);
 
         $arguments = [
