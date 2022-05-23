@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * The mother of all test cases.
  *
- * Don't sub class this test case but rather choose a more specialized base test case,
+ * Don't subclass this test case but rather choose a more specialized base test case,
  * such as UnitTestCase or FunctionalTestCase
  *
  * @api
@@ -31,14 +31,15 @@ abstract class BaseTestCase extends TestCase
      * Returns a mock object which allows for calling protected methods and access
      * of protected properties.
      *
-     * @param string $originalClassName Full qualified name of the original class
+     * @template T of object
+     * @param class-string<T> $originalClassName Full qualified name of the original class
      * @param array $methods
      * @param array $arguments
      * @param string $mockClassName
      * @param bool $callOriginalConstructor
      * @param bool $callOriginalClone
      * @param bool $callAutoload
-     * @return MockObject
+     * @return MockObject&AccessibleObjectInterface&T
      * @api
      */
     protected function getAccessibleMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
@@ -94,13 +95,14 @@ abstract class BaseTestCase extends TestCase
      * Returns a mock object which allows for calling protected methods and access
      * of protected properties.
      *
-     * @param string $originalClassName Full qualified name of the original class
+     * @template T of object
+     * @param class-string<T> $originalClassName Full qualified name of the original class
      * @param array $methods
      * @param array $arguments
      * @param bool $callOriginalConstructor
      * @param bool $callOriginalClone
      * @param bool $callAutoload
-     * @return MockObject
+     * @return MockObject&T
      * @api
      */
     protected function getMock($originalClassName, $methods = [], array $arguments = [], $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
@@ -125,13 +127,14 @@ abstract class BaseTestCase extends TestCase
      * Returns a mock object which allows for calling protected methods and access
      * of protected properties.
      *
-     * @param string $originalClassName Full qualified name of the original class
+     * @template T of object
+     * @param class-string<T> $originalClassName Full qualified name of the original class
      * @param array $arguments
      * @param string $mockClassName
      * @param bool $callOriginalConstructor
      * @param bool $callOriginalClone
      * @param bool $callAutoload
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return MockObject&AccessibleObjectInterface&T
      * @api
      */
     protected function getAccessibleMockForAbstractClass($originalClassName, array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
@@ -143,8 +146,9 @@ abstract class BaseTestCase extends TestCase
      * Creates a proxy class of the specified class which allows
      * for calling even protected methods and access of protected properties.
      *
-     * @param string $className Full qualified name of the original class
-     * @return string Full qualified name of the built class
+     * @template T of object
+     * @param class-string<T> $className Full qualified name of the original class
+     * @return class-string<AccessibleObjectInterface&T> Full qualified name of the built class
      * @api
      */
     protected function buildAccessibleProxy($className)
@@ -153,31 +157,14 @@ abstract class BaseTestCase extends TestCase
         $class = new \ReflectionClass($className);
         $abstractModifier = $class->isAbstract() ? 'abstract ' : '';
         eval('
-			' . $abstractModifier . 'class ' . $accessibleClassName . ' extends ' . $className . ' {
-				public function _call($methodName) {
-					return call_user_func_array(array($this, $methodName), array_slice(func_get_args(), 1));
+			' . $abstractModifier . 'class ' . $accessibleClassName . ' extends ' . $className . ' implements ' . AccessibleObjectInterface::class . ' {
+				public function _call(string $methodName, ...$methodArguments) {
+				    return $this->$methodName(...$methodArguments);
 				}
-				public function _callRef($methodName, &$arg1 = NULL, &$arg2 = NULL, &$arg3 = NULL, &$arg4 = NULL, &$arg5= NULL, &$arg6 = NULL, &$arg7 = NULL, &$arg8 = NULL, &$arg9 = NULL) {
-					switch (func_num_args()) {
-						case 0 : return $this->$methodName();
-						case 1 : return $this->$methodName($arg1);
-						case 2 : return $this->$methodName($arg1, $arg2);
-						case 3 : return $this->$methodName($arg1, $arg2, $arg3);
-						case 4 : return $this->$methodName($arg1, $arg2, $arg3, $arg4);
-						case 5 : return $this->$methodName($arg1, $arg2, $arg3, $arg4, $arg5);
-						case 6 : return $this->$methodName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6);
-						case 7 : return $this->$methodName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7);
-						case 8 : return $this->$methodName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8);
-						case 9 : return $this->$methodName($arg1, $arg2, $arg3, $arg4, $arg5, $arg6, $arg7, $arg8, $arg9);
-					}
-				}
-				public function _set($propertyName, $value) {
+				public function _set(string $propertyName, $value): void {
 					$this->$propertyName = $value;
 				}
-				public function _setRef($propertyName, &$value) {
-					$this->$propertyName = $value;
-				}
-				public function _get($propertyName) {
+				public function _get(string $propertyName) {
 					return $this->$propertyName;
 				}
 			}

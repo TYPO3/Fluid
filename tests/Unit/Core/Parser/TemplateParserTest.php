@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -991,12 +991,10 @@ class TemplateParserTest extends UnitTestCase
     }
 
     /**
-     * @param $string
-     * @param $expected
      * @dataProvider dataProviderRecursiveArrayHandler
      * @throws \ReflectionException
      */
-    public function testRecursiveArrayHandler($string, $expected)
+    public function testRecursiveArrayHandler(string $string, array $expected)
     {
         $state = new ParsingState();
         $resolver = $this->getMock(ViewHelperResolver::class, ['isNamespaceIgnored']);

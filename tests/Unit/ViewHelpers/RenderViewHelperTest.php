@@ -1,12 +1,13 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderableInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
@@ -15,19 +16,15 @@ use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ParsedTemplateImplementatio
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper;
 
-/**
- * Testcase for RenderViewHelper
- */
 class RenderViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var RenderViewHelper
+     * @var RenderViewHelper&MockObject
      */
     protected $subject;
 
     /**
-     * @var TemplateView
+     * @var TemplateView&MockObject
      */
     protected $view;
 

@@ -1,23 +1,27 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
+use TYPO3Fluid\Fluid\Tests\AccessibleObjectInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for TagBasedViewHelper
- */
 class AbstractTagBasedViewHelperTest extends UnitTestCase
 {
+    /**
+     * @var AbstractTagBasedViewHelper&MockObject&AccessibleObjectInterface
+     */
+    protected $viewHelper;
+
     public function setUp(): void
     {
         $this->viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, ['dummy'], [], '', false);

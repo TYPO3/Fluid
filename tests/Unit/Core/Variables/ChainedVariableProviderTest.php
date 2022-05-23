@@ -9,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use TYPO3Fluid\Fluid\Core\Variables\ChainedVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**
@@ -20,7 +19,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param array $chain
      * @param string $path
      * @param mixed $expected
      * @dataProvider getGetTestValues
@@ -34,7 +33,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param array $chain
      * @param string $path
      * @param mixed $expected
      * @dataProvider getGetTestValues
@@ -66,7 +65,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param array $chain
      * @param mixed $expected
      * @dataProvider getGetAllTestValues
      */
@@ -95,7 +94,7 @@ class ChainedVariableProviderTest extends UnitTestCase
 
     /**
      * @param array $local
-     * @param VariableProviderInterface $chain
+     * @param array $chain
      * @param mixed $expected
      * @dataProvider getGetAllIdentifiersTestValues
      */

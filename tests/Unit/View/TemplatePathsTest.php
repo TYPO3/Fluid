@@ -1,29 +1,18 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\View;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\View;
+
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-/**
- * Class TemplatePathsTest
- */
 class TemplatePathsTest extends BaseTestCase
 {
-    /**
-     * @return string
-     */
-    protected function getSubjectClassName()
-    {
-        return TemplatePaths::class;
-    }
-
     /**
      * @param string|array $input
      * @param string|array $expected
@@ -32,8 +21,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testSanitizePath($input, $expected)
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'sanitizePath');
         $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
@@ -67,8 +55,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testSanitizePaths($input, $expected)
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'sanitizePaths');
         $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
@@ -92,7 +79,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function setsLayoutPathAndFilename()
     {
-        $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
+        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setLayoutPathAndFilename('foobar');
         self::assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
@@ -104,7 +91,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function setsTemplatePathAndFilename()
     {
-        $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
+        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setTemplatePathAndFilename('foobar');
         self::assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
@@ -119,7 +106,7 @@ class TemplatePathsTest extends BaseTestCase
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
-        $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
+        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->$setter($value);
         self::assertEquals($value, $instance->$getter());
@@ -139,15 +126,13 @@ class TemplatePathsTest extends BaseTestCase
 
     public function testFillByPackageName()
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className('TYPO3Fluid.Fluid');
+        $instance = new TemplatePaths('TYPO3Fluid.Fluid');
         self::assertNotEmpty($instance->getTemplateRootPaths());
     }
 
     public function testFillByConfigurationArray()
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className([
+        $instance = new TemplatePaths([
             TemplatePaths::CONFIG_TEMPLATEROOTPATHS => ['Resources/Private/Templates/'],
             TemplatePaths::CONFIG_LAYOUTROOTPATHS => ['Resources/Private/Layouts/'],
             TemplatePaths::CONFIG_PARTIALROOTPATHS => ['Resources/Private/Partials/'],
@@ -162,7 +147,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testResolveFilesMethodCallsResolveFilesInFolders($method, $pathsMethod)
     {
-        $instance = $this->getMock($this->getSubjectClassName(), ['resolveFilesInFolders']);
+        $instance = $this->getMock(TemplatePaths::class, ['resolveFilesInFolders']);
         $instance->$pathsMethod(['foo']);
         $instance->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
         $instance->$method('format', 'format');
@@ -182,7 +167,7 @@ class TemplatePathsTest extends BaseTestCase
 
     public function testToArray()
     {
-        $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
+        $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setTemplateRootPaths(['1']);
         $instance->setLayoutRootPaths(['2']);
@@ -201,8 +186,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testResolveFilesInFolders()
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFilesInFolders');
         $method->setAccessible(true);
         $result = $method->invokeArgs(
@@ -228,8 +212,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testGetTemplateSourceThrowsExceptionIfFileNotFound()
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $this->setExpectedException(InvalidTemplateResourceException::class);
         $instance->getTemplateSource();
     }
@@ -240,8 +223,7 @@ class TemplatePathsTest extends BaseTestCase
     public function testGetTemplateSourceReadsStreamWrappers()
     {
         $fixture = __DIR__ . '/Fixtures/LayoutFixture.html';
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $stream = fopen($fixture, 'r');
         $instance->setTemplateSource($stream);
         self::assertEquals(stream_get_contents($stream), $instance->getTemplateSource());
@@ -253,8 +235,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testResolveFileInPathsThrowsExceptionIfFileNotFound()
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFileInPaths');
         $method->setAccessible(true);
         $this->setExpectedException(InvalidTemplateResourceException::class);
@@ -266,8 +247,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat()
     {
-        $className = $this->getSubjectClassName();
-        $instance = new $className();
+        $instance = new TemplatePaths();
         $instance->setTemplateSource('foobar');
         self::assertEquals('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
     }
@@ -277,8 +257,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testActionTemplateWithControllerAndAction(): void
     {
-        $className = $this->getSubjectClassName();
-        $subject = new $className();
+        $subject = new TemplatePaths();
         $baseTemplatePath = __DIR__ . '/Fixtures';
         $subject->setTemplateRootPaths([$baseTemplatePath]);
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('ARandomController', 'TestTemplate');
@@ -292,8 +271,7 @@ class TemplatePathsTest extends BaseTestCase
      */
     public function testActionTemplateWithEmptyController(): void
     {
-        $className = $this->getSubjectClassName();
-        $subject = new $className();
+        $subject = new TemplatePaths();
         $baseTemplatePath = __DIR__ . '/Fixtures';
         $subject->setTemplateRootPaths([$baseTemplatePath]);
         $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');

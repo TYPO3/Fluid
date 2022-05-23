@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
@@ -13,9 +13,6 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for ParsingState
- */
 class ParsingStateTest extends UnitTestCase
 {
 
@@ -51,7 +48,7 @@ class ParsingStateTest extends UnitTestCase
      */
     public function testGetIdentifierReturnsProperty()
     {
-        $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
+        $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false);
         $instance->_set('identifier', 'test');
         self::assertEquals('test', $instance->getIdentifier());
     }
@@ -73,8 +70,8 @@ class ParsingStateTest extends UnitTestCase
     {
         $rootNode = new RootNode();
         $this->parsingState->pushNodeToStack($rootNode);
-        self::assertSame($rootNode, $this->parsingState->getNodeFromStack($rootNode), 'Node returned from stack was not the right one.');
-        self::assertSame($rootNode, $this->parsingState->popNodeFromStack($rootNode), 'Node popped from stack was not the right one.');
+        self::assertSame($rootNode, $this->parsingState->getNodeFromStack());
+        self::assertSame($rootNode, $this->parsingState->popNodeFromStack());
     }
 
     /**

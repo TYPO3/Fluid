@@ -1,22 +1,20 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
+use PHPUnit\Framework\MockObject\MockObject;
+use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\ViewHelpers\CycleViewHelper;
 
-/**
- * Testcase for CycleViewHelper
- */
 class CycleViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var CycleViewHelper
+     * @var CycleViewHelper&MockObject
      */
     protected $viewHelper;
 
@@ -44,8 +42,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
      */
     public function renderThrowsExceptionWhenPassingObjectsToValuesThatAreNotTraversable()
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception::class);
-
+        $this->expectException(Exception::class);
         $object = new \stdClass();
         $this->viewHelper->setArguments(['values' => $object, 'as' => 'innerVariable']);
         $this->viewHelper->render();
@@ -58,7 +55,7 @@ class CycleViewHelperTest extends ViewHelperBaseTestcase
     {
         $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn('Child nodes');
         $this->viewHelper->setArguments(['values' => null, 'as' => 'foo']);
-        self::assertEquals('Child nodes', $this->viewHelper->render(null, 'foo'));
+        self::assertEquals('Child nodes', $this->viewHelper->render());
     }
 
     /**

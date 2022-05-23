@@ -1,16 +1,17 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\View;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\View;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Compiler\AbstractCompiledTemplate;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
@@ -18,19 +19,15 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 use TYPO3Fluid\Fluid\View\Exception\InvalidSectionException;
 
-/**
- * Testcase for the TemplateView
- */
 class AbstractTemplateViewTest extends UnitTestCase
 {
-
     /**
      * @var AbstractTemplateView
      */
     protected $view;
 
     /**
-     * @var RenderingContext
+     * @var RenderingContextInterface
      */
     protected $renderingContext;
 
@@ -40,13 +37,10 @@ class AbstractTemplateViewTest extends UnitTestCase
     protected $viewHelperVariableContainer;
 
     /**
-     * @var TemplateVariableContainer
+     * @var VariableProviderInterface&MockObject
      */
     protected $templateVariableContainer;
 
-    /**
-     * Sets up this test case
-     */
     public function setUp(): void
     {
         $this->templateVariableContainer = $this->getMock(StandardVariableProvider::class);

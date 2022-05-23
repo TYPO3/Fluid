@@ -1,19 +1,16 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\ViewHelpers\DebugViewHelper;
 
-/**
- * Testcase for DebugViewHelper
- */
 class DebugViewHelperTest extends ViewHelperBaseTestcase
 {
     /**

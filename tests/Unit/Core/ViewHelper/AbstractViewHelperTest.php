@@ -236,7 +236,7 @@ class AbstractViewHelperTest extends UnitTestCase
         $viewHelper->expects(self::once())->method('callRenderMethod')->willReturn('Output');
 
         $expectedOutput = 'Output';
-        $actualOutput = $viewHelper->initializeArgumentsAndRender(['argument1' => 'value1']);
+        $actualOutput = $viewHelper->initializeArgumentsAndRender();
         self::assertEquals($expectedOutput, $actualOutput);
     }
 
