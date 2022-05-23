@@ -1,19 +1,16 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
+
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for TemplateVariableContainer
- */
 class StandardVariableProviderTest extends UnitTestCase
 {
 

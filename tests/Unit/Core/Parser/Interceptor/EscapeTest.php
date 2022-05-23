@@ -1,12 +1,13 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\Interceptor;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
@@ -14,31 +15,29 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\EscapingNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+use TYPO3Fluid\Fluid\Tests\AccessibleObjectInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for Interceptor\Escape
- */
 class EscapeTest extends UnitTestCase
 {
 
     /**
-     * @var Escape|\PHPUnit\Framework\MockObject\MockObject
+     * @var Escape&MockObject&AccessibleObjectInterface
      */
     protected $escapeInterceptor;
 
     /**
-     * @var AbstractViewHelper|\PHPUnit\Framework\MockObject\MockObject
+     * @var AbstractViewHelper|MockObject
      */
     protected $mockViewHelper;
 
     /**
-     * @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject
+     * @var ViewHelperNode|MockObject
      */
     protected $mockNode;
 
     /**
-     * @var ParsingState|\PHPUnit\Framework\MockObject\MockObject
+     * @var ParsingState|MockObject
      */
     protected $mockParsingState;
 

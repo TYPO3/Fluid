@@ -40,7 +40,7 @@ jobs:
         run: vendor/bin/php-cs-fixer fix --dry-run
 
       - name: Phpstan
-        if: ${{ matrix.php == '7.2' }}
+        if: ${{ matrix.php == '7.3' }}
         run: vendor/bin/phpstan analyze --no-progress
 
       - name: Run test suite

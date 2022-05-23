@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 use PHPUnit\Framework\MockObject\Generator;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
@@ -22,9 +22,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-/**
- * Class RenderingContextFixture
- */
 class RenderingContextFixture implements RenderingContextInterface
 {
     /**
@@ -334,7 +331,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function setControllerName($controllerName)
     {
-        $this->controllerName;
+        $this->controllerName = $controllerName;
     }
 
     /**

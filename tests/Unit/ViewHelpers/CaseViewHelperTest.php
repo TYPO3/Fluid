@@ -1,22 +1,20 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper;
 
-/**
- * Testcase for CaseViewHelper
- */
 class CaseViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var CaseViewHelper
+     * @var CaseViewHelper&MockObject
      */
     protected $viewHelper;
 

@@ -1,23 +1,20 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\ViewHelpers\CountViewHelper;
 
-/**
- * Testcase for CountViewHelper
- */
 class CountViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var CountViewHelper
+     * @var CountViewHelper&MockObject
      */
     protected $viewHelper;
 

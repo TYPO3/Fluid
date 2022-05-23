@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /**
  * Class CountableIterator
@@ -32,6 +32,7 @@ class CountableIterator implements \Iterator, \Countable
     #[\ReturnTypeWillChange]
     public function valid()
     {
+        return false;
     }
 
     #[\ReturnTypeWillChange]
@@ -42,5 +43,6 @@ class CountableIterator implements \Iterator, \Countable
     #[\ReturnTypeWillChange]
     public function count()
     {
+        return 0;
     }
 }

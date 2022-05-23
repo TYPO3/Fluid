@@ -1,36 +1,34 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractConditionViewHelper;
+use TYPO3Fluid\Fluid\Tests\AccessibleObjectInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\ElseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\ThenViewHelper;
 
-/**
- * Testcase for Condition ViewHelper
- */
 class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var AbstractConditionViewHelper|\PHPUnit\Framework\MockObject\MockObject
+     * @var AbstractConditionViewHelper&MockObject&AccessibleObjectInterface
      */
     protected $viewHelper;
 
     /**
-     * @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject
+     * @var ViewHelperNode|MockObject
      */
     protected $viewHelperNode;
 
@@ -113,7 +111,7 @@ class AbstractConditionViewHelperTest extends ViewHelperBaseTestcase
      * @test
      * @dataProvider getRenderFromArgumentsTestValues
      * @param array $arguments
-     * @param $expected
+     * @param mixed $expected
      */
     public function testRenderFromArgumentsReturnsExpectedValue(array $arguments, $expected)
     {

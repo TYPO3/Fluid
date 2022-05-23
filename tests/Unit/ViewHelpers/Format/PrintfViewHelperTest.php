@@ -1,23 +1,21 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper;
 
-/**
- * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper
- */
 class PrintfViewHelperTest extends ViewHelperBaseTestcase
 {
 
     /**
-     * @var \TYPO3Fluid\Fluid\ViewHelpers\Format\PrintfViewHelper
+     * @var PrintfViewHelper&MockObject
      */
     protected $viewHelper;
 

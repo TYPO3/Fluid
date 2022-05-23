@@ -1,18 +1,15 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
+
 use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for TagBuilder
- */
 class TagBuilderTest extends UnitTestCase
 {
 
@@ -40,7 +37,7 @@ class TagBuilderTest extends UnitTestCase
     public function setContentDoesNotEscapeValue()
     {
         $tagBuilder = new TagBuilder();
-        $tagBuilder->setContent('<to be escaped>', false);
+        $tagBuilder->setContent('<to be escaped>');
         self::assertEquals('<to be escaped>', $tagBuilder->getContent());
     }
 

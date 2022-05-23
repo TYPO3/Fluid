@@ -1,24 +1,21 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 
-/**
- * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper
- */
 class RawViewHelperTest extends UnitTestCase
 {
-
     /**
-     * @var RawViewHelper
+     * @var RawViewHelper&MockObject
      */
     protected $viewHelper;
 

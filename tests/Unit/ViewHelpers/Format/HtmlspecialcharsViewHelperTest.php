@@ -1,12 +1,13 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
@@ -15,14 +16,10 @@ use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\ViewHelperBaseTestcase;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 
-/**
- * Test for \TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper
- */
 class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var HtmlspecialcharsViewHelper|\PHPUnit_Framework_MockObject_MockObject
+     * @var HtmlspecialcharsViewHelper&MockObject
      */
     protected $viewHelper;
 
@@ -173,10 +170,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      */
     public function compileTests($value, array $options, $expectedResult)
     {
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+        /** @var ViewHelperNode&MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
+        /** @var TemplateCompiler&MockObject $mockTemplateCompiler */
         $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
         $mockTemplateCompiler->expects(self::once())->method('variableName')->with('value')->willReturn('$value123');
 
@@ -201,10 +198,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      */
     public function compileTestsWithRenderChildrenFallback($value, array $options, $expectedResult)
     {
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+        /** @var ViewHelperNode&MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
+        /** @var TemplateCompiler&MockObject $mockTemplateCompiler */
         $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
         $mockTemplateCompiler->expects(self::once())->method('variableName')->with('value')->willReturn('$value123');
 
@@ -251,10 +248,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      */
     public function compileConvertsObjectsToStrings()
     {
-        /** @var AbstractNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+        /** @var AbstractNode&MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(AbstractNode::class)->disableOriginalConstructor()->getMock();
 
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
+        /** @var TemplateCompiler&MockObject $mockTemplateCompiler */
         $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
         $mockTemplateCompiler->expects(self::once())->method('variableName')->with('value')->willReturn('$value123');
 
@@ -270,10 +267,10 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
      */
     public function compileDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString()
     {
-        /** @var ViewHelperNode|\PHPUnit_Framework_MockObject_MockObject $mockSyntaxTreeNode */
+        /** @var ViewHelperNode&MockObject $mockSyntaxTreeNode */
         $mockSyntaxTreeNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
 
-        /** @var TemplateCompiler|\PHPUnit_Framework_MockObject_MockObject $mockTemplateCompiler */
+        /** @var TemplateCompiler&MockObject $mockTemplateCompiler */
         $mockTemplateCompiler = $this->getMockBuilder(TemplateCompiler::class)->disableOriginalConstructor()->getMock();
         $mockTemplateCompiler->expects(self::once())->method('variableName')->with('value')->willReturn('$value123');
 

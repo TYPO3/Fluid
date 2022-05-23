@@ -1,15 +1,16 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
@@ -17,24 +18,15 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for \TYPO3Fluid\CMS\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
- */
 class ViewHelperNodeTest extends UnitTestCase
 {
-
     /**
-     * @var RenderingContext
+     * @var RenderingContextInterface
      */
     protected $renderingContext;
 
     /**
-     * @var TemplateVariableContainer|\PHPUnit\Framework\MockObject\MockObject
-     */
-    protected $templateVariableContainer;
-
-    /**
-     * @var ViewHelperResolver|\PHPUnit\Framework\MockObject\MockObject
+     * @var ViewHelperResolver&MockObject
      */
     protected $mockViewHelperResolver;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
@@ -15,16 +15,12 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for BooleanNode
- */
 class BooleanNodeTest extends UnitTestCase
 {
 
@@ -445,11 +441,7 @@ class BooleanNodeTest extends UnitTestCase
         self::assertFalse(BooleanNode::createFromNodeAndEvaluate($rootNode, $this->renderingContext));
     }
 
-    /**
-     * @param array $variables
-     * @return RenderingContext
-     */
-    protected function getDummyRenderingContextWithVariables(array $variables)
+    protected function getDummyRenderingContextWithVariables(array $variables): RenderingContextInterface
     {
         $context = $this->renderingContext;
         $context->setVariableProvider(new StandardVariableProvider($variables));
