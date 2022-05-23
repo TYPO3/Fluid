@@ -22,7 +22,10 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArgumentsRegistersExpectedArguments()
     {
         $instance = $this->getMock(DebugViewHelper::class, ['registerArgument']);
-        $instance->expects(self::at(0))->method('registerArgument')->with('typeOnly', 'boolean', self::anything(), false, false);
+        $instance->expects(self::atLeastOnce())->method('registerArgument')->withConsecutive(
+            ['typeOnly', 'boolean', self::anything(), false, false],
+            ['levels', 'integer', self::anything(), false, 5, null]
+        );
         $instance->setRenderingContext(new RenderingContextFixture());
         $instance->initializeArguments();
     }

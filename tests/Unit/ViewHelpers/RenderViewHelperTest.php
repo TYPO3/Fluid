@@ -49,14 +49,16 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArgumentsRegistersExpectedArguments()
     {
         $instance = $this->getMock(RenderViewHelper::class, ['registerArgument']);
-        $instance->expects(self::at(0))->method('registerArgument')->with('section', 'string', self::anything());
-        $instance->expects(self::at(1))->method('registerArgument')->with('partial', 'string', self::anything());
-        $instance->expects(self::at(2))->method('registerArgument')->with('delegate', 'string', self::anything());
-        $instance->expects(self::at(3))->method('registerArgument')->with('renderable', RenderableInterface::class, self::anything());
-        $instance->expects(self::at(4))->method('registerArgument')->with('arguments', 'array', self::anything(), false, []);
-        $instance->expects(self::at(5))->method('registerArgument')->with('optional', 'boolean', self::anything(), false, false);
-        $instance->expects(self::at(6))->method('registerArgument')->with('default', 'mixed', self::anything());
-        $instance->expects(self::at(7))->method('registerArgument')->with('contentAs', 'string', self::anything());
+        $instance->expects(self::exactly(8))->method('registerArgument')->withConsecutive(
+            ['section', 'string', self::anything()],
+            ['partial', 'string', self::anything()],
+            ['delegate', 'string', self::anything()],
+            ['renderable', RenderableInterface::class, self::anything()],
+            ['arguments', 'array', self::anything(), false, []],
+            ['optional', 'boolean', self::anything(), false, false],
+            ['default', 'mixed', self::anything()],
+            ['contentAs', 'string', self::anything()]
+        );
         $instance->initializeArguments();
     }
 

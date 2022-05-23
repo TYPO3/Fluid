@@ -28,12 +28,7 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
     {
         $renderingContext = new RenderingContextFixture();
         $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['addNamespace'])->getMock();
-        foreach ($expectedNamespaces as $index => $expectedNamespace) {
-            list($expectedNamespaceAlias, $expectedNamespacePhp) = $expectedNamespace;
-            $viewHelperResolver->expects(self::at($index))
-                ->method('addNamespace')
-                ->with($expectedNamespaceAlias, $expectedNamespacePhp);
-        }
+        $viewHelperResolver->expects(self::exactly(count($expectedNamespaces)))->method('addNamespace')->withConsecutive(...$expectedNamespaces);
         $renderingContext->setViewHelperResolver($viewHelperResolver);
         $subject = new NamespaceDetectionTemplateProcessor();
         $subject->setRenderingContext($renderingContext);

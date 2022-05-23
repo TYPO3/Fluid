@@ -121,11 +121,18 @@ class TemplateCompilerTest extends UnitTestCase
             '',
             false
         );
-        $nodeConverter->expects(self::at(0))->method('convertListOfSubNodes')->with($foo)->willReturn([]);
-        $nodeConverter->expects(self::at(1))->method('convertListOfSubNodes')->with($bar)->willReturn([]);
+        $nodeConverter->expects(self::exactly(2))->method('convertListOfSubNodes')->withConsecutive(
+            [$foo],
+            [$bar]
+        )->willReturn([]);
         $instance = $this->getMock(TemplateCompiler::class, ['generateCodeForSection']);
-        $instance->expects(self::at(0))->method('generateCodeForSection')->with(self::anything())->willReturn('FOO');
-        $instance->expects(self::at(1))->method('generateCodeForSection')->with(self::anything())->willReturn('BAR');
+        $instance->expects(self::exactly(2))->method('generateCodeForSection')->withConsecutive(
+            [self::anything()],
+            [self::anything()]
+        )->willReturnOnConsecutiveCalls(
+            'FOO',
+            'BAR'
+        );
         $instance->setNodeConverter($nodeConverter);
         $method = new \ReflectionMethod($instance, 'generateSectionCodeFromParsingState');
         $method->setAccessible(true);

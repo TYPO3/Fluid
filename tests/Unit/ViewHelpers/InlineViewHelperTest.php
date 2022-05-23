@@ -23,7 +23,7 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArguments()
     {
         $instance = $this->getMockBuilder(InlineViewHelper::class)->setMethods(['registerArgument'])->getMock();
-        $instance->expects(self::at(0))->method('registerArgument')->with('code', 'string', self::anything());
+        $instance->expects(self::exactly(1))->method('registerArgument')->with('code', 'string', self::anything());
         $instance->initializeArguments();
     }
 

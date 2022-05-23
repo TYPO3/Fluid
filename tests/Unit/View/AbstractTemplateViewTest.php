@@ -83,9 +83,10 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignAddsValueToTemplateVariableContainer()
     {
-        $this->templateVariableContainer->expects(self::at(0))->method('add')->with('foo', 'FooValue');
-        $this->templateVariableContainer->expects(self::at(1))->method('add')->with('bar', 'BarValue');
-
+        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->withConsecutive(
+            ['foo', 'FooValue'],
+            ['bar', 'BarValue']
+        );
         $this->view
             ->assign('foo', 'FooValue')
             ->assign('bar', 'BarValue');
@@ -96,9 +97,10 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignCanOverridePreviouslyAssignedValues()
     {
-        $this->templateVariableContainer->expects(self::at(0))->method('add')->with('foo', 'FooValue');
-        $this->templateVariableContainer->expects(self::at(1))->method('add')->with('foo', 'FooValueOverridden');
-
+        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->withConsecutive(
+            ['foo', 'FooValue'],
+            ['foo', 'FooValueOverridden']
+        );
         $this->view->assign('foo', 'FooValue');
         $this->view->assign('foo', 'FooValueOverridden');
     }
@@ -108,10 +110,11 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignMultipleAddsValuesToTemplateVariableContainer()
     {
-        $this->templateVariableContainer->expects(self::at(0))->method('add')->with('foo', 'FooValue');
-        $this->templateVariableContainer->expects(self::at(1))->method('add')->with('bar', 'BarValue');
-        $this->templateVariableContainer->expects(self::at(2))->method('add')->with('baz', 'BazValue');
-
+        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->withConsecutive(
+            ['foo', 'FooValue'],
+            ['bar', 'BarValue'],
+            ['baz', 'BazValue']
+        );
         $this->view
             ->assignMultiple(['foo' => 'FooValue', 'bar' => 'BarValue'])
             ->assignMultiple(['baz' => 'BazValue']);
@@ -122,10 +125,11 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignMultipleCanOverridePreviouslyAssignedValues()
     {
-        $this->templateVariableContainer->expects(self::at(0))->method('add')->with('foo', 'FooValue');
-        $this->templateVariableContainer->expects(self::at(1))->method('add')->with('foo', 'FooValueOverridden');
-        $this->templateVariableContainer->expects(self::at(2))->method('add')->with('bar', 'BarValue');
-
+        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->withConsecutive(
+            ['foo', 'FooValue'],
+            ['foo', 'FooValueOverridden'],
+            ['bar', 'BarValue']
+        );
         $this->view->assign('foo', 'FooValue');
         $this->view->assignMultiple(['foo' => 'FooValueOverridden', 'bar' => 'BarValue']);
     }

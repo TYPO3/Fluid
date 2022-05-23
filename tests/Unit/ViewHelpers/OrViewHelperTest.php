@@ -22,9 +22,11 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArguments()
     {
         $instance = $this->getMock(OrViewHelper::class, ['registerArgument']);
-        $instance->expects(self::at(0))->method('registerArgument')->with('content', 'mixed', self::anything(), false, '');
-        $instance->expects(self::at(1))->method('registerArgument')->with('alternative', 'mixed', self::anything(), false, '');
-        $instance->expects(self::at(2))->method('registerArgument')->with('arguments', 'array', self::anything());
+        $instance->expects(self::exactly(3))->method('registerArgument')->withConsecutive(
+            ['content', 'mixed', self::anything(), false, ''],
+            ['alternative', 'mixed', self::anything(), false, ''],
+            ['arguments', 'array', self::anything()]
+        );
         $instance->setRenderingContext(new RenderingContextFixture());
         $instance->initializeArguments();
     }
