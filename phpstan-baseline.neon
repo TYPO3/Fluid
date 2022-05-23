@@ -531,13 +531,18 @@ parameters:
 			path: tests/Unit/Core/Parser/BooleanParserTest.php
 
 		-
-			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\|TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Interceptor\\\\Escape\\:\\:_get\\(\\)\\.$#"
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Interceptor\\\\Escape\\:\\:_get\\(\\)\\.$#"
 			count: 5
 			path: tests/Unit/Core/Parser/Interceptor/EscapeTest.php
 
 		-
-			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\|TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Interceptor\\\\Escape\\:\\:_set\\(\\)\\.$#"
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Interceptor\\\\Escape\\:\\:_set\\(\\)\\.$#"
 			count: 2
+			path: tests/Unit/Core/Parser/Interceptor/EscapeTest.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Parser\\\\Interceptor\\\\EscapeTest\\:\\:\\$escapeInterceptor \\(PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Interceptor\\\\Escape\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
 			path: tests/Unit/Core/Parser/Interceptor/EscapeTest.php
 
 		-
@@ -594,6 +599,11 @@ parameters:
 			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:evaluate\\(\\)\\.$#"
 			count: 1
 			path: tests/Unit/Core/Parser/SyntaxTree/RootNodeTest.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Parser\\\\SyntaxTree\\\\ViewHelperNodeTest\\:\\:\\$mockViewHelperResolver \\(PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperResolver\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Parser/SyntaxTree/ViewHelperNodeTest.php
 
 		-
 			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Parser\\\\SyntaxTree\\\\ViewHelperNodeTest\\:\\:\\$renderingContext \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\) does not accept TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\.$#"
@@ -701,6 +711,11 @@ parameters:
 			path: tests/Unit/Core/Variables/StandardVariableProviderTest.php
 
 		-
+			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelper\\:\\:_call\\(\\)\\.$#"
+			count: 10
+			path: tests/Unit/Core/ViewHelper/AbstractConditionViewHelperTest.php
+
+		-
 			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\:\\:setArguments\\(\\)\\.$#"
 			count: 1
 			path: tests/Unit/Core/ViewHelper/AbstractConditionViewHelperTest.php
@@ -716,12 +731,12 @@ parameters:
 			path: tests/Unit/Core/ViewHelper/AbstractConditionViewHelperTest.php
 
 		-
-			message: "#^Call to an undefined method PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\|TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelper\\:\\:_call\\(\\)\\.$#"
-			count: 10
+			message: "#^PHPDoc tag @param has invalid value \\(\\$expected\\)\\: Unexpected token \"\\$expected\", expected type at offset 116$#"
+			count: 1
 			path: tests/Unit/Core/ViewHelper/AbstractConditionViewHelperTest.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(\\$expected\\)\\: Unexpected token \"\\$expected\", expected type at offset 116$#"
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelperTest\\:\\:\\$viewHelper \\(PHPUnit\\\\Framework\\\\MockObject\\\\MockObject&TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelper\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: tests/Unit/Core/ViewHelper/AbstractConditionViewHelperTest.php
 
@@ -861,21 +876,6 @@ parameters:
 			path: tests/Unit/Core/ViewHelper/TagBuilderTest.php
 
 		-
-			message: "#^Call to method expects\\(\\) on an unknown class TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\Traits\\\\CompileWithContentArgumentAndRenderStatic\\.$#"
-			count: 1
-			path: tests/Unit/Core/ViewHelper/Traits/CompileWithContentArgumentAndRenderStaticTest.php
-
-		-
-			message: "#^Call to method compile\\(\\) on an unknown class TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\Traits\\\\ParserRuntimeOnly\\.$#"
-			count: 1
-			path: tests/Unit/Core/ViewHelper/Traits/ParserRuntimeOnlyTest.php
-
-		-
-			message: "#^Call to method render\\(\\) on an unknown class TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\Traits\\\\ParserRuntimeOnly\\.$#"
-			count: 1
-			path: tests/Unit/Core/ViewHelper/Traits/ParserRuntimeOnlyTest.php
-
-		-
 			message: "#^Class TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInvoker does not have a constructor and must be instantiated without any parameters\\.$#"
 			count: 1
 			path: tests/Unit/Core/ViewHelper/ViewHelperInvokerTest.php
@@ -998,6 +998,21 @@ parameters:
 		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\CountViewHelper\\:\\:expects\\(\\)\\.$#"
 			count: 6
+			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 0 and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 2 and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 3 and string will always evaluate to false\\.$#"
+			count: 2
 			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
 
 		-
@@ -1156,6 +1171,16 @@ parameters:
 			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
 
 		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'Xaver &lt;b&gt…' and null will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\UserWithoutToString and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
+
+		-
 			message: "#^PHPDoc tag @var for variable \\$mockSyntaxTreeNode contains unknown class PHPUnit_Framework_MockObject_MockObject\\.$#"
 			count: 4
 			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
@@ -1166,7 +1191,7 @@ parameters:
 			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
 
 		-
-			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelperTest\\:\\:\\$viewHelper \\(PHPUnit_Framework_MockObject_MockObject\\|TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelper\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelperTest\\:\\:\\$viewHelper \\(PHPUnit_Framework_MockObject_MockObject&TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelper\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
 
