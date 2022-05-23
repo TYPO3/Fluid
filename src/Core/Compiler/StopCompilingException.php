@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -13,5 +14,4 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
  */
 class StopCompilingException extends \TYPO3Fluid\Fluid\Core\Exception
 {
-
 }

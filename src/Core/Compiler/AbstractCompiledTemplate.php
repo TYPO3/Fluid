@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -20,7 +21,6 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
 
     /**
      * @param string $identifier
-     * @return void
      */
     public function setIdentifier($identifier)
     {
@@ -57,7 +57,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCompilable()
     {
@@ -65,7 +65,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCompiled()
     {
@@ -73,7 +73,7 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasLayout()
     {
@@ -91,7 +91,6 @@ abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
     {

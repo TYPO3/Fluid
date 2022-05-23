@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
@@ -15,7 +16,7 @@ class UserWithToArray extends UserWithToString
     /**
      * @return array
      */
-    function toArray()
+    public function toArray()
     {
         return ['name' => $this->name];
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -7,8 +8,9 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  */
 
 use TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
 use TYPO3Fluid\Fluid\Core\Compiler\UncompilableTemplateInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ArrayNode;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionNodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ParseTimeEvaluatedExpressionNodeInterface;
@@ -19,6 +21,8 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
+use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 /**
  * Template parser building up an object syntax tree
@@ -37,7 +41,7 @@ class TemplateParser
     /**
      * Whether or not the escaping interceptors are active
      *
-     * @var boolean
+     * @var bool
      */
     protected $escapingEnabled = true;
 
@@ -57,19 +61,19 @@ class TemplateParser
     protected $renderingContext;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pointerLineNumber = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pointerLineCharacter = 1;
 
     /**
      * @var string
      */
-    protected $pointerTemplateCode = null;
+    protected $pointerTemplateCode;
 
     /**
      * @var ParsedTemplateInterface[]
@@ -78,7 +82,6 @@ class TemplateParser
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
@@ -98,7 +101,7 @@ class TemplateParser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEscapingEnabled()
     {
@@ -106,12 +109,11 @@ class TemplateParser
     }
 
     /**
-     * @param boolean $escapingEnabled
-     * @return void
+     * @param bool $escapingEnabled
      */
     public function setEscapingEnabled($escapingEnabled)
     {
-        $this->escapingEnabled = (boolean) $escapingEnabled;
+        $this->escapingEnabled = (boolean)$escapingEnabled;
     }
 
     /**
@@ -153,7 +155,7 @@ class TemplateParser
      */
     public function createParsingRelatedExceptionWithContext(\Exception $error, $templateIdentifier)
     {
-        list ($line, $character, $templateCode) = $this->getCurrentParsingPointers();
+        list($line, $character, $templateCode) = $this->getCurrentParsingPointers();
         $exceptionClass = get_class($error);
         return new $exceptionClass(
             sprintf(
@@ -231,8 +233,6 @@ class TemplateParser
 
     /**
      * Resets the parser to its default values.
-     *
-     * @return void
      */
     protected function reset()
     {
@@ -256,7 +256,7 @@ class TemplateParser
      * Build object tree from the split template
      *
      * @param array $splitTemplate The split template, so that every tag with a namespace declaration is already a seperate array element.
-     * @param integer $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
+     * @param int $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      * @return ParsingState
      * @throws Exception
      */
@@ -278,15 +278,27 @@ class TemplateParser
             $matchedVariables = [];
 
             if (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
-                if ($this->openingViewHelperTagHandler(
-                    $state,
-                    $matchedVariables['NamespaceIdentifier'],
-                    $matchedVariables['MethodIdentifier'],
-                    $matchedVariables['Attributes'],
-                    ($matchedVariables['Selfclosing'] === '' ? false : true),
-                    $templateElement
-                )) {
-                    continue;
+                try {
+                    if ($this->openingViewHelperTagHandler(
+                        $state,
+                        $matchedVariables['NamespaceIdentifier'],
+                        $matchedVariables['MethodIdentifier'],
+                        $matchedVariables['Attributes'],
+                        ($matchedVariables['Selfclosing'] === '' ? false : true),
+                        $templateElement
+                    )) {
+                        continue;
+                    }
+                } catch (\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error) {
+                    $this->textHandler(
+                        $state,
+                        $this->renderingContext->getErrorHandler()->handleViewHelperError($error)
+                    );
+                } catch (Exception $error) {
+                    $this->textHandler(
+                        $state,
+                        $this->renderingContext->getErrorHandler()->handleParserError($error)
+                    );
                 }
             } elseif (preg_match(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, $templateElement, $matchedVariables) > 0) {
                 if ($this->closingViewHelperTagHandler(
@@ -315,17 +327,27 @@ class TemplateParser
      * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
      * @param string $methodIdentifier Method identifier
      * @param string $arguments Arguments string, not yet parsed
-     * @param boolean $selfclosing true, if the tag is a self-closing tag.
+     * @param bool $selfclosing true, if the tag is a self-closing tag.
      * @param string $templateElement The template code containing the ViewHelper call
      * @return NodeInterface|null
      */
     protected function openingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $arguments, $selfclosing, $templateElement)
     {
+        $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
+        if ($viewHelperResolver->isNamespaceIgnored($namespaceIdentifier)) {
+            return null;
+        }
+        if (!$viewHelperResolver->isNamespaceValid($namespaceIdentifier)) {
+            throw new UnknownNamespaceException('Unknown Namespace: ' . $namespaceIdentifier);
+        }
+
+        $viewHelper = $viewHelperResolver->createViewHelperInstance($namespaceIdentifier, $methodIdentifier);
+        $argumentDefinitions = $viewHelper->prepareArguments();
         $viewHelperNode = $this->initializeViewHelperAndAddItToStack(
             $state,
             $namespaceIdentifier,
             $methodIdentifier,
-            $this->parseArguments($arguments)
+            $this->parseArguments($arguments, $viewHelper)
         );
 
         if ($viewHelperNode) {
@@ -349,7 +371,7 @@ class TemplateParser
      * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
      * @param string $methodIdentifier Method identifier
      * @param array $argumentsObjectTree Arguments object tree
-     * @return null|NodeInterface An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
+     * @return NodeInterface|null An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
      * @throws Exception
      */
     protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree)
@@ -395,7 +417,7 @@ class TemplateParser
      * @param ParsingState $state The current parsing state
      * @param string $namespaceIdentifier Namespace identifier for the closing tag.
      * @param string $methodIdentifier Method identifier.
-     * @return boolean whether the viewHelper was found and added to the stack or not
+     * @return bool whether the viewHelper was found and added to the stack or not
      * @throws Exception
      */
     protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier)
@@ -437,7 +459,6 @@ class TemplateParser
      * @param string $delimiter
      * @param string $viewHelperString
      * @param string $additionalViewHelpersString
-     * @return void
      */
     protected function objectAccessorHandler(ParsingState $state, $objectAccessorString, $delimiter, $viewHelperString, $additionalViewHelpersString)
     {
@@ -455,13 +476,25 @@ class TemplateParser
         $matches = [];
         if (strlen($viewHelperString) > 0 && preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER, $viewHelperString, $matches, PREG_SET_ORDER) > 0) {
             // The last ViewHelper has to be added first for correct chaining.
+            // Note that ignoring namespaces is NOT possible in inline syntax; any inline syntax that contains a namespace
+            // which is invalid will be reported as an error regardless of whether the namespace is marked as ignored.
+            $viewHelperResolver = $this->renderingContext->getViewHelperResolver();
             foreach (array_reverse($matches) as $singleMatch) {
+                if (!$viewHelperResolver->isNamespaceValid($singleMatch['NamespaceIdentifier'])) {
+                    throw new UnknownNamespaceException('Unknown Namespace: ' . $singleMatch['NamespaceIdentifier']);
+                }
+                $viewHelper = $viewHelperResolver->createViewHelperInstance($singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier']);
                 if (strlen($singleMatch['ViewHelperArguments']) > 0) {
-                    $arguments = $this->recursiveArrayHandler($singleMatch['ViewHelperArguments']);
+                    $arguments = $this->recursiveArrayHandler($state, $singleMatch['ViewHelperArguments'], $viewHelper);
                 } else {
                     $arguments = [];
                 }
-                $viewHelperNode = $this->initializeViewHelperAndAddItToStack($state, $singleMatch['NamespaceIdentifier'], $singleMatch['MethodIdentifier'], $arguments);
+                $viewHelperNode = $this->initializeViewHelperAndAddItToStack(
+                    $state,
+                    $singleMatch['NamespaceIdentifier'],
+                    $singleMatch['MethodIdentifier'],
+                    $arguments
+                );
                 if ($viewHelperNode) {
                     $numberOfViewHelpers++;
                 }
@@ -487,9 +520,8 @@ class TemplateParser
      * Call all interceptors registered for a given interception point.
      *
      * @param NodeInterface $node The syntax tree node which can be modified by the interceptors.
-     * @param integer $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
+     * @param int $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
      * @param ParsingState $state the parsing state
-     * @return void
      */
     protected function callInterceptor(NodeInterface & $node, $interceptionPoint, ParsingState $state)
     {
@@ -516,23 +548,51 @@ class TemplateParser
      * and the value is a single Argument Object Tree.
      *
      * @param string $argumentsString All arguments as string
+     * @param ViewHelperInterface $viewHelper
      * @return array An associative array of objects, where the key is the argument name.
      */
-    protected function parseArguments($argumentsString)
+    protected function parseArguments($argumentsString, ViewHelperInterface $viewHelper)
     {
+        $argumentDefinitions = $this->renderingContext->getViewHelperResolver()->getArgumentDefinitionsForViewHelper($viewHelper);
         $argumentsObjectTree = [];
+        $undeclaredArguments = [];
         $matches = [];
         if (preg_match_all(Patterns::$SPLIT_PATTERN_TAGARGUMENTS, $argumentsString, $matches, PREG_SET_ORDER) > 0) {
-            $escapingEnabledBackup = $this->escapingEnabled;
-            $this->escapingEnabled = false;
             foreach ($matches as $singleMatch) {
                 $argument = $singleMatch['Argument'];
                 $value = $this->unquoteString($singleMatch['ValueQuoted']);
-                $argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
+                $escapingEnabledBackup = $this->escapingEnabled;
+                if (isset($argumentDefinitions[$argument])) {
+                    $argumentDefinition = $argumentDefinitions[$argument];
+                    $this->escapingEnabled = $this->escapingEnabled && $this->isArgumentEscaped($viewHelper, $argumentDefinition);
+                    $isBoolean = $argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool';
+                    $argumentsObjectTree[$argument] = $this->buildArgumentObjectTree($value);
+                    if ($isBoolean) {
+                        $argumentsObjectTree[$argument] = new BooleanNode($argumentsObjectTree[$argument]);
+                    }
+                } else {
+                    $this->escapingEnabled = false;
+                    $undeclaredArguments[$argument] = $this->buildArgumentObjectTree($value);
+                }
+                $this->escapingEnabled = $escapingEnabledBackup;
             }
-            $this->escapingEnabled = $escapingEnabledBackup;
         }
-        return $argumentsObjectTree;
+        $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $argumentsObjectTree);
+        $viewHelper->validateAdditionalArguments($undeclaredArguments);
+        return $argumentsObjectTree + $undeclaredArguments;
+    }
+
+    protected function isArgumentEscaped(ViewHelperInterface $viewHelper, ArgumentDefinition $argumentDefinition = null)
+    {
+        $hasDefinition = $argumentDefinition instanceof ArgumentDefinition;
+        $isBoolean = $hasDefinition && ($argumentDefinition->getType() === 'boolean' || $argumentDefinition->getType() === 'bool');
+        $escapingEnabled = $this->configuration->isViewHelperArgumentEscapingEnabled();
+        $isArgumentEscaped = $hasDefinition && $argumentDefinition->getEscape() === true;
+        $isContentArgument = $hasDefinition && method_exists($viewHelper, 'resolveContentArgumentName') && $argumentDefinition->getName() === $viewHelper->resolveContentArgumentName();
+        if ($isContentArgument) {
+            return !$isBoolean && ($viewHelper->isChildrenEscapingEnabled() || $isArgumentEscaped);
+        }
+        return !$isBoolean && $escapingEnabled && $isArgumentEscaped;
     }
 
     /**
@@ -573,9 +633,9 @@ class TemplateParser
         if ($value === '') {
             return $value;
         }
-        if ($quotedValue{0} === '"') {
+        if ($quotedValue[0] === '"') {
             $value = str_replace('\\"', '"', preg_replace('/(^"|"$)/', '', $quotedValue));
-        } elseif ($quotedValue{0} === '\'') {
+        } elseif ($quotedValue[0] === '\'') {
             $value = str_replace("\\'", "'", preg_replace('/(^\'|\'$)/', '', $quotedValue));
         }
         return str_replace('\\\\', '\\', $value);
@@ -588,8 +648,7 @@ class TemplateParser
      *
      * @param ParsingState $state Current parsing state
      * @param string $text Text to process
-     * @param integer $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
-     * @return void
+     * @param int $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      */
     protected function textAndShorthandSyntaxHandler(ParsingState $state, $text, $context)
     {
@@ -614,7 +673,7 @@ class TemplateParser
                 && preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $section, $matchedVariables) > 0
             ) {
                 // We only match arrays if we are INSIDE viewhelper arguments
-                $this->arrayHandler($state, $this->recursiveArrayHandler($matchedVariables['Array']));
+                $this->arrayHandler($state, $this->recursiveArrayHandler($state, $matchedVariables['Array']));
             } else {
                 // We ask custom ExpressionNode instances from ViewHelperResolver
                 // if any match our expression:
@@ -669,7 +728,6 @@ class TemplateParser
      *
      * @param ParsingState $state The current parsing state
      * @param NodeInterface[] $arrayText The array as string.
-     * @return void
      */
     protected function arrayHandler(ParsingState $state, $arrayText)
     {
@@ -687,31 +745,64 @@ class TemplateParser
      * - Variables
      * - sub-arrays
      *
+     * @param ParsingState $state
      * @param string $arrayText Array text
+     * @param ViewHelperInterface|null $viewHelper ViewHelper instance - passed only if the array is a collection of arguments for an inline ViewHelper
      * @return NodeInterface[] the array node built up
      * @throws Exception
      */
-    protected function recursiveArrayHandler($arrayText)
+    protected function recursiveArrayHandler(ParsingState $state, $arrayText, ViewHelperInterface $viewHelper = null)
     {
+        $undeclaredArguments = [];
+        $argumentDefinitions = [];
+        if ($viewHelper instanceof ViewHelperInterface) {
+            $argumentDefinitions = $this->renderingContext->getViewHelperResolver()->getArgumentDefinitionsForViewHelper($viewHelper);
+        }
         $matches = [];
         $arrayToBuild = [];
         if (preg_match_all(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS, $arrayText, $matches, PREG_SET_ORDER)) {
             foreach ($matches as $singleMatch) {
                 $arrayKey = $this->unquoteString($singleMatch['Key']);
-                if (!empty($singleMatch['VariableIdentifier'])) {
-                    $arrayToBuild[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
+                $assignInto = &$arrayToBuild;
+                $isBoolean = false;
+                $argumentDefinition = null;
+                if (isset($argumentDefinitions[$arrayKey])) {
+                    $argumentDefinition = $argumentDefinitions[$arrayKey];
+                    $isBoolean = $argumentDefinitions[$arrayKey]->getType() === 'boolean' || $argumentDefinitions[$arrayKey]->getType() === 'bool';
+                } else {
+                    $assignInto = &$undeclaredArguments;
+                }
+
+                $escapingEnabledBackup = $this->escapingEnabled;
+                $this->escapingEnabled = $this->escapingEnabled && $viewHelper instanceof ViewHelperInterface && $this->isArgumentEscaped($viewHelper, $argumentDefinition);
+
+                if (array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
+                    $assignInto[$arrayKey] = new ArrayNode($this->recursiveArrayHandler($state, $singleMatch['Subarray']));
+                } elseif (!empty($singleMatch['VariableIdentifier'])) {
+                    $assignInto[$arrayKey] = new ObjectAccessorNode($singleMatch['VariableIdentifier']);
+                    if ($viewHelper instanceof ViewHelperInterface && !$isBoolean) {
+                        $this->callInterceptor($assignInto[$arrayKey], InterceptorInterface::INTERCEPT_OBJECTACCESSOR, $state);
+                    }
                 } elseif (array_key_exists('Number', $singleMatch) && (!empty($singleMatch['Number']) || $singleMatch['Number'] === '0')) {
                     // Note: this method of casting picks "int" when value is a natural number and "float" if any decimals are found. See also NumericNode.
-                    $arrayToBuild[$arrayKey] = $singleMatch['Number'] + 0;
+                    $assignInto[$arrayKey] = $singleMatch['Number'] + 0;
                 } elseif ((array_key_exists('QuotedString', $singleMatch) && !empty($singleMatch['QuotedString']))) {
                     $argumentString = $this->unquoteString($singleMatch['QuotedString']);
-                    $arrayToBuild[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
-                } elseif (array_key_exists('Subarray', $singleMatch) && !empty($singleMatch['Subarray'])) {
-                    $arrayToBuild[$arrayKey] = new ArrayNode($this->recursiveArrayHandler($singleMatch['Subarray']));
+                    $assignInto[$arrayKey] = $this->buildArgumentObjectTree($argumentString);
                 }
+
+                if ($isBoolean) {
+                    $assignInto[$arrayKey] = new BooleanNode($assignInto[$arrayKey]);
+                }
+
+                $this->escapingEnabled = $escapingEnabledBackup;
             }
         }
-        return $arrayToBuild;
+        if ($viewHelper instanceof ViewHelperInterface) {
+            $this->abortIfRequiredArgumentsAreMissing($argumentDefinitions, $arrayToBuild);
+            $viewHelper->validateAdditionalArguments($undeclaredArguments);
+        }
+        return $arrayToBuild + $undeclaredArguments;
     }
 
     /**
@@ -719,7 +810,6 @@ class TemplateParser
      *
      * @param ParsingState $state
      * @param string $text
-     * @return void
      */
     protected function textHandler(ParsingState $state, $text)
     {
@@ -740,5 +830,22 @@ class TemplateParser
         $state->pushNodeToStack($rootNode);
         $state->setVariableProvider($variableProvider->getScopeCopy($variableProvider->getAll()));
         return $state;
+    }
+
+    /**
+     * Throw an exception if required arguments are missing
+     *
+     * @param ArgumentDefinition[] $expectedArguments Array of all expected arguments
+     * @param NodeInterface[] $actualArguments Actual arguments
+     * @throws Exception
+     */
+    protected function abortIfRequiredArgumentsAreMissing($expectedArguments, $actualArguments)
+    {
+        $actualArgumentNames = array_keys($actualArguments);
+        foreach ($expectedArguments as $name => $expectedArgument) {
+            if ($expectedArgument->isRequired() && !in_array($name, $actualArgumentNames)) {
+                throw new Exception('Required argument "' . $name . '" was not supplied.', 1237823699);
+            }
+        }
     }
 }

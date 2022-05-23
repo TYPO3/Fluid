@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\View;
 
 /*
@@ -13,5 +14,4 @@ namespace TYPO3Fluid\Fluid\View;
  */
 class TemplateView extends AbstractTemplateView
 {
-
 }

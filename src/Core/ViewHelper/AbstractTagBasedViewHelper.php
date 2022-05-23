@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -19,7 +20,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     /**
      * Disable escaping of tag based ViewHelpers so that the rendered tag is not htmlspecialchar'd
      *
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
@@ -28,7 +29,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * @var array
      */
-    static private $tagAttributes = [];
+    private static $tagAttributes = [];
 
     /**
      * Tag builder instance
@@ -36,7 +37,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @var TagBuilder
      * @api
      */
-    protected $tag = null;
+    protected $tag;
 
     /**
      * Name of the tag to be created by this view helper
@@ -45,6 +46,14 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @api
      */
     protected $tagName = 'div';
+
+    /**
+     * Arguments which are valid but do not have an ArgumentDefinition, e.g.
+     * data- prefixed arguments.
+     *
+     * @var array
+     */
+    protected $additionalArguments = [];
 
     /**
      * Constructor
@@ -56,7 +65,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
 
     /**
      * @param TagBuilder $tag
-     * @return void
      */
     public function setTagBuilder(TagBuilder $tag)
     {
@@ -73,6 +81,7 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
     {
         $this->registerArgument('additionalAttributes', 'array', 'Additional tag attributes. They will be added directly to the resulting HTML tag.', false);
         $this->registerArgument('data', 'array', 'Additional data-* attributes. They will each be added with a "data-" prefix.', false);
+        $this->registerArgument('aria', 'array', 'Additional aria-* attributes. They will each be added with a "aria-" prefix.', false);
     }
 
     /**
@@ -82,7 +91,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      *
      * Will be invoked just before the render method.
      *
-     * @return void
      * @api
      */
     public function initialize()
@@ -101,6 +109,18 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
             }
         }
 
+        if ($this->hasArgument('aria') && is_array($this->arguments['aria'])) {
+            foreach ($this->arguments['aria'] as $ariaAttributeKey => $ariaAttributeValue) {
+                $this->tag->addAttribute('aria-' . $ariaAttributeKey, $ariaAttributeValue);
+            }
+        }
+
+        foreach ($this->additionalArguments as $argumentName => $argumentValue) {
+            if (strpos($argumentName, 'data-') === 0 || strpos($argumentName, 'aria-') === 0) {
+                $this->tag->addAttribute($argumentName, $argumentValue);
+            }
+        }
+
         if (isset(self::$tagAttributes[get_class($this)])) {
             foreach (self::$tagAttributes[get_class($this)] as $attributeName) {
                 if ($this->hasArgument($attributeName) && $this->arguments[$attributeName] !== '') {
@@ -116,9 +136,8 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * @param string $name Name of tag attribute
      * @param string $type Type of the tag attribute
      * @param string $description Description of tag attribute
-     * @param boolean $required set to TRUE if tag attribute is required. Defaults to FALSE.
+     * @param bool $required set to TRUE if tag attribute is required. Defaults to FALSE.
      * @param mixed $defaultValue Optional, default value of attribute if one applies
-     * @return void
      * @api
      */
     protected function registerTagAttribute($name, $type, $description, $required = false, $defaultValue = null)
@@ -131,7 +150,6 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
      * Registers all standard HTML universal attributes.
      * Should be used inside registerArguments();
      *
-     * @return void
      * @api
      */
     protected function registerUniversalTagAttributes()
@@ -147,27 +165,10 @@ abstract class AbstractTagBasedViewHelper extends AbstractViewHelper
         $this->registerTagAttribute('onclick', 'string', 'JavaScript evaluated for the onclick event');
     }
 
-    /**
-     * Handles additional arguments, sorting out any data-
-     * prefixed tag attributes and assigning them. Then passes
-     * the unassigned arguments to the parent class' method,
-     * which in the default implementation will throw an error
-     * about "undeclared argument used".
-     *
-     * @param array $arguments
-     * @return void
-     */
     public function handleAdditionalArguments(array $arguments)
     {
-        $unassigned = [];
-        foreach ($arguments as $argumentName => $argumentValue) {
-            if (strpos($argumentName, 'data-') === 0) {
-                $this->tag->addAttribute($argumentName, $argumentValue);
-            } else {
-                $unassigned[$argumentName] = $argumentValue;
-            }
-        }
-        parent::handleAdditionalArguments($unassigned);
+        $this->additionalArguments = $arguments;
+        parent::handleAdditionalArguments($arguments);
     }
 
     /**

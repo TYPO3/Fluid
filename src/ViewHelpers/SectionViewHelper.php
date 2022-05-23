@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -10,48 +11,56 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
- * A ViewHelper to declare sections in templates for later use with e.g. the RenderViewHelper.
+ * A ViewHelper to declare sections in templates for later use with e.g. the ``f:render`` ViewHelper.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Rendering sections">
- * <f:section name="someSection">This is a section. {foo}</f:section>
- * <f:render section="someSection" arguments="{foo: someVariable}" />
- * </code>
- * <output>
- * the content of the section "someSection". The content of the variable {someVariable} will be available in the partial as {foo}
- * </output>
+ * Rendering sections
+ * ------------------
  *
- * <code title="Rendering recursive sections">
- * <f:section name="mySection">
- *  <ul>
- *    <f:for each="{myMenu}" as="menuItem">
- *      <li>
- *        {menuItem.text}
- *        <f:if condition="{menuItem.subItems}">
- *          <f:render section="mySection" arguments="{myMenu: menuItem.subItems}" />
- *        </f:if>
- *      </li>
- *    </f:for>
- *  </ul>
- * </f:section>
- * <f:render section="mySection" arguments="{myMenu: menu}" />
- * </code>
- * <output>
- * <ul>
- *   <li>menu1
+ * ::
+ *
+ *     <f:section name="someSection">This is a section. {foo}</f:section>
+ *     <f:render section="someSection" arguments="{foo: someVariable}" />
+ *
+ * Output::
+ *
+ *     the content of the section "someSection". The content of the variable {someVariable} will be available in the partial as {foo}
+ *
+ * Rendering recursive sections
+ * ----------------------------
+ *
+ * ::
+ *
+ *     <f:section name="mySection">
+ *        <ul>
+ *             <f:for each="{myMenu}" as="menuItem">
+ *                  <li>
+ *                    {menuItem.text}
+ *                    <f:if condition="{menuItem.subItems}">
+ *                        <f:render section="mySection" arguments="{myMenu: menuItem.subItems}" />
+ *                    </f:if>
+ *                  </li>
+ *             </f:for>
+ *        </ul>
+ *     </f:section>
+ *     <f:render section="mySection" arguments="{myMenu: menu}" />
+ *
+ * Output::
+ *
  *     <ul>
- *       <li>menu1a</li>
- *       <li>menu1b</li>
- *     </ul>
- *   </li>
- * [...]
- * (depending on the value of {menu})
- * </output>
+ *         <li>menu1
+ *             <ul>
+ *                 <li>menu1a</li>
+ *                 <li>menu1b</li>
+ *             </ul>
+ *         </li>
+ *     [...]
+ *     (depending on the value of {menu})
  *
  * @api
  */
@@ -60,14 +69,13 @@ class SectionViewHelper extends AbstractViewHelper
     use ParserRuntimeOnly;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
     /**
      * Initialize the arguments.
      *
-     * @return void
      * @api
      */
     public function initializeArguments()
@@ -82,7 +90,6 @@ class SectionViewHelper extends AbstractViewHelper
      * @param ViewHelperNode $node
      * @param TextNode[] $arguments
      * @param VariableProviderInterface $variableContainer
-     * @return void
      */
     public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
     {

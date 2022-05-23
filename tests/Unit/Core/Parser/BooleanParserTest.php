@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -33,17 +34,17 @@ class BooleanParserTest extends UnitTestCase
      * @test
      * @dataProvider getSomeEvaluationTestValues
      * @param string $comparison
-     * @param boolean $expected
+     * @param bool $expected
      */
     public function testSomeEvaluations($comparison, $expected, $variables = [])
     {
         $parser = new BooleanParser();
-        $this->assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
+        self::assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
 
         $compiledEvaluation = $parser->compile($comparison);
         $functionName = 'expression_' . md5($comparison . rand(0, 100000));
         eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
-        $this->assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
+        self::assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
     }
 
     /**
@@ -128,9 +129,10 @@ class BooleanParserTest extends UnitTestCase
             ['0 OR 1', true],
 
             // edge cases as per https://github.com/TYPO3Fluid/Fluid/issues/7
-            ['\'foo\' == 0', true],
-            ['1.1 >= foo', true],
-            ['\'foo\' > 0', false],
+            // expected value based on php versions behaviour
+            ['\'foo\' == 0', (PHP_VERSION_ID < 80000 ? true : false)],
+            ['1.1 >= foo', (PHP_VERSION_ID < 80000 ? true : false)],
+            ['\'foo\' > 0', (PHP_VERSION_ID < 80000 ? false : true)],
 
             ['{foo}', true, ['foo' => true]],
             ['{foo} == FALSE', true, ['foo' => false]],

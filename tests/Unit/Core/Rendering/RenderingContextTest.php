@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 /*
@@ -22,7 +23,6 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Testcase for ParsingState
- *
  */
 class RenderingContextTest extends UnitTestCase
 {
@@ -48,7 +48,7 @@ class RenderingContextTest extends UnitTestCase
         $subject = $this->getAccessibleMock(RenderingContext::class, ['dummy'], [$view]);
         $subject->_set($property, $value);
         $getter = 'get' . ucfirst($property);
-        $this->assertSame($value, $subject->$getter());
+        self::assertSame($value, $subject->$getter());
     }
 
     /**
@@ -58,11 +58,10 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testSetter($property, $value)
     {
-        $view = new TemplateView();
-        $subject = new RenderingContext($view);
+        $subject = new RenderingContext();
         $setter = 'set' . ucfirst($property);
         $subject->$setter($value);
-        $this->assertAttributeSame($value, $property, $subject);
+        self::assertAttributeSame($value, $property, $subject);
     }
 
     /**
@@ -92,7 +91,7 @@ class RenderingContextTest extends UnitTestCase
     {
         $templateVariableContainer = $this->getMock(StandardVariableProvider::class);
         $this->renderingContext->setVariableProvider($templateVariableContainer);
-        $this->assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
+        self::assertSame($this->renderingContext->getVariableProvider(), $templateVariableContainer, 'Template Variable Container could not be read out again.');
     }
 
     /**
@@ -102,7 +101,7 @@ class RenderingContextTest extends UnitTestCase
     {
         $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class);
         $this->renderingContext->setViewHelperVariableContainer($viewHelperVariableContainer);
-        $this->assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
+        self::assertSame($viewHelperVariableContainer, $this->renderingContext->getViewHelperVariableContainer());
     }
 
     /**
@@ -110,9 +109,9 @@ class RenderingContextTest extends UnitTestCase
      */
     public function testIsCacheEnabled()
     {
-        $subject = new RenderingContext($this->getMock(TemplateView::class));
-        $this->assertFalse($subject->isCacheEnabled());
+        $subject = new RenderingContext();
+        self::assertFalse($subject->isCacheEnabled());
         $subject->setCache($this->getMock(SimpleFileCache::class));
-        $this->assertTrue($subject->isCacheEnabled());
+        self::assertTrue($subject->isCacheEnabled());
     }
 }

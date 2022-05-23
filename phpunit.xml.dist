@@ -1,9 +1,12 @@
 <phpunit
         backupGlobals="false"
         backupStaticAttributes="false"
-        colors="false"
+        cacheResult="false"
+        colors="true"
         convertErrorsToExceptions="true"
         convertWarningsToExceptions="true"
+        convertDeprecationsToExceptions="true"
+        convertNoticesToExceptions="true"
         forceCoversAnnotation="false"
         processIsolation="false"
         stopOnError="false"
@@ -25,4 +28,9 @@
                         <directory>src/</directory>
                 </whitelist>
         </filter>
+
+        <php>
+                <ini name="display_errors" value="1" />
+                <ini name="error_reporting" value="E_ALL" />
+        </php>        
 </phpunit>

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -9,9 +10,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
  */
 trait ParserRuntimeOnly
 {
-    /**
-     * @return null
-     */
     public function render()
     {
         return null;
@@ -23,7 +21,6 @@ trait ParserRuntimeOnly
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return null
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -36,7 +37,7 @@ class NodeConverterTest extends UnitTestCase
     {
         $instance = new NodeConverter(new TemplateCompiler());
         $instance->setVariableCounter(10);
-        $this->assertAttributeEquals(10, 'variableCounter', $instance);
+        self::assertAttributeEquals(10, 'variableCounter', $instance);
     }
 
     /**
@@ -48,7 +49,7 @@ class NodeConverterTest extends UnitTestCase
     public function testConvertCallsExpectedMethod(NodeInterface $node, $expected)
     {
         $instance = $this->getMock(NodeConverter::class, [$expected], [], '', false);
-        $instance->expects($this->once())->method($expected);
+        $instance->expects(self::once())->method($expected);
         $instance->convert($node);
     }
 
@@ -80,7 +81,7 @@ class NodeConverterTest extends UnitTestCase
     {
         $instance = new NodeConverter(new TemplateCompiler());
         $result = $instance->convert($node);
-        $this->assertEquals($expected, $result['execution']);
+        self::assertEquals($expected, $result['execution']);
     }
 
     /**

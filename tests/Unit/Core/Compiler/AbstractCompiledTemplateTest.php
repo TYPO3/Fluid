@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -25,7 +26,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $before = clone $instance;
         $instance->setIdentifier('test');
-        $this->assertEquals($before, $instance);
+        self::assertEquals($before, $instance);
     }
 
     /**
@@ -34,7 +35,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     public function testGetIdentifierReturnsClassName()
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
-        $this->assertEquals($instance->getIdentifier(), get_class($instance));
+        self::assertEquals($instance->getIdentifier(), get_class($instance));
     }
 
     /**
@@ -44,7 +45,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->getVariableContainer();
-        $this->assertInstanceOf(StandardVariableProvider::class, $result);
+        self::assertInstanceOf(StandardVariableProvider::class, $result);
     }
 
     /**
@@ -54,7 +55,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->render(new RenderingContextFixture());
-        $this->assertEquals('', $result);
+        self::assertEquals('', $result);
     }
 
     /**
@@ -64,7 +65,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->getLayoutName(new RenderingContextFixture());
-        $this->assertEquals('', $result);
+        self::assertEquals('', $result);
     }
 
     /**
@@ -74,7 +75,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->hasLayout();
-        $this->assertEquals(false, $result);
+        self::assertFalse($result);
     }
 
     /**
@@ -84,7 +85,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->isCompilable();
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -94,7 +95,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->isCompiled();
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -107,6 +108,6 @@ class AbstractCompiledTemplateTest extends UnitTestCase
         $before = $context->getViewHelperResolver()->getNamespaces();
         $instance->addCompiledNamespaces($context);
         $after = $context->getViewHelperResolver()->getNamespaces();
-        $this->assertEquals($before, $after);
+        self::assertEquals($before, $after);
     }
 }

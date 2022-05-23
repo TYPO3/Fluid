@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers\Cache;
 
 /*
@@ -27,22 +28,34 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  * so can safely be used as container tag, as self-closing
  * or with inline syntax - all with the same result.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Self-closing">
- * <f:cache.disable />
- * </code>
+ * Self-closing
+ * ------------
  *
- * <code title="Inline mode">
- * {f:cache.disable()}
- * </code>
+ * ::
  *
- * <code title="Container tag">
- * <f:cache.disable>
- *    Some output or Fluid code
- * </f:cache.disble>
+ *     <f:cache.disable />
+ *
+ * Inline mode
+ * -----------
+ *
+ * ::
+ *
+ *     {f:cache.disable()}
+ *
+ *
+ * Container tag
+ * -------------
+ *
+ * ::
+ *
+ *     <f:cache.disable>
+ *        Some output or Fluid code
+ *     </f:cache.disble>
+ *
  * Additional output is also not compilable because of the ViewHelper
- * </code>
  *
  * @api
  */
@@ -50,12 +63,12 @@ class DisableViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 

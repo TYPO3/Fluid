@@ -1,9 +1,7 @@
 TYPO3.Fluid Rendering Engine
 ============================
 
-[![Build Status](https://travis-ci.org/TYPO3/Fluid.svg?branch=master)](https://travis-ci.org/TYPO3/Fluid)
-[![Coverage Status](https://coveralls.io/repos/github/TYPO3/Fluid/badge.svg?branch=master)](https://coveralls.io/github/TYPO3/Fluid?branch=master)
-[![Scrutinizer](https://scrutinizer-ci.com/g/TYPO3/Fluid/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/TYPO3/Fluid/)
+[![Build Status](https://github.com/TYPO3/Fluid/actions/workflows/build.yml/badge.svg)](https://github.com/TYPO3/Fluid/actions/workflows/build.yml)
 
 TYPO3 community template engine - composer-enabled, Flow/CMS dependency-free PSR-4 edition.
 
@@ -39,3 +37,7 @@ Developer Documentation
 * [Creating ViewHelpers - special PHP classes to create custom dynamic tags](doc/FLUID_CREATING_VIEWHELPERS.md)
 * [Creating ExpressionNodes - special PHP classes that extend the Fluid syntax](doc/FLUID_EXPRESSIONS.md)
 * [Special difference information for developers coming from TYPO3 Flow/CMS](doc/README_TYPO3.md)
+
+License
+-------
+LGPL 3.0 License. See LICENSE file.

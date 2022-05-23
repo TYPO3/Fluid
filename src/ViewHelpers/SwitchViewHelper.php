@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -12,29 +13,35 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Switch view helper which can be used to render content depending on a value or expression.
- * Implements what a basic switch()-PHP-method does.
+ * Switch ViewHelper which can be used to render content depending on a value or expression.
+ * Implements what a basic PHP ``switch()`` does.
  *
- * An optional default case can be specified which is rendered if none of the "f:case" conditions matches.
+ * An optional default case can be specified which is rendered if none of the
+ * ``case`` conditions matches.
  *
- * = Examples =
- *
- * <code title="Simple Switch statement">
- * <f:switch expression="{person.gender}">
- *   <f:case value="male">Mr.</f:case>
- *   <f:case value="female">Mrs.</f:case>
- *   <f:defaultCase>Mr. / Mrs.</f:defaultCase>
- * </f:switch>
- * </code>
- * <output>
- * "Mr.", "Mrs." or "Mr. / Mrs." (depending on the value of {person.gender})
- * </output>
- *
- * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
+ * Using this ViewHelper can be a sign of weak architecture. If you end up using it extensively
  * you might want to consider restructuring your controllers/actions and/or use partials and sections.
- * E.g. the above example could be achieved with <f:render partial="title.{person.gender}" /> and the partials
- * "title.male.html", "title.female.html", ...
+ * E.g. the above example could be achieved with :html:`<f:render partial="title.{person.gender}" />`
+ * and the partials "title.male.html", "title.female.html", ...
  * Depending on the scenario this can be easier to extend and possibly contains less duplication.
+ *
+ * Examples
+ * ========
+ *
+ * Simple Switch statement
+ * -----------------------
+ *
+ * ::
+ *
+ *     <f:switch expression="{person.gender}">
+ *         <f:case value="male">Mr.</f:case>
+ *         <f:case value="female">Mrs.</f:case>
+ *         <f:defaultCase>Mr. / Mrs.</f:defaultCase>
+ *     </f:switch>
+ *
+ * Output::
+ *
+ *     "Mr.", "Mrs." or "Mr. / Mrs." (depending on the value of {person.gender})
  *
  * @api
  */
@@ -42,23 +49,20 @@ class SwitchViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
     /**
      * @var mixed
      */
-    protected $backupSwitchExpression = null;
+    protected $backupSwitchExpression;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $backupBreakState = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -121,26 +125,24 @@ class SwitchViewHelper extends AbstractViewHelper
 
     /**
      * @param NodeInterface $node
-     * @return boolean
+     * @return bool
      */
     protected function isDefaultCaseNode(NodeInterface $node)
     {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class);
+        return $node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class;
     }
 
     /**
      * @param NodeInterface $node
-     * @return boolean
+     * @return bool
      */
     protected function isCaseNode(NodeInterface $node)
     {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class);
+        return $node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class;
     }
 
     /**
      * Backups "switch expression" and "break" state of a possible parent switch ViewHelper to support nesting
-     *
-     * @return void
      */
     protected function backupSwitchState()
     {
@@ -154,8 +156,6 @@ class SwitchViewHelper extends AbstractViewHelper
 
     /**
      * Restores "switch expression" and "break" states that might have been backed up in backupSwitchState() before
-     *
-     * @return void
      */
     protected function restoreSwitchState()
     {

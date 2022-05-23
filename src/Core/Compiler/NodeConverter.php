@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Compiler;
 
 /*
@@ -26,7 +27,7 @@ class NodeConverter
 {
 
     /**
-     * @var integer
+     * @var int
      */
     protected $variableCounter = 0;
 
@@ -44,8 +45,7 @@ class NodeConverter
     }
 
     /**
-     * @param integer $variableCounter
-     * @return void
+     * @param int $variableCounter
      */
     public function setVariableCounter($variableCounter)
     {
@@ -211,7 +211,7 @@ class NodeConverter
 
             $initializationPhpCode .= $argumentInitializationCode . $viewHelperInitializationPhpCode;
         } catch (StopCompilingChildrenException $stopCompilingChildrenException) {
-            $convertedViewHelperExecutionCode = '\'' . $stopCompilingChildrenException->getReplacementString() . '\'';
+            $convertedViewHelperExecutionCode = '\'' . str_replace("'", "\'", $stopCompilingChildrenException->getReplacementString()) . '\'';
         }
         $initializationArray = [
             'initialization' => $initializationPhpCode,
@@ -237,7 +237,8 @@ class NodeConverter
                 'initialization' => '',
                 'execution' => sprintf('%s->getAll()', $providerReference)
             ];
-        } elseif (1 === count(array_unique($accessors))
+        }
+        if (1 === count(array_unique($accessors))
             && reset($accessors) === VariableExtractor::ACCESSOR_ARRAY
             && count($accessors) === count($pathSegments)
             && false === strpos($path, '{')
@@ -332,6 +333,7 @@ class NodeConverter
                 if ($childNode instanceof NodeInterface) {
                     return $this->convert($childNode);
                 }
+                // no break
             default:
                 $outputVariableName = $this->variableName('output');
                 $initializationPhpCode = sprintf('%s = \'\';', $outputVariableName) . chr(10);

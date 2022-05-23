@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -61,7 +62,6 @@ class NumericNode extends AbstractNode
      *
      * @param NodeInterface $childNode The sub node to add
      * @throws Parser\Exception
-     * @return void
      */
     public function addChildNode(NodeInterface $childNode)
     {

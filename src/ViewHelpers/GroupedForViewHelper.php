@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -13,79 +14,87 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
 /**
- * Grouped loop view helper.
+ * Grouped loop ViewHelper.
  * Loops through the specified values.
  *
  * The groupBy argument also supports property paths.
  *
- * = Examples =
+ * Using this ViewHelper can be a sign of weak architecture. If you end up
+ * using it extensively you might want to fine-tune your "view model" (the
+ * data you assign to the view).
  *
- * <code title="Simple">
- * <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color">
- *   <f:for each="{fruitsOfThisColor}" as="fruit">
- *     {fruit.name}
- *   </f:for>
- * </f:groupedFor>
- * </code>
- * <output>
- * apple cherry strawberry banana
- * </output>
+ * Examples
+ * ========
  *
- * <code title="Two dimensional list">
- * <ul>
- *   <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color" groupKey="color">
- *     <li>
- *       {color} fruits:
- *       <ul>
- *         <f:for each="{fruitsOfThisColor}" as="fruit" key="label">
- *           <li>{label}: {fruit.name}</li>
+ * Simple
+ * ------
+ *
+ * ::
+ *
+ *     <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}"
+ *         as="fruitsOfThisColor" groupBy="color"
+ *     >
+ *         <f:for each="{fruitsOfThisColor}" as="fruit">
+ *             {fruit.name}
  *         </f:for>
- *       </ul>
- *     </li>
- *   </f:groupedFor>
- * </ul>
- * </code>
- * <output>
- * <ul>
- *   <li>green fruits
- *     <ul>
- *       <li>0: apple</li>
- *     </ul>
- *   </li>
- *   <li>red fruits
- *     <ul>
- *       <li>1: cherry</li>
- *     </ul>
- *     <ul>
- *       <li>3: strawberry</li>
- *     </ul>
- *   </li>
- *   <li>yellow fruits
- *     <ul>
- *       <li>2: banana</li>
- *     </ul>
- *   </li>
- * </ul>
- * </output>
+ *     </f:groupedFor>
  *
- * Note: Using this view helper can be a sign of weak architecture. If you end up using it extensively
- * you might want to fine-tune your "view model" (the data you assign to the view).
+ * Output::
+ *
+ *     apple cherry strawberry banana
+ *
+ * Two dimensional list
+ * --------------------
+ *
+ * ::
+ *
+ *     <ul>
+ *         <f:groupedFor each="{0: {name: 'apple', color: 'green'}, 1: {name: 'cherry', color: 'red'}, 2: {name: 'banana', color: 'yellow'}, 3: {name: 'strawberry', color: 'red'}}" as="fruitsOfThisColor" groupBy="color" groupKey="color">
+ *             <li>
+ *                 {color} fruits:
+ *                 <ul>
+ *                     <f:for each="{fruitsOfThisColor}" as="fruit" key="label">
+ *                         <li>{label}: {fruit.name}</li>
+ *                     </f:for>
+ *                 </ul>
+ *             </li>
+ *         </f:groupedFor>
+ *     </ul>
+ *
+ * Output::
+ *
+ *     <ul>
+ *         <li>green fruits
+ *             <ul>
+ *                 <li>0: apple</li>
+ *             </ul>
+ *         </li>
+ *         <li>red fruits
+ *             <ul>
+ *                 <li>1: cherry</li>
+ *             </ul>
+ *             <ul>
+ *                 <li>3: strawberry</li>
+ *             </ul>
+ *         </li>
+ *         <li>yellow fruits
+ *             <ul>
+ *                 <li>2: banana</li>
+ *             </ul>
+ *         </li>
+ *     </ul>
  *
  * @api
  */
 class GroupedForViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -130,7 +139,6 @@ class GroupedForViewHelper extends AbstractViewHelper
         }
         return $output;
     }
-
 
     /**
      * Groups the given array by the specified groupBy property.

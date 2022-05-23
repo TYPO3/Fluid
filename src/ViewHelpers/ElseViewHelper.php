@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -11,21 +12,27 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 /**
- * Else-Branch of a condition. Only has an effect inside of "If". See the If-ViewHelper for documentation.
+ * Else-Branch of a condition. Only has an effect inside of ``f:if``.
+ * See the ``f:if`` ViewHelper for documentation.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Output content if condition is not met">
- * <f:if condition="{someCondition}">
- *   <f:else>
- *     condition was not true
- *   </f:else>
- * </f:if>
- * </code>
- * <output>
- * Everything inside the "else" tag is displayed if the condition evaluates to FALSE.
- * Otherwise nothing is outputted in this example.
- * </output>
+ * Output content if condition is not met
+ * --------------------------------------
+ *
+ * ::
+ *
+ *     <f:if condition="{someCondition}">
+ *         <f:else>
+ *             condition was not true
+ *         </f:else>
+ *     </f:if>
+ *
+ * Output::
+ *
+ *     Everything inside the "else" tag is displayed if the condition evaluates to FALSE.
+ *     Otherwise nothing is outputted in this example.
  *
  * @see TYPO3Fluid\Fluid\ViewHelpers\IfViewHelper
  * @api
@@ -34,13 +41,10 @@ class ElseViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('if', 'boolean', 'Condition expression conforming to Fluid boolean rules');
@@ -61,7 +65,7 @@ class ElseViewHelper extends AbstractViewHelper
      * @param string $initializationPhpCode
      * @param ViewHelperNode $node
      * @param TemplateCompiler $compiler
-     * @return string|NULL
+     * @return string|null
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {

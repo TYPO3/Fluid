@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor;
 
 /*
@@ -56,7 +57,8 @@ class EscapingModifierTemplateProcessor implements TemplateProcessorInterface
                 'There is more than one escaping modifier defined. There can only be one {escapingEnabled=...} per template.',
                 1407331080
             );
-        } elseif ($matches === []) {
+        }
+        if ($matches === []) {
             return $templateSource;
         }
         if (strtolower($matches[0][2]) === 'false' || strtolower($matches[0][2]) === 'off') {

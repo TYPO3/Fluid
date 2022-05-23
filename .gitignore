@@ -3,5 +3,3 @@ build
 composer.lock
 vendor
 examples/cache/*.php
-.numerolog-token-90d266e4c7e3463a4266086282f608c1121c3d95
-/.phpunit.result.cache

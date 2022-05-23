@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
@@ -15,7 +16,7 @@ class UserWithToString extends UserWithoutToString
     /**
      * @return string
      */
-    function __toString()
+    public function __toString()
     {
         return $this->name;
     }

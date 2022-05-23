@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /*
@@ -53,7 +54,6 @@ class StandardVariableProvider implements VariableProviderInterface
      * supported by the VariableProvider itself.
      *
      * @param mixed $source
-     * @return void
      */
     public function setSource($source)
     {
@@ -85,7 +85,6 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
-     * @return void
      * @api
      */
     public function add($identifier, $value)
@@ -137,7 +136,6 @@ class StandardVariableProvider implements VariableProviderInterface
      * Remove a variable from context. Throws exception if variable is not found in context.
      *
      * @param string $identifier The identifier to remove
-     * @return void
      * @api
      */
     public function remove($identifier)
@@ -161,7 +159,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * Checks if this property exists in the VariableContainer.
      *
      * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
+     * @return bool TRUE if $identifier exists, FALSE otherwise
      * @api
      */
     public function exists($identifier)
@@ -184,7 +182,6 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
-     * @return void
      */
     public function offsetSet($identifier, $value)
     {
@@ -195,7 +192,6 @@ class StandardVariableProvider implements VariableProviderInterface
      * Remove a variable from context. Throws exception if variable is not found in context.
      *
      * @param string $identifier The identifier to remove
-     * @return void
      */
     public function offsetUnset($identifier)
     {
@@ -206,7 +202,7 @@ class StandardVariableProvider implements VariableProviderInterface
      * Checks if this property exists in the VariableContainer.
      *
      * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
+     * @return bool TRUE if $identifier exists, FALSE otherwise
      */
     public function offsetExists($identifier)
     {
@@ -287,19 +283,22 @@ class StandardVariableProvider implements VariableProviderInterface
      * @param mixed $subject
      * @param string $propertyName
      * @param string $accessor
-     * @return boolean
+     * @return bool
      */
     protected function canExtractWithAccessor($subject, $propertyName, $accessor)
     {
         $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_ARRAY) {
-            return (is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)));
-        } elseif ($accessor === self::ACCESSOR_GETTER) {
-            return ($class !== false && method_exists($subject, 'get' . ucfirst($propertyName)));
-        } elseif ($accessor === self::ACCESSOR_ASSERTER) {
-            return ($class !== false && $this->isExtractableThroughAsserter($subject, $propertyName));
-        } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
-            return ($class !== false && property_exists($subject, $propertyName));
+            return is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName));
+        }
+        if ($accessor === self::ACCESSOR_GETTER) {
+            return $class !== false && method_exists($subject, 'get' . ucfirst($propertyName));
+        }
+        if ($accessor === self::ACCESSOR_ASSERTER) {
+            return $class !== false && $this->isExtractableThroughAsserter($subject, $propertyName);
+        }
+        if ($accessor === self::ACCESSOR_PUBLICPROPERTY) {
+            return $class !== false && property_exists($subject, $propertyName);
         }
         return false;
     }
@@ -316,12 +315,15 @@ class StandardVariableProvider implements VariableProviderInterface
             || $subject instanceof \ArrayAccess && $subject->offsetExists($propertyName)
         ) {
             return $subject[$propertyName];
-        } elseif (is_object($subject)) {
+        }
+        if (is_object($subject)) {
             if ($accessor === self::ACCESSOR_GETTER) {
                 return call_user_func_array([$subject, 'get' . ucfirst($propertyName)], []);
-            } elseif ($accessor === self::ACCESSOR_ASSERTER) {
+            }
+            if ($accessor === self::ACCESSOR_ASSERTER) {
                 return $this->extractThroughAsserter($subject, $propertyName);
-            } elseif ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
+            }
+            if ($accessor === self::ACCESSOR_PUBLICPROPERTY && property_exists($subject, $propertyName)) {
                 return $subject->$propertyName;
             }
         }
@@ -334,7 +336,7 @@ class StandardVariableProvider implements VariableProviderInterface
      *
      * @param mixed $subject
      * @param string $propertyName
-     * @return string|NULL
+     * @return string|null
      */
     protected function detectAccessor($subject, $propertyName)
     {

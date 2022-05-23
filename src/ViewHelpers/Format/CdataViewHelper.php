@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers\Format;
 
 /*
@@ -16,49 +17,58 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
  * PAY SPECIAL ATTENTION TO SECURITY HERE (especially Cross Site Scripting),
  * as the output is NOT SANITIZED!
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Child nodes">
- * <f:format.cdata>{string}</f:format.cdata>
- * </code>
- * <output>
- * <![CDATA[(Content of {string} without any conversion/escaping)]]>
- * </output>
+ * Child nodes
+ * -----------
  *
- * <code title="Value attribute">
- * <f:format.cdata value="{string}" />
- * </code>
- * <output>
- * <![CDATA[(Content of {string} without any conversion/escaping)]]>
- * </output>
+ * ::
  *
- * <code title="Inline notation">
- * {string -> f:format.cdata()}
- * </code>
- * <output>
- * <![CDATA[(Content of {string} without any conversion/escaping)]]>
- * </output>
+ *     <f:format.cdata>{string}</f:format.cdata>
+ *
+ * Output::
+ *
+ *     <![CDATA[(Content of {string} without any conversion/escaping)]]>
+ *
+ * Value attribute
+ * ---------------
+ *
+ * ::
+ *
+ *     <f:format.cdata value="{string}" />
+ *
+ * Output::
+ *
+ *     <![CDATA[(Content of {string} without any conversion/escaping)]]>
+ *
+ * Inline notation
+ * ---------------
+ *
+ * ::
+ *
+ *     {string -> f:format.cdata()}
+ *
+ * Output::
+ *
+ *     <![CDATA[(Content of {string} without any conversion/escaping)]]>
  *
  * @api
  */
 class CdataViewHelper extends AbstractViewHelper
 {
-
     use CompileWithContentArgumentAndRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('value', 'mixed', 'The value to output');

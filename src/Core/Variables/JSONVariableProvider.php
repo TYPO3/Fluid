@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /*
@@ -16,7 +17,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
 {
 
     /**
-     * @var integer
+     * @var int
      */
     protected $lastLoaded = 0;
 
@@ -27,7 +28,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
      * any CLI/infinite running scripts re-fetch JSON after this
      * time has passed.
      *
-     * @var integer
+     * @var int
      */
     protected $ttl = 15;
 
@@ -38,7 +39,7 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
      *
      * @var string
      */
-    protected $source = null;
+    protected $source;
 
     /**
      * @return mixed
@@ -50,7 +51,6 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
 
     /**
      * @param mixed $source
-     * @return void
      */
     public function setSource($source)
     {
@@ -85,9 +85,6 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
         return parent::getAllIdentifiers();
     }
 
-    /**
-     * @return void
-     */
     protected function load()
     {
         if ($this->source !== null && time() > ($this->lastLoaded + $this->ttl)) {
@@ -103,11 +100,11 @@ class JSONVariableProvider extends StandardVariableProvider implements VariableP
 
     /**
      * @param string $string
-     * @return boolean
+     * @return bool
      */
     protected function isJSON($string)
     {
         $string = trim($string);
-        return ($string{0} === '{' && substr($string, -1) === '}');
+        return $string[0] === '{' && substr($string, -1) === '}';
     }
 }

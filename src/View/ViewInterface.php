@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\View;
 
 /*
@@ -47,9 +48,9 @@ interface ViewInterface
      *
      * @param string $sectionName Name of section to render
      * @param array $variables The variables to use
-     * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+     * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string rendered template for the section
-     * @throws InvalidSectionException
+     * @throws Exception\InvalidSectionException
      */
     public function renderSection($sectionName, array $variables = [], $ignoreUnknown = false);
 
@@ -59,7 +60,7 @@ interface ViewInterface
      * @param string $partialName
      * @param string $sectionName
      * @param array $variables
-     * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+     * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string
      */
     public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false);

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -12,7 +13,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToArray;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class CastingExpressionNodeTest
@@ -30,11 +30,10 @@ class CastingExpressionNodeTest extends UnitTestCase
             ['dummy'],
             ['{test as string}', ['test as string']]
         );
-        $view = new TemplateView();
-        $context = new RenderingContext($view);
+        $context = new RenderingContext();
         $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
         $result = $subject->evaluate($context);
-        $this->assertSame('10', $result);
+        self::assertSame('10', $result);
     }
 
     /**
@@ -42,8 +41,7 @@ class CastingExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateInvalidExpressionThrowsException()
     {
-        $view = new TemplateView();
-        $renderingContext = new RenderingContext($view);
+        $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider());
         $this->setExpectedException(ExpressionException::class);
         $result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
@@ -57,11 +55,10 @@ class CastingExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateExpression($expression, array $variables, $expected)
     {
-        $view = new TemplateView();
-        $renderingContext = new RenderingContext($view);
+        $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

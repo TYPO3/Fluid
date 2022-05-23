@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Format;
 
 /*
@@ -32,10 +33,10 @@ class PrintfViewHelperTest extends ViewHelperBaseTestcase
      */
     public function viewHelperCanUseArrayAsArgument()
     {
-        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%04d-%02d-%02d'));
+        $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn('%04d-%02d-%02d');
         $this->viewHelper->setArguments(['value' => null, 'arguments' => ['year' => 2009, 'month' => 4, 'day' => 5]]);
         $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('2009-04-05', $actualResult);
+        self::assertEquals('2009-04-05', $actualResult);
     }
 
     /**
@@ -43,9 +44,9 @@ class PrintfViewHelperTest extends ViewHelperBaseTestcase
      */
     public function viewHelperCanSwapMultipleArguments()
     {
-        $this->viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('%2$s %1$d %3$s %2$s'));
+        $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn('%2$s %1$d %3$s %2$s');
         $this->viewHelper->setArguments(['value' => null, 'arguments' => [123, 'foo', 'bar']]);
         $actualResult = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('foo 123 bar foo', $actualResult);
+        self::assertEquals('foo 123 bar foo', $actualResult);
     }
 }

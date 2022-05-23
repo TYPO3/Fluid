@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -10,7 +11,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\TernaryExpressionNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class TernaryExpressionNodeTest
@@ -26,7 +26,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
     public function testTernaryExpressionDetection($expression, $expected)
     {
         $result = preg_match_all(TernaryExpressionNode::$detectionExpression, $expression, $matches, PREG_SET_ORDER);
-        $this->assertEquals($expected, count($matches) > 0);
+        self::assertEquals($expected, count($matches) > 0);
     }
 
     /**
@@ -62,11 +62,10 @@ class TernaryExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateExpression($expression, array $variables, $expected)
     {
-        $view = new TemplateView();
-        $renderingContext = new RenderingContext($view);
+        $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

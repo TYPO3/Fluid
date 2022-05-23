@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -22,9 +23,9 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
     {
         $viewHelper = $this->getMock(ThenViewHelper::class, ['renderChildren']);
 
-        $viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+        $viewHelper->expects(self::once())->method('renderChildren')->willReturn('foo');
         $actualResult = $viewHelper->render();
-        $this->assertEquals('foo', $actualResult);
+        self::assertEquals('foo', $actualResult);
     }
 
     /**
@@ -36,6 +37,6 @@ class ThenViewHelperTest extends ViewHelperBaseTestcase
         $init = '';
         $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
         $result = $section->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
-        $this->assertEquals('\'\'', $result);
+        self::assertEquals('\'\'', $result);
     }
 }

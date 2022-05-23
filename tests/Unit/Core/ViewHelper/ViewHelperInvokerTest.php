@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -11,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInvoker;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
-use TYPO3Fluid\Fluid\View\TemplateView;
 
 /**
  * Class ViewHelperInvokerTest
@@ -23,21 +23,20 @@ class ViewHelperInvokerTest extends UnitTestCase
      * @param string $viewHelperClassName
      * @param array $arguments
      * @param mixed $expectedOutput
-     * @param string|NULL $expectedException
+     * @param string|null $expectedException
      * @test
      * @dataProvider getInvocationTestValues
      */
     public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException)
     {
-        $view = new TemplateView();
         $resolver = new ViewHelperResolver();
         $invoker = new ViewHelperInvoker($resolver);
-        $renderingContext = new RenderingContext($view);
+        $renderingContext = new RenderingContext();
         if ($expectedException) {
             $this->setExpectedException($expectedException);
         }
         $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
-        $this->assertEquals($expectedOutput, $result);
+        self::assertEquals($expectedOutput, $result);
     }
 
     /**

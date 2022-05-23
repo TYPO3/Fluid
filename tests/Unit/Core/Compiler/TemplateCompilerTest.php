@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -29,7 +30,7 @@ class TemplateCompilerTest extends UnitTestCase
     public function testConstructorCreatesNodeConverter()
     {
         $instance = new TemplateCompiler();
-        $this->assertAttributeInstanceOf(NodeConverter::class, 'nodeConverter', $instance);
+        self::assertAttributeInstanceOf(NodeConverter::class, 'nodeConverter', $instance);
     }
 
     /**
@@ -39,8 +40,8 @@ class TemplateCompilerTest extends UnitTestCase
     {
         $instance = new TemplateCompiler();
         $instance->enterWarmupMode();
-        $this->assertAttributeSame(TemplateCompiler::MODE_WARMUP, 'mode', $instance);
-        $this->assertTrue($instance->isWarmupMode());
+        self::assertAttributeSame(TemplateCompiler::MODE_WARMUP, 'mode', $instance);
+        self::assertTrue($instance->isWarmupMode());
     }
 
     /**
@@ -51,7 +52,7 @@ class TemplateCompilerTest extends UnitTestCase
         $instance = new TemplateCompiler();
         $renderingContext = new RenderingContextFixture();
         $instance->setRenderingContext($renderingContext);
-        $this->assertAttributeSame($renderingContext, 'renderingContext', $instance);
+        self::assertAttributeSame($renderingContext, 'renderingContext', $instance);
     }
 
     /**
@@ -62,10 +63,11 @@ class TemplateCompilerTest extends UnitTestCase
         $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
         $renderingContext = $this->getMock(RenderingContextFixture::class, ['getCache']);
         $renderingContext->cacheDisabled = true;
-        $renderingContext->expects($this->never())->method('getCache');
+        $renderingContext->expects(self::never())->method('getCache');
         $instance->setRenderingContext($renderingContext);
+        $instance->expects(self::once())->method('sanitizeIdentifier')->willReturn('');
         $result = $instance->has('test');
-        $this->assertFalse($result);
+        self::assertFalse($result);
     }
 
     /**
@@ -74,14 +76,14 @@ class TemplateCompilerTest extends UnitTestCase
     public function testHasAsksCache()
     {
         $cache = $this->getMock(SimpleFileCache::class, ['get']);
-        $cache->expects($this->once())->method('get')->with('test')->willReturn(true);
+        $cache->expects(self::once())->method('get')->with('test')->willReturn(true);
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setCache($cache);
         $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
-        $instance->expects($this->once())->method('sanitizeIdentifier')->willReturnArgument(0);
+        $instance->expects(self::once())->method('sanitizeIdentifier')->willReturnArgument(0);
         $instance->setRenderingContext($renderingContext);
         $result = $instance->has('test');
-        $this->assertTrue($result);
+        self::assertTrue($result);
     }
 
     /**
@@ -99,7 +101,7 @@ class TemplateCompilerTest extends UnitTestCase
         $expected .= chr(10);
         $expected .= 'return \'sometext\';' . chr(10);
         $expected .= '}';
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -119,16 +121,16 @@ class TemplateCompilerTest extends UnitTestCase
             '',
             false
         );
-        $nodeConverter->expects($this->at(0))->method('convertListOfSubNodes')->with($foo)->willReturn([]);
-        $nodeConverter->expects($this->at(1))->method('convertListOfSubNodes')->with($bar)->willReturn([]);
+        $nodeConverter->expects(self::at(0))->method('convertListOfSubNodes')->with($foo)->willReturn([]);
+        $nodeConverter->expects(self::at(1))->method('convertListOfSubNodes')->with($bar)->willReturn([]);
         $instance = $this->getMock(TemplateCompiler::class, ['generateCodeForSection']);
-        $instance->expects($this->at(0))->method('generateCodeForSection')->with($this->anything())->willReturn('FOO');
-        $instance->expects($this->at(1))->method('generateCodeForSection')->with($this->anything())->willReturn('BAR');
+        $instance->expects(self::at(0))->method('generateCodeForSection')->with(self::anything())->willReturn('FOO');
+        $instance->expects(self::at(1))->method('generateCodeForSection')->with(self::anything())->willReturn('BAR');
         $instance->setNodeConverter($nodeConverter);
         $method = new \ReflectionMethod($instance, 'generateSectionCodeFromParsingState');
         $method->setAccessible(true);
         $result = $method->invokeArgs($instance, [$parsingState]);
-        $this->assertEquals('FOOBAR', $result);
+        self::assertEquals('FOOBAR', $result);
     }
 
     /**
@@ -140,7 +142,7 @@ class TemplateCompilerTest extends UnitTestCase
         $renderingContext->cacheDisabled = true;
         $instance = $this->getMock(TemplateCompiler::class, ['generateSectionCodeFromParsingState']);
         $instance->setRenderingContext($renderingContext);
-        $instance->expects($this->never())->method('generateSectionCodeFromParsingState');
+        $instance->expects(self::never())->method('generateSectionCodeFromParsingState');
         $instance->store('foobar', new ParsingState());
     }
 
@@ -160,7 +162,7 @@ class TemplateCompilerTest extends UnitTestCase
     public function testGetNodeConverterReturnsNodeConverterInstance()
     {
         $instance = new TemplateCompiler();
-        $this->assertInstanceOf(NodeConverter::class, $instance->getNodeConverter());
+        self::assertInstanceOf(NodeConverter::class, $instance->getNodeConverter());
     }
 
     /**
@@ -169,7 +171,7 @@ class TemplateCompilerTest extends UnitTestCase
     public function testStoreSavesUncompilableState()
     {
         $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->setMethods(['set'])->getMock();
-        $cacheMock->expects($this->once())->method('set')->with('fakeidentifier', $this->anything());
+        $cacheMock->expects(self::once())->method('set')->with('fakeidentifier', self::anything());
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setCache($cacheMock);
         $state = new ParsingState();
@@ -186,9 +188,9 @@ class TemplateCompilerTest extends UnitTestCase
     {
         $instance = new TemplateCompiler();
         $nodeConverter = $this->getMock(NodeConverter::class, ['variableName'], [$instance]);
-        $nodeConverter->expects($this->once())->method('variableName')->willReturnArgument(0);
+        $nodeConverter->expects(self::once())->method('variableName')->willReturnArgument(0);
         $instance->setNodeConverter($nodeConverter);
-        $this->assertEquals('foobar', $instance->variableName('foobar'));
+        self::assertEquals('foobar', $instance->variableName('foobar'));
     }
 
     /**
@@ -199,6 +201,6 @@ class TemplateCompilerTest extends UnitTestCase
         $context = new RenderingContextFixture();
         $instance = new TemplateCompiler();
         $instance->setRenderingContext($context);
-        $this->assertSame($context, $instance->getRenderingContext());
+        self::assertSame($context, $instance->getRenderingContext());
     }
 }

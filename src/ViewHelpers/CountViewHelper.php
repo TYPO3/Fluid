@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -14,21 +15,30 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderS
 /**
  * This ViewHelper counts elements of the specified array or countable object.
  *
- * = Examples =
+ * Examples
+ * ========
  *
- * <code title="Count array elements">
- * <f:count subject="{0:1, 1:2, 2:3, 3:4}" />
- * </code>
- * <output>
- * 4
- * </output>
+ * Count array elements
+ * --------------------
  *
- * <code title="inline notation">
- * {objects -> f:count()}
- * </code>
- * <output>
- * 10 (depending on the number of items in {objects})
- * </output>
+ * ::
+ *
+ *     <f:count subject="{0:1, 1:2, 2:3, 3:4}" />
+ *
+ * Output::
+ *
+ *     4
+ *
+ * inline notation
+ * ---------------
+ *
+ * ::
+ *
+ *     {objects -> f:count()}
+ *
+ * Output::
+ *
+ *     10 (depending on the number of items in ``{objects}``)
  *
  * @api
  */
@@ -37,18 +47,15 @@ class CountViewHelper extends AbstractViewHelper
     use CompileWithContentArgumentAndRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -59,14 +66,15 @@ class CountViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return integer
+     * @return int
      */
     public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
     {
         $countable = $renderChildrenClosure();
         if ($countable === null) {
             return 0;
-        } elseif (!$countable instanceof \Countable && !is_array($countable)) {
+        }
+        if (!$countable instanceof \Countable && !is_array($countable)) {
             throw new ViewHelper\Exception(
                 sprintf(
                     'Subject given to f:count() is not countable (type: %s)',

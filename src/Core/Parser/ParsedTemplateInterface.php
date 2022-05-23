@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -18,7 +19,6 @@ interface ParsedTemplateInterface
 
     /**
      * @param string $identifier
-     * @return void
      */
     public function setIdentifier($identifier);
 
@@ -57,14 +57,13 @@ interface ParsedTemplateInterface
      * and add those to the ones already defined in the ViewHelperResolver.
      *
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function addCompiledNamespaces(RenderingContextInterface $renderingContext);
 
     /**
      * Returns TRUE if the current template has a template defined via <f:layout name="..." />
      *
-     * @return boolean
+     * @return bool
      */
     public function hasLayout();
 
@@ -72,12 +71,12 @@ interface ParsedTemplateInterface
      * If the template contains constructs which prevent the compiler from compiling the template
      * correctly, isCompilable() will return FALSE.
      *
-     * @return boolean TRUE if the template can be compiled
+     * @return bool TRUE if the template can be compiled
      */
     public function isCompilable();
 
     /**
-     * @return boolean TRUE if the template is already compiled, FALSE otherwise
+     * @return bool TRUE if the template is already compiled, FALSE otherwise
      */
     public function isCompiled();
 }

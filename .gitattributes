@@ -1,0 +1,8 @@
+.gitattributes export-ignore
+.gitignore export-ignore
+.github/ export-ignore
+phpunit.xml.dist export-ignore
+tests/Functional/ export-ignore
+tests/Unit/*/ export-ignore
+tests/Unit/ViewHelpers/ -export-ignore
+tests/Unit/ViewHelpers/* export-ignore

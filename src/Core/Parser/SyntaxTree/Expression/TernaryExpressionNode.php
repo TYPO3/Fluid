@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -51,10 +52,10 @@ class TernaryExpressionNode extends AbstractExpressionNode
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
         $negated = false;
-        list ($check, $then, $else) = $parts;
+        list($check, $then, $else) = $parts;
 
         if ($then === '') {
-            $then = $check{0} === '!' ? $else : $check;
+            $then = $check[0] === '!' ? $else : $check;
         }
 
         $context = static::gatherContext($renderingContext, $expression);
@@ -64,9 +65,8 @@ class TernaryExpressionNode extends AbstractExpressionNode
 
         if ($checkResult) {
             return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
-        } else {
-            return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
         }
+        return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
     }
 
     /**
@@ -122,7 +122,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
     {
         $parts = preg_split('/([\?:])/s', $this->getExpression());
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
-        list ($check, $then, $else) = $parts;
+        list($check, $then, $else) = $parts;
 
         $matchesVariable = $templateCompiler->variableName('array');
         $initializationPhpCode = '// Rendering TernaryExpression node' . chr(10);

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 /*
@@ -6,8 +7,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\CMS\Core\Utility\ExtensionManagementUtility;
-use TYPO3Fluid\CMS\Core\Utility\GeneralUtility;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\View\Exception\InvalidTemplateResourceException;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
@@ -38,7 +37,7 @@ class TemplatePathsTest extends BaseTestCase
         $method = new \ReflectionMethod($instance, 'sanitizePath');
         $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
-        $this->assertEquals($expected, $output);
+        self::assertEquals($expected, $output);
     }
 
     /**
@@ -73,7 +72,7 @@ class TemplatePathsTest extends BaseTestCase
         $method = new \ReflectionMethod($instance, 'sanitizePaths');
         $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
-        $this->assertEquals($expected, $output);
+        self::assertEquals($expected, $output);
     }
 
     /**
@@ -94,10 +93,10 @@ class TemplatePathsTest extends BaseTestCase
     public function setsLayoutPathAndFilename()
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
-        $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
+        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setLayoutPathAndFilename('foobar');
-        $this->assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
-        $this->assertEquals('foobar', $instance->getLayoutPathAndFilename());
+        self::assertAttributeEquals('foobar', 'layoutPathAndFilename', $instance);
+        self::assertEquals('foobar', $instance->getLayoutPathAndFilename());
     }
 
     /**
@@ -106,9 +105,9 @@ class TemplatePathsTest extends BaseTestCase
     public function setsTemplatePathAndFilename()
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
-        $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
+        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setTemplatePathAndFilename('foobar');
-        $this->assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
+        self::assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
     }
 
     /**
@@ -121,9 +120,9 @@ class TemplatePathsTest extends BaseTestCase
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
-        $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
+        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->$setter($value);
-        $this->assertEquals($value, $instance->$getter());
+        self::assertEquals($value, $instance->$getter());
     }
 
     /**
@@ -138,19 +137,13 @@ class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testFillByPackageName()
     {
         $className = $this->getSubjectClassName();
         $instance = new $className('TYPO3Fluid.Fluid');
-        $this->assertNotEmpty($instance->getTemplateRootPaths());
+        self::assertNotEmpty($instance->getTemplateRootPaths());
     }
 
-    /**
-     * @return void
-     */
     public function testFillByConfigurationArray()
     {
         $className = $this->getSubjectClassName();
@@ -160,7 +153,7 @@ class TemplatePathsTest extends BaseTestCase
             TemplatePaths::CONFIG_PARTIALROOTPATHS => ['Resources/Private/Partials/'],
             TemplatePaths::CONFIG_FORMAT => 'xml'
         ]);
-        $this->assertNotEmpty($instance->getTemplateRootPaths());
+        self::assertNotEmpty($instance->getTemplateRootPaths());
     }
 
     /**
@@ -171,7 +164,7 @@ class TemplatePathsTest extends BaseTestCase
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['resolveFilesInFolders']);
         $instance->$pathsMethod(['foo']);
-        $instance->expects($this->once())->method('resolveFilesInFolders')->with($this->anything(), 'format');
+        $instance->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
         $instance->$method('format', 'format');
     }
 
@@ -187,13 +180,10 @@ class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @return void
-     */
     public function testToArray()
     {
         $instance = $this->getMock($this->getSubjectClassName(), ['sanitizePath']);
-        $instance->expects($this->any())->method('sanitizePath')->willReturnArgument(0);
+        $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
         $instance->setTemplateRootPaths(['1']);
         $instance->setLayoutRootPaths(['2']);
         $instance->setPartialRootPaths(['3']);
@@ -203,7 +193,7 @@ class TemplatePathsTest extends BaseTestCase
             TemplatePaths::CONFIG_LAYOUTROOTPATHS => [2],
             TemplatePaths::CONFIG_PARTIALROOTPATHS => [3]
         ];
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -227,7 +217,7 @@ class TemplatePathsTest extends BaseTestCase
         ];
         sort($result);
         sort($expected);
-        $this->assertEquals(
+        self::assertEquals(
             $expected,
             $result
         );
@@ -254,7 +244,7 @@ class TemplatePathsTest extends BaseTestCase
         $instance = new $className();
         $stream = fopen($fixture, 'r');
         $instance->setTemplateSource($stream);
-        $this->assertEquals(stream_get_contents($stream), $instance->getTemplateSource());
+        self::assertEquals(stream_get_contents($stream), $instance->getTemplateSource());
         fclose($stream);
     }
 
@@ -279,6 +269,36 @@ class TemplatePathsTest extends BaseTestCase
         $className = $this->getSubjectClassName();
         $instance = new $className();
         $instance->setTemplateSource('foobar');
-        $this->assertEquals('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+        self::assertEquals('source_8843d7f92416211de9ebb963ff4ce28125932878_DummyController_dummyAction_html', $instance->getTemplateIdentifier('DummyController', 'dummyAction'));
+    }
+
+    /**
+     * @test
+     */
+    public function testActionTemplateWithControllerAndAction(): void
+    {
+        $className = $this->getSubjectClassName();
+        $subject = new $className();
+        $baseTemplatePath = __DIR__ . '/Fixtures';
+        $subject->setTemplateRootPaths([$baseTemplatePath]);
+        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('ARandomController', 'TestTemplate');
+        self::assertEquals($baseTemplatePath . '/ARandomController/TestTemplate.html', $foundFixture);
+        $identifier = $subject->getTemplateIdentifier('ARandomController', 'TestTemplate');
+        self::assertStringStartsWith('ARandomController_action_TestTemplate_', $identifier);
+    }
+
+    /**
+     * @test
+     */
+    public function testActionTemplateWithEmptyController(): void
+    {
+        $className = $this->getSubjectClassName();
+        $subject = new $className();
+        $baseTemplatePath = __DIR__ . '/Fixtures';
+        $subject->setTemplateRootPaths([$baseTemplatePath]);
+        $foundFixture = $subject->resolveTemplateFileForControllerAndActionAndFormat('', 'UnparsedTemplateFixture');
+        self::assertEquals($baseTemplatePath . '/UnparsedTemplateFixture.html', $foundFixture);
+        $identifier = $subject->getTemplateIdentifier('', 'UnparsedTemplateFixture');
+        self::assertStringStartsWith('action_UnparsedTemplateFixture_', $identifier);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -22,7 +23,7 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArguments()
     {
         $instance = $this->getMockBuilder(InlineViewHelper::class)->setMethods(['registerArgument'])->getMock();
-        $instance->expects($this->at(0))->method('registerArgument')->with('code', 'string', $this->anything());
+        $instance->expects(self::at(0))->method('registerArgument')->with('code', 'string', self::anything());
         $instance->initializeArguments();
     }
 
@@ -34,14 +35,14 @@ class InlineViewHelperTest extends ViewHelperBaseTestcase
         $contextFixture = new RenderingContextFixture();
 
         $parsedTemplateMock = $this->getMockBuilder(ParsedTemplateInterface::class)->getMock();
-        $parsedTemplateMock->expects($this->once())->method('render')->with($contextFixture)->willReturn('bar');
+        $parsedTemplateMock->expects(self::once())->method('render')->with($contextFixture)->willReturn('bar');
 
         $parserMock = $this->getMockBuilder(TemplateParser::class)->setMethods(['parse'])->getMock();
-        $parserMock->expects($this->once())->method('parse')->with('foo')->willReturn($parsedTemplateMock);
+        $parserMock->expects(self::once())->method('parse')->with('foo')->willReturn($parsedTemplateMock);
 
         $contextFixture->setTemplateParser($parserMock);
 
-        $result = InlineViewHelper::renderStatic([], function() { return 'foo'; }, $contextFixture);
-        $this->assertEquals('bar', $result);
+        $result = InlineViewHelper::renderStatic([], function () { return 'foo'; }, $contextFixture);
+        self::assertEquals('bar', $result);
     }
 }

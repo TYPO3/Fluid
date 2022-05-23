@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 /*
@@ -34,7 +35,7 @@ class UserWithoutToString
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isNamed()
     {
@@ -42,7 +43,7 @@ class UserWithoutToString
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasHasAccessor()
     {
@@ -50,7 +51,7 @@ class UserWithoutToString
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isIsAccessor()
     {

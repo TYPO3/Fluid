@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -43,12 +44,12 @@ class CastingExpressionNode extends AbstractExpressionNode
      * @param RenderingContextInterface $renderingContext
      * @param string $expression
      * @param array $matches
-     * @return integer|float
+     * @return int|float
      */
     public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression, array $matches)
     {
         $expression = trim($expression, '{}');
-        list ($variable, $type) = explode(' as ', $expression);
+        list($variable, $type) = explode(' as ', $expression);
         $variable = static::getTemplateVariableOrValueItself($variable, $renderingContext);
         if (!in_array($type, self::$validTypes)) {
             $type = static::getTemplateVariableOrValueItself($type, $renderingContext);
@@ -74,17 +75,17 @@ class CastingExpressionNode extends AbstractExpressionNode
     {
         $value = null;
         if ($type === 'integer') {
-            $value = (integer) $variable;
+            $value = (integer)$variable;
         } elseif ($type === 'boolean') {
-            $value = (boolean) $variable;
+            $value = (boolean)$variable;
         } elseif ($type === 'string') {
-            $value = (string) $variable;
+            $value = (string)$variable;
         } elseif ($type === 'float') {
-            $value = (float) $variable;
+            $value = (float)$variable;
         } elseif ($type === 'DateTime') {
             $value = self::convertToDateTime($variable);
         } elseif ($type === 'array') {
-            $value = (array) self::convertToArray($variable);
+            $value = (array)self::convertToArray($variable);
         }
         return $value;
     }
@@ -98,7 +99,7 @@ class CastingExpressionNode extends AbstractExpressionNode
         if (preg_match_all('/[a-z]+/i', $variable)) {
             return new \DateTime($variable);
         }
-        return \DateTime::createFromFormat('U', (integer) $variable);
+        return \DateTime::createFromFormat('U', (integer)$variable);
     }
 
     /**
@@ -109,20 +110,23 @@ class CastingExpressionNode extends AbstractExpressionNode
     {
         if (is_array($variable)) {
             return $variable;
-        } elseif (is_string($variable) && strpos($variable, ',')) {
+        }
+        if (is_string($variable) && strpos($variable, ',')) {
             return array_map('trim', explode(',', $variable));
-        } elseif (is_object($variable) && $variable instanceof \Iterator) {
+        }
+        if (is_object($variable) && $variable instanceof \Iterator) {
             $array = [];
             foreach ($variable as $key => $value) {
                 $array[$key] = $value;
             }
             return $array;
-        } elseif (is_object($variable) && method_exists($variable, 'toArray')) {
-            return $variable->toArray();
-        } elseif (is_bool($variable)) {
-            return [];
-        } else {
-            return [$variable];
         }
+        if (is_object($variable) && method_exists($variable, 'toArray')) {
+            return $variable->toArray();
+        }
+        if (is_bool($variable)) {
+            return [];
+        }
+        return [$variable];
     }
 }

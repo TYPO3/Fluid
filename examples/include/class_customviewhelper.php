@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\FluidExample\ViewHelpers;
 
 /*
@@ -25,18 +26,15 @@ class CustomViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('page', 'string', 'An arbitrary page identifier', true);

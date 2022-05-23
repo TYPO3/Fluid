@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
@@ -28,7 +29,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
-        $this->assertEquals($expected, $chainedProvider->get($path));
+        self::assertEquals($expected, $chainedProvider->get($path));
     }
 
     /**
@@ -42,7 +43,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
-        $this->assertEquals($expected, $chainedProvider->getByPath($path));
+        self::assertEquals($expected, $chainedProvider->getByPath($path));
     }
 
     /**
@@ -73,7 +74,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
-        $this->assertEquals($expected, $chainedProvider->getAll());
+        self::assertEquals($expected, $chainedProvider->getAll());
     }
 
     /**
@@ -102,7 +103,7 @@ class ChainedVariableProviderTest extends UnitTestCase
     {
         $chainedProvider = new ChainedVariableProvider($chain);
         $chainedProvider->setSource($local);
-        $this->assertEquals($expected, $chainedProvider->getAllIdentifiers());
+        self::assertEquals($expected, $chainedProvider->getAllIdentifiers());
     }
 
     /**
@@ -129,6 +130,6 @@ class ChainedVariableProviderTest extends UnitTestCase
         $chain = [new StandardVariableProvider(), new StandardVariableProvider()];
         $chainedProvider = new ChainedVariableProvider($chain);
         $copy = $chainedProvider->getScopeCopy([]);
-        $this->assertAttributeSame($chain, 'variableProviders', $copy);
+        self::assertAttributeSame($chain, 'variableProviders', $copy);
     }
 }
