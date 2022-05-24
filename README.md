@@ -21,7 +21,7 @@ example - and you can execute the examples by running them through your HTTPD or
 
 > Tip: you can execute all examples in the same run by calling
 >
-> `find examples/ -depth 1 -name *.php -exec php {} \;`
+> `find examples/ -maxdepth 1 -name \*.php -exec php {} \;`
 
 Usage Documentation
 -------------------
