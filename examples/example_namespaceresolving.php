@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: ViewHelper resolving by namespace
  *
  * This example shows how to use a collection of
@@ -9,13 +14,12 @@
  * namespace entry.
  */
 
-require __DIR__ . '/include/view_init.php';
-require_once __DIR__ . '/include/class_customviewhelper.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
 
-// We alias our only ViewHelper so we can access it using multiple names.
-if (!class_exists('TYPO3Fluid\\FluidExample\\ViewHelpers\\Nested\\CustomViewHelper')) {
-    class_alias('TYPO3Fluid\\FluidExample\\ViewHelpers\\CustomViewHelper', 'TYPO3Fluid\\FluidExample\\ViewHelpers\\Nested\\CustomViewHelper');
-}
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
@@ -24,5 +28,4 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

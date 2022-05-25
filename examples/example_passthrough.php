@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Parsing modifier
  *
  * This example shows you how to use the "parsing off"
@@ -11,14 +16,19 @@
  * and passing through) using `f:render`.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
+$paths = $view->getTemplatePaths();
 $paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Passthrough.html');
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

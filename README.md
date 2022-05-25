@@ -15,13 +15,17 @@ Installation
 Usage Examples
 --------------
 
-Small usage examples have been included in the [examples/](examples/) folder. The examples are PHP scripts which render the
-templates and their atomic partials and layouts from the folders. In the PHP files you can find the most basic implementation
-example - and you can execute the examples by running them through your HTTPD or calling `php examples/example_variables.php` etc.
+The library source comes with a set of example scripts to study and play around with.
+They are PHP entry scripts which render templates, their partials and layouts.
 
-> Tip: you can execute all examples in the same run by calling
->
-> `find examples/ -maxdepth 1 -name \*.php -exec php {} \;`
+```bash
+$ git clone git@github.com:TYPO3/Fluid.git
+$ composer update
+# Run a single example file:
+$ php examples/example_format.php
+# Run all example files:
+$ find examples/ -maxdepth 1 -name \*.php -exec php {} \;
+```
 
 Usage Documentation
 -------------------

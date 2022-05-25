@@ -1,16 +1,16 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Example;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
+namespace TYPO3Fluid\FluidExamples;
+
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
-use TYPO3Fluid\FluidExample\ViewHelpers\CustomViewHelper;
+use TYPO3Fluid\FluidExamples\ViewHelper\CustomViewHelper;
 
 /**
  * Class MyCustomViewHelperResolver
@@ -21,7 +21,6 @@ use TYPO3Fluid\FluidExample\ViewHelpers\CustomViewHelper;
  */
 class CustomViewHelperResolver extends ViewHelperResolver
 {
-
     /**
      * Returns the built-in set of ViewHelper classes with
      * one addition, `f:myLink` which is redirected to anoter
@@ -34,7 +33,7 @@ class CustomViewHelperResolver extends ViewHelperResolver
     public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
     {
         if ($namespaceIdentifier === 'f' && $methodIdentifier === 'myLink') {
-            return 'TYPO3Fluid\\FluidExample\\ViewHelpers\\CustomViewHelper';
+            return CustomViewHelper::class;
         }
         return parent::resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier);
     }
