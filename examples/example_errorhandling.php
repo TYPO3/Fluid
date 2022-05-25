@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Error Handling
  *
  * Shows an example of a custom error handling class which
@@ -8,12 +13,18 @@
  * error messages.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler;
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Switch the error handler to the "TolerantErrorHandler" which basically turns
 // errors which would normally break the rendering and throw an exception, into
 // plain string errors which inform of the problem as inline text in the template.
-$view->getRenderingContext()->setErrorHandler(new \TYPO3Fluid\Fluid\Core\ErrorHandler\TolerantErrorHandler());
+$view->getRenderingContext()->setErrorHandler(new TolerantErrorHandler());
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
@@ -24,5 +35,4 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 // name because an action is irrelevant when rendering a file directly.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

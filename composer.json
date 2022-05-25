@@ -1,30 +1,34 @@
 {
-	"name": "typo3fluid/fluid",
-	"description": "The TYPO3 Fluid template rendering engine",
-	"license": ["LGPL-3.0-or-later"],
-	"require": {
-		"php": "^7.2 || ^8.0"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "^8.5.26 || ^9.5",
-		"friendsofphp/php-cs-fixer": "^3.4",
-		"phpstan/phpstan": "^1.7",
-		"phpstan/phpstan-phpunit": "^1.1"
-	},
-	"suggest": {
-		"ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case"
-	},
-	"autoload": {
-		"psr-4": {
-			"TYPO3Fluid\\Fluid\\": "src/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"TYPO3Fluid\\Fluid\\Tests\\": "tests/"
-		}
-	},
-	"bin": [
-		"bin/fluid"
-	]
+    "name": "typo3fluid/fluid",
+    "description": "The TYPO3 Fluid template rendering engine",
+    "license": ["LGPL-3.0-or-later"],
+    "require": {
+        "php": "^7.2 || ^8.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.4",
+        "phpstan/phpstan": "^1.7",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpunit/phpunit": "^8.5.26 || ^9.5"
+    },
+    "suggest": {
+        "ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case"
+    },
+    "autoload": {
+        "psr-4": {
+            "TYPO3Fluid\\Fluid\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TYPO3Fluid\\FluidExamples\\": "examples/src/",
+            "TYPO3Fluid\\Fluid\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/fluid"
+    ]
 }

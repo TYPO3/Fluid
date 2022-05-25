@@ -1,14 +1,24 @@
 <?php
 
 /*
- * EXAMPLE: Usage of conditions
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
+ * EXAMPLE: Using conditions
  *
  * This example shows you how to use conditions
  * in the Fluid template language, how they behave
  * and which syntax they support.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning View variables: we assign variables that will be used by the
 // expressions we build in this example. Refer to the names of these
@@ -30,10 +40,10 @@ $view->assign('asArray', [
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
+$paths = $view->getTemplatePaths();
 $paths->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Conditions.html');
 
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

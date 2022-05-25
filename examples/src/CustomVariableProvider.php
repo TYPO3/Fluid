@@ -1,11 +1,11 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Example;
-
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\FluidExamples;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
@@ -19,7 +19,6 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
  */
 class CustomVariableProvider extends StandardVariableProvider implements VariableProviderInterface
 {
-
     /**
      * @var int
      */

@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Usage of syntax structures
  *
  * This example shows you how to use the structural
@@ -8,10 +13,16 @@
  * in various forms, switches, sections, etc.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
+$paths = $view->getTemplatePaths();
 $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Private/Singles/Structures.html');
 
 $view->assign('dynamicSection', 'Dynamic');
@@ -30,5 +41,4 @@ $view->assign('group', [
 // Rendering the View: plain old rendering of single file, no bells and whistles.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);
