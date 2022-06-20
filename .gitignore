@@ -3,3 +3,4 @@ build
 composer.lock
 vendor
 examples/cache/*.php
+/Documentation-GENERATED-temp/

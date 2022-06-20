@@ -31,6 +31,8 @@ Fluid is a PHP template engine and is the de facto standard for any HTML-based
 output in the TYPO3 CMS. However, it is not dependent on TYPO3 and can be used
 in any PHP project.
 
+For a more detailed guide to TYPO3 content elements based on Fluid, see :doc:`ext_fsc:Index`.
+
 ----
 
 **Table of Contents:**
@@ -39,13 +41,9 @@ in any PHP project.
    :maxdepth: 2
    :titlesonly:
 
-   Usage/Structure
-   Usage/Syntax
-   Usage/ViewHelpers
-   Development/Implementation
-   Development/CreatingViewHelpers
-   Development/Expressions
-   Development/Decisions
+   Installation/Index
+   Usage/Index
+   Development/Index
 
 .. Meta Menu
 

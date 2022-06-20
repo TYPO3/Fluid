@@ -1,5 +1,8 @@
+.. include:: /Includes.rst.txt
+
+==================
 Implementing Fluid
-------------------
+==================
 
 `TYPO3.Fluid` provides a standard implementation which works great on simple MVC frameworks and as standalone rendering engine.
 However, the standard implementation may lack certain features needed by the product into which you are integrating `TYPO3.Fluid`.
@@ -9,7 +12,7 @@ instantiation, argument mapping and rendering of ViewHelpers to special classes 
 the user. These special classes and their use cases are:
 
 TemplateView
-------------
+============
 
 A fairly standard View implementation. The default object expects `TemplatePaths` as constructor argument and has a handful of
 utility methods like `$view->assign('variablename', 'value');`. Custom View types can be implemented by simply subclassing the
@@ -19,10 +22,12 @@ Creating a custom View allows you to change just a few aspects, mainly about com
 the View requires, if it needs a custom `ViewHelperResolver`, if it must have some default variables, if it should have a default
 cache, etc.
 
-*Note: the special variable `layoutName` is reserved and can be assigned to a template to set its Layout instead of using `<f:layout name="LayoutName" />`.*
+.. note::
+
+   The special variable `layoutName` is reserved and can be assigned to a template to set its Layout instead of using `<f:layout name="LayoutName" />`.
 
 TemplatePaths
--------------
+=============
 
 In the default `TemplatePaths` object included with `TYPO3.Fluid` we provide a set of conventions for resolving the template files
 that go into rendering a Fluid template - the templates themselves, plus partials and layouts.
@@ -45,7 +50,7 @@ And you should replace the `TemplatePaths` with your own subclass if:
 Whether you use your own class or the default, the `TemplatePaths` instance *must be provided as first argument for the View*.
 
 RenderingContext
-----------------
+================
 
 Because `TYPO3.Fluid` was created in an MVC context it supports MVC behaviors, including setting a "context" for your rendering
 process - to associate the rendering with a controller and an action. The default `RenderingContext` provided by `TYPO3.Fluid` has
@@ -74,7 +79,7 @@ Whether you use your own class or the default, the `RenderingContext` instance *
 If you do not pass a `RenderingContext`, the default one will automatically be used.
 
 FluidCache
-----------
+==========
 
 The caching of Fluid templates happens by compiling the templates to PHP files which execute much faster than a parsed template
 ever could. These compiled templates can only be stored if a `FluidCacheInterface`-implementing object is provided. `TYPO3.Fluid`
@@ -86,7 +91,7 @@ Whether you use your own cache class or the default, the `FluidCache` *must be p
 *must be assigned using `$view->setCache($cacheInstance)` before calling `$view->render()`*.
 
 TemplateProcessor
------------------
+=================
 
 While custom `TemplatePaths` also allows sources of template files to be modified before they are given to the TemplateParser,
 a custom `TemplatePaths` implementation is sometimes overkill - and has the drawback of completely overruling the reading of
@@ -96,13 +101,13 @@ In order to allow a more readily accessible and flexible way of pre-processing t
 parsing process, a `TemplateProcessorInterface` is provided. Implementing this interface and the methods it designates allows your
 class to be passed to the `TemplateView` and be triggered every time a template source is parsed, right before parsing starts:
 
-```php
-$myTemplateProcessor = new MyTemplateProcessor();
-$myTemplateProcessor->setDoMyMagicThing(TRUE);
-$templateView->setTemplateProcessors(array(
-    $myTemplateProcessor
-));
-```
+.. code-block:: php
+
+   $myTemplateProcessor = new MyTemplateProcessor();
+   $myTemplateProcessor->setDoMyMagicThing(TRUE);
+   $templateView->setTemplateProcessors(array(
+       $myTemplateProcessor
+   ));
 
 The registration method requires an array - this is to let you define multiple processors without needing to wrap them in a single
 class as well as reuse validation/manipulation across frameworks and only replace the parts that need to be replaced.
@@ -125,7 +130,7 @@ implementation this TemplateProcessor pattern can still be used to manipulate/va
 providing a nice way to decouple paths resolving from template source processing.
 
 ViewHelperInvoker
------------------
+=================
 
 The `ViewHelperInvoker` is a class dedicated to validating current arguments of and if valid, calling the ViewHelper's render
 method. The default object supports only the arguments added via `initializeArguments` and `(register|override)Argument` on
@@ -138,13 +143,17 @@ You should replace the `ViewHelperInvoker` if:
 3. You wish to change the way ViewHelper arguments are validated, for example changing the Exceptions that are thrown.
 4. You wish to perform processing on the output of ViewHelpers, for example to remove XSS attempts according to your own rules.
 
-> Note: ViewHelper instance creation and argument retrieval is handled by the ViewHelperResolver.
+.. note::
+
+   ViewHelper instance creation and argument retrieval is handled by the ViewHelperResolver.
 
 If you wish to use a custom `ViewHelperInvoker` you **must** do so via a custom `ViewHelperResolver`. You are given the class
 name of the ViewHelper to resolve a `ViewHelperInvoker` - which means you can also use different invokers for different classes.
 
+.. _implementation-view-helper-resolver:
+
 ViewHelperResolver
-------------------
+==================
 
 In `TYPO3.Fluid` most of your options for extending the language - for example, adding new ways to format strings, to make special
 condition types, custom links and such - are connected to ViewHelpers. These are the special classes that are called using for
@@ -177,7 +186,7 @@ The default `ViewHelperResolver` can be replaced in one way only: calling `$view
 the TemplateView. However, a custom View class can of course replace this and other aspects of the View such as `TemplatePaths`.
 
 ExpressionNodes
----------------
+===============
 
 The `ExpressionNode` concept is the most profound way you can manipulate the Fluid language itself, adding to it new syntax
 options that can be used inside the shorthand `{...}` syntax. Normally you are confined to using ViewHelpers when you want such

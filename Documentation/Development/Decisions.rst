@@ -1,17 +1,20 @@
+.. include:: /Includes.rst.txt
+
+======================================
 Decoupling decisions and compatibility
 ======================================
 
 In order to decouple this package from `TYPO3.Flow` a few necessary but implication-filled decisions had to be made.
 
 No more dependency injection
-----------------------------
+============================
 
 It is simply gone and will not be implemented again in any shape or form. The DI concept from `TYPO3.Flow` does not apply on a
 wider scale and it is every bit as possible to achieve the same results through the constructor methods. While DI is a nice
 concept for usability, it is better to sacrifice it for more universal class support.
 
 No more widget support
-----------------------
+======================
 
 It is also gone and will not be implemented again. However: because of the nature of Fluid and ViewHelpers, **recreating the
 implementation that behaves like Widgets but does so in the context of the framework in which it gets used** is the correct way
@@ -20,7 +23,7 @@ to achieve this behavior.
 As an added benefit, all translated labels and a **lot** of functional tests and fixtures can and have been removed.
 
 ViewHelpers can't use render method arguments
----------------------------------------------
+=============================================
 
 Although still technically feasible to implement, a decision was made to sacrifice the support for `render()` method arguments in
 ViewHelpers (as opposed to using `registerArgument` inside `initializeArguments`). The following reasons are given:
@@ -34,7 +37,7 @@ ViewHelpers (as opposed to using `registerArgument` inside `initializeArguments`
 Overriding these capabilites is possible and implies a custom `ViewHelperInvoker` returned from a custom `ViewHelperResolver`.
 
 The View consumes TemplatePaths
--------------------------------
+===============================
 
 Rather than allow the View class to be aware of the Request via the ControllerContext, both the Request and ControllerContext
 concepts have been completely removed. A new strategy has taken the place of these: the TemplatePaths.
@@ -63,18 +66,18 @@ To use such expressions make sure you convert the paths *before* you pass them t
 TemplatePaths or before you pass the paths to the built-in TemplatePaths object.
 
 Deprecated code has been evicted
---------------------------------
+================================
 
 This includes all and every support for the legacy path name conventions - only arrays of paths are now accepted except when
 specifying the full template- or layout path and filename on the View.
 
 Note about injecting functionality
-----------------------------------
+==================================
 
 It is possible to restore almost all of the removed features by creating custom implementations of the following classes:
 
-* https://github.com/TYPO3Fluid/Fluid/blob/master/src/View/TemplatePaths.php to change how template files are resolved.
-* https://github.com/TYPO3Fluid/Fluid/blob/master/src/Core/ViewHelper/ViewHelperResolver.php to change how each
+* https://github.com/TYPO3Fluid/Fluid/blob/main/src/View/TemplatePaths.php to change how template files are resolved.
+* https://github.com/TYPO3Fluid/Fluid/blob/main/src/Core/ViewHelper/ViewHelperResolver.php to change how each
   ViewHelper is resolved, how its arguments are retrieved, which namespaces are available and expected class names of ViewHelpers.
 
 When combined in a package that implements `TYPO3.Fluid` in a framework, these two classes together make it possible to change
