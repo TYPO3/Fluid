@@ -4,15 +4,19 @@
 Creating ExpressionNodes
 ========================
 
-To understand what an ExpressionNode is and which cases can be solved by implementing custom ones, first read the
-:doc:`chapter about implementing Fluid </Development/Implementation>`. Once you grasp what an ExpressionNode is and how it works, a very
-brief example is all you need.
+To understand what an ExpressionNode is and which cases can be solved by
+implementing custom ones, first read the
+:doc:`chapter about implementing Fluid </Development/Implementation>`. Once you
+grasp what an ExpressionNode is and how it works, a very brief example is all
+you need.
 
-First: an ExpressionNode is always one PHP class. Where you place it is completely up to you - but to have the class actually be
-detected and used by Fluid, *the class name must be returned from a custom ViewHelperResolver*. This concept is also explained in
-the implementation chapter.
+First: an ExpressionNode is always one PHP class. Where you place it is
+completely up to you - but to have the class actually be detected and used by
+Fluid, *the class name must be returned from a custom ViewHelperResolver*.
+This concept is also explained in the implementation chapter.
 
-In Fluid's default ViewHelperResolver, the following code is responsible for returning expression node class names:
+In Fluid's default ViewHelperResolver, the following code is responsible for
+returning expression node class names:
 
 .. code-block:: php
 
@@ -36,19 +40,25 @@ In Fluid's default ViewHelperResolver, the following code is responsible for ret
        return $this->expressionNodeTypes;
    }
 
-You may or may not want the listed expression nodes included, but if you change the available expression types you should of
-course document this difference about your implementation.
+You may or may not want the listed expression nodes included, but if you change
+the available expression types you should of course document this difference
+about your implementation.
 
-The following are fairly normal ways of replacing or extending this array of class names:
+The following are fairly normal ways of replacing or extending this array of
+class names:
 
-* Override the property `$expressionNodeTypes` and define your own array
-* Override the `getExpressionNodeTypes` method and return a complete array
-* Override the `getExpressionNodeTypes` method and modify/append the array from `parent::getExpressionNodeTypes`
+*  Override the property `$expressionNodeTypes` and define your own array
+*  Override the `getExpressionNodeTypes` method and return a complete array
+*  Override the `getExpressionNodeTypes` method and modify/append the array from
+   `parent::getExpressionNodeTypes`
 
-Once you are ready to create your ExpressionNode class, all you need is a very simple one. The following class is the ternary
-ExpressionNode from Fluid itself which detects the `{a ? b : c}` syntax and evaluates `a` as boolean and if true, renders `b` else
-renders `c`. To get this behavior, we need a (relatively simple) regular expression and one method to evaluate the expression
-while being aware of the rendering context (which stores all variables, controller name, action name etc).
+Once you are ready to create your ExpressionNode class, all you need is a very
+simple one. The following class is the ternary ExpressionNode from Fluid itself
+which detects the `{a ? b : c}` syntax and evaluates `a` as boolean and if true,
+renders `b` else renders `c`. To get this behavior, we need a (relatively
+simple) regular expression and one method to evaluate the expression while being
+aware of the rendering context (which stores all variables, controller name,
+action name etc).
 
 .. code-block:: php
 
@@ -104,14 +114,22 @@ while being aware of the rendering context (which stores all variables, controll
 
 Taking from this example class the following are the rules you must observe:
 
-1. Your ExpressionNode class name must be returned from your custom ViewHelperResolver
-2. You must either subclass the `AbstractExpressionNode` class or implement the `ExpressionNodeInterface` (subclassing the right
-   class will automatically implement the right interface).
-3. You must provide the class with an exact property called `public static $detectionExpression` which contains a string that is
-   a perl regular expression which will result in at least one match when run against expressions you type in Fluid. It is
-   **vital** that the property be both static and public and have the right name - it is accessed without instantiating the class.
-4. The class must have a `public static function evaluateExpression` taking exactly the arguments above - nothing more, nothing
-   less. The method must be able to work in a static context (it is called this way once templates have been compiled).
-5. The `evaluateExpression` method may return any value type you desire, but like ViewHelpers, returning a non-string-compatible
-   value implies that you should be careful about how you then use the expression; attempting to render a non-string-compatible
-   value as a string may cause PHP warnings.
+1. Your ExpressionNode class name must be returned from your custom
+   ViewHelperResolver.
+2. You must either subclass the `AbstractExpressionNode` class or implement the
+   `ExpressionNodeInterface` (subclassing the right class will automatically
+   implement the right interface).
+3. You must provide the class with an exact property called
+   `public static $detectionExpression` which contains a string that is a perl
+   regular expression which will result in at least one match when run against
+   expressions you type in Fluid. It is **vital** that the property be both
+   static and public and have the right name - it is accessed without
+   instantiating the class.
+4. The class must have a `public static function evaluateExpression` taking
+   exactly the arguments above - nothing more, nothing less. The method must be
+   able to work in a static context (it is called this way once templates have
+   been compiled).
+5. The `evaluateExpression` method may return any value type you desire, but
+   like ViewHelpers, returning a non-string-compatible value implies that you
+   should be careful about how you then use the expression; attempting to render
+   a non-string-compatible value as a string may cause PHP warnings.
