@@ -1,5 +1,6 @@
 # EditorConfig is awesome: https://EditorConfig.org
 
+# top-most EditorConfig file
 root = true
 
 [*]
@@ -10,6 +11,12 @@ indent_size = 4
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+# ReST-Files
+[{*.rst,*.rst.txt}]
+indent_size = 3
+max_line_length = 80
+
+# YAML-Files
 [*.{yaml,yml}]
 indent_size = 2
 
