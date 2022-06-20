@@ -1,6 +1,12 @@
 {
     "name": "typo3fluid/fluid",
     "description": "The TYPO3 Fluid template rendering engine",
+    "homepage": "https://packagist.org/packages/typo3fluid/fluid",
+    "support": {
+        "docs": "https://docs.typo3.org/other/typo3fluid/fluid/main/en-us/",
+        "issues": "https://github.com/TYPO3/Fluid/issues",
+        "source": "https://github.com/TYPO3/Fluid"
+    },
     "license": ["LGPL-3.0-or-later"],
     "require": {
         "php": "^7.2 || ^8.0"
