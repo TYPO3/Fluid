@@ -10,8 +10,8 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
- * Type Casting Node - allows the shorthand version
- * of a condition to be written as `{var ? thenvar : elsevar}`
+ * Type Casting Expression
+ * Allows casting variables to specific types, for example `{myVariable as boolean}`
  */
 class CastingExpressionNode extends AbstractExpressionNode
 {
