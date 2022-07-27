@@ -4,6 +4,11 @@
 Decoupling decisions and compatibility
 ======================================
 
+This is a historical elaboration on some details when this project has been
+decoupled form `TYPO3.Flow` and made a standalone library. Isn't of too much
+help nowadays anymore, but can be helpful for some insight on why things
+materialized as is.
+
 In order to decouple this package from `TYPO3.Flow` a few necessary but
 implication-filled decisions had to be made.
 
@@ -100,11 +105,11 @@ Note about injecting functionality
 It is possible to restore almost all of the removed features by creating custom
 implementations of the following classes:
 
-*  https://github.com/TYPO3Fluid/Fluid/blob/main/src/View/TemplatePaths.php to
-   change how template files are resolved.
-*  https://github.com/TYPO3Fluid/Fluid/blob/main/src/Core/ViewHelper/ViewHelperResolver.php
-   to change how each ViewHelper is resolved, how its arguments are retrieved,
-   which namespaces are available and expected class names of ViewHelpers.
+* https://github.com/TYPO3Fluid/Fluid/blob/main/src/View/TemplatePaths.php to
+  change how template files are resolved.
+* https://github.com/TYPO3Fluid/Fluid/blob/main/src/Core/ViewHelper/ViewHelperResolver.php
+  to change how each ViewHelper is resolved, how its arguments are retrieved,
+  which namespaces are available and expected class names of ViewHelpers.
 
 When combined in a package that implements `TYPO3.Fluid` in a framework, these
 two classes together make it possible to change all the behaviors that were

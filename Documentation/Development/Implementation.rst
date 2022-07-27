@@ -30,8 +30,8 @@ it should have a default cache, etc.
 
 .. note::
 
-   The special variable `layoutName` is reserved and can be assigned to a
-   template to set its Layout instead of using `<f:layout name="LayoutName" />`.
+    The special variable `layoutName` is reserved and can be assigned to a
+    template to set its Layout instead of using `<f:layout name="LayoutName" />`.
 
 TemplatePaths
 =============
@@ -138,11 +138,11 @@ starts:
 
 .. code-block:: php
 
-   $myTemplateProcessor = new MyTemplateProcessor();
-   $myTemplateProcessor->setDoMyMagicThing(TRUE);
-   $templateView->setTemplateProcessors(array(
-       $myTemplateProcessor
-   ));
+    $myTemplateProcessor = new MyTemplateProcessor();
+    $myTemplateProcessor->setDoMyMagicThing(TRUE);
+    $templateView->setTemplateProcessors(array(
+        $myTemplateProcessor
+    ));
 
 The registration method requires an array - this is to let you define multiple
 processors without needing to wrap them in a single class as well as reuse
@@ -157,17 +157,17 @@ ViewHelperResolver instances which the View uses.
 
 The result is that TemplateProcessor instances are able to, for example:
 
-*  Validate template sources and implement reporting/logging of errors in for
-   example a framework.
-*  Fix things like character encoding issues in template sources.
-*  Process Fluid code from potentially untrusted sources, for example doing XSS
-   removals before parsing.
-*  Extract legacy namespace definitions and assign those to the
-   ViewHelperResolver for active use.
-*  Extract legacy escaping instruction headers and assign those to the
-   TemplateParser's Configuration instance.
-*  Enable the use of custom template code in file's header, extracted and used
-   by a framework.
+* Validate template sources and implement reporting/logging of errors in for
+  example a framework.
+* Fix things like character encoding issues in template sources.
+* Process Fluid code from potentially untrusted sources, for example doing XSS
+  removals before parsing.
+* Extract legacy namespace definitions and assign those to the
+  ViewHelperResolver for active use.
+* Extract legacy escaping instruction headers and assign those to the
+  TemplateParser's Configuration instance.
+* Enable the use of custom template code in file's header, extracted and used
+  by a framework.
 
 Note again: these same behaviors are possible using a custom `TemplatePaths`
 implementation - but even with such a custom implementation this
@@ -197,8 +197,8 @@ You should replace the `ViewHelperInvoker` if:
 
 .. note::
 
-   ViewHelper instance creation and argument retrieval is handled by the
-   ViewHelperResolver.
+    ViewHelper instance creation and argument retrieval is handled by the
+    ViewHelperResolver.
 
 If you wish to use a custom `ViewHelperInvoker` you **must** do so via a custom
 `ViewHelperResolver`. You are given the class name of the ViewHelper to resolve

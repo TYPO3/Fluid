@@ -20,13 +20,13 @@ The difference between the two modes can be briefly described this way:
 
 .. code-block:: xml
 
-   <f:count>{myArray}</f:count>
+    <f:count>{myArray}</f:count>
 
 Is the same as:
 
 .. code-block:: xml
 
-   {myArray -> f:count()}
+    {myArray -> f:count()}
 
 Which means that the variable `{myArray}` is in both cases passed to the
 ViewHelper `f:count` (which counts arrays and outputs the number of items). In
@@ -41,34 +41,34 @@ Consider the following **bad** (X)HTML syntax:
 
 .. code-block:: xml
 
-   <ol class="item-count-<f:count>{firstArray}</f:count>">
-   // render list
-   </ol>
+    <ol class="item-count-<f:count>{firstArray}</f:count>">
+        // render list
+    </ol>
 
 And the following **good** (X)HTML syntax we can get by using inline mode:
 
 .. code-block:: xml
 
-   <ol class="item-count-{firstArray -> f:count()}">
-   // render list
-   </ol>
+    <ol class="item-count-{firstArray -> f:count()}">
+        // render list
+    </ol>
 
 The special `->` operator can be used to express any depth of ViewHelper calls.
 This is called a "chain" and works like this:
 
 .. code-block:: xml
 
-   <f:if condition="{myArray}">
-       <f:for each="{myArray}" as="item">
-           <f:render section="MySection" />
-       </f:for>
-   </f:if>
+    <f:if condition="{myArray}">
+        <f:for each="{myArray}" as="item">
+            <f:render section="MySection" />
+        </f:for>
+    </f:if>
 
 Can also be expressed like:
 
 .. code-block:: xml
 
-   {f:render(section: 'MySection') -> f:for(each: myArray, as: 'item') -> f:if(condition: myArray)}
+    {f:render(section: 'MySection') -> f:for(each: myArray, as: 'item') -> f:if(condition: myArray)}
 
 The latter syntax is quicker to parse but obviously does not allow for inserting
 any (X)HTML elements around the tags.
@@ -86,15 +86,15 @@ variable access (e.g. `{variable}`) and ViewHelper usage in inline mode
 (e.g. `{myArray -> f:count()}`). Expressions are written as
 *variable access with additional syntax*:
 
-*  `{myPossiblyArray as array}` will for example make sure you access
-   `{myPossiblyArray}` as an array even if it is NULL or other, which is useful
-   when you pass a suspect value to ViewHelpers like `f:for` which require
-   arrays.
-*  `{checkVariable ? thenVariable : elseVariable}` will for example output the
-   variable `{thenVariable}` if `{checkVariable}` evaluates to TRUE, otherwise
-   output the variable `{elseVariable}`.
-*  `{myNumber + 3}` (and other mathematical operations) will for example output
-   the sum of `{myNumber}` plus `3`.
+* `{myPossiblyArray as array}` will for example make sure you access
+  `{myPossiblyArray}` as an array even if it is NULL or other, which is useful
+  when you pass a suspect value to ViewHelpers like `f:for` which require
+  arrays.
+* `{checkVariable ? thenVariable : elseVariable}` will for example output the
+  variable `{thenVariable}` if `{checkVariable}` evaluates to TRUE, otherwise
+  output the variable `{elseVariable}`.
+* `{myNumber + 3}` (and other mathematical operations) will for example output
+  the sum of `{myNumber}` plus `3`.
 
 The **expressions** that are available when you render a template is purely
 determined by the ViewHelperResolver (which you can read more about in
@@ -116,9 +116,9 @@ expected type when you call ViewHelpers:
 
 .. code-block:: xml
 
-   <f:if condition="1">
-       This is true
-   </f:if>
+    <f:if condition="1">
+        This is true
+    </f:if>
 
 In this example, the `condition` argument expects a boolean value but we pass an
 integer `1`. Internally, Fluid converts this (and any other compatible types
@@ -131,9 +131,9 @@ case being in arrays:
 
 .. code-block:: xml
 
-   <f:for each="{0: myVariable, 1: myOtherVariable}" as="newVariable">
-   // render
-   </f:for>
+    <f:for each="{0: myVariable, 1: myOtherVariable}" as="newVariable">
+        // render
+    </f:for>
 
 In these cases you cannot cast or convert the `myVariable` or `myOtherVariable`
 variables - and the code inside `//render` may fail if you receive unexpected
@@ -141,9 +141,9 @@ types. To be able to cast a variable in this case, simply wrap it with quotes:
 
 .. code-block:: xml
 
-   <f:for each="{0: '{myVariable as integer}', 1: '{myOtherVariable as integer}'}" as="newVariable">
-   // render
-   </f:for>
+    <f:for each="{0: '{myVariable as integer}', 1: '{myOtherVariable as integer}'}" as="newVariable">
+        // render
+    </f:for>
 
 ...and Fluid will be able to detect the **expression** you used, extract and
 cast the variable and finally remove the quotations and use the variable

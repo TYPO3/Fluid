@@ -22,31 +22,31 @@ available in *all template files* without further importing:
 
 .. code-block:: php
 
-   $view = new TemplateView();
-   $view->getRenderingContext()->getViewHelperResolver()->addNamespace('foo', 'Vendor\\Foo\\ViewHelpers');
+    $view = new TemplateView();
+    $view->getRenderingContext()->getViewHelperResolver()->addNamespace('foo', 'Vendor\\Foo\\ViewHelpers');
 
 And the latter method which can be used in each template file that requires the
 ViewHelpers:
 
 .. code-block:: xml
 
-   <html xmlns:foo="Vendor\Foo\ViewHelpers">
-   <f:layout name="Default" />
-       <f:section name="Main">
-           <!-- ... --->
-       </f:section>
-   </html>
+    <html xmlns:foo="Vendor\Foo\ViewHelpers">
+    <f:layout name="Default" />
+        <f:section name="Main">
+            <!-- ... --->
+        </f:section>
+    </html>
 
 Or using the alternative `xmlns` approach:
 
 .. code-block:: xml
 
-   <html xmlns:foo="http://typo3.org/ns/Vendor/Foo/ViewHelpers">
-   <f:layout name="Default" />
-       <f:section name="Main">
-           <!-- ... --->
-       </f:section>
-   </html>
+    <html xmlns:foo="http://typo3.org/ns/Vendor/Foo/ViewHelpers">
+    <f:layout name="Default" />
+        <f:section name="Main">
+            <!-- ... --->
+        </f:section>
+    </html>
 
 Once you have registered/imported the ViewHelper collection (we call it a
 collection here even if it contains only one class) you can start using it in
@@ -74,12 +74,12 @@ a ViewHelper. Such classes are usually placed in the `Vendor\Package\ViewHelpers
 PHP namespace (where `Vendor` and `Package` are obviously placeholders for actual
 values) and follow the following naming convention:
 
-*  `v:format.raw` becomes PHP class `TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper`
-*  `v:render` becomes PHP class `TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper`
-*  `mypkg:custom.specialFormat` becomes PHP class
-   `My\Package\ViewHelpers\Custom\SpecialFormatViewHelper` assuming you added
-   `xmlns:mpkg="My\Package\ViewHelpers"` or alternative namespace registration
-   (see above).
+* `v:format.raw` becomes PHP class `TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper`
+* `v:render` becomes PHP class `TYPO3Fluid\Fluid\ViewHelpers\RenderViewHelper`
+* `mypkg:custom.specialFormat` becomes PHP class
+  `My\Package\ViewHelpers\Custom\SpecialFormatViewHelper` assuming you added
+  `xmlns:mpkg="My\Package\ViewHelpers"` or alternative namespace registration
+  (see above).
 
 And so on.
 
@@ -90,29 +90,29 @@ attributes. An example argument definition looks like this:
 
 .. code-block:: php
 
-   public function initializeArguments() {
-       $this->registerArgument('myArgument', 'boolean', 'If TRUE, makes ViewHelper do foobar', FALSE, FALSE);
-   }
+    public function initializeArguments() {
+        $this->registerArgument('myArgument', 'boolean', 'If TRUE, makes ViewHelper do foobar', FALSE, FALSE);
+    }
 
 Which translated to human terms means that we:
 
-*  Register an argument named `myArgument`
-*  Specify that it must be a boolean value or an expression resulting in a
-   boolean value (you can find a few examples of such expressions in the
-   `conditions example <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Singles/Conditions.html>`__.
-   Other valid types are `integer`, `string`, `float`, `array`, `DateTime` and
-   other class names.
-*  Describe the argument's behavior in simple terms.
-*  Specify that the argument is not required (the 4th argument is `FALSE`).
-*  Specify that if the argument is not written when calling the ViewHelper,
-   a default value of `FALSE` is assumed (5th argument).
+* Register an argument named `myArgument`
+* Specify that it must be a boolean value or an expression resulting in a
+  boolean value (you can find a few examples of such expressions in the
+  `conditions example <https://github.com/TYPO3/Fluid/blob/main/examples/Resources/Private/Singles/Conditions.html>`__.
+  Other valid types are `integer`, `string`, `float`, `array`, `DateTime` and
+  other class names.
+* Describe the argument's behavior in simple terms.
+* Specify that the argument is not required (the 4th argument is `FALSE`).
+* Specify that if the argument is not written when calling the ViewHelper,
+  a default value of `FALSE` is assumed (5th argument).
 
 The ViewHelper itself would then - assuming the class was named as our example
 above - be callable using:
 
 .. code-block:: xml
 
-   <mypkg:custom.specialFormat myArgument="TRUE">{somevariable}</mypkg:custom.specialFormat>
+    <mypkg:custom.specialFormat myArgument="TRUE">{somevariable}</mypkg:custom.specialFormat>
 
 What the argument does is then decided by the ViewHelper.
 
@@ -133,7 +133,7 @@ any inside your own packages. To use this command:
 
 .. code-block:: bash
 
-   ./vendor/bin/generateschema TYPO3Fluid\\Fluid\\ViewHelpers src/ViewHelpers > schema.xsd
+    ./vendor/bin/generateschema TYPO3Fluid\\Fluid\\ViewHelpers src/ViewHelpers > schema.xsd
 
 Replace the first and second parameters with your own PHP namespace prefix and
 path to your ViewHelper class files, respectively, to generate a schema file for
@@ -144,6 +144,6 @@ dependencies you will need to manually install the schema generating utility:
 
 .. code-block:: bash
 
-   composer require typo3fluid/fluid-schema-generator
+    composer require typo3fluid/fluid-schema-generator
 
 After which you can use the command like the examples illustrate.

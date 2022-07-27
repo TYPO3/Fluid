@@ -5,9 +5,10 @@ Usage
 =====
 
 .. toctree::
-   :maxdepth: 2
-   :titlesonly:
+    :maxdepth: 2
+    :titlesonly:
 
-   Structure
-   Syntax
-   ViewHelpers
+    RunningExamples
+    Structure
+    Syntax
+    ViewHelpers

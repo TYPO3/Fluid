@@ -19,54 +19,54 @@ syntax for tag content:
 
 .. code-block:: xml
 
-   <html xmlns:mypkg="Vendor\Package\ViewHelpers">
-   <dl>
-       <f:for each="{myValuesArray -> mypkg:combine(keys: myKeysArray)}" as="item" key="key">
-           <dt>{key}</dt>
-           <dd>{item}</dd>
-       </f:for>
-   <dl>
+    <html xmlns:mypkg="Vendor\Package\ViewHelpers">
+    <dl>
+        <f:for each="{myValuesArray -> mypkg:combine(keys: myKeysArray)}" as="item" key="key">
+            <dt>{key}</dt>
+            <dd>{item}</dd>
+        </f:for>
+    <dl>
    </html>
 
 To enable this usage we must then create a ViewHelper class:
 
 .. code-block:: php
 
-   <?php
-   namespace Vendor\Package\ViewHelpers;
+    <?php
+    namespace Vendor\Package\ViewHelpers;
 
-   use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
+    use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-   /**
-    * This ViewHelper takes two arrays and returns
-    * the `array_combine`d result.
-    */
-   class CombineViewHelper extends AbstractViewHelper {
+    /**
+     * This ViewHelper takes two arrays and returns
+     * the `array_combine`d result.
+     */
+    class CombineViewHelper extends AbstractViewHelper {
 
-       /**
-        * @return void
-        */
-       public function initializeArguments() {
-           $this->registerArgument('values', 'array', 'Values to use in array_combine');
-           $this->registerArgument('keys', 'array', 'Keys to use in array_combine', TRUE);
-       }
+        /**
+         * @return void
+         */
+        public function initializeArguments() {
+            $this->registerArgument('values', 'array', 'Values to use in array_combine');
+            $this->registerArgument('keys', 'array', 'Keys to use in array_combine', TRUE);
+        }
 
-       /**
-        * Combines two arrays using one for keys and
-        * the other for values. If values are not provided
-        * in argument it can be provided as tag content.
-        *
-        * @return array
-        */
-       public function render() {
-           $values = $this->arguments['values'];
-           $keys = $this->arguments['keys'];
-           if ($values === NULL) {
-               $values = $this->renderChildren();
-           }
-           return array_combine($keys, $values);
-       }
-   }
+        /**
+         * Combines two arrays using one for keys and
+         * the other for values. If values are not provided
+         * in argument it can be provided as tag content.
+         *
+         * @return array
+         */
+        public function render() {
+            $values = $this->arguments['values'];
+            $keys = $this->arguments['keys'];
+            if ($values === NULL) {
+                $values = $this->renderChildren();
+            }
+            return array_combine($keys, $values);
+        }
+    }
 
 And that's all this class requires to work in the described way.
 
@@ -75,10 +75,10 @@ which means you can't use it in tag mode:
 
 .. code-block:: xml
 
-   <html xmlns:mypkg="Vendor\Package\ViewHelpers">
-   <!-- BAD USAGE. Will output string value "Array" -->
-   <mypkg:combine keys="{myKeysArray}">{myValuesArray}</mypkg:combine>
-   </html>
+    <html xmlns:mypkg="Vendor\Package\ViewHelpers">
+    <!-- BAD USAGE. Will output string value "Array" -->
+    <mypkg:combine keys="{myKeysArray}">{myValuesArray}</mypkg:combine>
+    </html>
 
 Naturally this implies that any ViewHelper which returns a string compatible
 value (including numbers and objects which have a `__toString()` method) can be
