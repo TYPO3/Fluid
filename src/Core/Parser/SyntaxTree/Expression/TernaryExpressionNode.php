@@ -51,7 +51,6 @@ class TernaryExpressionNode extends AbstractExpressionNode
     {
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
-        $negated = false;
         list($check, $then, $else) = $parts;
 
         if ($then === '') {
