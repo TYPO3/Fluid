@@ -9,6 +9,3 @@ parameters:
     - ./src
     - ./tests
     - ./examples
-
-  excludePaths:
-    - ./examples/cache/*
