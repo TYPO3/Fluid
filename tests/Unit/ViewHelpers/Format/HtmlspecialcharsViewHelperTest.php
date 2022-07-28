@@ -95,7 +95,7 @@ class HtmlspecialcharsViewHelperTest extends ViewHelperBaseTestcase
             ],
             // render respects "encoding" argument
             [
-                'value' => utf8_decode('Some special characters: &"\''),
+                'value' => mb_convert_encoding('Some special characters: &"\'', 'ISO-8859-1', 'UTF-8'),
                 'options' => [
                     'encoding' => 'ISO-8859-1',
                 ],
