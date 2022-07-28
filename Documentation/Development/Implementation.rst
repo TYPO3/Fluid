@@ -20,7 +20,7 @@ TemplateView
 A fairly standard View implementation. The default object expects
 `TemplatePaths` as constructor argument and has a handful of utility methods
 like `$view->assign('variablename', 'value');`. Custom View types can be
-implemented by simply subclassing the default class - but in order to avoid
+implemented by subclassing the default class - but in order to avoid
 problems, make sure you also call the original class' constructor method.
 
 Creating a custom View allows you to change just a few aspects, mainly about
