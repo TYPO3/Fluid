@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 1
-			path: src/Core/Cache/SimpleFileCache.php
-
-		-
 			message: "#^Call to sprintf contains 4 placeholders, 5 values given\\.$#"
 			count: 1
 			path: src/Core/Cache/StandardCacheWarmer.php
