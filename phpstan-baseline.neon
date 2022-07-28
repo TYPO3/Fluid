@@ -31,11 +31,6 @@ parameters:
 			path: src/Core/Compiler/TemplateCompiler.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(string\\|null Class name which contains the method; null means use ViewHelper's class name\\.\\)\\: Unexpected token \"Class\", expected variable at offset 913$#"
-			count: 1
-			path: src/Core/Compiler/ViewHelperCompiler.php
-
-		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
 			path: src/Core/Compiler/ViewHelperCompiler.php
@@ -131,11 +126,6 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$interceptor InterceptorInterface\\)\\: Unexpected token \"\\$interceptor\", expected type at offset 9$#"
-			count: 2
-			path: src/Core/Parser/TemplateParser.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\:\\:setName\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderableClosure but returns \\$this\\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\)\\.$#"
 			count: 1
 			path: src/Core/Rendering/AbstractRenderable.php
@@ -201,16 +191,6 @@ parameters:
 			path: src/View/AbstractTemplateView.php
 
 		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$section ViewHelperNode\\)\\: Unexpected token \"\\$section\", expected type at offset 9$#"
-			count: 1
-			path: src/View/AbstractTemplateView.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(string A template name to render, e\\.g\\. \"Main/Index\"\\)\\: Unexpected token \"A\", expected variable at offset 25$#"
-			count: 1
-			path: src/View/TemplateAwareViewInterface.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\View\\\\TemplatePaths\\:\\:sanitizePath\\(\\) should return string but returns array\\<string\\>\\.$#"
 			count: 1
 			path: src/View/TemplatePaths.php
@@ -224,11 +204,6 @@ parameters:
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\CommentViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
 			count: 1
 			path: src/ViewHelpers/CommentViewHelper.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$each \\\\Traversable\\)\\: Unexpected token \"\\$each\", expected type at offset 9$#"
-			count: 1
-			path: src/ViewHelpers/ForViewHelper.php
 
 		-
 			message: "#^Variable \\$iterationData might not be defined\\.$#"
@@ -257,11 +232,6 @@ parameters:
 
 		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\SectionViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/ViewHelpers/SectionViewHelper.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$nameArgument TextNode\\)\\: Unexpected token \"\\$nameArgument\", expected type at offset 9$#"
 			count: 1
 			path: src/ViewHelpers/SectionViewHelper.php
 

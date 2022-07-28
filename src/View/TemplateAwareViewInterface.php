@@ -16,7 +16,7 @@ namespace TYPO3Fluid\Fluid\View;
 interface TemplateAwareViewInterface
 {
     /**
-     * @param string A template name to render, e.g. "Main/Index"
+     * @param string $templateName A template name to render, e.g. "Main/Index"
      * @return string The rendered view
      * @api
      */

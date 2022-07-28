@@ -529,13 +529,13 @@ class TemplateParser
             return;
         }
         if ($this->escapingEnabled) {
-            /** @var $interceptor InterceptorInterface */
+            /** @var InterceptorInterface $interceptor */
             foreach ($this->configuration->getEscapingInterceptors($interceptionPoint) as $interceptor) {
                 $node = $interceptor->process($node, $interceptionPoint, $state);
             }
         }
 
-        /** @var $interceptor InterceptorInterface */
+        /** @var InterceptorInterface $interceptor */
         foreach ($this->configuration->getInterceptors($interceptionPoint) as $interceptor) {
             $node = $interceptor->process($node, $interceptionPoint, $state);
         }

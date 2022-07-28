@@ -267,7 +267,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
                     new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
                 );
             }
-            /** @var $section ViewHelperNode */
+            /** @var ViewHelperNode $section */
             $section = $sections[$sectionName];
 
             $renderingContext->getViewHelperVariableContainer()->add(

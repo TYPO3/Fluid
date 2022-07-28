@@ -93,7 +93,6 @@ class SectionViewHelper extends AbstractViewHelper
      */
     public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
     {
-        /** @var $nameArgument TextNode */
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument->getText();
         $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];
