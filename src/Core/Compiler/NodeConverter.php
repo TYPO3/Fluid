@@ -59,7 +59,6 @@ class NodeConverter
      *
      * @param NodeInterface $node
      * @return array two-element array, see above
-     * @throws FluidException
      */
     public function convert(NodeInterface $node)
     {

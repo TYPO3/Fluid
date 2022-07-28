@@ -16,11 +16,6 @@ parameters:
 			path: src/Core/Compiler/NodeConverter.php
 
 		-
-			message: "#^PHPDoc tag @throws with type TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\FluidException is not subtype of Throwable$#"
-			count: 1
-			path: src/Core/Compiler/NodeConverter.php
-
-		-
 			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Core/Compiler/NodeConverter.php
