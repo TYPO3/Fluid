@@ -32,7 +32,7 @@ class MutableTestViewHelper extends AbstractViewHelper
 
     public function withContentArgument($escaped = null): self
     {
-        // TODO: set escaping behavior if $escaped !== null
+        // @todo: set escaping behavior if $escaped !== null
         $clone = clone $this;
         $clone->registerArgument('content', 'string', 'Content argument', false, null, $escaped);
         return $clone;
@@ -40,7 +40,7 @@ class MutableTestViewHelper extends AbstractViewHelper
 
     public function withOutputArgument($escaped = null): self
     {
-        // TODO: set escaping behavior if $escaped !== null
+        // @todo: set escaping behavior if $escaped !== null
         $clone = clone $this;
         $clone->registerArgument('output', 'string', 'Content argument', true, null, $escaped);
         return $clone;

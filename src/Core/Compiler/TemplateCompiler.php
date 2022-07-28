@@ -269,7 +269,8 @@ EOD;
     {
         $generatedRenderFunctions = '';
         if ($parsingState->getVariableContainer()->exists('1457379500_sections')) {
-            $sections = $parsingState->getVariableContainer()->get('1457379500_sections'); // TODO: refactor to $parsedTemplate->getSections()
+            // @todo: refactor to $parsedTemplate->getSections()
+            $sections = $parsingState->getVariableContainer()->get('1457379500_sections');
             foreach ($sections as $sectionName => $sectionRootNode) {
                 $generatedRenderFunctions .= $this->generateCodeForSection(
                     $this->nodeConverter->convertListOfSubNodes($sectionRootNode),
