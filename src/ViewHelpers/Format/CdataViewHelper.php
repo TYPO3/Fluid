@@ -75,9 +75,6 @@ class CdataViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
-     * @param callable $renderChildrenClosure
-     * @param RenderingContextInterface $renderingContext
      * @return string
      */
     public static function renderStatic(

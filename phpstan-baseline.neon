@@ -66,11 +66,6 @@ parameters:
 			path: src/Core/Parser/ParsingState.php
 
 		-
-			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsingState\\:\\:\\$layoutNameNode has unknown class TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\AbstractNode as its type\\.$#"
-			count: 1
-			path: src/Core/Parser/ParsingState.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\EscapingNode\\:\\:evaluate\\(\\) should return float\\|int but returns string\\.$#"
 			count: 1
 			path: src/Core/Parser/SyntaxTree/EscapingNode.php
@@ -171,11 +166,6 @@ parameters:
 			path: src/Core/ViewHelper/ViewHelperVariableContainer.php
 
 		-
-			message: "#^Anonymous function has an unused use \\$renderingContext\\.$#"
-			count: 1
-			path: src/View/AbstractTemplateView.php
-
-		-
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/View/AbstractTemplateView.php
@@ -199,11 +189,6 @@ parameters:
 			message: "#^Variable \\$iterationData might not be defined\\.$#"
 			count: 1
 			path: src/ViewHelpers/ForViewHelper.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$renderChildrenClosure with type callable is not subtype of native type Closure\\.$#"
-			count: 1
-			path: src/ViewHelpers/Format/CdataViewHelper.php
 
 		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelper\\:\\:render\\(\\) should return string but returns mixed\\.$#"

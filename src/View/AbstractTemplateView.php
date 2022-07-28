@@ -382,7 +382,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         $actionName = $renderingContext->getControllerAction();
         $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
             $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-            function ($parent, TemplatePaths $paths) use ($controllerName, $actionName, $renderingContext) {
+            function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
                 return $paths->getTemplateSource($controllerName, $actionName);
             }
         );
