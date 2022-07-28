@@ -36,16 +36,6 @@ parameters:
 			path: src/Core/Compiler/ViewHelperCompiler.php
 
 		-
-			message: "#^PHPDoc tag @param for parameter \\$error with type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ExpressionException is not subtype of native type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\ExpressionException\\.$#"
-			count: 1
-			path: src/Core/ErrorHandler/ErrorHandlerInterface.php
-
-		-
-			message: "#^Parameter \\$error of method TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\ErrorHandlerInterface\\:\\:handleExpressionError\\(\\) has invalid type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ExpressionException\\.$#"
-			count: 1
-			path: src/Core/ErrorHandler/ErrorHandlerInterface.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\StandardErrorHandler\\:\\:handleCompilerError\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: src/Core/ErrorHandler/StandardErrorHandler.php
