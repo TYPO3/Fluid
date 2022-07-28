@@ -81,7 +81,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testThrowsInvalidArgumentExceptionWhenNoTargetSpecifiedIfOptionalIsFalse()
     {
-        $this->subject->expects(self::any())->method('renderChildren')->willReturn(null);
+        $this->subject->expects(self::never())->method('renderChildren');
         $this->subject->setArguments([
             'partial' => null,
             'section' => null,
@@ -101,7 +101,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testThrowsInvalidArgumentExceptionOnInvalidDelegateType()
     {
-        $this->subject->expects(self::any())->method('renderChildren')->willReturn(null);
+        $this->subject->expects(self::never())->method('renderChildren');
         $this->subject->setArguments([
             'partial' => null,
             'section' => null,
@@ -121,7 +121,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
      */
     public function testRenderWithDelegate()
     {
-        $this->subject->expects(self::any())->method('renderChildren')->willReturn(null);
+        $this->subject->expects(self::never())->method('renderChildren');
         $this->subject->setArguments([
             'partial' => null,
             'section' => null,
@@ -143,7 +143,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     {
         $renderable = $this->getMockBuilder(RenderableInterface::class)->getMockForAbstractClass();
         $renderable->expects(self::once())->method('render')->willReturn('rendered by fixture');
-        $this->subject->expects(self::any())->method('renderChildren')->willReturn(null);
+        $this->subject->expects(self::never())->method('renderChildren');
         $this->subject->setArguments([
             'partial' => null,
             'section' => null,
@@ -202,10 +202,10 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     /**
      * @test
      */
-    public function testRenderWithDefautReturnsDefaultIfContentEmpty()
+    public function testRenderWithDefaultReturnsDefaultIfContentEmpty()
     {
         $this->view->expects(self::once())->method('renderPartial')->willReturn('');
-        $this->subject->expects(self::any())->method('renderChildren')->willReturn(null);
+        $this->subject->expects(self::never())->method('renderChildren');
         $this->subject->setArguments(
             [
                 'partial' => 'test',
@@ -229,7 +229,7 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
     {
         $variables = ['foo' => 'bar', 'foobar' => 'tagcontent-foobar'];
         $this->view->expects(self::once())->method('renderPartial')->with('test1', 'test2', $variables, true)->willReturn('baz');
-        $this->subject->expects(self::any())->method('renderChildren')->willReturn('tagcontent-foobar');
+        $this->subject->expects(self::once())->method('renderChildren')->willReturn('tagcontent-foobar');
         $this->subject->setArguments(
             [
                 'partial' => 'test1',
@@ -246,5 +246,27 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
         );
         $output = $this->subject->render();
         self::assertEquals('baz', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function testRenderChildrenWhenNoContentAndNoDefault()
+    {
+        $this->subject->expects(self::once())->method('renderChildren')->willReturn('foobar');
+        $this->subject->setArguments(
+            [
+                'partial' => null,
+                'section' => null,
+                'delegate' => null,
+                'renderable' => null,
+                'arguments' => [],
+                'optional' => true,
+                'default' => null,
+                'contentAs' => null
+            ]
+        );
+        $output = $this->subject->render();
+        self::assertEquals('foobar', $output);
     }
 }

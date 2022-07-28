@@ -140,8 +140,9 @@ class RenderViewHelper extends AbstractViewHelper
         $delegate = $arguments['delegate'];
         /** @var RenderableInterface $renderable */
         $renderable = $arguments['renderable'];
-        $tagContent = $renderChildrenClosure();
+        $tagContent = null;
         if ($arguments['contentAs']) {
+            $tagContent = $renderChildrenClosure();
             $variables[$arguments['contentAs']] = $tagContent;
         }
 
@@ -176,7 +177,7 @@ class RenderViewHelper extends AbstractViewHelper
         // not set, NULL is returned and cast to a new, empty string
         // outside of this ViewHelper.
         if ($content === '') {
-            $content = $arguments['default'] ?: $tagContent;
+            $content = $arguments['default'] ?: $tagContent ?: $renderChildrenClosure();
         }
         return $content;
     }
