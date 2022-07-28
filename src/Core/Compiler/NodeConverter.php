@@ -170,15 +170,13 @@ class NodeConverter
             $arguments = $node->getArgumentDefinitions();
             $argumentInitializationCode = sprintf('%s = array();', $argumentsVariableName) . chr(10);
             foreach ($arguments as $argumentName => $argumentDefinition) {
-                if (!isset($alreadyBuiltArguments[$argumentName])) {
-                    $argumentInitializationCode .= sprintf(
-                        '%s[\'%s\'] = %s;%s',
-                        $argumentsVariableName,
-                        $argumentName,
-                        var_export($argumentDefinition->getDefaultValue(), true),
-                        chr(10)
-                    );
-                }
+                $argumentInitializationCode .= sprintf(
+                    '%s[\'%s\'] = %s;%s',
+                    $argumentsVariableName,
+                    $argumentName,
+                    var_export($argumentDefinition->getDefaultValue(), true),
+                    chr(10)
+                );
             }
 
             $alreadyBuiltArguments = [];
