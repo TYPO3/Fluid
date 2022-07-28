@@ -143,7 +143,7 @@ class BooleanNode extends AbstractNode
      *
      * Must be public and static as it is used from inside cached templates.
      *
-     * @param bool $value Value to be converted to boolean
+     * @param mixed $value Value to be converted to boolean
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */

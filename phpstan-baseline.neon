@@ -96,11 +96,6 @@ parameters:
 			path: src/Core/Parser/ParsingState.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/BooleanNode.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\EscapingNode\\:\\:evaluate\\(\\) should return float\\|int but returns string\\.$#"
 			count: 1
 			path: src/Core/Parser/SyntaxTree/EscapingNode.php
