@@ -1,11 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to sprintf contains 4 placeholders, 5 values given\\.$#"
-			count: 1
-			path: src/Core/Cache/StandardCacheWarmer.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\AbstractCompiledTemplate\\:\\:getVariableContainer\\(\\) has invalid return type TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\VariableProviderInterface\\.$#"
 			count: 1
 			path: src/Core/Compiler/AbstractCompiledTemplate.php
@@ -284,11 +279,6 @@ parameters:
 			message: "#^PHPDoc tag @var has invalid value \\(\\$nameArgument TextNode\\)\\: Unexpected token \"\\$nameArgument\", expected type at offset 9$#"
 			count: 1
 			path: src/ViewHelpers/SectionViewHelper.php
-
-		-
-			message: "#^Call to sprintf contains 2 placeholders, 3 values given\\.$#"
-			count: 1
-			path: src/ViewHelpers/SwitchViewHelper.php
 
 		-
 			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$cache \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Cache\\\\FluidCacheInterface\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"

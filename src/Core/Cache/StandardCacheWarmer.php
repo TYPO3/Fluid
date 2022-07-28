@@ -311,8 +311,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                     get_class($error),
                     $error->getFile(),
                     $error->getLine(),
-                    $error->getMessage(),
-                    $error->getCode()
+                    $error->getMessage()
                 )
             );
             $parsedTemplate->setMitigations([
