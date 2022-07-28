@@ -1,10 +1,11 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 use PHPUnit\Framework\MockObject\Generator;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
@@ -21,9 +22,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-/**
- * Class RenderingContextFixture
- */
 class RenderingContextFixture implements RenderingContextInterface
 {
     /**
@@ -92,7 +90,7 @@ class RenderingContextFixture implements RenderingContextInterface
     public $controllerAction = 'Default';
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $cacheDisabled = false;
 
@@ -122,7 +120,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param ErrorHandlerInterface $errorHandler
-     * @return void
      */
     public function setErrorHandler(ErrorHandlerInterface $errorHandler)
     {
@@ -178,7 +175,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param ViewHelperResolver $viewHelperResolver
-     * @return void
      */
     public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver)
     {
@@ -195,7 +191,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param ViewHelperInvoker $viewHelperInvoker
-     * @return void
      */
     public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker)
     {
@@ -206,7 +201,6 @@ class RenderingContextFixture implements RenderingContextInterface
      * Inject the Template Parser
      *
      * @param TemplateParser $templateParser The template parser
-     * @return void
      */
     public function setTemplateParser(TemplateParser $templateParser)
     {
@@ -223,7 +217,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param TemplateCompiler $templateCompiler
-     * @return void
      */
     public function setTemplateCompiler(TemplateCompiler $templateCompiler)
     {
@@ -248,7 +241,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param TemplatePaths $templatePaths
-     * @return void
      */
     public function setTemplatePaths(TemplatePaths $templatePaths)
     {
@@ -259,7 +251,6 @@ class RenderingContextFixture implements RenderingContextInterface
      * Delegation: Set the cache used by this View's compiler
      *
      * @param FluidCacheInterface $cache
-     * @return void
      */
     public function setCache(FluidCacheInterface $cache)
     {
@@ -275,7 +266,7 @@ class RenderingContextFixture implements RenderingContextInterface
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCacheEnabled()
     {
@@ -287,7 +278,6 @@ class RenderingContextFixture implements RenderingContextInterface
      * through a public API.
      *
      * @param TemplateProcessorInterface[] $templateProcessors
-     * @return void
      */
     public function setTemplateProcessors(array $templateProcessors)
     {
@@ -312,7 +302,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param array $expressionNodeTypes
-     * @return void
      */
     public function setExpressionNodeTypes(array $expressionNodeTypes)
     {
@@ -339,11 +328,10 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param string $controllerName
-     * @return void
      */
     public function setControllerName($controllerName)
     {
-        $this->controllerName;
+        $this->controllerName = $controllerName;
     }
 
     /**
@@ -356,7 +344,6 @@ class RenderingContextFixture implements RenderingContextInterface
 
     /**
      * @param string $action
-     * @return void
      */
     public function setControllerAction($action)
     {

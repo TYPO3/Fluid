@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 /*
@@ -6,52 +7,41 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
  * See LICENSE.txt that was shipped with this package.
  */
 
-use org\bovigo\vfs\vfsStream;
 use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
-/**
- * Class CommandTest
- */
 class CommandTest extends BaseTestCase
 {
-
-    /**
-     * @return void
-     */
-    public static function setUpBeforeClass(): void
+    public function getCommandTestValues(): array
     {
-        vfsStream::setup('fakecache/');
+        return [
+            [
+                '%s --help',
+                'Use the CLI utility in the following modes',
+                'Exception'
+            ],
+            [
+                'echo "Hello world!" | %s',
+                'Hello world!',
+                'Exeption'
+            ],
+            [
+                'echo "{foo}" | %s --variables "{\\"foo\\": \\"bar\\"}"',
+                'bar',
+                'Exception', 'foo'
+            ],
+        ];
     }
 
     /**
-     * @param string $argumentString
-     * @param array $mustContain
-     * @param array $mustNotContain
+     * @test
      * @dataProvider getCommandTestValues
      */
-    public function testCommand($argumentString, array $mustContain, array $mustNotContain)
+    public function command(string $argumentString, string $mustContainString, string $mustNotContainString): void
     {
         $bin = realpath(__DIR__ . '/../../bin/fluid');
         $command = sprintf($argumentString, $bin);
         $output = shell_exec($command);
-        foreach ($mustContain as $mustContainString) {
-            $this->assertStringContainsString($mustContainString, $output);
-        }
-        foreach ($mustNotContain as $mustNotContainString) {
-            $this->assertStringNotContainsString($mustNotContainString, $output);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    public function getCommandTestValues()
-    {
-        $dummyVariablesFile = realpath(__DIR__ . '/Fixtures/Variables/DummyVariables.json');
-        return [
-            ['%s --help', ['Use the CLI utility in the following modes'], ['Exception']],
-            ['echo "Hello world!" | %s', ['Hello world!'], ['Exeption']],
-            ['echo "{foo}" | %s --variables "{\\"foo\\": \\"bar\\"}"', ['bar'], ['Exception', 'foo']],
-        ];
+        self::assertStringContainsString($mustContainString, $output);
+        self::assertStringNotContainsString($mustNotContainString, $output);
     }
 }

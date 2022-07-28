@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -26,7 +27,6 @@ interface TemplateProcessorInterface
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext);
 

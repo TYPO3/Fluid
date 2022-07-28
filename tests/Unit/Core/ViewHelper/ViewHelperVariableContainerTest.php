@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 
 /*
@@ -33,11 +34,11 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function storedDataCanBeReadOutAgain()
     {
         $variable = 'Hello world';
-        $this->assertFalse($this->viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
+        self::assertFalse($this->viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
         $this->viewHelperVariableContainer->add(TestViewHelper::class, 'test', $variable);
-        $this->assertTrue($this->viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
+        self::assertTrue($this->viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
 
-        $this->assertEquals($variable, $this->viewHelperVariableContainer->get(TestViewHelper::class, 'test'));
+        self::assertEquals($variable, $this->viewHelperVariableContainer->get(TestViewHelper::class, 'test'));
     }
 
     /**
@@ -46,7 +47,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function addOrUpdateSetsAKeyIfItDoesNotExistYet()
     {
         $this->viewHelperVariableContainer->add('Foo\Bar', 'nonExistentKey', 'value1');
-        $this->assertEquals($this->viewHelperVariableContainer->get('Foo\Bar', 'nonExistentKey'), 'value1');
+        self::assertEquals($this->viewHelperVariableContainer->get('Foo\Bar', 'nonExistentKey'), 'value1');
     }
 
     /**
@@ -56,7 +57,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     {
         $this->viewHelperVariableContainer->add('Foo\Bar', 'someKey', 'value1');
         $this->viewHelperVariableContainer->addOrUpdate('Foo\Bar', 'someKey', 'value2');
-        $this->assertEquals($this->viewHelperVariableContainer->get('Foo\Bar', 'someKey'), 'value2');
+        self::assertEquals($this->viewHelperVariableContainer->get('Foo\Bar', 'someKey'), 'value2');
     }
 
     /**
@@ -66,7 +67,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     {
         $this->viewHelperVariableContainer->add('Foo\Bar', 'nonExistentKey', 'value1');
         $this->viewHelperVariableContainer->remove('Foo\Bar', 'nonExistentKey');
-        $this->assertFalse($this->viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
+        self::assertFalse($this->viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
     }
 
     /**
@@ -74,7 +75,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
      */
     public function existsReturnsFalseIfTheSpecifiedKeyDoesNotExist()
     {
-        $this->assertFalse($this->viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
+        self::assertFalse($this->viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
     }
 
     /**
@@ -83,7 +84,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function existsReturnsTrueIfTheSpecifiedKeyExists()
     {
         $this->viewHelperVariableContainer->add('Foo\Bar', 'someKey', 'someValue');
-        $this->assertTrue($this->viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
+        self::assertTrue($this->viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
     }
 
     /**
@@ -92,7 +93,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function existsReturnsTrueIfTheSpecifiedKeyExistsAndIsNull()
     {
         $this->viewHelperVariableContainer->add('Foo\Bar', 'someKey', null);
-        $this->assertTrue($this->viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
+        self::assertTrue($this->viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
     }
 
     /**
@@ -102,7 +103,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     {
         $view = $this->getMockForAbstractClass(AbstractTemplateView::class);
         $this->viewHelperVariableContainer->setView($view);
-        $this->assertSame($view, $this->viewHelperVariableContainer->getView());
+        self::assertSame($view, $this->viewHelperVariableContainer->getView());
     }
 
     /**
@@ -111,7 +112,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function getAllGetsAllVariables()
     {
         $this->viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo', 'bar' => 'bar']);
-        $this->assertSame(['foo' => 'foo', 'bar' => 'bar'], $this->viewHelperVariableContainer->getAll('Foo\\Bar'));
+        self::assertSame(['foo' => 'foo', 'bar' => 'bar'], $this->viewHelperVariableContainer->getAll('Foo\\Bar'));
     }
 
     /**
@@ -120,7 +121,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function getAllReturnsDefaultIfNotFound()
     {
         $this->viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo']);
-        $this->assertSame(['foo' => 'bar'], $this->viewHelperVariableContainer->getAll('Baz\\Baz', ['foo' => 'bar']));
+        self::assertSame(['foo' => 'bar'], $this->viewHelperVariableContainer->getAll('Baz\\Baz', ['foo' => 'bar']));
     }
 
     /**
@@ -139,7 +140,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     {
         $subject = new ViewHelperVariableContainer();
         $properties = $subject->__sleep();
-        $this->assertContains('objects', $properties);
+        self::assertContains('objects', $properties);
     }
 
     /**
@@ -148,6 +149,6 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     public function testGetReturnsDefaultIfRequestedVariableDoesNotExist()
     {
         $subject = new ViewHelperVariableContainer();
-        $this->assertEquals('test', $subject->get('foo', 'bar', 'test'));
+        self::assertEquals('test', $subject->get('foo', 'bar', 'test'));
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -30,7 +31,6 @@ interface RenderingContextInterface
 
     /**
      * @param ErrorHandlerInterface $errorHandler
-     * @return void
      */
     public function setErrorHandler(ErrorHandlerInterface $errorHandler);
 
@@ -68,7 +68,6 @@ interface RenderingContextInterface
 
     /**
      * @param ViewHelperResolver $viewHelperResolver
-     * @return void
      */
     public function setViewHelperResolver(ViewHelperResolver $viewHelperResolver);
 
@@ -79,7 +78,6 @@ interface RenderingContextInterface
 
     /**
      * @param ViewHelperInvoker $viewHelperInvoker
-     * @return void
      */
     public function setViewHelperInvoker(ViewHelperInvoker $viewHelperInvoker);
 
@@ -87,7 +85,6 @@ interface RenderingContextInterface
      * Inject the Template Parser
      *
      * @param TemplateParser $templateParser The template parser
-     * @return void
      */
     public function setTemplateParser(TemplateParser $templateParser);
 
@@ -98,7 +95,6 @@ interface RenderingContextInterface
 
     /**
      * @param TemplateCompiler $templateCompiler
-     * @return void
      */
     public function setTemplateCompiler(TemplateCompiler $templateCompiler);
 
@@ -114,7 +110,6 @@ interface RenderingContextInterface
 
     /**
      * @param TemplatePaths $templatePaths
-     * @return void
      */
     public function setTemplatePaths(TemplatePaths $templatePaths);
 
@@ -122,7 +117,6 @@ interface RenderingContextInterface
      * Delegation: Set the cache used by this View's compiler
      *
      * @param FluidCacheInterface $cache
-     * @return void
      */
     public function setCache(FluidCacheInterface $cache);
 
@@ -132,7 +126,7 @@ interface RenderingContextInterface
     public function getCache();
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isCacheEnabled();
 
@@ -141,7 +135,6 @@ interface RenderingContextInterface
      * through a public API.
      *
      * @param TemplateProcessorInterface[] $templateProcessors
-     * @return void
      */
     public function setTemplateProcessors(array $templateProcessors);
 
@@ -157,7 +150,6 @@ interface RenderingContextInterface
 
     /**
      * @param array $expressionNodeTypes
-     * @return void
      */
     public function setExpressionNodeTypes(array $expressionNodeTypes);
 
@@ -175,7 +167,6 @@ interface RenderingContextInterface
 
     /**
      * @param string $controllerName
-     * @return void
      */
     public function setControllerName($controllerName);
 
@@ -186,7 +177,6 @@ interface RenderingContextInterface
 
     /**
      * @param string $action
-     * @return void
      */
     public function setControllerAction($action);
 }

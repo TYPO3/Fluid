@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -22,7 +23,7 @@ class DefaultCaseViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 

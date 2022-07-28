@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
 
 /**
@@ -50,5 +51,4 @@ interface ErrorHandlerInterface
      * @return string
      */
     public function handleViewError(\TYPO3Fluid\Fluid\View\Exception $error);
-
 }

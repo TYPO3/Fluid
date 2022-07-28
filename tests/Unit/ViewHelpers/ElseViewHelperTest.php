@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -21,7 +22,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArgumentsRegistersExpectedArguments()
     {
         $instance = $this->getMock(ElseViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('if', 'boolean', $this->anything());
+        $instance->expects(self::exactly(1))->method('registerArgument')->with('if', 'boolean', self::anything());
         $instance->initializeArguments();
     }
 
@@ -32,9 +33,9 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
     {
         $viewHelper = $this->getMock(ElseViewHelper::class, ['renderChildren']);
 
-        $viewHelper->expects($this->once())->method('renderChildren')->will($this->returnValue('foo'));
+        $viewHelper->expects(self::once())->method('renderChildren')->willReturn('foo');
         $actualResult = $viewHelper->render();
-        $this->assertEquals('foo', $actualResult);
+        self::assertEquals('foo', $actualResult);
     }
 
     /**
@@ -47,7 +48,7 @@ class ElseViewHelperTest extends ViewHelperBaseTestcase
         $compiler = $this->getMock(TemplateCompiler::class);
         $init = '';
         $result = $viewHelper->compile('', '', $init, $node, $compiler);
-        $this->assertEmpty($init);
-        $this->assertEquals('\'\'', $result);
+        self::assertEmpty($init);
+        self::assertEquals('\'\'', $result);
     }
 }

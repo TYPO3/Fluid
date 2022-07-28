@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -30,7 +31,7 @@ class ViewHelperNode extends AbstractNode
     /**
      * @var ViewHelperInterface
      */
-    protected $uninitializedViewHelper = null;
+    protected $uninitializedViewHelper;
 
     /**
      * @var ArgumentDefinition[]
@@ -40,7 +41,7 @@ class ViewHelperNode extends AbstractNode
     /**
      * @var string
      */
-    protected $pointerTemplateCode = null;
+    protected $pointerTemplateCode;
 
     /**
      * Constructor.
@@ -115,7 +116,6 @@ class ViewHelperNode extends AbstractNode
 
     /**
      * @param NodeInterface $childNode
-     * @return void
      */
     public function addChildNode(NodeInterface $childNode)
     {
@@ -125,7 +125,6 @@ class ViewHelperNode extends AbstractNode
 
     /**
      * @param string $pointerTemplateCode
-     * @return void
      */
     public function setPointerTemplateCode($pointerTemplateCode)
     {

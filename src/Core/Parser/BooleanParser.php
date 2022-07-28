@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -28,7 +29,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser;
  *                      parseBracketToken: takes care of any '()' parts and restarts the cycle
  *                          parseStringToken: takes care of any strings
  *                              evaluateTerm: evaluate terms from true/false/numeric/context
- *
  */
 class BooleanParser
 {
@@ -88,7 +88,7 @@ class BooleanParser
      * the expression that needs to be focused on next. This cursor is changed
      * by the consume method, by "consuming" part of the expression.
      *
-     * @var integer
+     * @var int
      */
     protected $cursor = 0;
 
@@ -109,7 +109,7 @@ class BooleanParser
     /**
      * Switch to enable compiling
      *
-     * @var boolean
+     * @var bool
      */
     protected $compileToCode = false;
 
@@ -118,7 +118,7 @@ class BooleanParser
      *
      * @param string $expression to be parsed
      * @param array $context containing variables that can be used in the expression
-     * @return boolean
+     * @return bool
      */
     public function evaluate($expression, $context)
     {
@@ -146,7 +146,7 @@ class BooleanParser
      * The part of the expression we're currently focusing on based on the
      * tokenizing regex offset by the internally tracked cursor.
      *
-     * @param boolean $includeWhitespace return surrounding whitespace with token
+     * @param bool $includeWhitespace return surrounding whitespace with token
      * @return string
      */
     protected function peek($includeWhitespace = false)
@@ -163,7 +163,6 @@ class BooleanParser
      * to the position of the string in the expression and it's length
      *
      * @param string $string
-     * @return void
      */
     protected function consume($string)
     {
@@ -321,7 +320,7 @@ class BooleanParser
      *
      * @param mixed $x
      * @param mixed $y
-     * @return boolean
+     * @return bool
      */
     protected function evaluateAnd($x, $y)
     {
@@ -333,7 +332,7 @@ class BooleanParser
      *
      * @param mixed $x
      * @param mixed $y
-     * @return boolean
+     * @return bool
      */
     protected function evaluateOr($x, $y)
     {
@@ -344,7 +343,7 @@ class BooleanParser
      * Evaluate an "not" comparison
      *
      * @param mixed $x
-     * @return boolean|string
+     * @return bool|string
      */
     protected function evaluateNot($x)
     {
@@ -357,7 +356,7 @@ class BooleanParser
      * @param mixed $x
      * @param mixed $y
      * @param string $comparator
-     * @return boolean|string
+     * @return bool|string
      */
     protected function evaluateCompare($x, $y, $comparator)
     {
@@ -437,9 +436,8 @@ class BooleanParser
             }
             if (mb_strpos($x, '.') !== false) {
                 return (float)$x;
-            } else {
-                return (int)$x;
             }
+            return (int)$x;
         }
 
         if (trim(strtolower($x)) === 'true') {
@@ -462,7 +460,8 @@ class BooleanParser
         return trim($x, '\'"');
     }
 
-    public static function convertNodeToBoolean($value) {
+    public static function convertNodeToBoolean($value)
+    {
         if (is_object($value) && $value instanceof \Countable) {
             return count($value) > 0;
         }

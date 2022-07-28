@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -29,9 +30,9 @@ class ObjectAccessorNodeTest extends UnitTestCase
         $node = new ObjectAccessorNode($path);
         $renderingContext = $this->getMock(RenderingContextInterface::class);
         $variableContainer = new StandardVariableProvider($variables);
-        $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
+        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);
-        $this->assertEquals($expected, $value);
+        self::assertEquals($expected, $value);
     }
 
     /**
@@ -58,9 +59,9 @@ class ObjectAccessorNodeTest extends UnitTestCase
         $node = new ObjectAccessorNode('foo.bar');
         $renderingContext = $this->getMock(RenderingContextInterface::class);
         $variableContainer = $this->getMock(StandardVariableProvider::class, []);
-        $variableContainer->expects($this->once())->method('getByPath')->with('foo.bar', [])->will($this->returnValue('foo'));
-        $renderingContext->expects($this->any())->method('getVariableProvider')->will($this->returnValue($variableContainer));
+        $variableContainer->expects(self::once())->method('getByPath')->with('foo.bar', [])->willReturn('foo');
+        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);
-        $this->assertEquals('foo', $value);
+        self::assertEquals('foo', $value);
     }
 }

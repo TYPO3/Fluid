@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -23,7 +24,7 @@ class SpacelessViewHelperTest extends ViewHelperBaseTestcase
     public function testRenderStatic($input, $expected)
     {
         $context = $this->getMock(RenderingContextInterface::class);
-        $this->assertEquals($expected, SpacelessViewHelper::renderStatic([], function () use ($input) {
+        self::assertEquals($expected, SpacelessViewHelper::renderStatic([], function () use ($input) {
             return $input;
         }, $context));
     }

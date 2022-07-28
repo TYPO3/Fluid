@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -28,7 +29,7 @@ class MathExpressionNodeTest extends UnitTestCase
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = MathExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

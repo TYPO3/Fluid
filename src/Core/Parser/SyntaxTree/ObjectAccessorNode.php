@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -43,7 +44,6 @@ class ObjectAccessorNode extends AbstractNode
         $this->objectPath = $objectPath;
         $this->accessors = $accessors;
     }
-
 
     /**
      * Internally used for building up cached templates; do not use directly!

@@ -1,0 +1,401 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Negated boolean expression is always true\\.$#"
+			count: 1
+			path: src/Core/Cache/SimpleFileCache.php
+
+		-
+			message: "#^Call to sprintf contains 4 placeholders, 5 values given\\.$#"
+			count: 1
+			path: src/Core/Cache/StandardCacheWarmer.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\AbstractCompiledTemplate\\:\\:getVariableContainer\\(\\) has invalid return type TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\VariableProviderInterface\\.$#"
+			count: 1
+			path: src/Core/Compiler/AbstractCompiledTemplate.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\AbstractCompiledTemplate\\:\\:getVariableContainer\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\VariableProviderInterface but returns TYPO3Fluid\\\\Fluid\\\\Core\\\\Variables\\\\StandardVariableProvider\\.$#"
+			count: 1
+			path: src/Core/Compiler/AbstractCompiledTemplate.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Core/Compiler/NodeConverter.php
+
+		-
+			message: "#^PHPDoc tag @throws with type TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\FluidException is not subtype of Throwable$#"
+			count: 1
+			path: src/Core/Compiler/NodeConverter.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Core/Compiler/NodeConverter.php
+
+		-
+			message: "#^Variable \\$alreadyBuiltArguments in isset\\(\\) is never defined\\.$#"
+			count: 1
+			path: src/Core/Compiler/NodeConverter.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\TemplateCompiler\\:\\:get\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsedTemplateInterface but returns TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\UncompilableTemplateInterface\\.$#"
+			count: 1
+			path: src/Core/Compiler/TemplateCompiler.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\TemplateCompiler\\:\\:\\$currentlyProcessingState \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsedTemplateInterface\\) does not accept null\\.$#"
+			count: 1
+			path: src/Core/Compiler/TemplateCompiler.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(string\\|null Class name which contains the method; null means use ViewHelper's class name\\.\\)\\: Unexpected token \"Class\", expected variable at offset 913$#"
+			count: 1
+			path: src/Core/Compiler/ViewHelperCompiler.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Compiler/ViewHelperCompiler.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$error with type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ExpressionException is not subtype of native type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\ExpressionException\\.$#"
+			count: 1
+			path: src/Core/ErrorHandler/ErrorHandlerInterface.php
+
+		-
+			message: "#^Parameter \\$error of method TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\ErrorHandlerInterface\\:\\:handleExpressionError\\(\\) has invalid type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ExpressionException\\.$#"
+			count: 1
+			path: src/Core/ErrorHandler/ErrorHandlerInterface.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\StandardErrorHandler\\:\\:handleCompilerError\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: src/Core/ErrorHandler/StandardErrorHandler.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Configuration\\:\\:getEscapingInterceptors\\(\\) should return array\\<TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\InterceptorInterface\\> but returns SplObjectStorage\\.$#"
+			count: 1
+			path: src/Core/Parser/Configuration.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\Configuration\\:\\:getInterceptors\\(\\) should return array\\<TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\InterceptorInterface\\> but returns SplObjectStorage\\.$#"
+			count: 1
+			path: src/Core/Parser/Configuration.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/Interceptor/Escape.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isOutputEscapingEnabled\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/Interceptor/Escape.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$rootNode with type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\NodeInterface is not subtype of native type TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\RootNode\\.$#"
+			count: 1
+			path: src/Core/Parser/ParsingState.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsingState\\:\\:\\$layoutNameNode has unknown class TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\AbstractNode as its type\\.$#"
+			count: 1
+			path: src/Core/Parser/ParsingState.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/BooleanNode.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\EscapingNode\\:\\:evaluate\\(\\) should return float\\|int but returns string\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/EscapingNode.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\TernaryExpressionNode\\:\\:compile\\(\\) should return string but returns array\\<string, string\\>\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/Expression/TernaryExpressionNode.php
+
+		-
+			message: "#^Return type \\(string\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\TernaryExpressionNode\\:\\:compile\\(\\) should be compatible with return type \\(array\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\AbstractExpressionNode\\:\\:compile\\(\\)$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/Expression/TernaryExpressionNode.php
+
+		-
+			message: "#^Return type \\(string\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\TernaryExpressionNode\\:\\:compile\\(\\) should be compatible with return type \\(array\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\ExpressionNodeInterface\\:\\:compile\\(\\)$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/Expression/TernaryExpressionNode.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:setViewHelperNode\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
+
+		-
+			message: "#^Constructor of class TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\ViewHelperNode has an unused parameter \\$state\\.$#"
+			count: 1
+			path: src/Core/Parser/SyntaxTree/ViewHelperNode.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsedTemplateInterface\\:\\:setCompilable\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/TemplateParser.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\NodeInterface\\:\\:setPointerTemplateCode\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/TemplateParser.php
+
+		-
+			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
+			count: 1
+			path: src/Core/Parser/TemplateParser.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$interceptor InterceptorInterface\\)\\: Unexpected token \"\\$interceptor\", expected type at offset 9$#"
+			count: 2
+			path: src/Core/Parser/TemplateParser.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\:\\:setName\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderableClosure but returns \\$this\\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\)\\.$#"
+			count: 1
+			path: src/Core/Rendering/AbstractRenderable.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\:\\:setNode\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderableClosure but returns \\$this\\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\)\\.$#"
+			count: 1
+			path: src/Core/Rendering/AbstractRenderable.php
+
+		-
+			message: "#^Ternary operator condition is always true\\.$#"
+			count: 1
+			path: src/Core/Rendering/AbstractRenderable.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:getExpressionNodeTypes\\(\\) should return string but returns array\\.$#"
+			count: 1
+			path: src/Core/Rendering/RenderingContext.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:\\$errorHandler \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\ErrorHandlerInterface\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: src/Core/Rendering/RenderingContext.php
+
+		-
+			message: "#^Return type \\(string\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:getExpressionNodeTypes\\(\\) should be compatible with return type \\(array\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContextInterface\\:\\:getExpressionNodeTypes\\(\\)$#"
+			count: 1
+			path: src/Core/Rendering/RenderingContext.php
+
+		-
+			message: "#^Unsafe call to private method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\AbstractConditionViewHelper\\:\\:evaluateElseClosures\\(\\) through static\\:\\:\\.$#"
+			count: 1
+			path: src/Core/ViewHelper/AbstractConditionViewHelper.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between array\\|string and null will always evaluate to false\\.$#"
+			count: 1
+			path: src/Core/ViewHelper/ViewHelperResolver.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between class\\-string and false will always evaluate to false\\.$#"
+			count: 1
+			path: src/Core/ViewHelper/ViewHelperResolver.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: src/Core/ViewHelper/ViewHelperVariableContainer.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: src/Core/ViewHelper/ViewHelperVariableContainer.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$renderingContext\\.$#"
+			count: 1
+			path: src/View/AbstractTemplateView.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/View/AbstractTemplateView.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$section ViewHelperNode\\)\\: Unexpected token \"\\$section\", expected type at offset 9$#"
+			count: 1
+			path: src/View/AbstractTemplateView.php
+
+		-
+			message: "#^PHPDoc tag @param has invalid value \\(string A template name to render, e\\.g\\. \"Main/Index\"\\)\\: Unexpected token \"A\", expected variable at offset 25$#"
+			count: 1
+			path: src/View/TemplateAwareViewInterface.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\View\\\\TemplatePaths\\:\\:sanitizePath\\(\\) should return string but returns array\\<string\\>\\.$#"
+			count: 1
+			path: src/View/TemplatePaths.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Cache\\\\DisableViewHelper\\:\\:compile\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: src/ViewHelpers/Cache/DisableViewHelper.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\CommentViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
+			count: 1
+			path: src/ViewHelpers/CommentViewHelper.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$each \\\\Traversable\\)\\: Unexpected token \"\\$each\", expected type at offset 9$#"
+			count: 1
+			path: src/ViewHelpers/ForViewHelper.php
+
+		-
+			message: "#^Variable \\$iterationData might not be defined\\.$#"
+			count: 1
+			path: src/ViewHelpers/ForViewHelper.php
+
+		-
+			message: "#^PHPDoc tag @param for parameter \\$renderChildrenClosure with type callable is not subtype of native type Closure\\.$#"
+			count: 1
+			path: src/ViewHelpers/Format/CdataViewHelper.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Format\\\\HtmlspecialcharsViewHelper\\:\\:render\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/ViewHelpers/Format/HtmlspecialcharsViewHelper.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\LayoutViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
+			count: 1
+			path: src/ViewHelpers/LayoutViewHelper.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/ViewHelpers/RenderViewHelper.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\SectionViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
+			count: 1
+			path: src/ViewHelpers/SectionViewHelper.php
+
+		-
+			message: "#^PHPDoc tag @var has invalid value \\(\\$nameArgument TextNode\\)\\: Unexpected token \"\\$nameArgument\", expected type at offset 9$#"
+			count: 1
+			path: src/ViewHelpers/SectionViewHelper.php
+
+		-
+			message: "#^Call to sprintf contains 2 placeholders, 3 values given\\.$#"
+			count: 1
+			path: src/ViewHelpers/SwitchViewHelper.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$cache \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Cache\\\\FluidCacheInterface\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$errorHandler \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\ErrorHandlerInterface\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$templateCompiler \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\TemplateCompiler\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$templateParser \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\TemplateParser\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$templatePaths \\(TYPO3Fluid\\\\Fluid\\\\View\\\\TemplatePaths\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$variableProvider \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Variables\\\\VariableProviderInterface\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$viewHelperInvoker \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInvoker\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$viewHelperResolver \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperResolver\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$viewHelperVariableContainer \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperVariableContainer\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
+			count: 1
+			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 0 and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 2 and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 3 and string will always evaluate to false\\.$#"
+			count: 2
+			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
+
+		-
+			message: "#^ArrayObject\\<string, string\\> does not accept ArrayObject\\<string, string\\>\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/DebugViewHelperTest.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getIdentifier\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getLayoutName\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getVariableContainer\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Variables\\\\VariableProviderInterface but return statement is missing\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:hasLayout\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:isCompilable\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
+
+		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:isCompiled\\(\\) should return bool but return statement is missing\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'Xaver &lt;b&gt…' and null will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
+
+		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\UserWithoutToString and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php

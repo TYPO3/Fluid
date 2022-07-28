@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: MVC pattern used with TYPO3.Fluid
  *
  * This examples shows how TYPO3.Fluid is integrated
@@ -12,7 +17,12 @@
  * - see the other example for that.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assign Layout name as ViewVariable which we will pass to f:layout as name
 $view->assign('layout', 'Dynamic');
@@ -22,5 +32,4 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 
 $output = $view->render();
 
-// Output of Controller "Default" action "Default" using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

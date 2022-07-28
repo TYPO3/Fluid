@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
 /*
@@ -25,7 +26,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
     public function testTernaryExpressionDetection($expression, $expected)
     {
         $result = preg_match_all(TernaryExpressionNode::$detectionExpression, $expression, $matches, PREG_SET_ORDER);
-        $this->assertEquals($expected, count($matches) > 0);
+        self::assertEquals($expected, count($matches) > 0);
     }
 
     /**
@@ -64,7 +65,7 @@ class TernaryExpressionNodeTest extends UnitTestCase
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
         $result = TernaryExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Cache;
 
 /*
@@ -34,10 +35,10 @@ class StandardCacheWarmerTest extends UnitTestCase
         $subject = $this->getMockBuilder(StandardCacheWarmer::class)
             ->setMethods(['warmSingleFile', 'detectControllerNamesInTemplateRootPaths'])
             ->getMock();
-        $subject->expects($this->atLeastOnce())
+        $subject->expects(self::atLeastOnce())
             ->method('detectControllerNamesInTemplateRootPaths')
             ->willReturn(['Default', 'Standard']);
-        $subject->expects($this->atLeastOnce())
+        $subject->expects(self::atLeastOnce())
             ->method('warmSingleFile')
             ->willReturn($failedCompilingState);
         $context = new RenderingContextFixture();
@@ -54,28 +55,28 @@ class StandardCacheWarmerTest extends UnitTestCase
                 ]
             )
             ->getMock();
-        $paths->expects($this->atLeastOnce())
+        $paths->expects(self::atLeastOnce())
             ->method('resolveAvailableTemplateFiles')
             ->willReturn(['foo', 'bar']);
-        $paths->expects($this->atLeastOnce())
+        $paths->expects(self::atLeastOnce())
             ->method('resolveAvailablePartialFiles')
             ->willReturn(['foo', 'bar']);
-        $paths->expects($this->atLeastOnce())
+        $paths->expects(self::atLeastOnce())
             ->method('resolveAvailableLayoutFiles')
             ->willReturn(['foo', 'bar']);
-        $paths->expects($this->atLeastOnce())->method('resolveFileInPaths')->willReturn('/dev/null');
-        $paths->expects($this->atLeastOnce())->method('getTemplateRootPaths')->willReturn(['/dev/null']);
-        $paths->expects($this->atLeastOnce())->method('getPartialRootPaths')->willReturn(['/dev/null']);
-        $paths->expects($this->atLeastOnce())->method('getLayoutRootPaths')->willReturn(['/dev/null']);
+        $paths->expects(self::atLeastOnce())->method('resolveFileInPaths')->willReturn('/dev/null');
+        $paths->expects(self::atLeastOnce())->method('getTemplateRootPaths')->willReturn(['/dev/null']);
+        $paths->expects(self::atLeastOnce())->method('getPartialRootPaths')->willReturn(['/dev/null']);
+        $paths->expects(self::atLeastOnce())->method('getLayoutRootPaths')->willReturn(['/dev/null']);
         $compiler = $this->getMockBuilder(TemplateCompiler::class)
             ->setMethods(['enterWarmupMode'])
             ->getMock();
-        $compiler->expects($this->once())->method('enterWarmupMode');
+        $compiler->expects(self::once())->method('enterWarmupMode');
         $context->setTemplateCompiler($compiler);
         $context->setTemplatePaths($paths);
         $failedCompilingState->_set('variableContainer', new StandardVariableProvider());
         $result = $subject->warm($context);
-        $this->assertInstanceOf(FluidCacheWarmupResult::class, $result);
+        self::assertInstanceOf(FluidCacheWarmupResult::class, $result);
     }
 
     /**
@@ -89,7 +90,7 @@ class StandardCacheWarmerTest extends UnitTestCase
         $directory = realpath(__DIR__ . '/../../../../examples/Resources/Private/Templates/');
         $generator = $method->invokeArgs($subject, [[$directory]]);
         foreach ($generator as $resolvedControllerName) {
-            $this->assertNotEmpty($resolvedControllerName, 'Generator yielded an empty controller name!');
+            self::assertNotEmpty($resolvedControllerName, 'Generator yielded an empty controller name!');
         }
     }
 
@@ -103,16 +104,16 @@ class StandardCacheWarmerTest extends UnitTestCase
         $subject = new StandardCacheWarmer();
         $context = new RenderingContextFixture();
         $parser = $this->getMock(TemplateParser::class, ['getOrParseAndStoreTemplate']);
-        $parser->expects($this->once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
+        $parser->expects(self::once())->method('getOrParseAndStoreTemplate')->willThrowException($error);
         $variableProvider = new StandardVariableProvider(['foo' => 'bar']);
         $context->setVariableProvider($variableProvider);
         $context->setTemplateParser($parser);
         $method = new \ReflectionMethod($subject, 'warmSingleFile');
         $method->setAccessible(true);
         $result = $method->invokeArgs($subject, ['/some/file', 'some_file', $context]);
-        $this->assertInstanceOf(ParsedTemplateInterface::class, $result);
-        $this->assertAttributeNotEmpty('failureReason', $result);
-        $this->assertAttributeNotEmpty('mitigations', $result);
+        self::assertInstanceOf(ParsedTemplateInterface::class, $result);
+        self::assertAttributeNotEmpty('failureReason', $result);
+        self::assertAttributeNotEmpty('mitigations', $result);
     }
 
     /**
@@ -140,6 +141,6 @@ class StandardCacheWarmerTest extends UnitTestCase
         $method = new \ReflectionMethod($subject, 'createClosure');
         $method->setAccessible(true);
         $closure = $method->invokeArgs($subject, [__FILE__]);
-        $this->assertNotEmpty($closure(new TemplateParser(), new TemplatePaths()));
+        self::assertNotEmpty($closure(new TemplateParser(), new TemplatePaths()));
     }
 }

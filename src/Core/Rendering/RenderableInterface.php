@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Rendering;
 
 /*
@@ -41,7 +42,6 @@ interface RenderableInterface
      * by the NodeConverter
      *
      * @param NodeInterface $node
-     * @return void
      */
     public function setNode(NodeInterface $node);
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -48,7 +49,7 @@ abstract class AbstractNode implements NodeInterface
     /**
      * @param NodeInterface $node
      * @param RenderingContextInterface $renderingContext
-     * @param boolean $cast
+     * @param bool $cast
      * @return mixed
      */
     protected function evaluateChildNode(NodeInterface $node, RenderingContextInterface $renderingContext, $cast)
@@ -69,7 +70,7 @@ abstract class AbstractNode implements NodeInterface
         if (is_object($value) && !method_exists($value, '__toString')) {
             throw new Parser\Exception('Cannot cast object of type "' . get_class($value) . '" to string.', 1273753083);
         }
-        $output = (string) $value;
+        $output = (string)$value;
         return $output;
     }
 
@@ -88,7 +89,6 @@ abstract class AbstractNode implements NodeInterface
      * Appends a sub node to this node. Is used inside the parser to append children
      *
      * @param NodeInterface $childNode The sub node to add
-     * @return void
      */
     public function addChildNode(NodeInterface $childNode)
     {

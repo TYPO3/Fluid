@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Single file rendering
  *
  * This example shows how to render a single Fluid
@@ -12,7 +17,12 @@
  * other example for that.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning View variables: each variable defined using `assign()` can be used
 // used in the template as {variable}. Variables can be assigned individually
@@ -29,5 +39,4 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 // name because an action is irrelevant when rendering a file directly.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

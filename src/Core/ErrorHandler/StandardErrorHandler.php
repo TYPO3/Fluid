@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ErrorHandler;
 
 /*
@@ -19,7 +20,6 @@ class StandardErrorHandler implements ErrorHandlerInterface
     /**
      * @param \TYPO3Fluid\Fluid\Core\Parser\Exception $error
      * @throws \TYPO3Fluid\Fluid\Core\Parser\Exception
-     * @return void
      */
     public function handleParserError(\TYPO3Fluid\Fluid\Core\Parser\Exception $error)
     {
@@ -29,7 +29,6 @@ class StandardErrorHandler implements ErrorHandlerInterface
     /**
      * @param \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException $error
      * @throws \TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException
-     * @return void
      */
     public function handleExpressionError(\TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException $error)
     {
@@ -39,7 +38,6 @@ class StandardErrorHandler implements ErrorHandlerInterface
     /**
      * @param \TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error
      * @throws \TYPO3Fluid\Fluid\Core\ViewHelper\Exception
-     * @return void
      */
     public function handleViewHelperError(\TYPO3Fluid\Fluid\Core\ViewHelper\Exception $error)
     {
@@ -48,7 +46,6 @@ class StandardErrorHandler implements ErrorHandlerInterface
 
     /**
      * @param \TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error
-     * @return void
      */
     public function handleCompilerError(\TYPO3Fluid\Fluid\Core\Compiler\StopCompilingException $error)
     {
@@ -57,11 +54,9 @@ class StandardErrorHandler implements ErrorHandlerInterface
     /**
      * @param \TYPO3Fluid\Fluid\View\Exception $error
      * @throws \TYPO3Fluid\Fluid\View\Exception
-     * @return void
      */
     public function handleViewError(\TYPO3Fluid\Fluid\View\Exception $error)
     {
         throw $error;
     }
-
 }

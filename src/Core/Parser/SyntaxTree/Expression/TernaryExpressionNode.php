@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 /*
@@ -8,7 +9,6 @@ namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
-use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 /**
@@ -50,8 +50,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
     {
         $parts = preg_split('/([\?:])/s', $expression);
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
-        $negated = false;
-        list ($check, $then, $else) = $parts;
+        list($check, $then, $else) = $parts;
 
         if ($then === '') {
             $then = $check[0] === '!' ? $else : $check;
@@ -64,9 +63,8 @@ class TernaryExpressionNode extends AbstractExpressionNode
 
         if ($checkResult) {
             return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($then), $renderingContext);
-        } else {
-            return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
         }
+        return static::getTemplateVariableOrValueItself($renderingContext->getTemplateParser()->unquoteString($else), $renderingContext);
     }
 
     /**
@@ -122,25 +120,29 @@ class TernaryExpressionNode extends AbstractExpressionNode
     {
         $parts = preg_split('/([\?:])/s', $this->getExpression());
         $parts = array_map([__CLASS__, 'trimPart'], $parts);
-        list ($check, $then, $else) = $parts;
+        list($check, $then, $else) = $parts;
+
+        if ($then === '') {
+            $then = $check[0] === '!' ? $else : $check;
+        }
 
         $matchesVariable = $templateCompiler->variableName('array');
         $initializationPhpCode = '// Rendering TernaryExpression node' . chr(10);
         $initializationPhpCode .= sprintf('%s = %s;', $matchesVariable, var_export($this->getMatches(), true)) . chr(10);
 
-        $parser = new BooleanParser();
-        $compiledExpression = $parser->compile($check);
         $functionName = $templateCompiler->variableName('ternaryExpression');
         $initializationPhpCode .= sprintf(
             '%s = function($context, $renderingContext) {
-				if (%s::convertToBoolean(' . $compiledExpression . ', $renderingContext) === TRUE) {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				} else {
-					return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
-				}
+                $check = %s;
+                $parser = new \TYPO3Fluid\Fluid\Core\Parser\BooleanParser();
+                $checkResult = $parser->evaluate($check, $context);
+                if ($checkResult) {
+                    return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
+                }
+                return %s::getTemplateVariableOrValueItself(%s, $renderingContext);
 			};' . chr(10),
             $functionName,
-            BooleanNode::class,
+            var_export($check, true),
             static::class,
             var_export($then, true),
             static::class,

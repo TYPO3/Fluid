@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests;
 
 /*
@@ -18,5 +19,4 @@ namespace TYPO3Fluid\Fluid\Tests;
  */
 abstract class UnitTestCase extends BaseTestCase
 {
-
 }

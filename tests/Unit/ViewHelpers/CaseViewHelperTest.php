@@ -1,21 +1,20 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
+
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\ViewHelpers\CaseViewHelper;
 use TYPO3Fluid\Fluid\ViewHelpers\SwitchViewHelper;
 
-/**
- * Testcase for CaseViewHelper
- */
 class CaseViewHelperTest extends ViewHelperBaseTestcase
 {
-
     /**
-     * @var CaseViewHelper
+     * @var CaseViewHelper&MockObject
      */
     protected $viewHelper;
 
@@ -32,7 +31,7 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     public function viewHelperInitializesArguments()
     {
         $this->viewHelper->initializeArguments();
-        $this->assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
+        self::assertAttributeNotEmpty('argumentDefinitions', $this->viewHelper);
     }
 
     /**
@@ -54,8 +53,8 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $renderedChildNodes = 'ChildNodes';
         $this->viewHelper->setArguments(['value' => 'someValue']);
-        $this->viewHelper->expects($this->once())->method('renderChildren')->willReturn($renderedChildNodes);
-        $this->assertSame($renderedChildNodes, $this->viewHelper->render());
+        $this->viewHelper->expects(self::once())->method('renderChildren')->willReturn($renderedChildNodes);
+        self::assertSame($renderedChildNodes, $this->viewHelper->render());
     }
 
     /**
@@ -65,6 +64,6 @@ class CaseViewHelperTest extends ViewHelperBaseTestcase
     {
         $this->viewHelperVariableContainer->addOrUpdate(SwitchViewHelper::class, 'switchExpression', 'someValue');
         $this->viewHelper->setArguments(['value' => 'someOtherValue']);
-        $this->assertSame('', $this->viewHelper->initializeArgumentsAndRender());
+        self::assertSame('', $this->viewHelper->initializeArgumentsAndRender());
     }
 }

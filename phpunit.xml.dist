@@ -1,28 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
         backupGlobals="false"
         backupStaticAttributes="false"
-        colors="false"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        cacheResult="false"
+        colors="true"
+        convertDeprecationsToExceptions="true"
         convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
-        forceCoversAnnotation="false"
+        failOnRisky="true"
+        failOnWarning="true"
         processIsolation="false"
         stopOnError="false"
         stopOnFailure="false"
         stopOnIncomplete="false"
         stopOnSkipped="false"
-        verbose="false">
-
+>
         <testsuites>
-                <testsuite name="TYPO3.Fluid Unit">
+                <testsuite name="Unit">
                         <directory>tests/Unit</directory>
                 </testsuite>
-                <testsuite name="TYPO3.Fluid Functional">
+                <testsuite name="Functional">
                         <directory>tests/Functional</directory>
                 </testsuite>
         </testsuites>
-        <filter>
-                <whitelist>
-                        <directory>src/</directory>
-                </whitelist>
-        </filter>
+        <php>
+                <ini name="display_errors" value="1" />
+                <ini name="error_reporting" value="E_ALL" />
+        </php>        
 </phpunit>

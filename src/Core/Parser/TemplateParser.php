@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser;
 
 /*
@@ -40,7 +41,7 @@ class TemplateParser
     /**
      * Whether or not the escaping interceptors are active
      *
-     * @var boolean
+     * @var bool
      */
     protected $escapingEnabled = true;
 
@@ -60,19 +61,19 @@ class TemplateParser
     protected $renderingContext;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pointerLineNumber = 1;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $pointerLineCharacter = 1;
 
     /**
      * @var string
      */
-    protected $pointerTemplateCode = null;
+    protected $pointerTemplateCode;
 
     /**
      * @var ParsedTemplateInterface[]
@@ -81,7 +82,6 @@ class TemplateParser
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
@@ -101,7 +101,7 @@ class TemplateParser
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isEscapingEnabled()
     {
@@ -109,12 +109,11 @@ class TemplateParser
     }
 
     /**
-     * @param boolean $escapingEnabled
-     * @return void
+     * @param bool $escapingEnabled
      */
     public function setEscapingEnabled($escapingEnabled)
     {
-        $this->escapingEnabled = (boolean) $escapingEnabled;
+        $this->escapingEnabled = (boolean)$escapingEnabled;
     }
 
     /**
@@ -156,7 +155,7 @@ class TemplateParser
      */
     public function createParsingRelatedExceptionWithContext(\Exception $error, $templateIdentifier)
     {
-        list ($line, $character, $templateCode) = $this->getCurrentParsingPointers();
+        list($line, $character, $templateCode) = $this->getCurrentParsingPointers();
         $exceptionClass = get_class($error);
         return new $exceptionClass(
             sprintf(
@@ -234,8 +233,6 @@ class TemplateParser
 
     /**
      * Resets the parser to its default values.
-     *
-     * @return void
      */
     protected function reset()
     {
@@ -259,7 +256,7 @@ class TemplateParser
      * Build object tree from the split template
      *
      * @param array $splitTemplate The split template, so that every tag with a namespace declaration is already a seperate array element.
-     * @param integer $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
+     * @param int $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      * @return ParsingState
      * @throws Exception
      */
@@ -330,7 +327,7 @@ class TemplateParser
      * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
      * @param string $methodIdentifier Method identifier
      * @param string $arguments Arguments string, not yet parsed
-     * @param boolean $selfclosing true, if the tag is a self-closing tag.
+     * @param bool $selfclosing true, if the tag is a self-closing tag.
      * @param string $templateElement The template code containing the ViewHelper call
      * @return NodeInterface|null
      */
@@ -374,7 +371,7 @@ class TemplateParser
      * @param string $namespaceIdentifier Namespace identifier - being looked up in $this->namespaces
      * @param string $methodIdentifier Method identifier
      * @param array $argumentsObjectTree Arguments object tree
-     * @return null|NodeInterface An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
+     * @return NodeInterface|null An instance of ViewHelperNode if identity was valid - NULL if the namespace/identity was not registered
      * @throws Exception
      */
     protected function initializeViewHelperAndAddItToStack(ParsingState $state, $namespaceIdentifier, $methodIdentifier, $argumentsObjectTree)
@@ -420,7 +417,7 @@ class TemplateParser
      * @param ParsingState $state The current parsing state
      * @param string $namespaceIdentifier Namespace identifier for the closing tag.
      * @param string $methodIdentifier Method identifier.
-     * @return boolean whether the viewHelper was found and added to the stack or not
+     * @return bool whether the viewHelper was found and added to the stack or not
      * @throws Exception
      */
     protected function closingViewHelperTagHandler(ParsingState $state, $namespaceIdentifier, $methodIdentifier)
@@ -462,7 +459,6 @@ class TemplateParser
      * @param string $delimiter
      * @param string $viewHelperString
      * @param string $additionalViewHelpersString
-     * @return void
      */
     protected function objectAccessorHandler(ParsingState $state, $objectAccessorString, $delimiter, $viewHelperString, $additionalViewHelpersString)
     {
@@ -524,9 +520,8 @@ class TemplateParser
      * Call all interceptors registered for a given interception point.
      *
      * @param NodeInterface $node The syntax tree node which can be modified by the interceptors.
-     * @param integer $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
+     * @param int $interceptionPoint the interception point. One of the \TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_* constants.
      * @param ParsingState $state the parsing state
-     * @return void
      */
     protected function callInterceptor(NodeInterface & $node, $interceptionPoint, ParsingState $state)
     {
@@ -653,8 +648,7 @@ class TemplateParser
      *
      * @param ParsingState $state Current parsing state
      * @param string $text Text to process
-     * @param integer $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
-     * @return void
+     * @param int $context one of the CONTEXT_* constants, defining whether we are inside or outside of ViewHelper arguments currently.
      */
     protected function textAndShorthandSyntaxHandler(ParsingState $state, $text, $context)
     {
@@ -734,7 +728,6 @@ class TemplateParser
      *
      * @param ParsingState $state The current parsing state
      * @param NodeInterface[] $arrayText The array as string.
-     * @return void
      */
     protected function arrayHandler(ParsingState $state, $arrayText)
     {
@@ -817,7 +810,6 @@ class TemplateParser
      *
      * @param ParsingState $state
      * @param string $text
-     * @return void
      */
     protected function textHandler(ParsingState $state, $text)
     {

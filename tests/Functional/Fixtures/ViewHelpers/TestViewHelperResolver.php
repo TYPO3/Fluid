@@ -1,7 +1,7 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 

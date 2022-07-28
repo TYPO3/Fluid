@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -31,7 +32,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     public function renderReturnsEmptyStringIfObjectIsNull()
     {
         $this->viewHelper->setArguments(['each' => null, 'as' => 'foo', 'groupBy' => 'bar', 'groupKey' => null]);
-        $this->assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
+        self::assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
     }
 
     /**
@@ -40,7 +41,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
     public function renderReturnsEmptyStringIfObjectIsEmptyArray()
     {
         $this->viewHelper->setArguments(['each' => [], 'as' => 'foo', 'groupBy' => 'bar', 'groupKey' => null]);
-        $this->assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
+        self::assertEquals('', $this->viewHelper->initializeArgumentsAndRender());
     }
 
     /**
@@ -55,7 +56,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $object, 'as' => 'innerVariable', 'groupBy' => 'someKey', 'groupKey' => null]
         );
         $output = $this->viewHelper->render();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -75,7 +76,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -95,7 +96,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -125,7 +126,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -157,7 +158,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $products, 'as' => 'products', 'groupBy' => 'license', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -181,7 +182,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'customer', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -210,7 +211,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'customer.name', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -242,7 +243,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'customer', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -270,7 +271,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $invoices, 'as' => 'invoices', 'groupBy' => 'date', 'groupKey' => 'myGroupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -288,7 +289,7 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $products, 'as' => 'innerKey', 'groupBy' => 'NonExistingKey', 'groupKey' => 'groupKey']
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 
     /**
@@ -304,6 +305,6 @@ class GroupedForViewHelperTest extends ViewHelperBaseTestcase
             ['each' => $values, 'as' => 'innerVariable', 'groupBy' => 'someKey', 'groupKey' => null]
         );
         $output = $this->viewHelper->initializeArgumentsAndRender();
-        $this->assertEquals('', $output);
+        self::assertEquals('', $output);
     }
 }

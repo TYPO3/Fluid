@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -45,7 +46,7 @@ class SpacelessViewHelper extends AbstractViewHelper
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
@@ -57,6 +58,6 @@ class SpacelessViewHelper extends AbstractViewHelper
      */
     public static function renderStatic(array $arguments, \Closure $childClosure, RenderingContextInterface $renderingContext)
     {
-        return trim(preg_replace('/\\>\\s+\\</', '><', $childClosure()));
+        return trim(preg_replace('/\\>\\s+\\</', '><', (string)$childClosure()));
     }
 }

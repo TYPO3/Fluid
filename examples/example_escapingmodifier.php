@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Use of escaping modifier
  *
  * This example shows how to use the `{escaping on|off|true|false}`
@@ -8,7 +13,12 @@
  * for the entire template file parsing.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning View variables: one variable containing HTML
 $view->assign('html', '<strong>This is not escaped</strong>');
@@ -22,5 +32,4 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 // name because an action is irrelevant when rendering a file directly.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

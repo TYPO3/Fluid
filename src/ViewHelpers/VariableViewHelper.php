@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -37,9 +38,6 @@ class VariableViewHelper extends AbstractViewHelper
 {
     use CompileWithContentArgumentAndRenderStatic;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('value', 'mixed', 'Value to assign. If not in arguments then taken from tag content');
@@ -50,7 +48,6 @@ class VariableViewHelper extends AbstractViewHelper
      * @param array $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
-     * @return null
      */
     public static function renderStatic(
         array $arguments,
@@ -60,5 +57,4 @@ class VariableViewHelper extends AbstractViewHelper
         $value = $renderChildrenClosure();
         $renderingContext->getVariableProvider()->add($arguments['name'], $value);
     }
-
 }

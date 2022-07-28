@@ -1,13 +1,17 @@
 <?php
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
-use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
-use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
+use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
-use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class DataAccessorTest extends UnitTestCase
+class DataAccessorTest extends BaseTestCase
 {
     /**
      * @return array
@@ -81,7 +85,8 @@ class DataAccessorTest extends UnitTestCase
             }
         );
 
-        $view = $this->getView();
+        // @todo: refactor to run twice to trigger caching.
+        $view = new TemplateView();
         $view->getTemplatePaths()->setTemplateSource($template);
         $view->assign('data', $object);
 
@@ -92,40 +97,12 @@ class DataAccessorTest extends UnitTestCase
             try {
                 $view->render();
             } catch (\Throwable $t) {
-                static::assertSame($expectedErrorMessage, $t->getMessage());
+                self::assertSame($expectedErrorMessage, $t->getMessage());
             }
         } else {
             $result = json_decode($view->render(), true);
-            static::assertSame($expectation, $result);
+            self::assertSame($expectation, $result);
         }
-    }
-
-    /**
-     * If your test case requires a custom View instance
-     * return the instance from this method.
-     *
-     * @param bool $withCache
-     * @return TemplateView
-     */
-    private function getView($withCache = false)
-    {
-        $view = new TemplateView();
-        $cache = $this->getCache();
-        if ($cache && $withCache) {
-            $view->getRenderingContext()->setCache($cache);
-        }
-        return $view;
-    }
-
-    /**
-     * If your test case requires a cache, override this
-     * method and return an instance.
-     *
-     * @return FluidCacheInterface
-     */
-    private function getCache()
-    {
-        return new SimpleFileCache(sys_get_temp_dir());
     }
 
     /**

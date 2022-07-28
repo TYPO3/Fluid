@@ -1,26 +1,44 @@
 <?php
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases;
 
-use TYPO3Fluid\Fluid\Tests\Functional\BaseFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 
-/**
- * Class CycleTest
- */
-class CycleTest extends BaseFunctionalTestCase
+class CycleTest extends AbstractFunctionalTestCase
 {
-
     /**
-     * @return array
+     * @test
      */
-    public function getTemplateCodeFixturesAndExpectations()
+    public function cycleValuesInArray(): void
     {
-        return [
-            'Cycles values in array' => [
-                '<f:for each="{items}" as="item"><f:cycle values="{cycles}" as="cycled">{cycled}</f:cycle></f:for>',
-                ['items' => [0, 1, 2, 3], 'cycles' => ['a', 'b']],
-                ['abab'],
-                ['aa', 'bb']
-            ],
+        $source = '<f:for each="{items}" as="item"><f:cycle values="{cycles}" as="cycled">{cycled}</f:cycle></f:for>';
+        $variables = [
+            'items' => [0, 1, 2, 3],
+            'cycles' => ['a', 'b'],
         ];
+
+        $view = new TemplateView();
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $output = $view->render();
+        self::assertStringContainsString('abab', $output);
+        self::assertStringNotContainsString('aa', $output);
+        self::assertStringNotContainsString('bb', $output);
+
+        $view = new TemplateView();
+        $view->assignMultiple($variables);
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);
+        $output = $view->render();
+        self::assertStringContainsString('abab', $output);
+        self::assertStringNotContainsString('aa', $output);
+        self::assertStringNotContainsString('bb', $output);
     }
 }

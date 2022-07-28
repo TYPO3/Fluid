@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -43,22 +44,18 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class DebugViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeChildren = false;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -78,7 +75,7 @@ class DebugViewHelper extends AbstractViewHelper
         $typeOnly = $arguments['typeOnly'];
         $expressionToExamine = $renderChildrenClosure();
         if ($typeOnly === true) {
-            return (is_object($expressionToExamine) ? get_class($expressionToExamine) : gettype($expressionToExamine));
+            return is_object($expressionToExamine) ? get_class($expressionToExamine) : gettype($expressionToExamine);
         }
 
         $html = $arguments['html'];
@@ -86,12 +83,11 @@ class DebugViewHelper extends AbstractViewHelper
         return static::dumpVariable($expressionToExamine, $html, 1, $levels);
     }
 
-
     /**
      * @param mixed $variable
-     * @param boolean $html
-     * @param integer $level
-     * @param integer $levels
+     * @param bool $html
+     * @param int $level
+     * @param int $levels
      * @return string
      */
     protected static function dumpVariable($variable, $html, $level, $levels)
@@ -154,26 +150,28 @@ class DebugViewHelper extends AbstractViewHelper
     protected static function getValuesOfNonScalarVariable($variable)
     {
         if ($variable instanceof \ArrayObject || is_array($variable)) {
-            return (array) $variable;
-        } elseif ($variable instanceof \Iterator) {
+            return (array)$variable;
+        }
+        if ($variable instanceof \Iterator) {
             return iterator_to_array($variable);
-        } elseif (is_resource($variable)) {
+        }
+        if (is_resource($variable)) {
             return stream_get_meta_data($variable);
-        } elseif ($variable instanceof \DateTimeInterface) {
+        }
+        if ($variable instanceof \DateTimeInterface) {
             return [
                 'class' => get_class($variable),
                 'ISO8601' => $variable->format(\DateTime::ATOM),
-                'UNIXTIME' => (integer) $variable->format('U')
+                'UNIXTIME' => (integer)$variable->format('U')
             ];
-        } else {
-            $reflection = new \ReflectionObject($variable);
-            $properties = $reflection->getProperties();
-            $output = [];
-            foreach ($properties as $property) {
-                $propertyName = $property->getName();
-                $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
-            }
-            return $output;
         }
+        $reflection = new \ReflectionObject($variable);
+        $properties = $reflection->getProperties();
+        $output = [];
+        foreach ($properties as $property) {
+            $propertyName = $property->getName();
+            $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
+        }
+        return $output;
     }
 }

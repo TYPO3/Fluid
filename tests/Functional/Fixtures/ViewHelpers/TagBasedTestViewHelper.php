@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;

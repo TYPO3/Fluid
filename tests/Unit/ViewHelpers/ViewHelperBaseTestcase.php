@@ -1,17 +1,16 @@
 <?php
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
+namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
+
+use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TagBuilder;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
@@ -38,14 +37,9 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
     protected $viewHelperVariableContainerData = [];
 
     /**
-     * @var TemplateVariableContainer
+     * @var VariableProviderInterface
      */
     protected $templateVariableContainer;
-
-    /**
-     * @var TagBuilder
-     */
-    protected $tagBuilder;
 
     /**
      * @var array
@@ -53,13 +47,10 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
     protected $arguments = [];
 
     /**
-     * @var RenderingContext
+     * @var RenderingContextInterface
      */
     protected $renderingContext;
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         $this->viewHelperVariableContainer = new ViewHelperVariableContainer();
@@ -72,7 +63,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
     /**
      * @param string $viewHelperName
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function viewHelperVariableContainerExistsCallback($viewHelperName, $key)
     {
@@ -82,7 +73,7 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
     /**
      * @param string $viewHelperName
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function viewHelperVariableContainerGetCallback($viewHelperName, $key)
     {
@@ -91,14 +82,10 @@ abstract class ViewHelperBaseTestcase extends UnitTestCase
 
     /**
      * @param AbstractViewHelper $viewHelper
-     * @return void
      */
     protected function injectDependenciesIntoViewHelper(AbstractViewHelper $viewHelper)
     {
         $viewHelper->setRenderingContext($this->renderingContext);
         $viewHelper->setArguments($this->arguments);
-        if ($viewHelper instanceof AbstractTagBasedViewHelper) {
-            $viewHelper->injectTagBuilder($this->tagBuilder);
-        }
     }
 }
