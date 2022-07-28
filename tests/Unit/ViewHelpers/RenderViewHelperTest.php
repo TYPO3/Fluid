@@ -267,6 +267,6 @@ class RenderViewHelperTest extends ViewHelperBaseTestcase
             ]
         );
         $output = $this->subject->render();
-        $this->assertEquals('foobar', $output);
+        self::assertEquals('foobar', $output);
     }
 }
