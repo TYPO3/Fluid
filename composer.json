@@ -3,6 +3,7 @@
     "description": "The TYPO3 Fluid template rendering engine",
     "homepage": "https://github.com/TYPO3/Fluid",
     "support": {
+        "docs": "https://docs.typo3.org/other/typo3fluid/fluid/main/en-us/",
         "issues": "https://github.com/TYPO3/Fluid/issues",
         "source": "https://github.com/TYPO3/Fluid"
     },
