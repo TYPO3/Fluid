@@ -27,16 +27,17 @@ returning expression node class names:
      *
      * @var string
      */
-    protected $expressionNodeTypes = array(
+    protected $expressionNodeTypes = [
         'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\CastingExpressionNode',
         'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\MathExpressionNode',
         'TYPO3Fluid\\Fluid\\Core\\Parser\\SyntaxTree\\Expression\\TernaryExpressionNode',
-    );
+    ];
 
     /**
      * @return string
      */
-    public function getExpressionNodeTypes() {
+    public function getExpressionNodeTypes()
+    {
         return $this->expressionNodeTypes;
     }
 
@@ -72,8 +73,8 @@ action name etc).
      * Ternary Condition Node - allows the shorthand version
      * of a condition to be written as `{var ? thenvar : elsevar}`
      */
-    class TernaryExpressionNode extends AbstractExpressionNode {
-
+    class TernaryExpressionNode extends AbstractExpressionNode
+    {
         /**
          * Pattern which detects ternary conditions written in shorthand
          * syntax, e.g. {checkvar ? thenvar : elsevar}.
@@ -96,9 +97,10 @@ action name etc).
          * @param string $expression
          * @return mixed
          */
-        public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression) {
+        public static function evaluateExpression(RenderingContextInterface $renderingContext, $expression)
+        {
             $parts = preg_split('/([\?:])/s', $expression); // split our expression on "?" and ":" characters
-            $parts = array_map(array(__CLASS__, 'trimPart'), $parts); // parent::trimPart() is a utility method to trim
+            $parts = array_map([__CLASS__, 'trimPart'], $parts); // parent::trimPart() is a utility method to trim
             list ($check, $then, $else) = $parts; // we expect *exactly* three parts, nothing more, nothing less
             // we evaluate the "check this" side of the expression as boolean...
             $checkResult = Parser\SyntaxTree\BooleanNode::convertToBoolean(parent::getTemplateVariableOrValueItself($check, $renderingContext));

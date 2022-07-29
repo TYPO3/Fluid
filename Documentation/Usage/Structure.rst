@@ -32,9 +32,9 @@ object before you pass it to the `TemplateView`:
 
     // set up paths object with arrays of paths with files
     $paths = new \TYPO3Fluid\Fluid\View\TemplatePaths();
-    $paths->setTemplateRootPaths(array('/path/to/templates/'));
-    $paths->setLayoutRootPaths(array('/path/to/layouts/'));
-    $paths->setPartialRootPaths(array('/path/to/partials/'));
+    $paths->setTemplateRootPaths(['/path/to/templates/']);
+    $paths->setLayoutRootPaths(['/path/to/layouts/']);
+    $paths->setPartialRootPaths(['/path/to/partials/']);
     // pass the constructed TemplatePaths instance to the View
     $view = new \TYPO3Fluid\Fluid\View\TemplateView($paths);
 
