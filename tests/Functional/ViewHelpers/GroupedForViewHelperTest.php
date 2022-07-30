@@ -28,7 +28,7 @@ class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'groupBy' => '',
             'groupKey' => '',
         ];
-        self::assertSame('', GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext()));
+        GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext());
     }
 
     /**
@@ -44,7 +44,7 @@ class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'groupBy' => '',
             'groupKey' => '',
         ];
-        self::assertSame('', GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext()));
+        GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext());
     }
 
     /**
@@ -202,6 +202,31 @@ class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'Anton Abel' . chr(10) .
             'groupKey: Balthasar Bux' . chr(10) .
             'Balthasar Bux' . chr(10),
+        ];
+
+        yield 'group multidimensional array by sub array key' => [
+            '<f:groupedFor each="{products}" as="products" groupBy="license.theLicense" groupKey="myGroupKey">' .
+                'groupKey: {myGroupKey}' . chr(10) .
+                '<f:for each="{products}" as="product" key="productKey">' .
+                    '{productKey}: {product.name}' . chr(10) .
+                '</f:for>' .
+            '</f:groupedFor>',
+            [
+                'products' => [
+                    'photoshop' => ['name' => 'Adobe Photoshop', 'license' => ['theLicense' => 'commercial']],
+                    'typo3' => ['name' => 'TYPO3', 'license' => ['theLicense' => 'GPL']],
+                    'office' => ['name' => 'Microsoft Office', 'license' => ['theLicense' => 'commercial']],
+                    'drupal' => ['name' => 'Drupal', 'license' => ['theLicense' => 'GPL']],
+                    'wordpress' => ['name' => 'Wordpress', 'license' => ['theLicense' => 'GPL']],
+                ],
+            ],
+            'groupKey: commercial' . chr(10) .
+            'photoshop: Adobe Photoshop' . chr(10) .
+            'office: Microsoft Office' . chr(10) .
+            'groupKey: GPL' . chr(10) .
+            'typo3: TYPO3' . chr(10) .
+            'drupal: Drupal' . chr(10) .
+            'wordpress: Wordpress' . chr(10),
         ];
 
         /*
