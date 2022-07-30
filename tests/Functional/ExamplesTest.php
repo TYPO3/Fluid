@@ -18,8 +18,7 @@ class ExamplesTest extends AbstractFunctionalTestCase
                     'Standard ternary expression: The ternary expression is TRUE',
                     'Negated ternary expression without then case: The ternary expression is FALSE',
                     'Negated ternary expression: The ternary expression is FALSE',
-                    // @todo: There seems to be a cache issue when the cached template is loaded a second time.
-                    // 'Ternary expression without then case: The ternary expression is TRUE',
+                    'Ternary expression without then case: The ternary expression is TRUE',
                     '1 === TRUE',
                     '(0) === FALSE',
                     '(1) === TRUE',
