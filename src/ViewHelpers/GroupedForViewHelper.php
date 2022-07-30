@@ -153,9 +153,7 @@ class GroupedForViewHelper extends AbstractViewHelper
         $extractor = new VariableExtractor();
         $groups = ['keys' => [], 'values' => []];
         foreach ($elements as $key => $value) {
-            if (is_array($value)) {
-                $currentGroupIndex = isset($value[$groupBy]) ? $value[$groupBy] : null;
-            } elseif (is_object($value)) {
+            if (is_array($value) || is_object($value)) {
                 $currentGroupIndex = $extractor->getByPath($value, $groupBy);
             } else {
                 throw new ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
