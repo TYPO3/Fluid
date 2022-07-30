@@ -60,4 +60,10 @@ return (new PhpCsFixer\Config())
         'single_line_comment_style' => ['comment_types' => ['hash']],
         'single_trait_insert_per_statement' => true,
         'whitespace_after_comma_in_array' => true,
+        'header_comment' => [
+            'header' => 'This file belongs to the package "TYPO3 Fluid".' . chr(10) .
+                'See LICENSE.txt that was shipped with this package.',
+            'comment_type' => 'comment',
+            'location' => 'after_declare_strict',
+        ],
     ]);
