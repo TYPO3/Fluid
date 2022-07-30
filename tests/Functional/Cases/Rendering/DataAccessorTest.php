@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -7,137 +9,112 @@
 
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering;
 
-use TYPO3Fluid\Fluid\Tests\BaseTestCase;
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
+use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithCamelCaseGetter;
+use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithEverything;
+use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithProperties;
+use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithUpperCaseGetter;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class DataAccessorTest extends BaseTestCase
+class DataAccessorTest extends AbstractFunctionalTestCase
 {
-    /**
-     * @return array
-     */
-    public function dataIsRenderedDataProvider()
+    public function renderDataProvider(): array
     {
         return [
             'plain array' => [
-                ['value' => 'value'],
-                ['value' => 'value'],
+                '["{data.value}"]',
+                [
+                    'data' => [
+                        'value' => 'value'
+                    ],
+                ],
+                [
+                    'value',
+                ],
             ],
             'array object' => [
-                new \ArrayObject(['value' => 'value']),
-                ['value' => 'value'],
-            ],
-            'private properties fail' => [
-                $this->createObjectWithProperties(),
+                '["{data.value}"]',
                 [
-                    'privateValue' => null,
+                    'data' => new \ArrayObject(['value' => 'value']),
                 ],
-                'Cannot access private property TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects\WithProperties::$privateValue',
+                [
+                    'value',
+                ],
             ],
             'public property' => [
-                $this->createObjectWithProperties(),
+                '["{data.publicValue}"]',
                 [
-                    'publicValue' => 'publicValue',
+                    'data' => new WithProperties(),
+                ],
+                [
+                    'publicValue',
                 ],
             ],
             'camelCase getter method' => [
-                $this->createObjectWithCamelCaseGetter(),
+                '["{data.privateValue}", "{data.protectedValue}", "{data.publicValue}"]',
                 [
-                    'privateValue' => 'privateValue@getPrivateValue()',
-                    'protectedValue' => 'protectedValue@getProtectedValue()',
-                    'publicValue' => 'publicValue@getPublicValue()',
+                    'data' => new WithCamelCaseGetter(),
+                ],
+                [
+                    'privateValue@getPrivateValue()',
+                    'protectedValue@getProtectedValue()',
+                    'publicValue@getPublicValue()',
                 ],
             ],
             'UPPERCASE getter method' => [
-                $this->createObjectWithUpperCaseGetter(),
+                '["{data.privateValue}", "{data.protectedValue}", "{data.publicValue}"]',
                 [
-                    'privateValue' => 'privateValue@GETPRIVATEVALUE()',
-                    'protectedValue' => 'protectedValue@GETPROTECTEDVALUE()',
-                    'publicValue' => 'publicValue@GETPUBLICVALUE()',
+                    'data' => new WithUpperCaseGetter(),
+                ],
+                [
+                    'privateValue@GETPRIVATEVALUE()',
+                    'protectedValue@GETPROTECTEDVALUE()',
+                    'publicValue@GETPUBLICVALUE()'
                 ],
             ],
             'multiple accessor types' => [
-                $this->createObjectWithEverything(),
+                '["{data.privateValue}", "{data.protectedValue}", "{data.publicValue}"]',
                 [
-                    'privateValue' => 'privateValue@getPrivateValue()',
-                    'protectedValue' => 'protectedValue@getProtectedValue()',
-                    'publicValue' => 'publicValue@getPublicValue()',
+                    'data' => new WithEverything(),
+                ],
+                [
+                    'privateValue@getPrivateValue()',
+                    'protectedValue@getProtectedValue()',
+                    'publicValue@getPublicValue()'
                 ],
             ],
         ];
     }
 
     /**
-     * @param object $object
-     * @param array $properties
-     * @param string|null $expectedErrorMessage
-     *
      * @test
-     * @dataProvider dataIsRenderedDataProvider
+     * @dataProvider renderDataProvider
      */
-    public function dataIsRendered($object, array $properties, $expectedErrorMessage = null)
+    public function render(string $template, array $variables, array $expected)
     {
-        $template = $this->createJsonFluidTemplate($properties, 'data.');
-        $expectation = array_filter(
-            array_values($properties),
-            function ($propertyValue) {
-                return $propertyValue !== null;
-            }
-        );
-
-        // @todo: refactor to run twice to trigger caching.
         $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->assignMultiple($variables);
         $view->getTemplatePaths()->setTemplateSource($template);
-        $view->assign('data', $object);
+        self::assertSame($expected, json_decode($view->render(), true));
 
-        if ($expectedErrorMessage !== null && method_exists($this, 'expectErrorMessage')) {
-            $this->expectErrorMessage($expectedErrorMessage);
-            $view->render();
-        } elseif ($expectedErrorMessage !== null) {
-            try {
-                $view->render();
-            } catch (\Throwable $t) {
-                self::assertSame($expectedErrorMessage, $t->getMessage());
-            }
-        } else {
-            $result = json_decode($view->render(), true);
-            self::assertSame($expectation, $result);
-        }
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->assignMultiple($variables);
+        $view->getTemplatePaths()->setTemplateSource($template);
+        self::assertSame($expected, json_decode($view->render(), true));
     }
 
     /**
-     * @param array $properties
-     * @param string $variablePrefix
-     * @return string
+     * @test
      */
-    private function createJsonFluidTemplate(array $properties, $variablePrefix = '')
+    public function renderThrowsExceptionAccessingPrivateProperty(): void
     {
-        $inferences = array_map(
-            function ($propertyName) use ($variablePrefix) {
-                return sprintf('"{%s%s}"', $variablePrefix, $propertyName);
-            },
-            array_keys($properties)
-        );
-        return sprintf('[%s]', implode(', ', $inferences));
-    }
-
-    private function createObjectWithProperties()
-    {
-        return new Objects\WithProperties();
-    }
-
-    private function createObjectWithCamelCaseGetter()
-    {
-        return new Objects\WithCamelCaseGetter();
-    }
-
-    private function createObjectWithUpperCaseGetter()
-    {
-        return new Objects\WithUpperCaseGetter();
-    }
-
-    private function createObjectWithEverything()
-    {
-        return new Objects\WithEverything();
+        $this->expectException(\Throwable::class);
+        $this->expectExceptionCode(0);
+        $view = new TemplateView();
+        $view->getTemplatePaths()->setTemplateSource('["{data.privateValue}"]');
+        $view->assignMultiple(['data' => new WithProperties()]);
+        $view->render();
     }
 }

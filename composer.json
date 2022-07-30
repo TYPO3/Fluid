@@ -15,6 +15,7 @@
         "sort-packages": true
     },
     "require-dev": {
+        "ext-json": "*",
         "ext-mbstring": "*",
         "friendsofphp/php-cs-fixer": "^3.4",
         "phpstan/phpstan": "^1.7",

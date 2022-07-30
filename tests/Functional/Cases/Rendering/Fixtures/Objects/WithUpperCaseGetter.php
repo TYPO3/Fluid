@@ -1,11 +1,43 @@
 <?php
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
+declare(strict_types=1);
 
-use TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Traits;
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Rendering\Fixtures\Objects;
 
 class WithUpperCaseGetter
 {
-    use Traits\PropertiesTrait;
-    use Traits\UpperCaseGetterTrait;
+    /**
+     * @var string
+     */
+    private $privateValue = 'privateValue';
+
+    /**
+     * @var string
+     */
+    protected $protectedValue = 'protectedValue';
+
+    /**
+     * @var string
+     */
+    public $publicValue = 'publicValue';
+
+    public function GETPRIVATEVALUE(): string
+    {
+        return $this->privateValue . sprintf('@%s()', __FUNCTION__);
+    }
+
+    public function GETPROTECTEDVALUE(): string
+    {
+        return $this->protectedValue . sprintf('@%s()', __FUNCTION__);
+    }
+
+    public function GETPUBLICVALUE(): string
+    {
+        return $this->publicValue . sprintf('@%s()', __FUNCTION__);
+    }
 }
