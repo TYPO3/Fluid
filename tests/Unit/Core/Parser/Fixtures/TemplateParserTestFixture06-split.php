@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 return [
     '{namespace foo=TYPO3Fluid\Fluid\ViewHelpers}',
     '<foo:format.nl2br>',
