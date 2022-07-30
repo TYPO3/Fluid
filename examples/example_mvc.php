@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: MVC pattern used with TYPO3.Fluid
  *
  * This examples shows how TYPO3.Fluid is integrated
@@ -12,7 +17,12 @@
  * - see the other example for that.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning View variables: each variable defined using `assign()` can be used
 // used in the template as {variable}. Variables can be assigned individually
@@ -25,25 +35,22 @@ $view->assign('foobar', 'MVC template');
 // To customise the context, instantiate \TYPO3Fluid\Fluid\Core\Rendering\RenderingContext
 // and set your context settings (controller name, action, etc) and then override
 // the context using `$view->setRenderingContext($context)`.
+// Output of Controller "Default" action "Default":
 $output = $view->render('Default');
-
-// Output of Controller "Default" action "Default" using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);
 
 // We now illustrate how to change the Controller name that gets used when templates
 // are resolved - making the controller name "Other". We are still rendering the
-// action "Default":
+// action "Default".
+// Output of Controller "Other" action "Default":
 $view->getRenderingContext()->setControllerName('Other');
 $output = $view->render('Default');
+$exampleHelper->output($output);
 
-// Output of Controller "Other" action "Default" using helper from view_init.php
-example_output($output);
-
-// Finally, we illustrate how to change the action that gets rendered:
+// Finally, we illustrate how to change the action that gets rendered.
+// Output of Controller "Other" action "List":
 $output = $view->render('List');
-
-// Output of Controller "Other" action "List" using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);
 
 // NB: in a normal MVC context you usually would not be reusing the same View
 // instance for all these renderings - normally, you would be creating a fresh

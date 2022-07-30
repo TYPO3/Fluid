@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
 
 /*
@@ -52,16 +53,16 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
     public function testRenderReturnsContentDirectlyOutsideWarmupMode()
     {
         $compiler = $this->getMock(TemplateCompiler::class, ['isWarmupMode']);
-        $compiler->expects($this->once())->method('isWarmupMode')->willReturn(false);
+        $compiler->expects(self::once())->method('isWarmupMode')->willReturn(false);
         $renderingContext = $this->getMock(RenderingContextFixture::class, ['setVariableProvider']);
-        $renderingContext->expects($this->never())->method('setVariableProvider');
+        $renderingContext->expects(self::never())->method('setVariableProvider');
         $renderingContext->setTemplateCompiler($compiler);
         $subject = new WarmupViewHelper();
         $subject->setRenderChildrenClosure(function () {
             return 'test';
         });
         $subject->setRenderingContext($renderingContext);
-        $this->assertEquals('test', $subject->render());
+        self::assertEquals('test', $subject->render());
     }
 
     /**
@@ -70,9 +71,9 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
     public function testRenderOverlaysAndRestoresVariableProviderAndReturnsContentInsideWarmupMode()
     {
         $compiler = $this->getMock(TemplateCompiler::class, ['isWarmupMode']);
-        $compiler->expects($this->once())->method('isWarmupMode')->willReturn(true);
+        $compiler->expects(self::once())->method('isWarmupMode')->willReturn(true);
         $renderingContext = $this->getMock(RenderingContextFixture::class, ['setVariableProvider']);
-        $renderingContext->expects($this->exactly(2))->method('setVariableProvider');
+        $renderingContext->expects(self::exactly(2))->method('setVariableProvider');
         $renderingContext->setTemplateCompiler($compiler);
         $subject = new WarmupViewHelper();
         $subject->setArguments(['variables' => ['foo' => 'bar']]);
@@ -80,6 +81,6 @@ class WarmupViewHelperTest extends ViewHelperBaseTestcase
             return 'test';
         });
         $subject->setRenderingContext($renderingContext);
-        $this->assertEquals('test', $subject->render());
+        self::assertEquals('test', $subject->render());
     }
 }

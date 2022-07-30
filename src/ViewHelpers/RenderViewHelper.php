@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -110,13 +111,10 @@ class RenderViewHelper extends AbstractViewHelper
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -137,13 +135,14 @@ class RenderViewHelper extends AbstractViewHelper
     {
         $section = $arguments['section'];
         $partial = $arguments['partial'];
-        $variables = (array) $arguments['arguments'];
-        $optional = (boolean) $arguments['optional'];
+        $variables = (array)$arguments['arguments'];
+        $optional = (boolean)$arguments['optional'];
         $delegate = $arguments['delegate'];
         /** @var RenderableInterface $renderable */
         $renderable = $arguments['renderable'];
-        $tagContent = $renderChildrenClosure();
+        $tagContent = null;
         if ($arguments['contentAs']) {
+            $tagContent = $renderChildrenClosure();
             $variables[$arguments['contentAs']] = $tagContent;
         }
 
@@ -178,7 +177,7 @@ class RenderViewHelper extends AbstractViewHelper
         // not set, NULL is returned and cast to a new, empty string
         // outside of this ViewHelper.
         if ($content === '') {
-            $content = $arguments['default'] ?: $tagContent;
+            $content = $arguments['default'] ?: $tagContent ?: $renderChildrenClosure();
         }
         return $content;
     }

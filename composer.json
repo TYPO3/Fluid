@@ -1,27 +1,41 @@
 {
-	"name": "typo3fluid/fluid",
-	"description": "The TYPO3 Fluid template rendering engine",
-	"license": ["LGPL-3.0-or-later"],
-	"require": {
-		"php": ">=5.5.0"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "^8.1",
-		"mikey179/vfsstream": "^1.6",
-		"squizlabs/php_codesniffer": "^2.7",
-		"php-coveralls/php-coveralls": "^2.1"
-	},
-	"autoload": {
-		"psr-4": {
-			"TYPO3Fluid\\Fluid\\": "src/"
-		}
-	},
-	"autoload-dev": {
-		"psr-4": {
-			"TYPO3Fluid\\Fluid\\Tests\\": "tests/"
-		}
-	},
-	"bin": [
-		"bin/fluid"
-	]
+    "name": "typo3fluid/fluid",
+    "description": "The TYPO3 Fluid template rendering engine",
+    "homepage": "https://github.com/TYPO3/Fluid",
+    "support": {
+        "docs": "https://docs.typo3.org/other/typo3fluid/fluid/main/en-us/",
+        "issues": "https://github.com/TYPO3/Fluid/issues",
+        "source": "https://github.com/TYPO3/Fluid"
+    },
+    "license": ["LGPL-3.0-or-later"],
+    "require": {
+        "php": "^7.2 || ^8.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "ext-mbstring": "*",
+        "friendsofphp/php-cs-fixer": "^3.4",
+        "phpstan/phpstan": "^1.7",
+        "phpstan/phpstan-phpunit": "^1.1",
+        "phpunit/phpunit": "^8.5.26 || ^9.5"
+    },
+    "suggest": {
+        "ext-json": "PHP JSON is needed when using JSONVariableProvider: A relatively rare use case"
+    },
+    "autoload": {
+        "psr-4": {
+            "TYPO3Fluid\\Fluid\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TYPO3Fluid\\FluidExamples\\": "examples/src/",
+            "TYPO3Fluid\\Fluid\\Tests\\": "tests/"
+        }
+    },
+    "bin": [
+        "bin/fluid"
+    ]
 }

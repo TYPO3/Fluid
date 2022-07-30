@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Cache;
 
 /*
@@ -25,8 +26,8 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
     public function testRenderCallsRenderChildren()
     {
         $subject = $this->getMockBuilder(StaticViewHelper::class)->setMethods(['renderChildren'])->getMock();
-        $subject->expects($this->once())->method('renderChildren')->willReturn('test');
-        $this->assertEquals('test', $subject->render());
+        $subject->expects(self::once())->method('renderChildren')->willReturn('test');
+        self::assertEquals('test', $subject->render());
     }
 
     /**
@@ -40,7 +41,7 @@ class StaticViewHelperTest extends ViewHelperBaseTestcase
             ->setMethods(['evaluateChildNodes'])
             ->disableOriginalConstructor()
             ->getMock();
-        $node->expects($this->once())->method('evaluateChildNodes');
+        $node->expects(self::once())->method('evaluateChildNodes');
         $compiler = new TemplateCompiler();
         $this->setExpectedException(StopCompilingChildrenException::class);
         $code = '';

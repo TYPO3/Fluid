@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -48,23 +49,20 @@ class SwitchViewHelper extends AbstractViewHelper
 {
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
     /**
      * @var mixed
      */
-    protected $backupSwitchExpression = null;
+    protected $backupSwitchExpression;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $backupBreakState = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -127,26 +125,24 @@ class SwitchViewHelper extends AbstractViewHelper
 
     /**
      * @param NodeInterface $node
-     * @return boolean
+     * @return bool
      */
     protected function isDefaultCaseNode(NodeInterface $node)
     {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class);
+        return $node instanceof ViewHelperNode && $node->getViewHelperClassName() === DefaultCaseViewHelper::class;
     }
 
     /**
      * @param NodeInterface $node
-     * @return boolean
+     * @return bool
      */
     protected function isCaseNode(NodeInterface $node)
     {
-        return ($node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class);
+        return $node instanceof ViewHelperNode && $node->getViewHelperClassName() === CaseViewHelper::class;
     }
 
     /**
      * Backups "switch expression" and "break" state of a possible parent switch ViewHelper to support nesting
-     *
-     * @return void
      */
     protected function backupSwitchState()
     {
@@ -160,8 +156,6 @@ class SwitchViewHelper extends AbstractViewHelper
 
     /**
      * Restores "switch expression" and "break" states that might have been backed up in backupSwitchState() before
-     *
-     * @return void
      */
     protected function restoreSwitchState()
     {
@@ -201,8 +195,7 @@ class SwitchViewHelper extends AbstractViewHelper
                 $phpCode .= sprintf(
                     'case call_user_func(%s): return call_user_func(%s);',
                     $valueClosure,
-                    $childrenClosure,
-                    $compiler->getNodeConverter()->convert($childNode)
+                    $childrenClosure
                 ) . PHP_EOL;
             }
         }

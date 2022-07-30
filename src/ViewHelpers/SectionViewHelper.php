@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -10,7 +11,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
-use TYPO3Fluid\Fluid\Core\ViewHelper\TemplateVariableContainer;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 
 /**
@@ -69,14 +69,13 @@ class SectionViewHelper extends AbstractViewHelper
     use ParserRuntimeOnly;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
     /**
      * Initialize the arguments.
      *
-     * @return void
      * @api
      */
     public function initializeArguments()
@@ -91,11 +90,9 @@ class SectionViewHelper extends AbstractViewHelper
      * @param ViewHelperNode $node
      * @param TextNode[] $arguments
      * @param VariableProviderInterface $variableContainer
-     * @return void
      */
     public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
     {
-        /** @var $nameArgument TextNode */
         $nameArgument = $arguments['name'];
         $sectionName = $nameArgument->getText();
         $sections = $variableContainer['1457379500_sections'] ? $variableContainer['1457379500_sections'] : [];

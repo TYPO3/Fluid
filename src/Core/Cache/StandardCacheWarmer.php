@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Cache;
 
 /*
@@ -231,7 +232,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
     protected function detectControllerNamesInTemplateRootPaths(array $templateRootPaths)
     {
         foreach ($templateRootPaths as $templateRootPath) {
-            foreach ((array) glob(rtrim($templateRootPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $pathName) {
+            foreach ((array)glob(rtrim($templateRootPath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $pathName) {
                 if (is_dir($pathName)) {
                     yield basename($pathName);
                 }
@@ -310,8 +311,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
                     get_class($error),
                     $error->getFile(),
                     $error->getLine(),
-                    $error->getMessage(),
-                    $error->getCode()
+                    $error->getMessage()
                 )
             );
             $parsedTemplate->setMitigations([
@@ -327,7 +327,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      */
     protected function createClosure($templatePathAndFilename)
     {
-        return function(TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
+        return function (TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
             return file_get_contents($templatePathAndFilename);
         };
     }

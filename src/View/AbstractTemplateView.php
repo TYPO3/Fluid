@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\View;
 
 /*
@@ -22,7 +23,7 @@ use TYPO3Fluid\Fluid\ViewHelpers\SectionViewHelper;
  *
  * Contains the fundamental methods which any Fluid based template view needs.
  */
-abstract class AbstractTemplateView extends AbstractView
+abstract class AbstractTemplateView extends AbstractView implements TemplateAwareViewInterface
 {
 
     /**
@@ -52,7 +53,7 @@ abstract class AbstractTemplateView extends AbstractView
     /**
      * Constructor
      *
-     * @param null|RenderingContextInterface $context
+     * @param RenderingContextInterface|null $context
      */
     public function __construct(RenderingContextInterface $context = null)
     {
@@ -78,7 +79,6 @@ abstract class AbstractTemplateView extends AbstractView
      * Sets the cache to use in RenderingContext.
      *
      * @param FluidCacheInterface $cache
-     * @return void
      */
     public function setCache(FluidCacheInterface $cache)
     {
@@ -119,7 +119,6 @@ abstract class AbstractTemplateView extends AbstractView
      * Injects a fresh rendering context
      *
      * @param RenderingContextInterface $renderingContext
-     * @return void
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
     {
@@ -190,7 +189,7 @@ abstract class AbstractTemplateView extends AbstractView
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
-                    function($parent, TemplatePaths $paths) use ($layoutName) {
+                    function ($parent, TemplatePaths $paths) use ($layoutName) {
                         return $paths->getLayoutSource($layoutName);
                     }
                 );
@@ -210,7 +209,7 @@ abstract class AbstractTemplateView extends AbstractView
      *
      * @param string $sectionName Name of section to render
      * @param array $variables The variables to use
-     * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+     * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string rendered template for the section
      * @throws InvalidSectionException
      */
@@ -250,11 +249,10 @@ abstract class AbstractTemplateView extends AbstractView
             if (!method_exists($parsedTemplate, $methodNameOfSection)) {
                 if ($ignoreUnknown) {
                     return '';
-                } else {
-                    return $renderingContext->getErrorHandler()->handleViewError(
-                        new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
-                    );
                 }
+                return $renderingContext->getErrorHandler()->handleViewError(
+                    new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
+                );
             }
             $this->startRendering($renderingTypeOnNextLevel, $parsedTemplate, $renderingContext);
             $output = $parsedTemplate->$methodNameOfSection($renderingContext);
@@ -269,7 +267,7 @@ abstract class AbstractTemplateView extends AbstractView
                     new InvalidSectionException('Section "' . $sectionName . '" does not exist.')
                 );
             }
-            /** @var $section ViewHelperNode */
+            /** @var ViewHelperNode $section */
             $section = $sections[$sectionName];
 
             $renderingContext->getViewHelperVariableContainer()->add(
@@ -292,7 +290,7 @@ abstract class AbstractTemplateView extends AbstractView
      * @param string $partialName
      * @param string $sectionName
      * @param array $variables
-     * @param boolean $ignoreUnknown Ignore an unknown section and just return an empty string
+     * @param bool $ignoreUnknown Ignore an unknown section and just return an empty string
      * @return string
      */
     public function renderPartial($partialName, $sectionName, array $variables, $ignoreUnknown = false)
@@ -335,10 +333,9 @@ abstract class AbstractTemplateView extends AbstractView
     /**
      * Start a new nested rendering. Pushes the given information onto the $renderingStack.
      *
-     * @param integer $type one of the RENDERING_* constants
+     * @param int $type one of the RENDERING_* constants
      * @param ParsedTemplateInterface $template
      * @param RenderingContextInterface $context
-     * @return void
      */
     protected function startRendering($type, ParsedTemplateInterface $template, RenderingContextInterface $context)
     {
@@ -348,8 +345,6 @@ abstract class AbstractTemplateView extends AbstractView
     /**
      * Stops the current rendering. Removes one element from the $renderingStack. Make sure to always call this
      * method pair-wise with startRendering().
-     *
-     * @return void
      */
     protected function stopRendering()
     {
@@ -360,7 +355,7 @@ abstract class AbstractTemplateView extends AbstractView
     /**
      * Get the current rendering type.
      *
-     * @return integer one of RENDERING_* constants
+     * @return int one of RENDERING_* constants
      */
     protected function getCurrentRenderingType()
     {
@@ -387,7 +382,7 @@ abstract class AbstractTemplateView extends AbstractView
         $actionName = $renderingContext->getControllerAction();
         $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
             $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-            function($parent, TemplatePaths $paths) use ($controllerName, $actionName, $renderingContext) {
+            function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
                 return $paths->getTemplateSource($controllerName, $actionName);
             }
         );

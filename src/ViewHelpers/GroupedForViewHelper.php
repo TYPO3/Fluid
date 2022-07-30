@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -87,17 +88,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class GroupedForViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -142,7 +139,6 @@ class GroupedForViewHelper extends AbstractViewHelper
         }
         return $output;
     }
-
 
     /**
      * Groups the given array by the specified groupBy property.

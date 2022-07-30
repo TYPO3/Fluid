@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper\Traits;
 
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
@@ -34,7 +35,7 @@ trait CompileWithRenderStatic
     /**
      * @return \Closure
      */
-    protected abstract function buildRenderChildrenClosure();
+    abstract protected function buildRenderChildrenClosure();
 
     /**
      * @param string $argumentsName
@@ -51,7 +52,7 @@ trait CompileWithRenderStatic
         ViewHelperNode $node,
         TemplateCompiler $compiler
     ) {
-        list ($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
+        list($initialization, $execution) = ViewHelperCompiler::getInstance()->compileWithCallToStaticMethod(
             $this,
             $argumentsName,
             $closureName

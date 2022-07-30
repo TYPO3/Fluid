@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 /*
@@ -60,7 +61,7 @@ class BooleanNode extends AbstractNode
 
     /**
      * @param RenderingContextInterface $renderingContext
-     * @return boolean the boolean value
+     * @return bool the boolean value
      */
     public function evaluate(RenderingContextInterface $renderingContext)
     {
@@ -70,7 +71,7 @@ class BooleanNode extends AbstractNode
     /**
      * @param NodeInterface $node
      * @param RenderingContextInterface $renderingContext
-     * @return boolean
+     * @return bool
      */
     public static function createFromNodeAndEvaluate(NodeInterface $node, RenderingContextInterface $renderingContext)
     {
@@ -85,7 +86,7 @@ class BooleanNode extends AbstractNode
      *
      * @param RenderingContextInterface $renderingContext
      * @param array $expressionParts
-     * @return boolean the boolean value
+     * @return bool the boolean value
      */
     public static function evaluateStack(RenderingContextInterface $renderingContext, array $expressionParts)
     {
@@ -142,9 +143,9 @@ class BooleanNode extends AbstractNode
      *
      * Must be public and static as it is used from inside cached templates.
      *
-     * @param boolean $value Value to be converted to boolean
+     * @param mixed $value Value to be converted to boolean
      * @param RenderingContextInterface $renderingContext
-     * @return boolean
+     * @return bool
      */
     public static function convertToBoolean($value, $renderingContext)
     {
@@ -152,14 +153,14 @@ class BooleanNode extends AbstractNode
             return $value;
         }
         if (is_numeric($value)) {
-            return (boolean) ((float) $value);
+            return (boolean)((float)$value);
         }
         if (is_string($value)) {
             if (strlen($value) === 0) {
                 return false;
             }
             $value = $renderingContext->getTemplateParser()->unquoteString($value);
-            return (strtolower($value) !== 'false' && !empty($value));
+            return strtolower($value) !== 'false' && !empty($value);
         }
         if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
             return count($value) > 0;

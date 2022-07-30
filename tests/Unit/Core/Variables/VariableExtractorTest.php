@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 /*
@@ -9,7 +10,6 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
-use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithProtectedGetter;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -29,7 +29,7 @@ class VariableExtractorTest extends UnitTestCase
     public function testGetByPath($subject, $path, $expected)
     {
         $result = VariableExtractor::extract($subject, $path);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -68,7 +68,7 @@ class VariableExtractorTest extends UnitTestCase
     public function testGetAccessorsForPath($subject, $path, $expected)
     {
         $result = VariableExtractor::extractAccessors($subject, $path);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -79,7 +79,7 @@ class VariableExtractorTest extends UnitTestCase
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
         $inArrayAccess = new StandardVariableProvider($inArray);
-        $inPublic = (object) $inArray;
+        $inPublic = (object)$inArray;
         $asArray = VariableExtractor::ACCESSOR_ARRAY;
         $asGetter = VariableExtractor::ACCESSOR_GETTER;
         $asPublic = VariableExtractor::ACCESSOR_PUBLICPROPERTY;
@@ -104,7 +104,7 @@ class VariableExtractorTest extends UnitTestCase
     public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected)
     {
         $result = VariableExtractor::extract($subject, $path, [$accessor]);
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -118,8 +118,8 @@ class VariableExtractorTest extends UnitTestCase
             [['test' => 'test'], 'test', VariableExtractor::ACCESSOR_PUBLICPROPERTY, 'test'],
             [['test' => 'test'], 'test', VariableExtractor::ACCESSOR_GETTER, 'test'],
             [['test' => 'test'], 'test', VariableExtractor::ACCESSOR_ASSERTER, 'test'],
-            [(object) ['test' => 'test'], 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'],
-            [(object) ['test' => 'test'], 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'],
+            [(object)['test' => 'test'], 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'],
+            [(object)['test' => 'test'], 'test', VariableExtractor::ACCESSOR_ARRAY, 'test'],
             [new \ArrayObject(['testProperty' => 'testValue']), 'testProperty', null, 'testValue'],
         ];
     }
@@ -131,6 +131,6 @@ class VariableExtractorTest extends UnitTestCase
     {
         $subject = new ClassWithMagicGetter();
         $result = VariableExtractor::extract($subject, 'test');
-        $this->assertEquals('test result', $result);
+        self::assertEquals('test result', $result);
     }
 }

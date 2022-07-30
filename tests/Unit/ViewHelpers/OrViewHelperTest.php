@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -21,9 +22,11 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArguments()
     {
         $instance = $this->getMock(OrViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('content', 'mixed', $this->anything(), false, '');
-        $instance->expects($this->at(1))->method('registerArgument')->with('alternative', 'mixed', $this->anything(), false, '');
-        $instance->expects($this->at(2))->method('registerArgument')->with('arguments', 'array', $this->anything());
+        $instance->expects(self::exactly(3))->method('registerArgument')->withConsecutive(
+            ['content', 'mixed', self::anything(), false, ''],
+            ['alternative', 'mixed', self::anything(), false, ''],
+            ['arguments', 'array', self::anything()]
+        );
         $instance->setRenderingContext(new RenderingContextFixture());
         $instance->initializeArguments();
     }
@@ -37,11 +40,11 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     public function testRender($arguments, $expected)
     {
         $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
-        $instance->expects($this->exactly((integer) empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
+        $instance->expects(self::exactly((integer)empty($arguments['content'])))->method('renderChildren')->willReturn($arguments['content']);
         $instance->setArguments($arguments);
         $instance->setRenderingContext(new RenderingContextFixture());
         $result = $instance->render();
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**
@@ -64,12 +67,12 @@ class OrViewHelperTest extends ViewHelperBaseTestcase
     public function testRenderAlternative($arguments, $expected)
     {
         $instance = $this->getMock(OrViewHelper::class, ['renderChildren']);
-        $instance->expects($this->once())->method('renderChildren')->willReturn(null);
+        $instance->expects(self::once())->method('renderChildren')->willReturn(null);
         $arguments['content'] = null;
         $instance->setArguments($arguments);
         $instance->setRenderingContext(new RenderingContextFixture());
         $result = $instance->render();
-        $this->assertEquals($expected, $result);
+        self::assertEquals($expected, $result);
     }
 
     /**

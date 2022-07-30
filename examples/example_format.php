@@ -1,16 +1,27 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Format other than HTML
  *
  * This example shows how to render template files
  * in a format different from the default HTML.
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigning the template path and filename to be rendered. Doing this overrides
 // resolving normally done by the TemplatePaths and directly renders this file.
+$paths = $view->getTemplatePaths();
 $paths->setFormat('json');
 
 // Rendering the View: we use the $action argument for the render() method in
@@ -19,5 +30,4 @@ $paths->setFormat('json');
 $view->assign('foobar', 'Variable foobar');
 $output = $view->render('OtherFormat');
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

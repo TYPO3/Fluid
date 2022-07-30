@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -81,12 +82,11 @@ class ViewHelperResolver
      *
      * @param string $identifier
      * @param string|array $phpNamespace
-     * @return void
      */
     public function addNamespace($identifier, $phpNamespace)
     {
         if (!array_key_exists($identifier, $this->namespaces) || $this->namespaces[$identifier] === null) {
-            $this->namespaces[$identifier] = $phpNamespace === null ? null : (array) $phpNamespace;
+            $this->namespaces[$identifier] = $phpNamespace === null ? null : (array)$phpNamespace;
         } elseif (is_array($phpNamespace)) {
             $this->namespaces[$identifier] = array_unique(array_merge($this->namespaces[$identifier], $phpNamespace));
         } elseif (isset($this->namespaces[$identifier]) && !in_array($phpNamespace, $this->namespaces[$identifier])) {
@@ -101,7 +101,6 @@ class ViewHelperResolver
      * from outside and some can be added from compiled values.
      *
      * @param array $namespaces
-     * @return void
      */
     public function addNamespaces(array $namespaces)
     {
@@ -153,13 +152,12 @@ class ViewHelperResolver
      * Use getNamespaces() to get an array of currently added namespaces.
      *
      * @param array $namespaces
-     * @return void
      */
     public function setNamespaces(array $namespaces)
     {
         $this->namespaces = [];
         foreach ($namespaces as $identifier => $phpNamespace) {
-            $this->namespaces[$identifier] = $phpNamespace === null ? null : (array) $phpNamespace;
+            $this->namespaces[$identifier] = $phpNamespace === null ? null : (array)$phpNamespace;
         }
     }
 
@@ -169,7 +167,7 @@ class ViewHelperResolver
      * without processing.
      *
      * @param string $namespaceIdentifier
-     * @return boolean TRUE if the given namespace is valid, otherwise FALSE
+     * @return bool TRUE if the given namespace is valid, otherwise FALSE
      */
     public function isNamespaceValid($namespaceIdentifier)
     {
@@ -185,7 +183,7 @@ class ViewHelperResolver
      * if the namespace is unknown and not ignored
      *
      * @param string $namespaceIdentifier
-     * @return boolean TRUE if the given namespace is valid, otherwise FALSE
+     * @return bool TRUE if the given namespace is valid, otherwise FALSE
      */
     public function isNamespaceValidOrIgnored($namespaceIdentifier)
     {
@@ -206,7 +204,7 @@ class ViewHelperResolver
 
     /**
      * @param string $namespaceIdentifier
-     * @return boolean
+     * @return bool
      */
     public function isNamespaceIgnored($namespaceIdentifier)
     {
@@ -239,7 +237,7 @@ class ViewHelperResolver
      *
      * @param string $namespaceIdentifier
      * @param string $methodIdentifier
-     * @return string|NULL
+     * @return string|null
      * @throws ParserException
      */
     public function resolveViewHelperClassName($namespaceIdentifier, $methodIdentifier)
@@ -322,7 +320,7 @@ class ViewHelperResolver
         }
         $className .= 'ViewHelper';
 
-        $namespaces = (array) $this->namespaces[$namespaceIdentifier];
+        $namespaces = (array)$this->namespaces[$namespaceIdentifier];
 
         do {
             $name = rtrim((string)array_pop($namespaces), '\\') . '\\' . $className;

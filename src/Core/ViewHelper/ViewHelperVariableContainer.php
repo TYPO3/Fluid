@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\ViewHelper;
 
 /*
@@ -36,7 +37,6 @@ class ViewHelperVariableContainer
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data
      * @param mixed $value The value to store
-     * @return void
      * @api
      */
     public function add($viewHelperName, $key, $value)
@@ -50,7 +50,6 @@ class ViewHelperVariableContainer
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param array|\Traversable $variables An associative array of all variables to add
-     * @return void
      * @api
      */
     public function addAll($viewHelperName, $variables)
@@ -76,7 +75,6 @@ class ViewHelperVariableContainer
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data
      * @param mixed $value The value to store
-     * @return void
      */
     public function addOrUpdate($viewHelperName, $key, $value)
     {
@@ -117,7 +115,7 @@ class ViewHelperVariableContainer
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data
-     * @return boolean TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
+     * @return bool TRUE if a value for the given ViewHelperName / Key is stored, FALSE otherwise.
      * @api
      */
     public function exists($viewHelperName, $key)
@@ -130,7 +128,6 @@ class ViewHelperVariableContainer
      *
      * @param string $viewHelperName The ViewHelper Class name (Fully qualified, like "TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper")
      * @param string $key Key of the data to remove
-     * @return void
      * @api
      */
     public function remove($viewHelperName, $key)
@@ -142,7 +139,6 @@ class ViewHelperVariableContainer
      * Set the view to pass it to ViewHelpers.
      *
      * @param ViewInterface $view View to set
-     * @return void
      */
     public function setView(ViewInterface $view)
     {

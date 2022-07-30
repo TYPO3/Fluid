@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 
 /*
@@ -22,7 +23,7 @@ class AbstractViewViewTest extends UnitTestCase
     {
         $instance = $this->getMockForAbstractClass(AbstractView::class);
         $result = $instance->render();
-        $this->assertEquals('', $result);
+        self::assertEquals('', $result);
     }
 
     /**
@@ -32,7 +33,7 @@ class AbstractViewViewTest extends UnitTestCase
     {
         $mock = $this->getMockForAbstractClass(AbstractView::class);
         $mock->assign('test', 'foobar');
-        $this->assertAttributeEquals(['test' => 'foobar'], 'variables', $mock);
+        self::assertAttributeEquals(['test' => 'foobar'], 'variables', $mock);
     }
 
     /**
@@ -42,6 +43,6 @@ class AbstractViewViewTest extends UnitTestCase
     {
         $mock = $this->getMockForAbstractClass(AbstractView::class);
         $mock->assignMultiple(['test' => 'foobar', 'baz' => 'barfoo']);
-        $this->assertAttributeEquals(['test' => 'foobar', 'baz' => 'barfoo'], 'variables', $mock);
+        self::assertAttributeEquals(['test' => 'foobar', 'baz' => 'barfoo'], 'variables', $mock);
     }
 }

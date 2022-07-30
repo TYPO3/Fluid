@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /*
@@ -48,7 +49,6 @@ interface VariableProviderInterface extends \ArrayAccess
      * supported by the VariableProvider itself.
      *
      * @param mixed $source
-     * @return void
      */
     public function setSource($source);
 
@@ -71,7 +71,6 @@ interface VariableProviderInterface extends \ArrayAccess
      *
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
-     * @return void
      * @api
      */
     public function add($identifier, $value);
@@ -102,7 +101,6 @@ interface VariableProviderInterface extends \ArrayAccess
      * Remove a variable from context.
      *
      * @param string $identifier The identifier to remove
-     * @return void
      * @api
      */
     public function remove($identifier);
@@ -118,7 +116,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * Checks if this property exists in the VariableContainer.
      *
      * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
+     * @return bool TRUE if $identifier exists, FALSE otherwise
      * @api
      */
     public function exists($identifier);
@@ -128,7 +126,6 @@ interface VariableProviderInterface extends \ArrayAccess
      *
      * @param string $identifier Identifier of the variable to add
      * @param mixed $value The variable's value
-     * @return void
      */
     #[\ReturnTypeWillChange]
     public function offsetSet($identifier, $value);
@@ -137,7 +134,6 @@ interface VariableProviderInterface extends \ArrayAccess
      * Remove a variable from context.
      *
      * @param string $identifier The identifier to remove
-     * @return void
      */
     #[\ReturnTypeWillChange]
     public function offsetUnset($identifier);
@@ -146,7 +142,7 @@ interface VariableProviderInterface extends \ArrayAccess
      * Checks if this property exists in the VariableContainer.
      *
      * @param string $identifier
-     * @return boolean TRUE if $identifier exists, FALSE otherwise
+     * @return bool TRUE if $identifier exists, FALSE otherwise
      */
     #[\ReturnTypeWillChange]
     public function offsetExists($identifier);

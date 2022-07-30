@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 /*
@@ -19,7 +20,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
  */
 class EscapeChildrenEnabledAndEscapeOutputDisabledViewHelper extends AbstractEscapingViewHelper
 {
-
     protected $escapeChildren = true;
     protected $escapeOutput = false;
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Compiler;
 
 /*
@@ -26,7 +27,7 @@ class FailedCompilingStateTest extends UnitTestCase
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set($property, $value);
         $method = 'get' . ucfirst($property);
-        $this->assertEquals($value, $subject->$method());
+        self::assertEquals($value, $subject->$method());
     }
 
     /**
@@ -42,7 +43,7 @@ class FailedCompilingStateTest extends UnitTestCase
         $method = 'set' . ucfirst($property);
         $getter = 'get' . ucfirst($property);
         $subject->$method($value);
-        $this->assertEquals($value, $subject->$getter());
+        self::assertEquals($value, $subject->$getter());
     }
 
     /**
@@ -53,7 +54,7 @@ class FailedCompilingStateTest extends UnitTestCase
         $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
         $subject->_set('mitigations', ['m1']);
         $subject->addMitigation('m2');
-        $this->assertEquals(['m1', 'm2'], $subject->getMitigations());
+        self::assertEquals(['m1', 'm2'], $subject->getMitigations());
     }
 
     /**

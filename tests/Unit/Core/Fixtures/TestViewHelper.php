@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
 /*
@@ -13,10 +14,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 class TestViewHelper extends AbstractViewHelper
 {
-
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('param1', 'integer', 'P1 Stuff', true);

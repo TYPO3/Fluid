@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
@@ -8,10 +9,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
  */
 abstract class AbstractEscapingViewHelper extends AbstractViewHelper
 {
-
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         $this->registerArgument('content', 'string', 'Content provided as argument');

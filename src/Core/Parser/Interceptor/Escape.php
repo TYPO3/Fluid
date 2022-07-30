@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Core\Parser\Interceptor;
 
 /*
@@ -23,7 +24,7 @@ class Escape implements InterceptorInterface
     /**
      * Is the interceptor enabled right now for child nodes?
      *
-     * @var boolean
+     * @var bool
      */
     protected $childrenEscapingEnabled = true;
 
@@ -40,7 +41,7 @@ class Escape implements InterceptorInterface
      * If "escapingInterceptorEnabled" in the ViewHelper is FALSE, will disable itself inside the ViewHelpers body.
      *
      * @param NodeInterface $node
-     * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
+     * @param int $interceptorPosition One of the INTERCEPT_* constants for the current interception point
      * @param ParsingState $parsingState the current parsing state. Not needed in this interceptor.
      * @return NodeInterface
      */

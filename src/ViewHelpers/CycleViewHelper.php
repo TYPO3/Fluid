@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -68,13 +69,10 @@ class CycleViewHelper extends AbstractViewHelper
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -134,7 +132,7 @@ class CycleViewHelper extends AbstractViewHelper
     /**
      * @param string $as
      * @param ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer
-     * @return integer
+     * @return int
      */
     protected static function initializeIndex($as, ViewHelper\ViewHelperVariableContainer $viewHelperVariableContainer)
     {

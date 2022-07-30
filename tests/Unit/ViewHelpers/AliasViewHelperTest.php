@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
 /*
@@ -21,7 +22,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
     public function testInitializeArgumentsRegistersExpectedArguments()
     {
         $instance = $this->getMock(AliasViewHelper::class, ['registerArgument']);
-        $instance->expects($this->at(0))->method('registerArgument')->with('map', 'array', $this->anything(), true);
+        $instance->expects(self::exactly(1))->method('registerArgument')->with('map', 'array', self::anything(), true);
         $instance->initializeArguments();
     }
 
@@ -39,7 +40,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
             '',
             false
         );
-        $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
+        $mockViewHelperNode->expects(self::once())->method('evaluateChildNodes')->willReturn('foo');
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->setViewHelperNode($mockViewHelperNode);
@@ -61,7 +62,7 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
             '',
             false
         );
-        $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
+        $mockViewHelperNode->expects(self::once())->method('evaluateChildNodes')->willReturn('foo');
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->setViewHelperNode($mockViewHelperNode);
@@ -83,12 +84,12 @@ class AliasViewHelperTest extends ViewHelperBaseTestcase
             '',
             false
         );
-        $mockViewHelperNode->expects($this->once())->method('evaluateChildNodes')->will($this->returnValue('foo'));
+        $mockViewHelperNode->expects(self::once())->method('evaluateChildNodes')->willReturn('foo');
 
         $this->injectDependenciesIntoViewHelper($viewHelper);
         $viewHelper->setViewHelperNode($mockViewHelperNode);
 
         $viewHelper->setArguments(['map' => []]);
-        $this->assertEquals('foo', $viewHelper->render());
+        self::assertEquals('foo', $viewHelper->render());
     }
 }

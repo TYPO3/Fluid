@@ -1,4 +1,10 @@
 <?php
+
+/*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
@@ -6,7 +12,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 {
-
     public function setIdentifier($identifier)
     {
         // stub

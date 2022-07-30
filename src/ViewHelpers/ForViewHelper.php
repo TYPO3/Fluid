@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 /*
@@ -75,17 +76,13 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
  */
 class ForViewHelper extends AbstractViewHelper
 {
-
     use CompileWithRenderStatic;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $escapeOutput = false;
 
-    /**
-     * @return void
-     */
     public function initializeArguments()
     {
         parent::initializeArguments();
@@ -116,7 +113,6 @@ class ForViewHelper extends AbstractViewHelper
         if ($arguments['reverse'] === true) {
             // array_reverse only supports arrays
             if (is_object($arguments['each'])) {
-                /** @var $each \Traversable */
                 $each = $arguments['each'];
                 $arguments['each'] = iterator_to_array($each);
             }

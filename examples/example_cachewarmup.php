@@ -1,6 +1,11 @@
 <?php
 
 /*
+ * This file belongs to the package "TYPO3 Fluid".
+ * See LICENSE.txt that was shipped with this package.
+ */
+
+/**
  * EXAMPLE: Cache warmup using fallback variables
  *
  * This example shows how to add variables which only apply when the
@@ -19,7 +24,12 @@
  * See the "fluid" CLI script that comes with this library!
  */
 
-require __DIR__ . '/include/view_init.php';
+use TYPO3Fluid\FluidExamples\Helper\ExampleHelper;
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$exampleHelper = new ExampleHelper();
+$view = $exampleHelper->init();
 
 // Assigns a required variable (reference to the name of a section which
 // gets rendered WITHOUT the "optional" flag.
@@ -34,5 +44,4 @@ $view->getTemplatePaths()->setTemplatePathAndFilename(__DIR__ . '/Resources/Priv
 // name because an action is irrelevant when rendering a file directly.
 $output = $view->render();
 
-// Output using helper from view_init.php
-example_output($output);
+$exampleHelper->output($output);

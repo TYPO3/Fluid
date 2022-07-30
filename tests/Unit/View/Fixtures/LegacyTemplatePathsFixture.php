@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\View\Fixtures;
 
 use TYPO3Fluid\Fluid\View\TemplatePaths;

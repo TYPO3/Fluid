@@ -1,4 +1,5 @@
 <?php
+
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 /*
@@ -26,7 +27,7 @@ class ConfigurationTest extends UnitTestCase
         $configuration = new Configuration();
         $configuration->addInterceptor($interceptor);
         $interceptors = $configuration->getInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-        $this->assertContains($interceptor, $interceptors);
+        self::assertContains($interceptor, $interceptors);
     }
 
     /**
@@ -38,6 +39,6 @@ class ConfigurationTest extends UnitTestCase
         $configuration = new Configuration();
         $configuration->addEscapingInterceptor($interceptor);
         $interceptors = $configuration->getEscapingInterceptors(InterceptorInterface::INTERCEPT_OBJECTACCESSOR);
-        $this->assertContains($interceptor, $interceptors);
+        self::assertContains($interceptor, $interceptors);
     }
 }
