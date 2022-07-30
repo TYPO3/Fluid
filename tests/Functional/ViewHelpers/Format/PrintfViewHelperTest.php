@@ -11,28 +11,18 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
-use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 
-class RawViewHelperTest extends AbstractFunctionalTestCase
+class PrintfViewHelperTest extends AbstractFunctionalTestCase
 {
-
-    /**
-     * @test
-     */
-    public function viewHelperDeactivatesEscapingInterceptor()
-    {
-        self::assertFalse((new RawViewHelper())->isOutputEscapingEnabled());
-    }
-
     public function renderDataProvider(): \Generator
     {
-        yield 'value as argument' => [
-            '<f:format.raw value="input value \" & äöüß@" />',
-            'input value " & äöüß@',
+        yield 'argument is array' => [
+            '<f:format.printf arguments="{year: 2009, month: 4, day: 5}">%04d-%02d-%02d</f:format.printf>',
+            '2009-04-05',
         ];
-        yield 'value as tag content' => [
-            '<f:format.raw>input value " & äöüß@</f:format.raw>',
-            'input value " & äöüß@',
+        yield 'swap arguments' => [
+            '<f:format.printf arguments="{0: 123, 1: \'foo\', 2: \'bar\'}">%2$s %1$d %3$s %2$s</f:format.printf>',
+            'foo 123 bar foo',
         ];
     }
 
