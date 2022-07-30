@@ -140,9 +140,9 @@ starts:
 
     $myTemplateProcessor = new MyTemplateProcessor();
     $myTemplateProcessor->setDoMyMagicThing(TRUE);
-    $templateView->setTemplateProcessors(array(
+    $templateView->setTemplateProcessors([
         $myTemplateProcessor
-    ));
+    ]);
 
 The registration method requires an array - this is to let you define multiple
 processors without needing to wrap them in a single class as well as reuse
