@@ -211,6 +211,11 @@ parameters:
 			path: src/ViewHelpers/SectionViewHelper.php
 
 		-
+			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\UserWithoutToString and string will always evaluate to false\\.$#"
+			count: 1
+			path: tests/Functional/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
+
+		-
 			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$cache \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Cache\\\\FluidCacheInterface\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
@@ -304,13 +309,3 @@ parameters:
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:isCompiled\\(\\) should return bool but return statement is missing\\.$#"
 			count: 1
 			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 'Xaver &lt;b&gt…' and null will always evaluate to false\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\UserWithoutToString and string will always evaluate to false\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
