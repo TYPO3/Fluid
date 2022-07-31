@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
@@ -14,7 +16,7 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 /**
  * Testcase for Regular expressions in parser
  */
-class PatternsTest extends UnitTestCase
+class TemplateParserPatternTest extends UnitTestCase
 {
 
     /**

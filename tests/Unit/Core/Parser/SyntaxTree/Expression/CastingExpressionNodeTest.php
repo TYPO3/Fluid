@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
+namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree\Expression;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
@@ -77,7 +79,7 @@ class CastingExpressionNodeTest extends UnitTestCase
             ['mystring as float', ['mystring' => '1.23'], 1.23],
             ['myvariable as integer', ['myvariable' => 321], 321],
             ['myinteger as string', ['myinteger' => 111], '111'],
-            ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', 90000)],
+            ['mydate as DateTime', ['mydate' => 90000], \DateTime::createFromFormat('U', '90000')],
             ['mydate as DateTime', ['mydate' => 'January'], new \DateTime('January')],
             ['1 as namestoredinvariables', ['namestoredinvariables' => 'boolean'], true],
             ['mystring as array', ['mystring' => 'foo,bar'], ['foo', 'bar']],
