@@ -261,21 +261,6 @@ parameters:
 			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
 
 		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 0 and string will always evaluate to false\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 2 and string will always evaluate to false\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
-
-		-
-			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with 3 and string will always evaluate to false\\.$#"
-			count: 2
-			path: tests/Unit/ViewHelpers/CountViewHelperTest.php
-
-		-
 			message: "#^ArrayObject\\<string, string\\> does not accept ArrayObject\\<string, string\\>\\.$#"
 			count: 1
 			path: tests/Unit/ViewHelpers/DebugViewHelperTest.php
