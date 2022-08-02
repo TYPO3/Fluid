@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers;
 
-use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\ConstraintSyntaxTreeNode;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\CountableIterator;
 use TYPO3Fluid\Fluid\ViewHelpers\ForViewHelper;
 
 /**
@@ -26,30 +24,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
         $this->arguments['reverse'] = null;
         $this->arguments['key'] = null;
         $this->arguments['iteration'] = null;
-    }
-
-    /**
-     * @test
-     */
-    public function renderExecutesTheLoopCorrectly()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
-        $this->arguments['each'] = [0, 1, 2, 3];
-        $this->arguments['as'] = 'innerVariable';
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
-
-        $expectedCallProtocol = [
-            ['innerVariable' => 0],
-            ['innerVariable' => 1],
-            ['innerVariable' => 2],
-            ['innerVariable' => 3]
-        ];
-        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -78,88 +52,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
                 'innerVariable' => 'value2',
                 'someKey' => 'key2'
             ]
-        ];
-        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsEmptyStringIfObjectIsNull()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $this->arguments['each'] = null;
-        $this->arguments['as'] = 'foo';
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-
-        self::assertEquals('', $viewHelper->initializeArgumentsAndRender());
-    }
-
-    /**
-     * @test
-     */
-    public function renderReturnsEmptyStringIfObjectIsEmptyArray()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $this->arguments['each'] = [];
-        $this->arguments['as'] = 'foo';
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-
-        self::assertEquals('', $viewHelper->initializeArgumentsAndRender());
-    }
-
-    /**
-     * @test
-     */
-    public function renderIteratesElementsInReverseOrderIfReverseIsTrue()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
-
-        $this->arguments['each'] = [0, 1, 2, 3];
-        $this->arguments['as'] = 'innerVariable';
-        $this->arguments['reverse'] = true;
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
-
-        $expectedCallProtocol = [
-            ['innerVariable' => 3],
-            ['innerVariable' => 2],
-            ['innerVariable' => 1],
-            ['innerVariable' => 0]
-        ];
-        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-    }
-
-    /**
-     * @test
-     */
-    public function renderIteratesElementsInReverseOrderIfReverseIsTrueAndObjectIsIterator()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
-
-        $this->arguments['each'] = new \ArrayIterator([0, 1, 2, 3]);
-        $this->arguments['as'] = 'innerVariable';
-        $this->arguments['reverse'] = true;
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
-
-        $expectedCallProtocol = [
-            ['innerVariable' => 3],
-            ['innerVariable' => 2],
-            ['innerVariable' => 1],
-            ['innerVariable' => 0]
         ];
         self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
@@ -264,47 +156,6 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ]
         ];
         self::assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-    }
-
-    /**
-     * @test
-     */
-    public function renderThrowsExceptionWhenPassingObjectsToEachThatAreNotTraversable()
-    {
-        $viewHelper = new ForViewHelper();
-        $object = new \stdClass();
-
-        $this->arguments['each'] = $object;
-        $this->arguments['as'] = 'innerVariable';
-        $this->arguments['key'] = 'someKey';
-        $this->arguments['reverse'] = true;
-
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->initializeArgumentsAndRender();
-    }
-
-    /**
-     * @test
-     */
-    public function renderIteratesThroughElementsOfTraversableObjects()
-    {
-        $viewHelper = new ForViewHelper();
-
-        $viewHelperNode = new ConstraintSyntaxTreeNode($this->templateVariableContainer);
-
-        $this->arguments['each'] = new \ArrayObject(['key1' => 'value1', 'key2' => 'value2']);
-        $this->arguments['as'] = 'innerVariable';
-
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->setViewHelperNode($viewHelperNode);
-        $viewHelper->initializeArgumentsAndRender();
-
-        $expectedCallProtocol = [
-            ['innerVariable' => 'value1'],
-            ['innerVariable' => 'value2']
-        ];
-        self::assertEquals($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
     }
 
     /**
@@ -435,44 +286,5 @@ class ForViewHelperTest extends ViewHelperBaseTestcase
             ]
         ];
         self::assertSame($expectedCallProtocol, $viewHelperNode->callProtocol, 'The call protocol differs -> The for loop does not work as it should!');
-    }
-
-    /**
-     * @test
-     */
-    public function renderThrowsExceptionOnInvalidObject()
-    {
-        $viewHelper = new ForViewHelper();
-        $this->arguments['each'] = new \DateTime('now');
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $this->setExpectedException(Exception::class);
-        $viewHelper->render();
-    }
-
-    /**
-     * @test
-     */
-    public function renderCountsSubjectIfIterationArgumentProvided()
-    {
-        $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
-        $subject->expects(self::once())->method('count')->willReturn(1);
-        $viewHelper = new ForViewHelper();
-        $this->arguments['each'] = $subject;
-        $this->arguments['iteration'] = 'test';
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->render();
-    }
-    /**
-     * @test
-     */
-    public function renderDoesNotCountSubjectIfIterationArgumentNotProvided()
-    {
-        $subject = $this->getMockBuilder(CountableIterator::class)->setMethods(['count'])->getMock();
-        $subject->expects(self::never())->method('count');
-        $viewHelper = new ForViewHelper();
-        $this->arguments['each'] = $subject;
-        $this->arguments['iteration'] = null;
-        $this->injectDependenciesIntoViewHelper($viewHelper);
-        $viewHelper->render();
     }
 }
