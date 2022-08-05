@@ -58,13 +58,6 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
         $stream = fopen('php://memory', 'r+');
         fwrite($stream, 'Hello world');
         return [
-            ['test', ['typeOnly' => false, 'html' => false, 'levels' => 1], "string 'test'" . PHP_EOL],
-            ['test', ['typeOnly' => true, 'html' => false, 'levels' => 1], 'string'],
-            [
-                'test<strong>bold</strong>',
-                ['typeOnly' => false, 'html' => true, 'levels' => 1],
-                '<code>string = \'test&lt;strong&gt;bold&lt;/strong&gt;\'</code>'
-            ],
             [
                 ['nested' => 'test<strong>bold</strong>'],
                 ['typeOnly' => false, 'html' => true, 'levels' => 1],
@@ -84,11 +77,6 @@ class DebugViewHelperTest extends ViewHelperBaseTestcase
                 new \ArrayIterator(['foo' => 'bar']),
                 ['typeOnly' => false, 'html' => true, 'levels' => 2],
                 '<code>ArrayIterator</code><ul><li>foo: <code>string = \'bar\'</code></li></ul>'
-            ],
-            [
-                ['foo' => 'bar'],
-                ['typeOnly' => false, 'html' => false, 'levels' => 3],
-                'array: ' . PHP_EOL . '  "foo": string \'bar\'' . PHP_EOL
             ],
             [
                 $arrayObject,
