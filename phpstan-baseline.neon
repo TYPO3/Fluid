@@ -261,11 +261,6 @@ parameters:
 			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
 
 		-
-			message: "#^ArrayObject\\<string, string\\> does not accept ArrayObject\\<string, string\\>\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/DebugViewHelperTest.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getIdentifier\\(\\) should return string but return statement is missing\\.$#"
 			count: 1
 			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
