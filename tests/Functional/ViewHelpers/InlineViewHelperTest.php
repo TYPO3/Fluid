@@ -21,6 +21,7 @@ class InlineViewHelperTest extends AbstractFunctionalTestCase
     public function renderThrowsExceptionIfInlineFluidCodeIsInvalid()
     {
         $this->expectException(Exception::class);
+        $this->expectExceptionCode(1238169398);
         $view = new TemplateView();
         $view->assignMultiple(['code' => '<f:if condition="{undefinedVariable}">']);
         $view->getRenderingContext()->setCache(self::$cache);
