@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-class SwitchCaseDefaulCaseViewHelperTest extends AbstractFunctionalTestCase
+class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
 {
     /**
      * @test
@@ -21,6 +21,7 @@ class SwitchCaseDefaulCaseViewHelperTest extends AbstractFunctionalTestCase
     public function renderThrowsExceptionIfCaseIsOutsideOfSwitch()
     {
         $this->expectException(Exception::class);
+        $this->expectExceptionCode(1368112037);
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:case value="foo">bar</f:case>');
@@ -33,6 +34,7 @@ class SwitchCaseDefaulCaseViewHelperTest extends AbstractFunctionalTestCase
     public function renderThrowsExceptionIfDefaultCaseIsOutsideOfSwitch()
     {
         $this->expectException(Exception::class);
+        $this->expectExceptionCode(1368112037);
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:defaultCase>bar</f:defaultCase>');
@@ -50,8 +52,7 @@ class SwitchCaseDefaulCaseViewHelperTest extends AbstractFunctionalTestCase
             '<f:switch expression="{value}">' .
                 '<f:case value="option1">bar</f:case>' .
                 '<f:case value="option2">baz</f:case>' .
-                // @TODO if this line is part of the test case, the next case fails
-                // (empty string vs null), maybe a Fluid caching issue?
+                // @todo when next line is added, next case fails. Smells like a cache or state bug?
                 // '<f:defaultCase>default</f:defaultCase>' .
             '</f:switch>',
             ['value' => 'option1'],
