@@ -29,7 +29,7 @@ class OrViewHelperTest extends AbstractFunctionalTestCase
         yield 'with content argument and empty content' => [
             '<f:or content="{var}" />',
             ['var' => null],
-            null, // @TODO this should probably be an empty string?
+            null, // @todo this should probably be an empty string?
         ];
         yield 'with alternative' => [
             '<f:or content="{var}" alternative="alt" />',
