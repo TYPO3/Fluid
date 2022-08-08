@@ -21,9 +21,9 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
     public function renderThrowsExceptionIfSubjectIsNotTraversable()
     {
         $this->expectException(\InvalidArgumentException::class);
-        $value = new \stdClass();
+        $this->expectExceptionCode(1256475113);
         $view = new TemplateView();
-        $view->assignMultiple(['value' => $value]);
+        $view->assignMultiple(['value' => new \stdClass()]);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:for each="{value}" as="item">{item}</f:for>');
         $view->render();
@@ -35,9 +35,9 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
     public function renderThrowsExceptionIfSubjectIsInvalid()
     {
         $this->expectException(Exception::class);
-        $value = new \DateTime();
+        $this->expectExceptionCode(1248728393);
         $view = new TemplateView();
-        $view->assignMultiple(['value' => $value]);
+        $view->assignMultiple(['value' => new \stdClass()]);
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource('<f:for each="{value}" as="item">{item}</f:for>');
         $view->render();
@@ -51,36 +51,49 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
             ['value' => $value],
             '',
         ];
+
         $value = [];
         yield 'empty for empty array' => [
             '<f:for each="{value}" as="item">{item}</f:for>',
             ['value' => $value],
             '',
         ];
+
         $value = [0, 1, 2, 3];
         yield 'items are displayed' => [
             '<f:for each="{value}" as="item">{item} </f:for>',
             ['value' => $value],
             '0 1 2 3 ',
         ];
+
         $value = [0, 1, 2, 3];
         yield 'reverse is respected for array' => [
             '<f:for each="{value}" as="item" reverse="true">{item} </f:for>',
             ['value' => $value],
             '3 2 1 0 ',
         ];
+
+        $value = ['key1' => 'value1', 'key2' => 'value2'];
+        yield 'reverse is respected for associative array' => [
+            '<f:for each="{value}" as="item" reverse="true">{item} </f:for>',
+            ['value' => $value],
+            'value2 value1 ',
+        ];
+
         $value = new \ArrayIterator([0, 1, 2, 3]);
         yield 'reverse is respected for object' => [
             '<f:for each="{value}" as="item" reverse="true">{item} </f:for>',
             ['value' => $value],
             '3 2 1 0 ',
         ];
+
         $value = new \ArrayObject(['key1' => 'value1', 'key2' => 'value2']);
         yield 'object gets traversed' => [
             '<f:for each="{value}" as="item">{item} </f:for>',
             ['value' => $value],
             'value1 value2 ',
         ];
+
         yield 'iterator contains information' => [
             '<ul>' .
                 '<f:for each="{0:1, 1:2, 2:3, 3:4}" as="item" iteration="iterator">' .
@@ -95,17 +108,60 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
                 '<li>Index: 3 Cycle: 4 Total: 4 Even Last</li>' .
             '</ul>',
         ];
+
         $value = ['item'];
         yield 'iterator not available if not requested' => [
             '<f:for each="{value}" as="item">Total: {iterator.total}</f:for>',
             ['value' => $value],
             'Total: ',
         ];
+
         $value = ['item' => 'bar', 'baz' => 2];
         yield 'key attribute is respected' => [
             '<f:for each="{value}" key="key" as="item">{key}: {item}, </f:for>',
             ['value' => $value],
             'item: bar, baz: 2, ',
+        ];
+
+        $value = ['bar', 2];
+        yield 'key contains numerical index' => [
+            '<f:for each="{value}" key="key" as="item">{key}: {item}, </f:for>',
+            ['value' => $value],
+            '0: bar, 1: 2, ',
+        ];
+
+        $value = new \ArrayIterator(['key1' => 'value1', 'key2' => 'value2']);
+        yield 'keys are preserved with objects implementing iterator interface' => [
+            '<f:for each="{value}" key="key" as="item">{key}: {item}, </f:for>',
+            ['value' => $value],
+            'key1: value1, key2: value2, ',
+        ];
+
+        $value = new \SplObjectStorage();
+        $object1 = new \stdClass();
+        $value->attach($object1);
+        $object2 = new \stdClass();
+        $value->attach($object2, 'foo');
+        $object3 = new \stdClass();
+        $value->offsetSet($object3, 'bar');
+        yield 'keys are a numerical index with objects of type SplObjectStorage' => [
+            '<f:for each="{value}" key="key" as="item">{key}</f:for>',
+            ['value' => $value],
+            '012',
+        ];
+
+        $value = ['foo' => 'fooValue', 'Fluid' => 'FluidStandalone', 'TYPO3' => 'rocks'];
+        yield 'iterator works' => [
+            '<f:for each="{value}" key="key" as="item" iteration="myIterator">' .
+                'key: {key}, item: {item}, ' .
+                'index: {myIterator.index}, cycle: {myIterator.cycle}, total: {myIterator.total}, ' .
+                'isFirst: {myIterator.isFirst}, isLast: {myIterator.isLast}, ' .
+                'isEven: {myIterator.isEven}, isOdd: {myIterator.isOdd}' . chr(10) .
+            '</f:for>',
+            ['value' => $value],
+            'key: foo, item: fooValue, index: 0, cycle: 1, total: 3, isFirst: 1, isLast: , isEven: , isOdd: 1' . chr(10) .
+            'key: Fluid, item: FluidStandalone, index: 1, cycle: 2, total: 3, isFirst: , isLast: , isEven: 1, isOdd: ' . chr(10) .
+            'key: TYPO3, item: rocks, index: 2, cycle: 3, total: 3, isFirst: , isLast: 1, isEven: , isOdd: 1' . chr(10)
         ];
     }
 
