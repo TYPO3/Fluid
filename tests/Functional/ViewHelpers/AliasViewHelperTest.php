@@ -16,22 +16,28 @@ class AliasViewHelperTest extends AbstractFunctionalTestCase
 {
     public function renderDataProvider(): \Generator
     {
-        yield 'adds and removes single alias' => [
-            '<f:alias map="{x: \'foo\'}">{x}</f:alias>{x}',
+        yield 'single alias is defined' => [
+            '<f:alias map="{x: \'foo\'}">{x}</f:alias>',
             [],
             'foo',
         ];
 
-        yield 'adds and removes multiple aliases' => [
-            '<f:alias map="{x: \'foo\', y: \'bar\'}">{x} {y}</f:alias>{x} {y}',
+        yield 'multiple aliases are defined' => [
+            '<f:alias map="{x: \'foo\', y: \'bar\'}">{y} {x}</f:alias>',
             [],
-            'foo bar '
+            'bar foo'
         ];
 
-        yield 'outputs wrapped content even if map is empty' => [
+        yield 'wrapped content is output even if map is empty' => [
             '<f:alias map="{emptyMap}">wrapped content</f:alias>',
             ['emptyMap' => []],
             'wrapped content'
+        ];
+
+        yield 'defined alias does not exist anymore outside tag' => [
+            '<f:alias map="{x: \'foo\'}"></f:alias>{x}',
+            [],
+            '',
         ];
     }
 
