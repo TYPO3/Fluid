@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Cache;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
+use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Cache\DisableViewHelper;
 
 class DisableViewHelperTest extends AbstractFunctionalTestCase
@@ -18,9 +19,28 @@ class DisableViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function viewHelperCanBeInstantiated()
+    public function viewHelperCanBeInstantiated(): void
     {
         $subject = new DisableViewHelper();
         self::assertInstanceOf(AbstractViewHelper::class, $subject);
+    }
+
+    /**
+     * @test
+     */
+    public function templateUsingViewHelperCanBeRendered(): void
+    {
+        $template = '<f:cache.disable>foo</f:cache.disable>';
+        $expected = 'foo';
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
+        self::assertSame($expected, $view->render());
+
+        $view = new TemplateView();
+        $view->getRenderingContext()->setCache(self::$cache);
+        $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($template);
+        self::assertSame($expected, $view->render());
     }
 }
