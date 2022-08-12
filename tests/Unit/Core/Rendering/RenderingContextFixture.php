@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering;
 
 use PHPUnit\Framework\MockObject\Generator;
+use PHPUnit\Framework\MockObject\MockObject;
 use TYPO3Fluid\Fluid\Core\Cache\FluidCacheInterface;
 use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\ErrorHandler\ErrorHandlerInterface;
@@ -27,7 +28,7 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 class RenderingContextFixture implements RenderingContextInterface
 {
     /**
-     * @var ErrorHandlerInterface
+     * @var ErrorHandlerInterface|null
      */
     public $errorHandler;
 
@@ -102,14 +103,30 @@ class RenderingContextFixture implements RenderingContextInterface
     public function __construct()
     {
         $mockBuilder = new Generator();
-        $this->variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
-        $this->viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, ['dummy']);
-        $this->viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
-        $this->viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, ['dummy']);
-        $this->templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
-        $this->templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, ['dummy']);
-        $this->templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
-        $this->cache = $mockBuilder->getMock(FluidCacheInterface::class);
+        /** @var VariableProviderInterface&MockObject $variableProvider */
+        $variableProvider = $mockBuilder->getMock(VariableProviderInterface::class);
+        $this->variableProvider = $variableProvider;
+        /** @var ViewHelperVariableContainer&MockObject $viewHelperVariableContainer */
+        $viewHelperVariableContainer = $mockBuilder->getMock(ViewHelperVariableContainer::class, ['dummy']);
+        $this->viewHelperVariableContainer = $viewHelperVariableContainer;
+        /** @var ViewHelperResolver&MockObject $viewHelperResolver */
+        $viewHelperResolver = $mockBuilder->getMock(ViewHelperResolver::class, ['dummy']);
+        $this->viewHelperResolver = $viewHelperResolver;
+        /** @var ViewHelperInvoker&MockObject $viewHelperInvoker */
+        $viewHelperInvoker = $mockBuilder->getMock(ViewHelperInvoker::class, ['dummy']);
+        $this->viewHelperInvoker = $viewHelperInvoker;
+        /** @var TemplateParser&MockObject $templateParser */
+        $templateParser = $mockBuilder->getMock(TemplateParser::class, ['dummy']);
+        $this->templateParser = $templateParser;
+        /** @var TemplateCompiler&MockObject $templateCompiler */
+        $templateCompiler = $mockBuilder->getMock(TemplateCompiler::class, ['dummy']);
+        $this->templateCompiler = $templateCompiler;
+        /** @var TemplatePaths&MockObject $templatePaths */
+        $templatePaths = $mockBuilder->getMock(TemplatePaths::class, ['dummy']);
+        $this->templatePaths = $templatePaths;
+        /** @var FluidCacheInterface&MockObject $cache */
+        $cache = $mockBuilder->getMock(FluidCacheInterface::class);
+        $this->cache = $cache;
     }
 
     /**
@@ -117,7 +134,7 @@ class RenderingContextFixture implements RenderingContextInterface
      */
     public function getErrorHandler()
     {
-        return isset($this->errorHandler) ? $this->errorHandler : new StandardErrorHandler();
+        return $this->errorHandler ?? new StandardErrorHandler();
     }
 
     /**
