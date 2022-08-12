@@ -185,7 +185,7 @@ class ParsingState implements ParsedTemplateInterface
      * This requires the current rendering context in order to be able to evaluate the layout name
      *
      * @param RenderingContextInterface $renderingContext
-     * @return string
+     * @return string|null
      * @throws View\Exception
      */
     public function getLayoutName(RenderingContextInterface $renderingContext)

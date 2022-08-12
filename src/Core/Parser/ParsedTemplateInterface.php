@@ -48,7 +48,7 @@ interface ParsedTemplateInterface
      * This requires the current rendering context in order to be able to evaluate the layout name
      *
      * @param RenderingContextInterface $renderingContext
-     * @return string
+     * @return string|null
      */
     public function getLayoutName(RenderingContextInterface $renderingContext);
 
