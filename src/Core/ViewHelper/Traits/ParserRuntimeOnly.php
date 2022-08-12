@@ -29,6 +29,6 @@ trait ParserRuntimeOnly
      */
     public function compile($argumentsName, $closureName, &$initializationPhpCode, ViewHelperNode $node, TemplateCompiler $compiler)
     {
-        return null;
+        return '';
     }
 }

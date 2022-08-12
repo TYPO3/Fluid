@@ -6,11 +6,6 @@ parameters:
 			path: src/Core/Compiler/NodeConverter.php
 
 		-
-			message: "#^Strict comparison using \\=\\=\\= between string and null will always evaluate to false\\.$#"
-			count: 1
-			path: src/Core/Compiler/NodeConverter.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\TemplateCompiler\\:\\:get\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\ParsedTemplateInterface but returns TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\UncompilableTemplateInterface\\.$#"
 			count: 1
 			path: src/Core/Compiler/TemplateCompiler.php
@@ -171,11 +166,6 @@ parameters:
 			path: src/ViewHelpers/Cache/DisableViewHelper.php
 
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\CommentViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/ViewHelpers/CommentViewHelper.php
-
-		-
 			message: "#^Variable \\$iterationData might not be defined\\.$#"
 			count: 1
 			path: src/ViewHelpers/ForViewHelper.php
@@ -186,19 +176,9 @@ parameters:
 			path: src/ViewHelpers/Format/HtmlspecialcharsViewHelper.php
 
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\LayoutViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/ViewHelpers/LayoutViewHelper.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/ViewHelpers/RenderViewHelper.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\SectionViewHelper\\:\\:compile\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/ViewHelpers/SectionViewHelper.php
 
 		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Fixtures\\\\Various\\\\ParsedTemplateImplementationFixture\\:\\:getLayoutName\\(\\) should return string but return statement is missing\\.$#"

@@ -38,6 +38,6 @@ class ParserRuntimeOnlyTest extends UnitTestCase
         $init = '';
         $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
         $result = $trait->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
-        self::assertNull($result);
+        self::assertSame('', $result);
     }
 }
