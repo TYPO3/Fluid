@@ -37,7 +37,7 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 
     public function getLayoutName(RenderingContextInterface $renderingContext)
     {
-        // stub
+        return null;
     }
 
     public function addCompiledNamespaces(RenderingContextInterface $renderingContext)
