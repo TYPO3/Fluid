@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\CastingExpressionNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\Expression\ExpressionException;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToArray;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToArray;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**

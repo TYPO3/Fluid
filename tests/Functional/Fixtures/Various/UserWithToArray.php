@@ -7,7 +7,7 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 
 /**
  * Dummy object to test Viewhelper behavior on objects with a toArray() method
