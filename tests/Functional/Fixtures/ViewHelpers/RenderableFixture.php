@@ -10,47 +10,32 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
+use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderableInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 
 class RenderableFixture implements RenderableInterface
 {
-
-    /**
-     * @inheritDoc
-     */
     public function getName()
     {
-        // stub
+        return 'RenderableFixture';
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setName($name)
     {
         // stub
     }
 
-    /**
-     * @inheritDoc
-     */
     public function setNode(NodeInterface $node)
     {
         // stub
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getNode()
     {
-        // stub
+        return new TextNode(sprintf('%s (%s)', static::class, 'RenderableFixture'));
     }
 
-    /**
-     * @inheritDoc
-     */
     public function render(RenderingContextInterface $renderingContext): string
     {
         return 'rendered by renderable';

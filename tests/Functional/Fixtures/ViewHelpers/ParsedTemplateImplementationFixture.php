@@ -11,6 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
 class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 {
@@ -21,7 +22,7 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 
     public function getIdentifier()
     {
-        // stub
+        return 'myIdentifier';
     }
 
     public function render(RenderingContextInterface $renderingContext)
@@ -31,7 +32,7 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 
     public function getVariableContainer()
     {
-        // stub
+        return new StandardVariableProvider();
     }
 
     public function getLayoutName(RenderingContextInterface $renderingContext)
@@ -46,16 +47,16 @@ class ParsedTemplateImplementationFixture implements ParsedTemplateInterface
 
     public function hasLayout()
     {
-        // stub
+        return false;
     }
 
     public function isCompilable()
     {
-        // stub
+        return false;
     }
 
     public function isCompiled()
     {
-        // stub
+        return false;
     }
 }

@@ -17,11 +17,10 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class RenderViewHelperTest extends AbstractFunctionalTestCase
 {
-
     /**
      * @test
      */
-    public function exceptionForOptionalSetToFalseAndNoTargetGiven()
+    public function exceptionForOptionalSetToFalseAndNoTargetGiven(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $template = '<f:render optional="false"/>';
@@ -34,7 +33,7 @@ class RenderViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function exceptionForInvalidDelegate()
+    public function exceptionForInvalidDelegate(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $template = '<f:render delegate="TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture"/>';
@@ -47,9 +46,10 @@ class RenderViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function exceptionForMissingPartial()
+    public function exceptionForMissingPartial(): void
     {
         $this->expectException(InvalidTemplateResourceException::class);
+        $this->expectExceptionCode(1225709595);
         $template = '<f:render partial="non-existent" />';
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
@@ -61,7 +61,7 @@ class RenderViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function exceptionForMissingSection()
+    public function exceptionForMissingSection(): void
     {
         $this->expectException(InvalidSectionException::class);
         $template = '<f:render partial="Partial" section="non-existent" />';
