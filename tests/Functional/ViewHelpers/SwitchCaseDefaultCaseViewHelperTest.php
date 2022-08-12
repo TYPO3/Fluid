@@ -46,14 +46,13 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
         yield 'without cases' => [
             '<f:switch expression="{value}">bar</f:switch>',
             ['value' => 'foo'],
-            null,
+            '',
         ];
         yield 'with matching case' => [
             '<f:switch expression="{value}">' .
                 '<f:case value="option1">bar</f:case>' .
                 '<f:case value="option2">baz</f:case>' .
-                // @todo when next line is added, next case fails. Smells like a cache or state bug?
-                // '<f:defaultCase>default</f:defaultCase>' .
+                '<f:defaultCase>default</f:defaultCase>' .
             '</f:switch>',
             ['value' => 'option1'],
             'bar',
@@ -64,7 +63,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
                 '<f:case value="option2">baz</f:case>' .
             '</f:switch>',
             ['value' => 'anotherValue'],
-            null,
+            '',
         ];
         yield 'with matching default case' => [
             '<f:switch expression="{value}">' .

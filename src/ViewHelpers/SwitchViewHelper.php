@@ -92,7 +92,7 @@ class SwitchViewHelper extends AbstractViewHelper
         }
 
         $this->restoreSwitchState();
-        return $content;
+        return $content ?? '';
     }
 
     /**
@@ -184,8 +184,10 @@ class SwitchViewHelper extends AbstractViewHelper
     {
         $phpCode = 'call_user_func_array(function($arguments) use ($renderingContext, $self) {' . PHP_EOL .
             'switch ($arguments[\'expression\']) {' . PHP_EOL;
+        $hasDefaultCase = false;
         foreach ($node->getChildNodes() as $childNode) {
             if ($this->isDefaultCaseNode($childNode)) {
+                $hasDefaultCase = true;
                 $childrenClosure = $compiler->wrapChildNodesInClosure($childNode);
                 $phpCode .= sprintf('default: return call_user_func(%s);', $childrenClosure) . PHP_EOL;
             } elseif ($this->isCaseNode($childNode)) {
@@ -198,6 +200,10 @@ class SwitchViewHelper extends AbstractViewHelper
                     $childrenClosure
                 ) . PHP_EOL;
             }
+        }
+        if (!$hasDefaultCase) {
+            $phpCode .= 'default:' . PHP_EOL;
+            $phpCode .= 'return \'\';' . PHP_EOL;
         }
         $phpCode .= '}' . PHP_EOL;
         $phpCode .= sprintf('}, array(%s))', $argumentsName);
