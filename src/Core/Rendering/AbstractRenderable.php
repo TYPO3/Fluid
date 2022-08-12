@@ -58,6 +58,6 @@ abstract class AbstractRenderable implements RenderableInterface
      */
     public function getNode()
     {
-        return $this->node ? $this->node : new TextNode(sprintf('%s (%s)', static::class, $this->name));
+        return $this->node ?: new TextNode(sprintf('%s (%s)', static::class, $this->name));
     }
 }
