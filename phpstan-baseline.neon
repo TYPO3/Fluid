@@ -1,16 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\AbstractCompiledTemplate\\:\\:getVariableContainer\\(\\) has invalid return type TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\VariableProviderInterface\\.$#"
-			count: 1
-			path: src/Core/Compiler/AbstractCompiledTemplate.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\AbstractCompiledTemplate\\:\\:getVariableContainer\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Compiler\\\\VariableProviderInterface but returns TYPO3Fluid\\\\Fluid\\\\Core\\\\Variables\\\\StandardVariableProvider\\.$#"
-			count: 1
-			path: src/Core/Compiler/AbstractCompiledTemplate.php
-
-		-
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/Core/Compiler/NodeConverter.php

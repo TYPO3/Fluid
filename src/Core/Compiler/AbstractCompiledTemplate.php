@@ -10,6 +10,7 @@ namespace TYPO3Fluid\Fluid\Core\Compiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsedTemplateInterface;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 
 /**
  * Abstract Fluid Compiled template.
