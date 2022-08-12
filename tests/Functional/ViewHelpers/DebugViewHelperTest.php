@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 class DebugViewHelperTest extends AbstractFunctionalTestCase
@@ -139,13 +139,13 @@ class DebugViewHelperTest extends AbstractFunctionalTestCase
         yield 'casual object' => [
             '<f:debug>{value}</f:debug>',
             ['value' => new UserWithoutToString('username')],
-            'TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString: ' . PHP_EOL .
+            'TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString: ' . PHP_EOL .
             '  "name": string \'username\'' . PHP_EOL
         ];
         yield 'casual object html' => [
             '<f:debug html="1">{value}</f:debug>',
             ['value' => new UserWithoutToString('username')],
-            '<code>TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString</code><ul><li>name: <code>string = \'username\'</code></li></ul>'
+            '<code>TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString</code><ul><li>name: <code>string = \'username\'</code></li></ul>'
         ];
 
         yield 'datetime object' => [

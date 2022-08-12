@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\Cases\Conditions;
 
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
 class VariableConditionsTest extends AbstractFunctionalTestCase

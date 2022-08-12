@@ -7,10 +7,11 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
+namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers\MutableTestViewHelper;
 
 /**
  * ViewHelperResolver with overridable resolving

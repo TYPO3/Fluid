@@ -11,8 +11,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Variables;
 
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**

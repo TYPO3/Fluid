@@ -12,7 +12,7 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 /**

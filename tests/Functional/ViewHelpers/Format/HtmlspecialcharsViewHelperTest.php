@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace TYPO3Fluid\Fluid\Tests\Functional\ViewHelpers\Format;
 
 use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithoutToString;
-use TYPO3Fluid\Fluid\Tests\Unit\ViewHelpers\Fixtures\UserWithToString;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
+use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 
@@ -24,7 +24,6 @@ class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
     public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString()
     {
         $user = new UserWithoutToString('Xaver <b>Cross-Site</b>');
-
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->assign('user', $user);
