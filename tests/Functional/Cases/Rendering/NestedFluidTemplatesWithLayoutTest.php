@@ -36,7 +36,7 @@ class NestedFluidTemplatesWithLayoutTest extends AbstractFunctionalTestCase
         $output = $view->render();
         self::assertStringContainsString('DefaultLayoutLayoutOverride', $output);
 
-        // A second run with now compliled templates.
+        // A second run with now compiled templates.
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);

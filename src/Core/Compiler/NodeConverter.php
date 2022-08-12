@@ -212,7 +212,9 @@ class NodeConverter
         }
         $initializationArray = [
             'initialization' => $initializationPhpCode,
-            'execution' => $convertedViewHelperExecutionCode === null ? 'NULL' : $convertedViewHelperExecutionCode
+            // @todo: compile() *should* return strings, but it's not enforced in the interface.
+            //        The string cast is here to stay compatible in case something still returns for instance null.
+            'execution' => (string)$convertedViewHelperExecutionCode === '' ? "''" : $convertedViewHelperExecutionCode
         ];
         return $initializationArray;
     }

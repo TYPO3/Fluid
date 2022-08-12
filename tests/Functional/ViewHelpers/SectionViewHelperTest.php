@@ -16,13 +16,10 @@ class SectionViewHelperTest extends AbstractFunctionalTestCase
 {
     public function renderDataProvider(): \Generator
     {
-        /*
-         * @todo inconsistent, returns empty string when not cached, but null when cached
         yield 'section will not render itself' => [
             '<f:section name="foo">bar</f:section>',
             '',
         ];
-        */
         yield 'render section without arguments before section was defined' => [
             '<f:render section="foo" /><f:section name="foo">bar</f:section>',
             'bar',
