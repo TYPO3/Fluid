@@ -96,21 +96,6 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\:\\:setName\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderableClosure but returns \\$this\\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\)\\.$#"
-			count: 1
-			path: src/Core/Rendering/AbstractRenderable.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\:\\:setNode\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderableClosure but returns \\$this\\(TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\AbstractRenderable\\)\\.$#"
-			count: 1
-			path: src/Core/Rendering/AbstractRenderable.php
-
-		-
-			message: "#^Ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Core/Rendering/AbstractRenderable.php
-
-		-
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:getExpressionNodeTypes\\(\\) should return string but returns array\\.$#"
 			count: 1
 			path: src/Core/Rendering/RenderingContext.php

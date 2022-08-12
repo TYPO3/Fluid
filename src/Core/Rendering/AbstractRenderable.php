@@ -10,9 +10,6 @@ namespace TYPO3Fluid\Fluid\Core\Rendering;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NodeInterface;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 
-/**
- * Class AbstractRenderable
- */
 abstract class AbstractRenderable implements RenderableInterface
 {
     /**
@@ -21,7 +18,7 @@ abstract class AbstractRenderable implements RenderableInterface
     protected $name;
 
     /**
-     * @var NodeInterface
+     * @var NodeInterface|null
      */
     protected $node;
 
@@ -35,7 +32,7 @@ abstract class AbstractRenderable implements RenderableInterface
 
     /**
      * @param string $name
-     * @return RenderableClosure
+     * @return RenderableInterface
      */
     public function setName($name)
     {
@@ -45,7 +42,7 @@ abstract class AbstractRenderable implements RenderableInterface
 
     /**
      * @param NodeInterface $node
-     * @return RenderableClosure
+     * @return RenderableInterface
      */
     public function setNode(NodeInterface $node)
     {
