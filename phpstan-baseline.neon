@@ -211,6 +211,11 @@ parameters:
 			path: src/ViewHelpers/SectionViewHelper.php
 
 		-
+			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Functional\\\\Fixtures\\\\ViewHelpers\\\\ParsedTemplateImplementationFixture\\:\\:getLayoutName\\(\\) should return string but return statement is missing\\.$#"
+			count: 1
+			path: tests/Functional/Fixtures/ViewHelpers/ParsedTemplateImplementationFixture.php
+
+		-
 			message: "#^Call to static method PHPUnit\\\\Framework\\\\Assert\\:\\:assertSame\\(\\) with TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\UserWithoutToString and string will always evaluate to false\\.$#"
 			count: 1
 			path: tests/Functional/ViewHelpers/Format/HtmlspecialcharsViewHelperTest.php
@@ -259,33 +264,3 @@ parameters:
 			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\Core\\\\Rendering\\\\RenderingContextFixture\\:\\:\\$viewHelperVariableContainer \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperVariableContainer\\) does not accept PHPUnit\\\\Framework\\\\MockObject\\\\MockObject\\.$#"
 			count: 1
 			path: tests/Unit/Core/Rendering/RenderingContextFixture.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getIdentifier\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getLayoutName\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:getVariableContainer\\(\\) should return TYPO3Fluid\\\\Fluid\\\\Core\\\\Variables\\\\VariableProviderInterface but return statement is missing\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:hasLayout\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:isCompilable\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Tests\\\\Unit\\\\ViewHelpers\\\\Fixtures\\\\ParsedTemplateImplementationFixture\\:\\:isCompiled\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: tests/Unit/ViewHelpers/Fixtures/ParsedTemplateImplementationFixture.php
