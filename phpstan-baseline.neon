@@ -146,11 +146,6 @@ parameters:
 			path: src/View/TemplatePaths.php
 
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\ViewHelpers\\\\Cache\\\\DisableViewHelper\\:\\:compile\\(\\) should return string but return statement is missing\\.$#"
-			count: 1
-			path: src/ViewHelpers/Cache/DisableViewHelper.php
-
-		-
 			message: "#^Variable \\$iterationData might not be defined\\.$#"
 			count: 1
 			path: src/ViewHelpers/ForViewHelper.php
