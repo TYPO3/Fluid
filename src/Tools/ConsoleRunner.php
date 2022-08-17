@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tools;
 
+use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\View\ViewInterface;
+
 /**
  * @internal
  */
@@ -47,7 +50,11 @@ class ConsoleRunner
         self::ARGUMENT_RENDERINGCONTEXT => 'Class name of custom RenderingContext implementation to use when rendering'
     ];
 
-    public function handleCommand(array $arguments): string
+    /**
+     * @param array $arguments
+     * @return string|void
+     */
+    public function handleCommand(array $arguments)
     {
         $arguments = $this->parseAndValidateInputArguments($arguments);
         if (isset($arguments[self::ARGUMENT_HELP])) {
@@ -165,7 +172,7 @@ class ConsoleRunner
      * @param string $socketIdentifier
      * @param ViewInterface $view
      */
-    protected function listenIndefinitelyOnSocket($socketIdentifier, \TYPO3Fluid\Fluid\View\ViewInterface $view)
+    protected function listenIndefinitelyOnSocket($socketIdentifier, ViewInterface $view)
     {
         if (file_exists($socketIdentifier)) {
             unlink($socketIdentifier);
@@ -197,10 +204,10 @@ class ConsoleRunner
 
     /**
      * @param string $input
-     * @param \TYPO3Fluid\Fluid\View\TemplatePaths $paths
+     * @param TemplatePaths $paths
      * @return string
      */
-    protected function parseTemplatePathAndFilenameFromHeaders($input, \TYPO3Fluid\Fluid\View\TemplatePaths $paths)
+    protected function parseTemplatePathAndFilenameFromHeaders($input, TemplatePaths $paths)
     {
         if (strpos($input, "\000") !== false) {
             return $this->parseTemplatePathAndFilenameFromScgiHeaders($input);
@@ -210,10 +217,10 @@ class ConsoleRunner
 
     /**
      * @param string $input
-     * @param \TYPO3Fluid\Fluid\View\TemplatePaths $paths
+     * @param TemplatePaths $paths
      * @return string
      */
-    protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, \TYPO3Fluid\Fluid\View\TemplatePaths $paths)
+    protected function parseTemplatePathAndFilenameFromProcessedHeaders($input, TemplatePaths $paths)
     {
         $matches = [];
         preg_match('/^GET ([^\s]+)/', $input, $matches);
@@ -271,10 +278,10 @@ class ConsoleRunner
 
     /**
      * @param $templatePathAndFilename
-     * @param \TYPO3Fluid\Fluid\View\ViewInterface $view
+     * @param ViewInterface $view
      * @return string
      */
-    protected function renderSocketRequest($templatePathAndFilename, \TYPO3Fluid\Fluid\View\ViewInterface $view)
+    protected function renderSocketRequest($templatePathAndFilename, ViewInterface $view)
     {
         $view->getTemplatePaths()->setTemplatePathAndFilename($templatePathAndFilename);
         return $view->render();
@@ -293,7 +300,7 @@ class ConsoleRunner
             if (substr($argument, 0, 2) === '--') {
                 $argument = substr($argument, 2);
                 if (!in_array($argument, $allowed)) {
-                    throw new InvalidArgumentException('Unsupported argument: ' . $argument);
+                    throw new \InvalidArgumentException('Unsupported argument: ' . $argument);
                 }
                 $parsed[$argument] = false;
                 $argumentPointer = &$parsed[$argument];
