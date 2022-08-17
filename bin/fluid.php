@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file belongs to the package "TYPO3 Fluid".
  * See LICENSE.txt that was shipped with this package.
  */
 
-use TYPO3Fluid\Fluid\Tools\Console\ConsoleRunner;
+use TYPO3Fluid\Fluid\Tools\ConsoleRunner;
 
 if (file_exists(__DIR__ . '/../autoload.php')) {
     require_once __DIR__ . '/../autoload.php';

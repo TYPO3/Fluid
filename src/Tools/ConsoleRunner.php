@@ -7,8 +7,11 @@ declare(strict_types=1);
  * See LICENSE.txt that was shipped with this package.
  */
 
-namespace TYPO3Fluid\Fluid\Tools\Console;
+namespace TYPO3Fluid\Fluid\Tools;
 
+/**
+ * @internal
+ */
 class ConsoleRunner
 {
     const ARGUMENT_HELP = 'help';
@@ -44,11 +47,7 @@ class ConsoleRunner
         self::ARGUMENT_RENDERINGCONTEXT => 'Class name of custom RenderingContext implementation to use when rendering'
     ];
 
-    /**
-     * @param array $arguments
-     * @return string
-     */
-    public function handleCommand(array $arguments)
+    public function handleCommand(array $arguments): string
     {
         $arguments = $this->parseAndValidateInputArguments($arguments);
         if (isset($arguments[self::ARGUMENT_HELP])) {
