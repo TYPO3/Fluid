@@ -4,13 +4,13 @@
 Installation
 ============
 
-1. Include as composer dependency using
+1.  Include as composer dependency using
 
     .. code-block:: bash
 
         composer require typo3fluid/fluid
 
-2. Run
+2.  Run
 
     .. code-block:: bash
 
@@ -18,4 +18,4 @@ Installation
 
     to generate the vendor class autoloader.
 
-3. The classes from `TYPO3.Fluid` can now be used in your composer project.
+3.  The classes from `TYPO3.Fluid` can now be used in your composer project.
