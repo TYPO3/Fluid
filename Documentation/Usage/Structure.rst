@@ -1,5 +1,7 @@
 .. include:: /Includes.rst.txt
 
+.. _template-file-structure:
+
 =============================
 Fluid Template File Structure
 =============================
