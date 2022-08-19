@@ -1,5 +1,7 @@
 .. include:: /Includes.rst.txt
 
+.. _what-are-viewhelpers:
+
 =====================
 What Are ViewHelpers?
 =====================

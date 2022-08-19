@@ -1,5 +1,7 @@
 .. include:: /Includes.rst.txt
 
+.. _fluid-syntax:
+
 ================
 The Fluid Syntax
 ================

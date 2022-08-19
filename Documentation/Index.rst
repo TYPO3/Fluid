@@ -32,7 +32,7 @@ output in the TYPO3 CMS. However, it is not dependent on TYPO3 and can be used
 in any PHP project.
 
 If using Fluid in combination with TYPO3 CMS, a look at the documentation of
-:doc:`ext:fsc:Index` can be worth a look.
+:doc:`ext_fsc:Index` can be worth a look.
 
 ----
 
