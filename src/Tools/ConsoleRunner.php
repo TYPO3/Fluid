@@ -9,7 +9,14 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tools;
 
+use TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult;
+use TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache;
+use TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
+use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
+use TYPO3Fluid\Fluid\Exception;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
+use TYPO3Fluid\Fluid\View\TemplateView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
 
 /**
@@ -76,7 +83,7 @@ class ConsoleRunner
                 );
             }
         }
-        $view = new \TYPO3Fluid\Fluid\View\TemplateView();
+        $view = new TemplateView();
         if (isset($arguments[self::ARGUMENT_RENDERINGCONTEXT])) {
             $context = new $arguments[self::ARGUMENT_RENDERINGCONTEXT]($view);
             $view->setRenderingContext($context);
@@ -84,7 +91,7 @@ class ConsoleRunner
             $context = $view->getRenderingContext();
         }
         if (isset($arguments[self::ARGUMENT_CACHEDIRECTORY])) {
-            $cache = new \TYPO3Fluid\Fluid\Core\Cache\SimpleFileCache($arguments[self::ARGUMENT_CACHEDIRECTORY]);
+            $cache = new SimpleFileCache($arguments[self::ARGUMENT_CACHEDIRECTORY]);
             $context->setCache($cache);
         }
         $paths = $context->getTemplatePaths();
@@ -105,17 +112,17 @@ class ConsoleRunner
                     $variableProviderClassName = $variablesReference;
                     $source = null;
                 }
-                /** @var \TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface $variableProvider */
+                /** @var VariableProviderInterface $variableProvider */
                 $variableProvider = new $variableProviderClassName();
                 $variableProvider->setSource($source);
             } elseif (($variablesReference[0] === '{' && substr($variablesReference, -1) === '}')
                 || file_exists($variablesReference)
                 || strpos($variablesReference, ':/') !== false
             ) {
-                $variableProvider = new \TYPO3Fluid\Fluid\Core\Variables\JSONVariableProvider();
+                $variableProvider = new JSONVariableProvider();
                 $variableProvider->setSource($variablesReference);
             } else {
-                $variableProvider = new \TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider();
+                $variableProvider = new StandardVariableProvider();
             }
             $context->setVariableProvider($variableProvider);
         }
@@ -126,39 +133,39 @@ class ConsoleRunner
         if (isset($arguments[self::ARGUMENT_SOCKET])) {
             $this->listenIndefinitelyOnSocket($arguments[self::ARGUMENT_SOCKET], $view);
         } else {
-            $action = isset($arguments[self::ARGUMENT_CONTROLLERACTION]) ? $arguments[self::ARGUMENT_CONTROLLERACTION] : null;
+            $action = $arguments[self::ARGUMENT_CONTROLLERACTION] ?? null;
             return $view->render($action);
         }
     }
 
     /**
-     * @param \TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult $result
+     * @param FluidCacheWarmupResult $result
      * @return string
      */
-    protected function renderWarmupResult(\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult $result)
+    protected function renderWarmupResult(FluidCacheWarmupResult $result)
     {
         $string = PHP_EOL . 'Template cache warmup results' . PHP_EOL . PHP_EOL;
         foreach ($result->getResults() as $templatePathAndFilename => $aspects) {
             $string .= sprintf(
                 "%s\n    Compiled? %s\n    Has Layout? %s\n",
                 $templatePathAndFilename,
-                $aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_COMPILABLE] ? 'YES' : 'NO',
-                $aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_HASLAYOUT] ? 'YES' : 'NO'
+                $aspects[FluidCacheWarmupResult::RESULT_COMPILABLE] ? 'YES' : 'NO',
+                $aspects[FluidCacheWarmupResult::RESULT_HASLAYOUT] ? 'YES' : 'NO'
             );
-            if (isset($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_COMPILABLE])) {
+            if (isset($aspects[FluidCacheWarmupResult::RESULT_COMPILABLE])) {
                 $string .= sprintf(
                     "    Compiled as: %s\n",
-                    $aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_COMPILEDCLASS]
+                    $aspects[FluidCacheWarmupResult::RESULT_COMPILEDCLASS]
                 );
             }
-            if (isset($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_FAILURE])) {
+            if (isset($aspects[FluidCacheWarmupResult::RESULT_FAILURE])) {
                 $string .= sprintf(
                     "    Compilation failure reason: %s\n",
-                    $aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_FAILURE]
+                    $aspects[FluidCacheWarmupResult::RESULT_FAILURE]
                 );
             }
-            if (isset($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_MITIGATIONS])) {
-                foreach ($aspects[\TYPO3Fluid\Fluid\Core\Cache\FluidCacheWarmupResult::RESULT_MITIGATIONS] as $index => $mitigation) {
+            if (isset($aspects[FluidCacheWarmupResult::RESULT_MITIGATIONS])) {
+                foreach ($aspects[FluidCacheWarmupResult::RESULT_MITIGATIONS] as $index => $mitigation) {
                     $string .= sprintf("    Suggested mitigation #%d: %s\n", $index + 1, $mitigation);
                 }
             }
@@ -192,7 +199,7 @@ class ConsoleRunner
                 try {
                     $rendered = $this->renderSocketRequest($templatePathAndFilename, $view);
                     $response = $this->createResponse($rendered);
-                } catch (\TYPO3Fluid\Fluid\Exception $error) {
+                } catch (Exception $error) {
                     $response = $this->createErrorResponse($error->getMessage(), 500);
                 }
             }
