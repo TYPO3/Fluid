@@ -7,6 +7,8 @@
 
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
+use TYPO3Fluid\Fluid\Core\Exception;
+
 /**
  * Class StandardVariableProvider
  */
@@ -251,10 +253,15 @@ class StandardVariableProvider implements VariableProviderInterface
     protected function resolveSubVariableReferences($propertyPath)
     {
         if (strpos($propertyPath, '{') !== false) {
-            preg_match_all('/(\{.*\})/', $propertyPath, $matches);
-            foreach ($matches[1] as $match) {
-                $subPropertyPath = substr($match, 1, -1);
-                $propertyPath = str_replace($match, $this->getByPath($subPropertyPath), $propertyPath);
+            while (preg_match_all('/(\{[^{}]*\})/', $propertyPath, $matches) > 0) {
+                foreach ($matches[1] as $match) {
+                    $subPropertyPath = substr($match, 1, -1);
+                    $replacement = $this->getByPath($subPropertyPath);
+                    if (strpos($replacement, '{') !== false) {
+                        throw new Exception('Variables referenced in variable names must not introduce new references.');
+                    }
+                    $propertyPath = str_replace($match, $replacement, $propertyPath);
+                }
             }
         }
         return $propertyPath;

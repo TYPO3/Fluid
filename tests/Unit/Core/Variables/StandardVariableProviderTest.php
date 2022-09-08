@@ -203,6 +203,7 @@ class StandardVariableProviderTest extends UnitTestCase
             [['foodynamicbar' => 'test', 'dyn' => 'dynamic'], 'foo{dyn}bar', 'test'],
             [['foo' => ['dynamic' => ['bar' => 'test']], 'dyn' => 'dynamic'], 'foo.{dyn}.bar', 'test'],
             [['foo' => ['bar' => 'test'], 'dynamic' => ['sub' => 'bar'], 'baz' => 'sub'], 'foo.{dynamic.{baz}}', 'test'],
+            [['foobardynamic' => 'test', 'foo' => 'bar', 'dyn' => 'dynamic'], 'foo{foo}{dyn}', 'test'],
             [['user' => $namedUser], 'user.hasAccessor', true],
             [['user' => $namedUser], 'user.isAccessor', true],
             [['user' => $unnamedUser], 'user.hasAccessor', false],
