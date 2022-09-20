@@ -33,13 +33,7 @@ jobs:
           find src/ tests/ -name '*.php' -print0 | xargs -0 -n1 -P4 php -dxdebug.mode=off -l >/dev/null
 
       - name: Install dependencies
-        if: ${{ matrix.php <= '8.1' }}
         run: composer update
-
-      - name: Install dependencies PHP 8.2
-        if: ${{ matrix.php > '8.1' }}
-        # @todo: Needed until prophecy (req by phpunit) allows PHP 8.2, https://github.com/phpspec/prophecy/issues/556
-        run: composer update --ignore-platform-req=php+
 
       - name: CGL check
         if: ${{ matrix.php == '7.2' }}
