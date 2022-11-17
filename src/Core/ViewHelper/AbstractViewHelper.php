@@ -45,14 +45,12 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected $viewHelperNode;
 
     /**
-     * Arguments array.
-     * @var array
+     * @var array<string, mixed>
      * @api
      */
     protected $arguments = [];
 
     /**
-     * Arguments array.
      * @var NodeInterface[] array
      * @api
      */
@@ -103,7 +101,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     protected $escapeOutput;
 
     /**
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      */
     public function setArguments(array $arguments)
     {
@@ -449,7 +447,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * method must not be called, obviously.
      *
      * @throws Exception
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      */
     public function handleAdditionalArguments(array $arguments)
     {
@@ -463,7 +461,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * method must not be called, obviously.
      *
      * @throws Exception
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      */
     public function validateAdditionalArguments(array $arguments)
     {
@@ -506,7 +504,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * when compiled is able to render itself statically to increase performance. This
      * default implementation will simply delegate to the ViewHelperInvoker.
      *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      * @return mixed
@@ -522,7 +520,7 @@ abstract class AbstractViewHelper implements ViewHelperInterface
      * called directly after the ViewHelper was built.
      *
      * @param ViewHelperNode $node
-     * @param TextNode[] $arguments
+     * @param array<string, TextNode> $arguments
      * @param VariableProviderInterface $variableContainer
      */
     public static function postParseEvent(ViewHelperNode $node, array $arguments, VariableProviderInterface $variableContainer)
