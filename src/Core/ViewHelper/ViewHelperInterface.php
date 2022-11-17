@@ -26,7 +26,7 @@ interface ViewHelperInterface
     public function prepareArguments();
 
     /**
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      */
     public function setArguments(array $arguments);
 
@@ -80,7 +80,7 @@ interface ViewHelperInterface
      * the ability to allow additional, undeclared, dynamic etc. arguments for the
      * node in the template. Do not implement this unless you need it!
      *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      */
     public function handleAdditionalArguments(array $arguments);
 
@@ -89,7 +89,7 @@ interface ViewHelperInterface
      * the ability to allow additional, undeclared, dynamic etc. arguments for the
      * node in the template. Do not implement this unless you need it!
      *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      */
     public function validateAdditionalArguments(array $arguments);
 
@@ -107,7 +107,7 @@ interface ViewHelperInterface
      * $renderingContext contains references to the VariableProvider and the
      * ViewHelperVariableContainer.
      *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      * @return string the resulting string which is directly shown
