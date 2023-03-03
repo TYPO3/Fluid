@@ -116,19 +116,13 @@ class TemplateCompilerTest extends UnitTestCase
         $parsingState = new ParsingState();
         $container = new StandardVariableProvider(['1457379500_sections' => [$foo, $bar]]);
         $parsingState->setVariableProvider($container);
-        $nodeConverter = $this->getMock(
-            NodeConverter::class,
-            ['convertListOfSubNodes'],
-            [],
-            '',
-            false
-        );
-        $nodeConverter->expects(self::exactly(2))->method('convertListOfSubNodes')->withConsecutive(
+        $nodeConverter = $this->getMock(NodeConverter::class, ['convertListOfSubNodes'], [], false, false);
+        $nodeConverter->expects(self::exactly(2))->method('convertListOfSubNodes')->willReturnOnConsecutiveCalls(
             [$foo],
             [$bar]
         )->willReturn([]);
         $instance = $this->getMock(TemplateCompiler::class, ['generateCodeForSection']);
-        $instance->expects(self::exactly(2))->method('generateCodeForSection')->withConsecutive(
+        $instance->expects(self::exactly(2))->method('generateCodeForSection')->willReturnOnConsecutiveCalls(
             [self::anything()],
             [self::anything()]
         )->willReturnOnConsecutiveCalls(
@@ -179,7 +173,7 @@ class TemplateCompilerTest extends UnitTestCase
      */
     public function testStoreSavesUncompilableState()
     {
-        $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->setMethods(['set'])->getMock();
+        $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->onlyMethods(['set'])->getMock();
         $cacheMock->expects(self::once())->method('set')->with('fakeidentifier', self::anything());
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setCache($cacheMock);

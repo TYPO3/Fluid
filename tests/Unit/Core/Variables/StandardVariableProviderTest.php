@@ -23,7 +23,7 @@ class StandardVariableProviderTest extends UnitTestCase
 
     public function setUp(): void
     {
-        $this->variableProvider = $this->getMock(StandardVariableProvider::class, ['dummy']);
+        $this->variableProvider = $this->getMock(StandardVariableProvider::class, []);
     }
 
     public function tearDown(): void
@@ -51,7 +51,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getOperabilityTestValues()
+    public static function getOperabilityTestValues()
     {
         return [
             [[], []],
@@ -188,7 +188,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPathTestValues()
+    public static function getPathTestValues()
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $unnamedUser = new UserWithoutToString('');
@@ -227,7 +227,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getAccessorsForPathTestValues()
+    public static function getAccessorsForPathTestValues()
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
@@ -263,7 +263,7 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getExtractRedectAccessorTestValues()
+    public static function getExtractRedectAccessorTestValues()
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],

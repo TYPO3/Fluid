@@ -47,10 +47,7 @@ class ChainedVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $chainedProvider->getByPath($path));
     }
 
-    /**
-     * @return array
-     */
-    public function getGetTestValues()
+    public static function getGetTestValues(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
@@ -78,10 +75,7 @@ class ChainedVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $chainedProvider->getAll());
     }
 
-    /**
-     * @return array
-     */
-    public function getGetAllTestValues()
+    public static function getGetAllTestValues(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);
@@ -107,10 +101,7 @@ class ChainedVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $chainedProvider->getAllIdentifiers());
     }
 
-    /**
-     * @return array
-     */
-    public function getGetAllIdentifiersTestValues()
+    public static function getGetAllIdentifiersTestValues(): array
     {
         $a = new StandardVariableProvider(['a' => 'a']);
         $b = new StandardVariableProvider(['a' => 'b', 'b' => 'b']);

@@ -40,7 +40,7 @@ class ParsingStateTest extends UnitTestCase
      */
     public function testSetIdentifierSetsProperty()
     {
-        $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, false, false, ['dummy']);
+        $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, false, false, []);
         $instance->setIdentifier('test');
         self::assertAttributeEquals('test', 'identifier', $instance);
     }

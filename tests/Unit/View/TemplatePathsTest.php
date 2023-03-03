@@ -33,7 +33,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getSanitizePathTestValues()
+    public static function getSanitizePathTestValues()
     {
         return [
             ['', ''],
@@ -67,7 +67,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getSanitizePathsTestValues()
+    public static function getSanitizePathsTestValues()
     {
         return [
             [['/foo/bar/baz', 'C:\\foo\\bar\\baz'], ['/foo/bar/baz', 'C:/foo/bar/baz']],
@@ -117,7 +117,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getGetterAndSetterTestValues()
+    public static function getGetterAndSetterTestValues()
     {
         return [
             ['layoutRootPaths', ['foo' => 'bar']],
@@ -158,7 +158,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @return array
      */
-    public function getResolveFilesMethodTestValues()
+    public static function getResolveFilesMethodTestValues()
     {
         return [
             ['resolveAvailableTemplateFiles', 'setTemplateRootPaths'],

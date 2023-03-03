@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class IfThenElseViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'no condition' => [
             '<f:if then="foo" else="bar" />',

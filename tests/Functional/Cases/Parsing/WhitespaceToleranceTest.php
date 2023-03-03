@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class WhitespaceToleranceTest extends AbstractFunctionalTestCase
 {
-    public function whitespaceToleranceDataProvider(): array
+    public static function whitespaceToleranceDataProvider(): array
     {
         return [
             'Normal expected whitespace tolerance' => [

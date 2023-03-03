@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class DebugViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'not existing variable' => [
             '<f:debug>{value}</f:debug>',

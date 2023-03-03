@@ -29,7 +29,7 @@ class InlineViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'empty string' => [
             '<f:inline code="{code}" />',

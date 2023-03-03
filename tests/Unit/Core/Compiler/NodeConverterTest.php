@@ -26,70 +26,45 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class NodeConverterTest
- */
 class NodeConverterTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testSetVariableCounter()
+    public function setVariableCounterSetsVariableCounter(): void
     {
         $instance = new NodeConverter(new TemplateCompiler());
         $instance->setVariableCounter(10);
         self::assertAttributeEquals(10, 'variableCounter', $instance);
     }
 
-    /**
-     * @test
-     * @dataProvider getConvertMethodCallTestValues
-     * @param NodeInterface $node
-     * @param string $expected
-     */
-    public function testConvertCallsExpectedMethod(NodeInterface $node, $expected)
-    {
-        $instance = $this->getMock(NodeConverter::class, [$expected], [], '', false);
-        $instance->expects(self::once())->method($expected);
-        $instance->convert($node);
-    }
-
-    /**
-     * @return array
-     */
-    public function getConvertMethodCallTestValues()
+    public static function convertCallsExpectedMethodDataProvider(): array
     {
         return [
-            [$this->getMock(TextNode::class, [], [], '', false), 'convertTextNode'],
-            [$this->getMock(ExpressionNodeInterface::class), 'convertExpressionNode'],
-            [$this->getMock(NumericNode::class, [], [], '', false), 'convertNumericNode'],
-            [$this->getMock(ViewHelperNode::class, [], [], '', false), 'convertViewHelperNode'],
-            [$this->getMock(ObjectAccessorNode::class, [], [], '', false), 'convertObjectAccessorNode'],
-            [$this->getMock(ArrayNode::class, [], [], '', false), 'convertArrayNode'],
-            [$this->getMock(RootNode::class, [], [], '', false), 'convertListOfSubNodes'],
-            [$this->getMock(BooleanNode::class, [], [], '', false), 'convertBooleanNode'],
-            [$this->getMock(EscapingNode::class, [], [], '', false), 'convertEscapingNode'],
+            [TextNode::class, 'convertTextNode'],
+            [ExpressionNodeInterface::class, 'convertExpressionNode'],
+            [NumericNode::class, 'convertNumericNode'],
+            [ViewHelperNode::class, 'convertViewHelperNode'],
+            [ObjectAccessorNode::class, 'convertObjectAccessorNode'],
+            [ArrayNode::class, 'convertArrayNode'],
+            [RootNode::class, 'convertListOfSubNodes'],
+            [BooleanNode::class, 'convertBooleanNode'],
+            [EscapingNode::class, 'convertEscapingNode'],
         ];
     }
 
     /**
      * @test
-     * @dataProvider getConvertTestValues
-     * @param NodeInterface $node
-     * @param string $expected
+     * @dataProvider convertCallsExpectedMethodDataProvider
      */
-    public function testConvert(NodeInterface $node, $expected)
+    public function convertCallsExpectedMethod(string $nodeName, string $expected): void
     {
-        $instance = new NodeConverter(new TemplateCompiler());
-        $result = $instance->convert($node);
-        self::assertEquals($expected, $result['execution']);
+        $instance = $this->getMock(NodeConverter::class, [$expected], [], false, false);
+        $instance->expects(self::once())->method($expected);
+        $instance->convert($this->getMock($nodeName, [], [], false, false));
     }
 
-    /**
-     * @return array
-     */
-    public function getConvertTestValues()
+    public static function convertReturnsExpectedExecutionDataProvider(): array
     {
         $treeBooleanRoot = new RootNode();
         $treeBooleanRoot->addChildNode(new TextNode('1'));
@@ -167,7 +142,27 @@ class NodeConverterTest extends UnitTestCase
             [new NumericNode('4.5'), '4.5'],
             [new ArrayNode(['foo', 'bar']), '$array0'],
             [new ArrayNode([0, new TextNode('test'), new ArrayNode(['foo', 'bar'])]), '$array0'],
-            [$this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass(), '']
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider convertReturnsExpectedExecutionDataProvider
+     */
+    public function convertReturnsExpectedExecution(NodeInterface $node, $expected): void
+    {
+        $instance = new NodeConverter(new TemplateCompiler());
+        $result = $instance->convert($node);
+        self::assertEquals($expected, $result['execution']);
+    }
+
+    /**
+     * @test
+     */
+    public function instanceOfAbstractMockReturnsEmptyStringConvertExecution(): void
+    {
+        $instance = new NodeConverter(new TemplateCompiler());
+        $result = $instance->convert($this->getMockBuilder(NodeInterface::class)->getMockForAbstractClass());
+        self::assertEquals('', $result['execution']);
     }
 }

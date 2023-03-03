@@ -26,7 +26,7 @@ class FailedCompilingStateTest extends UnitTestCase
      */
     public function testGetter($property, $value)
     {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
+        $subject = $this->getAccessibleMock(FailedCompilingState::class, []);
         $subject->_set($property, $value);
         $method = 'get' . ucfirst($property);
         self::assertEquals($value, $subject->$method());
@@ -40,7 +40,7 @@ class FailedCompilingStateTest extends UnitTestCase
      */
     public function testSetter($property, $value)
     {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
+        $subject = $this->getAccessibleMock(FailedCompilingState::class, []);
         $subject->_set($property, $value);
         $method = 'set' . ucfirst($property);
         $getter = 'get' . ucfirst($property);
@@ -53,7 +53,7 @@ class FailedCompilingStateTest extends UnitTestCase
      */
     public function testAddMitigation()
     {
-        $subject = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
+        $subject = $this->getAccessibleMock(FailedCompilingState::class, []);
         $subject->_set('mitigations', ['m1']);
         $subject->addMitigation('m2');
         self::assertEquals(['m1', 'm2'], $subject->getMitigations());
@@ -62,7 +62,7 @@ class FailedCompilingStateTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getPropertyTestValues()
+    public static function getPropertyTestValues()
     {
         return [
             ['failureReason', 'test reason'],

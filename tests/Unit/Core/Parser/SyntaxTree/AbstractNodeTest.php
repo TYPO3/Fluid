@@ -15,9 +15,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * An AbstractNode Test
- */
 class AbstractNodeTest extends UnitTestCase
 {
     protected $renderingContext;
@@ -28,10 +25,8 @@ class AbstractNodeTest extends UnitTestCase
 
     public function setUp(): void
     {
-        $this->renderingContext = $this->getMock(RenderingContext::class, [], [], '', false);
-
+        $this->renderingContext = $this->getMock(RenderingContext::class, [], [], false, false);
         $this->abstractNode = $this->getMock(AbstractNode::class, ['evaluate']);
-
         $this->childNode = $this->getMock(AbstractNode::class);
         $this->abstractNode->addChildNode($this->childNode);
     }

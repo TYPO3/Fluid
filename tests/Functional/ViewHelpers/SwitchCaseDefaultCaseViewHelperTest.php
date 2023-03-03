@@ -41,7 +41,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'without cases' => [
             '<f:switch expression="{value}">bar</f:switch>',

@@ -14,9 +14,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class MathExpressionNodeTest
- */
 class MathExpressionNodeTest extends UnitTestCase
 {
 
@@ -34,10 +31,7 @@ class MathExpressionNodeTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getEvaluateExpressionTestValues()
+    public static function getEvaluateExpressionTestValues(): array
     {
         return [
             ['1 gabbagabbahey 1', [], 0],

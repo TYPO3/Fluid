@@ -33,9 +33,9 @@ class StandardCacheWarmerTest extends UnitTestCase
      */
     public function testWarm()
     {
-        $failedCompilingState = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
+        $failedCompilingState = $this->getAccessibleMock(FailedCompilingState::class, []);
         $subject = $this->getMockBuilder(StandardCacheWarmer::class)
-            ->setMethods(['warmSingleFile', 'detectControllerNamesInTemplateRootPaths'])
+            ->onlyMethods(['warmSingleFile', 'detectControllerNamesInTemplateRootPaths'])
             ->getMock();
         $subject->expects(self::atLeastOnce())
             ->method('detectControllerNamesInTemplateRootPaths')
@@ -45,7 +45,7 @@ class StandardCacheWarmerTest extends UnitTestCase
             ->willReturn($failedCompilingState);
         $context = new RenderingContextFixture();
         $paths = $this->getMockBuilder(TemplatePaths::class)
-            ->setMethods(
+            ->onlyMethods(
                 [
                     'resolveAvailableTemplateFiles',
                     'resolveAvailablePartialFiles',
@@ -71,7 +71,7 @@ class StandardCacheWarmerTest extends UnitTestCase
         $paths->expects(self::atLeastOnce())->method('getPartialRootPaths')->willReturn(['/dev/null']);
         $paths->expects(self::atLeastOnce())->method('getLayoutRootPaths')->willReturn(['/dev/null']);
         $compiler = $this->getMockBuilder(TemplateCompiler::class)
-            ->setMethods(['enterWarmupMode'])
+            ->onlyMethods(['enterWarmupMode'])
             ->getMock();
         $compiler->expects(self::once())->method('enterWarmupMode');
         $context->setTemplateCompiler($compiler);
@@ -121,7 +121,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getWarmSingleFileExceptionTestValues()
+    public static function getWarmSingleFileExceptionTestValues()
     {
         return [
             [new StopCompilingException('StopCompiling exception')],

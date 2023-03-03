@@ -43,7 +43,7 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         $value = new \ArrayObject();
         yield 'empty for empty object' => [

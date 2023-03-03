@@ -16,9 +16,6 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToArray;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class CastingExpressionNodeTest
- */
 class CastingExpressionNodeTest extends UnitTestCase
 {
 
@@ -27,11 +24,7 @@ class CastingExpressionNodeTest extends UnitTestCase
      */
     public function testEvaluateDelegatesToEvaluteExpression()
     {
-        $subject = $this->getMock(
-            CastingExpressionNode::class,
-            ['dummy'],
-            ['{test as string}', ['test as string']]
-        );
+        $subject = $this->getMock(CastingExpressionNode::class, [], ['{test as string}', ['test as string']]);
         $context = new RenderingContext();
         $context->setVariableProvider(new StandardVariableProvider(['test' => 10]));
         $result = $subject->evaluate($context);
@@ -63,10 +56,7 @@ class CastingExpressionNodeTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getEvaluateExpressionTestValues()
+    public static function getEvaluateExpressionTestValues(): array
     {
         $arrayIterator = new \ArrayIterator(['foo', 'bar']);
         $toArrayObject = new UserWithToArray('foobar');

@@ -35,18 +35,22 @@ abstract class BaseTestCase extends TestCase
      *
      * @template T of object
      * @param class-string<T> $originalClassName Full qualified name of the original class
-     * @param array $methods
-     * @param array $arguments
-     * @param string $mockClassName
-     * @param bool $callOriginalConstructor
-     * @param bool $callOriginalClone
-     * @param bool $callAutoload
      * @return MockObject&AccessibleObjectInterface&T
      * @api
      */
-    protected function getAccessibleMock($originalClassName, $methods = [], array $arguments = [], $mockClassName = '', $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
-    {
-        $builder = $this->getMockBuilder($this->buildAccessibleProxy($originalClassName))->setMethods($methods)->setConstructorArgs($arguments)->setMockClassName($mockClassName);
+    protected function getAccessibleMock(
+        string $originalClassName,
+        ?array $methods = null,
+        array $arguments = [],
+        string $mockClassName = '',
+        $callOriginalConstructor = true,
+        bool $callOriginalClone = true,
+        bool $callAutoload = true
+    ) {
+        $builder = $this->getMockBuilder($this->buildAccessibleProxy($originalClassName))->setConstructorArgs($arguments)->setMockClassName($mockClassName);
+        if ($methods !== null) {
+            $builder->onlyMethods($methods);
+        }
         if (!$callAutoload) {
             $builder->disableAutoload();
         }
@@ -107,9 +111,19 @@ abstract class BaseTestCase extends TestCase
      * @return MockObject&T
      * @api
      */
-    protected function getMock($originalClassName, $methods = [], array $arguments = [], $callOriginalConstructor = true, $callOriginalClone = true, $callAutoload = true)
-    {
-        $builder = $this->getMockBuilder($originalClassName)->setMethods($methods)->setConstructorArgs($arguments);
+    protected function getMock(
+        string $originalClassName,
+        ?array $methods = null,
+        array $arguments = [],
+        $callOriginalConstructor = true,
+        bool $callOriginalClone = true,
+        bool $callAutoload = true
+    ) {
+        $builder = $this->getMockBuilder($originalClassName);
+        if ($methods !== null) {
+            $builder->onlyMethods($methods);
+        }
+        $builder->setConstructorArgs($arguments);
         if (!$callAutoload) {
             $builder->disableAutoload();
         }

@@ -39,7 +39,7 @@ class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
         self::assertFalse((new HtmlspecialcharsViewHelper())->isOutputEscapingEnabled());
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'value as argument' => [
            '<f:format.htmlspecialchars value="Some string" keepQuotes="false" encoding="UTF-8" doubleEncode="false"/>',

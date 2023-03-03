@@ -30,7 +30,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     {
         $subject = new EscapingModifierTemplateProcessor();
         $context = new RenderingContextFixture();
-        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['setEscapingEnabled'])->getMock();
+        $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
         if (!$expected) {
             $parser->expects(self::once())->method('setEscapingEnabled')->with(false);
         } else {
@@ -45,7 +45,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getEscapingTestValues()
+    public static function getEscapingTestValues()
     {
         return [
             ['', true],
@@ -72,7 +72,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     {
         $subject = new EscapingModifierTemplateProcessor();
         $context = new RenderingContextFixture();
-        $parser = $this->getMockBuilder(TemplateParser::class)->setMethods(['setEscapingEnabled'])->getMock();
+        $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
         $context->setTemplateParser($parser);
         $subject->setRenderingContext($context);
         $this->setExpectedException(Exception::class);
@@ -82,7 +82,7 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getErrorTestValues()
+    public static function getErrorTestValues()
     {
         return [
             [

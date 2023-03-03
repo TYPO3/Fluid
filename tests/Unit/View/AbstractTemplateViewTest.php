@@ -79,7 +79,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignAddsValueToTemplateVariableContainer()
     {
-        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->withConsecutive(
+        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
             ['bar', 'BarValue']
         );
@@ -93,7 +93,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignCanOverridePreviouslyAssignedValues()
     {
-        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->withConsecutive(
+        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
             ['foo', 'FooValueOverridden']
         );
@@ -106,7 +106,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignMultipleAddsValuesToTemplateVariableContainer()
     {
-        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->withConsecutive(
+        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
             ['bar', 'BarValue'],
             ['baz', 'BazValue']
@@ -121,7 +121,7 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignMultipleCanOverridePreviouslyAssignedValues()
     {
-        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->withConsecutive(
+        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
             ['foo', 'FooValueOverridden'],
             ['bar', 'BarValue']
@@ -170,7 +170,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getRenderSectionExceptionTestValues()
+    public static function getRenderSectionExceptionTestValues()
     {
         return [
             [true],
@@ -219,7 +219,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getRenderSectionCompiledTestValues()
+    public static function getRenderSectionCompiledTestValues()
     {
         return [
             [true],

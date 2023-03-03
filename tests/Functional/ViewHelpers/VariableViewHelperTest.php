@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class VariableViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'value parameter' => [
             '<f:variable name="foo" value="bar" />{foo}',

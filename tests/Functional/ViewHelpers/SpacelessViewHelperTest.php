@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class SpacelessViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'extra whitespace between tags' => [
             '<f:spaceless><div>foo</div>  <div>bar</div></f:spaceless>',
