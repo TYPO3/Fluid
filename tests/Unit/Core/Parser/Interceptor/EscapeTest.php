@@ -45,11 +45,11 @@ class EscapeTest extends UnitTestCase
 
     public function setUp(): void
     {
-        $this->escapeInterceptor = $this->getAccessibleMock(Escape::class, ['dummy']);
+        $this->escapeInterceptor = $this->getAccessibleMock(Escape::class, []);
         $this->mockViewHelper = $this->getMockBuilder(AbstractViewHelper::class)->disableOriginalConstructor()->getMock();
         $this->mockNode = $this->getMockBuilder(ViewHelperNode::class)->disableOriginalConstructor()->getMock();
         $this->mockParsingState = $this->getMockBuilder(ParsingState::class)
-            ->setMethods(['dummy'])->disableOriginalConstructor()->getMock();
+            ->onlyMethods([])->disableOriginalConstructor()->getMock();
     }
 
     /**
@@ -102,7 +102,7 @@ class EscapeTest extends UnitTestCase
     public function processWrapsCurrentViewHelperInEscapeNode()
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
-        $mockNode = $this->getMock(ObjectAccessorNode::class, [], [], '', false);
+        $mockNode = $this->getMock(ObjectAccessorNode::class, [], [], false, false);
         $actualResult = $this->escapeInterceptor->process($mockNode, $interceptorPosition, $this->mockParsingState);
         self::assertInstanceOf(EscapingNode::class, $actualResult);
     }

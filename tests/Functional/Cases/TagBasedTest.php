@@ -88,7 +88,7 @@ class TagBasedTest extends BaseTestCase
         self::assertSame('<div data-foo="attribute" />', $result);
     }
 
-    public function tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider(): array
+    public static function tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider(): array
     {
         return [
             'data before attribute' => [
@@ -121,7 +121,7 @@ class TagBasedTest extends BaseTestCase
         self::assertSame('<div aria-controls="attribute" />', $result);
     }
 
-    public function tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider(): array
+    public static function tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider(): array
     {
         return [
             'aria before attribute' => [

@@ -34,10 +34,7 @@ class VariableExtractorTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getPathTestValues()
+    public static function getPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $unnamedUser = new UserWithoutToString('');
@@ -73,10 +70,7 @@ class VariableExtractorTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getAccessorsForPathTestValues()
+    public static function getAccessorsForPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
@@ -109,10 +103,7 @@ class VariableExtractorTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getExtractRedectAccessorTestValues()
+    public static function getExtractRedectAccessorTestValues(): array
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],

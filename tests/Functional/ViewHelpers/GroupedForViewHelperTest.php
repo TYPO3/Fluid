@@ -63,7 +63,7 @@ class GroupedForViewHelperTest extends AbstractFunctionalTestCase
         self::assertSame('', GroupedForViewHelper::renderStatic($arguments, function () {}, new RenderingContext()));
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'empty each returns empty string' => [
             '<f:groupedFor each="{}" as="foo" groupBy="bar">' .

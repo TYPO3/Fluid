@@ -80,7 +80,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getNumericBooleanTestValues()
+    public static function getNumericBooleanTestValues()
     {
         return [
             [0, false],
@@ -162,7 +162,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getCreateFromNodeAndEvaluateTestValues()
+    public static function getCreateFromNodeAndEvaluateTestValues()
     {
         return [
             '1 && 1' => [new TextNode('1 && 1'), true],
@@ -661,7 +661,7 @@ class BooleanNodeTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getStandardInputTypes()
+    public static function getStandardInputTypes()
     {
         return [
             [0, false],

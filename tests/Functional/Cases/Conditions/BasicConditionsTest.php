@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class BasicConditionsTest extends AbstractFunctionalTestCase
 {
-    public function basicConditionDataProvider(): array
+    public static function basicConditionDataProvider(): array
     {
         return [
             ['1 == 1', true],

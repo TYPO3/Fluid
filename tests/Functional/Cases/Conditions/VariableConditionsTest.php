@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class VariableConditionsTest extends AbstractFunctionalTestCase
 {
-    public function variableConditionDataProvider(): array
+    public static function variableConditionDataProvider(): array
     {
         $user1 = new UserWithToString('foobar');
         $user2 = new UserWithToString('foobar');

@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class SwitchTest extends AbstractFunctionalTestCase
 {
-    public function ignoreTextAndWhitespacesDataProvider(): array
+    public static function ignoreTextAndWhitespacesDataProvider(): array
     {
         return [
             'Ignores whitespace inside parent switch outside case children' => [

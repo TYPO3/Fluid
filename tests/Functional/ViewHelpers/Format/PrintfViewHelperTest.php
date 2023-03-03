@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class PrintfViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'argument is array' => [
             '<f:format.printf arguments="{year: 2009, month: 4, day: 5}">%04d-%02d-%02d</f:format.printf>',

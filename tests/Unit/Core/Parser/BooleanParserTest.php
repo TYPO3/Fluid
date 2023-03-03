@@ -53,7 +53,7 @@ class BooleanParserTest extends UnitTestCase
     /**
      * @return array
      */
-    public function getSomeEvaluationTestValues()
+    public static function getSomeEvaluationTestValues()
     {
         return [
             ['(1 && false) || false || \'foobar\' == \'foobar\'', true],

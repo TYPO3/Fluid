@@ -231,7 +231,7 @@ class TagBuilderTest extends UnitTestCase
      */
     public function resetResetsTagBuilder()
     {
-        $tagBuilder = $this->getAccessibleMock(TagBuilder::class, ['dummy']);
+        $tagBuilder = $this->getAccessibleMock(TagBuilder::class, []);
         $tagBuilder->setTagName('tagName');
         $tagBuilder->setContent('some content');
         $tagBuilder->forceClosingTag(true);

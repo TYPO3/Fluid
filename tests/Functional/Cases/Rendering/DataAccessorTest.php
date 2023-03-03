@@ -18,7 +18,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class DataAccessorTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): array
+    public static function renderDataProvider(): array
     {
         return [
             'plain array' => [

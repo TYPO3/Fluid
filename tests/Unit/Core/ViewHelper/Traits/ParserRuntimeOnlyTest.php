@@ -14,9 +14,6 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\ParserRuntimeOnly;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class ParserRuntimeOnlyTest
- */
 class ParserRuntimeOnlyTest extends UnitTestCase
 {
     /**
@@ -36,7 +33,7 @@ class ParserRuntimeOnlyTest extends UnitTestCase
     {
         $trait = $this->getMockBuilder(ParserRuntimeOnly::class)->getMockForTrait();
         $init = '';
-        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], '', false);
+        $viewHelperNodeMock = $this->getMock(ViewHelperNode::class, [], [], false, false);
         $result = $trait->compile('fake', 'fake', $init, $viewHelperNodeMock, new TemplateCompiler());
         self::assertSame('', $result);
     }

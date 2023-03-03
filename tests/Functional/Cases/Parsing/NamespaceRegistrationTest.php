@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class NamespaceRegistrationTest extends AbstractFunctionalTestCase
 {
-    public function getTemplateCodeFixturesAndExpectations(): array
+    public static function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Ignoring namespaces without conflict with registered namespace' => [

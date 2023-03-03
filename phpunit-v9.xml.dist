@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        beStrictAboutTestsThatDoNotTestAnything="true"
+        cacheResult="false"
+        colors="true"
+        convertDeprecationsToExceptions="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        failOnRisky="true"
+        failOnWarning="true"
+        processIsolation="false"
+        stopOnError="false"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnSkipped="false"
+>
+        <testsuites>
+                <testsuite name="Unit">
+                        <directory>tests/Unit</directory>
+                </testsuite>
+                <testsuite name="Functional">
+                        <directory>tests/Functional</directory>
+                </testsuite>
+        </testsuites>
+        <php>
+                <ini name="display_errors" value="1" />
+                <ini name="error_reporting" value="E_ALL" />
+        </php>        
+</phpunit>

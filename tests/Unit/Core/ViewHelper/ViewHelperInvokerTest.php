@@ -35,10 +35,7 @@ class ViewHelperInvokerTest extends UnitTestCase
         self::assertEquals($expectedOutput, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getInvocationTestValues()
+    public static function getInvocationTestValues(): array
     {
         return [
             [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo', null],

@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Tests\BaseTestCase;
 
 class CommandTest extends BaseTestCase
 {
-    public function getCommandTestValues(): array
+    public static function getCommandTestValues(): array
     {
         return [
             [

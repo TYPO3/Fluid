@@ -12,12 +12,8 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractView;
 
-/**
- * Testcase for the AbstractView
- */
-class AbstractViewViewTest extends UnitTestCase
+class AbstractViewTest extends UnitTestCase
 {
-
     /**
      * @test
      */

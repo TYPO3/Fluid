@@ -36,7 +36,7 @@ class ViewHelperEscapingTest extends BaseTestCase
         $configuration = new Configuration();
         $configuration->addEscapingInterceptor(new Escape());
 
-        $context = $this->getMockBuilder(RenderingContextFixture::class)->setMethods(['buildParserConfiguration'])->getMock();
+        $context = $this->getMockBuilder(RenderingContextFixture::class)->onlyMethods(['buildParserConfiguration'])->getMock();
         $context->expects(self::once())->method('buildParserConfiguration')->willReturn($configuration);
         $context->getTemplateParser()->setRenderingContext($context);
         $context->getTemplateCompiler()->setRenderingContext($context);

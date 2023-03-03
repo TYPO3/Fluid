@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class CompileWithContentArgumentAndRenderStaticTest extends AbstractFunctionalTestCase
 {
-    public function compileWithContentArgumentAndRenderStaticDataProvider(): array
+    public static function compileWithContentArgumentAndRenderStaticDataProvider(): array
     {
         return [
             // with trait but without contentArgumentProperty set in viewhelper and having optional argument

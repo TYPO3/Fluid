@@ -30,7 +30,7 @@ class CycleViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         $value = ['foo', 'bar', 'baz'];
         yield 'assigns values to array items' => [

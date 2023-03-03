@@ -24,7 +24,7 @@ class RawViewHelperTest extends AbstractFunctionalTestCase
         self::assertFalse((new RawViewHelper())->isOutputEscapingEnabled());
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'value as argument' => [
             '<f:format.raw value="input value \" & äöüß@" />',

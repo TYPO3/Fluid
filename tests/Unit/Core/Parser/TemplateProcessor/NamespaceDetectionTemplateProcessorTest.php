@@ -14,9 +14,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperResolver;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for NamespaceDetectionTemplateProcessor
- */
 class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
 {
 
@@ -29,8 +26,8 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
     public function testExtractsExpectedNamespaces($templateSource, array $expectedNamespaces, $expectedSource)
     {
         $renderingContext = new RenderingContextFixture();
-        $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->setMethods(['addNamespace'])->getMock();
-        $viewHelperResolver->expects(self::exactly(count($expectedNamespaces)))->method('addNamespace')->withConsecutive(...$expectedNamespaces);
+        $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->onlyMethods(['addNamespace'])->getMock();
+        $viewHelperResolver->expects(self::exactly(count($expectedNamespaces)))->method('addNamespace')->willReturnOnConsecutiveCalls(...$expectedNamespaces);
         $renderingContext->setViewHelperResolver($viewHelperResolver);
         $subject = new NamespaceDetectionTemplateProcessor();
         $subject->setRenderingContext($renderingContext);
@@ -38,10 +35,7 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
         self::assertSame($expectedSource, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getTestValues()
+    public static function getTestValues(): array
     {
         return [
             'does nothing with empty templates' => [

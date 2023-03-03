@@ -28,7 +28,7 @@ class CountViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'value as argument' => [
             '<f:count subject="{0:foo, 1:bar, 2:baz}" />',

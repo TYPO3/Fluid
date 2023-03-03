@@ -305,10 +305,7 @@ class TemplateParserPatternTest extends UnitTestCase
         // $this->assertEquals(preg_match($pattern, '{}'), 0, 'Object accessor identified, and it was empty!');
     }
 
-    /**
-     * @return array
-     */
-    public function dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
+    public static function dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS(): array
     {
         return [
             ['string' => '{a:b}'],
@@ -348,7 +345,7 @@ class TemplateParserPatternTest extends UnitTestCase
 
     /**
      * @param string $string
-     * @dataProvider dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
+     * @dataProvider dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
      * @test
      */
     public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS($string)
@@ -358,10 +355,7 @@ class TemplateParserPatternTest extends UnitTestCase
         self::assertSame($string, $matches[0]);
     }
 
-    /**
-     * @return array
-     */
-    public function dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
+    public static function dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS(): array
     {
         return [
             ['string' => '{"foo\': "bar"}'],
@@ -372,7 +366,7 @@ class TemplateParserPatternTest extends UnitTestCase
 
     /**
      * @param string $string
-     * @dataProvider dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS()
+     * @dataProvider dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
      * @test
      */
     public function SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS_doesNotMatchInvalidSyntax($string)
@@ -461,10 +455,7 @@ class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals($expected, $matches, 'The regular expression splitting the array apart does not work!');
     }
 
-    /**
-     * @return array
-     */
-    public function dataProviderValidArrayExpressionsBeginningAndEndingOnDigits()
+    public static function dataProviderValidArrayExpressionsBeginningAndEndingOnDigits(): array
     {
         return [
             [
@@ -569,7 +560,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @param string $expression
      * @param string $expected
-     * @dataProvider dataProviderValidArrayExpressionsBeginningAndEndingOnDigits()
+     * @dataProvider dataProviderValidArrayExpressionsBeginningAndEndingOnDigits
      * @test
      */
     public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesKeysEndingInDigits($expression, $expected)
@@ -584,10 +575,7 @@ class TemplateParserPatternTest extends UnitTestCase
         );
     }
 
-    /**
-     * @return array
-     */
-    public function dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS()
+    public static function dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS(): array
     {
         return [
             ['string' => '{"a\': b}'],
@@ -598,7 +586,7 @@ class TemplateParserPatternTest extends UnitTestCase
 
     /**
      * @param string $string
-     * @dataProvider dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS()
+     * @dataProvider dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS
      * @test
      */
     public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_doesNotMatchInvalidSyntax($string)
