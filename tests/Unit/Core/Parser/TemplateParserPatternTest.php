@@ -13,16 +13,12 @@ use TYPO3Fluid\Fluid\Core\Parser\Patterns;
 use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\NamespaceDetectionTemplateProcessor;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for Regular expressions in parser
- */
 class TemplateParserPatternTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testSCAN_PATTERN_NAMESPACEDECLARATION()
+    public function testSCAN_PATTERN_NAMESPACEDECLARATION(): void
     {
         self::assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '{namespace acme=Acme.MyPackage\Bla\blubb}'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (1).');
         self::assertEquals(preg_match(NamespaceDetectionTemplateProcessor::NAMESPACE_DECLARATION, '{namespace acme=Acme.MyPackage\Bla\Blubb }'), 1, 'The SCAN_PATTERN_NAMESPACEDECLARATION pattern did not match a namespace declaration (2).');
@@ -35,7 +31,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSPLIT_PATTERN_DYNAMICTAGS()
+    public function testSPLIT_PATTERN_DYNAMICTAGS(): void
     {
         $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, ['typo3', 't3', 'f']);
 
@@ -84,7 +80,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSCAN_PATTERN_DYNAMICTAG()
+    public function testSCAN_PATTERN_DYNAMICTAG(): void
     {
         $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, ['f']);
         $source = '<f:crop attribute="Hallo">';
@@ -167,7 +163,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSCAN_PATTERN_CLOSINGDYNAMICTAG()
+    public function testSCAN_PATTERN_CLOSINGDYNAMICTAG(): void
     {
         $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, ['f']);
         self::assertEquals(preg_match($pattern, '</f:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
@@ -178,7 +174,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSPLIT_PATTERN_TAGARGUMENTS()
+    public function testSPLIT_PATTERN_TAGARGUMENTS(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_TAGARGUMENTS;
         $source = ' test="Hallo" argument:post="\'Web" other=\'Single"Quoted\' data-foo="bar"';
@@ -189,7 +185,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSPLIT_PATTERN_SHORTHANDSYNTAX()
+    public function testSPLIT_PATTERN_SHORTHANDSYNTAX(): void
     {
         $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, ['f']);
 
@@ -241,7 +237,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER()
+    public function testSPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER;
 
@@ -288,7 +284,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS()
+    public function testSCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS(): void
     {
         $pattern = Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_OBJECTACCESSORS;
         self::assertEquals(preg_match($pattern, '{object}'), 1, 'Object accessor not identified!');
@@ -344,11 +340,10 @@ class TemplateParserPatternTest extends UnitTestCase
     }
 
     /**
-     * @param string $string
      * @dataProvider dataProviderSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
      * @test
      */
-    public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS($string)
+    public function testSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS(string $string): void
     {
         $success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
         self::assertTrue($success);
@@ -365,11 +360,10 @@ class TemplateParserPatternTest extends UnitTestCase
     }
 
     /**
-     * @param string $string
      * @dataProvider dataProviderInvalidSCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS
      * @test
      */
-    public function SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS_doesNotMatchInvalidSyntax($string)
+    public function SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS_doesNotMatchInvalidSyntax(string $string): void
     {
         $success = preg_match(Patterns::$SCAN_PATTERN_SHORTHANDSYNTAX_ARRAYS, $string, $matches) === 1;
         self::assertFalse($success);
@@ -378,7 +372,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS()
+    public function testSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
 
@@ -420,7 +414,7 @@ class TemplateParserPatternTest extends UnitTestCase
     /**
      * @test
      */
-    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesQuotedKeys()
+    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesQuotedKeys(): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
 
@@ -558,12 +552,10 @@ class TemplateParserPatternTest extends UnitTestCase
     }
 
     /**
-     * @param string $expression
-     * @param string $expected
      * @dataProvider dataProviderValidArrayExpressionsBeginningAndEndingOnDigits
      * @test
      */
-    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesKeysEndingInDigits($expression, $expected)
+    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_matchesKeysEndingInDigits(string $expression, array $expected): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
         $success = preg_match_all($pattern, $expression, $matches, PREG_SET_ORDER) > 0;
@@ -585,11 +577,10 @@ class TemplateParserPatternTest extends UnitTestCase
     }
 
     /**
-     * @param string $string
      * @dataProvider dataProviderInvalidSPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS
      * @test
      */
-    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_doesNotMatchInvalidSyntax($string)
+    public function SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS_doesNotMatchInvalidSyntax(string $string): void
     {
         $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX_ARRAY_PARTS;
         $success = preg_match_all($pattern, $string, $matches, PREG_SET_ORDER) > 0;
@@ -601,7 +592,7 @@ class TemplateParserPatternTest extends UnitTestCase
      *
      * @test
      */
-    public function testSCAN_PATTERN_CDATA()
+    public function testSCAN_PATTERN_CDATA(): void
     {
         $pattern = Patterns::$SCAN_PATTERN_CDATA;
         self::assertEquals(preg_match($pattern, '<!-- Test -->'), 0, 'The SCAN_PATTERN_CDATA matches a comment, but it should not.');
@@ -616,7 +607,7 @@ class TemplateParserPatternTest extends UnitTestCase
      * @param array $namespace List of namespace identifiers.
      * @return string working regular expression with NAMESPACE replaced.
      */
-    protected function insertNamespaceIntoRegularExpression($regularExpression, $namespace)
+    private function insertNamespaceIntoRegularExpression(string $regularExpression, array $namespace): string
     {
         return str_replace('NAMESPACE', implode('|', $namespace), $regularExpression);
     }

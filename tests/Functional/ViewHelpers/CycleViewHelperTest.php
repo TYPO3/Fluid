@@ -18,7 +18,7 @@ class CycleViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfSubjectIsNotIterable()
+    public function renderThrowsExceptionIfSubjectIsNotIterable(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1237823699);

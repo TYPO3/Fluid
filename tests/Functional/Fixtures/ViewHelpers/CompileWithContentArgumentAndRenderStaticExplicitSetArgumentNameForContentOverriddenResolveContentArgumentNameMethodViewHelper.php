@@ -13,9 +13,6 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithContentArgumentAndRenderStatic;
 
-/**
- * Class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethodViewHelper *
- */
 class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContentOverriddenResolveContentArgumentNameMethodViewHelper extends AbstractViewHelper
 {
     // ViewHelper tests this trait functionalities.
@@ -49,10 +46,7 @@ class CompileWithContentArgumentAndRenderStaticExplicitSetArgumentNameForContent
         );
     }
 
-    /**
-     * @return string
-     */
-    public function resolveContentArgumentName()
+    public function resolveContentArgumentName(): string
     {
         // Use argument name to be used as content 'renderChildrenClosure()' if provided, otherwise render children.
         return 'secondOptionalArgument';

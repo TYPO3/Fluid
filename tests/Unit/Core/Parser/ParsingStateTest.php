@@ -17,28 +17,10 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class ParsingStateTest extends UnitTestCase
 {
-
-    /**
-     * Parsing state
-     *
-     * @var ParsingState
-     */
-    protected $parsingState;
-
-    public function setUp(): void
-    {
-        $this->parsingState = new ParsingState();
-    }
-
-    public function tearDown(): void
-    {
-        unset($this->parsingState);
-    }
-
     /**
      * @test
      */
-    public function testSetIdentifierSetsProperty()
+    public function testSetIdentifierSetsProperty(): void
     {
         $instance = $this->getMockForAbstractClass(ParsingState::class, [], '', false, false, false, []);
         $instance->setIdentifier('test');
@@ -48,7 +30,7 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetIdentifierReturnsProperty()
+    public function testGetIdentifierReturnsProperty(): void
     {
         $instance = $this->getAccessibleMockForAbstractClass(ParsingState::class, [], '', false, false, false);
         $instance->_set('identifier', 'test');
@@ -58,53 +40,58 @@ class ParsingStateTest extends UnitTestCase
     /**
      * @test
      */
-    public function setRootNodeCanBeReadOutAgain()
+    public function setRootNodeCanBeReadOutAgain(): void
     {
+        $parsingState = new ParsingState();
         $rootNode = new RootNode();
-        $this->parsingState->setRootNode($rootNode);
-        self::assertSame($this->parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
+        $parsingState->setRootNode($rootNode);
+        self::assertSame($parsingState->getRootNode(), $rootNode, 'Root node could not be read out again.');
     }
 
     /**
      * @test
      */
-    public function pushAndGetFromStackWorks()
+    public function pushAndGetFromStackWorks(): void
     {
+        $parsingState = new ParsingState();
         $rootNode = new RootNode();
-        $this->parsingState->pushNodeToStack($rootNode);
-        self::assertSame($rootNode, $this->parsingState->getNodeFromStack());
-        self::assertSame($rootNode, $this->parsingState->popNodeFromStack());
+        $parsingState->pushNodeToStack($rootNode);
+        self::assertSame($rootNode, $parsingState->getNodeFromStack());
+        self::assertSame($rootNode, $parsingState->popNodeFromStack());
     }
 
     /**
      * @test
      */
-    public function renderCallsTheRightMethodsOnTheRootNode()
+    public function renderCallsTheRightMethodsOnTheRootNode(): void
     {
+        $parsingState = new ParsingState();
         $renderingContext = new RenderingContextFixture();
         $rootNode = $this->getMock(RootNode::class);
         $rootNode->expects(self::once())->method('evaluate')->with($renderingContext)->willReturn('T3DD09 Rock!');
-        $this->parsingState->setRootNode($rootNode);
-        $renderedValue = $this->parsingState->render($renderingContext);
+        $parsingState->setRootNode($rootNode);
+        $renderedValue = $parsingState->render($renderingContext);
         self::assertEquals($renderedValue, 'T3DD09 Rock!', 'The rendered value of the Root Node is not returned by the ParsingState.');
     }
 
     /**
      * @test
      */
-    public function testGetLayoutName()
+    public function testGetLayoutName(): void
     {
-        $this->parsingState->setVariableProvider(new StandardVariableProvider(['layoutName' => 'test']));
-        $result = $this->parsingState->getLayoutName(new RenderingContextFixture());
+        $parsingState = new ParsingState();
+        $parsingState->setVariableProvider(new StandardVariableProvider(['layoutName' => 'test']));
+        $result = $parsingState->getLayoutName(new RenderingContextFixture());
         self::assertEquals('test', $result);
     }
 
     /**
      * @test
      */
-    public function testSetCompilableSetsProperty()
+    public function testSetCompilableSetsProperty(): void
     {
-        $this->parsingState->setCompilable(false);
-        self::assertAttributeEquals(false, 'compilable', $this->parsingState);
+        $parsingState = new ParsingState();
+        $parsingState->setCompilable(false);
+        self::assertAttributeEquals(false, 'compilable', $parsingState);
     }
 }

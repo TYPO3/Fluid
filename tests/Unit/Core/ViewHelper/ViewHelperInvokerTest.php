@@ -16,30 +16,23 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class ViewHelperInvokerTest extends UnitTestCase
 {
-    /**
-     * @param string $viewHelperClassName
-     * @param array $arguments
-     * @param mixed $expectedOutput
-     * @param string|null $expectedException
-     * @test
-     * @dataProvider getInvocationTestValues
-     */
-    public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException)
-    {
-        $invoker = new ViewHelperInvoker();
-        $renderingContext = new RenderingContext();
-        if ($expectedException) {
-            $this->setExpectedException($expectedException);
-        }
-        $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
-        self::assertEquals($expectedOutput, $result);
-    }
-
     public static function getInvocationTestValues(): array
     {
         return [
-            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo', null],
-            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar'], 'add1' => 'baz', 'add2' => 'zap'], 'foo', null],
+            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo'],
+            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar'], 'add1' => 'baz', 'add2' => 'zap'], 'foo'],
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getInvocationTestValues
+     */
+    public function testInvokeViewHelper(string $viewHelperClassName, array $arguments, string $expectedOutput): void
+    {
+        $invoker = new ViewHelperInvoker();
+        $renderingContext = new RenderingContext();
+        $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
+        self::assertEquals($expectedOutput, $result);
     }
 }

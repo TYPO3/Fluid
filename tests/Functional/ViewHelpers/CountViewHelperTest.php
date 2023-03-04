@@ -17,7 +17,7 @@ class CountViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfSubjectIsNotCountable()
+    public function renderThrowsExceptionIfSubjectIsNotCountable(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $value = new \stdClass();

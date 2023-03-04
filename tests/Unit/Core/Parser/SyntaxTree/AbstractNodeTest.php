@@ -17,11 +17,9 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class AbstractNodeTest extends UnitTestCase
 {
-    protected $renderingContext;
-
-    protected $abstractNode;
-
-    protected $childNode;
+    private $renderingContext;
+    private $abstractNode;
+    private $childNode;
 
     public function setUp(): void
     {
@@ -34,7 +32,7 @@ class AbstractNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function evaluateChildNodesPassesRenderingContextToChildNodes()
+    public function evaluateChildNodesPassesRenderingContextToChildNodes(): void
     {
         $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext);
         $this->abstractNode->evaluateChildNodes($this->renderingContext);
@@ -43,7 +41,7 @@ class AbstractNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function evaluateChildNodesReturnsNullIfNoChildNodesExist()
+    public function evaluateChildNodesReturnsNullIfNoChildNodesExist(): void
     {
         $abstractNode = $this->getMock(AbstractNode::class, ['evaluate']);
         self::assertNull($abstractNode->evaluateChildNodes($this->renderingContext));
@@ -52,19 +50,19 @@ class AbstractNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString()
+    public function evaluateChildNodeThrowsExceptionIfChildNodeCannotBeCastToString(): void
     {
+        $this->expectException(Exception::class);
         $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn(new \DateTime('now'));
         $method = new \ReflectionMethod($this->abstractNode, 'evaluateChildNode');
         $method->setAccessible(true);
-        $this->setExpectedException(Exception::class);
         $method->invokeArgs($this->abstractNode, [$this->childNode, $this->renderingContext, true]);
     }
 
     /**
      * @test
      */
-    public function evaluateChildNodeCanCastToString()
+    public function evaluateChildNodeCanCastToString(): void
     {
         $withToString = new UserWithToString('foobar');
         $this->childNode->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn($withToString);
@@ -77,7 +75,7 @@ class AbstractNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function evaluateChildNodesConcatenatesOutputs()
+    public function evaluateChildNodesConcatenatesOutputs(): void
     {
         $child2 = clone $this->childNode;
         $child2->expects(self::once())->method('evaluate')->with($this->renderingContext)->willReturn('bar');
@@ -92,7 +90,7 @@ class AbstractNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function childNodeCanBeReadOutAgain()
+    public function childNodeCanBeReadOutAgain(): void
     {
         self::assertSame($this->abstractNode->getChildNodes(), [$this->childNode]);
     }

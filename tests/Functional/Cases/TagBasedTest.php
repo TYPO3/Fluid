@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 
 class TagBasedTest extends BaseTestCase
 {
-    public function testTagBasedViewHelperWithAdditionalAttributesArray()
+    public function testTagBasedViewHelperWithAdditionalAttributesArray(): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
@@ -29,7 +29,7 @@ class TagBasedTest extends BaseTestCase
         self::assertSame('<div foo="bar" />', $result);
     }
 
-    public function testTagBasedViewHelperWithDataArray()
+    public function testTagBasedViewHelperWithDataArray(): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
@@ -42,7 +42,7 @@ class TagBasedTest extends BaseTestCase
         self::assertSame('<div data-foo="bar" />', $result);
     }
 
-    public function testTagBasedViewHelperWithAriaArray()
+    public function testTagBasedViewHelperWithAriaArray(): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
@@ -55,7 +55,7 @@ class TagBasedTest extends BaseTestCase
         self::assertSame('<div aria-controls="foo" />', $result);
     }
 
-    public function testTagBasedViewHelperWithDataPrefixedArgument()
+    public function testTagBasedViewHelperWithDataPrefixedArgument(): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
@@ -66,7 +66,7 @@ class TagBasedTest extends BaseTestCase
         self::assertSame('<div data-foo="bar" />', $result);
     }
 
-    public function testTagBasedViewHelperWithAriaPrefixedArgument()
+    public function testTagBasedViewHelperWithAriaPrefixedArgument(): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
@@ -80,7 +80,7 @@ class TagBasedTest extends BaseTestCase
     /**
      * @dataProvider tagBasedViewHelperWithDataArrayAndPrefixedArgumentProvider
      */
-    public function testTagBasedViewHelperWithDataArrayAndPrefixedArgument(array $arguments)
+    public function testTagBasedViewHelperWithDataArrayAndPrefixedArgument(array $arguments): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();
@@ -113,7 +113,7 @@ class TagBasedTest extends BaseTestCase
     /**
      * @dataProvider tagBasedViewHelperWithAriaArrayAndPrefixedArgumentProvider
      */
-    public function testTagBasedViewHelperWithAriaArrayAndPrefixedArgument(array $arguments)
+    public function testTagBasedViewHelperWithAriaArrayAndPrefixedArgument(array $arguments): void
     {
         $invoker = new ViewHelperInvoker();
         $viewHelper = new TagBasedTestViewHelper();

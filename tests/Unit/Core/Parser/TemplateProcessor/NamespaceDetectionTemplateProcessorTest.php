@@ -16,25 +16,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
 {
-
-    /**
-     * @param string $templateSource
-     * @param array $expectedNamespaces
-     * @param string $expectedSource
-     * @dataProvider getTestValues
-     */
-    public function testExtractsExpectedNamespaces($templateSource, array $expectedNamespaces, $expectedSource)
-    {
-        $renderingContext = new RenderingContextFixture();
-        $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->onlyMethods(['addNamespace'])->getMock();
-        $viewHelperResolver->expects(self::exactly(count($expectedNamespaces)))->method('addNamespace')->willReturnOnConsecutiveCalls(...$expectedNamespaces);
-        $renderingContext->setViewHelperResolver($viewHelperResolver);
-        $subject = new NamespaceDetectionTemplateProcessor();
-        $subject->setRenderingContext($renderingContext);
-        $result = $subject->preProcessSource($templateSource);
-        self::assertSame($expectedSource, $result);
-    }
-
     public static function getTestValues(): array
     {
         return [
@@ -101,5 +82,21 @@ class NamespaceDetectionTemplateProcessorTest extends UnitTestCase
                 PHP_EOL
             ],
         ];
+    }
+
+    /**
+     * @dataProvider getTestValues
+     * @test
+     */
+    public function testExtractsExpectedNamespaces(string $templateSource, array $expectedNamespaces, string $expectedSource): void
+    {
+        $renderingContext = new RenderingContextFixture();
+        $viewHelperResolver = $this->getMockBuilder(ViewHelperResolver::class)->onlyMethods(['addNamespace'])->getMock();
+        $viewHelperResolver->expects(self::exactly(count($expectedNamespaces)))->method('addNamespace')->willReturnOnConsecutiveCalls(...$expectedNamespaces);
+        $renderingContext->setViewHelperResolver($viewHelperResolver);
+        $subject = new NamespaceDetectionTemplateProcessor();
+        $subject->setRenderingContext($renderingContext);
+        $result = $subject->preProcessSource($templateSource);
+        self::assertSame($expectedSource, $result);
     }
 }

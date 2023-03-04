@@ -26,29 +26,24 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @var AbstractTemplateView
      */
-    protected $view;
+    private $view;
 
     /**
      * @var RenderingContextInterface
      */
-    protected $renderingContext;
-
-    /**
-     * @var ViewHelperVariableContainer
-     */
-    protected $viewHelperVariableContainer;
+    private $renderingContext;
 
     /**
      * @var VariableProviderInterface&MockObject
      */
-    protected $templateVariableContainer;
+    private $templateVariableContainer;
 
     public function setUp(): void
     {
         $this->templateVariableContainer = $this->getMock(StandardVariableProvider::class);
-        $this->viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class, ['setView']);
+        $viewHelperVariableContainer = $this->getMock(ViewHelperVariableContainer::class, ['setView']);
         $this->renderingContext = new RenderingContextFixture();
-        $this->renderingContext->viewHelperVariableContainer = $this->viewHelperVariableContainer;
+        $this->renderingContext->viewHelperVariableContainer = $viewHelperVariableContainer;
         $this->renderingContext->variableProvider = $this->templateVariableContainer;
         $this->view = $this->getMockForAbstractClass(AbstractTemplateView::class);
         $this->view->setRenderingContext($this->renderingContext);
@@ -57,7 +52,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetRenderingContextReturnsExpectedRenderingContext()
+    public function testGetRenderingContextReturnsExpectedRenderingContext(): void
     {
         $result = $this->view->getRenderingContext();
         self::assertSame($this->renderingContext, $result);
@@ -66,7 +61,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetViewHelperResolverReturnsExpectedViewHelperResolver()
+    public function testGetViewHelperResolverReturnsExpectedViewHelperResolver(): void
     {
         $viewHelperResolver = $this->getMock(ViewHelperResolver::class);
         $this->renderingContext->setViewHelperResolver($viewHelperResolver);
@@ -77,7 +72,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignAddsValueToTemplateVariableContainer()
+    public function assignAddsValueToTemplateVariableContainer(): void
     {
         $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
@@ -91,7 +86,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignCanOverridePreviouslyAssignedValues()
+    public function assignCanOverridePreviouslyAssignedValues(): void
     {
         $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
@@ -104,7 +99,7 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function assignMultipleAddsValuesToTemplateVariableContainer()
+    public function assignMultipleAddsValuesToTemplateVariableContainer(): void
     {
         $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
@@ -116,10 +111,18 @@ class AbstractTemplateViewTest extends UnitTestCase
             ->assignMultiple(['baz' => 'BazValue']);
     }
 
+    public static function getRenderSectionExceptionTestValues(): array
+    {
+        return [
+            [true],
+            [false]
+        ];
+    }
+
     /**
      * @test
      */
-    public function assignMultipleCanOverridePreviouslyAssignedValues()
+    public function assignMultipleCanOverridePreviouslyAssignedValues(): void
     {
         $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnOnConsecutiveCalls(
             ['foo', 'FooValue'],
@@ -133,11 +136,10 @@ class AbstractTemplateViewTest extends UnitTestCase
     /**
      * @test
      * @dataProvider getRenderSectionExceptionTestValues
-     * @param bool $compiled
-     * @test
      */
-    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown($compiled)
+    public function testRenderSectionThrowsExceptionIfSectionMissingAndNotIgnoringUnknown(bool $compiled): void
     {
+        $this->expectException(InvalidSectionException::class);
         $parsedTemplate = $this->getMockForAbstractClass(
             AbstractCompiledTemplate::class,
             [],
@@ -163,14 +165,10 @@ class AbstractTemplateViewTest extends UnitTestCase
         $view->expects(self::once())->method('getCurrentRenderingContext')->willReturn($this->renderingContext);
         $view->expects(self::once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
         $view->expects(self::once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
-        $this->setExpectedException(InvalidSectionException::class);
         $view->renderSection('Missing');
     }
 
-    /**
-     * @return array
-     */
-    public static function getRenderSectionExceptionTestValues()
+    public static function getRenderSectionCompiledTestValues(): array
     {
         return [
             [true],
@@ -179,12 +177,10 @@ class AbstractTemplateViewTest extends UnitTestCase
     }
 
     /**
-     * @test
      * @dataProvider getRenderSectionCompiledTestValues
-     * @param bool $exists
      * @test
      */
-    public function testRenderSectionOnCompiledTemplate($exists)
+    public function testRenderSectionOnCompiledTemplate(bool $exists): void
     {
         if ($exists) {
             $sectionMethodName = 'section_' . sha1('Section');
@@ -214,16 +210,5 @@ class AbstractTemplateViewTest extends UnitTestCase
         $view->expects(self::once())->method('getCurrentRenderingType')->willReturn(AbstractTemplateView::RENDERING_LAYOUT);
         $view->expects(self::once())->method('getCurrentParsedTemplate')->willReturn($parsedTemplate);
         $view->renderSection('Section', [], true);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getRenderSectionCompiledTestValues()
-    {
-        return [
-            [true],
-            [false]
-        ];
     }
 }

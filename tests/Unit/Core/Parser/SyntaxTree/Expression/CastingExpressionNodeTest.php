@@ -18,11 +18,10 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class CastingExpressionNodeTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testEvaluateDelegatesToEvaluteExpression()
+    public function testEvaluateDelegatesToEvaluteExpression(): void
     {
         $subject = $this->getMock(CastingExpressionNode::class, [], ['{test as string}', ['test as string']]);
         $context = new RenderingContext();
@@ -34,26 +33,12 @@ class CastingExpressionNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function testEvaluateInvalidExpressionThrowsException()
+    public function testEvaluateInvalidExpressionThrowsException(): void
     {
+        $this->expectException(ExpressionException::class);
         $renderingContext = new RenderingContext();
         $renderingContext->setVariableProvider(new StandardVariableProvider());
-        $this->setExpectedException(ExpressionException::class);
-        $result = CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
-    }
-
-    /**
-     * @dataProvider getEvaluateExpressionTestValues
-     * @param string $expression
-     * @param array $variables
-     * @param mixed $expected
-     */
-    public function testEvaluateExpression($expression, array $variables, $expected)
-    {
-        $renderingContext = new RenderingContext();
-        $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-        $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        self::assertEquals($expected, $result);
+        CastingExpressionNode::evaluateExpression($renderingContext, 'suchaninvalidexpression as 1', []);
     }
 
     public static function getEvaluateExpressionTestValues(): array
@@ -80,5 +65,18 @@ class CastingExpressionNodeTest extends UnitTestCase
             ['myboolean as array', ['myboolean' => false], []],
             ['myobject as array', ['myobject' => $toArrayObject], ['name' => 'foobar']],
         ];
+    }
+
+    /**
+     * @dataProvider getEvaluateExpressionTestValues
+     * @param mixed $expected
+     * @test
+     */
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
+    {
+        $renderingContext = new RenderingContext();
+        $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
+        $result = CastingExpressionNode::evaluateExpression($renderingContext, $expression, []);
+        self::assertEquals($expected, $result);
     }
 }

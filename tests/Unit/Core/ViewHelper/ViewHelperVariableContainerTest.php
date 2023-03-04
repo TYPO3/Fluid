@@ -14,131 +14,128 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\TestViewHelper;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractTemplateView;
 
-/**
- * Testcase for AbstractViewHelper
- */
 class ViewHelperVariableContainerTest extends UnitTestCase
 {
-
-    /**
-     * @var ViewHelperVariableContainer
-     */
-    protected $viewHelperVariableContainer;
-
-    protected function setUp(): void
-    {
-        $this->viewHelperVariableContainer = new ViewHelperVariableContainer();
-    }
-
     /**
      * @test
      */
-    public function storedDataCanBeReadOutAgain()
+    public function storedDataCanBeReadOutAgain(): void
     {
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
         $variable = 'Hello world';
-        self::assertFalse($this->viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
-        $this->viewHelperVariableContainer->add(TestViewHelper::class, 'test', $variable);
-        self::assertTrue($this->viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
+        self::assertFalse($viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
+        $viewHelperVariableContainer->add(TestViewHelper::class, 'test', $variable);
+        self::assertTrue($viewHelperVariableContainer->exists(TestViewHelper::class, 'test'));
 
-        self::assertEquals($variable, $this->viewHelperVariableContainer->get(TestViewHelper::class, 'test'));
+        self::assertEquals($variable, $viewHelperVariableContainer->get(TestViewHelper::class, 'test'));
     }
 
     /**
      * @test
      */
-    public function addOrUpdateSetsAKeyIfItDoesNotExistYet()
+    public function addOrUpdateSetsAKeyIfItDoesNotExistYet(): void
     {
-        $this->viewHelperVariableContainer->add('Foo\Bar', 'nonExistentKey', 'value1');
-        self::assertEquals($this->viewHelperVariableContainer->get('Foo\Bar', 'nonExistentKey'), 'value1');
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->add('Foo\Bar', 'nonExistentKey', 'value1');
+        self::assertEquals($viewHelperVariableContainer->get('Foo\Bar', 'nonExistentKey'), 'value1');
     }
 
     /**
      * @test
      */
-    public function addOrUpdateOverridesAnExistingKey()
+    public function addOrUpdateOverridesAnExistingKey(): void
     {
-        $this->viewHelperVariableContainer->add('Foo\Bar', 'someKey', 'value1');
-        $this->viewHelperVariableContainer->addOrUpdate('Foo\Bar', 'someKey', 'value2');
-        self::assertEquals($this->viewHelperVariableContainer->get('Foo\Bar', 'someKey'), 'value2');
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->add('Foo\Bar', 'someKey', 'value1');
+        $viewHelperVariableContainer->addOrUpdate('Foo\Bar', 'someKey', 'value2');
+        self::assertEquals($viewHelperVariableContainer->get('Foo\Bar', 'someKey'), 'value2');
     }
 
     /**
      * @test
      */
-    public function aSetValueCanBeRemovedAgain()
+    public function aSetValueCanBeRemovedAgain(): void
     {
-        $this->viewHelperVariableContainer->add('Foo\Bar', 'nonExistentKey', 'value1');
-        $this->viewHelperVariableContainer->remove('Foo\Bar', 'nonExistentKey');
-        self::assertFalse($this->viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->add('Foo\Bar', 'nonExistentKey', 'value1');
+        $viewHelperVariableContainer->remove('Foo\Bar', 'nonExistentKey');
+        self::assertFalse($viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
     }
 
     /**
      * @test
      */
-    public function existsReturnsFalseIfTheSpecifiedKeyDoesNotExist()
+    public function existsReturnsFalseIfTheSpecifiedKeyDoesNotExist(): void
     {
-        self::assertFalse($this->viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        self::assertFalse($viewHelperVariableContainer->exists('Foo\Bar', 'nonExistentKey'));
     }
 
     /**
      * @test
      */
-    public function existsReturnsTrueIfTheSpecifiedKeyExists()
+    public function existsReturnsTrueIfTheSpecifiedKeyExists(): void
     {
-        $this->viewHelperVariableContainer->add('Foo\Bar', 'someKey', 'someValue');
-        self::assertTrue($this->viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->add('Foo\Bar', 'someKey', 'someValue');
+        self::assertTrue($viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
     }
 
     /**
      * @test
      */
-    public function existsReturnsTrueIfTheSpecifiedKeyExistsAndIsNull()
+    public function existsReturnsTrueIfTheSpecifiedKeyExistsAndIsNull(): void
     {
-        $this->viewHelperVariableContainer->add('Foo\Bar', 'someKey', null);
-        self::assertTrue($this->viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->add('Foo\Bar', 'someKey', null);
+        self::assertTrue($viewHelperVariableContainer->exists('Foo\Bar', 'someKey'));
     }
 
     /**
      * @test
      */
-    public function viewCanBeReadOutAgain()
+    public function viewCanBeReadOutAgain(): void
     {
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
         $view = $this->getMockForAbstractClass(AbstractTemplateView::class);
-        $this->viewHelperVariableContainer->setView($view);
-        self::assertSame($view, $this->viewHelperVariableContainer->getView());
+        $viewHelperVariableContainer->setView($view);
+        self::assertSame($view, $viewHelperVariableContainer->getView());
     }
 
     /**
      * @test
      */
-    public function getAllGetsAllVariables()
+    public function getAllGetsAllVariables(): void
     {
-        $this->viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo', 'bar' => 'bar']);
-        self::assertSame(['foo' => 'foo', 'bar' => 'bar'], $this->viewHelperVariableContainer->getAll('Foo\\Bar'));
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo', 'bar' => 'bar']);
+        self::assertSame(['foo' => 'foo', 'bar' => 'bar'], $viewHelperVariableContainer->getAll('Foo\\Bar'));
     }
 
     /**
      * @test
      */
-    public function getAllReturnsDefaultIfNotFound()
+    public function getAllReturnsDefaultIfNotFound(): void
     {
-        $this->viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo']);
-        self::assertSame(['foo' => 'bar'], $this->viewHelperVariableContainer->getAll('Baz\\Baz', ['foo' => 'bar']));
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->addAll('Foo\\Bar', ['foo' => 'foo']);
+        self::assertSame(['foo' => 'bar'], $viewHelperVariableContainer->getAll('Baz\\Baz', ['foo' => 'bar']));
     }
 
     /**
      * @test
      */
-    public function addAllThrowsInvalidArgumentExceptionOnUnsupportedType()
+    public function addAllThrowsInvalidArgumentExceptionOnUnsupportedType(): void
     {
-        $this->setExpectedException(\InvalidArgumentException::class);
-        $this->viewHelperVariableContainer->addAll('Foo\\Bar', new \DateTime('now'));
+        $this->expectException(\InvalidArgumentException::class);
+        $viewHelperVariableContainer = new ViewHelperVariableContainer();
+        $viewHelperVariableContainer->addAll('Foo\\Bar', new \DateTime('now'));
     }
 
     /**
      * @test
      */
-    public function testSleepReturnsExpectedPropertyNames()
+    public function testSleepReturnsExpectedPropertyNames(): void
     {
         $subject = new ViewHelperVariableContainer();
         $properties = $subject->__sleep();
@@ -148,7 +145,7 @@ class ViewHelperVariableContainerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetReturnsDefaultIfRequestedVariableDoesNotExist()
+    public function testGetReturnsDefaultIfRequestedVariableDoesNotExist(): void
     {
         $subject = new ViewHelperVariableContainer();
         self::assertEquals('test', $subject->get('foo', 'bar', 'test'));

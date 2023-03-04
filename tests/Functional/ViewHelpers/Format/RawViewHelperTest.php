@@ -15,11 +15,10 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\RawViewHelper;
 
 class RawViewHelperTest extends AbstractFunctionalTestCase
 {
-
     /**
      * @test
      */
-    public function viewHelperDeactivatesEscapingInterceptor()
+    public function viewHelperDeactivatesEscapingInterceptor(): void
     {
         self::assertFalse((new RawViewHelper())->isOutputEscapingEnabled());
     }

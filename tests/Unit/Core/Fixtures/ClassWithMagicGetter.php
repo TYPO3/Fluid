@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures;
 
-/**
- * Class ClassWithMagicGetter
- */
 class ClassWithMagicGetter
 {
     public function __call($name, $arguments)

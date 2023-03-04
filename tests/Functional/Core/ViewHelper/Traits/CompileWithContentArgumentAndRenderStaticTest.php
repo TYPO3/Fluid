@@ -18,9 +18,9 @@ class CompileWithContentArgumentAndRenderStaticTest extends UnitTestCase
     /**
      * @test
      */
-    public function resolveContentArgumentNameThrowsExceptionIfNoArgumentsAvailable()
+    public function resolveContentArgumentNameThrowsExceptionIfNoArgumentsAvailable(): void
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $instance = new CompileWithContentArgumentAndRenderStaticTestTraitViewHelper();
         $instance->resolveContentArgumentName();
     }

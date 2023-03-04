@@ -90,7 +90,7 @@ class DataAccessorTest extends AbstractFunctionalTestCase
      * @test
      * @dataProvider renderDataProvider
      */
-    public function render(string $template, array $variables, array $expected)
+    public function render(string $template, array $variables, array $expected): void
     {
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);

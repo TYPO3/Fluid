@@ -14,7 +14,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
  */
 class UserWithoutToString
 {
-
     /**
      * @var string
      */

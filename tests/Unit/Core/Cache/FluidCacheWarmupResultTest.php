@@ -28,7 +28,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
      * @dataProvider getCacheWarmupResultTestValues
      * @test
      */
-    public function testMerge(array $results, array $expected)
+    public function testMerge(array $results, array $expected): void
     {
         $result1 = $this->getAccessibleMock(FluidCacheWarmupResult::class, []);
         $result1->_set('results', array_pop($results));
@@ -41,7 +41,7 @@ class FluidCacheWarmupResultTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetResults()
+    public function testGetResults(): void
     {
         $subject = $this->getAccessibleMock(FluidCacheWarmupResult::class, []);
         $subject->_set('results', ['foo' => 'bar']);

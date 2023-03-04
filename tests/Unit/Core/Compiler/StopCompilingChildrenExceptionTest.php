@@ -14,40 +14,13 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class StopCompilingChildrenExceptionTest extends UnitTestCase
 {
-
     /**
-     * @param string $property
-     * @param mixed $value
-     * @dataProvider getPropertyTestValues
      * @test
      */
-    public function testGetter($property, $value)
+    public function setAndGetReplacementString(): void
     {
-        $subject = $this->getAccessibleMock(StopCompilingChildrenException::class, []);
-        $subject->_set($property, $value);
-        $method = 'get' . ucfirst($property);
-        self::assertEquals($value, $subject->$method());
-    }
-
-    /**
-     * @param string $property
-     * @param mixed $value
-     * @dataProvider getPropertyTestValues
-     * @test
-     */
-    public function testSetter($property, $value)
-    {
-        $subject = $this->getAccessibleMock(StopCompilingChildrenException::class, []);
-        $subject->_set($property, $value);
-        $method = 'set' . ucfirst($property);
-        $subject->$method($value);
-        self::assertAttributeEquals($value, $property, $subject);
-    }
-
-    public static function getPropertyTestValues(): array
-    {
-        return [
-            ['replacementString', 'test replacement string'],
-        ];
+        $subject = new StopCompilingChildrenException();
+        $subject->setReplacementString('test replacement string');
+        self::assertEquals('test replacement string', $subject->getReplacementString());
     }
 }

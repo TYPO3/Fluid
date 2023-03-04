@@ -17,11 +17,10 @@ use TYPO3Fluid\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper;
 
 class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
 {
-
     /**
      * @test
      */
-    public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString()
+    public function renderDoesNotModifySourceIfItIsAnObjectThatCantBeConvertedToAString(): void
     {
         $user = new UserWithoutToString('Xaver <b>Cross-Site</b>');
         $view = new TemplateView();
@@ -34,7 +33,7 @@ class HtmlspecialcharsViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function viewHelperDeactivatesEscapingInterceptor()
+    public function viewHelperDeactivatesEscapingInterceptor(): void
     {
         self::assertFalse((new HtmlspecialcharsViewHelper())->isOutputEscapingEnabled());
     }

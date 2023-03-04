@@ -14,16 +14,12 @@ use TYPO3Fluid\Fluid\Core\Parser\Interceptor\Escape;
 use TYPO3Fluid\Fluid\Core\Parser\InterceptorInterface;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class ConfigurationTest
- */
 class ConfigurationTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testAddInterceptor()
+    public function testAddInterceptor(): void
     {
         $interceptor = new Escape();
         $configuration = new Configuration();
@@ -35,7 +31,7 @@ class ConfigurationTest extends UnitTestCase
     /**
      * @test
      */
-    public function testAddEscapingInterceptor()
+    public function testAddEscapingInterceptor(): void
     {
         $interceptor = new Escape();
         $configuration = new Configuration();

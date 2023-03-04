@@ -13,16 +13,12 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContext;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for RootNode
- */
 class RootNodeTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testEvaluateCallsEvaluateChildNodes()
+    public function testEvaluateCallsEvaluateChildNodes(): void
     {
         $subject = $this->getMock(RootNode::class, ['evaluateChildNodes']);
         $subject->expects(self::once())->method('evaluateChildNodes');

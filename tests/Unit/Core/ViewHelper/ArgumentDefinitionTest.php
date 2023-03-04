@@ -12,16 +12,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for \TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition
- */
 class ArgumentDefinitionTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function objectStoresDataCorrectly()
+    public function objectStoresDataCorrectly(): void
     {
         $name = 'This is a name';
         $description = 'Example desc';

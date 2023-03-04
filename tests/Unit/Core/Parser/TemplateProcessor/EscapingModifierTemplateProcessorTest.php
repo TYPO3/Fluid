@@ -15,37 +15,9 @@ use TYPO3Fluid\Fluid\Core\Parser\TemplateProcessor\EscapingModifierTemplateProce
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for EscapingModifierTemplateProcessor
- */
 class EscapingModifierTemplateProcessorTest extends UnitTestCase
 {
-
-    /**
-     * @dataProvider getEscapingTestValues
-     * @param string $templateSource
-     * @param bool $expected
-     */
-    public function testSetsEscapingToExpectedValueAndStripsModifier($templateSource, $expected)
-    {
-        $subject = new EscapingModifierTemplateProcessor();
-        $context = new RenderingContextFixture();
-        $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
-        if (!$expected) {
-            $parser->expects(self::once())->method('setEscapingEnabled')->with(false);
-        } else {
-            $parser->expects(self::never())->method('setEscapingEnabled');
-        }
-        $context->setTemplateParser($parser);
-        $subject->setRenderingContext($context);
-        $processedSource = $subject->preProcessSource($templateSource);
-        self::assertStringNotContainsString('{escaping', $processedSource);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getEscapingTestValues()
+    public static function getEscapingTestValues(): array
     {
         return [
             ['', true],
@@ -65,24 +37,26 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
     }
 
     /**
-     * @dataProvider getErrorTestValues
-     * @param string $templateSource
+     * @dataProvider getEscapingTestValues
+     * @test
      */
-    public function testThrowsExceptionOnMultipleDefinitions($templateSource)
+    public function testSetsEscapingToExpectedValueAndStripsModifier(string $templateSource, bool $expected): void
     {
         $subject = new EscapingModifierTemplateProcessor();
         $context = new RenderingContextFixture();
         $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
+        if (!$expected) {
+            $parser->expects(self::once())->method('setEscapingEnabled')->with(false);
+        } else {
+            $parser->expects(self::never())->method('setEscapingEnabled');
+        }
         $context->setTemplateParser($parser);
         $subject->setRenderingContext($context);
-        $this->setExpectedException(Exception::class);
-        $subject->preProcessSource($templateSource);
+        $processedSource = $subject->preProcessSource($templateSource);
+        self::assertStringNotContainsString('{escaping', $processedSource);
     }
 
-    /**
-     * @return array
-     */
-    public static function getErrorTestValues()
+    public static function getErrorTestValues(): array
     {
         return [
             [
@@ -94,5 +68,20 @@ class EscapingModifierTemplateProcessorTest extends UnitTestCase
                 '{escaping off}' . PHP_EOL . '{escaping false}',
             ]
         ];
+    }
+
+    /**
+     * @dataProvider getErrorTestValues
+     * @test
+     */
+    public function testThrowsExceptionOnMultipleDefinitions(string $templateSource): void
+    {
+        $this->expectException(Exception::class);
+        $subject = new EscapingModifierTemplateProcessor();
+        $context = new RenderingContextFixture();
+        $parser = $this->getMockBuilder(TemplateParser::class)->onlyMethods(['setEscapingEnabled'])->getMock();
+        $context->setTemplateParser($parser);
+        $subject->setRenderingContext($context);
+        $subject->preProcessSource($templateSource);
     }
 }
