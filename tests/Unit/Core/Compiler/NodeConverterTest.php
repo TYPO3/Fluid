@@ -149,7 +149,7 @@ class NodeConverterTest extends UnitTestCase
      * @test
      * @dataProvider convertReturnsExpectedExecutionDataProvider
      */
-    public function convertReturnsExpectedExecution(NodeInterface $node, $expected): void
+    public function convertReturnsExpectedExecution(NodeInterface $node, string $expected): void
     {
         $instance = new NodeConverter(new TemplateCompiler());
         $result = $instance->convert($node);

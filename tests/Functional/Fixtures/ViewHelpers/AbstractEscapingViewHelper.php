@@ -11,20 +11,14 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
-/**
- * Class AbstractEscapingViewHelper
- */
 abstract class AbstractEscapingViewHelper extends AbstractViewHelper
 {
-    public function initializeArguments()
+    public function initializeArguments(): void
     {
         $this->registerArgument('content', 'string', 'Content provided as argument');
     }
 
-    /**
-     * @return string
-     */
-    public function render()
+    public function render(): string
     {
         if (!isset($this->arguments['content'])) {
             $content = $this->renderChildren();

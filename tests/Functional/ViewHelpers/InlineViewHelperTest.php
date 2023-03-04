@@ -18,7 +18,7 @@ class InlineViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfInlineFluidCodeIsInvalid()
+    public function renderThrowsExceptionIfInlineFluidCodeIsInvalid(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1238169398);

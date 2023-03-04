@@ -100,7 +100,7 @@ class SimpleFileCacheTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function flushByNameDeletesSingleFile()
+    public function flushByNameDeletesSingleFile(): void
     {
         $cache = new SimpleFileCache(self::$cachePath);
         $cache->set('test', '<?php' . PHP_EOL . 'class MyCachedClass {}' . PHP_EOL);
@@ -118,9 +118,9 @@ class SimpleFileCacheTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function setThrowsRuntimeExceptionOnInvalidDirectory()
+    public function setThrowsRuntimeExceptionOnInvalidDirectory(): void
     {
-        $this->setExpectedException('RuntimeException');
+        $this->expectException(\RuntimeException::class);
         $cache = new SimpleFileCache('/does/not/exist');
         $cache->set('foo', 'bar');
     }

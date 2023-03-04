@@ -22,26 +22,25 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class EscapeTest extends UnitTestCase
 {
-
     /**
      * @var Escape&MockObject&AccessibleObjectInterface
      */
-    protected $escapeInterceptor;
+    private $escapeInterceptor;
 
     /**
      * @var AbstractViewHelper|MockObject
      */
-    protected $mockViewHelper;
+    private $mockViewHelper;
 
     /**
      * @var ViewHelperNode|MockObject
      */
-    protected $mockNode;
+    private $mockNode;
 
     /**
      * @var ParsingState|MockObject
      */
-    protected $mockParsingState;
+    private $mockParsingState;
 
     public function setUp(): void
     {
@@ -55,7 +54,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processDoesNotDisableEscapingInterceptorByDefault()
+    public function processDoesNotDisableEscapingInterceptorByDefault(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
         $this->mockViewHelper->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(true);
@@ -69,7 +68,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processDisablesEscapingInterceptorIfViewHelperDisablesIt()
+    public function processDisablesEscapingInterceptorIfViewHelperDisablesIt(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER;
         $this->mockViewHelper->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(false);
@@ -83,7 +82,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore()
+    public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
         $this->mockViewHelper->expects(self::any())->method('isOutputEscapingEnabled')->willReturn(false);
@@ -99,7 +98,7 @@ class EscapeTest extends UnitTestCase
     /**
      * @test
      */
-    public function processWrapsCurrentViewHelperInEscapeNode()
+    public function processWrapsCurrentViewHelperInEscapeNode(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_OBJECTACCESSOR;
         $mockNode = $this->getMock(ObjectAccessorNode::class, [], [], false, false);

@@ -15,25 +15,8 @@ use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithoutToString;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Fixtures\ClassWithMagicGetter;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class VariableExtractorTest
- */
 class VariableExtractorTest extends UnitTestCase
 {
-
-    /**
-     * @param mixed $subject
-     * @param string $path
-     * @param mixed $expected
-     * @test
-     * @dataProvider getPathTestValues
-     */
-    public function testGetByPath($subject, $path, $expected)
-    {
-        $result = VariableExtractor::extract($subject, $path);
-        self::assertEquals($expected, $result);
-    }
-
     public static function getPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
@@ -59,14 +42,13 @@ class VariableExtractorTest extends UnitTestCase
 
     /**
      * @param mixed $subject
-     * @param string $path
      * @param mixed $expected
      * @test
-     * @dataProvider getAccessorsForPathTestValues
+     * @dataProvider getPathTestValues
      */
-    public function testGetAccessorsForPath($subject, $path, $expected)
+    public function testGetByPath($subject, string $path, $expected): void
     {
-        $result = VariableExtractor::extractAccessors($subject, $path);
+        $result = VariableExtractor::extract($subject, $path);
         self::assertEquals($expected, $result);
     }
 
@@ -91,15 +73,12 @@ class VariableExtractorTest extends UnitTestCase
 
     /**
      * @param mixed $subject
-     * @param string $path
-     * @param string $accessor
-     * @param mixed $expected
      * @test
-     * @dataProvider getExtractRedectAccessorTestValues
+     * @dataProvider getAccessorsForPathTestValues
      */
-    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected)
+    public function testGetAccessorsForPath($subject, string $path, array $expected): void
     {
-        $result = VariableExtractor::extract($subject, $path, [$accessor]);
+        $result = VariableExtractor::extractAccessors($subject, $path);
         self::assertEquals($expected, $result);
     }
 
@@ -118,9 +97,21 @@ class VariableExtractorTest extends UnitTestCase
     }
 
     /**
+     * @param mixed $subject
+     * @param mixed $accessor
+     * @test
+     * @dataProvider getExtractRedectAccessorTestValues
+     */
+    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, string $path, $accessor, string $expected): void
+    {
+        $result = VariableExtractor::extract($subject, $path, [$accessor]);
+        self::assertEquals($expected, $result);
+    }
+
+    /**
      * @test
      */
-    public function testExtractCallsMagicMethodGetters()
+    public function testExtractCallsMagicMethodGetters(): void
     {
         $subject = new ClassWithMagicGetter();
         $result = VariableExtractor::extract($subject, 'test');

@@ -18,7 +18,7 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfSubjectIsNotTraversable()
+    public function renderThrowsExceptionIfSubjectIsNotTraversable(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionCode(1256475113);
@@ -32,7 +32,7 @@ class ForViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfSubjectIsInvalid()
+    public function renderThrowsExceptionIfSubjectIsInvalid(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1248728393);

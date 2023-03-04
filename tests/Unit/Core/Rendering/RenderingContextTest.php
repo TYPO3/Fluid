@@ -22,9 +22,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 use TYPO3Fluid\Fluid\View\TemplateView;
 
-/**
- * Testcase for ParsingState
- */
 class RenderingContextTest extends UnitTestCase
 {
     /**

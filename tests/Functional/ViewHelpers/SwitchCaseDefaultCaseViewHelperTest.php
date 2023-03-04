@@ -18,7 +18,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfCaseIsOutsideOfSwitch()
+    public function renderThrowsExceptionIfCaseIsOutsideOfSwitch(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1368112037);
@@ -31,7 +31,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfDefaultCaseIsOutsideOfSwitch()
+    public function renderThrowsExceptionIfDefaultCaseIsOutsideOfSwitch(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1368112037);

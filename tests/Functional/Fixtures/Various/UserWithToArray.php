@@ -14,7 +14,6 @@ namespace TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various;
  */
 class UserWithToArray extends UserWithToString
 {
-
     /**
      * @return array
      */

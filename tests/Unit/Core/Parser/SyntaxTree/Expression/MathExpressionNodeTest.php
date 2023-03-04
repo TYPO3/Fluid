@@ -16,21 +16,6 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class MathExpressionNodeTest extends UnitTestCase
 {
-
-    /**
-     * @dataProvider getEvaluateExpressionTestValues
-     * @param string $expression
-     * @param array $variables
-     * @param mixed $expected
-     */
-    public function testEvaluateExpression($expression, array $variables, $expected)
-    {
-        $renderingContext = new RenderingContext();
-        $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
-        $result = MathExpressionNode::evaluateExpression($renderingContext, $expression, []);
-        self::assertEquals($expected, $result);
-    }
-
     public static function getEvaluateExpressionTestValues(): array
     {
         return [
@@ -47,5 +32,18 @@ class MathExpressionNodeTest extends UnitTestCase
             ['1 + b', ['b' => 1], 2],
             ['a + b', ['a' => 1, 'b' => 1], 2],
         ];
+    }
+
+    /**
+     * @dataProvider getEvaluateExpressionTestValues
+     * @param mixed $expected
+     * @test
+     */
+    public function testEvaluateExpression(string $expression, array $variables, $expected): void
+    {
+        $renderingContext = new RenderingContext();
+        $renderingContext->setVariableProvider(new StandardVariableProvider($variables));
+        $result = MathExpressionNode::evaluateExpression($renderingContext, $expression, []);
+        self::assertEquals($expected, $result);
     }
 }

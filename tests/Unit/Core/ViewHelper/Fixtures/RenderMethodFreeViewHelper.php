@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperInterface;
 
 class RenderMethodFreeViewHelper extends AbstractViewHelper implements ViewHelperInterface
 {
-    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext)
+    public static function renderStatic(array $arguments, \Closure $renderChildrenClosure, RenderingContextInterface $renderingContext): string
     {
         return 'I was rendered';
     }

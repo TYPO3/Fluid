@@ -143,7 +143,7 @@ class EscapingTest extends AbstractFunctionalTestCase
      */
     public function disablingEscapingTwiceInTemplateThrowsParsingException(): void
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $source = '{escapingEnabled=false}<test:escapeChildrenDisabledAndEscapeOutputEnabled>{settings.test}</test:escapeChildrenDisabledAndEscapeOutputEnabled>{escapingEnabled=false}';
 
         $view = new TemplateView();
