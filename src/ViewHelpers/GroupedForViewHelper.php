@@ -8,7 +8,7 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
@@ -150,11 +150,11 @@ class GroupedForViewHelper extends AbstractViewHelper
      */
     protected static function groupElements(array $elements, $groupBy)
     {
-        $extractor = new VariableExtractor();
         $groups = ['keys' => [], 'values' => []];
         foreach ($elements as $key => $value) {
             if (is_array($value) || is_object($value)) {
-                $currentGroupIndex = $extractor->getByPath($value, $groupBy);
+                $extractor = new StandardVariableProvider(['subject' => $value]);
+                $currentGroupIndex = $extractor->getByPath('subject.' . $groupBy);
             } else {
                 throw new ViewHelper\Exception('GroupedForViewHelper only supports multi-dimensional arrays and objects', 1253120365);
             }
