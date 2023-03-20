@@ -38,6 +38,23 @@ class InlineViewHelperTest extends AbstractFunctionalTestCase
             ],
             null,
         ];
+        yield 'empty children closure' => [
+            '<f:inline></f:inline>',
+            [],
+            null,
+        ];
+        yield 'undefined variable as children closure' => [
+            '<f:inline>{undefined}</f:inline>',
+            [],
+            null,
+        ];
+        yield 'variable with null as value as children closure' => [
+            '<f:inline>{iAmNull}</f:inline>',
+            [
+                'iAmNull' => null,
+            ],
+            null,
+        ];
         yield 'valid code with undefined variable' => [
             '<f:inline code="{code}" />',
             [
