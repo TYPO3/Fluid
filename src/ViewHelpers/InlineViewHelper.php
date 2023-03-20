@@ -60,6 +60,6 @@ class InlineViewHelper extends AbstractViewHelper
         \Closure $renderChildrenClosure,
         RenderingContextInterface $renderingContext
     ) {
-        return $renderingContext->getTemplateParser()->parse($renderChildrenClosure())->render($renderingContext);
+        return $renderingContext->getTemplateParser()->parse((string)$renderChildrenClosure())->render($renderingContext);
     }
 }
