@@ -18,14 +18,10 @@ use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\RootNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
-/**
- * Class NodeConverter
- */
 class NodeConverter
 {
-
     /**
      * @var int
      */
@@ -238,7 +234,7 @@ class NodeConverter
             ];
         }
         if (1 === count(array_unique($accessors))
-            && reset($accessors) === VariableExtractor::ACCESSOR_ARRAY
+            && reset($accessors) === StandardVariableProvider::ACCESSOR_ARRAY
             && count($accessors) === count($pathSegments)
             && false === strpos($path, '{')
         ) {
