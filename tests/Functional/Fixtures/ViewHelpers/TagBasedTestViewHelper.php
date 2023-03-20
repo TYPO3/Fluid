@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper;
 
 class TagBasedTestViewHelper extends AbstractTagBasedViewHelper
 {
-    public function prepareArguments()
+    public function prepareArguments(): array
     {
         // Override to avoid the static cache of registered ViewHelper arguments; will always return
         // only those arguments that are registered in this particular instance.

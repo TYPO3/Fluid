@@ -72,7 +72,7 @@ class RenderViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'delegate' => [
             '<f:render delegate="TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\ParsedTemplateImplementationFixture"/>',

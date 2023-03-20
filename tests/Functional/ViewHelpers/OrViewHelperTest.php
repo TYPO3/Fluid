@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class OrViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'without arguments' => [
             '<f:or>{var}</f:or>',

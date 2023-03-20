@@ -11,49 +11,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser;
 
 use TYPO3Fluid\Fluid\Core\Parser\BooleanParser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\BooleanNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for BooleanNode
- */
 class BooleanParserTest extends UnitTestCase
 {
-    /**
-     * @var RenderingContextInterface
-     */
-    protected $renderingContext;
-
-    /**
-     * Setup fixture
-     */
-    public function setUp(): void
-    {
-        $this->renderingContext = new RenderingContextFixture();
-    }
-
-    /**
-     * @test
-     * @dataProvider getSomeEvaluationTestValues
-     * @param string $comparison
-     * @param bool $expected
-     */
-    public function testSomeEvaluations($comparison, $expected, $variables = [])
-    {
-        $parser = new BooleanParser();
-        self::assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $this->renderingContext), 'Expression: ' . $comparison);
-
-        $compiledEvaluation = $parser->compile($comparison);
-        $functionName = 'expression_' . md5($comparison . rand(0, 100000));
-        eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
-        self::assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $this->renderingContext), 'compiled Expression: ' . $compiledEvaluation);
-    }
-
-    /**
-     * @return array
-     */
-    public function getSomeEvaluationTestValues()
+    public static function getSomeEvaluationTestValues(): array
     {
         return [
             ['(1 && false) || false || \'foobar\' == \'foobar\'', true],
@@ -141,5 +104,20 @@ class BooleanParserTest extends UnitTestCase
             ['{foo} == FALSE', true, ['foo' => false]],
             ['!{foo}', true, ['foo' => false]]
         ];
+    }
+
+    /**
+     * @test
+     * @dataProvider getSomeEvaluationTestValues
+     */
+    public function testSomeEvaluations(string $comparison, bool $expected, array $variables = []): void
+    {
+        $renderingContext = new RenderingContextFixture();
+        $parser = new BooleanParser();
+        self::assertEquals($expected, BooleanNode::convertToBoolean($parser->evaluate($comparison, $variables), $renderingContext), 'Expression: ' . $comparison);
+        $compiledEvaluation = $parser->compile($comparison);
+        $functionName = 'expression_' . md5($comparison . rand(0, 100000));
+        eval('function ' . $functionName . '($context) {return ' . $compiledEvaluation . ';}');
+        self::assertEquals($expected, BooleanNode::convertToBoolean($functionName($variables), $renderingContext), 'compiled Expression: ' . $compiledEvaluation);
     }
 }

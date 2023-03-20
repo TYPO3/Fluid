@@ -14,33 +14,9 @@ use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Testcase for ObjectAccessorNode
- */
 class ObjectAccessorNodeTest extends UnitTestCase
 {
-
-    /**
-     * @test
-     * @dataProvider getEvaluateTestValues
-     * @param array $variables
-     * @param string $path
-     * @param mixed $expected
-     */
-    public function testEvaluateGetsExpectedValue(array $variables, $path, $expected)
-    {
-        $node = new ObjectAccessorNode($path);
-        $renderingContext = $this->getMock(RenderingContextInterface::class);
-        $variableContainer = new StandardVariableProvider($variables);
-        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
-        $value = $node->evaluate($renderingContext);
-        self::assertEquals($expected, $value);
-    }
-
-    /**
-     * @return array
-     */
-    public function getEvaluateTestValues()
+    public static function getEvaluateTestValues(): array
     {
         return [
             [['foo' => 'bar'], 'foo.notaproperty', null],
@@ -55,12 +31,27 @@ class ObjectAccessorNodeTest extends UnitTestCase
 
     /**
      * @test
+     * @dataProvider getEvaluateTestValues
+     * @param mixed $expected
      */
-    public function testEvaluatedUsesVariableProviderGetByPath()
+    public function testEvaluateGetsExpectedValue(array $variables, string $path, $expected): void
+    {
+        $node = new ObjectAccessorNode($path);
+        $renderingContext = $this->getMock(RenderingContextInterface::class);
+        $variableContainer = new StandardVariableProvider($variables);
+        $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
+        $value = $node->evaluate($renderingContext);
+        self::assertEquals($expected, $value);
+    }
+
+    /**
+     * @test
+     */
+    public function testEvaluatedUsesVariableProviderGetByPath(): void
     {
         $node = new ObjectAccessorNode('foo.bar');
         $renderingContext = $this->getMock(RenderingContextInterface::class);
-        $variableContainer = $this->getMock(StandardVariableProvider::class, []);
+        $variableContainer = $this->getMock(StandardVariableProvider::class);
         $variableContainer->expects(self::once())->method('getByPath')->with('foo.bar', [])->willReturn('foo');
         $renderingContext->expects(self::any())->method('getVariableProvider')->willReturn($variableContainer);
         $value = $node->evaluate($renderingContext);

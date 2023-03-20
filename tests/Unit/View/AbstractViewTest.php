@@ -12,16 +12,12 @@ namespace TYPO3Fluid\Fluid\Tests\Unit\View;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\AbstractView;
 
-/**
- * Testcase for the AbstractView
- */
-class AbstractViewViewTest extends UnitTestCase
+class AbstractViewTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testParentRenderMethodReturnsEmptyString()
+    public function testParentRenderMethodReturnsEmptyString(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractView::class);
         $result = $instance->render();
@@ -31,7 +27,7 @@ class AbstractViewViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function testAssignsVariableAndReturnsSelf()
+    public function testAssignsVariableAndReturnsSelf(): void
     {
         $mock = $this->getMockForAbstractClass(AbstractView::class);
         $mock->assign('test', 'foobar');
@@ -41,7 +37,7 @@ class AbstractViewViewTest extends UnitTestCase
     /**
      * @test
      */
-    public function testAssignsMultipleVariablesAndReturnsSelf()
+    public function testAssignsMultipleVariablesAndReturnsSelf(): void
     {
         $mock = $this->getMockForAbstractClass(AbstractView::class);
         $mock->assignMultiple(['test' => 'foobar', 'baz' => 'barfoo']);

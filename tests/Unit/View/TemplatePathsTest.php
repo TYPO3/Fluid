@@ -15,25 +15,7 @@ use TYPO3Fluid\Fluid\View\TemplatePaths;
 
 class TemplatePathsTest extends BaseTestCase
 {
-    /**
-     * @param string|array $input
-     * @param string|array $expected
-     * @test
-     * @dataProvider getSanitizePathTestValues
-     */
-    public function testSanitizePath($input, $expected)
-    {
-        $instance = new TemplatePaths();
-        $method = new \ReflectionMethod($instance, 'sanitizePath');
-        $method->setAccessible(true);
-        $output = $method->invokeArgs($instance, [$input]);
-        self::assertEquals($expected, $output);
-    }
-
-    /**
-     * @return array
-     */
-    public function getSanitizePathTestValues()
+    public static function getSanitizePathTestValues(): array
     {
         return [
             ['', ''],
@@ -53,21 +35,18 @@ class TemplatePathsTest extends BaseTestCase
      * @param string|array $input
      * @param string|array $expected
      * @test
-     * @dataProvider getSanitizePathsTestValues
+     * @dataProvider getSanitizePathTestValues
      */
-    public function testSanitizePaths($input, $expected)
+    public function testSanitizePath($input, $expected): void
     {
         $instance = new TemplatePaths();
-        $method = new \ReflectionMethod($instance, 'sanitizePaths');
+        $method = new \ReflectionMethod($instance, 'sanitizePath');
         $method->setAccessible(true);
         $output = $method->invokeArgs($instance, [$input]);
         self::assertEquals($expected, $output);
     }
 
-    /**
-     * @return array
-     */
-    public function getSanitizePathsTestValues()
+    public static function getSanitizePathsTestValues(): array
     {
         return [
             [['/foo/bar/baz', 'C:\\foo\\bar\\baz'], ['/foo/bar/baz', 'C:/foo/bar/baz']],
@@ -78,8 +57,21 @@ class TemplatePathsTest extends BaseTestCase
 
     /**
      * @test
+     * @dataProvider getSanitizePathsTestValues
      */
-    public function setsLayoutPathAndFilename()
+    public function testSanitizePaths(array $input, array $expected): void
+    {
+        $instance = new TemplatePaths();
+        $method = new \ReflectionMethod($instance, 'sanitizePaths');
+        $method->setAccessible(true);
+        $output = $method->invokeArgs($instance, [$input]);
+        self::assertEquals($expected, $output);
+    }
+
+    /**
+     * @test
+     */
+    public function setsLayoutPathAndFilename(): void
     {
         $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
@@ -91,7 +83,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function setsTemplatePathAndFilename()
+    public function setsTemplatePathAndFilename(): void
     {
         $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
@@ -99,12 +91,20 @@ class TemplatePathsTest extends BaseTestCase
         self::assertAttributeEquals('foobar', 'templatePathAndFilename', $instance);
     }
 
+    public static function getGetterAndSetterTestValues(): array
+    {
+        return [
+            ['layoutRootPaths', ['foo' => 'bar']],
+            ['templateRootPaths', ['foo' => 'bar']],
+            ['partialRootPaths', ['foo' => 'bar']]
+        ];
+    }
+
     /**
      * @dataProvider getGetterAndSetterTestValues
-     * @param string $property
-     * @param mixed $value
+     * @test
      */
-    public function testGetterAndSetter($property, $value)
+    public function testGetterAndSetter(string $property, array $value): void
     {
         $getter = 'get' . ucfirst($property);
         $setter = 'set' . ucfirst($property);
@@ -115,24 +115,18 @@ class TemplatePathsTest extends BaseTestCase
     }
 
     /**
-     * @return array
+     * @test
      */
-    public function getGetterAndSetterTestValues()
-    {
-        return [
-            ['layoutRootPaths', ['foo' => 'bar']],
-            ['templateRootPaths', ['foo' => 'bar']],
-            ['partialRootPaths', ['foo' => 'bar']]
-        ];
-    }
-
-    public function testFillByPackageName()
+    public function testFillByPackageName(): void
     {
         $instance = new TemplatePaths('TYPO3Fluid.Fluid');
         self::assertNotEmpty($instance->getTemplateRootPaths());
     }
 
-    public function testFillByConfigurationArray()
+    /**
+     * @test
+     */
+    public function testFillByConfigurationArray(): void
     {
         $instance = new TemplatePaths([
             TemplatePaths::CONFIG_TEMPLATEROOTPATHS => ['Resources/Private/Templates/'],
@@ -143,22 +137,7 @@ class TemplatePathsTest extends BaseTestCase
         self::assertNotEmpty($instance->getTemplateRootPaths());
     }
 
-    /**
-     * @dataProvider getResolveFilesMethodTestValues
-     * @param string $method
-     */
-    public function testResolveFilesMethodCallsResolveFilesInFolders($method, $pathsMethod)
-    {
-        $instance = $this->getMock(TemplatePaths::class, ['resolveFilesInFolders']);
-        $instance->$pathsMethod(['foo']);
-        $instance->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
-        $instance->$method('format', 'format');
-    }
-
-    /**
-     * @return array
-     */
-    public function getResolveFilesMethodTestValues()
+    public static function getResolveFilesMethodTestValues(): array
     {
         return [
             ['resolveAvailableTemplateFiles', 'setTemplateRootPaths'],
@@ -167,7 +146,22 @@ class TemplatePathsTest extends BaseTestCase
         ];
     }
 
-    public function testToArray()
+    /**
+     * @dataProvider getResolveFilesMethodTestValues
+     * @test
+     */
+    public function testResolveFilesMethodCallsResolveFilesInFolders(string $method, string $pathsMethod): void
+    {
+        $instance = $this->getMock(TemplatePaths::class, ['resolveFilesInFolders']);
+        $instance->$pathsMethod(['foo']);
+        $instance->expects(self::once())->method('resolveFilesInFolders')->with(self::anything(), 'format');
+        $instance->$method('format', 'format');
+    }
+
+    /**
+     * @test
+     */
+    public function testToArray(): void
     {
         $instance = $this->getMock(TemplatePaths::class, ['sanitizePath']);
         $instance->expects(self::any())->method('sanitizePath')->willReturnArgument(0);
@@ -186,7 +180,7 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testResolveFilesInFolders()
+    public function testResolveFilesInFolders(): void
     {
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFilesInFolders');
@@ -212,17 +206,17 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testGetTemplateSourceThrowsExceptionIfFileNotFound()
+    public function testGetTemplateSourceThrowsExceptionIfFileNotFound(): void
     {
+        $this->expectException(InvalidTemplateResourceException::class);
         $instance = new TemplatePaths();
-        $this->setExpectedException(InvalidTemplateResourceException::class);
         $instance->getTemplateSource();
     }
 
     /**
      * @test
      */
-    public function testGetTemplateSourceReadsStreamWrappers()
+    public function testGetTemplateSourceReadsStreamWrappers(): void
     {
         $fixture = __DIR__ . '/Fixtures/LayoutFixture.html';
         $instance = new TemplatePaths();
@@ -235,19 +229,19 @@ class TemplatePathsTest extends BaseTestCase
     /**
      * @test
      */
-    public function testResolveFileInPathsThrowsExceptionIfFileNotFound()
+    public function testResolveFileInPathsThrowsExceptionIfFileNotFound(): void
     {
+        $this->expectException(InvalidTemplateResourceException::class);
         $instance = new TemplatePaths();
         $method = new \ReflectionMethod($instance, 'resolveFileInPaths');
         $method->setAccessible(true);
-        $this->setExpectedException(InvalidTemplateResourceException::class);
         $method->invokeArgs($instance, [['/not/', '/found/'], 'notfound.html']);
     }
 
     /**
      * @test
      */
-    public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat()
+    public function testGetTemplateIdentifierReturnsSourceChecksumWithControllerAndActionAndFormat(): void
     {
         $instance = new TemplatePaths();
         $instance->setTemplateSource('foobar');

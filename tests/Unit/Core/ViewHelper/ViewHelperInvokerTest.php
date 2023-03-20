@@ -16,33 +16,23 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class ViewHelperInvokerTest extends UnitTestCase
 {
-    /**
-     * @param string $viewHelperClassName
-     * @param array $arguments
-     * @param mixed $expectedOutput
-     * @param string|null $expectedException
-     * @test
-     * @dataProvider getInvocationTestValues
-     */
-    public function testInvokeViewHelper($viewHelperClassName, array $arguments, $expectedOutput, $expectedException)
+    public static function getInvocationTestValues(): array
     {
-        $invoker = new ViewHelperInvoker();
-        $renderingContext = new RenderingContext();
-        if ($expectedException) {
-            $this->setExpectedException($expectedException);
-        }
-        $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
-        self::assertEquals($expectedOutput, $result);
+        return [
+            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo'],
+            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar'], 'add1' => 'baz', 'add2' => 'zap'], 'foo'],
+        ];
     }
 
     /**
-     * @return array
+     * @test
+     * @dataProvider getInvocationTestValues
      */
-    public function getInvocationTestValues()
+    public function testInvokeViewHelper(string $viewHelperClassName, array $arguments, string $expectedOutput): void
     {
-        return [
-            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar']], 'foo', null],
-            [TestViewHelper::class, ['param1' => 'foo', 'param2' => ['bar'], 'add1' => 'baz', 'add2' => 'zap'], 'foo', null],
-        ];
+        $invoker = new ViewHelperInvoker();
+        $renderingContext = new RenderingContext();
+        $result = $invoker->invoke($viewHelperClassName, $arguments, $renderingContext);
+        self::assertEquals($expectedOutput, $result);
     }
 }

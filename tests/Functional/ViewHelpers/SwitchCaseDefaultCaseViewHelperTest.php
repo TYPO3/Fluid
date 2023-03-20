@@ -18,7 +18,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfCaseIsOutsideOfSwitch()
+    public function renderThrowsExceptionIfCaseIsOutsideOfSwitch(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1368112037);
@@ -31,7 +31,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfDefaultCaseIsOutsideOfSwitch()
+    public function renderThrowsExceptionIfDefaultCaseIsOutsideOfSwitch(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1368112037);
@@ -41,7 +41,7 @@ class SwitchCaseDefaultCaseViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'without cases' => [
             '<f:switch expression="{value}">bar</f:switch>',

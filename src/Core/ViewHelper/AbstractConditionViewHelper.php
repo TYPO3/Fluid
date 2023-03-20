@@ -64,7 +64,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
     }
 
     /**
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @param \Closure $renderChildrenClosure
      * @param RenderingContextInterface $renderingContext
      * @return mixed
@@ -92,7 +92,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * requires a different (or faster) decision then this method is the one
      * to override and implement.
      *
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @param RenderingContextInterface $renderingContext
      * @return bool
      */
@@ -115,7 +115,7 @@ abstract class AbstractConditionViewHelper extends AbstractViewHelper
      * be a warning if someone considers changing this method signature!
      *
      * @deprecated Deprecated in favor of ClassName::verdict($arguments, renderingContext), will no longer be called in 3.0
-     * @param array|null $arguments
+     * @param array<string, mixed> $arguments
      * @return bool
      * @api
      */

@@ -16,8 +16,6 @@ namespace TYPO3Fluid\Fluid\Tests;
  * to extend this class for unit test cases instead of the base test case because if,
  * at some point, specific behavior needs to be implemented for unit tests, your test cases
  * will profit from it automatically.
- *
- * @api
  */
 abstract class UnitTestCase extends BaseTestCase
 {

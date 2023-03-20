@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class TernaryExpressionNodeTest extends AbstractFunctionalTestCase
 {
-    public function variableConditionDataProvider(): array
+    public static function variableConditionDataProvider(): array
     {
         return [
             'true evaluates to then' => [

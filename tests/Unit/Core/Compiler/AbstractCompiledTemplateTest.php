@@ -14,16 +14,12 @@ use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class AbstractCompiledTemplateTest
- */
 class AbstractCompiledTemplateTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testSetIdentifierDoesNotChangeObject()
+    public function testSetIdentifierDoesNotChangeObject(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $before = clone $instance;
@@ -34,7 +30,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetIdentifierReturnsClassName()
+    public function testGetIdentifierReturnsClassName(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         self::assertEquals($instance->getIdentifier(), get_class($instance));
@@ -43,7 +39,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testParentGetVariableContainerMethodReturnsStandardVariableProvider()
+    public function testParentGetVariableContainerMethodReturnsStandardVariableProvider(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->getVariableContainer();
@@ -53,7 +49,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testParentRenderMethodReturnsEmptyString()
+    public function testParentRenderMethodReturnsEmptyString(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->render(new RenderingContextFixture());
@@ -63,7 +59,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testParentGetLayoutNameMethodReturnsEmptyString()
+    public function testParentGetLayoutNameMethodReturnsEmptyString(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->getLayoutName(new RenderingContextFixture());
@@ -73,7 +69,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testParentHasLayoutMethodReturnsFalse()
+    public function testParentHasLayoutMethodReturnsFalse(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->hasLayout();
@@ -83,7 +79,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testIsCompilableReturnsFalse()
+    public function testIsCompilableReturnsFalse(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->isCompilable();
@@ -93,7 +89,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testIsCompiledReturnsTrue()
+    public function testIsCompiledReturnsTrue(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $result = $instance->isCompiled();
@@ -103,7 +99,7 @@ class AbstractCompiledTemplateTest extends UnitTestCase
     /**
      * @test
      */
-    public function testAddCompiledNamespacesDoesNothing()
+    public function testAddCompiledNamespacesDoesNothing(): void
     {
         $instance = $this->getMockForAbstractClass(AbstractCompiledTemplate::class);
         $context = new RenderingContextFixture();

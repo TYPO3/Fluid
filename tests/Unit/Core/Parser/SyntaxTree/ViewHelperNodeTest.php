@@ -25,16 +25,13 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @var RenderingContextInterface
      */
-    protected $renderingContext;
+    private $renderingContext;
 
     /**
      * @var ViewHelperResolver&MockObject
      */
-    protected $mockViewHelperResolver;
+    private $mockViewHelperResolver;
 
-    /**
-     * Setup fixture
-     */
     public function setUp(): void
     {
         $this->renderingContext = new RenderingContextFixture();
@@ -50,19 +47,18 @@ class ViewHelperNodeTest extends UnitTestCase
     /**
      * @test
      */
-    public function constructorSetsViewHelperAndArguments()
+    public function constructorSetsViewHelperAndArguments(): void
     {
         $arguments = ['foo' => 'bar'];
-        /** @var ViewHelperNode|\PHPUnit\Framework\MockObject\MockObject $viewHelperNode */
+        /** @var ViewHelperNode|MockObject $viewHelperNode */
         $viewHelperNode = new ViewHelperNode($this->renderingContext, 'f', 'vh', $arguments, new ParsingState());
-
         self::assertAttributeEquals($arguments, 'arguments', $viewHelperNode);
     }
 
     /**
      * @test
      */
-    public function testEvaluateCallsInvoker()
+    public function testEvaluateCallsInvoker(): void
     {
         $invoker = $this->getMock(ViewHelperInvoker::class, ['invoke']);
         $invoker->expects(self::once())->method('invoke')->willReturn('test');

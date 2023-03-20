@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class CdataViewHelperTest extends AbstractFunctionalTestCase
 {
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'empty argument and not empty tag content' => [
             '<f:format.cdata>test1</f:format.cdata>',

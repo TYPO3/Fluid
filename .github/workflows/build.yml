@@ -16,7 +16,7 @@ jobs:
         php: ['7.2', '7.3', '7.4', '8.0', '8.1', '8.2']
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -37,11 +37,16 @@ jobs:
 
       - name: CGL check
         if: ${{ matrix.php == '7.2' }}
-        run: vendor/bin/php-cs-fixer fix --dry-run
+        run: vendor/bin/php-cs-fixer fix --dry-run --diff
 
       - name: Phpstan
         if: ${{ matrix.php == '7.3' }}
         run: vendor/bin/phpstan analyze --no-progress
 
-      - name: Run test suite
+      - name: Phpunit v8 and v9
+        if: ${{ matrix.php <= '8.0' }}
+        run: vendor/bin/phpunit -v -c phpunit-v9.xml.dist
+
+      - name: Phpunit v10
+        if: ${{ matrix.php >= '8.1' }}
         run: vendor/bin/phpunit -v

@@ -23,19 +23,16 @@ use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 use TYPO3Fluid\Fluid\View\TemplatePaths;
 
-/**
- * Class StandardCacheWarmerTest
- */
 class StandardCacheWarmerTest extends UnitTestCase
 {
     /**
      * @test
      */
-    public function testWarm()
+    public function testWarm(): void
     {
-        $failedCompilingState = $this->getAccessibleMock(FailedCompilingState::class, ['dummy']);
+        $failedCompilingState = $this->getAccessibleMock(FailedCompilingState::class, []);
         $subject = $this->getMockBuilder(StandardCacheWarmer::class)
-            ->setMethods(['warmSingleFile', 'detectControllerNamesInTemplateRootPaths'])
+            ->onlyMethods(['warmSingleFile', 'detectControllerNamesInTemplateRootPaths'])
             ->getMock();
         $subject->expects(self::atLeastOnce())
             ->method('detectControllerNamesInTemplateRootPaths')
@@ -45,7 +42,7 @@ class StandardCacheWarmerTest extends UnitTestCase
             ->willReturn($failedCompilingState);
         $context = new RenderingContextFixture();
         $paths = $this->getMockBuilder(TemplatePaths::class)
-            ->setMethods(
+            ->onlyMethods(
                 [
                     'resolveAvailableTemplateFiles',
                     'resolveAvailablePartialFiles',
@@ -71,7 +68,7 @@ class StandardCacheWarmerTest extends UnitTestCase
         $paths->expects(self::atLeastOnce())->method('getPartialRootPaths')->willReturn(['/dev/null']);
         $paths->expects(self::atLeastOnce())->method('getLayoutRootPaths')->willReturn(['/dev/null']);
         $compiler = $this->getMockBuilder(TemplateCompiler::class)
-            ->setMethods(['enterWarmupMode'])
+            ->onlyMethods(['enterWarmupMode'])
             ->getMock();
         $compiler->expects(self::once())->method('enterWarmupMode');
         $context->setTemplateCompiler($compiler);
@@ -84,7 +81,7 @@ class StandardCacheWarmerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testDetectControllerNamesInTemplateRootPaths()
+    public function testDetectControllerNamesInTemplateRootPaths(): void
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'detectControllerNamesInTemplateRootPaths');
@@ -96,12 +93,24 @@ class StandardCacheWarmerTest extends UnitTestCase
         }
     }
 
+    public static function getWarmSingleFileExceptionTestValues(): array
+    {
+        return [
+            [new StopCompilingException('StopCompiling exception')],
+            [new ExpressionException('Expression exception')],
+            [new Exception('Parser exception')],
+            [new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception('ViewHelper exception')],
+            [new \TYPO3Fluid\Fluid\Core\Exception('Fluid core exception')],
+            [new \TYPO3Fluid\Fluid\View\Exception('Fluid view exception')],
+            [new \RuntimeException('General runtime exception')]
+        ];
+    }
+
     /**
-     * @param \RuntimeException $error
      * @dataProvider getWarmSingleFileExceptionTestValues
      * @test
      */
-    public function testWarmuSingleFileHandlesException(\RuntimeException $error)
+    public function testWarmupSingleFileHandlesException(\RuntimeException $error): void
     {
         $subject = new StandardCacheWarmer();
         $context = new RenderingContextFixture();
@@ -119,25 +128,9 @@ class StandardCacheWarmerTest extends UnitTestCase
     }
 
     /**
-     * @return array
-     */
-    public function getWarmSingleFileExceptionTestValues()
-    {
-        return [
-            [new StopCompilingException('StopCompiling exception')],
-            [new ExpressionException('Expression exception')],
-            [new Exception('Parser exception')],
-            [new \TYPO3Fluid\Fluid\Core\ViewHelper\Exception('ViewHelper exception')],
-            [new \TYPO3Fluid\Fluid\Core\Exception('Fluid core exception')],
-            [new \TYPO3Fluid\Fluid\View\Exception('Fluid view exception')],
-            [new \RuntimeException('General runtime exception')]
-        ];
-    }
-
-    /**
      * @test
      */
-    public function testCreateClosureCreatesFileReadingClosure()
+    public function testCreateClosureCreatesFileReadingClosure(): void
     {
         $subject = new StandardCacheWarmer();
         $method = new \ReflectionMethod($subject, 'createClosure');

@@ -15,28 +15,19 @@ use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class StandardVariableProviderTest extends UnitTestCase
 {
-
-    /**
-     * @var StandardVariableProvider
-     */
-    protected $variableProvider;
-
-    public function setUp(): void
+    public static function getOperabilityTestValues(): array
     {
-        $this->variableProvider = $this->getMock(StandardVariableProvider::class, ['dummy']);
-    }
-
-    public function tearDown(): void
-    {
-        unset($this->variableProvider);
+        return [
+            [[], []],
+            [['foo' => 'bar'], ['foo' => 'bar']]
+        ];
     }
 
     /**
      * @dataProvider getOperabilityTestValues
-     * @param string $input
-     * @param array $expected
+     * @test
      */
-    public function testOperability($input, array $expected)
+    public function testOperability(array $input, array $expected): void
     {
         $provider = new StandardVariableProvider();
         $provider->setSource($input);
@@ -49,20 +40,9 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @return array
-     */
-    public function getOperabilityTestValues()
-    {
-        return [
-            [[], []],
-            [['foo' => 'bar'], ['foo' => 'bar']]
-        ];
-    }
-
-    /**
      * @test
      */
-    public function testSupportsDottedPath()
+    public function testSupportsDottedPath(): void
     {
         $provider = new StandardVariableProvider();
         $provider->setSource(['foo' => ['bar' => 'baz']]);
@@ -73,88 +53,96 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function testUnsetAsArrayAccess()
+    public function testUnsetAsArrayAccess(): void
     {
-        $this->variableProvider->add('variable', 'test');
-        unset($this->variableProvider['variable']);
-        self::assertFalse($this->variableProvider->exists('variable'));
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider->add('variable', 'test');
+        unset($variableProvider['variable']);
+        self::assertFalse($variableProvider->exists('variable'));
     }
 
     /**
      * @test
      */
-    public function addedObjectsCanBeRetrievedAgain()
+    public function addedObjectsCanBeRetrievedAgain(): void
     {
         $object = 'StringObject';
-        $this->variableProvider->add('variable', $object);
-        self::assertSame($this->variableProvider->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider->add('variable', $object);
+        self::assertSame($variableProvider->get('variable'), $object, 'The retrieved object from the context is not the same as the stored object.');
     }
 
     /**
      * @test
      */
-    public function addedObjectsCanBeRetrievedAgainUsingArrayAccess()
+    public function addedObjectsCanBeRetrievedAgainUsingArrayAccess(): void
     {
         $object = 'StringObject';
-        $this->variableProvider['variable'] = $object;
-        self::assertSame($this->variableProvider->get('variable'), $object);
-        self::assertSame($this->variableProvider['variable'], $object);
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider['variable'] = $object;
+        self::assertSame($variableProvider->get('variable'), $object);
+        self::assertSame($variableProvider['variable'], $object);
     }
 
     /**
      * @test
      */
-    public function addedObjectsExistInArray()
+    public function addedObjectsExistInArray(): void
     {
         $object = 'StringObject';
-        $this->variableProvider->add('variable', $object);
-        self::assertTrue($this->variableProvider->exists('variable'));
-        self::assertTrue(isset($this->variableProvider['variable']));
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider->add('variable', $object);
+        self::assertTrue($variableProvider->exists('variable'));
+        self::assertTrue(isset($variableProvider['variable']));
     }
 
     /**
      * @test
      */
-    public function addedObjectsExistInAllIdentifiers()
+    public function addedObjectsExistInAllIdentifiers(): void
     {
         $object = 'StringObject';
-        $this->variableProvider->add('variable', $object);
-        self::assertEquals($this->variableProvider->getAllIdentifiers(), ['variable'], 'Added key is not visible in getAllIdentifiers');
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider->add('variable', $object);
+        self::assertEquals($variableProvider->getAllIdentifiers(), ['variable'], 'Added key is not visible in getAllIdentifiers');
     }
 
     /**
      * @test
      */
-    public function gettingNonexistentValueReturnsNull()
+    public function gettingNonexistentValueReturnsNull(): void
     {
-        $result = $this->variableProvider->get('nonexistent');
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $result = $variableProvider->get('nonexistent');
         self::assertNull($result);
     }
 
     /**
      * @test
      */
-    public function removeReallyRemovesVariables()
+    public function removeReallyRemovesVariables(): void
     {
-        $this->variableProvider->add('variable', 'string1');
-        $this->variableProvider->remove('variable');
-        $result = $this->variableProvider->get('variable');
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider->add('variable', 'string1');
+        $variableProvider->remove('variable');
+        $result = $variableProvider->get('variable');
         self::assertNull($result);
     }
 
     /**
      * @test
      */
-    public function getAllShouldReturnAllVariables()
+    public function getAllShouldReturnAllVariables(): void
     {
-        $this->variableProvider->add('name', 'Simon');
-        self::assertSame(['name' => 'Simon'], $this->variableProvider->getAll());
+        $variableProvider = $this->getMock(StandardVariableProvider::class, []);
+        $variableProvider->add('name', 'Simon');
+        self::assertSame(['name' => 'Simon'], $variableProvider->getAll());
     }
 
     /**
      * @test
      */
-    public function testSleepReturnsExpectedPropertyNames()
+    public function testSleepReturnsExpectedPropertyNames(): void
     {
         $subject = new StandardVariableProvider();
         $properties = $subject->__sleep();
@@ -164,31 +152,14 @@ class StandardVariableProviderTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetScopeCopyReturnsCopyWithSettings()
+    public function testGetScopeCopyReturnsCopyWithSettings(): void
     {
         $subject = new StandardVariableProvider(['foo' => 'bar', 'settings' => ['baz' => 'bam']]);
         $copy = $subject->getScopeCopy(['bar' => 'foo']);
         self::assertAttributeEquals(['settings' => ['baz' => 'bam'], 'bar' => 'foo'], 'variables', $copy);
     }
 
-    /**
-     * @param mixed $subject
-     * @param string $path
-     * @param mixed $expected
-     * @test
-     * @dataProvider getPathTestValues
-     */
-    public function testGetByPath($subject, $path, $expected)
-    {
-        $provider = new StandardVariableProvider($subject);
-        $result = $provider->getByPath($path);
-        self::assertEquals($expected, $result);
-    }
-
-    /**
-     * @return array
-     */
-    public function getPathTestValues()
+    public static function getPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $unnamedUser = new UserWithoutToString('');
@@ -211,23 +182,18 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @param mixed $subject
-     * @param string $path
      * @param mixed $expected
      * @test
-     * @dataProvider getAccessorsForPathTestValues
+     * @dataProvider getPathTestValues
      */
-    public function testGetAccessorsForPath($subject, $path, $expected)
+    public function testGetByPath(array $subject, string $path, $expected): void
     {
         $provider = new StandardVariableProvider($subject);
-        $result = $provider->getAccessorsForPath($path);
+        $result = $provider->getByPath($path);
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getAccessorsForPathTestValues()
+    public static function getAccessorsForPathTestValues(): array
     {
         $namedUser = new UserWithoutToString('Foobar Name');
         $inArray = ['user' => $namedUser];
@@ -246,24 +212,17 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @param mixed $subject
-     * @param string $path
-     * @param string $accessor
-     * @param mixed $expected
      * @test
-     * @dataProvider getExtractRedectAccessorTestValues
+     * @dataProvider getAccessorsForPathTestValues
      */
-    public function testExtractRedetectsAccessorIfUnusableAccessorPassed($subject, $path, $accessor, $expected)
+    public function testGetAccessorsForPath(array $subject, string $path, array $expected): void
     {
         $provider = new StandardVariableProvider($subject);
-        $result = $provider->getByPath($path, [$accessor]);
+        $result = $provider->getAccessorsForPath($path);
         self::assertEquals($expected, $result);
     }
 
-    /**
-     * @return array
-     */
-    public function getExtractRedectAccessorTestValues()
+    public static function getExtractRedectAccessorTestValues(): array
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],
@@ -272,5 +231,17 @@ class StandardVariableProviderTest extends UnitTestCase
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_GETTER, 'test'],
             [['test' => 'test'], 'test', StandardVariableProvider::ACCESSOR_ASSERTER, 'test'],
         ];
+    }
+
+    /**
+     * @param string $accessor
+     * @test
+     * @dataProvider getExtractRedectAccessorTestValues
+     */
+    public function testExtractRedetectsAccessorIfUnusableAccessorPassed(array $subject, string $path, $accessor, string $expected): void
+    {
+        $provider = new StandardVariableProvider($subject);
+        $result = $provider->getByPath($path, [$accessor]);
+        self::assertEquals($expected, $result);
     }
 }

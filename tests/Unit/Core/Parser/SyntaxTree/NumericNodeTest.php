@@ -9,60 +9,50 @@ declare(strict_types=1);
 
 namespace TYPO3Fluid\Fluid\Tests\Unit\Core\Parser\SyntaxTree;
 
+use TYPO3Fluid\Fluid\Core\Parser\Exception;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\NumericNode;
-use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
 class NumericNodeTest extends UnitTestCase
 {
-
-    /**
-     * @var RenderingContextInterface
-     */
-    protected $renderingContext;
-
-    public function setUp(): void
-    {
-        $this->renderingContext = new RenderingContextFixture();
-    }
-
     /**
      * @test
      */
-    public function renderReturnsProperIntegerGivenInConstructor()
+    public function renderReturnsProperIntegerGivenInConstructor(): void
     {
+        $renderingContext = new RenderingContextFixture();
         $string = '1';
         $node = new NumericNode($string);
-        self::assertEquals($node->evaluate($this->renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+        self::assertEquals($node->evaluate($renderingContext), 1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
     /**
      * @test
      */
-    public function renderReturnsProperFloatGivenInConstructor()
+    public function renderReturnsProperFloatGivenInConstructor(): void
     {
+        $renderingContext = new RenderingContextFixture();
         $string = '1.1';
         $node = new NumericNode($string);
-        self::assertEquals($node->evaluate($this->renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
+        self::assertEquals($node->evaluate($renderingContext), 1.1, 'The rendered value of a numeric node does not match the string given in the constructor.');
     }
 
     /**
      * @test
      */
-    public function constructorThrowsExceptionIfNoNumericGiven()
+    public function constructorThrowsExceptionIfNoNumericGiven(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
+        $this->expectException(Exception::class);
         new NumericNode('foo');
     }
 
     /**
      * @test
      */
-    public function addChildNodeThrowsException()
+    public function addChildNodeThrowsException(): void
     {
-        $this->expectException(\TYPO3Fluid\Fluid\Core\Parser\Exception::class);
-
+        $this->expectException(Exception::class);
         $node = new NumericNode('1');
         $node->addChildNode(clone $node);
     }

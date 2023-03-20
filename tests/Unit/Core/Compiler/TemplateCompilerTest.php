@@ -16,20 +16,15 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
-/**
- * Class TemplateCompilerTest
- */
 class TemplateCompilerTest extends UnitTestCase
 {
-
     /**
      * @test
      */
-    public function testConstructorCreatesNodeConverter()
+    public function testConstructorCreatesNodeConverter(): void
     {
         $instance = new TemplateCompiler();
         self::assertAttributeInstanceOf(NodeConverter::class, 'nodeConverter', $instance);
@@ -38,7 +33,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testWarmupModeToggle()
+    public function testWarmupModeToggle(): void
     {
         $instance = new TemplateCompiler();
         $instance->enterWarmupMode();
@@ -49,7 +44,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSetRenderingContext()
+    public function testSetRenderingContext(): void
     {
         $instance = new TemplateCompiler();
         $renderingContext = new RenderingContextFixture();
@@ -60,7 +55,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testHasReturnsFalseWithoutCache()
+    public function testHasReturnsFalseWithoutCache(): void
     {
         $instance = $this->getMock(TemplateCompiler::class, ['sanitizeIdentifier']);
         $renderingContext = $this->getMock(RenderingContextFixture::class, ['getCache']);
@@ -75,7 +70,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testHasAsksCache()
+    public function testHasAsksCache(): void
     {
         $cache = $this->getMock(SimpleFileCache::class, ['get']);
         $cache->expects(self::once())->method('get')->with('test')->willReturn(true);
@@ -91,14 +86,13 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testWrapViewHelperNodeArgumentEvaluationInClosure()
+    public function testWrapViewHelperNodeArgumentEvaluationInClosure(): void
     {
         $instance = new TemplateCompiler();
         $arguments = ['value' => new TextNode('sometext')];
         $renderingContext = new RenderingContextFixture();
         $viewHelperNode = new ViewHelperNode($renderingContext, 'f', 'format.raw', $arguments, new ParsingState());
         $result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
-        $serialized = serialize($arguments['value']);
         $expected = 'function() use ($renderingContext, $self) {' . chr(10);
         $expected .= chr(10);
         $expected .= 'return \'sometext\';' . chr(10);
@@ -109,43 +103,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGenerateSectionCodeFromParsingState()
-    {
-        $foo = new TextNode('foo');
-        $bar = new TextNode('bar');
-        $parsingState = new ParsingState();
-        $container = new StandardVariableProvider(['1457379500_sections' => [$foo, $bar]]);
-        $parsingState->setVariableProvider($container);
-        $nodeConverter = $this->getMock(
-            NodeConverter::class,
-            ['convertListOfSubNodes'],
-            [],
-            '',
-            false
-        );
-        $nodeConverter->expects(self::exactly(2))->method('convertListOfSubNodes')->withConsecutive(
-            [$foo],
-            [$bar]
-        )->willReturn([]);
-        $instance = $this->getMock(TemplateCompiler::class, ['generateCodeForSection']);
-        $instance->expects(self::exactly(2))->method('generateCodeForSection')->withConsecutive(
-            [self::anything()],
-            [self::anything()]
-        )->willReturnOnConsecutiveCalls(
-            'FOO',
-            'BAR'
-        );
-        $instance->setNodeConverter($nodeConverter);
-        $method = new \ReflectionMethod($instance, 'generateSectionCodeFromParsingState');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($instance, [$parsingState]);
-        self::assertEquals('FOOBAR', $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testStoreReturnsEarlyIfDisabled()
+    public function testStoreReturnsEarlyIfDisabled(): void
     {
         $renderingContext = new RenderingContextFixture();
         $renderingContext->cacheDisabled = true;
@@ -158,17 +116,17 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testSupportsDisablingCompiler()
+    public function testSupportsDisablingCompiler(): void
     {
+        $this->expectException(StopCompilingException::class);
         $instance = new TemplateCompiler();
-        $this->setExpectedException(StopCompilingException::class);
         $instance->disable();
     }
 
     /**
      * @test
      */
-    public function testGetNodeConverterReturnsNodeConverterInstance()
+    public function testGetNodeConverterReturnsNodeConverterInstance(): void
     {
         $instance = new TemplateCompiler();
         self::assertInstanceOf(NodeConverter::class, $instance->getNodeConverter());
@@ -177,9 +135,9 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testStoreSavesUncompilableState()
+    public function testStoreSavesUncompilableState(): void
     {
-        $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->setMethods(['set'])->getMock();
+        $cacheMock = $this->getMockBuilder(SimpleFileCache::class)->onlyMethods(['set'])->getMock();
         $cacheMock->expects(self::once())->method('set')->with('fakeidentifier', self::anything());
         $renderingContext = new RenderingContextFixture();
         $renderingContext->setCache($cacheMock);
@@ -193,7 +151,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testVariableNameDelegatesToNodeConverter()
+    public function testVariableNameDelegatesToNodeConverter(): void
     {
         $instance = new TemplateCompiler();
         $nodeConverter = $this->getMock(NodeConverter::class, ['variableName'], [$instance]);
@@ -205,7 +163,7 @@ class TemplateCompilerTest extends UnitTestCase
     /**
      * @test
      */
-    public function testGetRenderingContextGetsRenderingContext()
+    public function testGetRenderingContextGetsRenderingContext(): void
     {
         $context = new RenderingContextFixture();
         $instance = new TemplateCompiler();

@@ -11,7 +11,7 @@ namespace TYPO3Fluid\Fluid\Tests\Functional;
 
 class ExamplesTest extends AbstractFunctionalTestCase
 {
-    public function exampleScriptValuesDataProvider(): array
+    public static function exampleScriptValuesDataProvider(): array
     {
         return [
             'example_conditions.php' => [
@@ -213,14 +213,23 @@ class ExamplesTest extends AbstractFunctionalTestCase
     {
         $scriptFile = __DIR__ . '/../../examples/' . $script;
 
-        $this->setOutputCallback(function ($output) use ($expectedOutputs) {
+        $outputCallback = function ($output) use ($expectedOutputs) {
             foreach ($expectedOutputs as $expectedOutput) {
                 self::assertStringContainsString($expectedOutput, $output);
             }
-        });
+        };
+
+        ob_start();
         include $scriptFile;
+        $output = ob_get_contents();
+        ob_end_clean();
+        call_user_func($outputCallback, $output);
 
         // Render a second time to verify caching works
+        ob_start();
         include $scriptFile;
+        $output = ob_get_contents();
+        ob_end_clean();
+        call_user_func($outputCallback, $output);
     }
 }

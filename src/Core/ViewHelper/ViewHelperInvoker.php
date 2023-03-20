@@ -36,7 +36,7 @@ class ViewHelperInvoker
      * of which will already have been filled by the ViewHelperResolver.
      *
      * @param string|ViewHelperInterface $viewHelperClassNameOrInstance
-     * @param array $arguments
+     * @param array<string, mixed> $arguments
      * @param RenderingContextInterface $renderingContext
      * @param \Closure|null $renderChildrenClosure
      * @return string

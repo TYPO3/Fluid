@@ -14,7 +14,7 @@ use TYPO3Fluid\Fluid\Tests\Functional\AbstractFunctionalTestCase;
 
 class JSONVariableProviderTest extends AbstractFunctionalTestCase
 {
-    public function provideVariablesDataProvider(): array
+    public static function provideVariablesDataProvider(): array
     {
         return [
             ['{}', []],

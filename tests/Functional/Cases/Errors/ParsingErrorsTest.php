@@ -16,7 +16,7 @@ use TYPO3Fluid\Fluid\View\TemplateView;
 
 class ParsingErrorsTest extends AbstractFunctionalTestCase
 {
-    public function getTemplateCodeFixturesAndExpectations(): array
+    public static function getTemplateCodeFixturesAndExpectations(): array
     {
         return [
             'Unclosed ViewHelperNode non-cached' => [
@@ -50,9 +50,9 @@ class ParsingErrorsTest extends AbstractFunctionalTestCase
      * @test
      * @dataProvider getTemplateCodeFixturesAndExpectations
      */
-    public function testTemplateCodeFixture($source, string $expectedException)
+    public function testTemplateCodeFixture(string $source, string $expectedException): void
     {
-        $this->setExpectedException($expectedException);
+        $this->expectException($expectedException);
         $view = new TemplateView();
         $view->getRenderingContext()->setCache(self::$cache);
         $view->getRenderingContext()->getTemplatePaths()->setTemplateSource($source);

@@ -18,7 +18,7 @@ class InlineViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfInlineFluidCodeIsInvalid()
+    public function renderThrowsExceptionIfInlineFluidCodeIsInvalid(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1238169398);
@@ -29,7 +29,7 @@ class InlineViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         yield 'empty string' => [
             '<f:inline code="{code}" />',

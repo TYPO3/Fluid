@@ -18,7 +18,7 @@ class CycleViewHelperTest extends AbstractFunctionalTestCase
     /**
      * @test
      */
-    public function renderThrowsExceptionIfSubjectIsNotIterable()
+    public function renderThrowsExceptionIfSubjectIsNotIterable(): void
     {
         $this->expectException(Exception::class);
         $this->expectExceptionCode(1237823699);
@@ -30,7 +30,7 @@ class CycleViewHelperTest extends AbstractFunctionalTestCase
         $view->render();
     }
 
-    public function renderDataProvider(): \Generator
+    public static function renderDataProvider(): \Generator
     {
         $value = ['foo', 'bar', 'baz'];
         yield 'assigns values to array items' => [

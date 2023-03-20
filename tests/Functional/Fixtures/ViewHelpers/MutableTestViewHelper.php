@@ -13,7 +13,7 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 
 class MutableTestViewHelper extends AbstractViewHelper
 {
-    public function prepareArguments()
+    public function prepareArguments(): array
     {
         // Override to avoid the static cache of registered ViewHelper arguments; will always return
         // only those arguments that are registered in this particular instance.
@@ -32,7 +32,7 @@ class MutableTestViewHelper extends AbstractViewHelper
         $this->escapeOutput = $escapeOutput;
     }
 
-    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escaped = null)
+    public function registerArgument($name, $type, $description, $required = false, $defaultValue = null, $escaped = null): AbstractViewHelper
     {
         return parent::registerArgument($name, $type, $description, $required, $defaultValue, $escaped);
     }
@@ -67,7 +67,7 @@ class MutableTestViewHelper extends AbstractViewHelper
         return $clone;
     }
 
-    public function resolveContentArgumentName()
+    public function resolveContentArgumentName(): string
     {
         return 'content';
     }
