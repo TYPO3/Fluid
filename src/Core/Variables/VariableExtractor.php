@@ -8,8 +8,6 @@
 namespace TYPO3Fluid\Fluid\Core\Variables;
 
 /**
- * Class VariableExtractor
- *
  * Extracts variables from arrays/objects by use
  * of array accessing and basic getter methods.
  *

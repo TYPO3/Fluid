@@ -24,7 +24,8 @@ class ObjectAccessorNode extends AbstractNode
     protected $objectPath;
 
     /**
-     * Accessor names, one per segment in the object path. Use constants from VariableExtractor
+     * Accessor names, one per segment in the object path.
+     * Use constants from StandardVariableProvider.
      *
      * @var array
      */
