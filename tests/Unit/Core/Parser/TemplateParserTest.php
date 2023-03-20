@@ -395,11 +395,18 @@ class TemplateParserTest extends UnitTestCase
         $templateParser->setRenderingContext(new RenderingContextFixture());
         $templateParser->expects(self::atLeastOnce())->method('recursiveArrayHandler')
             ->with($mockState, 'arguments: {0: \'foo\'}')->willReturn(['arguments' => ['foo']]);
-        $templateParser->expects(self::atLeastOnce())->method('initializeViewHelperAndAddItToStack')->willReturnOnConsecutiveCalls(
+        $series = [
             [$mockState, 'f', 'format.printf', ['arguments' => ['foo']]],
-            [$mockState, 'f', 'debug', []]
-        )->willReturn(true);
-
+            [$mockState, 'f', 'debug', []],
+        ];
+        $templateParser->expects(self::atLeastOnce())->method('initializeViewHelperAndAddItToStack')->willReturnCallback(function (...$args) use (&$series): bool {
+            $expectedArgs = array_shift($series);
+            self::assertSame($expectedArgs[0], $args[0]);
+            self::assertSame($expectedArgs[1], $args[1]);
+            self::assertSame($expectedArgs[2], $args[2]);
+            self::assertSame($expectedArgs[3], $args[3]);
+            return true;
+        });
         $templateParser->_call('objectAccessorHandler', $mockState, '', '', 'f:debug() -> f:format.printf(arguments: {0: \'foo\'})', '');
     }
 
@@ -557,10 +564,15 @@ class TemplateParserTest extends UnitTestCase
         );
         $context = new RenderingContextFixture();
         $templateParser->setRenderingContext($context);
-        $templateParser->expects(self::atLeastOnce())->method('textHandler')->willReturnOnConsecutiveCalls(
+        $series = [
             [$mockState, ' '],
             [$mockState, ' "fishy" is \'going\' ']
-        );
+        ];
+        $templateParser->expects(self::atLeastOnce())->method('textHandler')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $templateParser->expects(self::atLeastOnce())->method('objectAccessorHandler')->with($mockState, 'someThing.absolutely', '', '', '');
         $templateParser->expects(self::atLeastOnce())->method('arrayHandler')->with($mockState, self::anything());
 

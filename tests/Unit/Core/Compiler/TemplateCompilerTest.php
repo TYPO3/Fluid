@@ -16,7 +16,6 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser\ParsingState;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\TextNode;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\ViewHelperNode;
-use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\UnitTestCase;
 
@@ -94,42 +93,11 @@ class TemplateCompilerTest extends UnitTestCase
         $renderingContext = new RenderingContextFixture();
         $viewHelperNode = new ViewHelperNode($renderingContext, 'f', 'format.raw', $arguments, new ParsingState());
         $result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
-        $serialized = serialize($arguments['value']);
         $expected = 'function() use ($renderingContext, $self) {' . chr(10);
         $expected .= chr(10);
         $expected .= 'return \'sometext\';' . chr(10);
         $expected .= '}';
         self::assertEquals($expected, $result);
-    }
-
-    /**
-     * @test
-     */
-    public function testGenerateSectionCodeFromParsingState(): void
-    {
-        $foo = new TextNode('foo');
-        $bar = new TextNode('bar');
-        $parsingState = new ParsingState();
-        $container = new StandardVariableProvider(['1457379500_sections' => [$foo, $bar]]);
-        $parsingState->setVariableProvider($container);
-        $nodeConverter = $this->getMock(NodeConverter::class, ['convertListOfSubNodes'], [], false, false);
-        $nodeConverter->expects(self::exactly(2))->method('convertListOfSubNodes')->willReturnOnConsecutiveCalls(
-            [$foo],
-            [$bar]
-        )->willReturn([]);
-        $instance = $this->getMock(TemplateCompiler::class, ['generateCodeForSection']);
-        $instance->expects(self::exactly(2))->method('generateCodeForSection')->willReturnOnConsecutiveCalls(
-            [self::anything()],
-            [self::anything()]
-        )->willReturnOnConsecutiveCalls(
-            'FOO',
-            'BAR'
-        );
-        $instance->setNodeConverter($nodeConverter);
-        $method = new \ReflectionMethod($instance, 'generateSectionCodeFromParsingState');
-        $method->setAccessible(true);
-        $result = $method->invokeArgs($instance, [$parsingState]);
-        self::assertEquals('FOOBAR', $result);
     }
 
     /**

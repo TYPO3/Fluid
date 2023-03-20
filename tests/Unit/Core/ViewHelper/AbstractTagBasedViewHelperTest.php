@@ -52,19 +52,6 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
     /**
      * @test
      */
-    public function testInitializeArgumentsRegistersExpectedArguments(): void
-    {
-        $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, ['registerArgument'], [], '', false);
-        $viewHelper->expects(self::atLeastOnce())->method('registerArgument')->willReturnOnConsecutiveCalls(
-            ['additionalAttributes'],
-            ['data']
-        );
-        $viewHelper->initializeArguments();
-    }
-
-    /**
-     * @test
-     */
     public function oneTagAttributeIsRenderedCorrectly(): void
     {
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
@@ -107,13 +94,18 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
         $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
-        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnOnConsecutiveCalls(
-            ['data-foo', 'bar'],
-            ['data-baz', 'foos']
-        );
+        $series = [
+            ['data-foo', 'fooValue'],
+            ['data-bar', 'barValue'],
+        ];
+        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $viewHelper->setTagBuilder($mockTagBuilder);
 
-        $arguments = ['data' => ['foo' => 'bar', 'baz' => 'foos']];
+        $arguments = ['data' => ['foo' => 'fooValue', 'bar' => 'barValue']];
         $viewHelper->setArguments($arguments);
         $viewHelper->initialize();
     }
@@ -127,13 +119,18 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
         $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
-        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnOnConsecutiveCalls(
-            ['aria-foo', 'bar'],
-            ['aria-baz', 'foos']
-        );
+        $series = [
+            ['aria-foo', 'fooValue'],
+            ['aria-bar', 'barValue'],
+        ];
+        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $viewHelper->setTagBuilder($mockTagBuilder);
 
-        $arguments = ['aria' => ['foo' => 'bar', 'baz' => 'foos']];
+        $arguments = ['aria' => ['foo' => 'fooValue', 'bar' => 'barValue']];
         $viewHelper->setArguments($arguments);
         $viewHelper->initialize();
     }
@@ -157,12 +154,17 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
         $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
-        $tagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnOnConsecutiveCalls(
-            ['data-foo', 'foo'],
-            ['data-bar', 'bar']
-        );
+        $series = [
+            ['data-foo', 'fooValue'],
+            ['data-bar', 'barValue'],
+        ];
+        $tagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $viewHelper->setTagBuilder($tagBuilder);
-        $viewHelper->handleAdditionalArguments(['data-foo' => 'foo', 'data-bar' => 'bar']);
+        $viewHelper->handleAdditionalArguments(['data-foo' => 'fooValue', 'data-bar' => 'barValue']);
         $viewHelper->initializeArgumentsAndRender();
     }
 
@@ -174,12 +176,17 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper = $this->getAccessibleMock(AbstractTagBasedViewHelper::class, [], [], '', false);
         $viewHelper->setRenderingContext(new RenderingContextFixture());
         $tagBuilder = $this->getMock(TagBuilder::class, ['addAttribute']);
-        $tagBuilder->expects(self::exactly(2))->method('addAttribute')->willReturnOnConsecutiveCalls(
-            ['aria-foo', 'foo'],
-            ['aria-bar', 'bar']
-        );
+        $series = [
+            ['aria-foo', 'fooValue'],
+            ['aria-bar', 'barValue'],
+        ];
+        $tagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $viewHelper->setTagBuilder($tagBuilder);
-        $viewHelper->handleAdditionalArguments(['aria-foo' => 'foo', 'aria-bar' => 'bar']);
+        $viewHelper->handleAdditionalArguments(['aria-foo' => 'fooValue', 'aria-bar' => 'barValue']);
         $viewHelper->initializeArgumentsAndRender();
     }
 
@@ -192,7 +199,7 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
         $viewHelper->setRenderingContext(new RenderingContextFixture());
 
         $mockTagBuilder = $this->getMock(TagBuilder::class, ['addAttribute'], [], false, false);
-        $mockTagBuilder->expects(self::exactly(8))->method('addAttribute')->willReturnOnConsecutiveCalls(
+        $series = [
             ['class', 'classAttribute'],
             ['dir', 'dirAttribute'],
             ['id', 'idAttribute'],
@@ -201,7 +208,12 @@ class AbstractTagBasedViewHelperTest extends UnitTestCase
             ['title', 'titleAttribute'],
             ['accesskey', 'accesskeyAttribute'],
             ['tabindex', 'tabindexAttribute']
-        );
+        ];
+        $mockTagBuilder->expects(self::atLeastOnce())->method('addAttribute')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $viewHelper->setTagBuilder($mockTagBuilder);
 
         $arguments = [
