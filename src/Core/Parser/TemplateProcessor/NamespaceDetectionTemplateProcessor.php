@@ -27,11 +27,6 @@ class NamespaceDetectionTemplateProcessor implements TemplateProcessorInterface
     protected $renderingContext;
 
     /**
-     * @var array
-     */
-    protected $localNamespaces = [];
-
-    /**
      * @param RenderingContextInterface $renderingContext
      */
     public function setRenderingContext(RenderingContextInterface $renderingContext)
