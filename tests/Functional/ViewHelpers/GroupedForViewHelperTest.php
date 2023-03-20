@@ -231,8 +231,6 @@ class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'wordpress: Wordpress' . chr(10),
         ];
 
-        /*
-         * @todo: This data set does not work, it seems the VH does not properly group by an object property
         $customer1 = new \stdClass();
         $customer1->name = 'Anton Abel';
         $customer2 = new \stdClass();
@@ -257,7 +255,6 @@ class GroupedForViewHelperTest extends AbstractFunctionalTestCase
             'Anton Abel' . chr(10) .
             'Balthasar Bux' . chr(10),
         ];
-        */
 
         $customer1 = new \stdClass();
         $customer1->name = 'Anton Abel';
