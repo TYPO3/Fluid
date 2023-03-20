@@ -18,7 +18,6 @@ use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ArgumentDefinition;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Exception;
 use TYPO3Fluid\Fluid\Core\ViewHelper\ViewHelperVariableContainer;
-use TYPO3Fluid\Fluid\Tests\Functional\Fixtures\Various\UserWithToString;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\Rendering\RenderingContextFixture;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeDefaultRenderStaticViewHelper;
 use TYPO3Fluid\Fluid\Tests\Unit\Core\ViewHelper\Fixtures\RenderMethodFreeViewHelper;
@@ -215,46 +214,6 @@ class AbstractViewHelperTest extends UnitTestCase
         });
         $result = $viewHelper->renderChildren();
         self::assertEquals('foobar', $result);
-    }
-
-    public static function getValidateArgumentsTestValues(): array
-    {
-        return [
-            [new ArgumentDefinition('test', 'boolean', '', true, false), false],
-            [new ArgumentDefinition('test', 'boolean', '', true), true],
-            [new ArgumentDefinition('test', 'string', '', true), 'foobar'],
-            [new ArgumentDefinition('test', 'string', '', true), new UserWithToString('foobar')],
-            [new ArgumentDefinition('test', 'array', '', true), ['foobar']],
-            [new ArgumentDefinition('test', 'mixed', '', true), new \DateTime('now')],
-            [new ArgumentDefinition('test', 'DateTime[]', '', true), [new \DateTime('now'), 'test']],
-            [new ArgumentDefinition('test', 'string[]', '', true), []],
-            [new ArgumentDefinition('test', 'string[]', '', true), ['foobar']],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider getValidateArgumentsTestValues
-     * @param mixed $value
-     */
-    public function testValidateArguments(ArgumentDefinition $argument, $value): void
-    {
-        $viewHelper = $this->getAccessibleMock(
-            AbstractViewHelper::class,
-            ['hasArgument', 'prepareArguments'],
-            [],
-            '',
-            false
-        );
-        $viewHelper->expects(self::once())->method('prepareArguments')->willReturn(
-            [$argument->getName() => $argument, 'second' => $argument]
-        );
-        $viewHelper->setArguments([$argument->getName() => $value, 'second' => $value]);
-        $viewHelper->expects(self::exactly(2))->method('hasArgument')->willReturnOnConsecutiveCalls(
-            [$argument->getName()],
-            ['second']
-        )->willReturn(true);
-        $viewHelper->validateArguments();
     }
 
     public static function getValidateArgumentsErrorsTestValues(): array

@@ -74,10 +74,15 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignAddsValueToTemplateVariableContainer(): void
     {
-        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnOnConsecutiveCalls(
+        $series = [
             ['foo', 'FooValue'],
-            ['bar', 'BarValue']
-        );
+            ['bar', 'BarValue'],
+        ];
+        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $this->view
             ->assign('foo', 'FooValue')
             ->assign('bar', 'BarValue');
@@ -88,10 +93,15 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignCanOverridePreviouslyAssignedValues(): void
     {
-        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnOnConsecutiveCalls(
+        $series = [
             ['foo', 'FooValue'],
-            ['foo', 'FooValueOverridden']
-        );
+            ['foo', 'FooValueOverridden'],
+        ];
+        $this->templateVariableContainer->expects(self::exactly(2))->method('add')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $this->view->assign('foo', 'FooValue');
         $this->view->assign('foo', 'FooValueOverridden');
     }
@@ -101,14 +111,38 @@ class AbstractTemplateViewTest extends UnitTestCase
      */
     public function assignMultipleAddsValuesToTemplateVariableContainer(): void
     {
-        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnOnConsecutiveCalls(
+        $series = [
             ['foo', 'FooValue'],
             ['bar', 'BarValue'],
-            ['baz', 'BazValue']
-        );
+            ['baz', 'BazValue'],
+        ];
+        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
         $this->view
             ->assignMultiple(['foo' => 'FooValue', 'bar' => 'BarValue'])
             ->assignMultiple(['baz' => 'BazValue']);
+    }
+
+    /**
+     * @test
+     */
+    public function assignMultipleCanOverridePreviouslyAssignedValues(): void
+    {
+        $series = [
+            ['foo', 'FooValue'],
+            ['foo', 'FooValueOverridden'],
+            ['bar', 'BarValue']
+        ];
+        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnCallback(function (...$args) use (&$series): void {
+            [$expectedArgOne, $expectedArgTwo] = array_shift($series);
+            self::assertSame($expectedArgOne, $args[0]);
+            self::assertSame($expectedArgTwo, $args[1]);
+        });
+        $this->view->assign('foo', 'FooValue');
+        $this->view->assignMultiple(['foo' => 'FooValueOverridden', 'bar' => 'BarValue']);
     }
 
     public static function getRenderSectionExceptionTestValues(): array
@@ -117,20 +151,6 @@ class AbstractTemplateViewTest extends UnitTestCase
             [true],
             [false]
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function assignMultipleCanOverridePreviouslyAssignedValues(): void
-    {
-        $this->templateVariableContainer->expects(self::exactly(3))->method('add')->willReturnOnConsecutiveCalls(
-            ['foo', 'FooValue'],
-            ['foo', 'FooValueOverridden'],
-            ['bar', 'BarValue']
-        );
-        $this->view->assign('foo', 'FooValue');
-        $this->view->assignMultiple(['foo' => 'FooValueOverridden', 'bar' => 'BarValue']);
     }
 
     /**
