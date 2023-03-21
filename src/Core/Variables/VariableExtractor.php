@@ -21,7 +21,7 @@ class VariableExtractor
     const ACCESSOR_PUBLICPROPERTY = 'public';
 
     /**
-     * Static interface for instanciating and extracting
+     * Static interface for instantiating and extracting
      * in a single operation. Delegates to getByPath.
      *
      * @param mixed $subject
