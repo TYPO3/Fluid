@@ -8,7 +8,7 @@
 namespace TYPO3Fluid\Fluid\ViewHelpers;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 use TYPO3Fluid\Fluid\Core\ViewHelper\AbstractViewHelper;
 use TYPO3Fluid\Fluid\Core\ViewHelper\Traits\CompileWithRenderStatic;
 
@@ -170,7 +170,8 @@ class DebugViewHelper extends AbstractViewHelper
         $output = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            $output[$propertyName] = VariableExtractor::extract($variable, $propertyName);
+            $standardVariableProvider = new StandardVariableProvider(['subject' => $variable]);
+            $output[$propertyName] = $standardVariableProvider->getByPath('subject.' . $propertyName);
         }
         return $output;
     }
