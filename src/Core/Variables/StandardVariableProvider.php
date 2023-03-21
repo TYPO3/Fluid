@@ -123,7 +123,7 @@ class StandardVariableProvider implements VariableProviderInterface
     {
         $subject = $this->variables;
         foreach (explode('.', $this->resolveSubVariableReferences($path)) as $index => $pathSegment) {
-            $accessor = isset($accessors[$index]) ? $accessors[$index] : null;
+            $accessor = $accessors[$index] ?? null;
             $subject = $this->extractSingleValue($subject, $pathSegment, $accessor);
             if ($subject === null) {
                 break;
