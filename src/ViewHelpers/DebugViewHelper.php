@@ -170,8 +170,9 @@ class DebugViewHelper extends AbstractViewHelper
         $output = [];
         foreach ($properties as $property) {
             $propertyName = $property->getName();
-            $standardVariableProvider = new StandardVariableProvider(['subject' => $variable]);
-            $output[$propertyName] = $standardVariableProvider->getByPath('subject.' . $propertyName);
+            $standardVariableProvider = new StandardVariableProvider();
+            $standardVariableProvider->setSource($variable);
+            $output[$propertyName] = $standardVariableProvider->getByPath($propertyName);
         }
         return $output;
     }
