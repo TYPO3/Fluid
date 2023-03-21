@@ -11,7 +11,7 @@ use TYPO3Fluid\Fluid\Core\Compiler\TemplateCompiler;
 use TYPO3Fluid\Fluid\Core\Parser;
 use TYPO3Fluid\Fluid\Core\Parser\SyntaxTree\AbstractNode;
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
+use TYPO3Fluid\Fluid\Core\Variables\StandardVariableProvider;
 
 /**
  * Base class for nodes based on (shorthand) expressions.
@@ -127,11 +127,9 @@ abstract class AbstractExpressionNode extends AbstractNode implements Expression
     protected static function getTemplateVariableOrValueItself($candidate, RenderingContextInterface $renderingContext)
     {
         $variables = $renderingContext->getVariableProvider()->getAll();
-        $extractor = new VariableExtractor();
-        $suspect = $extractor->getByPath($variables, $candidate);
-        if (null === $suspect) {
-            return $candidate;
-        }
-        return $suspect;
+        $standardVariableProvider = new StandardVariableProvider();
+        $standardVariableProvider->setSource($variables);
+        $suspect = $standardVariableProvider->getByPath($candidate);
+        return $suspect ?? $candidate;
     }
 }
