@@ -8,7 +8,6 @@
 namespace TYPO3Fluid\Fluid\Core\Parser\SyntaxTree;
 
 use TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface;
-use TYPO3Fluid\Fluid\Core\Variables\VariableExtractor;
 
 /**
  * A node which handles object access. This means it handles structures like {object.accessor.bla}
@@ -85,6 +84,6 @@ class ObjectAccessorNode extends AbstractNode
         if ($objectPath === '_all') {
             return $variableProvider->getAll();
         }
-        return VariableExtractor::extract($variableProvider, $this->objectPath, $this->accessors);
+        return $variableProvider->getByPath($this->objectPath, $this->accessors);
     }
 }
