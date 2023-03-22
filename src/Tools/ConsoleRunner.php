@@ -393,8 +393,8 @@ To specify multiple values, for example for the templateRootPaths argument:
 
     ./bin/fluid --templateRootPaths /path/to/first/ /path/to/second/ "/path/with spaces/"
 
-To specify variables, use any JSON source - string of JSON, local file or URI, or
-class name of a PHP class implementing DataProviderInterface:
+To specify variables, use any JSON source - string of JSON, local file or URI, or class
+name of a PHP class implementing DataProviderInterface:
 
     ./bin/fluid --variables /path/to/fluidvariables.json
 
