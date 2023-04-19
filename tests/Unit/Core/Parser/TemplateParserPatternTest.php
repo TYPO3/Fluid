@@ -256,6 +256,38 @@ class TemplateParserPatternTest extends UnitTestCase
         preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
         self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
 
+        // Test trailing comma without whitespace
+        $source = 'f:for(each: bla,)';
+        $expected = [
+            0 => [
+                0 => 'f:for(each: bla,)',
+                1 => 'f',
+                'NamespaceIdentifier' => 'f',
+                2 => 'for',
+                'MethodIdentifier' => 'for',
+                3 => 'each: bla,',
+                'ViewHelperArguments' => 'each: bla,'
+            ]
+        ];
+        preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
+        self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
+
+        // Test trailing comma with whitespace
+        $source = 'f:for(each: bla, )';
+        $expected = [
+            0 => [
+                0 => 'f:for(each: bla, )',
+                1 => 'f',
+                'NamespaceIdentifier' => 'f',
+                2 => 'for',
+                'MethodIdentifier' => 'for',
+                3 => 'each: bla, ',
+                'ViewHelperArguments' => 'each: bla, '
+            ]
+        ];
+        preg_match_all($pattern, $source, $matches, PREG_SET_ORDER);
+        self::assertEquals($matches, $expected, 'The SPLIT_PATTERN_SHORTHANDSYNTAX_VIEWHELPER');
+
         $source = 'f:for(each: bla)->foo.bar:bla(a:"b\"->(f:a()", cd: {a:b})';
         $expected = [
             0 => [
@@ -313,6 +345,7 @@ class TemplateParserPatternTest extends UnitTestCase
 
             // trailing comma
             ['string' => '{a:b, c :   d,}'],
+            ['string' => '{a:b, c :   d, }'],
 
             ['string' => '{a : 123}'],
             ['string' => '{a:"String"}'],

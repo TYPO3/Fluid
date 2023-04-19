@@ -153,7 +153,7 @@ abstract class Patterns
 								|[a-zA-Z0-9\-_.]+           # variable identifiers
 								|{(?P>ViewHelperArguments)} # Another sub-array
 							)                               # END possible value options
-							\s*,?                           # There might be a , to seperate different parts of the array
+							\s*,?\s*                        # There might be a , to seperate different parts of the array
 						)*                                  # The above cycle is repeated for all array elements
 					)                                       # End ViewHelper Arguments submatch
 				\)                                          # Closing parameter brackets of ViewHelper
@@ -185,7 +185,7 @@ abstract class Patterns
 						|[a-zA-Z0-9\-_.]+           # variable identifiers
 						|{(?P>ViewHelperArguments)} # Another sub-array
 					)                               # END possible value options
-					\s*,?                           # There might be a , to seperate different parts of the array
+					\s*,?\s*                        # There might be a , to seperate different parts of the array
 				)*                                  # The above cycle is repeated for all array elements
 			)                                       # End ViewHelper Arguments submatch
 		\)                                          # Closing parameter brackets of ViewHelper
@@ -215,7 +215,7 @@ abstract class Patterns
 							|[a-zA-Z0-9\-_.]+                      # variable identifiers
 							|(?P>Recursion)                        # Another sub-array
 						)                                          # END possible value options
-						\s*,?                                      # There might be a , to separate different parts of the array
+						\s*,?\s*                                   # There might be a , to separate different parts of the array
 					)*                                             # The above cycle is repeated for all array elements
 				)                                                  # End array sub-match
 			}                                                      # Each array ends with }
