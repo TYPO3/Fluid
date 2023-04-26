@@ -221,7 +221,6 @@ class TemplateCompiler
 %s {
 
 public function getLayoutName(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$self = \$this;
 %s;
 }
 public function hasLayout() {
@@ -307,7 +306,6 @@ EOD;
  * %s
  */
 public function %s(\TYPO3Fluid\Fluid\Core\Rendering\RenderingContextInterface \$renderingContext) {
-\$self = \$this;
 %s
 return %s;
 }
@@ -334,7 +332,7 @@ EOD;
     public function wrapChildNodesInClosure(NodeInterface $node)
     {
         $closure = '';
-        $closure .= 'function() use ($renderingContext, $self) {' . chr(10);
+        $closure .= 'function() use ($renderingContext) {' . chr(10);
         $convertedSubNodes = $this->nodeConverter->convertListOfSubNodes($node);
         $closure .= $convertedSubNodes['initialization'];
         $closure .= sprintf('return %s;', $convertedSubNodes['execution']) . chr(10);
@@ -354,7 +352,7 @@ EOD;
     {
         $arguments = $node->getArguments();
         $argument = $arguments[$argumentName];
-        $closure = 'function() use ($renderingContext, $self) {' . chr(10);
+        $closure = 'function() use ($renderingContext) {' . chr(10);
         $compiled = $this->nodeConverter->convert($argument);
         $closure .= $compiled['initialization'] . chr(10);
         $closure .= 'return ' . $compiled['execution'] . ';' . chr(10);
