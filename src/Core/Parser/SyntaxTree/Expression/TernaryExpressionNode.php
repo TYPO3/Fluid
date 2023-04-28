@@ -114,7 +114,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
      * can be accessed via the TemplateCompiler.
      *
      * @param TemplateCompiler $templateCompiler
-     * @return string
+     * @return array<string, string>
      */
     public function compile(TemplateCompiler $templateCompiler)
     {
