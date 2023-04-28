@@ -20,17 +20,13 @@ class Configuration
 
     /**
      * Generic interceptors registered with the configuration.
-     *
-     * @var \SplObjectStorage[]
      */
-    protected $interceptors = [];
+    protected array $interceptors = [];
 
     /**
      * Escaping interceptors registered with the configuration.
-     *
-     * @var \SplObjectStorage[]
      */
-    protected $escapingInterceptors = [];
+    protected array $escapingInterceptors = [];
 
     /**
      * @return bool
@@ -72,17 +68,17 @@ class Configuration
      * Adds an interceptor to apply to values coming from object accessors.
      *
      * @param InterceptorInterface $interceptor
-     * @param \SplObjectStorage[] $interceptorArray
+     * @param array $interceptorArray
      */
     protected function addInterceptorToArray(InterceptorInterface $interceptor, array &$interceptorArray)
     {
         foreach ($interceptor->getInterceptionPoints() as $interceptionPoint) {
             if (!isset($interceptorArray[$interceptionPoint])) {
-                $interceptorArray[$interceptionPoint] = new \SplObjectStorage();
+                $interceptorArray[$interceptionPoint] = [];
             }
             $interceptors = $interceptorArray[$interceptionPoint];
-            if (!$interceptors->contains($interceptor)) {
-                $interceptors->attach($interceptor);
+            if (!in_array($interceptor, $interceptors, true)) {
+                $interceptors[] = $interceptor;
             }
         }
     }
@@ -93,9 +89,9 @@ class Configuration
      * @param int $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
-    public function getInterceptors($interceptionPoint)
+    public function getInterceptors($interceptionPoint): array
     {
-        return isset($this->interceptors[$interceptionPoint]) ? $this->interceptors[$interceptionPoint] : new \SplObjectStorage();
+        return $this->interceptors[$interceptionPoint] ?? [];
     }
 
     /**
@@ -104,8 +100,8 @@ class Configuration
      * @param int $interceptionPoint one of the InterceptorInterface::INTERCEPT_* constants,
      * @return InterceptorInterface[]
      */
-    public function getEscapingInterceptors($interceptionPoint)
+    public function getEscapingInterceptors($interceptionPoint): array
     {
-        return isset($this->escapingInterceptors[$interceptionPoint]) ? $this->escapingInterceptors[$interceptionPoint] : new \SplObjectStorage();
+        return $this->escapingInterceptors[$interceptionPoint] ?? [];
     }
 }
