@@ -93,7 +93,7 @@ class TemplateCompilerTest extends UnitTestCase
         $renderingContext = new RenderingContextFixture();
         $viewHelperNode = new ViewHelperNode($renderingContext, 'f', 'format.raw', $arguments, new ParsingState());
         $result = $instance->wrapViewHelperNodeArgumentEvaluationInClosure($viewHelperNode, 'value');
-        $expected = 'function() use ($renderingContext) {' . chr(10);
+        $expected = 'static function () use ($renderingContext) {' . chr(10);
         $expected .= chr(10);
         $expected .= 'return \'sometext\';' . chr(10);
         $expected .= '}';
