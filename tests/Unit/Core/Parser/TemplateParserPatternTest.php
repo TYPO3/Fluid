@@ -33,7 +33,7 @@ class TemplateParserPatternTest extends UnitTestCase
      */
     public function testSPLIT_PATTERN_DYNAMICTAGS(): void
     {
-        $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS, ['typo3', 't3', 'f']);
+        $pattern = Patterns::$SPLIT_PATTERN_TEMPLATE_DYNAMICTAGS;
 
         $source = '<html><head> <f:a.testing /> <f:blablubb> {testing}</f4:blz> </t3:hi.jo>';
         $expected = ['<html><head> ', '<f:a.testing />', ' ', '<f:blablubb>', ' {testing}', '</f4:blz>', ' ', '</t3:hi.jo>'];
@@ -82,7 +82,7 @@ class TemplateParserPatternTest extends UnitTestCase
      */
     public function testSCAN_PATTERN_DYNAMICTAG(): void
     {
-        $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, ['f']);
+        $pattern = Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG;
         $source = '<f:crop attribute="Hallo">';
         $expected = [
             0 => '<f:crop attribute="Hallo">',
@@ -98,7 +98,7 @@ class TemplateParserPatternTest extends UnitTestCase
         preg_match($pattern, $source, $matches);
         self::assertEquals($expected, $matches, 'The SCAN_PATTERN_DYNAMICTAG does not match correctly.');
 
-        $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG, ['f']);
+        $pattern = Patterns::$SCAN_PATTERN_TEMPLATE_VIEWHELPERTAG;
         $source = '<f:crop data-attribute="Hallo">';
         $expected = [
             0 => '<f:crop data-attribute="Hallo">',
@@ -165,7 +165,7 @@ class TemplateParserPatternTest extends UnitTestCase
      */
     public function testSCAN_PATTERN_CLOSINGDYNAMICTAG(): void
     {
-        $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG, ['f']);
+        $pattern = Patterns::$SCAN_PATTERN_TEMPLATE_CLOSINGVIEWHELPERTAG;
         self::assertEquals(preg_match($pattern, '</f:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag it should match.');
         self::assertEquals(preg_match($pattern, '</f:bla.a    >'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a tag (with spaces included) it should match.');
         self::assertEquals(preg_match($pattern, '</t:bla>'), 1, 'The SCAN_PATTERN_CLOSINGDYNAMICTAG does not match a unknown namespace tag it should match.');
@@ -187,7 +187,7 @@ class TemplateParserPatternTest extends UnitTestCase
      */
     public function testSPLIT_PATTERN_SHORTHANDSYNTAX(): void
     {
-        $pattern = $this->insertNamespaceIntoRegularExpression(Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX, ['f']);
+        $pattern = Patterns::$SPLIT_PATTERN_SHORTHANDSYNTAX;
 
         $source = 'some string{Object.bla}here as well';
         $expected = ['some string', '{Object.bla}', 'here as well'];
@@ -631,17 +631,5 @@ class TemplateParserPatternTest extends UnitTestCase
         self::assertEquals(preg_match($pattern, '<!-- Test -->'), 0, 'The SCAN_PATTERN_CDATA matches a comment, but it should not.');
         self::assertEquals(preg_match($pattern, '<![CDATA[This is some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a simple CDATA string.');
         self::assertEquals(preg_match($pattern, '<![CDATA[This is<bla:test> some ]]>'), 1, 'The SCAN_PATTERN_CDATA does not match a CDATA string with tags inside..');
-    }
-
-    /**
-     * Helper method which replaces NAMESPACE in the regular expression with the real namespace used.
-     *
-     * @param string $regularExpression The regular expression in which to replace NAMESPACE
-     * @param array $namespace List of namespace identifiers.
-     * @return string working regular expression with NAMESPACE replaced.
-     */
-    private function insertNamespaceIntoRegularExpression(string $regularExpression, array $namespace): string
-    {
-        return str_replace('NAMESPACE', implode('|', $namespace), $regularExpression);
     }
 }
