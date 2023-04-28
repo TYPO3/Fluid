@@ -80,7 +80,7 @@ class Configuration
             if (!isset($interceptorArray[$interceptionPoint])) {
                 $interceptorArray[$interceptionPoint] = [];
             }
-            $interceptors = $interceptorArray[$interceptionPoint];
+            $interceptors = &$interceptorArray[$interceptionPoint];
             if (!in_array($interceptor, $interceptors, true)) {
                 $interceptors[] = $interceptor;
             }
