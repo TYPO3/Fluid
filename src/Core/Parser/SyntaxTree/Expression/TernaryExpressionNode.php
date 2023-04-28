@@ -93,7 +93,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
         $context = [];
         if (preg_match_all(static::$variableDetection, $expression, $matches) > 0) {
             foreach ($matches[1] as $variable) {
-                if (strtolower($variable) == 'true' || strtolower($variable) == 'false' || empty($variable) === true) {
+                if (strtolower($variable) === 'true' || strtolower($variable) === 'false' || empty($variable) === true) {
                     continue;
                 }
                 $context[$variable] = static::getTemplateVariableOrValueItself($variable, $renderingContext);
