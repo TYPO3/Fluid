@@ -98,6 +98,8 @@ abstract class Patterns
 
     /**
      * This pattern detects the escaping modifier
+     *
+     * @deprecated Unused. Will be removed.
      */
     public static $SCAN_PATTERN_ESCAPINGMODIFIER = '/{escapingEnabled\s*=\s*(?P<enabled>true|false)\s*}/i';
 
