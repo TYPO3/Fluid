@@ -327,7 +327,7 @@ class StandardCacheWarmer implements FluidCacheWarmerInterface
      */
     protected function createClosure($templatePathAndFilename)
     {
-        return function (TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
+        return static function (TemplateParser $parser, TemplatePaths $templatePaths) use ($templatePathAndFilename) {
             return file_get_contents($templatePathAndFilename);
         };
     }

@@ -326,7 +326,7 @@ class TemplatePaths
 
         $directoryIterator = new \RecursiveDirectoryIterator($folder, \FilesystemIterator::FOLLOW_SYMLINKS | \FilesystemIterator::SKIP_DOTS);
         $recursiveIterator = new \RecursiveIteratorIterator($directoryIterator, \RecursiveIteratorIterator::SELF_FIRST);
-        $filterIterator = new \CallbackFilterIterator($recursiveIterator, function ($current, $key, $iterator) use ($format) {
+        $filterIterator = new \CallbackFilterIterator($recursiveIterator, static function ($current, $key, $iterator) use ($format) {
             return $current->getExtension() === $format;
         });
 

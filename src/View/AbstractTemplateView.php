@@ -189,7 +189,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
             try {
                 $parsedLayout = $templateParser->getOrParseAndStoreTemplate(
                     $templatePaths->getLayoutIdentifier($layoutName),
-                    function ($parent, TemplatePaths $paths) use ($layoutName) {
+                    static function ($parent, TemplatePaths $paths) use ($layoutName) {
                         return $paths->getLayoutSource($layoutName);
                     }
                 );
@@ -300,7 +300,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         try {
             $parsedPartial = $renderingContext->getTemplateParser()->getOrParseAndStoreTemplate(
                 $templatePaths->getPartialIdentifier($partialName),
-                function ($parent, TemplatePaths $paths) use ($partialName) {
+                static function ($parent, TemplatePaths $paths) use ($partialName) {
                     return $paths->getPartialSource($partialName);
                 }
             );
@@ -382,7 +382,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
         $actionName = $renderingContext->getControllerAction();
         $parsedTemplate = $templateParser->getOrParseAndStoreTemplate(
             $templatePaths->getTemplateIdentifier($controllerName, $actionName),
-            function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
+            static function ($parent, TemplatePaths $paths) use ($controllerName, $actionName) {
                 return $paths->getTemplateSource($controllerName, $actionName);
             }
         );

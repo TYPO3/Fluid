@@ -103,7 +103,7 @@ class NodeConverter
     {
         $configuration = $this->convert($node->getNode());
         $configuration['execution'] = sprintf(
-            'call_user_func_array( function ($var) { ' .
+            'call_user_func_array( static function ($var) { ' .
             'return (is_string($var) || (is_object($var) && method_exists($var, \'__toString\')) ' .
             '? htmlspecialchars((string) $var, ENT_QUOTES) : $var); }, [%s])',
             $configuration['execution']
@@ -371,7 +371,7 @@ class NodeConverter
         $parser = new BooleanParser();
         $compiledExpression = $parser->compile(BooleanNode::reconcatenateExpression($node->getStack()));
         $functionName = $this->variableName('expression');
-        $initializationPhpCode .= $functionName . ' = function($context) {return ' . $compiledExpression . ';};' . chr(10);
+        $initializationPhpCode .= $functionName . ' = static function ($context) {return ' . $compiledExpression . ';};' . chr(10);
 
         return [
             'initialization' => $initializationPhpCode,

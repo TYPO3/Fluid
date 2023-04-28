@@ -101,7 +101,7 @@ trait CompileWithContentArgumentAndRenderStatic
         );
         $contentArgumentName = $this->resolveContentArgumentName();
         $initializationPhpCode .= sprintf(
-            '%s = (%s[\'%s\'] !== null) ? function() use (%s) { return %s[\'%s\']; } : %s;',
+            '%s = (%s[\'%s\'] !== null) ? static function () use (%s) { return %s[\'%s\']; } : %s;',
             $closureName,
             $argumentsName,
             $contentArgumentName,
@@ -127,12 +127,12 @@ trait CompileWithContentArgumentAndRenderStatic
         $argumentName = $this->resolveContentArgumentName();
         $arguments = $this->arguments;
         if (!empty($argumentName) && isset($arguments[$argumentName])) {
-            $renderChildrenClosure = function () use ($arguments, $argumentName) {
+            $renderChildrenClosure = static function () use ($arguments, $argumentName) {
                 return $arguments[$argumentName];
             };
         } else {
             $self = clone $this;
-            $renderChildrenClosure = function () use ($self) {
+            $renderChildrenClosure = static function () use ($self) {
                 return $self->renderChildren();
             };
         }

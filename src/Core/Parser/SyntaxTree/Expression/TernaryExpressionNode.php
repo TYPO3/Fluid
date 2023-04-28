@@ -132,7 +132,7 @@ class TernaryExpressionNode extends AbstractExpressionNode
 
         $functionName = $templateCompiler->variableName('ternaryExpression');
         $initializationPhpCode .= sprintf(
-            '%s = function($context, $renderingContext) {
+            '%s = static function ($context, $renderingContext) {
                 $check = %s;
                 $parser = new \TYPO3Fluid\Fluid\Core\Parser\BooleanParser();
                 $checkResult = $parser->evaluate($check, $context);

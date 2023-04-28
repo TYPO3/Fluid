@@ -332,7 +332,7 @@ EOD;
     public function wrapChildNodesInClosure(NodeInterface $node)
     {
         $closure = '';
-        $closure .= 'function() use ($renderingContext) {' . chr(10);
+        $closure .= 'static function () use ($renderingContext) {' . chr(10);
         $convertedSubNodes = $this->nodeConverter->convertListOfSubNodes($node);
         $closure .= $convertedSubNodes['initialization'];
         $closure .= sprintf('return %s;', $convertedSubNodes['execution']) . chr(10);
@@ -352,7 +352,7 @@ EOD;
     {
         $arguments = $node->getArguments();
         $argument = $arguments[$argumentName];
-        $closure = 'function() use ($renderingContext) {' . chr(10);
+        $closure = 'static function () use ($renderingContext) {' . chr(10);
         $compiled = $this->nodeConverter->convert($argument);
         $closure .= $compiled['initialization'] . chr(10);
         $closure .= 'return ' . $compiled['execution'] . ';' . chr(10);
