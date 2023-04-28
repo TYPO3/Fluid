@@ -20,13 +20,17 @@ class Configuration
 
     /**
      * Generic interceptors registered with the configuration.
+     *
+     * @var InterceptorInterface[]
      */
-    protected array $interceptors = [];
+    protected $interceptors = [];
 
     /**
      * Escaping interceptors registered with the configuration.
+     *
+     * @var InterceptorInterface[]
      */
-    protected array $escapingInterceptors = [];
+    protected $escapingInterceptors = [];
 
     /**
      * @return bool
