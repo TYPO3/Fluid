@@ -83,6 +83,20 @@ class DataAccessorTest extends AbstractFunctionalTestCase
                     'publicValue@getPublicValue()'
                 ],
             ],
+            'cached object accessors' => [
+                '["{data.privateValue}", "{data.protectedValue}", "{data.publicValue}", "{data.privateValue}", "{data.protectedValue}", "{data.publicValue}"]',
+                [
+                    'data' => new WithEverything(),
+                ],
+                [
+                    'privateValue@getPrivateValue()',
+                    'protectedValue@getProtectedValue()',
+                    'publicValue@getPublicValue()',
+                    'privateValue@getPrivateValue()',
+                    'protectedValue@getProtectedValue()',
+                    'publicValue@getPublicValue()'
+                ],
+            ]
         ];
     }
 

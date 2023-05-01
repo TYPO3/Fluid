@@ -12,17 +12,19 @@ namespace TYPO3Fluid\Fluid\Core\Variables;
  */
 class StandardVariableProvider implements VariableProviderInterface
 {
-    const ACCESSOR_ARRAY = 'array';
-    const ACCESSOR_GETTER = 'getter';
-    const ACCESSOR_ASSERTER = 'asserter';
-    const ACCESSOR_PUBLICPROPERTY = 'public';
-
     /**
      * Variables stored in context
      *
      * @var mixed
      */
     protected $variables = [];
+
+    /**
+     * Runtime cache to speed up object access through fluid
+     *
+     * @var array
+     */
+    protected $objectAccessorCache = [];
 
     /**
      * Variables, if any, with which to initialize this
@@ -45,7 +47,31 @@ class StandardVariableProvider implements VariableProviderInterface
             $variables['settings'] = $this->variables['settings'];
         }
         $className = get_class($this);
-        return new $className($variables);
+        $variableProvider = new $className($variables);
+        $variableProvider->setObjectAccessorCacheData($this->getObjectAccessorCacheData());
+        return $variableProvider;
+    }
+
+    /**
+     * Pre-fills the object accessor cache to speed up access to
+     * object properties with fluid
+     *
+     * @param array $cache
+     */
+    public function setObjectAccessorCacheData(array $cache): void
+    {
+        $this->objectAccessorCache = $cache;
+    }
+
+    /**
+     * Returns the object accessor cache data to be used in a different
+     * variable provider instance
+     *
+     * @return array
+     */
+    public function getObjectAccessorCacheData(): array
+    {
+        return $this->objectAccessorCache;
     }
 
     /**
@@ -248,19 +274,33 @@ class StandardVariableProvider implements VariableProviderInterface
             return $subject[$propertyName];
         }
         if (is_object($subject)) {
-            $upperCasePropertyName = ucfirst($propertyName);
-            $getMethod = 'get' . $upperCasePropertyName;
-            if (method_exists($subject, $getMethod)) {
-                return call_user_func_array([$subject, $getMethod], []);
+            // Accessor information can be cached per class property if it only relies
+            // on class methods that shouldn't change or disappear on runtime
+            $cacheIdentifier = get_class($subject) . '->' . $propertyName;
+            if (isset($this->objectAccessorCache[$cacheIdentifier])) {
+                $accessor = $this->objectAccessorCache[$cacheIdentifier];
+            } else {
+                $upperCasePropertyName = ucfirst($propertyName);
+                $getMethod = 'get' . $upperCasePropertyName;
+                $isMethod = 'is' . $upperCasePropertyName;
+                $hasMethod = 'has' . $upperCasePropertyName;
+                if (method_exists($subject, $getMethod)) {
+                    $accessor = $getMethod;
+                } elseif (method_exists($subject, $isMethod)) {
+                    $accessor = $isMethod;
+                } elseif (method_exists($subject, $hasMethod)) {
+                    $accessor = $hasMethod;
+                }
+                if (isset($accessor)) {
+                    $this->objectAccessorCache[$cacheIdentifier] = $accessor;
+                }
             }
-            $isMethod = 'is' . $upperCasePropertyName;
-            if (method_exists($subject, $isMethod)) {
-                return call_user_func_array([$subject, $isMethod], []);
+
+            if (isset($accessor)) {
+                return $subject->$accessor();
             }
-            $hasMethod = 'has' . $upperCasePropertyName;
-            if (method_exists($subject, $hasMethod)) {
-                return call_user_func_array([$subject, $hasMethod], []);
-            }
+
+            // Properties can be dynamic and thus are not covered by the cache
             if (property_exists($subject, $propertyName)) {
                 return $subject->$propertyName;
             }
