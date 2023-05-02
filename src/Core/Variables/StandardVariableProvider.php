@@ -122,7 +122,8 @@ class StandardVariableProvider implements VariableProviderInterface
     public function getByPath($path, array $accessors = [])
     {
         $subject = $this->variables;
-        foreach (explode('.', $this->resolveSubVariableReferences($path)) as $index => $pathSegment) {
+        $subVariableReferences = explode('.', $this->resolveSubVariableReferences($path));
+        foreach ($subVariableReferences as $index => $pathSegment) {
             $accessor = $accessors[$index] ?? null;
             if (!$accessor || !$this->canExtractWithAccessor($subject, $pathSegment, $accessor)) {
                 $accessor = $this->detectAccessor($subject, $pathSegment);
