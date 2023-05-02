@@ -202,9 +202,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Sets all needed attributes needed for the rendering. Called by the
      * framework. Populates $this->viewHelperNode.
-     * This is PURELY INTERNAL! Never override this method!!
-     *
      * @param ViewHelperNode $node View Helper node to be set.
+     * @internal
      */
     public function setViewHelperNode(ViewHelperNode $node)
     {
@@ -214,9 +213,8 @@ abstract class AbstractViewHelper implements ViewHelperInterface
     /**
      * Sets all needed attributes needed for the rendering. Called by the
      * framework. Populates $this->viewHelperNode.
-     * This is PURELY INTERNAL! Never override this method!!
-     *
      * @param NodeInterface[] $childNodes
+     * @internal
      */
     public function setChildNodes(array $childNodes)
     {

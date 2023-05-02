@@ -46,8 +46,7 @@ class ObjectAccessorNode extends AbstractNode
     }
 
     /**
-     * Internally used for building up cached templates; do not use directly!
-     *
+     * @internal Internally used for building up cached templates; do not use directly!
      * @return string
      */
     public function getObjectPath()
