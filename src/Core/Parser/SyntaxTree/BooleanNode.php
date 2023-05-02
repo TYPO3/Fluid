@@ -162,7 +162,7 @@ class BooleanNode extends AbstractNode
             $value = $renderingContext->getTemplateParser()->unquoteString($value);
             return strtolower($value) !== 'false' && !empty($value);
         }
-        if (is_array($value) || (is_object($value) && $value instanceof \Countable)) {
+        if (is_array($value) || $value instanceof \Countable) {
             return count($value) > 0;
         }
         if (is_object($value)) {
