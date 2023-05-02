@@ -124,7 +124,10 @@ class StandardVariableProvider implements VariableProviderInterface
         $subject = $this->variables;
         foreach (explode('.', $this->resolveSubVariableReferences($path)) as $index => $pathSegment) {
             $accessor = $accessors[$index] ?? null;
-            $subject = $this->extractSingleValue($subject, $pathSegment, $accessor);
+            if (!$accessor || !$this->canExtractWithAccessor($subject, $pathSegment, $accessor)) {
+                $accessor = $this->detectAccessor($subject, $pathSegment);
+            }
+            $subject = $this->extractWithAccessor($subject, $pathSegment, $accessor);
             if ($subject === null) {
                 break;
             }
@@ -234,22 +237,6 @@ class StandardVariableProvider implements VariableProviderInterface
             }
         }
         return $propertyPath;
-    }
-
-    /**
-     * Extracts a single value from an array or object.
-     *
-     * @param mixed $subject
-     * @param string $propertyName
-     * @param string|null $accessor
-     * @return mixed
-     */
-    protected function extractSingleValue($subject, $propertyName, $accessor = null)
-    {
-        if (!$accessor || !$this->canExtractWithAccessor($subject, $propertyName, $accessor)) {
-            $accessor = $this->detectAccessor($subject, $propertyName);
-        }
-        return $this->extractWithAccessor($subject, $propertyName, $accessor);
     }
 
     /**
