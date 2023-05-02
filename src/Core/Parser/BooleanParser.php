@@ -361,10 +361,10 @@ class BooleanParser
     protected function evaluateCompare($x, $y, $comparator)
     {
         // enfore strong comparison for comparing two objects
-        if ($comparator == '==' && is_object($x) && is_object($y)) {
+        if ($comparator === '==' && is_object($x) && is_object($y)) {
             $comparator = '===';
         }
-        if ($comparator == '!=' && is_object($x) && is_object($y)) {
+        if ($comparator === '!=' && is_object($x) && is_object($y)) {
             $comparator = '!==';
         }
 
@@ -462,7 +462,7 @@ class BooleanParser
 
     public static function convertNodeToBoolean($value)
     {
-        if (is_object($value) && $value instanceof \Countable) {
+        if ($value instanceof \Countable) {
             return count($value) > 0;
         }
         return $value;

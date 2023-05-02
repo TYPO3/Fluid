@@ -126,7 +126,7 @@ class ParsingState implements ParsedTemplateInterface
      */
     public function pushNodeToStack(NodeInterface $node)
     {
-        array_push($this->nodeStack, $node);
+        $this->nodeStack[] = $node;
     }
 
     /**

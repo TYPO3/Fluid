@@ -27,7 +27,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:isChildrenEscapingEnabled\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/Core/Parser/Interceptor/Escape.php
 
 		-
@@ -44,21 +44,6 @@ parameters:
 			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\EscapingNode\\:\\:evaluate\\(\\) should return float\\|int but returns string\\.$#"
 			count: 1
 			path: src/Core/Parser/SyntaxTree/EscapingNode.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\TernaryExpressionNode\\:\\:compile\\(\\) should return string but returns array\\<string, string\\>\\.$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/Expression/TernaryExpressionNode.php
-
-		-
-			message: "#^Return type \\(string\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\TernaryExpressionNode\\:\\:compile\\(\\) should be compatible with return type \\(array\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\AbstractExpressionNode\\:\\:compile\\(\\)$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/Expression/TernaryExpressionNode.php
-
-		-
-			message: "#^Return type \\(string\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\TernaryExpressionNode\\:\\:compile\\(\\) should be compatible with return type \\(array\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Parser\\\\SyntaxTree\\\\Expression\\\\ExpressionNodeInterface\\:\\:compile\\(\\)$#"
-			count: 1
-			path: src/Core/Parser/SyntaxTree/Expression/TernaryExpressionNode.php
 
 		-
 			message: "#^Call to an undefined method TYPO3Fluid\\\\Fluid\\\\Core\\\\ViewHelper\\\\ViewHelperInterface\\:\\:setViewHelperNode\\(\\)\\.$#"
@@ -91,17 +76,7 @@ parameters:
 			path: src/Core/Parser/TemplateParser.php
 
 		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:getExpressionNodeTypes\\(\\) should return string but returns array\\.$#"
-			count: 1
-			path: src/Core/Rendering/RenderingContext.php
-
-		-
 			message: "#^Property TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:\\$errorHandler \\(TYPO3Fluid\\\\Fluid\\\\Core\\\\ErrorHandler\\\\ErrorHandlerInterface\\) in isset\\(\\) is not nullable\\.$#"
-			count: 1
-			path: src/Core/Rendering/RenderingContext.php
-
-		-
-			message: "#^Return type \\(string\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContext\\:\\:getExpressionNodeTypes\\(\\) should be compatible with return type \\(array\\) of method TYPO3Fluid\\\\Fluid\\\\Core\\\\Rendering\\\\RenderingContextInterface\\:\\:getExpressionNodeTypes\\(\\)$#"
 			count: 1
 			path: src/Core/Rendering/RenderingContext.php
 
@@ -139,11 +114,6 @@ parameters:
 			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
 			count: 1
 			path: src/View/AbstractTemplateView.php
-
-		-
-			message: "#^Method TYPO3Fluid\\\\Fluid\\\\View\\\\TemplatePaths\\:\\:sanitizePath\\(\\) should return string but returns array\\<string\\>\\.$#"
-			count: 1
-			path: src/View/TemplatePaths.php
 
 		-
 			message: "#^Variable \\$iterationData might not be defined\\.$#"

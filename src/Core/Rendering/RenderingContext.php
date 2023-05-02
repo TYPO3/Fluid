@@ -329,7 +329,7 @@ class RenderingContext implements RenderingContextInterface
     }
 
     /**
-     * @return string
+     * @return array<string>
      */
     public function getExpressionNodeTypes()
     {

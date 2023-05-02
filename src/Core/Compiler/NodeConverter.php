@@ -175,7 +175,6 @@ class NodeConverter
                 );
             }
 
-            $alreadyBuiltArguments = [];
             foreach ($node->getArguments() as $argumentName => $argumentValue) {
                 if ($argumentValue instanceof NodeInterface) {
                     $converted = $this->convert($argumentValue);
@@ -192,7 +191,6 @@ class NodeConverter
                     $argumentName,
                     $converted['execution']
                 ) . chr(10);
-                $alreadyBuiltArguments[$argumentName] = true;
             }
 
             // Build up closure which renders the child nodes

@@ -399,7 +399,7 @@ class TemplatePaths
      * if a directory, suffixed by a trailing slash.
      *
      * @param string|array $path
-     * @return string
+     * @return string|array<string>
      */
     protected function sanitizePath($path)
     {
