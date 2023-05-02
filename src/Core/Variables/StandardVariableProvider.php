@@ -125,7 +125,7 @@ class StandardVariableProvider implements VariableProviderInterface
         $subVariableReferences = explode('.', $this->resolveSubVariableReferences($path));
         foreach ($subVariableReferences as $index => $pathSegment) {
             $accessor = $accessors[$index] ?? null;
-            if (!$accessor || !$this->canExtractWithAccessor($subject, $pathSegment, $accessor)) {
+            if ($accessor === null || !$this->canExtractWithAccessor($subject, $pathSegment, $accessor)) {
                 $accessor = $this->detectAccessor($subject, $pathSegment);
             }
             $subject = $this->extractWithAccessor($subject, $pathSegment, $accessor);
