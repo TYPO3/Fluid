@@ -361,10 +361,10 @@ class BooleanParser
     protected function evaluateCompare($x, $y, $comparator)
     {
         // enfore strong comparison for comparing two objects
-        if ($comparator == '==' && is_object($x) && is_object($y)) {
+        if ($comparator === '==' && is_object($x) && is_object($y)) {
             $comparator = '===';
         }
-        if ($comparator == '!=' && is_object($x) && is_object($y)) {
+        if ($comparator === '!=' && is_object($x) && is_object($y)) {
             $comparator = '!==';
         }
 
