@@ -193,35 +193,6 @@ class StandardVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    public static function getAccessorsForPathTestValues(): array
-    {
-        $namedUser = new UserWithoutToString('Foobar Name');
-        $inArray = ['user' => $namedUser];
-        $inArrayAccess = new StandardVariableProvider($inArray);
-        $inPublic = (object)$inArray;
-        $asArray = StandardVariableProvider::ACCESSOR_ARRAY;
-        $asGetter = StandardVariableProvider::ACCESSOR_GETTER;
-        $asPublic = StandardVariableProvider::ACCESSOR_PUBLICPROPERTY;
-        return [
-            [['inArray' => $inArray], 'inArray.user', [$asArray, $asArray]],
-            [['inArray' => $inArray], 'inArray.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccess' => $inArrayAccess], 'inArrayAccess.user.name', [$asArray, $asArray, $asGetter]],
-            [['inArrayAccessWithGetter' => $inArrayAccess], 'inArrayAccessWithGetter.allIdentifiers', [$asArray, $asGetter]],
-            [['inPublic' => $inPublic], 'inPublic.user.name', [$asArray, $asPublic, $asGetter]],
-        ];
-    }
-
-    /**
-     * @test
-     * @dataProvider getAccessorsForPathTestValues
-     */
-    public function testGetAccessorsForPath(array $subject, string $path, array $expected): void
-    {
-        $provider = new StandardVariableProvider($subject);
-        $result = $provider->getAccessorsForPath($path);
-        self::assertEquals($expected, $result);
-    }
-
     public static function getExtractRedectAccessorTestValues(): array
     {
         return [
