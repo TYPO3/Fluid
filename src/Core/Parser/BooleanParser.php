@@ -462,7 +462,7 @@ class BooleanParser
 
     public static function convertNodeToBoolean($value)
     {
-        if (is_object($value) && $value instanceof \Countable) {
+        if ($value instanceof \Countable) {
             return count($value) > 0;
         }
         return $value;

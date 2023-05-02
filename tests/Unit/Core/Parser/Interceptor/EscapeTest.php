@@ -60,9 +60,9 @@ class EscapeTest extends UnitTestCase
         $this->mockViewHelper->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(true);
         $this->mockNode->expects(self::once())->method('getUninitializedViewHelper')->willReturn($this->mockViewHelper);
 
-        self::assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
         $this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
     }
 
     /**
@@ -74,9 +74,9 @@ class EscapeTest extends UnitTestCase
         $this->mockViewHelper->expects(self::once())->method('isChildrenEscapingEnabled')->willReturn(false);
         $this->mockNode->expects(self::once())->method('getUninitializedViewHelper')->willReturn($this->mockViewHelper);
 
-        self::assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
         $this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertFalse($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        self::assertSame(1, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
     }
 
     /**
@@ -85,14 +85,13 @@ class EscapeTest extends UnitTestCase
     public function processReenablesEscapingInterceptorOnClosingViewHelperTagIfItWasDisabledBefore(): void
     {
         $interceptorPosition = InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER;
-        $this->mockViewHelper->expects(self::any())->method('isOutputEscapingEnabled')->willReturn(false);
+        $this->mockViewHelper->expects(self::once())->method('isOutputEscapingEnabled')->willReturn(false);
         $this->mockNode->expects(self::any())->method('getUninitializedViewHelper')->willReturn($this->mockViewHelper);
 
-        $this->escapeInterceptor->_set('childrenEscapingEnabled', false);
-        $this->escapeInterceptor->_set('viewHelperNodesWhichDisableTheInterceptor', [$this->mockNode]);
+        $this->escapeInterceptor->_set('viewHelperNodesWhichDisableTheInterceptor', 1);
 
         $this->escapeInterceptor->process($this->mockNode, $interceptorPosition, $this->mockParsingState);
-        self::assertTrue($this->escapeInterceptor->_get('childrenEscapingEnabled'));
+        self::assertSame(0, $this->escapeInterceptor->_get('viewHelperNodesWhichDisableTheInterceptor'));
     }
 
     /**

@@ -339,7 +339,7 @@ abstract class AbstractTemplateView extends AbstractView implements TemplateAwar
      */
     protected function startRendering($type, ParsedTemplateInterface $template, RenderingContextInterface $context)
     {
-        array_push($this->renderingStack, ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context]);
+        $this->renderingStack[] = ['type' => $type, 'parsedTemplate' => $template, 'renderingContext' => $context];
     }
 
     /**
