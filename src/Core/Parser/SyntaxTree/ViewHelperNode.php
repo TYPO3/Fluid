@@ -94,8 +94,7 @@ class ViewHelperNode extends AbstractNode
     }
 
     /**
-     * INTERNAL - only needed for compiling templates
-     *
+     * @internal only needed for compiling templates
      * @return NodeInterface[]
      */
     public function getArguments()
@@ -104,9 +103,8 @@ class ViewHelperNode extends AbstractNode
     }
 
     /**
-     * INTERNAL - only needed for compiling templates
-     *
      * @param string $argumentName
+     * @internal only needed for compiling templates
      * @return ArgumentDefinition
      */
     public function getArgumentDefinition($argumentName)
