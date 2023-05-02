@@ -251,10 +251,10 @@ class StandardVariableProvider implements VariableProviderInterface
      */
     protected function canExtractWithAccessor($subject, $propertyName, $accessor)
     {
-        $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_ARRAY) {
             return is_array($subject) || ($subject instanceof \ArrayAccess && $subject->offsetExists($propertyName));
         }
+        $class = is_object($subject) ? get_class($subject) : false;
         if ($accessor === self::ACCESSOR_GETTER) {
             return $class !== false && method_exists($subject, 'get' . ucfirst($propertyName));
         }
