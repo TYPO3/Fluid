@@ -193,7 +193,7 @@ class StandardVariableProviderTest extends UnitTestCase
         self::assertEquals($expected, $result);
     }
 
-    public static function getExtractRedectAccessorTestValues(): array
+    public static function getByPathRedetectsAccessorIfUnusableAccessorPassedDataProvider(): array
     {
         return [
             [['test' => 'test'], 'test', null, 'test'],
@@ -205,11 +205,10 @@ class StandardVariableProviderTest extends UnitTestCase
     }
 
     /**
-     * @param string $accessor
      * @test
-     * @dataProvider getExtractRedectAccessorTestValues
+     * @dataProvider getByPathRedetectsAccessorIfUnusableAccessorPassedDataProvider
      */
-    public function testExtractRedetectsAccessorIfUnusableAccessorPassed(array $subject, string $path, $accessor, string $expected): void
+    public function getByPathRedetectsAccessorIfUnusableAccessorPassed(array $subject, string $path, ?string $accessor, string $expected): void
     {
         $provider = new StandardVariableProvider($subject);
         $result = $provider->getByPath($path, [$accessor]);
