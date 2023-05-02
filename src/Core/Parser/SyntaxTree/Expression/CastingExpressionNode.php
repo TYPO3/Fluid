@@ -114,7 +114,7 @@ class CastingExpressionNode extends AbstractExpressionNode
         if (is_string($variable) && strpos($variable, ',')) {
             return array_map('trim', explode(',', $variable));
         }
-        if (is_object($variable) && $variable instanceof \Iterator) {
+        if ($variable instanceof \Iterator) {
             $array = [];
             foreach ($variable as $key => $value) {
                 $array[$key] = $value;

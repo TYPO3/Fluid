@@ -15,7 +15,7 @@ use TYPO3Fluid\Fluid\Core\Variables\VariableProviderInterface;
 /**
  * Abstract Fluid Compiled template.
  *
- * INTERNAL!!
+ * @internal
  */
 abstract class AbstractCompiledTemplate implements ParsedTemplateInterface
 {

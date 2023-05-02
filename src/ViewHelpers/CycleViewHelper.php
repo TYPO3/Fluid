@@ -122,7 +122,7 @@ class CycleViewHelper extends AbstractViewHelper
             return array_values($values);
         }
 
-        if (is_object($values) && $values instanceof \Traversable) {
+        if ($values instanceof \Traversable) {
             return iterator_to_array($values, false);
         }
 
